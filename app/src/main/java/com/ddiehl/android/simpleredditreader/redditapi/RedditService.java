@@ -34,39 +34,15 @@ public class RedditService {
 
     @Subscribe
     public void onLoadHotListings(LoadHotListingsEvent event) {
-        Log.d(TAG, "Calling getHotListing(\"all\")");
-        new GetAllHotListings().execute();
-
-//        Response response = mApi.getHotListing("all");
-//        printResponse(response);
-//        ListingsLoadedEvent responseEvent = new ListingsLoadedEvent(response);
-//        mBus.post(responseEvent);
-
-//        mApi.getHotListing("all", new Callback<List<Link>>() {
-//            @Override
-//            public void success(List<Link> o, Response response) {
-//                Utils.debug("onLoadHotListings SUCCESS");
-//                printResponse(response);
-//                ListingsLoadedEvent responseEvent = new ListingsLoadedEvent(response);
-//                mBus.post(responseEvent);
-//            }
-//
-//            @Override
-//            public void failure(RetrofitError error) {
-//                Utils.debug("onLoadHotListings FAILURE");
-//                if (error.getResponse() != null) {
-//                    Response response = error.getResponse();
-//
-//                }
-//            }
-//        });
+        new GetAllHotListings().execute(event.getSubreddit());
     }
 
-    private class GetAllHotListings extends AsyncTask<Void, Void, ListingResponse> {
+    private class GetAllHotListings extends AsyncTask<String, Void, ListingResponse> {
         @Override
-        protected ListingResponse doInBackground(Void... params) {
+        protected ListingResponse doInBackground(String... params) {
+            Log.d(TAG, "Loading listings for " + params[0]);
             try {
-                return mApi.getHotListing("all");
+                return mApi.getHotListing(params[0]);
             } catch (RetrofitError error) {
                 Log.e(TAG, "RetrofitError: " + error.getMessage());
                 return null;

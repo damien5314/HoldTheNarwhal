@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
 import com.ddiehl.android.simpleredditreader.events.ListingsLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.LoadHotListingsEvent;
@@ -20,19 +19,33 @@ import com.squareup.otto.Subscribe;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FrontPageFragment extends ListFragment {
-    private static final String TAG = FrontPageFragment.class.getSimpleName();
+public class ListingFragment extends ListFragment {
+    private static final String TAG = ListingFragment.class.getSimpleName();
+
+    private static final String ARG_SUBREDDIT = "subreddit";
 
     private Bus mBus;
+    private String mSubreddit;
     private List<RedditListingData> mData;
     private boolean mListingsRetrieved = false;
 
-    public FrontPageFragment() { /* Empty constructor required */ }
+    public ListingFragment() { /* Default constructor required */ }
+
+    public static ListingFragment newInstance(String subreddit) {
+        Bundle args = new Bundle();
+        args.putString(ARG_SUBREDDIT, subreddit);
+        ListingFragment fragment = new ListingFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+
+        Bundle args = getArguments();
+        mSubreddit = args.getString(ARG_SUBREDDIT);
 
         mData = new ArrayList<>();
         setListAdapter(new ListingAdapter(mData));
@@ -42,7 +55,7 @@ public class FrontPageFragment extends ListFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = super.onCreateView(inflater, container, savedInstanceState);
 
-        getActivity().setTitle(R.string.front_page_title);
+        getActivity().setTitle("/r/" + mSubreddit);
 
         return v;
     }
@@ -53,8 +66,7 @@ public class FrontPageFragment extends ListFragment {
         getBus().register(this);
 
         if (!mListingsRetrieved) {
-            Log.d(TAG, "Loading listings...");
-            getBus().post(new LoadHotListingsEvent()); // Load Hot listings from /r/all
+            getBus().post(new LoadHotListingsEvent(mSubreddit)); // Load Hot listings from subreddit
         }
     }
 
