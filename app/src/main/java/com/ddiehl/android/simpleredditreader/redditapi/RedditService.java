@@ -1,9 +1,11 @@
-package com.ddiehl.android.simpleredditreader;
+package com.ddiehl.android.simpleredditreader.redditapi;
 
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.ddiehl.android.simpleredditreader.redditapi.listings.RedditResponse;
+import com.ddiehl.android.simpleredditreader.events.ListingsLoadedEvent;
+import com.ddiehl.android.simpleredditreader.events.LoadHotListingsEvent;
+import com.ddiehl.android.simpleredditreader.redditapi.listings.ListingResponse;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -60,9 +62,9 @@ public class RedditService {
 //        });
     }
 
-    private class GetAllHotListings extends AsyncTask<Void, Void, RedditResponse> {
+    private class GetAllHotListings extends AsyncTask<Void, Void, ListingResponse> {
         @Override
-        protected RedditResponse doInBackground(Void... params) {
+        protected ListingResponse doInBackground(Void... params) {
             try {
                 return mApi.getHotListing("all");
             } catch (RetrofitError error) {
@@ -75,7 +77,7 @@ public class RedditService {
         }
 
         @Override
-        protected void onPostExecute(RedditResponse response) {
+        protected void onPostExecute(ListingResponse response) {
             if (response != null) {
 //                printResponse(response);
                 mBus.post(new ListingsLoadedEvent(response));

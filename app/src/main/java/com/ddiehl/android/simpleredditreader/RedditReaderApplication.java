@@ -4,6 +4,10 @@ import android.app.Application;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.ddiehl.android.simpleredditreader.events.ApiErrorEvent;
+import com.ddiehl.android.simpleredditreader.events.BusProvider;
+import com.ddiehl.android.simpleredditreader.redditapi.RedditApi;
+import com.ddiehl.android.simpleredditreader.redditapi.RedditService;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 

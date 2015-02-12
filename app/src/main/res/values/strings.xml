@@ -4,5 +4,6 @@
     <string name="app_name">Simple Reddit Reader</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="front_page_title">/r/all</string>
 
 </resources>

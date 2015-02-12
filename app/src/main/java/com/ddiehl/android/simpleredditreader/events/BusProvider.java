@@ -1,4 +1,4 @@
-package com.ddiehl.android.simpleredditreader;
+package com.ddiehl.android.simpleredditreader.events;
 
 import com.squareup.otto.Bus;
 

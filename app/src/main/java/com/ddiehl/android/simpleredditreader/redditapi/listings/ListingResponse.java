@@ -5,12 +5,12 @@ import com.google.gson.annotations.Expose;
 /**
  * Created by Damien on 2/5/2015.
  */
-public class RedditResponse {
+public class ListingResponse {
 
     @Expose
     private String kind;
     @Expose
-    private RedditResponseData data;
+    private ListingResponseData data;
 
     /**
      *
@@ -35,7 +35,7 @@ public class RedditResponse {
      * @return
      * The data
      */
-    public RedditResponseData getData() {
+    public ListingResponseData getData() {
         return data;
     }
 
@@ -44,7 +44,7 @@ public class RedditResponse {
      * @param data
      * The data
      */
-    public void setData(RedditResponseData data) {
+    public void setData(ListingResponseData data) {
         this.data = data;
     }
 

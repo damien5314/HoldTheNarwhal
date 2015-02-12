@@ -1,7 +1,7 @@
-package com.ddiehl.android.simpleredditreader;
+package com.ddiehl.android.simpleredditreader.view;
 
-import android.app.ListFragment;
 import android.os.Bundle;
+import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +9,10 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.ddiehl.android.simpleredditreader.R;
+import com.ddiehl.android.simpleredditreader.events.BusProvider;
+import com.ddiehl.android.simpleredditreader.events.ListingsLoadedEvent;
+import com.ddiehl.android.simpleredditreader.events.LoadHotListingsEvent;
 import com.ddiehl.android.simpleredditreader.redditapi.listings.RedditListingData;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
@@ -35,6 +39,15 @@ public class FrontPageFragment extends ListFragment {
     }
 
     @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View v = super.onCreateView(inflater, container, savedInstanceState);
+
+        getActivity().setTitle(R.string.front_page_title);
+
+        return v;
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         getBus().register(this);
@@ -49,13 +62,6 @@ public class FrontPageFragment extends ListFragment {
     public void onPause() {
         super.onPause();
         getBus().unregister(this);
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = super.onCreateView(inflater, container, savedInstanceState);
-
-        return v;
     }
 
     @Subscribe

@@ -8,7 +8,7 @@ import com.google.gson.annotations.Expose;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RedditResponseData {
+public class ListingResponseData {
 
     @Expose
     private String modhash;
