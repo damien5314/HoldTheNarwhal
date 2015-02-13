@@ -113,7 +113,7 @@ public class ListingFragment extends ListFragment {
             ((TextView) view.findViewById(R.id.listing_score)).setText(String.valueOf(link.getScore()));
             ((TextView) view.findViewById(R.id.listing_title)).setText(link.getTitle());
             ((TextView) view.findViewById(R.id.listing_author)).setText(link.getAuthor());
-            ((TextView) view.findViewById(R.id.listing_subreddit)).setText(link.getSubreddit());
+            ((TextView) view.findViewById(R.id.listing_subreddit)).setText("/r/" + link.getSubreddit());
             ((TextView) view.findViewById(R.id.listing_timestamp)).setText(createDateFormatted);
 
             return view;

@@ -3,10 +3,43 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
-        <item name="@android:listViewStyle">@style/ListView</item>
     </style>
 
-    <style name="ListView" parent="@android:style/Widget.DeviceDefault.ListView">
+    <style name="ListingScoreTextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:layout_marginLeft">5dp</item>
+        <item name="android:layout_marginRight">5dp</item>
+        <item name="android:textSize">@dimen/listing_score_text_size</item>
+    </style>
+
+    <style name="ListingTitleTextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/listing_title_text_size</item>
+    </style>
+
+    <style name="ListingAuthorTextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginRight">5dp</item>
+        <item name="android:textSize">@dimen/listing_author_text_size</item>
+    </style>
+
+    <style name="ListingSubredditTextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginLeft">5dp</item>
+        <item name="android:layout_marginRight">5dp</item>
+        <item name="android:textSize">@dimen/listing_subreddit_text_size</item>
+    </style>
+
+    <style name="ListingTimestampTextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginLeft">5dp</item>
+        <item name="android:textSize">@dimen/listing_timestamp_text_size</item>
     </style>
 
 </resources>
