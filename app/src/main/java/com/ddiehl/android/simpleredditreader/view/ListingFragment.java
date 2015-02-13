@@ -29,6 +29,7 @@ public class ListingFragment extends ListFragment {
     private Bus mBus;
     private String mSubreddit;
     private List<RedditListingData> mData;
+    private NavigationDrawer mNavigationDrawer;
     private boolean mListingsRetrieved = false;
 
     public ListingFragment() { /* Default constructor required */ }
@@ -55,9 +56,11 @@ public class ListingFragment extends ListFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = super.onCreateView(inflater, container, savedInstanceState);
+        View v = inflater.inflate(R.layout.listings_fragment, null);
 
         getActivity().setTitle("/r/" + mSubreddit);
+
+        mNavigationDrawer = new NavigationDrawer(inflater, v);
 
         return v;
     }

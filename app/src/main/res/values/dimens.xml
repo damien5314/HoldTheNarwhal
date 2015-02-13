@@ -9,5 +9,6 @@
     <dimen name="listing_subreddit_text_size">16sp</dimen>
     <dimen name="listing_timestamp_text_size">16sp</dimen>
     <dimen name="listing_row_height">48dp</dimen>
+    <dimen name="navigation_drawer_width">240dp</dimen>
 
 </resources>

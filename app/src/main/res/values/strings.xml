@@ -3,5 +3,6 @@
 
     <string name="app_name">Simple Reddit Reader</string>
     <string name="action_settings">Settings</string>
+    <string name="no_listings_found">No listings found</string>
 
 </resources>
