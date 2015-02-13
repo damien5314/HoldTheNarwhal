@@ -20,8 +20,6 @@ import com.ddiehl.android.simpleredditreader.R;
 public class MainActivity extends ActionBarActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
 
-//    public static final String EXTRA_SUBREDDIT = "com.ddiehl.android.simpleredditreader.extra_subreddit";
-
     // Navigation drawer
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerListView;
@@ -34,23 +32,10 @@ public class MainActivity extends ActionBarActivity {
             "Random Subreddit"
     };
 
-//    private String mSubreddit;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-//        Bundle extras = getIntent().getExtras();
-//        if (extras != null
-//                && extras.containsKey(EXTRA_SUBREDDIT)) {
-//            mSubreddit = extras.getString(EXTRA_SUBREDDIT);
-//        }
-//
-//        // If started as the launcher activity, default to /r/all
-//        if (mSubreddit == null) {
-//            mSubreddit = getString(R.string.default_subreddit);
-//        }
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerListView = (ListView) findViewById(R.id.drawer_list);
@@ -68,6 +53,8 @@ public class MainActivity extends ActionBarActivity {
 
     private void selectItem(int position) {
         Log.d(TAG, "Navigation drawer item selected: " + mDrawerItems[position]);
+        mDrawerListView.setItemChecked(position, true);
+        mDrawerLayout.closeDrawer(mDrawerListView);
     }
 
     private void displayFragment(Fragment fragment) {

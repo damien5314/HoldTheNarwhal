@@ -15,7 +15,7 @@
         <item name="android:background">#030304</item>
     </style>
 
-    <style name="NavigationDrawerItem">
+    <style name="NavigationDrawerItemText">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">center_vertical</item>
@@ -31,16 +31,20 @@
     <style name="ListingScoreTextView">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_gravity">center_vertical</item>
         <item name="android:layout_marginLeft">5dp</item>
-        <item name="android:layout_marginRight">5dp</item>
+        <item name="android:layout_marginRight">10dp</item>
         <item name="android:textSize">@dimen/listing_score_text_size</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="ListingTitleTextView">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">5dp</item>
         <item name="android:textSize">@dimen/listing_title_text_size</item>
+        <item name="android:minLines">2</item>
+        <item name="android:maxLines">2</item>
+        <item name="android:ellipsize">end</item>
     </style>
 
     <style name="ListingAuthorTextView">
@@ -48,21 +52,28 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginRight">5dp</item>
         <item name="android:textSize">@dimen/listing_author_text_size</item>
+        <item name="android:textStyle">italic</item>
     </style>
 
     <style name="ListingSubredditTextView">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginLeft">5dp</item>
         <item name="android:layout_marginRight">5dp</item>
         <item name="android:textSize">@dimen/listing_subreddit_text_size</item>
+        <item name="android:textStyle">italic</item>
     </style>
 
     <style name="ListingTimestampTextView">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginLeft">5dp</item>
         <item name="android:textSize">@dimen/listing_timestamp_text_size</item>
+        <item name="android:textStyle">italic</item>
+    </style>
+
+    <style name="ListingThumbnail">
+        <item name="android:layout_width">48dp</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:layout_margin">10dp</item>
     </style>
 
 </resources>
