@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.ddiehl.android.simpleredditreader.R;
+import com.ddiehl.android.simpleredditreader.Utils;
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
 import com.ddiehl.android.simpleredditreader.events.ListingsLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.LoadHotListingsEvent;
@@ -18,7 +19,6 @@ import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class ListingFragment extends ListFragment {
@@ -97,47 +97,6 @@ public class ListingFragment extends ListFragment {
         return mBus;
     }
 
-    private String formatCreateDate(Date date) {
-        long currentTime = System.currentTimeMillis();
-        long differential = currentTime - date.getTime();
-
-        long seconds = differential / 1000;
-        long minutes = seconds / 60;
-        long hours = minutes / 60;
-        long days = hours / 24;
-        long weeks = days / 7;
-        long years = days / 365;
-
-        long output;
-        String outputString;
-        if (years > 0) {
-            output =  years;
-            outputString = " year";
-        } else if (weeks > 0) {
-            output = weeks;
-            outputString = " week";
-        } else if (days > 0) {
-            output = days;
-            outputString = " day";
-        } else if (hours > 0) {
-            output = hours;
-            outputString = " hour";
-        } else if (minutes > 0) {
-            output = minutes;
-            outputString = " minute";
-        } else {
-            output = seconds;
-            outputString = " second";
-        }
-
-        if (output > 1)
-            outputString += "s";
-
-        outputString += " ago";
-
-        return output + outputString;
-    }
-
     private class ListingAdapter extends ArrayAdapter<RedditListingData> {
         public ListingAdapter(List<RedditListingData> data) {
             super(getActivity(), 0, data);
@@ -151,15 +110,14 @@ public class ListingFragment extends ListFragment {
 
             RedditListingData link = getItem(position);
 
-            long utc = link.getCreatedUtc().longValue();
-            Date createDate = new Date(utc*1000);
-            String createDateFormatted = formatCreateDate(createDate);
+            String createDateFormatted = Utils.getFormattedDateStringFromUtc(link.getCreatedUtc().longValue());
 
             ((TextView) view.findViewById(R.id.listing_score)).setText(String.valueOf(link.getScore()));
             ((TextView) view.findViewById(R.id.listing_title)).setText(link.getTitle());
-            ((TextView) view.findViewById(R.id.listing_author)).setText(link.getAuthor());
-            ((TextView) view.findViewById(R.id.listing_subreddit)).setText("/r/" + link.getSubreddit());
+            ((TextView) view.findViewById(R.id.listing_author)).setText("/u/" + link.getAuthor());
             ((TextView) view.findViewById(R.id.listing_timestamp)).setText(createDateFormatted);
+            ((TextView) view.findViewById(R.id.listing_subreddit)).setText("/r/" + link.getSubreddit());
+            ((TextView) view.findViewById(R.id.listing_domain)).setText("(" + link.getDomain() + ")");
 
             return view;
         }

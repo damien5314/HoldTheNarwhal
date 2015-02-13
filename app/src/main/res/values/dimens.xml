@@ -6,8 +6,9 @@
     <dimen name="listing_score_text_size">14sp</dimen>
     <dimen name="listing_title_text_size">16sp</dimen>
     <dimen name="listing_author_text_size">12sp</dimen>
-    <dimen name="listing_subreddit_text_size">12sp</dimen>
     <dimen name="listing_timestamp_text_size">12sp</dimen>
+    <dimen name="listing_subreddit_text_size">12sp</dimen>
+    <dimen name="listing_domain_text_size">12sp</dimen>
     <dimen name="listing_row_height">48dp</dimen>
     <dimen name="navigation_drawer_width">240dp</dimen>
 

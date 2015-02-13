@@ -31,16 +31,23 @@
             android:layout_below="@id/listing_title"/>
 
         <TextView
-            android:id="@+id/listing_subreddit"
-            style="@style/ListingSubredditTextView"
+            android:id="@+id/listing_timestamp"
+            style="@style/ListingTimestampTextView"
+            android:layout_below="@id/listing_author"/>
+
+        <TextView
+            android:id="@+id/listing_domain"
+            style="@style/ListingDomainTextView"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_below="@id/listing_title"/>
 
         <TextView
-            android:id="@+id/listing_timestamp"
-            style="@style/ListingTimestampTextView"
-            android:layout_below="@id/listing_subreddit"/>
+            android:id="@+id/listing_subreddit"
+            style="@style/ListingSubredditTextView"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/listing_domain"/>
 
     </RelativeLayout>
 
