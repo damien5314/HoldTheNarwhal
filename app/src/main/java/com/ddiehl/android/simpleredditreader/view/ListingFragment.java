@@ -97,6 +97,47 @@ public class ListingFragment extends ListFragment {
         return mBus;
     }
 
+    private String formatCreateDate(Date date) {
+        long currentTime = System.currentTimeMillis();
+        long differential = currentTime - date.getTime();
+
+        long seconds = differential / 1000;
+        long minutes = seconds / 60;
+        long hours = minutes / 60;
+        long days = hours / 24;
+        long weeks = days / 7;
+        long years = days / 365;
+
+        long output;
+        String outputString;
+        if (years > 0) {
+            output =  years;
+            outputString = " year";
+        } else if (weeks > 0) {
+            output = weeks;
+            outputString = " week";
+        } else if (days > 0) {
+            output = days;
+            outputString = " day";
+        } else if (hours > 0) {
+            output = hours;
+            outputString = " hour";
+        } else if (minutes > 0) {
+            output = minutes;
+            outputString = " minute";
+        } else {
+            output = seconds;
+            outputString = " second";
+        }
+
+        if (output > 1)
+            outputString += "s";
+
+        outputString += " ago";
+
+        return output + outputString;
+    }
+
     private class ListingAdapter extends ArrayAdapter<RedditListingData> {
         public ListingAdapter(List<RedditListingData> data) {
             super(getActivity(), 0, data);
@@ -110,7 +151,9 @@ public class ListingFragment extends ListFragment {
 
             RedditListingData link = getItem(position);
 
-            String createDateFormatted = new Date(link.getCreatedUtc().longValue()).toString();
+            long utc = link.getCreatedUtc().longValue();
+            Date createDate = new Date(utc*1000);
+            String createDateFormatted = formatCreateDate(createDate);
 
             ((TextView) view.findViewById(R.id.listing_score)).setText(String.valueOf(link.getScore()));
             ((TextView) view.findViewById(R.id.listing_title)).setText(link.getTitle());
