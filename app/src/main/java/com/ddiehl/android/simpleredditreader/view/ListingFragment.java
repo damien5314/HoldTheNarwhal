@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
 import com.ddiehl.android.simpleredditreader.events.ListingsLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.LoadHotListingsEvent;
@@ -17,6 +18,7 @@ import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class ListingFragment extends ListFragment {
@@ -101,14 +103,18 @@ public class ListingFragment extends ListFragment {
         @Override
         public View getView(int position, View view, ViewGroup parent) {
             if (view == null) {
-//                view = getActivity().getLayoutInflater().inflate(R.layout.listing_item, parent, false);
-                view = getActivity().getLayoutInflater().inflate(android.R.layout.simple_list_item_1, parent, false);
+                view = getActivity().getLayoutInflater().inflate(R.layout.listing_item, null);
             }
 
             RedditListingData link = getItem(position);
 
-//            ((TextView) view.findViewById(R.id.item_text)).setText(link.getTitle());
-            ((TextView) view).setText(link.getTitle());
+            String createDateFormatted = new Date(link.getCreatedUtc().longValue()).toString();
+
+            ((TextView) view.findViewById(R.id.listing_score)).setText(String.valueOf(link.getScore()));
+            ((TextView) view.findViewById(R.id.listing_title)).setText(link.getTitle());
+            ((TextView) view.findViewById(R.id.listing_author)).setText(link.getAuthor());
+            ((TextView) view.findViewById(R.id.listing_subreddit)).setText(link.getSubreddit());
+            ((TextView) view.findViewById(R.id.listing_timestamp)).setText(createDateFormatted);
 
             return view;
         }

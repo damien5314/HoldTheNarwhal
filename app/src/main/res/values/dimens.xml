@@ -2,4 +2,11 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+
+    <dimen name="listing_score_text_size">16sp</dimen>
+    <dimen name="listing_title_text_size">16sp</dimen>
+    <dimen name="listing_author_text_size">16sp</dimen>
+    <dimen name="listing_subreddit_text_size">16sp</dimen>
+    <dimen name="listing_timestamp_text_size">16sp</dimen>
+
 </resources>
