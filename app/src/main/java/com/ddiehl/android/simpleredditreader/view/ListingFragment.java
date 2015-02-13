@@ -29,7 +29,6 @@ public class ListingFragment extends ListFragment {
     private Bus mBus;
     private String mSubreddit;
     private List<RedditListingData> mData;
-    private NavigationDrawer mNavigationDrawer;
     private boolean mListingsRetrieved = false;
 
     public ListingFragment() { /* Default constructor required */ }
@@ -60,7 +59,7 @@ public class ListingFragment extends ListFragment {
 
         getActivity().setTitle("/r/" + mSubreddit);
 
-        mNavigationDrawer = new NavigationDrawer(inflater, v);
+//        mNavigationDrawer = new NavigationDrawer(inflater, v);
 
         return v;
     }

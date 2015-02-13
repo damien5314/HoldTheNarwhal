@@ -12,7 +12,7 @@ public abstract class SingleFragmentActivity extends ActionBarActivity {
     protected abstract Fragment createFragment();
 
     protected int getLayoutResourceId() {
-        return R.layout.activity_fragment;
+        return R.layout.activity_main;
     }
 
     @Override

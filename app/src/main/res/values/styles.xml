@@ -5,6 +5,29 @@
         <!-- Customize your theme here. -->
     </style>
 
+    <style name="NavigationDrawer">
+        <item name="android:layout_width">@dimen/navigation_drawer_width</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_gravity">start</item>
+        <item name="android:choiceMode">singleChoice</item>
+        <item name="android:divider">@android:color/transparent</item>
+        <item name="android:dividerHeight">0dp</item>
+        <item name="android:background">#030304</item>
+    </style>
+
+    <style name="NavigationDrawerItem">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceListItemSmall</item>
+        <item name="android:paddingLeft">?android:attr/listPreferredItemPaddingStart</item>
+        <item name="android:paddingRight">?android:attr/listPreferredItemPaddingEnd</item>
+        <item name="android:paddingStart">?android:attr/listPreferredItemPaddingStart</item>
+        <item name="android:paddingEnd">?android:attr/listPreferredItemPaddingEnd</item>
+        <item name="android:minHeight">?android:attr/listPreferredItemHeightSmall</item>
+    </style>
+
     <style name="ListingScoreTextView">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
