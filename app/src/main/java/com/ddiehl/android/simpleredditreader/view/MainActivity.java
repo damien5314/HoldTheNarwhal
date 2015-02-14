@@ -37,6 +37,7 @@ public class MainActivity extends ActionBarActivity {
             "Subreddits",
             "Random Subreddit"
     };
+    private CharSequence mLastFragmentTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,11 +62,14 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
+                mLastFragmentTitle = getTitle();
+                setTitle(R.string.app_name);
             }
 
             @Override
             public void onDrawerClosed(View drawerView) {
                 super.onDrawerClosed(drawerView);
+                setTitle(mLastFragmentTitle);
             }
         };
         mDrawerToggle.setDrawerIndicatorEnabled(true);
