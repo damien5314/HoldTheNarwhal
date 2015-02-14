@@ -12,5 +12,6 @@
     <string name="drawer_all">/r/all</string>
     <string name="drawer_subreddits">Subreddits</string>
     <string name="drawer_random_subreddit">Random Subreddit</string>
+    <string name="front_page_title">Front Page</string>
 
 </resources>

@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.ddiehl.android.simpleredditreader.R;
@@ -16,7 +17,6 @@ import com.ddiehl.android.simpleredditreader.Utils;
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
 import com.ddiehl.android.simpleredditreader.events.ListingsLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.LoadHotListingsEvent;
-import com.ddiehl.android.simpleredditreader.events.RandomSubredditLoadedEvent;
 import com.ddiehl.android.simpleredditreader.redditapi.listings.RedditListingData;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
@@ -35,7 +35,10 @@ public class ListingFragment extends ListFragment {
 
     private String mSubreddit;
     private List<RedditListingData> mData;
+    private ListingAdapter mListingAdapter;
     private boolean mListingsRetrieved = false;
+
+    private ProgressBar mProgressBar;
 
     public ListingFragment() { /* Default constructor required */ }
 
@@ -71,14 +74,23 @@ public class ListingFragment extends ListFragment {
         mSubreddit = args.getString(ARG_SUBREDDIT);
 
         mData = new ArrayList<>();
-        setListAdapter(new ListingAdapter(mData));
+        mListingAdapter = new ListingAdapter(mData);
+        setListAdapter(mListingAdapter);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.listings_fragment, null);
+        View v = super.onCreateView(inflater, container, savedInstanceState);
+
+        mProgressBar = (ProgressBar) v.findViewById(R.id.progress_bar);
 
         return v;
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        setEmptyText(getString(R.string.no_listings_found));
     }
 
     @Override
@@ -86,9 +98,14 @@ public class ListingFragment extends ListFragment {
         super.onResume();
         getBus().register(this);
 
-        getActivity().setTitle("/r/" + mSubreddit);
+        if (mSubreddit == null) {
+            getActivity().setTitle(getString(R.string.front_page_title));
+        } else {
+            getActivity().setTitle("/r/" + mSubreddit);
+        }
 
         if (!mListingsRetrieved) {
+            setListShown(false);
             getBus().post(new LoadHotListingsEvent(mSubreddit)); // Load Hot listings from subreddit
         }
     }
@@ -117,18 +134,8 @@ public class ListingFragment extends ListFragment {
 
         mData.clear();
         mData.addAll(event.getListings());
-        ((ListingAdapter) getListAdapter()).notifyDataSetChanged();
-    }
-
-    @Subscribe
-    public void onRandomSubredditLoaded(RandomSubredditLoadedEvent event) {
-        mListingsRetrieved = true;
-
-        mData.clear();
-        mData.addAll(event.getListings());
-        ((ListingAdapter) getListAdapter()).notifyDataSetChanged();
-
-        getActivity().setTitle("/r/" + mData.get(0).getSubreddit());
+        mListingAdapter.notifyDataSetChanged();
+        setListShown(true);
     }
 
     private Bus getBus() {

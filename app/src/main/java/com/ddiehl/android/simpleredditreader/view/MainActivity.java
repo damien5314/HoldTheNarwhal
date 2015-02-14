@@ -62,8 +62,7 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-                mLastFragmentTitle = getTitle();
-                setTitle(R.string.app_name);
+//                setTitle(R.string.app_name);
             }
 
             @Override
@@ -76,30 +75,37 @@ public class MainActivity extends ActionBarActivity {
         mDrawerToggle.setHomeAsUpIndicator(R.drawable.ic_drawer);
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
-        Fragment defaultFragment = ListingFragment.newInstance(getString(R.string.default_subreddit));
-        displayFragment(defaultFragment);
+        if (getSupportFragmentManager().findFragmentById(R.id.fragment_container) == null) {
+            Fragment defaultFragment = ListingFragment.newInstance(null);
+            displayFragment(defaultFragment);
+        }
     }
 
     private void selectItem(int position) {
-        mDrawerListView.setItemChecked(position, true);
-        mDrawerLayout.closeDrawer(mDrawerListView);
-
+        Fragment fragment;
         switch (position) {
             case 0: // Log In
                 break;
             case 1: // User Profile
                 break;
             case 2: // Front Page
+                fragment = ListingFragment.newInstance(null);
+                displayFragment(fragment);
                 break;
             case 3: // /r/all
+                fragment = ListingFragment.newInstance("all");
+                displayFragment(fragment);
                 break;
             case 4: // Subreddits
                 break;
             case 5: // Random Subreddit
-                Fragment fragment = ListingFragment.newInstance("random");
+                fragment = ListingFragment.newInstance("random");
                 displayFragment(fragment);
                 break;
         }
+
+        mDrawerListView.setItemChecked(position, true);
+        mDrawerLayout.closeDrawer(mDrawerListView);
     }
 
     private void displayFragment(Fragment fragment) {
@@ -116,11 +122,6 @@ public class MainActivity extends ActionBarActivity {
         }
 
         transaction.commit();
-    }
-
-    private void closeNavigationDrawer() {
-        setTitle(mLastFragmentTitle);
-        mDrawerLayout.closeDrawer(mDrawerLayout);
     }
 
     @Override

@@ -1,24 +1,16 @@
 package com.ddiehl.android.simpleredditreader.redditapi;
 
-import android.os.AsyncTask;
 import android.util.Log;
 
 import com.ddiehl.android.simpleredditreader.events.ListingsLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.LoadHotListingsEvent;
-import com.ddiehl.android.simpleredditreader.events.LoadRandomSubredditEvent;
-import com.ddiehl.android.simpleredditreader.events.RandomSubredditLoadedEvent;
 import com.ddiehl.android.simpleredditreader.redditapi.listings.ListingResponse;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-
+import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
-import retrofit.mime.TypedInput;
 
 /**
  * Created by Damien on 1/19/2015.
@@ -34,101 +26,36 @@ public class RedditService {
         mBus = bus;
     }
 
-    @Subscribe
-    public void onLoadHotListings(LoadHotListingsEvent event) {
-        new GetHotListings().execute(event.getSubreddit());
-    }
-
     /**
      * Retrieves /hot.json listings for subreddit passed as a parameter
      */
-    private class GetHotListings extends AsyncTask<String, Void, ListingResponse> {
-        @Override
-        protected ListingResponse doInBackground(String... params) {
-            Log.d(TAG, "Loading listings for " + params[0]);
-            try {
-                return mApi.getHotListing(params[0]);
-            } catch (RetrofitError error) {
-                Log.e(TAG, "RetrofitError: " + error.getMessage());
-                return null;
-            } catch (Exception error) {
-                Log.e(TAG, "Exception: ", error);
-                return null;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(ListingResponse response) {
-            if (response != null) {
-//                printResponse(response);
-                mBus.post(new ListingsLoadedEvent(response));
-            } else {
-                Log.e(TAG, "Response is null");
-            }
-        }
-    }
-
     @Subscribe
-    public void onLoadRandomSubreddit(LoadRandomSubredditEvent event) {
-        new GetRandomSubreddit().execute();
-    }
+    public void onLoadHotListings(LoadHotListingsEvent event) {
+        String subreddit = event.getSubreddit();
+        if (subreddit == null) {
+            mApi.getDefaultHotListings(new Callback<ListingResponse>() {
+                @Override
+                public void success(ListingResponse listingResponse, Response response) {
+                    mBus.post(new ListingsLoadedEvent(listingResponse));
+                }
 
-    /**
-     * Retrieves listings for random subreddit
-     */
-    private class GetRandomSubreddit extends AsyncTask<Void, Void, ListingResponse> {
-        @Override
-        protected ListingResponse doInBackground(Void... params) {
-            Log.d(TAG, "Loading random subreddit");
-            try {
-                return mApi.getRandomSubreddit();
-            } catch (RetrofitError error) {
-                Log.e(TAG, "RetrofitError: " + error.getMessage());
-                return null;
-            } catch (Exception error) {
-                Log.e(TAG, "Exception: ", error);
-                return null;
-            }
+                @Override
+                public void failure(RetrofitError error) {
+                    Log.e(TAG, "RetrofitError: " + error.getMessage());
+                }
+            });
+        } else {
+            mApi.getHotListings(subreddit, new Callback<ListingResponse>() {
+                @Override
+                public void success(ListingResponse listingResponse, Response response) {
+                    mBus.post(new ListingsLoadedEvent(listingResponse));
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                    Log.e(TAG, "RetrofitError: " + error.getMessage());
+                }
+            });
         }
-
-        @Override
-        protected void onPostExecute(ListingResponse response) {
-            if (response != null) {
-//                printResponse(response);
-                mBus.post(new RandomSubredditLoadedEvent(response));
-            }
-        }
-    }
-
-    static void printResponse(Response response) {
-        try {
-/*
-            System.out.println("STATUS: " + response.getStatus());
-            System.out.println("URL:    " + response.getUrl());
-            System.out.println("REASON: " + response.getReason());
-
-            System.out.println("--HEADERS--");
-            List<Header> headersList = response.getHeaders();
-            for (Header header : headersList) {
-                System.out.println(header.toString());
-            }
-*/
-
-            System.out.println("--BODY--");
-            TypedInput body = response.getBody();
-            System.out.println("LENGTH: " + body.length());
-            System.out.println("-CONTENT-");
-            printInputStream(body.in());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    static void printInputStream(InputStream i) throws IOException {
-        BufferedReader in = new BufferedReader(new InputStreamReader(i));
-        String inputLine;
-        while ((inputLine = in.readLine()) != null)
-            System.out.println(inputLine + "\n");
-        in.close();
     }
 }
