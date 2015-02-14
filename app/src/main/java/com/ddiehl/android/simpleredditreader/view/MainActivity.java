@@ -5,11 +5,11 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,13 +29,13 @@ public class MainActivity extends ActionBarActivity {
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerListView;
     private ActionBarDrawerToggle mDrawerToggle;
-    private String[] mDrawerItems = new String[] {
-            "Log In",
-            "User Profile",
-            "Front Page",
-            "/r/all",
-            "Subreddits",
-            "Random Subreddit"
+    private DrawerItem[] mDrawerItems = new DrawerItem[] {
+            new DrawerItem(0, R.string.drawer_log_in),
+            new DrawerItem(0, R.string.drawer_user_profile),
+            new DrawerItem(0, R.string.drawer_front_page),
+            new DrawerItem(0, R.string.drawer_all),
+            new DrawerItem(0, R.string.drawer_subreddits),
+            new DrawerItem(0, R.string.drawer_random_subreddit)
     };
     private CharSequence mLastFragmentTitle;
 
@@ -69,7 +69,7 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onDrawerClosed(View drawerView) {
                 super.onDrawerClosed(drawerView);
-                setTitle(mLastFragmentTitle);
+//                setTitle(mLastFragmentTitle);
             }
         };
         mDrawerToggle.setDrawerIndicatorEnabled(true);
@@ -81,18 +81,46 @@ public class MainActivity extends ActionBarActivity {
     }
 
     private void selectItem(int position) {
-        Log.d(TAG, "Navigation drawer item selected: " + mDrawerItems[position]);
         mDrawerListView.setItemChecked(position, true);
         mDrawerLayout.closeDrawer(mDrawerListView);
+
+        switch (position) {
+            case 0: // Log In
+                break;
+            case 1: // User Profile
+                break;
+            case 2: // Front Page
+                break;
+            case 3: // /r/all
+                break;
+            case 4: // Subreddits
+                break;
+            case 5: // Random Subreddit
+                Fragment fragment = ListingFragment.newInstance("random");
+                displayFragment(fragment);
+                break;
+        }
     }
 
     private void displayFragment(Fragment fragment) {
-        if (fragment != null) {
-            FragmentManager fm = getSupportFragmentManager();
-            fm.beginTransaction()
-                    .add(R.id.fragment_container, fragment)
-                    .commit();
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction transaction = fm.beginTransaction();
+
+        Fragment currentFragment = fm.findFragmentById(R.id.fragment_container);
+        if (currentFragment != null) {
+            transaction.remove(currentFragment);
         }
+
+        if (fragment != null) {
+            transaction.add(R.id.fragment_container, fragment);
+        }
+
+        transaction.commit();
+    }
+
+    private void closeNavigationDrawer() {
+        setTitle(mLastFragmentTitle);
+        mDrawerLayout.closeDrawer(mDrawerLayout);
     }
 
     @Override
@@ -122,8 +150,8 @@ public class MainActivity extends ActionBarActivity {
         return id == R.id.action_settings || super.onOptionsItemSelected(item);
     }
 
-    private class NavigationDrawerItemAdapter extends ArrayAdapter<String> {
-        public NavigationDrawerItemAdapter(Context context, String[] data) {
+    private class NavigationDrawerItemAdapter extends ArrayAdapter<DrawerItem> {
+        public NavigationDrawerItemAdapter(Context context, DrawerItem[] data) {
             super(context, 0, data);
         }
 
@@ -133,7 +161,8 @@ public class MainActivity extends ActionBarActivity {
                 view = getLayoutInflater().inflate(R.layout.navigation_drawer_item, null);
             }
 
-            ((TextView) view.findViewById(R.id.drawer_item_label)).setText(mDrawerItems[position]);
+            ((TextView) view.findViewById(R.id.drawer_item_label))
+                    .setText(getString(mDrawerItems[position].getItemLabel()));
 
             return view;
         }
