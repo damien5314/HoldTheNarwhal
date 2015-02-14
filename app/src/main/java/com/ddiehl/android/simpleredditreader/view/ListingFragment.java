@@ -153,7 +153,7 @@ public class ListingFragment extends ListFragment {
         @Override
         public View getView(int position, View view, ViewGroup parent) {
             if (view == null) {
-                view = getActivity().getLayoutInflater().inflate(R.layout.listing_item, null);
+                view = getActivity().getLayoutInflater().inflate(R.layout.listings_item, null);
             }
 
             RedditListingData link = getItem(position);

@@ -22,8 +22,8 @@ import android.widget.TextView;
 import com.ddiehl.android.simpleredditreader.R;
 
 
-public class MainActivity extends ActionBarActivity {
-    private static final String TAG = MainActivity.class.getSimpleName();
+public class NavigationDrawerActivity extends ActionBarActivity {
+    private static final String TAG = NavigationDrawerActivity.class.getSimpleName();
 
     // Navigation drawer
     private DrawerLayout mDrawerLayout;
