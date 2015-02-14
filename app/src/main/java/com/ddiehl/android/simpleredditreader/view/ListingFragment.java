@@ -4,7 +4,6 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.ListFragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +16,7 @@ import com.ddiehl.android.simpleredditreader.Utils;
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
 import com.ddiehl.android.simpleredditreader.events.ListingsLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.LoadHotListingsEvent;
+import com.ddiehl.android.simpleredditreader.events.RandomSubredditLoadedEvent;
 import com.ddiehl.android.simpleredditreader.redditapi.listings.RedditListingData;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
@@ -78,8 +78,6 @@ public class ListingFragment extends ListFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.listings_fragment, null);
 
-        getActivity().setTitle("/r/" + mSubreddit);
-
         return v;
     }
 
@@ -87,6 +85,8 @@ public class ListingFragment extends ListFragment {
     public void onResume() {
         super.onResume();
         getBus().register(this);
+
+        getActivity().setTitle("/r/" + mSubreddit);
 
         if (!mListingsRetrieved) {
             getBus().post(new LoadHotListingsEvent(mSubreddit)); // Load Hot listings from subreddit
@@ -112,13 +112,23 @@ public class ListingFragment extends ListFragment {
     }
 
     @Subscribe
-    public void onHotListingsLoaded(ListingsLoadedEvent event) {
-        Log.d(TAG, "Listings loaded: " + event.getListings().size());
+    public void onListingsLoaded(ListingsLoadedEvent event) {
         mListingsRetrieved = true;
 
         mData.clear();
         mData.addAll(event.getListings());
         ((ListingAdapter) getListAdapter()).notifyDataSetChanged();
+    }
+
+    @Subscribe
+    public void onRandomSubredditLoaded(RandomSubredditLoadedEvent event) {
+        mListingsRetrieved = true;
+
+        mData.clear();
+        mData.addAll(event.getListings());
+        ((ListingAdapter) getListAdapter()).notifyDataSetChanged();
+
+        getActivity().setTitle("/r/" + mData.get(0).getSubreddit());
     }
 
     private Bus getBus() {
@@ -156,7 +166,9 @@ public class ListingFragment extends ListFragment {
             String thumbnailUrl = link.getThumbnail();
             if (thumbnailUrl.equals("nsfw")) {
                 thumbnailImageView.setImageResource(R.drawable.ic_nsfw);
-            } else if (!thumbnailUrl.equals("") && !thumbnailUrl.equals("default")) {
+            } else if (!thumbnailUrl.equals("")
+                    && !thumbnailUrl.equals("default")
+                    && !thumbnailUrl.equals("self")) {
                 Bitmap thumbnail = mThumbnailCache.getThumbnail(thumbnailUrl);
                 if (thumbnail == null) {
                     mThumbnailThread.queueThumbnail(thumbnailImageView, thumbnailUrl);

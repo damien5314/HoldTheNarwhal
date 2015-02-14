@@ -5,6 +5,8 @@ import android.util.Log;
 
 import com.ddiehl.android.simpleredditreader.events.ListingsLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.LoadHotListingsEvent;
+import com.ddiehl.android.simpleredditreader.events.LoadRandomSubredditEvent;
+import com.ddiehl.android.simpleredditreader.events.RandomSubredditLoadedEvent;
 import com.ddiehl.android.simpleredditreader.redditapi.listings.ListingResponse;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
@@ -62,6 +64,38 @@ public class RedditService {
                 mBus.post(new ListingsLoadedEvent(response));
             } else {
                 Log.e(TAG, "Response is null");
+            }
+        }
+    }
+
+    @Subscribe
+    public void onLoadRandomSubreddit(LoadRandomSubredditEvent event) {
+        new GetRandomSubreddit().execute();
+    }
+
+    /**
+     * Retrieves listings for random subreddit
+     */
+    private class GetRandomSubreddit extends AsyncTask<Void, Void, ListingResponse> {
+        @Override
+        protected ListingResponse doInBackground(Void... params) {
+            Log.d(TAG, "Loading random subreddit");
+            try {
+                return mApi.getRandomSubreddit();
+            } catch (RetrofitError error) {
+                Log.e(TAG, "RetrofitError: " + error.getMessage());
+                return null;
+            } catch (Exception error) {
+                Log.e(TAG, "Exception: ", error);
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(ListingResponse response) {
+            if (response != null) {
+//                printResponse(response);
+                mBus.post(new RandomSubredditLoadedEvent(response));
             }
         }
     }

@@ -10,4 +10,7 @@ public interface RedditApi {
     @GET("/r/{subreddit}/hot.json")
     ListingResponse getHotListing(@Path("subreddit") String subreddit);
 
+    @GET("/r/random/.json")
+    ListingResponse getRandomSubreddit();
+
 }

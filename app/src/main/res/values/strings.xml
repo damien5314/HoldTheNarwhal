@@ -6,5 +6,11 @@
     <string name="no_listings_found">No listings found</string>
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
+    <string name="drawer_log_in">Log In</string>
+    <string name="drawer_user_profile">User Profile</string>
+    <string name="drawer_front_page">Front Page</string>
+    <string name="drawer_all">/r/all</string>
+    <string name="drawer_subreddits">Subreddits</string>
+    <string name="drawer_random_subreddit">Random Subreddit</string>
 
 </resources>
