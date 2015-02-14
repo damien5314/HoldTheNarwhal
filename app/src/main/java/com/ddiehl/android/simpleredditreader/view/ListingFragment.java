@@ -31,6 +31,7 @@ public class ListingFragment extends ListFragment {
 
     private Bus mBus;
     private ThumbnailDownloader<ImageView> mThumbnailThread;
+    private ThumbnailCache mThumbnailCache;
 
     private String mSubreddit;
     private List<RedditListingData> mData;
@@ -54,14 +55,17 @@ public class ListingFragment extends ListFragment {
         mThumbnailThread = new ThumbnailDownloader<>(new Handler());
         mThumbnailThread.setListener(new ThumbnailDownloader.Listener<ImageView>() {
             @Override
-            public void onThumbnailDownloaded(ImageView imageView, Bitmap thumbnail) {
+            public void onThumbnailDownloaded(ImageView imageView, String url, Bitmap thumbnail) {
                 if (isVisible()) {
+                    mThumbnailCache.addThumbnail(url, thumbnail);
                     imageView.setImageBitmap(thumbnail);
                 }
             }
         });
         mThumbnailThread.start();
         mThumbnailThread.getLooper();
+
+        mThumbnailCache = ThumbnailCache.getInstance();
 
         Bundle args = getArguments();
         mSubreddit = args.getString(ARG_SUBREDDIT);
@@ -151,7 +155,13 @@ public class ListingFragment extends ListFragment {
             ImageView thumbnailImageView = (ImageView) view.findViewById(R.id.listing_thumbnail);
             String thumbnailUrl = link.getThumbnail();
             if (!thumbnailUrl.equals("") && !thumbnailUrl.equals("default")) {
-                mThumbnailThread.queueThumbnail(thumbnailImageView, thumbnailUrl);
+                Bitmap thumbnail = mThumbnailCache.getThumbnail(thumbnailUrl);
+                if (thumbnail == null) {
+                    mThumbnailThread.queueThumbnail(thumbnailImageView, thumbnailUrl);
+                } else {
+                    thumbnailImageView.setImageBitmap(thumbnail);
+                }
+                thumbnailImageView.setVisibility(View.VISIBLE);
             } else {
                 thumbnailImageView.setVisibility(View.GONE);
             }

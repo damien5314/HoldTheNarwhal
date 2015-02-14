@@ -34,10 +34,13 @@ public class RedditService {
 
     @Subscribe
     public void onLoadHotListings(LoadHotListingsEvent event) {
-        new GetAllHotListings().execute(event.getSubreddit());
+        new GetHotListings().execute(event.getSubreddit());
     }
 
-    private class GetAllHotListings extends AsyncTask<String, Void, ListingResponse> {
+    /**
+     * Retrieves /hot.json listings for subreddit passed as a parameter
+     */
+    private class GetHotListings extends AsyncTask<String, Void, ListingResponse> {
         @Override
         protected ListingResponse doInBackground(String... params) {
             Log.d(TAG, "Loading listings for " + params[0]);

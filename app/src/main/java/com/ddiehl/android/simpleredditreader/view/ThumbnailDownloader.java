@@ -25,7 +25,7 @@ public class ThumbnailDownloader<Token> extends HandlerThread {
     Listener<Token> mListener;
 
     public interface Listener<Token> {
-        void onThumbnailDownloaded(Token token, Bitmap thumbnail);
+        void onThumbnailDownloaded(Token token, String url, Bitmap thumbnail);
     }
 
     public void setListener(Listener<Token> listener) {
@@ -52,7 +52,6 @@ public class ThumbnailDownloader<Token> extends HandlerThread {
     }
 
     public void queueThumbnail(Token token, String url) {
-        Log.i(TAG, "Got a URL: " + url);
         mRequestMap.put(token, url);
         mHandler.obtainMessage(MSG_DOWNLOAD, token)
                 .sendToTarget();
@@ -74,7 +73,7 @@ public class ThumbnailDownloader<Token> extends HandlerThread {
                         return;
 
                     mRequestMap.remove(token);
-                    mListener.onThumbnailDownloaded(token, bitmap);
+                    mListener.onThumbnailDownloaded(token, url, bitmap);
                 }
             });
         } catch (IOException e) {
