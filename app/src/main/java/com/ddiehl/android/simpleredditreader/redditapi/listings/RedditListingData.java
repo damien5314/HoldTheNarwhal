@@ -464,7 +464,7 @@ public class RedditListingData {
      * @return
      * The over18
      */
-    public Boolean getOver18() {
+    public Boolean isNSFW() {
         return over18;
     }
 

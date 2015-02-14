@@ -154,7 +154,9 @@ public class ListingFragment extends ListFragment {
             // Queue thumbnail to be downloaded, if one exists
             ImageView thumbnailImageView = (ImageView) view.findViewById(R.id.listing_thumbnail);
             String thumbnailUrl = link.getThumbnail();
-            if (!thumbnailUrl.equals("") && !thumbnailUrl.equals("default")) {
+            if (thumbnailUrl.equals("nsfw")) {
+                thumbnailImageView.setImageResource(R.drawable.ic_nsfw);
+            } else if (!thumbnailUrl.equals("") && !thumbnailUrl.equals("default")) {
                 Bitmap thumbnail = mThumbnailCache.getThumbnail(thumbnailUrl);
                 if (thumbnail == null) {
                     mThumbnailThread.queueThumbnail(thumbnailImageView, thumbnailUrl);
