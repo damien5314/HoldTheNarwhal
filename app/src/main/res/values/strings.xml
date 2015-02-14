@@ -9,7 +9,7 @@
     <string name="drawer_log_in">Log In</string>
     <string name="drawer_user_profile">User Profile</string>
     <string name="drawer_front_page">Front Page</string>
-    <string name="drawer_all">/r/all</string>
+    <string name="drawer_r_all">/r/all</string>
     <string name="drawer_subreddits">Subreddits</string>
     <string name="drawer_random_subreddit">Random Subreddit</string>
     <string name="front_page_title">front page</string>

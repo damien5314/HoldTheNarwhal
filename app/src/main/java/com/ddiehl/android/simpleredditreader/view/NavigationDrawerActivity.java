@@ -21,31 +21,29 @@ import android.widget.TextView;
 
 import com.ddiehl.android.simpleredditreader.R;
 
+import java.util.List;
+
 
 public class NavigationDrawerActivity extends ActionBarActivity {
     private static final String TAG = NavigationDrawerActivity.class.getSimpleName();
 
+    private CharSequence mLastFragmentTitle;
+
     // Navigation drawer
+    private NavigationDrawer mNavigationDrawer;
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerListView;
     private ActionBarDrawerToggle mDrawerToggle;
-    private DrawerItem[] mDrawerItems = new DrawerItem[] {
-            new DrawerItem(0, R.string.drawer_log_in),
-            new DrawerItem(0, R.string.drawer_user_profile),
-            new DrawerItem(0, R.string.drawer_front_page),
-            new DrawerItem(0, R.string.drawer_all),
-            new DrawerItem(0, R.string.drawer_subreddits),
-            new DrawerItem(0, R.string.drawer_random_subreddit)
-    };
-    private CharSequence mLastFragmentTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mNavigationDrawer = NavigationDrawer.getInstance();
+
         mDrawerListView = (ListView) findViewById(R.id.drawer_list);
-        mDrawerListView.setAdapter(new NavigationDrawerItemAdapter(this, mDrawerItems));
+        mDrawerListView.setAdapter(new NavigationDrawerItemAdapter(this, mNavigationDrawer.getItems()));
         mDrawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -83,22 +81,22 @@ public class NavigationDrawerActivity extends ActionBarActivity {
 
     private void selectItem(int position) {
         Fragment fragment;
-        switch (position) {
-            case 0: // Log In
+        switch (mNavigationDrawer.get(position).getId()) {
+            case R.id.drawer_log_in:
                 break;
-            case 1: // User Profile
+            case R.id.drawer_user_profile:
                 break;
-            case 2: // Front Page
+            case R.id.drawer_front_page:
                 fragment = ListingFragment.newInstance(null);
                 displayFragment(fragment);
                 break;
-            case 3: // /r/all
+            case R.id.drawer_r_all:
                 fragment = ListingFragment.newInstance("all");
                 displayFragment(fragment);
                 break;
-            case 4: // Subreddits
+            case R.id.drawer_subreddits:
                 break;
-            case 5: // Random Subreddit
+            case R.id.drawer_random_subreddit:
                 fragment = ListingFragment.newInstance("random");
                 displayFragment(fragment);
                 break;
@@ -151,8 +149,8 @@ public class NavigationDrawerActivity extends ActionBarActivity {
         return id == R.id.action_settings || super.onOptionsItemSelected(item);
     }
 
-    private class NavigationDrawerItemAdapter extends ArrayAdapter<DrawerItem> {
-        public NavigationDrawerItemAdapter(Context context, DrawerItem[] data) {
+    private class NavigationDrawerItemAdapter extends ArrayAdapter<NavigationDrawer.DrawerItem> {
+        public NavigationDrawerItemAdapter(Context context, List<NavigationDrawer.DrawerItem> data) {
             super(context, 0, data);
         }
 
@@ -163,7 +161,7 @@ public class NavigationDrawerActivity extends ActionBarActivity {
             }
 
             ((TextView) view.findViewById(R.id.drawer_item_label))
-                    .setText(getString(mDrawerItems[position].getItemLabel()));
+                    .setText(getString(mNavigationDrawer.get(position).getItemLabel()));
 
             return view;
         }

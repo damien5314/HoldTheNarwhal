@@ -1,74 +1,60 @@
 package com.ddiehl.android.simpleredditreader.view;
 
-import android.content.Context;
-import android.support.v4.widget.DrawerLayout;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.TextView;
-
 import com.ddiehl.android.simpleredditreader.R;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class NavigationDrawer {
     private static final String TAG = NavigationDrawer.class.getSimpleName();
 
-    private static final int mDrawerLayoutId = R.id.drawer_layout;
+    private static NavigationDrawer _instance = new NavigationDrawer();
 
-    private String[] mDrawerItems = new String[] {
-            "Log In",
-            "User Profile",
-            "Front Page",
-            "/r/all",
-            "Subreddits",
-            "Random Subreddit"
-    };
-    private DrawerLayout mLayout;
-    private ListView mListView;
-    private LayoutInflater mLayoutInflater;
+    private List<DrawerItem> mDrawerItems;
 
-    public NavigationDrawer(LayoutInflater inflater, View v) {
-        mLayoutInflater = inflater;
-        mLayout = (DrawerLayout) v.findViewById(R.id.drawer_layout);
-        mListView = (ListView) v.findViewById(R.id.drawer_list);
-        mListView.setAdapter(new NavigationDrawerItemAdapter(v.getContext(), mDrawerItems));
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                selectItem(position);
-            }
-        });
+    private NavigationDrawer() {
+        mDrawerItems = new ArrayList<>();
+        mDrawerItems.add(new DrawerItem(R.id.drawer_log_in, 0, R.string.drawer_log_in));
+        mDrawerItems.add(new DrawerItem(R.id.drawer_user_profile, 0, R.string.drawer_user_profile));
+        mDrawerItems.add(new DrawerItem(R.id.drawer_front_page, 0, R.string.drawer_front_page));
+        mDrawerItems.add(new DrawerItem(R.id.drawer_r_all, 0, R.string.drawer_r_all));
+        mDrawerItems.add(new DrawerItem(R.id.drawer_subreddits, 0, R.string.drawer_subreddits));
+        mDrawerItems.add(new DrawerItem(R.id.drawer_random_subreddit, 0, R.string.drawer_random_subreddit));
     }
 
-    private void selectItem(int position) {
-        Log.d(TAG, "Navigation drawer item selected: " + mDrawerItems[position]);
+    public static NavigationDrawer getInstance() {
+        return _instance;
     }
 
-    public DrawerLayout getLayout() {
-        return mLayout;
+    public List<DrawerItem> getItems() {
+        return mDrawerItems;
     }
 
-    public ListView getListView() {
-        return mListView;
+    public DrawerItem get(int position) {
+        return mDrawerItems.get(position);
     }
 
-    private class NavigationDrawerItemAdapter extends ArrayAdapter<String> {
-        public NavigationDrawerItemAdapter(Context context, String[] data) {
-            super(context, 0, data);
+    public static class DrawerItem {
+        private int mId;
+        private int mIconResourceId;
+        private int mLabelResourceId;
+
+        public DrawerItem(int id, int iconResourceId, int labelResourceId) {
+            mId = id;
+            mIconResourceId = iconResourceId;
+            mLabelResourceId = labelResourceId;
         }
 
-        @Override
-        public View getView(int position, View view, ViewGroup parent) {
-            if (view == null) {
-                view = mLayoutInflater.inflate(R.layout.navigation_drawer_item, null);
-            }
+        public int getId() {
+            return mId;
+        }
 
-            ((TextView) view.findViewById(R.id.drawer_item_label)).setText(mDrawerItems[position]);
+        public int getIconResourceId() {
+            return mIconResourceId;
+        }
 
-            return view;
+        public int getItemLabel() {
+            return mLabelResourceId;
         }
     }
 }
