@@ -1,12 +1,15 @@
 package com.ddiehl.android.simpleredditreader.view;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ddiehl.android.simpleredditreader.R;
@@ -27,6 +30,8 @@ public class ListingFragment extends ListFragment {
     private static final String ARG_SUBREDDIT = "subreddit";
 
     private Bus mBus;
+    private ThumbnailDownloader<ImageView> mThumbnailThread;
+
     private String mSubreddit;
     private List<RedditListingData> mData;
     private boolean mListingsRetrieved = false;
@@ -46,6 +51,18 @@ public class ListingFragment extends ListFragment {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
 
+        mThumbnailThread = new ThumbnailDownloader<>(new Handler());
+        mThumbnailThread.setListener(new ThumbnailDownloader.Listener<ImageView>() {
+            @Override
+            public void onThumbnailDownloaded(ImageView imageView, Bitmap thumbnail) {
+                if (isVisible()) {
+                    imageView.setImageBitmap(thumbnail);
+                }
+            }
+        });
+        mThumbnailThread.start();
+        mThumbnailThread.getLooper();
+
         Bundle args = getArguments();
         mSubreddit = args.getString(ARG_SUBREDDIT);
 
@@ -58,8 +75,6 @@ public class ListingFragment extends ListFragment {
         View v = inflater.inflate(R.layout.listings_fragment, null);
 
         getActivity().setTitle("/r/" + mSubreddit);
-
-//        mNavigationDrawer = new NavigationDrawer(inflater, v);
 
         return v;
     }
@@ -78,6 +93,18 @@ public class ListingFragment extends ListFragment {
     public void onPause() {
         super.onPause();
         getBus().unregister(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mThumbnailThread.quit();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mThumbnailThread.clearQueue();
     }
 
     @Subscribe
@@ -112,12 +139,22 @@ public class ListingFragment extends ListFragment {
 
             String createDateFormatted = Utils.getFormattedDateStringFromUtc(link.getCreatedUtc().longValue());
 
+            // Set content for each TextView
             ((TextView) view.findViewById(R.id.listing_score)).setText(String.valueOf(link.getScore()));
             ((TextView) view.findViewById(R.id.listing_title)).setText(link.getTitle());
             ((TextView) view.findViewById(R.id.listing_author)).setText("/u/" + link.getAuthor());
             ((TextView) view.findViewById(R.id.listing_timestamp)).setText(createDateFormatted);
             ((TextView) view.findViewById(R.id.listing_subreddit)).setText("/r/" + link.getSubreddit());
             ((TextView) view.findViewById(R.id.listing_domain)).setText("(" + link.getDomain() + ")");
+
+            // Queue thumbnail to be downloaded, if one exists
+            ImageView thumbnailImageView = (ImageView) view.findViewById(R.id.listing_thumbnail);
+            String thumbnailUrl = link.getThumbnail();
+            if (!thumbnailUrl.equals("") && !thumbnailUrl.equals("default")) {
+                mThumbnailThread.queueThumbnail(thumbnailImageView, thumbnailUrl);
+            } else {
+                thumbnailImageView.setVisibility(View.GONE);
+            }
 
             return view;
         }

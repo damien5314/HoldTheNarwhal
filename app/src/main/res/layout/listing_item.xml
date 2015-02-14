@@ -52,6 +52,7 @@
     </RelativeLayout>
 
     <ImageView
+        android:id="@+id/listing_thumbnail"
         style="@style/ListingThumbnail"
         android:layout_gravity="center_vertical"
         android:background="@drawable/thumbnail_background"
