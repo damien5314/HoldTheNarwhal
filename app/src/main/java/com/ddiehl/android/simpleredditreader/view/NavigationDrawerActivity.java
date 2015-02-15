@@ -72,11 +72,6 @@ public class NavigationDrawerActivity extends ActionBarActivity {
         mDrawerToggle.setDrawerIndicatorEnabled(true);
         mDrawerToggle.setHomeAsUpIndicator(R.drawable.ic_drawer);
         mDrawerLayout.setDrawerListener(mDrawerToggle);
-
-        if (getSupportFragmentManager().findFragmentById(R.id.fragment_container) == null) {
-            Fragment defaultFragment = ListingsFragment.newInstance(null);
-            displayFragment(defaultFragment);
-        }
     }
 
     private void selectItem(int position) {
