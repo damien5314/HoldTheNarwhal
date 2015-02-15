@@ -1,6 +1,7 @@
 package com.ddiehl.android.simpleredditreader.view;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -56,44 +57,34 @@ public class NavigationDrawerActivity extends ActionBarActivity {
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar,
-                R.string.drawer_open, R.string.drawer_close) {
-            @Override
-            public void onDrawerOpened(View drawerView) {
-                super.onDrawerOpened(drawerView);
-//                setTitle(R.string.app_name);
-            }
-
-            @Override
-            public void onDrawerClosed(View drawerView) {
-                super.onDrawerClosed(drawerView);
-//                setTitle(mLastFragmentTitle);
-            }
-        };
+                R.string.drawer_open, R.string.drawer_close);
         mDrawerToggle.setDrawerIndicatorEnabled(true);
         mDrawerToggle.setHomeAsUpIndicator(R.drawable.ic_drawer);
         mDrawerLayout.setDrawerListener(mDrawerToggle);
     }
 
     private void selectItem(int position) {
-        Fragment fragment;
+        Intent i;
         switch (mNavigationDrawer.get(position).getId()) {
             case R.id.drawer_log_in:
                 break;
             case R.id.drawer_user_profile:
                 break;
             case R.id.drawer_front_page:
-                fragment = ListingsFragment.newInstance(null);
-                displayFragment(fragment);
+                i = new Intent(this, ListingsActivity.class);
+                startActivity(i);
                 break;
             case R.id.drawer_r_all:
-                fragment = ListingsFragment.newInstance("all");
-                displayFragment(fragment);
+                i = new Intent(this, ListingsActivity.class);
+                i.putExtra(ListingsActivity.EXTRA_SUBREDDIT, "all");
+                startActivity(i);
                 break;
             case R.id.drawer_subreddits:
                 break;
             case R.id.drawer_random_subreddit:
-                fragment = ListingsFragment.newInstance("random");
-                displayFragment(fragment);
+                i = new Intent(this, ListingsActivity.class);
+                i.putExtra(ListingsActivity.EXTRA_SUBREDDIT, "random");
+                startActivity(i);
                 break;
         }
 

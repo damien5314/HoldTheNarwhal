@@ -3,8 +3,6 @@ package com.ddiehl.android.simpleredditreader.view;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
-import com.ddiehl.android.simpleredditreader.R;
-
 public class CommentsActivity extends NavigationDrawerActivity {
     private static final String TAG = CommentsActivity.class.getSimpleName();
 
@@ -15,13 +13,14 @@ public class CommentsActivity extends NavigationDrawerActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        String subreddit = null, article = null;
         Bundle extras = getIntent().getExtras();
-        String subreddit = extras.getString(EXTRA_SUBREDDIT);
-        String article = extras.getString(EXTRA_ARTICLE);
-
-        if (getSupportFragmentManager().findFragmentById(R.id.fragment_container) == null) {
-            Fragment defaultFragment = CommentsFragment.newInstance(subreddit, article);
-            displayFragment(defaultFragment);
+        if (extras != null) {
+            subreddit = extras.getString(EXTRA_SUBREDDIT);
+            article = extras.getString(EXTRA_ARTICLE);
         }
+
+        Fragment fragment = CommentsFragment.newInstance(subreddit, article);
+        displayFragment(fragment);
     }
 }
