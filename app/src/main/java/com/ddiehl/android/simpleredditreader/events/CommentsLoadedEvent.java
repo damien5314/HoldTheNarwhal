@@ -1,26 +1,34 @@
 package com.ddiehl.android.simpleredditreader.events;
 
-import com.ddiehl.android.simpleredditreader.redditapi.comments.CommentsResponse;
-import com.ddiehl.android.simpleredditreader.redditapi.comments.RedditComment;
+import com.ddiehl.android.simpleredditreader.redditapi.listings.Listing;
+import com.ddiehl.android.simpleredditreader.redditapi.listings.ListingResponse;
+import com.ddiehl.android.simpleredditreader.redditapi.listings.RedditComment;
+import com.ddiehl.android.simpleredditreader.redditapi.listings.RedditLink;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Damien on 1/19/2015.
- */
+
 public class CommentsLoadedEvent {
-    List<RedditComment> mComments;
+    private RedditLink.RedditLinkData mLink;
+    private List<RedditComment> mComments;
 
-    public CommentsLoadedEvent(List<CommentsResponse> response) {
+    public CommentsLoadedEvent(List<ListingResponse> listingResponseList) {
+        // Link is responseList.get(0), comments are responseList.get(1)
+        ListingResponse linkResponse = listingResponseList.get(0);
+        ListingResponse commentsResponse = listingResponseList.get(1);
+
+        mLink = (RedditLink.RedditLinkData) linkResponse.getData().getChildren().get(0).getData();
+
+        List<Listing> commentListings = commentsResponse.getData().getChildren();
         mComments = new ArrayList<>();
-
-        // Listing is response.get(0), comments are response.get(1)
-        List<RedditComment> comments = response.get(1).getData().getComments();
-
-        for (RedditComment comment : comments) {
-            mComments.add(comment);
+        for (Listing listing : commentListings) {
+            mComments.add((RedditComment) listing);
         }
+    }
+
+    public RedditLink.RedditLinkData getLink() {
+        return mLink;
     }
 
     public List<RedditComment> getComments() {

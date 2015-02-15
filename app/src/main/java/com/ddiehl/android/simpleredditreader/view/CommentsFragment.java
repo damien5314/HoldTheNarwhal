@@ -13,7 +13,7 @@ import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
 import com.ddiehl.android.simpleredditreader.events.CommentsLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.LoadHotCommentsEvent;
-import com.ddiehl.android.simpleredditreader.redditapi.comments.RedditComment;
+import com.ddiehl.android.simpleredditreader.redditapi.listings.RedditComment;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -49,8 +49,6 @@ public class CommentsFragment extends ListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-//        getActivity().setTitle(getString(R.string.fragment_comments_title));
-        getActivity().setTitle(mArticleId);
 
         Bundle args = getArguments();
         mSubreddit = args.getString(ARG_SUBREDDIT);
@@ -59,6 +57,8 @@ public class CommentsFragment extends ListFragment {
         mData = new ArrayList<>();
         mCommentAdapter = new CommentAdapter(mData);
         setListAdapter(mCommentAdapter);
+
+        getActivity().setTitle(mArticleId);
     }
 
     @Override
@@ -119,7 +119,7 @@ public class CommentsFragment extends ListFragment {
                 view = getActivity().getLayoutInflater().inflate(android.R.layout.simple_list_item_1, null);
             }
 
-            ((TextView) view.findViewById(android.R.id.text1)).setText(mData.get(position).getData().getName());
+            ((TextView) view.findViewById(android.R.id.text1)).setText(mData.get(position).getName());
 
             return view;
         }

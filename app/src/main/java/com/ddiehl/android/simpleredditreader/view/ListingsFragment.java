@@ -16,9 +16,9 @@ import android.widget.TextView;
 import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.Utils;
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
-import com.ddiehl.android.simpleredditreader.events.ListingsLoadedEvent;
-import com.ddiehl.android.simpleredditreader.events.LoadHotListingsEvent;
-import com.ddiehl.android.simpleredditreader.redditapi.listings.RedditListing;
+import com.ddiehl.android.simpleredditreader.events.LinksLoadedEvent;
+import com.ddiehl.android.simpleredditreader.events.LoadHotLinksEvent;
+import com.ddiehl.android.simpleredditreader.redditapi.listings.RedditLink;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -35,7 +35,7 @@ public class ListingsFragment extends ListFragment {
     private ThumbnailCache mThumbnailCache;
 
     private String mSubreddit;
-    private List<RedditListing.RedditListingData> mData;
+    private List<RedditLink> mData;
     private ListingAdapter mListingAdapter;
     private boolean mListingsRetrieved = false;
 
@@ -101,7 +101,7 @@ public class ListingsFragment extends ListFragment {
 
         if (!mListingsRetrieved) {
             setListShown(false);
-            getBus().post(new LoadHotListingsEvent(mSubreddit));
+            getBus().post(new LoadHotLinksEvent(mSubreddit));
         }
     }
 
@@ -125,7 +125,7 @@ public class ListingsFragment extends ListFragment {
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
-        RedditListing.RedditListingData listing = mData.get(position);
+        RedditLink listing = mData.get(position);
         String subreddit = listing.getSubreddit();
         String articleId = listing.getId();
 
@@ -136,11 +136,11 @@ public class ListingsFragment extends ListFragment {
     }
 
     @Subscribe
-    public void onListingsLoaded(ListingsLoadedEvent event) {
+    public void onListingsLoaded(LinksLoadedEvent event) {
         mListingsRetrieved = true;
 
         mData.clear();
-        mData.addAll(event.getListings());
+        mData.addAll(event.getLinks());
         mListingAdapter.notifyDataSetChanged();
         setListShown(true);
     }
@@ -152,8 +152,8 @@ public class ListingsFragment extends ListFragment {
         return mBus;
     }
 
-    private class ListingAdapter extends ArrayAdapter<RedditListing.RedditListingData> {
-        public ListingAdapter(List<RedditListing.RedditListingData> data) {
+    private class ListingAdapter extends ArrayAdapter<RedditLink> {
+        public ListingAdapter(List<RedditLink> data) {
             super(getActivity(), 0, data);
         }
 
@@ -163,7 +163,7 @@ public class ListingsFragment extends ListFragment {
                 view = getActivity().getLayoutInflater().inflate(R.layout.listings_item, null);
             }
 
-            RedditListing.RedditListingData link = getItem(position);
+            RedditLink link = getItem(position);
 
             String createDateFormatted = Utils.getFormattedDateStringFromUtc(link.getCreatedUtc().longValue());
 

@@ -3,11 +3,10 @@ package com.ddiehl.android.simpleredditreader.redditapi;
 import android.util.Log;
 
 import com.ddiehl.android.simpleredditreader.events.CommentsLoadedEvent;
-import com.ddiehl.android.simpleredditreader.events.ListingsLoadedEvent;
+import com.ddiehl.android.simpleredditreader.events.LinksLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.LoadHotCommentsEvent;
-import com.ddiehl.android.simpleredditreader.events.LoadHotListingsEvent;
-import com.ddiehl.android.simpleredditreader.redditapi.comments.CommentsResponse;
-import com.ddiehl.android.simpleredditreader.redditapi.listings.ListingsResponse;
+import com.ddiehl.android.simpleredditreader.events.LoadHotLinksEvent;
+import com.ddiehl.android.simpleredditreader.redditapi.listings.ListingResponse;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -17,9 +16,7 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-/**
- * Created by Damien on 1/19/2015.
- */
+
 public class RedditService {
     private static final String TAG = RedditService.class.getSimpleName();
 
@@ -35,13 +32,13 @@ public class RedditService {
      * Retrieves /hot.json listings for subreddit passed as a parameter
      */
     @Subscribe
-    public void onLoadHotListings(LoadHotListingsEvent event) {
+    public void onLoadHotLinks(LoadHotLinksEvent event) {
         String subreddit = event.getSubreddit();
         if (subreddit == null) {
-            mApi.getDefaultHotListings(new Callback<ListingsResponse>() {
+            mApi.getDefaultHotListings(new Callback<ListingResponse>() {
                 @Override
-                public void success(ListingsResponse listingsResponse, Response response) {
-                    mBus.post(new ListingsLoadedEvent(listingsResponse));
+                public void success(ListingResponse linksResponse, Response response) {
+                    mBus.post(new LinksLoadedEvent(linksResponse));
                 }
 
                 @Override
@@ -50,10 +47,10 @@ public class RedditService {
                 }
             });
         } else {
-            mApi.getHotListings(subreddit, new Callback<ListingsResponse>() {
+            mApi.getHotListings(subreddit, new Callback<ListingResponse>() {
                 @Override
-                public void success(ListingsResponse listingsResponse, Response response) {
-                    mBus.post(new ListingsLoadedEvent(listingsResponse));
+                public void success(ListingResponse linksResponse, Response response) {
+                    mBus.post(new LinksLoadedEvent(linksResponse));
                 }
 
                 @Override
@@ -71,15 +68,12 @@ public class RedditService {
     public void onLoadHotComments(LoadHotCommentsEvent event) {
         String subreddit = event.getSubreddit();
         String article = event.getArticle();
-        if (subreddit == null || article == null) {
-            Log.e(TAG, "Null parameter passed as LoadHotComments event");
-            return;
-        }
 
-        mApi.getHotComments(subreddit, article, new Callback<List<CommentsResponse>>() {
+        mApi.getHotComments(subreddit, article, new Callback<List<ListingResponse>>() {
             @Override
-            public void success(List<CommentsResponse> commentsResponse, Response response) {
-                mBus.post(new CommentsLoadedEvent(commentsResponse));
+            public void success(List<ListingResponse> listingsList, Response response) {
+                Log.d(TAG, "Number of ListingsResponse objects: " + listingsList.size());
+                mBus.post(new CommentsLoadedEvent(listingsList));
             }
 
             @Override

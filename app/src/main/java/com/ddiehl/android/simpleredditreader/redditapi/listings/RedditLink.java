@@ -1,0 +1,412 @@
+package com.ddiehl.android.simpleredditreader.redditapi.listings;
+
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
+import java.util.ArrayList;
+import java.util.List;
+
+
+@SuppressWarnings("unused")
+public class RedditLink extends Listing {
+
+    @Expose
+    private RedditLinkData data;
+
+    @Override
+    public Object getData() {
+        return data;
+    }
+
+    public String getDomain() {
+        return data.domain;
+    }
+
+    public Object getBannedBy() {
+        return data.bannedBy;
+    }
+
+    public RedditLinkData.MediaEmbed getMediaEmbed() {
+        return data.mediaEmbed;
+    }
+
+    public String getSubreddit() {
+        return data.subreddit;
+    }
+
+    public Object getSelftextHtml() {
+        return data.selftextHtml;
+    }
+
+    public String getSelftext() {
+        return data.selftext;
+    }
+
+    public Object getLikes() {
+        return data.likes;
+    }
+
+    public List<Object> getUserReports() {
+        return data.userReports;
+    }
+
+    public Object getSecureMedia() {
+        return data.secureMedia;
+    }
+
+    public Object getLinkFlairText() {
+        return data.linkFlairText;
+    }
+
+    public String getId() {
+        return data.id;
+    }
+
+    public Integer getGilded() {
+        return data.gilded;
+    }
+
+    public Boolean getArchived() {
+        return data.archived;
+    }
+
+    public Boolean getClicked() {
+        return data.clicked;
+    }
+
+    public Object getReportReasons() {
+        return data.reportReasons;
+    }
+
+    public String getAuthor() {
+        return data.author;
+    }
+
+    public Integer getNumComments() {
+        return data.numComments;
+    }
+
+    public Integer getScore() {
+        return data.score;
+    }
+
+    public Object getApprovedBy() {
+        return data.approvedBy;
+    }
+
+    public Boolean getOver18() {
+        return data.over18;
+    }
+
+    public Boolean getHidden() {
+        return data.hidden;
+    }
+
+    public String getThumbnail() {
+        return data.thumbnail;
+    }
+
+    public String getSubredditId() {
+        return data.subredditId;
+    }
+
+    public Object getLinkFlairCssClass() {
+        return data.linkFlairCssClass;
+    }
+
+    public Object getAuthorFlairCssClass() {
+        return data.authorFlairCssClass;
+    }
+
+    public Integer getDowns() {
+        return data.downs;
+    }
+
+    public RedditLinkData.SecureMediaEmbed getSecureMediaEmbed() {
+        return data.secureMediaEmbed;
+    }
+
+    public Boolean getSaved() {
+        return data.saved;
+    }
+
+    public Boolean getStickied() {
+        return data.stickied;
+    }
+
+    public Boolean getIsSelf() {
+        return data.isSelf;
+    }
+
+    public String getPermalink() {
+        return data.permalink;
+    }
+
+    public String getName() {
+        return data.name;
+    }
+
+    public Double getCreated() {
+        return data.created;
+    }
+
+    public String getUrl() {
+        return data.url;
+    }
+
+    public Object getAuthorFlairText() {
+        return data.authorFlairText;
+    }
+
+    public String getTitle() {
+        return data.title;
+    }
+
+    public Double getCreatedUtc() {
+        return data.createdUtc;
+    }
+
+    public Object getDistinguished() {
+        return data.distinguished;
+    }
+
+    public RedditLinkData.Media getMedia() {
+        return data.media;
+    }
+
+    public List<Object> getModReports() {
+        return data.modReports;
+    }
+
+    public Boolean getVisited() {
+        return data.visited;
+    }
+
+    public Object getNumReports() {
+        return data.numReports;
+    }
+
+    public Integer getUps() {
+        return data.ups;
+    }
+    
+    public static class RedditLinkData {
+
+        @Expose
+        private String domain;
+        @Expose @SerializedName("banned_by")
+        private Object bannedBy;
+        @Expose @SerializedName("media_embed")
+        private MediaEmbed mediaEmbed;
+        @Expose
+        private String subreddit;
+        @Expose @SerializedName("selftext_html")
+        private Object selftextHtml;
+        @Expose
+        private String selftext;
+        @Expose
+        private Object likes;
+        @Expose @SerializedName("user_reports")
+        private List<Object> userReports = new ArrayList<>();
+        @Expose @SerializedName("secure_media")
+        private Object secureMedia;
+        @Expose @SerializedName("link_flair_text")
+        private Object linkFlairText;
+        @Expose
+        private String id;
+        @Expose
+        private Integer gilded;
+        @Expose
+        private Boolean archived;
+        @Expose
+        private Boolean clicked;
+        @Expose @SerializedName("report_reasons")
+        private Object reportReasons;
+        @Expose
+        private String author;
+        @Expose @SerializedName("num_comments")
+        private Integer numComments;
+        @Expose
+        private Integer score;
+        @Expose @SerializedName("approved_by")
+        private Object approvedBy;
+        @Expose @SerializedName("over_18")
+        private Boolean over18;
+        @Expose
+        private Boolean hidden;
+        @Expose
+        private String thumbnail;
+        @Expose @SerializedName("subreddit_id")
+        private String subredditId;
+        @Expose @SerializedName("link_flair_css_class")
+        private Object linkFlairCssClass;
+        @Expose @SerializedName("author_flair_css_class")
+        private Object authorFlairCssClass;
+        @Expose
+        private Integer downs;
+        @Expose @SerializedName("secure_media_embed")
+        private SecureMediaEmbed secureMediaEmbed;
+        @Expose
+        private Boolean saved;
+        @Expose
+        private Boolean stickied;
+        @Expose @SerializedName("is_self")
+        private Boolean isSelf;
+        @Expose
+        private String permalink;
+        @Expose
+        private String name;
+        @Expose
+        private Double created;
+        @Expose
+        private String url;
+        @Expose @SerializedName("author_flair_text")
+        private Object authorFlairText;
+        @Expose
+        private String title;
+        @Expose @SerializedName("created_utc")
+        private Double createdUtc;
+        @Expose
+        private Object distinguished;
+        @Expose
+        private Media media;
+        @Expose @SerializedName("mod_reports")
+        private List<Object> modReports = new ArrayList<>();
+        @Expose
+        private Boolean visited;
+        @Expose @SerializedName("num_reports")
+        private Object numReports;
+        @Expose
+        private Integer ups;
+
+        protected static class SecureMediaEmbed {
+
+        }
+
+        protected static class MediaEmbed {
+
+            @Expose
+            private String content;
+            @Expose
+            private Integer width;
+            @Expose
+            private Boolean scrolling;
+            @Expose
+            private Integer height;
+
+
+            public String getContent() {
+                return content;
+            }
+
+            public Integer getWidth() {
+                return width;
+            }
+
+            public Boolean getScrolling() {
+                return scrolling;
+            }
+
+            public Integer getHeight() {
+                return height;
+            }
+
+        }
+
+        protected static class Media {
+
+            @Expose
+            private Oembed oembed;
+            @Expose
+            private String type;
+
+
+            public Oembed getOembed() {
+                return oembed;
+            }
+
+            public String getType() {
+                return type;
+            }
+
+            private static class Oembed {
+
+                @Expose @SerializedName("provider_url")
+                private String providerUrl;
+                @Expose
+                private String description;
+                @Expose
+                private String title;
+                @Expose
+                private String type;
+                @Expose @SerializedName("thumbnail_width")
+                private Integer thumbnailWidth;
+                @Expose
+                private Integer height;
+                @Expose
+                private Integer width;
+                @Expose
+                private String html;
+                @Expose
+                private String version;
+                @Expose @SerializedName("provider_name")
+                private String providerName;
+                @Expose @SerializedName("thumbnail_url")
+                private String thumbnailUrl;
+                @Expose @SerializedName("thumbnail_height")
+                private Integer thumbnailHeight;
+
+
+                public String getProviderUrl() {
+                    return providerUrl;
+                }
+
+                public String getDescription() {
+                    return description;
+                }
+
+                public String getTitle() {
+                    return title;
+                }
+
+                public String getType() {
+                    return type;
+                }
+
+                public Integer getThumbnailWidth() {
+                    return thumbnailWidth;
+                }
+
+                public Integer getHeight() {
+                    return height;
+                }
+
+                public Integer getWidth() {
+                    return width;
+                }
+
+                public String getHtml() {
+                    return html;
+                }
+
+                public String getVersion() {
+                    return version;
+                }
+
+                public String getProviderName() {
+                    return providerName;
+                }
+
+                public String getThumbnailUrl() {
+                    return thumbnailUrl;
+                }
+
+                public Integer getThumbnailHeight() {
+                    return thumbnailHeight;
+                }
+            }
+        }
+
+    }
+
+}

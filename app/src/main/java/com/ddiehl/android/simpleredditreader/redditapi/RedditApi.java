@@ -1,7 +1,6 @@
 package com.ddiehl.android.simpleredditreader.redditapi;
 
-import com.ddiehl.android.simpleredditreader.redditapi.comments.CommentsResponse;
-import com.ddiehl.android.simpleredditreader.redditapi.listings.ListingsResponse;
+import com.ddiehl.android.simpleredditreader.redditapi.listings.ListingResponse;
 
 import java.util.List;
 
@@ -13,18 +12,18 @@ public interface RedditApi {
 
     @GET("/r/{subreddit}/hot.json")
     void getHotListings(@Path("subreddit") String subreddit,
-                        Callback<ListingsResponse> callback);
+                        Callback<ListingResponse> callback);
 
     @GET("/r/{subreddit}/new.json")
     void getNewListings(@Path("subreddit") String subreddit,
-                        Callback<ListingsResponse> callback);
+                        Callback<ListingResponse> callback);
 
     @GET("/hot.json")
-    void getDefaultHotListings(Callback<ListingsResponse> callback);
+    void getDefaultHotListings(Callback<ListingResponse> callback);
 
     @GET("/r/{subreddit}/comments/{articleId}/hot.json")
     void getHotComments(@Path("subreddit") String subreddit,
                         @Path("articleId") String articleId,
-                        Callback<List<CommentsResponse>> callback);
+                        Callback<List<ListingResponse>> callback);
 
 }
