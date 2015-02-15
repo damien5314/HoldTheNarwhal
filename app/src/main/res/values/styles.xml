@@ -33,8 +33,8 @@
     <style name="ListingScoreTextView">
         <item name="android:layout_width">42dp</item>
         <item name="android:layout_height">fill_parent</item>
-        <item name="android:layout_marginLeft">5dp</item>
-        <item name="android:layout_marginRight">10dp</item>
+        <item name="android:layout_marginLeft">4dp</item>
+        <item name="android:layout_marginRight">4dp</item>
         <item name="android:textSize">@dimen/listing_score_text_size</item>
         <item name="android:textStyle">bold</item>
         <item name="android:singleLine">true</item>
@@ -82,9 +82,10 @@
     </style>
 
     <style name="ListingThumbnail">
-        <item name="android:layout_width">48dp</item>
-        <item name="android:layout_height">48dp</item>
-        <item name="android:layout_margin">10dp</item>
+        <item name="android:layout_width">72dp</item>
+        <item name="android:layout_height">72dp</item>
+        <item name="android:layout_marginLeft">4dp</item>
+        <item name="android:layout_marginRight">4dp</item>
     </style>
 
 </resources>
