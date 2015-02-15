@@ -1,5 +1,6 @@
 package com.ddiehl.android.simpleredditreader.view;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
@@ -9,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.ddiehl.android.simpleredditreader.R;
@@ -17,15 +18,15 @@ import com.ddiehl.android.simpleredditreader.Utils;
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
 import com.ddiehl.android.simpleredditreader.events.ListingsLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.LoadHotListingsEvent;
-import com.ddiehl.android.simpleredditreader.redditapi.listings.RedditListingData;
+import com.ddiehl.android.simpleredditreader.redditapi.listings.RedditListing;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListingFragment extends ListFragment {
-    private static final String TAG = ListingFragment.class.getSimpleName();
+public class ListingsFragment extends ListFragment {
+    private static final String TAG = ListingsFragment.class.getSimpleName();
 
     private static final String ARG_SUBREDDIT = "subreddit";
 
@@ -34,18 +35,16 @@ public class ListingFragment extends ListFragment {
     private ThumbnailCache mThumbnailCache;
 
     private String mSubreddit;
-    private List<RedditListingData> mData;
+    private List<RedditListing.RedditListingData> mData;
     private ListingAdapter mListingAdapter;
     private boolean mListingsRetrieved = false;
 
-    private ProgressBar mProgressBar;
+    public ListingsFragment() { /* Default constructor required */ }
 
-    public ListingFragment() { /* Default constructor required */ }
-
-    public static ListingFragment newInstance(String subreddit) {
+    public static ListingsFragment newInstance(String subreddit) {
         Bundle args = new Bundle();
         args.putString(ARG_SUBREDDIT, subreddit);
-        ListingFragment fragment = new ListingFragment();
+        ListingsFragment fragment = new ListingsFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -80,11 +79,7 @@ public class ListingFragment extends ListFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = super.onCreateView(inflater, container, savedInstanceState);
-
-        mProgressBar = (ProgressBar) v.findViewById(R.id.progress_bar);
-
-        return v;
+        return super.onCreateView(inflater, container, savedInstanceState);
     }
 
     @Override
@@ -106,7 +101,7 @@ public class ListingFragment extends ListFragment {
 
         if (!mListingsRetrieved) {
             setListShown(false);
-            getBus().post(new LoadHotListingsEvent(mSubreddit)); // Load Hot listings from subreddit
+            getBus().post(new LoadHotListingsEvent(mSubreddit));
         }
     }
 
@@ -128,6 +123,18 @@ public class ListingFragment extends ListFragment {
         mThumbnailThread.clearQueue();
     }
 
+    @Override
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        RedditListing.RedditListingData listing = mData.get(position);
+        String subreddit = listing.getSubreddit();
+        String articleId = listing.getId();
+
+        Intent i = new Intent(getActivity(), CommentsActivity.class);
+        i.putExtra(CommentsActivity.EXTRA_SUBREDDIT, subreddit);
+        i.putExtra(CommentsActivity.EXTRA_ARTICLE, articleId);
+        startActivity(i);
+    }
+
     @Subscribe
     public void onListingsLoaded(ListingsLoadedEvent event) {
         mListingsRetrieved = true;
@@ -145,8 +152,8 @@ public class ListingFragment extends ListFragment {
         return mBus;
     }
 
-    private class ListingAdapter extends ArrayAdapter<RedditListingData> {
-        public ListingAdapter(List<RedditListingData> data) {
+    private class ListingAdapter extends ArrayAdapter<RedditListing.RedditListingData> {
+        public ListingAdapter(List<RedditListing.RedditListingData> data) {
             super(getActivity(), 0, data);
         }
 
@@ -156,7 +163,7 @@ public class ListingFragment extends ListFragment {
                 view = getActivity().getLayoutInflater().inflate(R.layout.listings_item, null);
             }
 
-            RedditListingData link = getItem(position);
+            RedditListing.RedditListingData link = getItem(position);
 
             String createDateFormatted = Utils.getFormattedDateStringFromUtc(link.getCreatedUtc().longValue());
 

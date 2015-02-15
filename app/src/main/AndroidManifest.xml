@@ -29,6 +29,10 @@
                     android:scheme="http" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".view.CommentsActivity"
+            android:label="@string/app_name" >
+        </activity>
     </application>
 
 </manifest>

@@ -1,8 +1,7 @@
 package com.ddiehl.android.simpleredditreader.events;
 
+import com.ddiehl.android.simpleredditreader.redditapi.listings.ListingsResponse;
 import com.ddiehl.android.simpleredditreader.redditapi.listings.RedditListing;
-import com.ddiehl.android.simpleredditreader.redditapi.listings.RedditListingData;
-import com.ddiehl.android.simpleredditreader.redditapi.listings.ListingResponse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,9 +10,9 @@ import java.util.List;
  * Created by Damien on 1/19/2015.
  */
 public class ListingsLoadedEvent {
-    List<RedditListingData> mListings;
+    List<RedditListing.RedditListingData> mListings;
 
-    public ListingsLoadedEvent(ListingResponse response) {
+    public ListingsLoadedEvent(ListingsResponse response) {
         mListings = new ArrayList<>();
 
         List<RedditListing> listings = response.getData().getChildren();
@@ -23,7 +22,7 @@ public class ListingsLoadedEvent {
         }
     }
 
-    public List<RedditListingData> getListings() {
+    public List<RedditListing.RedditListingData> getListings() {
         return mListings;
     }
 }

@@ -74,7 +74,7 @@ public class NavigationDrawerActivity extends ActionBarActivity {
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
         if (getSupportFragmentManager().findFragmentById(R.id.fragment_container) == null) {
-            Fragment defaultFragment = ListingFragment.newInstance(null);
+            Fragment defaultFragment = ListingsFragment.newInstance(null);
             displayFragment(defaultFragment);
         }
     }
@@ -87,17 +87,17 @@ public class NavigationDrawerActivity extends ActionBarActivity {
             case R.id.drawer_user_profile:
                 break;
             case R.id.drawer_front_page:
-                fragment = ListingFragment.newInstance(null);
+                fragment = ListingsFragment.newInstance(null);
                 displayFragment(fragment);
                 break;
             case R.id.drawer_r_all:
-                fragment = ListingFragment.newInstance("all");
+                fragment = ListingsFragment.newInstance("all");
                 displayFragment(fragment);
                 break;
             case R.id.drawer_subreddits:
                 break;
             case R.id.drawer_random_subreddit:
-                fragment = ListingFragment.newInstance("random");
+                fragment = ListingsFragment.newInstance("random");
                 displayFragment(fragment);
                 break;
         }
@@ -106,7 +106,7 @@ public class NavigationDrawerActivity extends ActionBarActivity {
         mDrawerLayout.closeDrawer(mDrawerListView);
     }
 
-    private void displayFragment(Fragment fragment) {
+    protected void displayFragment(Fragment fragment) {
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction transaction = fm.beginTransaction();
 
