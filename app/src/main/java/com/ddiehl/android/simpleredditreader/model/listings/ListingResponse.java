@@ -1,31 +1,31 @@
-package com.ddiehl.android.simpleredditreader.redditapi.listings;
+package com.ddiehl.android.simpleredditreader.model.listings;
 
 import com.google.gson.annotations.Expose;
 
 import java.util.List;
 
-public class ListingResponse {
+public class ListingResponse<T extends Listing> {
 
     @Expose
     private String kind;
     @Expose
-    private ListingResponseData data;
+    private ListingResponseData<T> data;
 
 
     public String getKind() {
         return kind;
     }
 
-    public ListingResponseData getData() {
+    public ListingResponseData<T> getData() {
         return data;
     }
 
-    public static class ListingResponseData {
+    public static class ListingResponseData<T> {
 
         @Expose
         private String modhash;
         @Expose
-        private List<Listing> children;
+        private List<T> children;
         @Expose
         private String after;
         @Expose
@@ -36,7 +36,7 @@ public class ListingResponse {
             return modhash;
         }
 
-        public List<Listing> getChildren() {
+        public List<T> getChildren() {
             return children;
         }
 

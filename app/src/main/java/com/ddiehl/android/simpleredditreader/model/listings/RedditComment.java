@@ -1,4 +1,4 @@
-package com.ddiehl.android.simpleredditreader.redditapi.listings;
+package com.ddiehl.android.simpleredditreader.model.listings;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -11,6 +11,7 @@ public class RedditComment extends Listing {
 
     @Expose
     private RedditCommentData data;
+
 
     @Override
     public Object getData() {
@@ -33,7 +34,7 @@ public class RedditComment extends Listing {
         return data.likes;
     }
 
-    public ListingResponse getReplies() {
+    public ListingResponse<RedditComment> getReplies() {
         return data.replies;
     }
 
@@ -85,7 +86,7 @@ public class RedditComment extends Listing {
         return data.body;
     }
 
-    public boolean isEdited() {
+    public String isEdited() {
         return data.edited;
     }
 
@@ -143,6 +144,8 @@ public class RedditComment extends Listing {
 
     private static class RedditCommentData {
 
+        @Expose
+        private ListingResponse<RedditComment> replies;
         @Expose @SerializedName("subreddit_id")
         private String subredditId;
         @Expose @SerializedName("banned_by")
@@ -151,8 +154,6 @@ public class RedditComment extends Listing {
         private String linkId;
         @Expose
         private Object likes;
-        @Expose
-        private ListingResponse replies;
         @Expose @SerializedName("user_reports")
         private List<Object> userReports;
         @Expose
@@ -178,7 +179,7 @@ public class RedditComment extends Listing {
         @Expose
         private String body;
         @Expose
-        private boolean edited;
+        private String edited;
         @Expose @SerializedName("author_flair_css_class")
         private String AuthorFlairCssClass;
         @Expose

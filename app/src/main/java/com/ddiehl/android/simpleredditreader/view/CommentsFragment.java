@@ -13,7 +13,7 @@ import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
 import com.ddiehl.android.simpleredditreader.events.CommentsLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.LoadHotCommentsEvent;
-import com.ddiehl.android.simpleredditreader.redditapi.listings.RedditComment;
+import com.ddiehl.android.simpleredditreader.model.listings.RedditComment;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 

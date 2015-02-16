@@ -71,19 +71,19 @@ public class NavigationDrawerActivity extends ActionBarActivity {
             case R.id.drawer_user_profile:
                 break;
             case R.id.drawer_front_page:
-                i = new Intent(this, ListingsActivity.class);
+                i = new Intent(this, LinksActivity.class);
                 startActivity(i);
                 break;
             case R.id.drawer_r_all:
-                i = new Intent(this, ListingsActivity.class);
-                i.putExtra(ListingsActivity.EXTRA_SUBREDDIT, "all");
+                i = new Intent(this, LinksActivity.class);
+                i.putExtra(LinksActivity.EXTRA_SUBREDDIT, "all");
                 startActivity(i);
                 break;
             case R.id.drawer_subreddits:
                 break;
             case R.id.drawer_random_subreddit:
-                i = new Intent(this, ListingsActivity.class);
-                i.putExtra(ListingsActivity.EXTRA_SUBREDDIT, "random");
+                i = new Intent(this, LinksActivity.class);
+                i.putExtra(LinksActivity.EXTRA_SUBREDDIT, "random");
                 startActivity(i);
                 break;
         }

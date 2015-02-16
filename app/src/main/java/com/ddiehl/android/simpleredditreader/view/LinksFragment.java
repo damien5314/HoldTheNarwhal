@@ -8,6 +8,7 @@ import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -18,15 +19,15 @@ import com.ddiehl.android.simpleredditreader.Utils;
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
 import com.ddiehl.android.simpleredditreader.events.LinksLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.LoadHotLinksEvent;
-import com.ddiehl.android.simpleredditreader.redditapi.listings.RedditLink;
+import com.ddiehl.android.simpleredditreader.model.listings.RedditLink;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListingsFragment extends ListFragment {
-    private static final String TAG = ListingsFragment.class.getSimpleName();
+public class LinksFragment extends ListFragment {
+    private static final String TAG = LinksFragment.class.getSimpleName();
 
     private static final String ARG_SUBREDDIT = "subreddit";
 
@@ -36,15 +37,16 @@ public class ListingsFragment extends ListFragment {
 
     private String mSubreddit;
     private List<RedditLink> mData;
-    private ListingAdapter mListingAdapter;
-    private boolean mListingsRetrieved = false;
+    private LinkAdapter mLinkAdapter;
+    private String mLastDisplayedLink;
+    private boolean mLinksRequested = false;
 
-    public ListingsFragment() { /* Default constructor required */ }
+    public LinksFragment() { /* Default constructor required */ }
 
-    public static ListingsFragment newInstance(String subreddit) {
+    public static LinksFragment newInstance(String subreddit) {
         Bundle args = new Bundle();
         args.putString(ARG_SUBREDDIT, subreddit);
-        ListingsFragment fragment = new ListingsFragment();
+        LinksFragment fragment = new LinksFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -73,19 +75,36 @@ public class ListingsFragment extends ListFragment {
         mSubreddit = args.getString(ARG_SUBREDDIT);
 
         mData = new ArrayList<>();
-        mListingAdapter = new ListingAdapter(mData);
-        setListAdapter(mListingAdapter);
+        mLinkAdapter = new LinkAdapter(mData);
+        setListAdapter(mLinkAdapter);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return super.onCreateView(inflater, container, savedInstanceState);
+        View v = super.onCreateView(inflater, container, savedInstanceState);
+        return v;
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setEmptyText(getString(R.string.no_listings_found));
+
+        ListView listView = getListView();
+
+        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override public void onScrollStateChanged(AbsListView view, int scrollState) { }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                if ((firstVisibleItem + visibleItemCount) == totalItemCount
+                        && totalItemCount > 0
+                        && !mLinksRequested) {
+                    mLinksRequested = true;
+                    getBus().post(new LoadHotLinksEvent(mSubreddit, mLastDisplayedLink));
+                }
+            }
+        });
     }
 
     @Override
@@ -99,8 +118,9 @@ public class ListingsFragment extends ListFragment {
             getActivity().setTitle("/r/" + mSubreddit);
         }
 
-        if (!mListingsRetrieved) {
+        if (mLastDisplayedLink == null) {
             setListShown(false);
+            mLinksRequested = true;
             getBus().post(new LoadHotLinksEvent(mSubreddit));
         }
     }
@@ -137,11 +157,12 @@ public class ListingsFragment extends ListFragment {
 
     @Subscribe
     public void onListingsLoaded(LinksLoadedEvent event) {
-        mListingsRetrieved = true;
+        mLinksRequested = false;
+        mLastDisplayedLink = event.getResponse().getData().getAfter();
 
-        mData.clear();
+//        mData.clear();
         mData.addAll(event.getLinks());
-        mListingAdapter.notifyDataSetChanged();
+        mLinkAdapter.notifyDataSetChanged();
         setListShown(true);
     }
 
@@ -152,8 +173,8 @@ public class ListingsFragment extends ListFragment {
         return mBus;
     }
 
-    private class ListingAdapter extends ArrayAdapter<RedditLink> {
-        public ListingAdapter(List<RedditLink> data) {
+    private class LinkAdapter extends ArrayAdapter<RedditLink> {
+        public LinkAdapter(List<RedditLink> data) {
             super(getActivity(), 0, data);
         }
 

@@ -3,8 +3,8 @@ package com.ddiehl.android.simpleredditreader.view;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
-public class ListingsActivity extends NavigationDrawerActivity {
-    private static final String TAG = ListingsActivity.class.getSimpleName();
+public class LinksActivity extends NavigationDrawerActivity {
+    private static final String TAG = LinksActivity.class.getSimpleName();
 
     public static final String EXTRA_SUBREDDIT = "com.ddiehl.android.simpleredditreader.extra_subreddit";
 
@@ -18,7 +18,7 @@ public class ListingsActivity extends NavigationDrawerActivity {
             subreddit = extras.getString(EXTRA_SUBREDDIT);
         }
 
-        Fragment fragment = ListingsFragment.newInstance(subreddit);
+        Fragment fragment = LinksFragment.newInstance(subreddit);
         displayFragment(fragment);
     }
 }

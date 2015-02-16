@@ -1,4 +1,4 @@
-package com.ddiehl.android.simpleredditreader.redditapi.listings;
+package com.ddiehl.android.simpleredditreader.model.listings;
 
 import com.google.gson.annotations.Expose;
 

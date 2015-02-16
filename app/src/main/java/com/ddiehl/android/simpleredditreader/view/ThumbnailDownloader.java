@@ -8,7 +8,7 @@ import android.os.HandlerThread;
 import android.os.Message;
 import android.util.Log;
 
-import com.ddiehl.android.simpleredditreader.redditapi.RedditFetcher;
+import com.ddiehl.android.simpleredditreader.model.RedditFetcher;
 
 import java.io.IOException;
 import java.util.Collections;

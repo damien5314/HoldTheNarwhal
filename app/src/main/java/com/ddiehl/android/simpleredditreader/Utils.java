@@ -77,17 +77,20 @@ public class Utils {
             TypedInput body = response.getBody();
             System.out.println("LENGTH: " + body.length());
             System.out.println("-CONTENT-");
-            printInputStream(body.in());
+            System.out.println(inputStreamToString(body.in()));
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public static void printInputStream(InputStream i) throws IOException {
+    public static String inputStreamToString(InputStream i) throws IOException {
+        StringBuilder output = new StringBuilder();
         BufferedReader in = new BufferedReader(new InputStreamReader(i));
         String inputLine;
-        while ((inputLine = in.readLine()) != null)
-            System.out.println(inputLine + "\n");
+        while ((inputLine = in.readLine()) != null) {
+            output.append(inputLine).append("\n");
+        }
         in.close();
+        return output.toString();
     }
 }
