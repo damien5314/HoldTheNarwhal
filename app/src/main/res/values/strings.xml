@@ -20,5 +20,12 @@
     <string name="action_change_timespan">Timespan</string>
     <string name="choose_sort">Sort by</string>
     <string name="choose_timespan">Timespan</string>
+    <string name="action_upvote">upvote</string>
+    <string name="action_downvote">downvote</string>
+    <string name="action_show_comments">show comments</string>
+    <string name="action_share">share</string>
+    <string name="action_save">save</string>
+    <string name="action_open_in_browser">view in browser</string>
+    <string name="action_report">report</string>
 
 </resources>

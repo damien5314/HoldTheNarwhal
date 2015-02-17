@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/action_upvote"
+        android:title="@string/action_upvote"
+        android:icon="@drawable/ic_action_upvote"/>
+
+    <item android:id="@+id/action_downvote"
+        android:title="@string/action_downvote"
+        android:icon="@drawable/ic_action_downvote"/>
+
+    <item android:id="@+id/action_show_comments"
+        android:title="@string/action_show_comments"
+        android:icon="@drawable/ic_action_show_comments"/>
+
+    <item android:id="@+id/action_save"
+        android:title="@string/action_save"
+        android:icon="@drawable/ic_action_save_filled"/>
+
+    <item android:id="@+id/action_share"
+        android:title="@string/action_share"
+        android:icon="@drawable/ic_action_share"/>
+
+    <item android:id="@+id/action_open_in_browser"
+        android:title="@string/action_open_in_browser"
+        android:icon="@drawable/ic_action_open_in_browser"/>
+
+    <item android:id="@+id/action_report"
+        android:title="@string/action_report"
+        android:icon="@drawable/ic_action_report"/>
+
+</menu>
