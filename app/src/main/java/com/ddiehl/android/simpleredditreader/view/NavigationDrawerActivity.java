@@ -36,7 +36,7 @@ public class NavigationDrawerActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_links);
 
         mNavigationDrawer = NavigationDrawer.getInstance();
 
@@ -110,7 +110,7 @@ public class NavigationDrawerActivity extends ActionBarActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_links, menu);
         return true;
     }
 

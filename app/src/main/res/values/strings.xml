@@ -16,5 +16,7 @@
     <string name="title_activity_listings">ListingsActivity</string>
     <string name="no_comments_found">No comments found</string>
     <string name="fragment_comments_title">Comments</string>
+    <string name="action_change_sort">Sort</string>
+    <string name="action_change_timespan">Timespan</string>
 
 </resources>

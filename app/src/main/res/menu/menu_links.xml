@@ -1,0 +1,22 @@
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_change_sort"
+        android:title="@string/action_change_sort"
+        android:icon="@android:drawable/ic_menu_sort_by_size"
+        app:showAsAction="ifRoom|withText" />
+
+    <item
+        android:id="@+id/action_change_timespan"
+        android:title="@string/action_change_timespan"
+        android:icon="@android:drawable/ic_menu_my_calendar"
+        app:showAsAction="ifRoom|withText" />
+
+    <item
+        android:id="@+id/action_settings"
+        android:title="@string/action_settings"
+        app:showAsAction="never"/>
+
+</menu>

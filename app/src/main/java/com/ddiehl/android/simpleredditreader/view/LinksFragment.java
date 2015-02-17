@@ -6,6 +6,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -62,6 +65,7 @@ public class LinksFragment extends ListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+        setHasOptionsMenu(true);
 
         mThumbnailThread = new ThumbnailDownloader<>(new Handler());
         mThumbnailThread.setListener(new ThumbnailDownloader.Listener<ImageView>() {
@@ -215,6 +219,25 @@ public class LinksFragment extends ListFragment {
             mBus = BusProvider.getInstance();
         }
         return mBus;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_links, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_change_sort:
+                return true;
+            case R.id.action_change_timespan:
+                return true;
+            case R.id.action_settings:
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     private class LinkAdapter extends ArrayAdapter<RedditLink> {
