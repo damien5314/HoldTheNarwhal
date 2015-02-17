@@ -5,13 +5,13 @@
     <item
         android:id="@+id/action_change_sort"
         android:title="@string/action_change_sort"
-        android:icon="@android:drawable/ic_menu_sort_by_size"
+        android:icon="@drawable/ic_change_sort"
         app:showAsAction="ifRoom|withText" />
 
     <item
         android:id="@+id/action_change_timespan"
         android:title="@string/action_change_timespan"
-        android:icon="@android:drawable/ic_menu_my_calendar"
+        android:icon="@drawable/ic_change_timespan"
         app:showAsAction="ifRoom|withText" />
 
     <item

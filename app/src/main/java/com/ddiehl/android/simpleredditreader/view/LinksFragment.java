@@ -242,6 +242,7 @@ public class LinksFragment extends ListFragment {
                         getLinks();
                     }
                 }
+                getActivity().supportInvalidateOptionsMenu();
                 break;
             case REQUEST_CHOOSE_TIMESPAN:
                 if (resultCode == Activity.RESULT_OK) {
@@ -252,6 +253,7 @@ public class LinksFragment extends ListFragment {
                         getLinks();
                     }
                 }
+                getActivity().supportInvalidateOptionsMenu();
                 break;
         }
     }
@@ -259,6 +261,15 @@ public class LinksFragment extends ListFragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_links, menu);
+
+        // Disable timespan option if current sort does not support it
+        if (mSort.equals("hot") ||
+                mSort.equals("new") ||
+                mSort.equals("rising")) {
+            menu.findItem(R.id.action_change_timespan).setVisible(false);
+        } else { // controversial, rising
+            menu.findItem(R.id.action_change_timespan).setVisible(true);
+        }
     }
 
     @Override
