@@ -11,20 +11,20 @@ import android.support.v4.app.DialogFragment;
 
 import com.ddiehl.android.simpleredditreader.R;
 
-public class ChooseSortDialog extends DialogFragment {
-    private static final String TAG = ChooseSortDialog.class.getSimpleName();
+public class ChooseTimespanDialog extends DialogFragment {
+    private static final String TAG = ChooseTimespanDialog.class.getSimpleName();
 
-    public static final String EXTRA_SORT = "com.ddiehl.android.simpleredditreader.extra_sort";
+    public static final String EXTRA_TIMESPAN = "com.ddiehl.android.simpleredditreader.extra_timespan";
 
     @NonNull @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(R.string.choose_sort)
-                .setItems(R.array.sort_options, new DialogInterface.OnClickListener() {
+        builder.setTitle(R.string.choose_timespan)
+                .setItems(R.array.timespan_options, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        String selectedChoice = getResources().getStringArray(R.array.sort_options)[which];
+                        String selectedChoice = getResources().getStringArray(R.array.timespan_options)[which];
                         Intent data = new Intent();
-                        data.putExtra(EXTRA_SORT, selectedChoice);
+                        data.putExtra(EXTRA_TIMESPAN, selectedChoice);
                         getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, data);
                     }
                 });

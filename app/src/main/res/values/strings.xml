@@ -19,5 +19,6 @@
     <string name="action_change_sort">Sort</string>
     <string name="action_change_timespan">Timespan</string>
     <string name="choose_sort">Sort by</string>
+    <string name="choose_timespan">Timespan</string>
 
 </resources>

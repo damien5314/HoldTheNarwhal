@@ -39,7 +39,9 @@ public class LinksFragment extends ListFragment {
     private static final String ARG_TIMESPAN = "timespan";
 
     private static final int REQUEST_CHOOSE_SORT = 0;
+    private static final int REQUEST_CHOOSE_TIMESPAN = 1;
     private static final String DIALOG_CHOOSE_SORT = "dialog_choose_sort";
+    private static final String DIALOG_CHOOSE_TIMESPAN = "dialog_choose_timespan";
 
     private Bus mBus;
     private ThumbnailDownloader<ImageView> mThumbnailThread;
@@ -239,6 +241,16 @@ public class LinksFragment extends ListFragment {
                     }
                 }
                 break;
+            case REQUEST_CHOOSE_TIMESPAN:
+                if (resultCode == Activity.RESULT_OK) {
+                    String selectedTimespan = data.getStringExtra(ChooseTimespanDialog.EXTRA_TIMESPAN);
+                    if (!mTimeSpan.equals(selectedTimespan)) {
+                        mTimeSpan = selectedTimespan;
+                        mData.clear();
+                        getLinks();
+                    }
+                }
+                break;
         }
     }
 
@@ -249,14 +261,17 @@ public class LinksFragment extends ListFragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        FragmentManager fm = getActivity().getSupportFragmentManager();
         switch (item.getItemId()) {
             case R.id.action_change_sort:
-                FragmentManager fm = getActivity().getSupportFragmentManager();
-                ChooseSortDialog fragment = new ChooseSortDialog();
-                fragment.setTargetFragment(this, REQUEST_CHOOSE_SORT);
-                fragment.show(fm, DIALOG_CHOOSE_SORT);
+                ChooseSortDialog chooseSortDialog = new ChooseSortDialog();
+                chooseSortDialog.setTargetFragment(this, REQUEST_CHOOSE_SORT);
+                chooseSortDialog.show(fm, DIALOG_CHOOSE_SORT);
                 return true;
             case R.id.action_change_timespan:
+                ChooseTimespanDialog chooseTimespanDialog = new ChooseTimespanDialog();
+                chooseTimespanDialog.setTargetFragment(this, REQUEST_CHOOSE_TIMESPAN);
+                chooseTimespanDialog.show(fm, DIALOG_CHOOSE_TIMESPAN);
                 return true;
             case R.id.action_settings:
                 return true;
