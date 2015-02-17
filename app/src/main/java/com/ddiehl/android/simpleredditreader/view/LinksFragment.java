@@ -271,7 +271,7 @@ public class LinksFragment extends ListFragment {
                 chooseSortDialog.show(fm, DIALOG_CHOOSE_SORT);
                 return true;
             case R.id.action_change_timespan:
-                ChooseTimespanDialog chooseTimespanDialog = new ChooseTimespanDialog();
+                ChooseTimespanDialog chooseTimespanDialog = ChooseTimespanDialog.newInstance(mTimeSpan);
                 chooseTimespanDialog.setTargetFragment(this, REQUEST_CHOOSE_TIMESPAN);
                 chooseTimespanDialog.show(fm, DIALOG_CHOOSE_TIMESPAN);
                 return true;
