@@ -68,8 +68,10 @@ public class LinksDrawerActivity extends ActionBarActivity {
             subreddit = extras.getString(EXTRA_SUBREDDIT);
         }
 
-        Fragment fragment = LinksFragment.newInstance(subreddit, Sort.HOT, TimeSpan.ALL);
-        displayFragment(fragment);
+        if (savedInstanceState == null) {
+            Fragment fragment = LinksFragment.newInstance(subreddit, Sort.HOT, TimeSpan.ALL);
+            displayFragment(fragment);
+        }
 
 //        mViewPager = (ViewPager) findViewById(R.id.view_pager);
 //        mViewPager.setAdapter(new LinkFragmentPagerAdapter(getSupportFragmentManager()));

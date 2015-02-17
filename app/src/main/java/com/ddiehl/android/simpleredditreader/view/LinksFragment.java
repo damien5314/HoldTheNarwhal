@@ -104,7 +104,6 @@ public class LinksFragment extends ListFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Add a custom layout that has a ViewPager
-//        View v = super.onCreateView(inflater, container, savedInstanceState);
         View v = inflater.inflate(R.layout.links_fragment, null);
 
         return v;
@@ -113,8 +112,6 @@ public class LinksFragment extends ListFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-//        setEmptyText(getString(R.string.no_listings_found));
-
 //        mViewPager = (ViewPager) view.findViewById(R.id.view_pager);
 //        mViewPager.setAdapter(new LinkFragmentPagerAdapter(getFragmentManager()));
 
