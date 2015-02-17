@@ -1,4 +1,4 @@
-package com.ddiehl.android.simpleredditreader.view;
+package com.ddiehl.android.simpleredditreader.web;
 
 import android.graphics.Bitmap;
 import android.support.v4.util.LruCache;

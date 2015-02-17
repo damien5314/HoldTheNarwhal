@@ -25,6 +25,8 @@ import com.ddiehl.android.simpleredditreader.events.BusProvider;
 import com.ddiehl.android.simpleredditreader.events.LinksLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.LoadLinksEvent;
 import com.ddiehl.android.simpleredditreader.model.listings.RedditLink;
+import com.ddiehl.android.simpleredditreader.web.ThumbnailCache;
+import com.ddiehl.android.simpleredditreader.web.ThumbnailDownloader;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -264,7 +266,7 @@ public class LinksFragment extends ListFragment {
         FragmentManager fm = getActivity().getSupportFragmentManager();
         switch (item.getItemId()) {
             case R.id.action_change_sort:
-                ChooseSortDialog chooseSortDialog = new ChooseSortDialog();
+                ChooseSortDialog chooseSortDialog = ChooseSortDialog.newInstance(mSort);
                 chooseSortDialog.setTargetFragment(this, REQUEST_CHOOSE_SORT);
                 chooseSortDialog.show(fm, DIALOG_CHOOSE_SORT);
                 return true;

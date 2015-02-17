@@ -1,4 +1,4 @@
-package com.ddiehl.android.simpleredditreader;
+package com.ddiehl.android.simpleredditreader.model;
 
 public class Sort {
     public static final String HOT = "hot";

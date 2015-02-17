@@ -1,4 +1,4 @@
-package com.ddiehl.android.simpleredditreader.model;
+package com.ddiehl.android.simpleredditreader.web;
 
 import android.util.Log;
 

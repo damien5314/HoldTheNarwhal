@@ -2,20 +2,20 @@
 <resources>
 
     <string-array name="sort_options">
-        <item type="string" name="sort_hot">hot</item>
-        <item type="string" name="sort_new">new</item>
-        <item type="string" name="sort_rising">rising</item>
-        <item type="string" name="sort_top">top</item>
-        <item type="string" name="sort_controversial">controversial</item>
+        <item>hot</item>
+        <item>new</item>
+        <item>rising</item>
+        <item>top</item>
+        <item>controversial</item>
     </string-array>
 
     <string-array name="timespan_options">
-        <item type="string" name="timespan_hour">hour</item>
-        <item type="string" name="timespan_day">day</item>
-        <item type="string" name="timespan_week">week</item>
-        <item type="string" name="timespan_month">month</item>
-        <item type="string" name="timespan_year">year</item>
-        <item type="string" name="timespan_all">all</item>
+        <item>hour</item>
+        <item>day</item>
+        <item>week</item>
+        <item>month</item>
+        <item>year</item>
+        <item>all</item>
     </string-array>
 
 </resources>

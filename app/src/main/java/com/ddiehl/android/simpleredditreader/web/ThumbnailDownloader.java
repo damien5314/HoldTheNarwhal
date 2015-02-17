@@ -1,4 +1,4 @@
-package com.ddiehl.android.simpleredditreader.view;
+package com.ddiehl.android.simpleredditreader.web;
 
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
@@ -7,8 +7,6 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Message;
 import android.util.Log;
-
-import com.ddiehl.android.simpleredditreader.model.RedditFetcher;
 
 import java.io.IOException;
 import java.util.Collections;

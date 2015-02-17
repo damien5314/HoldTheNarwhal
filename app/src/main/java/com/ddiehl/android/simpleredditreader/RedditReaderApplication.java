@@ -6,8 +6,8 @@ import android.widget.Toast;
 
 import com.ddiehl.android.simpleredditreader.events.ApiErrorEvent;
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
-import com.ddiehl.android.simpleredditreader.model.RedditApi;
-import com.ddiehl.android.simpleredditreader.model.RedditService;
+import com.ddiehl.android.simpleredditreader.web.RedditApi;
+import com.ddiehl.android.simpleredditreader.web.RedditService;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 

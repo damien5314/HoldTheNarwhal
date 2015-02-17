@@ -1,4 +1,4 @@
-package com.ddiehl.android.simpleredditreader.model;
+package com.ddiehl.android.simpleredditreader.web;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

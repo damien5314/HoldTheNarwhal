@@ -18,8 +18,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.ddiehl.android.simpleredditreader.R;
-import com.ddiehl.android.simpleredditreader.Sort;
-import com.ddiehl.android.simpleredditreader.TimeSpan;
+import com.ddiehl.android.simpleredditreader.model.Sort;
+import com.ddiehl.android.simpleredditreader.model.TimeSpan;
 
 import java.util.List;
 
