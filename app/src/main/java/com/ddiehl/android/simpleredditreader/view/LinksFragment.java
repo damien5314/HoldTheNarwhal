@@ -18,7 +18,7 @@ import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.Utils;
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
 import com.ddiehl.android.simpleredditreader.events.LinksLoadedEvent;
-import com.ddiehl.android.simpleredditreader.events.LoadHotLinksEvent;
+import com.ddiehl.android.simpleredditreader.events.LoadLinksEvent;
 import com.ddiehl.android.simpleredditreader.model.listings.RedditLink;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
@@ -30,22 +30,29 @@ public class LinksFragment extends ListFragment {
     private static final String TAG = LinksFragment.class.getSimpleName();
 
     private static final String ARG_SUBREDDIT = "subreddit";
+    private static final String ARG_SORT = "sort";
+    private static final String ARG_TIMESPAN = "timespan";
 
     private Bus mBus;
     private ThumbnailDownloader<ImageView> mThumbnailThread;
     private ThumbnailCache mThumbnailCache;
 
     private String mSubreddit;
+    private String mSort;
+    private String mTimeSpan;
     private List<RedditLink> mData;
     private LinkAdapter mLinkAdapter;
     private String mLastDisplayedLink;
     private boolean mLinksRequested = false;
 
+
     public LinksFragment() { /* Default constructor required */ }
 
-    public static LinksFragment newInstance(String subreddit) {
+    public static LinksFragment newInstance(String subreddit, String sort, String timespan) {
         Bundle args = new Bundle();
         args.putString(ARG_SUBREDDIT, subreddit);
+        args.putString(ARG_SORT, sort);
+        args.putString(ARG_TIMESPAN, timespan);
         LinksFragment fragment = new LinksFragment();
         fragment.setArguments(args);
         return fragment;
@@ -73,6 +80,8 @@ public class LinksFragment extends ListFragment {
 
         Bundle args = getArguments();
         mSubreddit = args.getString(ARG_SUBREDDIT);
+        mSort = args.getString(ARG_SORT);
+        mTimeSpan = args.getString(ARG_TIMESPAN);
 
         mData = new ArrayList<>();
         mLinkAdapter = new LinkAdapter(mData);
@@ -81,17 +90,22 @@ public class LinksFragment extends ListFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = super.onCreateView(inflater, container, savedInstanceState);
+        // Add a custom layout that has a ViewPager
+//        View v = super.onCreateView(inflater, container, savedInstanceState);
+        View v = inflater.inflate(R.layout.links_fragment, null);
+
         return v;
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        setEmptyText(getString(R.string.no_listings_found));
+//        setEmptyText(getString(R.string.no_listings_found));
+
+//        mViewPager = (ViewPager) view.findViewById(R.id.view_pager);
+//        mViewPager.setAdapter(new LinkFragmentPagerAdapter(getFragmentManager()));
 
         ListView listView = getListView();
-
         listView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override public void onScrollStateChanged(AbsListView view, int scrollState) { }
 
@@ -101,7 +115,7 @@ public class LinksFragment extends ListFragment {
                         && totalItemCount > 0
                         && !mLinksRequested) {
                     mLinksRequested = true;
-                    getBus().post(new LoadHotLinksEvent(mSubreddit, mLastDisplayedLink));
+                    getBus().post(new LoadLinksEvent(mSubreddit, mSort, mTimeSpan, mLastDisplayedLink));
                 }
             }
         });
@@ -112,16 +126,11 @@ public class LinksFragment extends ListFragment {
         super.onResume();
         getBus().register(this);
 
-        if (mSubreddit == null) {
-            getActivity().setTitle(getString(R.string.front_page_title));
-        } else {
-            getActivity().setTitle("/r/" + mSubreddit);
-        }
+        updateTitle();
 
         if (mLastDisplayedLink == null) {
-            setListShown(false);
-            mLinksRequested = true;
-            getBus().post(new LoadHotLinksEvent(mSubreddit));
+//            setListShown(false);
+            getLinks();
         }
     }
 
@@ -155,15 +164,50 @@ public class LinksFragment extends ListFragment {
         startActivity(i);
     }
 
+    public void updateSubreddit(String subreddit) {
+        mData.clear();
+        mSubreddit = subreddit;
+        getLinks();
+    }
+
+    public void updateSort(String sort) {
+        mData.clear();
+        mSort = sort;
+        getLinks();
+    }
+
+    public void updateTimeSpan(String timespan) {
+        mData.clear();
+        mTimeSpan = timespan;
+        getLinks();
+    }
+
+    private void updateTitle() {
+        if (mSubreddit == null) {
+            getActivity().setTitle(getString(R.string.front_page_title));
+        } else {
+            getActivity().setTitle("/r/" + mSubreddit);
+        }
+    }
+
+    private void getLinks() {
+        mLinksRequested = true;
+        getBus().post(new LoadLinksEvent(mSubreddit, mSort, mTimeSpan));
+    }
+
     @Subscribe
-    public void onListingsLoaded(LinksLoadedEvent event) {
+    public void onLinksLoaded(LinksLoadedEvent event) {
         mLinksRequested = false;
         mLastDisplayedLink = event.getResponse().getData().getAfter();
 
-//        mData.clear();
+        if (mSubreddit != null && mSubreddit.equals("random")) {
+            mSubreddit = event.getLinks().get(0).getSubreddit();
+        }
+
+        updateTitle();
         mData.addAll(event.getLinks());
         mLinkAdapter.notifyDataSetChanged();
-        setListShown(true);
+//        setListShown(true);
     }
 
     private Bus getBus() {
@@ -181,7 +225,7 @@ public class LinksFragment extends ListFragment {
         @Override
         public View getView(int position, View view, ViewGroup parent) {
             if (view == null) {
-                view = getActivity().getLayoutInflater().inflate(R.layout.listings_item, null);
+                view = getActivity().getLayoutInflater().inflate(R.layout.links_list_item, null);
             }
 
             RedditLink link = getItem(position);

@@ -1,7 +1,6 @@
 package com.ddiehl.android.simpleredditreader.view;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 
 public class LinksActivity extends NavigationDrawerActivity {
     private static final String TAG = LinksActivity.class.getSimpleName();
@@ -18,7 +17,7 @@ public class LinksActivity extends NavigationDrawerActivity {
             subreddit = extras.getString(EXTRA_SUBREDDIT);
         }
 
-        Fragment fragment = LinksFragment.newInstance(subreddit);
-        displayFragment(fragment);
+//        Fragment fragment = LinksFragment.newInstance(subreddit);
+//        displayFragment(fragment);
     }
 }

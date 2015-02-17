@@ -20,18 +20,23 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.ddiehl.android.simpleredditreader.R;
+import com.ddiehl.android.simpleredditreader.Sort;
+import com.ddiehl.android.simpleredditreader.TimeSpan;
 
 import java.util.List;
 
+public class LinksDrawerActivity extends ActionBarActivity {
+    private static final String TAG = LinksDrawerActivity.class.getSimpleName();
 
-public class NavigationDrawerActivity extends ActionBarActivity {
-    private static final String TAG = NavigationDrawerActivity.class.getSimpleName();
+    public static final String EXTRA_SUBREDDIT = "com.ddiehl.android.simpleredditreader.extra_subreddit";
 
     // Navigation drawer
     private NavigationDrawer mNavigationDrawer;
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerListView;
     private ActionBarDrawerToggle mDrawerToggle;
+
+//    private ViewPager mViewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,10 +63,22 @@ public class NavigationDrawerActivity extends ActionBarActivity {
         mDrawerToggle.setDrawerIndicatorEnabled(true);
         mDrawerToggle.setHomeAsUpIndicator(R.drawable.ic_drawer);
         mDrawerLayout.setDrawerListener(mDrawerToggle);
+
+        String subreddit = null;
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            subreddit = extras.getString(EXTRA_SUBREDDIT);
+        }
+
+        Fragment fragment = LinksFragment.newInstance(subreddit, Sort.HOT, TimeSpan.ALL);
+        displayFragment(fragment);
+
+//        mViewPager = (ViewPager) findViewById(R.id.view_pager);
+//        mViewPager.setAdapter(new LinkFragmentPagerAdapter(getSupportFragmentManager()));
     }
 
     private void selectItem(int position) {
-        Fragment fragment;
+        LinksFragment fragment = (LinksFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container);
         Intent i;
         switch (mNavigationDrawer.get(position).getId()) {
             case R.id.drawer_log_in:
@@ -71,16 +88,19 @@ public class NavigationDrawerActivity extends ActionBarActivity {
             case R.id.drawer_front_page:
 //                fragment = LinksFragment.newInstance(null);
 //                displayFragment(fragment);
+                fragment.updateSubreddit(null);
                 break;
             case R.id.drawer_r_all:
 //                fragment = LinksFragment.newInstance("all");
 //                displayFragment(fragment);
+                fragment.updateSubreddit("all");
                 break;
             case R.id.drawer_subreddits:
                 break;
             case R.id.drawer_random_subreddit:
 //                fragment = LinksFragment.newInstance("random");
 //                displayFragment(fragment);
+                fragment.updateSubreddit("random");
                 break;
         }
 
@@ -91,7 +111,6 @@ public class NavigationDrawerActivity extends ActionBarActivity {
     protected void displayFragment(Fragment fragment) {
         FragmentManager fm = getSupportFragmentManager();
         fm.beginTransaction()
-//                .add(R.id.fragment_container, fragment)
                 .replace(R.id.fragment_container, fragment)
                 .commit();
     }
@@ -140,4 +159,24 @@ public class NavigationDrawerActivity extends ActionBarActivity {
             return view;
         }
     }
+
+//    private static class LinkFragmentPagerAdapter extends FragmentPagerAdapter {
+//
+//        public LinkFragmentPagerAdapter(FragmentManager fm) {
+//            super(fm);
+//        }
+//
+//        @Override
+//        public Fragment getItem(int position) {
+//
+//            // 0 = Hot
+//            // 1 = New
+//            return null;
+//        }
+//
+//        @Override
+//        public int getCount() {
+//            return 2;
+//        }
+//    }
 }
