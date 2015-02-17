@@ -1,9 +1,11 @@
 package com.ddiehl.android.simpleredditreader.view;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -35,6 +37,9 @@ public class LinksFragment extends ListFragment {
     private static final String ARG_SUBREDDIT = "subreddit";
     private static final String ARG_SORT = "sort";
     private static final String ARG_TIMESPAN = "timespan";
+
+    private static final int REQUEST_CHOOSE_SORT = 0;
+    private static final String DIALOG_CHOOSE_SORT = "dialog_choose_sort";
 
     private Bus mBus;
     private ThumbnailDownloader<ImageView> mThumbnailThread;
@@ -222,6 +227,22 @@ public class LinksFragment extends ListFragment {
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case REQUEST_CHOOSE_SORT:
+                if (resultCode == Activity.RESULT_OK) {
+                    String selectedSort = data.getStringExtra(ChooseSortDialog.EXTRA_SORT);
+                    if (!mSort.equals(selectedSort)) {
+                        mSort = selectedSort;
+                        mData.clear();
+                        getLinks();
+                    }
+                }
+                break;
+        }
+    }
+
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_links, menu);
     }
@@ -230,6 +251,10 @@ public class LinksFragment extends ListFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_change_sort:
+                FragmentManager fm = getActivity().getSupportFragmentManager();
+                ChooseSortDialog fragment = new ChooseSortDialog();
+                fragment.setTargetFragment(this, REQUEST_CHOOSE_SORT);
+                fragment.show(fm, DIALOG_CHOOSE_SORT);
                 return true;
             case R.id.action_change_timespan:
                 return true;
