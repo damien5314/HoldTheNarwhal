@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:id="@+id/navigation_drawer"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/navigation_drawer"
     style="@style/NavigationDrawer"
-    xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical">
 
     <LinearLayout
@@ -10,20 +10,15 @@
 
         <EditText
             android:id="@+id/drawer_navigate_to_subreddit_text"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
+            style="@style/NavigationDrawerEditText"
             android:hint="@string/go_to_subreddit"
             android:imeOptions="actionDone"
             android:inputType="text"
-            android:singleLine="true"
-            android:textColor="@android:color/white"
-            android:textColorHint="@android:color/white"/>
+            android:singleLine="true"/>
 
         <ImageView
             android:id="@+id/drawer_navigate_to_subreddit_go"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/NavigationDrawerItemIcon"
             android:src="@drawable/ic_navigation_go"/>
 
     </LinearLayout>
