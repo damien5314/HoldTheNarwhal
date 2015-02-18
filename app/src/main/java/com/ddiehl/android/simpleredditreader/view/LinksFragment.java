@@ -1,12 +1,17 @@
 package com.ddiehl.android.simpleredditreader.view;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.ListFragment;
+import android.support.v7.widget.Toolbar;
+import android.view.ActionMode;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -14,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -56,6 +62,8 @@ public class LinksFragment extends ListFragment {
     private LinkAdapter mLinkAdapter;
     private String mLastDisplayedLink;
     private boolean mLinksRequested = false;
+
+    private Toolbar mToolbar;
 
 
     public LinksFragment() { /* Default constructor required */ }
@@ -106,6 +114,15 @@ public class LinksFragment extends ListFragment {
         // Add a custom layout that has a ViewPager
         View v = inflater.inflate(R.layout.links_fragment, null);
 
+        ListView listView = (ListView) v.findViewById(android.R.id.list);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+            // Register view for context menu
+            registerForContextMenu(listView);
+        } else {
+            // Set up contextual action bar
+            listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        }
+
         return v;
     }
 
@@ -117,7 +134,9 @@ public class LinksFragment extends ListFragment {
 
         ListView listView = getListView();
         listView.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override public void onScrollStateChanged(AbsListView view, int scrollState) { }
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+            }
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
@@ -162,11 +181,35 @@ public class LinksFragment extends ListFragment {
         mThumbnailThread.clearQueue();
     }
 
-    @Override
+    @Override @TargetApi(11)
     public void onListItemClick(ListView l, View v, int position, long id) {
-        RedditLink listing = mData.get(position);
-        String subreddit = listing.getSubreddit();
-        String articleId = listing.getId();
+        getActivity().startActionMode(new ActionMode.Callback() {
+            @Override
+            public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+                mode.getMenuInflater().inflate(R.menu.menu_link_context, menu);
+                return true;
+            }
+
+            @Override
+            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+                return false;
+            }
+
+            @Override
+            public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+                return false;
+            }
+
+            @Override
+            public void onDestroyActionMode(ActionMode mode) {
+
+            }
+        });
+    }
+
+    public void openCommentsForLink(RedditLink link) {
+        String subreddit = link.getSubreddit();
+        String articleId = link.getId();
 
         Intent i = new Intent(getActivity(), CommentsActivity.class);
         i.putExtra(CommentsActivity.EXTRA_SUBREDDIT, subreddit);
@@ -267,6 +310,25 @@ public class LinksFragment extends ListFragment {
         } else { // controversial, rising
             menu.findItem(R.id.action_change_timespan).setVisible(true);
         }
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        getActivity().getMenuInflater().inflate(R.menu.menu_link_context, menu);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        int position = info.position;
+        LinkAdapter adapter = (LinkAdapter) getListAdapter();
+        RedditLink link = adapter.getItem(position);
+
+        switch (item.getItemId()) {
+            // Set actions for each menu item
+        }
+
+        return super.onContextItemSelected(item);
     }
 
     @Override

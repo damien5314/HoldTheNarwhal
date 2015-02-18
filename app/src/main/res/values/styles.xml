@@ -5,6 +5,7 @@
         <!-- to remove the default action -->
         <item name="android:windowNoTitle">true</item>
         <item name="windowActionBar">false</item> <!-- For 2.x version -->
+        <item name="android:windowActionModeOverlay">true</item>
     </style>
 
     <style name="NavigationDrawer">
