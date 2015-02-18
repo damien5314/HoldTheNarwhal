@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -187,8 +188,19 @@ public class LinksFragment extends ListFragment {
         mThumbnailThread.clearQueue();
     }
 
-    @Override @TargetApi(11)
+    @Override
     public void onListItemClick(ListView l, View v, final int position, long id) {
+        RedditLink link = mData.get(position);
+
+        Uri webViewUri = Uri.parse(link.getUrl());
+        Intent i = new Intent(getActivity(), WebViewActivity.class);
+        i.setData(webViewUri);
+
+        startActivity(i);
+    }
+
+    @TargetApi(11)
+    private void openListItemContext(ListView l, View v, final int position, long id) {
         getActivity().startActionMode(new ActionMode.Callback() {
             @Override
             public boolean onCreateActionMode(ActionMode mode, Menu menu) {

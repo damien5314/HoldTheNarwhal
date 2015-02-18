@@ -30,9 +30,9 @@ public class LinksDrawerActivity extends ActionBarActivity
     // Navigation drawer
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
+    private View mLogIn, mUserProfile, mFrontPage, mRAll, mSubreddits,
+            mRandomSubreddit, mNavigationDrawer, mNavToSubredditGo;
     private EditText mNavToSubredditText;
-
-//    private ViewPager mViewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,29 +49,26 @@ public class LinksDrawerActivity extends ActionBarActivity
         mDrawerToggle.setHomeAsUpIndicator(R.drawable.ic_drawer);
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
-        View vLogIn = findViewById(R.id.drawer_log_in);
-        vLogIn.setOnClickListener(this);
+        mLogIn = findViewById(R.id.drawer_log_in);
+        mLogIn.setOnClickListener(this);
 
-        View vUserProfile = findViewById(R.id.drawer_user_profile);
-        vUserProfile.setOnClickListener(this);
+        mUserProfile = findViewById(R.id.drawer_user_profile);
+        mUserProfile.setOnClickListener(this);
 
-        View vFrontPage = findViewById(R.id.drawer_front_page);
-        vFrontPage.setOnClickListener(this);
+        mFrontPage = findViewById(R.id.drawer_front_page);
+        mFrontPage.setOnClickListener(this);
 
-        View vRAll = findViewById(R.id.drawer_r_all);
-        vRAll.setOnClickListener(this);
+        mRAll = findViewById(R.id.drawer_r_all);
+        mRAll.setOnClickListener(this);
 
-        View vSubreddits = findViewById(R.id.drawer_subreddits);
-        vSubreddits.setOnClickListener(this);
+        mSubreddits = findViewById(R.id.drawer_subreddits);
+        mSubreddits.setOnClickListener(this);
 
-        View vRandomSubreddit = findViewById(R.id.drawer_random_subreddit);
-        vRandomSubreddit.setOnClickListener(this);
+        mRandomSubreddit = findViewById(R.id.drawer_random_subreddit);
+        mRandomSubreddit.setOnClickListener(this);
 
-        View vNavigationDrawer = findViewById(R.id.navigation_drawer);
-        vNavigationDrawer.setOnClickListener(null);
-
-        final View vNavToSubredditGo = findViewById(R.id.drawer_navigate_to_subreddit_go);
-        vNavToSubredditGo.setOnClickListener(this);
+        mNavToSubredditGo = findViewById(R.id.drawer_navigate_to_subreddit_go);
+        mNavToSubredditGo.setOnClickListener(this);
 
         mNavToSubredditText = (EditText) findViewById(R.id.drawer_navigate_to_subreddit_text);
         mNavToSubredditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -87,12 +84,16 @@ public class LinksDrawerActivity extends ActionBarActivity
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    vNavToSubredditGo.performClick();
+                    mNavToSubredditGo.performClick();
                     return true;
                 }
                 return false;
             }
         });
+
+        // Set onClick to null to intercept click events from background
+        mNavigationDrawer = findViewById(R.id.navigation_drawer);
+        mNavigationDrawer.setOnClickListener(null);
 
         String subreddit = null;
         Bundle extras = getIntent().getExtras();
@@ -104,9 +105,6 @@ public class LinksDrawerActivity extends ActionBarActivity
             Fragment fragment = LinksFragment.newInstance(subreddit, Sort.HOT, TimeSpan.ALL);
             displayFragment(fragment);
         }
-
-//        mViewPager = (ViewPager) findViewById(R.id.view_pager);
-//        mViewPager.setAdapter(new LinkFragmentPagerAdapter(getSupportFragmentManager()));
     }
 
     @Override
