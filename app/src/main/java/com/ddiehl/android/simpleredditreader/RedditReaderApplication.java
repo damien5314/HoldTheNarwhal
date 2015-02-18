@@ -11,6 +11,7 @@ import com.ddiehl.android.simpleredditreader.web.RedditService;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
+import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 
 /**
@@ -19,6 +20,8 @@ import retrofit.RestAdapter;
 public class RedditReaderApplication extends Application {
     private static final String TAG = RedditReaderApplication.class.getSimpleName();
     private final String API_URL = "http://www.reddit.com";
+    private static final String USER_AGENT =
+            "android:com.ddiehl.android.simpleredditreader:v0.1 (by /u/damien5314)";
 
     private RedditService mRedditService;
     private Bus mBus = BusProvider.getInstance();
@@ -42,6 +45,13 @@ public class RedditReaderApplication extends Application {
 
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint(API_URL)
+                // Add user agent header to each request
+                .setRequestInterceptor(new RequestInterceptor() {
+                    @Override
+                    public void intercept(RequestFacade request) {
+                        request.addHeader("User-Agent", USER_AGENT);
+                    }
+                })
                 .build();
 
         return restAdapter.create(RedditApi.class);

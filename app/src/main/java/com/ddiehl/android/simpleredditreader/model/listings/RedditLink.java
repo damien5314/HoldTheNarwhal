@@ -42,7 +42,7 @@ public class RedditLink extends Listing {
         return data.selftext;
     }
 
-    public Object getLikes() {
+    public Boolean isLiked() {
         return data.likes;
     }
 
@@ -205,7 +205,7 @@ public class RedditLink extends Listing {
         @Expose
         private String selftext;
         @Expose
-        private Object likes;
+        private Boolean likes;
         @Expose @SerializedName("user_reports")
         private List<Object> userReports = new ArrayList<>();
         @Expose @SerializedName("secure_media")

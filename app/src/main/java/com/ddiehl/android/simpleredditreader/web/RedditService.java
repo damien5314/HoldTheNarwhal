@@ -6,6 +6,8 @@ import com.ddiehl.android.simpleredditreader.Utils;
 import com.ddiehl.android.simpleredditreader.events.LinksLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.LoadHotCommentsEvent;
 import com.ddiehl.android.simpleredditreader.events.LoadLinksEvent;
+import com.ddiehl.android.simpleredditreader.events.VoteEvent;
+import com.ddiehl.android.simpleredditreader.events.VoteSubmittedEvent;
 import com.ddiehl.android.simpleredditreader.model.listings.ListingResponse;
 import com.ddiehl.android.simpleredditreader.model.listings.RedditLink;
 import com.squareup.otto.Bus;
@@ -20,7 +22,6 @@ import retrofit.client.Response;
 
 public class RedditService {
     private static final String TAG = RedditService.class.getSimpleName();
-
     private RedditApi mApi;
     private Bus mBus;
 
@@ -102,6 +103,26 @@ public class RedditService {
             @Override
             public void failure(RetrofitError error) {
                 Log.e(TAG, "RetrofitError: " + error.getMessage(), error);
+            }
+        });
+    }
+
+    /**
+     * Submits a vote on a link or comment
+     */
+    @Subscribe
+    public void onVote(VoteEvent event) {
+        String id = event.getId();
+        int direction = event.getDirection();
+        mApi.vote(id, direction, new Callback<Response>() {
+            @Override
+            public void success(Response response, Response response2) {
+                mBus.post(new VoteSubmittedEvent(response));
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                mBus.post(new VoteSubmittedEvent(error));
             }
         });
     }

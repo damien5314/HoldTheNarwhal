@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.ListFragment;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.ActionMode;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -24,12 +25,15 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.Utils;
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
 import com.ddiehl.android.simpleredditreader.events.LinksLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.LoadLinksEvent;
+import com.ddiehl.android.simpleredditreader.events.VoteEvent;
+import com.ddiehl.android.simpleredditreader.events.VoteSubmittedEvent;
 import com.ddiehl.android.simpleredditreader.model.listings.RedditLink;
 import com.ddiehl.android.simpleredditreader.web.ThumbnailCache;
 import com.ddiehl.android.simpleredditreader.web.ThumbnailDownloader;
@@ -38,6 +42,8 @@ import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit.client.Response;
 
 public class LinksFragment extends ListFragment {
     private static final String TAG = LinksFragment.class.getSimpleName();
@@ -182,7 +188,7 @@ public class LinksFragment extends ListFragment {
     }
 
     @Override @TargetApi(11)
-    public void onListItemClick(ListView l, View v, int position, long id) {
+    public void onListItemClick(ListView l, View v, final int position, long id) {
         getActivity().startActionMode(new ActionMode.Callback() {
             @Override
             public boolean onCreateActionMode(ActionMode mode, Menu menu) {
@@ -197,6 +203,14 @@ public class LinksFragment extends ListFragment {
 
             @Override
             public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.action_upvote:
+                        upvote(mData.get(position));
+                        return true;
+                    case R.id.action_downvote:
+                        downvote(mData.get(position));
+                        return true;
+                }
                 return false;
             }
 
@@ -248,6 +262,16 @@ public class LinksFragment extends ListFragment {
         getBus().post(new LoadLinksEvent(mSubreddit, mSort, mTimeSpan));
     }
 
+    private void upvote(RedditLink link) {
+        int dir = (link.isLiked() == null || !link.isLiked()) ? 1 : 0;
+        getBus().post(new VoteEvent(link.getId(), dir));
+    }
+
+    private void downvote(RedditLink link) {
+        int dir = (link.isLiked() == null || link.isLiked()) ? -1 : 0;
+        getBus().post(new VoteEvent(link.getId(), dir));
+    }
+
     @Subscribe
     public void onLinksLoaded(LinksLoadedEvent event) {
         mLinksRequested = false;
@@ -261,6 +285,17 @@ public class LinksFragment extends ListFragment {
         mData.addAll(event.getLinks());
         mLinkAdapter.notifyDataSetChanged();
 //        setListShown(true);
+    }
+
+    @Subscribe
+    public void onVoteSubmitted(VoteSubmittedEvent event) {
+        if (event.isFailed()) {
+            Toast.makeText(getActivity(), R.string.vote_failed, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Log.i(TAG, "Vote submitted successfully");
+        Response response = event.getResponse();
     }
 
     private Bus getBus() {

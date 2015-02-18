@@ -5,7 +5,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Date;
+import java.util.List;
 
+import retrofit.client.Header;
 import retrofit.client.Response;
 import retrofit.mime.TypedInput;
 
@@ -61,7 +63,6 @@ public class Utils {
 
     public static void printResponse(Response response) {
         try {
-/*
             System.out.println("STATUS: " + response.getStatus());
             System.out.println("URL:    " + response.getUrl());
             System.out.println("REASON: " + response.getReason());
@@ -71,7 +72,6 @@ public class Utils {
             for (Header header : headersList) {
                 System.out.println(header.toString());
             }
-*/
 
             System.out.println("--BODY--");
             TypedInput body = response.getBody();

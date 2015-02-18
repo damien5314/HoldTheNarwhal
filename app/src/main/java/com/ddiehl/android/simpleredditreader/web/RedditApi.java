@@ -6,6 +6,7 @@ import com.ddiehl.android.simpleredditreader.model.listings.RedditLink;
 import retrofit.Callback;
 import retrofit.client.Response;
 import retrofit.http.GET;
+import retrofit.http.POST;
 import retrofit.http.Path;
 import retrofit.http.Query;
 
@@ -33,5 +34,10 @@ public interface RedditApi {
     void getHotComments(@Path("subreddit") String subreddit,
                         @Path("articleId") String articleId,
                         Callback<Response> callback);
+
+    @POST("/api/vote")
+    void vote(@Query("id") String id,
+              @Query("dir") int dir,
+              Callback<Response> response);
 
 }
