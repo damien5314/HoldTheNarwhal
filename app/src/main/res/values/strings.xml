@@ -28,5 +28,6 @@
     <string name="action_open_in_browser">view in browser</string>
     <string name="action_report">report</string>
     <string name="vote_failed">Failed to cast vote, please try again</string>
+    <string name="go_to_subreddit">Go to subreddit</string>
 
 </resources>

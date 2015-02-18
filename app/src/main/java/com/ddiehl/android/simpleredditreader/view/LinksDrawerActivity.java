@@ -1,6 +1,6 @@
 package com.ddiehl.android.simpleredditreader.view;
 
-import android.content.Intent;
+import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,7 +10,12 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.model.Sort;
@@ -25,6 +30,7 @@ public class LinksDrawerActivity extends ActionBarActivity
     // Navigation drawer
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
+    private EditText mNavToSubredditText;
 
 //    private ViewPager mViewPager;
 
@@ -64,6 +70,30 @@ public class LinksDrawerActivity extends ActionBarActivity
         View vNavigationDrawer = findViewById(R.id.navigation_drawer);
         vNavigationDrawer.setOnClickListener(null);
 
+        final View vNavToSubredditGo = findViewById(R.id.drawer_navigate_to_subreddit_go);
+        vNavToSubredditGo.setOnClickListener(this);
+
+        mNavToSubredditText = (EditText) findViewById(R.id.drawer_navigate_to_subreddit_text);
+        mNavToSubredditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) { // Hide keyboard
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                }
+            }
+        });
+        mNavToSubredditText.setOnEditorActionListener(new EditText.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    vNavToSubredditGo.performClick();
+                    return true;
+                }
+                return false;
+            }
+        });
+
         String subreddit = null;
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -94,7 +124,6 @@ public class LinksDrawerActivity extends ActionBarActivity
     @Override
     public void onClick(View v) {
         LinksFragment fragment = (LinksFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-        Intent i;
         switch (v.getId()) {
             case R.id.drawer_log_in:
                 break;
@@ -111,12 +140,19 @@ public class LinksDrawerActivity extends ActionBarActivity
             case R.id.drawer_random_subreddit:
                 fragment.updateSubreddit("random");
                 break;
+            case R.id.drawer_navigate_to_subreddit_go:
+                String inputSubreddit = mNavToSubredditText.getText().toString();
+                if (!inputSubreddit.equals("")) {
+                    mNavToSubredditText.setText("");
+                    fragment.updateSubreddit(inputSubreddit);
+                }
+                break;
         }
 
         mDrawerLayout.closeDrawer(GravityCompat.START);
     }
 
-    protected void displayFragment(Fragment fragment) {
+    private void displayFragment(Fragment fragment) {
         FragmentManager fm = getSupportFragmentManager();
         fm.beginTransaction()
                 .replace(R.id.fragment_container, fragment)
