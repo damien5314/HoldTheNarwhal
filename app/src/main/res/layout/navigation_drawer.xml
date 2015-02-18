@@ -1,5 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ListView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/navigation_drawer"
     style="@style/NavigationDrawer"
-    android:id="@+id/drawer_list" />
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/drawer_log_in"
+        style="@style/NavigationDrawerItem">
+
+        <ImageView
+            style="@style/NavigationDrawerItemIcon"/>
+
+        <TextView
+            style="@style/NavigationDrawerItemText"
+            android:text="@string/drawer_log_in"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/drawer_user_profile"
+        style="@style/NavigationDrawerItem">
+
+        <ImageView
+            style="@style/NavigationDrawerItemIcon"/>
+
+        <TextView
+            style="@style/NavigationDrawerItemText"
+            android:text="@string/drawer_user_profile"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/drawer_front_page"
+        style="@style/NavigationDrawerItem">
+
+        <ImageView
+            style="@style/NavigationDrawerItemIcon"/>
+
+        <TextView
+            style="@style/NavigationDrawerItemText"
+            android:text="@string/drawer_front_page"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/drawer_r_all"
+        style="@style/NavigationDrawerItem">
+
+        <ImageView
+            style="@style/NavigationDrawerItemIcon"/>
+
+        <TextView
+            style="@style/NavigationDrawerItemText"
+            android:text="@string/drawer_r_all"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/drawer_subreddits"
+        style="@style/NavigationDrawerItem">
+
+        <ImageView
+            style="@style/NavigationDrawerItemIcon"/>
+
+        <TextView
+            style="@style/NavigationDrawerItemText"
+            android:text="@string/drawer_subreddits"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/drawer_random_subreddit"
+        style="@style/NavigationDrawerItem">
+
+        <ImageView
+            style="@style/NavigationDrawerItemIcon"/>
+
+        <TextView
+            style="@style/NavigationDrawerItemText"
+            android:text="@string/drawer_random_subreddit"/>
+
+    </LinearLayout>
+
+</LinearLayout>

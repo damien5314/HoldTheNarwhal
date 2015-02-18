@@ -1,9 +1,9 @@
 package com.ddiehl.android.simpleredditreader.view;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBarActivity;
 
-public class CommentsActivity extends NavigationDrawerActivity {
+public class CommentsActivity extends ActionBarActivity {
     private static final String TAG = CommentsActivity.class.getSimpleName();
 
     public static final String EXTRA_SUBREDDIT = "com.ddiehl.android.simpleredditreader.extra_subreddit";
@@ -20,7 +20,7 @@ public class CommentsActivity extends NavigationDrawerActivity {
             article = extras.getString(EXTRA_ARTICLE);
         }
 
-        Fragment fragment = CommentsFragment.newInstance(subreddit, article);
-        displayFragment(fragment);
+//        Fragment fragment = CommentsFragment.newInstance(subreddit, article);
+//        displayFragment(fragment);
     }
 }
