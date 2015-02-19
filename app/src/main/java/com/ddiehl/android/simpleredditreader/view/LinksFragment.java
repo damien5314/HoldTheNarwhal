@@ -192,11 +192,12 @@ public class LinksFragment extends ListFragment {
     public void onListItemClick(ListView l, View v, final int position, long id) {
         RedditLink link = mData.get(position);
 
-        Uri webViewUri = Uri.parse(link.getUrl());
-        Intent i = new Intent(getActivity(), WebViewActivity.class);
-        i.setData(webViewUri);
-
-        startActivity(i);
+        if (!link.isSelf()) {
+            Uri webViewUri = Uri.parse(link.getUrl());
+            Intent i = new Intent(getActivity(), WebViewActivity.class);
+            i.setData(webViewUri);
+            startActivity(i);
+        }
     }
 
     @TargetApi(11)

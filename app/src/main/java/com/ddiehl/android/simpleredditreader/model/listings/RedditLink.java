@@ -134,7 +134,7 @@ public class RedditLink extends Listing {
         return data.stickied;
     }
 
-    public Boolean getIsSelf() {
+    public Boolean isSelf() {
         return data.isSelf;
     }
 
