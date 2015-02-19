@@ -347,20 +347,6 @@ public class LinksFragment extends ListFragment {
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_links, menu);
-
-        // Disable timespan option if current sort does not support it
-        if (mSort.equals("hot") ||
-                mSort.equals("new") ||
-                mSort.equals("rising")) {
-            menu.findItem(R.id.action_change_timespan).setVisible(false);
-        } else { // controversial, rising
-            menu.findItem(R.id.action_change_timespan).setVisible(true);
-        }
-    }
-
-    @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         getActivity().getMenuInflater().inflate(R.menu.menu_link_context, menu);
     }
@@ -380,6 +366,20 @@ public class LinksFragment extends ListFragment {
     }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_links, menu);
+
+        // Disable timespan option if current sort does not support it
+        if (mSort.equals("hot") ||
+                mSort.equals("new") ||
+                mSort.equals("rising")) {
+            menu.findItem(R.id.action_change_timespan).setVisible(false);
+        } else { // controversial, rising
+            menu.findItem(R.id.action_change_timespan).setVisible(true);
+        }
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         FragmentManager fm = getActivity().getSupportFragmentManager();
         switch (item.getItemId()) {
@@ -392,6 +392,10 @@ public class LinksFragment extends ListFragment {
                 ChooseTimespanDialog chooseTimespanDialog = ChooseTimespanDialog.newInstance(mTimeSpan);
                 chooseTimespanDialog.setTargetFragment(this, REQUEST_CHOOSE_TIMESPAN);
                 chooseTimespanDialog.show(fm, DIALOG_CHOOSE_TIMESPAN);
+                return true;
+            case R.id.action_refresh:
+                mData.clear();
+                getLinks();
                 return true;
             case R.id.action_settings:
                 return true;
