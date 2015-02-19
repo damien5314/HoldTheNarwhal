@@ -201,7 +201,7 @@ public class LinksFragment extends ListFragment {
     }
 
     @TargetApi(11)
-    private void openListItemContext(ListView l, View v, final int position, long id) {
+    private void openListItemContext(final int position) {
         getActivity().startActionMode(new ActionMode.Callback() {
             @Override
             public boolean onCreateActionMode(ActionMode mode, Menu menu) {
@@ -429,7 +429,7 @@ public class LinksFragment extends ListFragment {
         }
 
         @Override
-        public View getView(int position, View view, ViewGroup parent) {
+        public View getView(final int position, View view, ViewGroup parent) {
             if (view == null) {
                 view = getActivity().getLayoutInflater().inflate(R.layout.links_list_item, null);
             }
@@ -439,12 +439,25 @@ public class LinksFragment extends ListFragment {
             String createDateFormatted = Utils.getFormattedDateStringFromUtc(link.getCreatedUtc().longValue());
 
             // Set content for each TextView
-            ((TextView) view.findViewById(R.id.listing_score)).setText(String.valueOf(link.getScore()));
-            ((TextView) view.findViewById(R.id.listing_title)).setText(link.getTitle());
-            ((TextView) view.findViewById(R.id.listing_author)).setText("/u/" + link.getAuthor());
-            ((TextView) view.findViewById(R.id.listing_timestamp)).setText(createDateFormatted);
-            ((TextView) view.findViewById(R.id.listing_subreddit)).setText("/r/" + link.getSubreddit());
-            ((TextView) view.findViewById(R.id.listing_domain)).setText("(" + link.getDomain() + ")");
+            TextView vScore = (TextView) view.findViewById(R.id.listing_score);
+            vScore.setText(String.valueOf(link.getScore()));
+            TextView vTitle = (TextView) view.findViewById(R.id.listing_title);
+            vTitle.setText(link.getTitle());
+            TextView vAuthor = (TextView) view.findViewById(R.id.listing_author);
+            vAuthor.setText("/u/" + link.getAuthor());
+            TextView vTimestamp = (TextView) view.findViewById(R.id.listing_timestamp);
+            vTimestamp.setText(createDateFormatted);
+            TextView vSubreddit = (TextView) view.findViewById(R.id.listing_subreddit);
+            vSubreddit.setText("/r/" + link.getSubreddit());
+            TextView vDomain = (TextView) view.findViewById(R.id.listing_domain);
+            vDomain.setText("(" + link.getDomain() + ")");
+
+            vScore.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    openListItemContext(position);
+                }
+            });
 
             // Queue thumbnail to be downloaded, if one exists
             ImageView thumbnailImageView = (ImageView) view.findViewById(R.id.listing_thumbnail);
