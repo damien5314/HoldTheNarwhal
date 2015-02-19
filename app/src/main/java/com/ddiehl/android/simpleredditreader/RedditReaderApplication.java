@@ -22,7 +22,7 @@ import retrofit.RestAdapter;
  */
 public class RedditReaderApplication extends Application {
     private static final String TAG = RedditReaderApplication.class.getSimpleName();
-    private final String API_URL = "http://www.reddit.com";
+    private static final String API_URL = "http://www.reddit.com";
     private static final String USER_AGENT =
             "android:com.ddiehl.android.simpleredditreader:v0.1 (by /u/damien5314)";
 
@@ -40,17 +40,13 @@ public class RedditReaderApplication extends Application {
         mBus.register(this); // Listen for "global" events
 
         // Stetho debugging tool
-        Stetho.initialize(
-                Stetho.newInitializerBuilder(this)
-                        .enableDumpapp(
-                                Stetho.defaultDumperPluginsProvider(this))
-                        .enableWebKitInspector(
-                                Stetho.defaultInspectorModulesProvider(this))
-                        .build());
+        Stetho.initialize(Stetho.newInitializerBuilder(this)
+                .enableDumpapp(Stetho.defaultDumperPluginsProvider(this))
+                .enableWebKitInspector(Stetho.defaultInspectorModulesProvider(this))
+                .build());
 
         // Network inspection through Stetho
-        OkHttpClient client = new OkHttpClient();
-        client.networkInterceptors().add(new StethoInterceptor());
+        new OkHttpClient().networkInterceptors().add(new StethoInterceptor());
     }
 
     private RedditApi buildApi() {
@@ -61,7 +57,7 @@ public class RedditReaderApplication extends Application {
 
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint(API_URL)
-                // Add user agent header to each request
+                        // Add user agent header to each request
                 .setRequestInterceptor(new RequestInterceptor() {
                     @Override
                     public void intercept(RequestFacade request) {
