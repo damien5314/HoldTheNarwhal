@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.ListFragment;
 import android.support.v7.widget.Toolbar;
@@ -193,7 +194,9 @@ public class LinksFragment extends ListFragment {
     public void onListItemClick(ListView l, View v, final int position, long id) {
         RedditLink link = mData.get(position);
 
-        if (!link.isSelf()) {
+        if (link.isSelf()) {
+            openCommentsForLink(mData.get(position));
+        } else {
             Uri webViewUri = Uri.parse(link.getUrl());
             Intent i = new Intent(getActivity(), WebViewActivity.class);
             i.setData(webViewUri);
@@ -219,10 +222,16 @@ public class LinksFragment extends ListFragment {
             public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.action_upvote:
+                        mode.finish();
                         upvote(mData.get(position));
                         return true;
                     case R.id.action_downvote:
+                        mode.finish();
                         downvote(mData.get(position));
+                        return true;
+                    case R.id.action_show_comments:
+                        mode.finish();
+                        openCommentsForLink(mData.get(position));
                         return true;
                     default:
                         return false;
@@ -240,10 +249,17 @@ public class LinksFragment extends ListFragment {
         String subreddit = link.getSubreddit();
         String articleId = link.getId();
 
-        Intent i = new Intent(getActivity(), CommentsActivity.class);
-        i.putExtra(CommentsActivity.EXTRA_SUBREDDIT, subreddit);
-        i.putExtra(CommentsActivity.EXTRA_ARTICLE, articleId);
-        startActivity(i);
+        Fragment fragment = CommentsFragment.newInstance(subreddit, articleId);
+        FragmentManager fm = getActivity().getSupportFragmentManager();
+        fm.beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .addToBackStack(null)
+                .commit();
+
+//        Intent i = new Intent(getActivity(), CommentsActivity.class);
+//        i.putExtra(CommentsActivity.EXTRA_SUBREDDIT, subreddit);
+//        i.putExtra(CommentsActivity.EXTRA_ARTICLE, articleId);
+//        startActivity(i);
     }
 
     public void updateSubreddit(String subreddit) {

@@ -103,7 +103,10 @@ public class LinksDrawerActivity extends ActionBarActivity
 
         if (savedInstanceState == null) {
             Fragment fragment = LinksFragment.newInstance(subreddit, Sort.HOT, TimeSpan.ALL);
-            displayFragment(fragment);
+            FragmentManager fm = getSupportFragmentManager();
+            fm.beginTransaction()
+                    .replace(R.id.fragment_container, fragment)
+                    .commit();
         }
     }
 
@@ -148,12 +151,5 @@ public class LinksDrawerActivity extends ActionBarActivity
         }
 
         mDrawerLayout.closeDrawer(GravityCompat.START);
-    }
-
-    private void displayFragment(Fragment fragment) {
-        FragmentManager fm = getSupportFragmentManager();
-        fm.beginTransaction()
-                .replace(R.id.fragment_container, fragment)
-                .commit();
     }
 }
