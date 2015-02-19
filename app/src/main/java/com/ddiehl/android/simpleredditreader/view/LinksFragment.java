@@ -73,6 +73,7 @@ public class LinksFragment extends ListFragment {
 
     private Toolbar mToolbar;
     private ProgressDialog mProgressBar;
+    private ListView mListView;
 
     public LinksFragment() { /* Default constructor required */ }
 
@@ -122,13 +123,13 @@ public class LinksFragment extends ListFragment {
         // Add a custom layout that has a ViewPager
         View v = inflater.inflate(R.layout.links_fragment, null);
 
-        ListView listView = (ListView) v.findViewById(android.R.id.list);
+        mListView = (ListView) v.findViewById(android.R.id.list);
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
             // Register view for context menu
-            registerForContextMenu(listView);
+            registerForContextMenu(mListView);
         } else {
             // Set up contextual action bar
-            listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+            mListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         }
 
         return v;
@@ -223,13 +224,14 @@ public class LinksFragment extends ListFragment {
                     case R.id.action_downvote:
                         downvote(mData.get(position));
                         return true;
+                    default:
+                        return false;
                 }
-                return false;
             }
 
             @Override
             public void onDestroyActionMode(ActionMode mode) {
-
+                mListView.setItemChecked(position, false);
             }
         });
     }
@@ -452,10 +454,16 @@ public class LinksFragment extends ListFragment {
             TextView vDomain = (TextView) view.findViewById(R.id.listing_domain);
             vDomain.setText("(" + link.getDomain() + ")");
 
+            // Register context menu to click event for score view
             vScore.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    openListItemContext(position);
+                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+
+                    } else { // Activate contextual action bar
+                        mListView.setItemChecked(position, true);
+                        openListItemContext(position);
+                    }
                 }
             });
 
