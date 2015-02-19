@@ -8,6 +8,9 @@ import com.ddiehl.android.simpleredditreader.events.ApiErrorEvent;
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
 import com.ddiehl.android.simpleredditreader.web.RedditApi;
 import com.ddiehl.android.simpleredditreader.web.RedditService;
+import com.facebook.stetho.Stetho;
+import com.facebook.stetho.okhttp.StethoInterceptor;
+import com.squareup.okhttp.OkHttpClient;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -35,6 +38,19 @@ public class RedditReaderApplication extends Application {
         mBus.register(mRedditService);
 
         mBus.register(this); // Listen for "global" events
+
+        // Stetho debugging tool
+        Stetho.initialize(
+                Stetho.newInitializerBuilder(this)
+                        .enableDumpapp(
+                                Stetho.defaultDumperPluginsProvider(this))
+                        .enableWebKitInspector(
+                                Stetho.defaultInspectorModulesProvider(this))
+                        .build());
+
+        // Network inspection through Stetho
+        OkHttpClient client = new OkHttpClient();
+        client.networkInterceptors().add(new StethoInterceptor());
     }
 
     private RedditApi buildApi() {
