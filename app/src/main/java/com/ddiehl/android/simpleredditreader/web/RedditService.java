@@ -63,6 +63,7 @@ public class RedditService {
                 @Override
                 public void failure(RetrofitError error) {
                     Log.e(TAG, "RetrofitError: " + error.getMessage(), error);
+                    mBus.post(new LinksLoadedEvent(error));
                 }
             });
         }

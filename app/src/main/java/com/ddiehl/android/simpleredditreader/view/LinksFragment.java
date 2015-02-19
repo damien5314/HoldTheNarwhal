@@ -2,6 +2,7 @@ package com.ddiehl.android.simpleredditreader.view;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -71,7 +72,7 @@ public class LinksFragment extends ListFragment {
     private boolean mLinksRequested = false;
 
     private Toolbar mToolbar;
-
+    private ProgressDialog mProgressBar;
 
     public LinksFragment() { /* Default constructor required */ }
 
@@ -165,7 +166,6 @@ public class LinksFragment extends ListFragment {
         updateTitle();
 
         if (mLastDisplayedLink == null) {
-//            setListShown(false);
             getLinks();
         }
     }
@@ -271,6 +271,7 @@ public class LinksFragment extends ListFragment {
     }
 
     private void getLinks() {
+        showSpinner();
         mLinksRequested = true;
         getBus().post(new LoadLinksEvent(mSubreddit, mSort, mTimeSpan));
     }
@@ -287,6 +288,12 @@ public class LinksFragment extends ListFragment {
 
     @Subscribe
     public void onLinksLoaded(LinksLoadedEvent event) {
+        dismissSpinner();
+        if (event.isFailed()) {
+            Log.e(TAG, "Error loading links", event.getError());
+            return;
+        }
+
         mLinksRequested = false;
         mLastDisplayedLink = event.getResponse().getData().getAfter();
 
@@ -297,7 +304,6 @@ public class LinksFragment extends ListFragment {
         updateTitle();
         mData.addAll(event.getLinks());
         mLinkAdapter.notifyDataSetChanged();
-//        setListShown(true);
     }
 
     @Subscribe
@@ -402,6 +408,19 @@ public class LinksFragment extends ListFragment {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showSpinner() {
+        if (mProgressBar == null) {
+            mProgressBar = new ProgressDialog(getActivity(), R.style.ProgressDialog);
+            mProgressBar.setCancelable(false);
+            mProgressBar.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        }
+        mProgressBar.show();
+    }
+
+    private void dismissSpinner() {
+        mProgressBar.dismiss();
     }
 
     private class LinkAdapter extends ArrayAdapter<RedditLink> {
