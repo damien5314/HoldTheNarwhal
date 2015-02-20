@@ -2,20 +2,27 @@ package com.ddiehl.android.simpleredditreader.model.listings;
 
 import com.google.gson.annotations.Expose;
 
-public class ListingResponse<T extends Listing> {
+public class ListingResponse {
 
     @Expose
     private String kind;
     @Expose
-    private ListingResponseData<T> data;
+    private ListingResponseData data;
 
 
     public String getKind() {
         return kind;
     }
 
-    public ListingResponseData<T> getData() {
+    public void setKind(String kind) {
+        this.kind = kind;
+    }
+
+    public ListingResponseData getData() {
         return data;
     }
 
+    public void setData(ListingResponseData data) {
+        this.data = data;
+    }
 }

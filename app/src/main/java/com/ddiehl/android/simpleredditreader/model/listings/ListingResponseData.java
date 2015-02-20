@@ -4,12 +4,12 @@ import com.google.gson.annotations.Expose;
 
 import java.util.List;
 
-public class ListingResponseData<T> {
+public class ListingResponseData {
 
     @Expose
     private String modhash;
     @Expose
-    private List<T> children;
+    private List<Listing> children;
     @Expose
     private String after;
     @Expose
@@ -24,11 +24,11 @@ public class ListingResponseData<T> {
         this.modhash = modhash;
     }
 
-    public List<T> getChildren() {
+    public List getChildren() {
         return children;
     }
 
-    public void setChildren(List<T> children) {
+    public void setChildren(List<Listing> children) {
         this.children = children;
     }
 

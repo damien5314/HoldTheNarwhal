@@ -7,7 +7,9 @@ import android.widget.Toast;
 import com.ddiehl.android.simpleredditreader.events.ApiErrorEvent;
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
 import com.ddiehl.android.simpleredditreader.model.adapters.ListingDeserializer;
+import com.ddiehl.android.simpleredditreader.model.adapters.ListingResponseDeserializer;
 import com.ddiehl.android.simpleredditreader.model.listings.Listing;
+import com.ddiehl.android.simpleredditreader.model.listings.ListingResponse;
 import com.ddiehl.android.simpleredditreader.web.RedditApi;
 import com.ddiehl.android.simpleredditreader.web.RedditService;
 import com.facebook.stetho.Stetho;
@@ -58,7 +60,7 @@ public class RedditReaderApplication extends Application {
     private RedditApi buildApi() {
         Gson gson = new GsonBuilder()
                 .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-//                .registerTypeAdapter(ListingResponse.class, new CommentsListingAdapter())
+                .registerTypeAdapter(ListingResponse.class, new ListingResponseDeserializer())
                 .registerTypeAdapter(Listing.class, new ListingDeserializer())
                 .create();
 

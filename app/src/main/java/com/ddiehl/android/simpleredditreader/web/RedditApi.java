@@ -1,8 +1,6 @@
 package com.ddiehl.android.simpleredditreader.web;
 
-import com.ddiehl.android.simpleredditreader.model.listings.Listing;
 import com.ddiehl.android.simpleredditreader.model.listings.ListingResponse;
-import com.ddiehl.android.simpleredditreader.model.listings.RedditLink;
 
 import java.util.List;
 
@@ -20,23 +18,18 @@ public interface RedditApi {
                   @Path("sort") String sort,
                   @Query("t") String timespan,
                   @Query("after") String after,
-                  Callback<ListingResponse<RedditLink>> callback);
+                  Callback<ListingResponse> callback);
 
     @GET("/{sort}.json")
     void getDefaultLinks(@Path("sort") String sort,
                          @Query("t") String timespan,
                          @Query("after") String after,
-                         Callback<ListingResponse<RedditLink>> callback);
+                         Callback<ListingResponse> callback);
 
-    @GET("/r/{subreddit}/comments/{articleId}/hot.json")
+    @GET("/r/{subreddit}/comments/{articleId}/top.json")
     void getComments(@Path("subreddit") String subreddit,
                      @Path("articleId") String articleId,
-                     Callback<List<ListingResponse<Listing>>> callback);
-
-//    @GET("/r/{subreddit}/comments/{articleId}/hot.json")
-//    void getComments(@Path("subreddit") String subreddit,
-//                        @Path("articleId") String articleId,
-//                        Callback<Response> callback);
+                     Callback<List<ListingResponse>> callback);
 
     @POST("/api/vote")
     void vote(@Query("id") String id,

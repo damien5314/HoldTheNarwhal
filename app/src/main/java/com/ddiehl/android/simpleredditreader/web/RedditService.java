@@ -8,9 +8,7 @@ import com.ddiehl.android.simpleredditreader.events.LoadHotCommentsEvent;
 import com.ddiehl.android.simpleredditreader.events.LoadLinksEvent;
 import com.ddiehl.android.simpleredditreader.events.VoteEvent;
 import com.ddiehl.android.simpleredditreader.events.VoteSubmittedEvent;
-import com.ddiehl.android.simpleredditreader.model.listings.Listing;
 import com.ddiehl.android.simpleredditreader.model.listings.ListingResponse;
-import com.ddiehl.android.simpleredditreader.model.listings.RedditLink;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -40,12 +38,12 @@ public class RedditService {
         String sort = event.getSort();
         String timespan = event.getTimeSpan();
         String after = event.getAfter();
-        Log.i(TAG, "Loading hot links for /r/" + subreddit + " after " + after);
+        Log.i(TAG, "Loading links for /r/" + subreddit + "/" + sort + ".json?t=" + timespan);
 
         if (subreddit == null) {
-            mApi.getDefaultLinks(sort, timespan, after, new Callback<ListingResponse<RedditLink>>() {
+            mApi.getDefaultLinks(sort, timespan, after, new Callback<ListingResponse>() {
                 @Override
-                public void success(ListingResponse<RedditLink> linksResponse, Response response) {
+                public void success(ListingResponse linksResponse, Response response) {
                     mBus.post(new LinksLoadedEvent(linksResponse));
                 }
 
@@ -55,9 +53,9 @@ public class RedditService {
                 }
             });
         } else {
-            mApi.getLinks(subreddit, sort, timespan, after, new Callback<ListingResponse<RedditLink>>() {
+            mApi.getLinks(subreddit, sort, timespan, after, new Callback<ListingResponse>() {
                 @Override
-                public void success(ListingResponse<RedditLink> linksResponse, Response response) {
+                public void success(ListingResponse linksResponse, Response response) {
                     mBus.post(new LinksLoadedEvent(linksResponse));
                 }
 
@@ -77,11 +75,11 @@ public class RedditService {
     public void onLoadHotComments(LoadHotCommentsEvent event) {
         String subreddit = event.getSubreddit();
         String article = event.getArticle();
-        Log.i(TAG, "Loading hot links for /r/" + subreddit + "/" + article);
+        Log.i(TAG, "Loading comments for /r/" + subreddit + "/" + article);
 
-        mApi.getComments(subreddit, article, new Callback<List<ListingResponse<Listing>>>() {
+        mApi.getComments(subreddit, article, new Callback<List<ListingResponse>>() {
             @Override
-            public void success(List<ListingResponse<Listing>> listingsList, Response response) {
+            public void success(List<ListingResponse> listingsList, Response response) {
                 mBus.post(new CommentsLoadedEvent(listingsList));
             }
 
@@ -90,23 +88,6 @@ public class RedditService {
                 Log.e(TAG, "RetrofitError: " + error.getMessage(), error);
             }
         });
-
-//        mApi.getComments(subreddit, article, new Callback<Response>() {
-//            @Override
-//            public void success(Response response, Response response2) {
-//                try {
-//                    JSONObject json = new JSONObject(Utils.inputStreamToString(response.getBody().in()));
-//
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//
-//            @Override
-//            public void failure(RetrofitError error) {
-//                Log.e(TAG, "RetrofitError: " + error.getMessage(), error);
-//            }
-//        });
     }
 
     /**

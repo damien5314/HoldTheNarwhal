@@ -14,7 +14,7 @@ public class RedditLink extends Listing {
     private RedditLinkData data;
 
     @Override
-    public Object getData() {
+    public RedditLinkData getData() {
         return data;
     }
 

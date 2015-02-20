@@ -80,7 +80,6 @@ public class CommentsFragment extends ListFragment {
         getBus().register(this);
 
         if (!mCommentsRetrieved) {
-            Log.d(TAG, "Loading hot comments for: " + mArticleId);
             setListShown(false);
             getBus().post(new LoadHotCommentsEvent(mSubreddit, mArticleId));
         }
@@ -98,7 +97,7 @@ public class CommentsFragment extends ListFragment {
         mCommentsRetrieved = true;
 
         mData.clear();
-        mData.addAll(event.getListings());
+        mData.addAll(event.getComments());
         mCommentAdapter.notifyDataSetChanged();
         setListShown(true);
     }
@@ -122,10 +121,11 @@ public class CommentsFragment extends ListFragment {
             }
 
             Listing comment = mData.get(position);
+            TextView vText = (TextView) view.findViewById(android.R.id.text1);
             if (comment instanceof RedditComment) {
-                ((TextView) view.findViewById(android.R.id.text1)).setText(((RedditComment) comment).getName());
+                vText.setText("Author: " + ((RedditComment) comment).getAuthor());
             } else {
-                ((TextView) view.findViewById(android.R.id.text1)).setText(((RedditMoreComments) comment).getName());
+                vText.setText("More: " + ((RedditMoreComments) comment).getCount());
             }
 
             return view;

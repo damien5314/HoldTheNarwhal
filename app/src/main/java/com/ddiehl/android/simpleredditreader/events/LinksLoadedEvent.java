@@ -11,12 +11,12 @@ import retrofit.RetrofitError;
  * Created by Damien on 1/19/2015.
  */
 public class LinksLoadedEvent {
-    private ListingResponse<RedditLink> mResponse;
+    private ListingResponse mResponse;
     private List<RedditLink> mLinks;
     private RetrofitError mError;
     private boolean mFailed = false;
 
-    public LinksLoadedEvent(ListingResponse<RedditLink> response) {
+    public LinksLoadedEvent(ListingResponse response) {
         mResponse = response;
         mLinks = response.getData().getChildren();
     }

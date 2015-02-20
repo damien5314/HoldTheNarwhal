@@ -5,14 +5,14 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class RedditMoreComments extends Comment {
+public class RedditMoreComments extends Listing {
 
     @Expose
     private RedditMoreCommentsData data;
 
 
     @Override
-    public Object getData() {
+    public RedditMoreCommentsData getData() {
         return null;
     }
 
