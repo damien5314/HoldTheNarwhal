@@ -122,7 +122,7 @@ public class RedditComment extends Listing {
         return data.authorFlairText;
     }
 
-    public double getCreateUtc() {
+    public Double getCreateUtc() {
         return data.createUtc;
     }
 

@@ -26,18 +26,16 @@ public class ListingDeserializer implements JsonDeserializer<Listing> {
         switch (kind) {
             case "t1":
                 listing = context.deserialize(json, RedditComment.class);
-                Log.d(TAG, kind + " - Author: " + ((RedditComment) listing).getAuthor());
                 return listing;
             case "t3":
                 listing = context.deserialize(json, RedditLink.class);
-                Log.d(TAG, kind + " - Title: " + ((RedditLink) listing).getTitle());
                 return listing;
             case "more":
                 listing = context.deserialize(json, RedditMoreComments.class);
-                Log.d(TAG, kind + " - More: " + ((RedditMoreComments) listing).getCount());
                 return listing;
             default:
-                return context.deserialize(json, typeOfT);
+                Log.w(TAG, "No deserialization class set for listing type: " + kind);
+                return null;
         }
     }
 }

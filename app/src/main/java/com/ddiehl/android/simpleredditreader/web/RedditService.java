@@ -72,11 +72,11 @@ public class RedditService {
      * Retrieves hot listings for article passed as a parameter
      */
     @Subscribe
-    public void onLoadHotComments(LoadHotCommentsEvent event) {
+    public void onLoadComments(LoadHotCommentsEvent event) {
         String subreddit = event.getSubreddit();
         String article = event.getArticle();
-        Log.i(TAG, "Loading comments for /r/" + subreddit + "/" + article);
 
+        Log.i(TAG, "Loading comments for /r/" + subreddit + "/" + article);
         mApi.getComments(subreddit, article, new Callback<List<ListingResponse>>() {
             @Override
             public void success(List<ListingResponse> listingsList, Response response) {

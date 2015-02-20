@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.ddiehl.android.simpleredditreader.R;
+import com.ddiehl.android.simpleredditreader.Utils;
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
 import com.ddiehl.android.simpleredditreader.events.CommentsLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.LoadHotCommentsEvent;
@@ -65,13 +66,13 @@ public class CommentsFragment extends ListFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return super.onCreateView(inflater, container, savedInstanceState);
+        View v = inflater.inflate(R.layout.comments_fragment, null);
+        return v;
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        setEmptyText(getString(R.string.no_comments_found));
     }
 
     @Override
@@ -80,7 +81,6 @@ public class CommentsFragment extends ListFragment {
         getBus().register(this);
 
         if (!mCommentsRetrieved) {
-            setListShown(false);
             getBus().post(new LoadHotCommentsEvent(mSubreddit, mArticleId));
         }
     }
@@ -99,7 +99,6 @@ public class CommentsFragment extends ListFragment {
         mData.clear();
         mData.addAll(event.getComments());
         mCommentAdapter.notifyDataSetChanged();
-        setListShown(true);
     }
 
     private Bus getBus() {
@@ -117,15 +116,22 @@ public class CommentsFragment extends ListFragment {
         @Override
         public View getView(int position, View view, ViewGroup parent) {
             if (view == null) {
-                view = getActivity().getLayoutInflater().inflate(android.R.layout.simple_list_item_1, null);
+                view = getActivity().getLayoutInflater().inflate(R.layout.comments_list_item, null);
             }
 
             Listing comment = mData.get(position);
-            TextView vText = (TextView) view.findViewById(android.R.id.text1);
             if (comment instanceof RedditComment) {
-                vText.setText("Author: " + ((RedditComment) comment).getAuthor());
+                TextView vAuthor = (TextView) view.findViewById(R.id.comment_author);
+                vAuthor.setText("/u/" + ((RedditComment) comment).getAuthor());
+                TextView vScore = (TextView) view.findViewById(R.id.comment_score);
+                vScore.setText("[" + ((RedditComment) comment).getScore() + "]");
+                TextView vTimestamp = (TextView) view.findViewById(R.id.comment_timestamp);
+                vTimestamp.setText(Utils.getFormattedDateStringFromUtc(((RedditComment) comment).getCreateUtc().longValue()));
+                TextView vBody = (TextView) view.findViewById(R.id.comment_body);
+                vBody.setText(((RedditComment) comment).getBody());
             } else {
-                vText.setText("More: " + ((RedditMoreComments) comment).getCount());
+                TextView vBody = (TextView) view.findViewById(R.id.comment_body);
+                vBody.setText("More comments (" + ((RedditMoreComments) comment).getCount() + ")");
             }
 
             return view;

@@ -121,7 +121,6 @@ public class LinksFragment extends ListFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Add a custom layout that has a ViewPager
         View v = inflater.inflate(R.layout.links_fragment, null);
 
         mListView = (ListView) v.findViewById(android.R.id.list);

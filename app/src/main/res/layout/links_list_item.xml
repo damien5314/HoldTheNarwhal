@@ -12,7 +12,7 @@
         android:id="@+id/link_score"
         style="@style/ListingScoreTextView"
         android:gravity="center"
-        android:text="•"/>
+        android:text="@string/link_score_default"/>
 
     <RelativeLayout
         android:layout_width="0dp"
