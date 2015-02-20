@@ -1,7 +1,10 @@
 package com.ddiehl.android.simpleredditreader.web;
 
+import com.ddiehl.android.simpleredditreader.model.listings.Listing;
 import com.ddiehl.android.simpleredditreader.model.listings.ListingResponse;
 import com.ddiehl.android.simpleredditreader.model.listings.RedditLink;
+
+import java.util.List;
 
 import retrofit.Callback;
 import retrofit.client.Response;
@@ -25,15 +28,15 @@ public interface RedditApi {
                          @Query("after") String after,
                          Callback<ListingResponse<RedditLink>> callback);
 
-//    @GET("/r/{subreddit}/comments/{articleId}/hot.json")
-//    void getHotComments(@Path("subreddit") String subreddit,
-//                        @Path("articleId") String articleId,
-//                        Callback<List<ListingResponse<RedditComment>>> callback);
-
     @GET("/r/{subreddit}/comments/{articleId}/hot.json")
-    void getHotComments(@Path("subreddit") String subreddit,
-                        @Path("articleId") String articleId,
-                        Callback<Response> callback);
+    void getComments(@Path("subreddit") String subreddit,
+                     @Path("articleId") String articleId,
+                     Callback<List<ListingResponse<Listing>>> callback);
+
+//    @GET("/r/{subreddit}/comments/{articleId}/hot.json")
+//    void getComments(@Path("subreddit") String subreddit,
+//                        @Path("articleId") String articleId,
+//                        Callback<Response> callback);
 
     @POST("/api/vote")
     void vote(@Query("id") String id,

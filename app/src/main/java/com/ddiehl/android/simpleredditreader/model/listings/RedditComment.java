@@ -7,7 +7,7 @@ import java.util.List;
 
 
 @SuppressWarnings("unused")
-public class RedditComment extends Listing {
+public class RedditComment extends Comment {
 
     @Expose
     private RedditCommentData data;
@@ -34,7 +34,7 @@ public class RedditComment extends Listing {
         return data.likes;
     }
 
-    public ListingResponse<RedditComment> getReplies() {
+    public ListingResponse<Listing> getReplies() {
         return data.replies;
     }
 
@@ -145,7 +145,7 @@ public class RedditComment extends Listing {
     private static class RedditCommentData {
 
         @Expose
-        private ListingResponse<RedditComment> replies;
+        private ListingResponse<Listing> replies;
         @Expose @SerializedName("subreddit_id")
         private String subredditId;
         @Expose @SerializedName("banned_by")

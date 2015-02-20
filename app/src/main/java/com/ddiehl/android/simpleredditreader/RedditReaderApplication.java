@@ -6,16 +6,22 @@ import android.widget.Toast;
 
 import com.ddiehl.android.simpleredditreader.events.ApiErrorEvent;
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
+import com.ddiehl.android.simpleredditreader.model.adapters.ListingDeserializer;
+import com.ddiehl.android.simpleredditreader.model.listings.Listing;
 import com.ddiehl.android.simpleredditreader.web.RedditApi;
 import com.ddiehl.android.simpleredditreader.web.RedditService;
 import com.facebook.stetho.Stetho;
 import com.facebook.stetho.okhttp.StethoInterceptor;
+import com.google.gson.FieldNamingPolicy;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
+import retrofit.converter.GsonConverter;
 
 /**
  * Created by Damien on 1/19/2015.
@@ -50,14 +56,15 @@ public class RedditReaderApplication extends Application {
     }
 
     private RedditApi buildApi() {
-//        Gson gson = new GsonBuilder()
-//                .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-//                .registerTypeAdapter(ListingResponse.class, new ListingResponseAdapter())
-//                .create();
+        Gson gson = new GsonBuilder()
+                .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+//                .registerTypeAdapter(ListingResponse.class, new CommentsListingAdapter())
+                .registerTypeAdapter(Listing.class, new ListingDeserializer())
+                .create();
 
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint(API_URL)
-                        // Add user agent header to each request
+                .setConverter(new GsonConverter(gson))
                 .setRequestInterceptor(new RequestInterceptor() {
                     @Override
                     public void intercept(RequestFacade request) {

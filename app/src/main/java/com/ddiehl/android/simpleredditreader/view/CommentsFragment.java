@@ -13,7 +13,9 @@ import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
 import com.ddiehl.android.simpleredditreader.events.CommentsLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.LoadHotCommentsEvent;
+import com.ddiehl.android.simpleredditreader.model.listings.Listing;
 import com.ddiehl.android.simpleredditreader.model.listings.RedditComment;
+import com.ddiehl.android.simpleredditreader.model.listings.RedditMoreComments;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -30,7 +32,7 @@ public class CommentsFragment extends ListFragment {
     private String mSubreddit;
     private String mArticleId;
 
-    private List<RedditComment> mData;
+    private List<Listing> mData;
     private CommentAdapter mCommentAdapter;
     private boolean mCommentsRetrieved = false;
 
@@ -96,7 +98,7 @@ public class CommentsFragment extends ListFragment {
         mCommentsRetrieved = true;
 
         mData.clear();
-        mData.addAll(event.getComments());
+        mData.addAll(event.getListings());
         mCommentAdapter.notifyDataSetChanged();
         setListShown(true);
     }
@@ -108,8 +110,8 @@ public class CommentsFragment extends ListFragment {
         return mBus;
     }
 
-    private class CommentAdapter extends ArrayAdapter<RedditComment> {
-        public CommentAdapter(List<RedditComment> data) {
+    private class CommentAdapter extends ArrayAdapter<Listing> {
+        public CommentAdapter(List<Listing> data) {
             super(getActivity(), 0, data);
         }
 
@@ -119,7 +121,12 @@ public class CommentsFragment extends ListFragment {
                 view = getActivity().getLayoutInflater().inflate(android.R.layout.simple_list_item_1, null);
             }
 
-            ((TextView) view.findViewById(android.R.id.text1)).setText(mData.get(position).getName());
+            Listing comment = mData.get(position);
+            if (comment instanceof RedditComment) {
+                ((TextView) view.findViewById(android.R.id.text1)).setText(((RedditComment) comment).getName());
+            } else {
+                ((TextView) view.findViewById(android.R.id.text1)).setText(((RedditMoreComments) comment).getName());
+            }
 
             return view;
         }

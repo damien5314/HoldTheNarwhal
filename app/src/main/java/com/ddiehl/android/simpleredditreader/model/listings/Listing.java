@@ -12,5 +12,9 @@ public abstract class Listing {
         return kind;
     }
 
+    public void setKind(String kind) {
+        this.kind = kind;
+    }
+
     public abstract Object getData();
 }

@@ -2,18 +2,19 @@ package com.ddiehl.android.simpleredditreader.web;
 
 import android.util.Log;
 
-import com.ddiehl.android.simpleredditreader.Utils;
+import com.ddiehl.android.simpleredditreader.events.CommentsLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.LinksLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.LoadHotCommentsEvent;
 import com.ddiehl.android.simpleredditreader.events.LoadLinksEvent;
 import com.ddiehl.android.simpleredditreader.events.VoteEvent;
 import com.ddiehl.android.simpleredditreader.events.VoteSubmittedEvent;
+import com.ddiehl.android.simpleredditreader.model.listings.Listing;
 import com.ddiehl.android.simpleredditreader.model.listings.ListingResponse;
 import com.ddiehl.android.simpleredditreader.model.listings.RedditLink;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
-import org.json.JSONObject;
+import java.util.List;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -78,27 +79,10 @@ public class RedditService {
         String article = event.getArticle();
         Log.i(TAG, "Loading hot links for /r/" + subreddit + "/" + article);
 
-//        mApi.getHotComments(subreddit, article, new Callback<List<ListingResponse<RedditComment>>>() {
-//            @Override
-//            public void success(List<ListingResponse<RedditComment>> listingsList, Response response) {
-//                mBus.post(new CommentsLoadedEvent(listingsList));
-//            }
-//
-//            @Override
-//            public void failure(RetrofitError error) {
-//                Log.e(TAG, "RetrofitError: " + error.getMessage(), error);
-//            }
-//        });
-
-        mApi.getHotComments(subreddit, article, new Callback<Response>() {
+        mApi.getComments(subreddit, article, new Callback<List<ListingResponse<Listing>>>() {
             @Override
-            public void success(Response response, Response response2) {
-                try {
-                    JSONObject json = new JSONObject(Utils.inputStreamToString(response.getBody().in()));
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+            public void success(List<ListingResponse<Listing>> listingsList, Response response) {
+                mBus.post(new CommentsLoadedEvent(listingsList));
             }
 
             @Override
@@ -106,6 +90,23 @@ public class RedditService {
                 Log.e(TAG, "RetrofitError: " + error.getMessage(), error);
             }
         });
+
+//        mApi.getComments(subreddit, article, new Callback<Response>() {
+//            @Override
+//            public void success(Response response, Response response2) {
+//                try {
+//                    JSONObject json = new JSONObject(Utils.inputStreamToString(response.getBody().in()));
+//
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//
+//            @Override
+//            public void failure(RetrofitError error) {
+//                Log.e(TAG, "RetrofitError: " + error.getMessage(), error);
+//            }
+//        });
     }
 
     /**
