@@ -457,17 +457,17 @@ public class LinksFragment extends ListFragment {
             String createDateFormatted = Utils.getFormattedDateStringFromUtc(link.getCreatedUtc().longValue());
 
             // Set content for each TextView
-            TextView vScore = (TextView) view.findViewById(R.id.listing_score);
+            TextView vScore = (TextView) view.findViewById(R.id.link_score);
             vScore.setText(String.valueOf(link.getScore()));
-            TextView vTitle = (TextView) view.findViewById(R.id.listing_title);
+            TextView vTitle = (TextView) view.findViewById(R.id.link_title);
             vTitle.setText(link.getTitle());
-            TextView vAuthor = (TextView) view.findViewById(R.id.listing_author);
+            TextView vAuthor = (TextView) view.findViewById(R.id.link_author);
             vAuthor.setText("/u/" + link.getAuthor());
-            TextView vTimestamp = (TextView) view.findViewById(R.id.listing_timestamp);
+            TextView vTimestamp = (TextView) view.findViewById(R.id.link_timestamp);
             vTimestamp.setText(createDateFormatted);
-            TextView vSubreddit = (TextView) view.findViewById(R.id.listing_subreddit);
+            TextView vSubreddit = (TextView) view.findViewById(R.id.link_subreddit);
             vSubreddit.setText("/r/" + link.getSubreddit());
-            TextView vDomain = (TextView) view.findViewById(R.id.listing_domain);
+            TextView vDomain = (TextView) view.findViewById(R.id.link_domain);
             vDomain.setText("(" + link.getDomain() + ")");
 
             // Register context menu to click event for score view
@@ -484,7 +484,7 @@ public class LinksFragment extends ListFragment {
             });
 
             // Queue thumbnail to be downloaded, if one exists
-            ImageView thumbnailImageView = (ImageView) view.findViewById(R.id.listing_thumbnail);
+            ImageView thumbnailImageView = (ImageView) view.findViewById(R.id.link_thumbnail);
             String thumbnailUrl = link.getThumbnail();
             if (thumbnailUrl.equals("nsfw")) {
                 thumbnailImageView.setImageResource(R.drawable.ic_nsfw);

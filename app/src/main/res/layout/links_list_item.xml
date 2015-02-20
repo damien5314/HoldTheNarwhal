@@ -9,7 +9,7 @@
     android:paddingTop="4dp">
 
     <TextView
-        android:id="@+id/listing_score"
+        android:id="@+id/link_score"
         style="@style/ListingScoreTextView"
         android:gravity="center"
         android:text="•"/>
@@ -20,40 +20,40 @@
         android:layout_weight="1">
 
         <TextView
-            android:id="@+id/listing_title"
+            android:id="@+id/link_title"
             style="@style/ListingTitleTextView"
             android:layout_gravity="center_vertical"/>
 
         <TextView
-            android:id="@+id/listing_author"
+            android:id="@+id/link_author"
             style="@style/ListingAuthorTextView"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_below="@id/listing_title"/>
+            android:layout_below="@id/link_title"/>
 
         <TextView
-            android:id="@+id/listing_timestamp"
+            android:id="@+id/link_timestamp"
             style="@style/ListingTimestampTextView"
-            android:layout_below="@id/listing_author"/>
+            android:layout_below="@id/link_author"/>
 
         <TextView
-            android:id="@+id/listing_domain"
+            android:id="@+id/link_domain"
             style="@style/ListingDomainTextView"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:layout_below="@id/listing_title"/>
+            android:layout_below="@id/link_title"/>
 
         <TextView
-            android:id="@+id/listing_subreddit"
+            android:id="@+id/link_subreddit"
             style="@style/ListingSubredditTextView"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:layout_below="@id/listing_domain"/>
+            android:layout_below="@id/link_domain"/>
 
     </RelativeLayout>
 
     <ImageView
-        android:id="@+id/listing_thumbnail"
+        android:id="@+id/link_thumbnail"
         style="@style/ListingThumbnail"
         android:layout_gravity="center_vertical"
         android:background="@drawable/thumbnail_background"
