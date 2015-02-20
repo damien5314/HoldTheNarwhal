@@ -138,8 +138,6 @@ public class LinksFragment extends ListFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-//        mViewPager = (ViewPager) view.findViewById(R.id.view_pager);
-//        mViewPager.setAdapter(new LinkFragmentPagerAdapter(getFragmentManager()));
 
         ListView listView = getListView();
         listView.setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -254,11 +252,6 @@ public class LinksFragment extends ListFragment {
                 .replace(R.id.fragment_container, fragment)
                 .addToBackStack(null)
                 .commit();
-
-//        Intent i = new Intent(getActivity(), CommentsActivity.class);
-//        i.putExtra(CommentsActivity.EXTRA_SUBREDDIT, subreddit);
-//        i.putExtra(CommentsActivity.EXTRA_ARTICLE, articleId);
-//        startActivity(i);
     }
 
     public void updateSubreddit(String subreddit) {

@@ -80,6 +80,7 @@ public class RedditService {
         mApi.getComments(subreddit, article, new Callback<List<ListingResponse>>() {
             @Override
             public void success(List<ListingResponse> listingsList, Response response) {
+                Log.i(TAG, "Comments loaded successfully");
                 mBus.post(new CommentsLoadedEvent(listingsList));
             }
 
