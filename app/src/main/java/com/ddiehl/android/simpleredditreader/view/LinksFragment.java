@@ -113,6 +113,7 @@ public class LinksFragment extends ListFragment {
         mSubreddit = args.getString(ARG_SUBREDDIT);
         mSort = args.getString(ARG_SORT);
         mTimeSpan = args.getString(ARG_TIMESPAN);
+        updateTitle();
 
         mData = new ArrayList<>();
         mLinkAdapter = new LinkAdapter(mData);
@@ -132,15 +133,7 @@ public class LinksFragment extends ListFragment {
             mListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         }
 
-        return v;
-    }
-
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        ListView listView = getListView();
-        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+        mListView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
             }
@@ -155,6 +148,8 @@ public class LinksFragment extends ListFragment {
                 }
             }
         });
+
+        return v;
     }
 
     @Override
@@ -257,6 +252,7 @@ public class LinksFragment extends ListFragment {
     public void updateSubreddit(String subreddit) {
         mData.clear();
         mSubreddit = subreddit;
+        updateTitle();
         getLinks();
     }
 

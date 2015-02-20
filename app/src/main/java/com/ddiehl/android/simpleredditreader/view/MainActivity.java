@@ -21,9 +21,9 @@ import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.model.Sort;
 import com.ddiehl.android.simpleredditreader.model.TimeSpan;
 
-public class LinksDrawerActivity extends ActionBarActivity
+public class MainActivity extends ActionBarActivity
         implements View.OnClickListener {
-    private static final String TAG = LinksDrawerActivity.class.getSimpleName();
+    private static final String TAG = MainActivity.class.getSimpleName();
 
     public static final String EXTRA_SUBREDDIT = "com.ddiehl.android.simpleredditreader.extra_subreddit";
 
