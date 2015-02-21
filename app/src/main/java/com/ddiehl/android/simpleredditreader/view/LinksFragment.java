@@ -12,7 +12,6 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.ListFragment;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.ActionMode;
 import android.view.ContextMenu;
@@ -46,8 +45,6 @@ import com.squareup.otto.Subscribe;
 import java.util.ArrayList;
 import java.util.List;
 
-import retrofit.client.Response;
-
 public class LinksFragment extends ListFragment {
     private static final String TAG = LinksFragment.class.getSimpleName();
 
@@ -72,7 +69,6 @@ public class LinksFragment extends ListFragment {
     private String mLastDisplayedLink;
     private boolean mLinksRequested = false;
 
-    private Toolbar mToolbar;
     private ProgressDialog mProgressBar;
     private ListView mListView;
 
@@ -135,8 +131,7 @@ public class LinksFragment extends ListFragment {
 
         mListView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-            }
+            public void onScrollStateChanged(AbsListView view, int scrollState) { }
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
@@ -225,6 +220,10 @@ public class LinksFragment extends ListFragment {
                         mode.finish();
                         openCommentsForLink(mData.get(position));
                         return true;
+                    case R.id.action_open_in_browser:
+                        mode.finish();
+                        openLinkInBrowser(mData.get(position));
+                        return true;
                     default:
                         return false;
                 }
@@ -292,6 +291,12 @@ public class LinksFragment extends ListFragment {
         getBus().post(new VoteEvent(link.getId(), dir));
     }
 
+    private void openLinkInBrowser(RedditLink link) {
+        Uri uri = Uri.parse(link.getUrl());
+        Intent i = new Intent(Intent.ACTION_VIEW, uri);
+        startActivity(i);
+    }
+
     @Subscribe
     public void onLinksLoaded(LinksLoadedEvent event) {
         dismissSpinner();
@@ -320,7 +325,6 @@ public class LinksFragment extends ListFragment {
         }
 
         Log.i(TAG, "Vote submitted successfully");
-        Response response = event.getResponse();
     }
 
     private Bus getBus() {
