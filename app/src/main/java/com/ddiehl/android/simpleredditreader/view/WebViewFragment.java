@@ -34,7 +34,7 @@ public class WebViewFragment extends Fragment {
 
     @Override @SuppressWarnings("SetJavaScriptEnabled")
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_web_view, container, false);
+        View v = inflater.inflate(R.layout.web_view_fragment, container, false);
 
         final ProgressBar progressBar = (ProgressBar) v.findViewById(R.id.progress_bar);
         progressBar.setMax(100);

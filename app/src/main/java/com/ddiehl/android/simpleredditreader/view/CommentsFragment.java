@@ -53,8 +53,8 @@ public class CommentsFragment extends ListFragment {
     private CommentAdapter mCommentAdapter;
     private boolean mCommentsRetrieved = false;
 
-    TextView mLinkScore, mLinkTitle, mLinkAuthor, mLinkTimestamp, mLinkSubreddit, mLinkDomain;
-    ImageView mThumbnailView;
+    private TextView mLinkScore, mLinkTitle, mLinkAuthor, mLinkTimestamp, mLinkSubreddit, mLinkDomain;
+    private ImageView mThumbnailView;
 
     public CommentsFragment() { /* Default constructor */ }
 
@@ -265,7 +265,7 @@ public class CommentsFragment extends ListFragment {
         @Override
         public View getView(int position, View view, ViewGroup parent) {
             if (view == null) {
-                view = getActivity().getLayoutInflater().inflate(R.layout.comments_list_item, null);
+                view = getActivity().getLayoutInflater().inflate(R.layout.reddit_comment_item, null);
             }
 
             Listing comment = mData.get(position);

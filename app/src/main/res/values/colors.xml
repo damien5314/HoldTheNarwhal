@@ -4,5 +4,6 @@
     <color name="transparent">#00000000</color>
     <color name="link_title">#4040FF</color>
     <color name="list_item_selected">#CCEDFF</color>
+    <color name="black">#000000</color>
 
 </resources>

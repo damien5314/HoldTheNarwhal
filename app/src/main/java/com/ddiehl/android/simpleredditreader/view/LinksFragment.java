@@ -197,7 +197,7 @@ public class LinksFragment extends ListFragment {
     }
 
     @TargetApi(11)
-    private void openListItemContext(final int position) {
+    private void openLinkContextMenu(final int position) {
         getActivity().startActionMode(new ActionMode.Callback() {
             @Override
             public boolean onCreateActionMode(ActionMode mode, Menu menu) {
@@ -437,7 +437,7 @@ public class LinksFragment extends ListFragment {
         @Override
         public View getView(final int position, View view, ViewGroup parent) {
             if (view == null) {
-                view = getActivity().getLayoutInflater().inflate(R.layout.links_list_item, null);
+                view = getActivity().getLayoutInflater().inflate(R.layout.reddit_link_item, null);
             }
 
             RedditLink link = getItem(position);
@@ -466,7 +466,7 @@ public class LinksFragment extends ListFragment {
 
                     } else { // Activate contextual action bar
                         mListView.setItemChecked(position, true);
-                        openListItemContext(position);
+                        openLinkContextMenu(position);
                     }
                 }
             });
