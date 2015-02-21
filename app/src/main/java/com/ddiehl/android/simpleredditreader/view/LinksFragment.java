@@ -305,11 +305,15 @@ public class LinksFragment extends ListFragment {
     }
 
     private void saveLink(RedditLink link) {
-        
+
     }
 
     private void shareLink(RedditLink link) {
-
+        String url = "http://www.reddit.com" + link.getPermalink();
+        Intent i = new Intent(Intent.ACTION_SEND);
+        i.setType("text/plain");
+        i.putExtra(Intent.EXTRA_TEXT, url);
+        startActivity(i);
     }
 
     private void openLinkInBrowser(RedditLink link) {
@@ -319,7 +323,7 @@ public class LinksFragment extends ListFragment {
     }
 
     private void openCommentsInBrowser(RedditLink link) {
-        Uri uri = Uri.parse("http://www.reddit.com/" + link.getPermalink());
+        Uri uri = Uri.parse("http://www.reddit.com" + link.getPermalink());
         Intent i = new Intent(Intent.ACTION_VIEW, uri);
         startActivity(i);
     }
