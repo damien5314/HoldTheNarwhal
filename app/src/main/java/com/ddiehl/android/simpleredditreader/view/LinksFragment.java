@@ -207,26 +207,35 @@ public class LinksFragment extends ListFragment {
 
             @Override
             public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+                RedditLink link = mData.get(position);
                 switch (item.getItemId()) {
                     case R.id.action_upvote:
                         mode.finish();
-                        upvote(mData.get(position));
+                        upvote(link);
                         return true;
                     case R.id.action_downvote:
                         mode.finish();
-                        downvote(mData.get(position));
+                        downvote(link);
                         return true;
                     case R.id.action_show_comments:
                         mode.finish();
-                        openCommentsForLink(mData.get(position));
+                        openCommentsForLink(link);
+                        return true;
+                    case R.id.action_save:
+                        mode.finish();
+                        saveLink(link);
+                        return true;
+                    case R.id.action_share:
+                        mode.finish();
+                        shareLink(link);
                         return true;
                     case R.id.action_open_in_browser:
                         mode.finish();
-                        openLinkInBrowser(mData.get(position));
+                        openLinkInBrowser(link);
                         return true;
                     case R.id.action_open_comments_in_browser:
                         mode.finish();
-                        openCommentsInBrowser(mData.get(position));
+                        openCommentsInBrowser(link);
                         return true;
                     default:
                         return false;
@@ -293,6 +302,10 @@ public class LinksFragment extends ListFragment {
     private void downvote(RedditLink link) {
         int dir = (link.isLiked() == null || link.isLiked()) ? -1 : 0;
         getBus().post(new VoteEvent(link.getId(), dir));
+    }
+
+    private void saveLink(RedditLink link) {
+        
     }
 
     private void shareLink(RedditLink link) {
