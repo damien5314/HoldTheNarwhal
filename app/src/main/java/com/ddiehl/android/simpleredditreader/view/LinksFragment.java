@@ -313,18 +313,21 @@ public class LinksFragment extends ListFragment {
         Intent i = new Intent(Intent.ACTION_SEND);
         i.setType("text/plain");
         i.putExtra(Intent.EXTRA_TEXT, url);
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(i);
     }
 
     private void openLinkInBrowser(RedditLink link) {
         Uri uri = Uri.parse(link.getUrl());
         Intent i = new Intent(Intent.ACTION_VIEW, uri);
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(i);
     }
 
     private void openCommentsInBrowser(RedditLink link) {
         Uri uri = Uri.parse("http://www.reddit.com" + link.getPermalink());
         Intent i = new Intent(Intent.ACTION_VIEW, uri);
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(i);
     }
 
