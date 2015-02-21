@@ -15,26 +15,32 @@
     <item android:id="@+id/action_show_comments"
         android:title="@string/action_show_comments"
         android:icon="@drawable/ic_action_show_comments"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="never"/>
 
     <item android:id="@+id/action_save"
         android:title="@string/action_save"
         android:icon="@drawable/ic_action_save_filled"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="never"/>
 
     <item android:id="@+id/action_share"
         android:title="@string/action_share"
         android:icon="@drawable/ic_action_share"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="never"/>
 
     <item android:id="@+id/action_open_in_browser"
         android:title="@string/action_open_in_browser"
         android:icon="@drawable/ic_action_open_in_browser"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/action_open_comments_in_browser"
+        android:title="@string/action_open_comments_in_browser"
+        android:icon="@drawable/ic_action_open_in_browser"
+        app:showAsAction="never"/>
 
     <item android:id="@+id/action_report"
         android:title="@string/action_report"
         android:icon="@drawable/ic_action_report"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="never"/>
 
 </menu>

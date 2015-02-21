@@ -224,6 +224,10 @@ public class LinksFragment extends ListFragment {
                         mode.finish();
                         openLinkInBrowser(mData.get(position));
                         return true;
+                    case R.id.action_open_comments_in_browser:
+                        mode.finish();
+                        openCommentsInBrowser(mData.get(position));
+                        return true;
                     default:
                         return false;
                 }
@@ -293,6 +297,12 @@ public class LinksFragment extends ListFragment {
 
     private void openLinkInBrowser(RedditLink link) {
         Uri uri = Uri.parse(link.getUrl());
+        Intent i = new Intent(Intent.ACTION_VIEW, uri);
+        startActivity(i);
+    }
+
+    private void openCommentsInBrowser(RedditLink link) {
+        Uri uri = Uri.parse("http://www.reddit.com/r/" + link.getSubreddit() + "/comments/" + link.getId());
         Intent i = new Intent(Intent.ACTION_VIEW, uri);
         startActivity(i);
     }

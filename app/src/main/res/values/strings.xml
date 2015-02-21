@@ -32,5 +32,6 @@
     <string name="action_refresh">Refresh</string>
     <string name="link_score_default">•</string>
     <string name="comment_score_unit">points</string>
+    <string name="action_open_comments_in_browser">view comments in browser</string>
 
 </resources>
