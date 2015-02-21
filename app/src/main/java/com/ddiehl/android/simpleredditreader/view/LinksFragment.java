@@ -295,6 +295,10 @@ public class LinksFragment extends ListFragment {
         getBus().post(new VoteEvent(link.getId(), dir));
     }
 
+    private void shareLink(RedditLink link) {
+
+    }
+
     private void openLinkInBrowser(RedditLink link) {
         Uri uri = Uri.parse(link.getUrl());
         Intent i = new Intent(Intent.ACTION_VIEW, uri);
@@ -302,7 +306,7 @@ public class LinksFragment extends ListFragment {
     }
 
     private void openCommentsInBrowser(RedditLink link) {
-        Uri uri = Uri.parse("http://www.reddit.com/r/" + link.getSubreddit() + "/comments/" + link.getId());
+        Uri uri = Uri.parse("http://www.reddit.com/" + link.getPermalink());
         Intent i = new Intent(Intent.ACTION_VIEW, uri);
         startActivity(i);
     }
