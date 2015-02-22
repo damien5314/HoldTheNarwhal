@@ -16,6 +16,14 @@ public class RedditMoreComments extends Listing {
         return null;
     }
 
+    public int getDepth() {
+        return data.depth;
+    }
+
+    public void setDepth(int depth) {
+        data.depth = depth;
+    }
+
     public Integer getCount() {
         return data.count;
     }
@@ -37,6 +45,8 @@ public class RedditMoreComments extends Listing {
     }
 
     private static class RedditMoreCommentsData {
+
+        private int depth;
 
         @Expose
         private Integer count;

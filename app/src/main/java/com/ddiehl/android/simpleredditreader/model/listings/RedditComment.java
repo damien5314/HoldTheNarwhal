@@ -18,6 +18,14 @@ public class RedditComment extends Listing {
         return data;
     }
 
+    public int getDepth() {
+        return data.depth;
+    }
+
+    public void setDepth(int depth) {
+        data.depth = depth;
+    }
+
     public String getSubredditId() {
         return data.subredditId;
     }
@@ -36,6 +44,10 @@ public class RedditComment extends Listing {
 
     public ListingResponse getReplies() {
         return data.replies;
+    }
+
+    public void setReplies(ListingResponse response) {
+        data.replies = response;
     }
 
     public List<Object> getUserReports() {
@@ -143,6 +155,8 @@ public class RedditComment extends Listing {
     }
 
     public static class RedditCommentData {
+
+        private int depth;
 
         @Expose
         private ListingResponse replies;

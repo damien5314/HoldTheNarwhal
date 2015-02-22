@@ -8,7 +8,10 @@ import com.ddiehl.android.simpleredditreader.events.LoadHotCommentsEvent;
 import com.ddiehl.android.simpleredditreader.events.LoadLinksEvent;
 import com.ddiehl.android.simpleredditreader.events.VoteEvent;
 import com.ddiehl.android.simpleredditreader.events.VoteSubmittedEvent;
+import com.ddiehl.android.simpleredditreader.model.listings.Listing;
 import com.ddiehl.android.simpleredditreader.model.listings.ListingResponse;
+import com.ddiehl.android.simpleredditreader.model.listings.RedditComment;
+import com.ddiehl.android.simpleredditreader.model.listings.RedditMoreComments;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -30,7 +33,7 @@ public class RedditService {
     }
 
     /**
-     * Retrieves /hot.json listings for subreddit passed as a parameter
+     * Retrieves link listings for subreddit
      */
     @Subscribe
     public void onLoadLinks(LoadLinksEvent event) {
@@ -69,7 +72,7 @@ public class RedditService {
     }
 
     /**
-     * Retrieves hot listings for article passed as a parameter
+     * Retrieves comment listings for link passed as parameter
      */
     @Subscribe
     public void onLoadComments(LoadHotCommentsEvent event) {
@@ -81,6 +84,7 @@ public class RedditService {
             @Override
             public void success(List<ListingResponse> listingsList, Response response) {
                 Log.i(TAG, "Comments loaded successfully");
+                flattenList(listingsList.get(1));
                 mBus.post(new CommentsLoadedEvent(listingsList));
             }
 
@@ -89,6 +93,35 @@ public class RedditService {
                 Log.e(TAG, "RetrofitError: " + error.getMessage(), error);
             }
         });
+    }
+
+    /**
+     * Flattens list of comments, marking each comment with depth
+     */
+    private void flattenList(ListingResponse commentsResponse) {
+        List<Listing> commentList = commentsResponse.getData().getChildren();
+        int i = 0;
+        while (i < commentList.size()) {
+            Listing listing = commentList.get(i);
+            if (listing instanceof RedditComment) {
+                RedditComment comment = (RedditComment) listing;
+                ListingResponse replies = comment.getReplies();
+                if (replies != null) {
+                    flattenList(replies);
+                }
+                comment.setDepth(comment.getDepth() + 1); // Increase depth by 1
+                if (comment.getReplies() != null) {
+                    commentList.addAll(i+1, comment.getReplies().getData().getChildren()); // Add all of the replies to commentList
+                    comment.setReplies(null); // Remove replies for comment
+                }
+            } else { // Listing is a RedditMoreComments
+                RedditMoreComments moreComments = (RedditMoreComments) listing;
+                moreComments.setDepth(moreComments.getDepth() + 1); // Increase depth by 1
+//                commentList.add(i+1, moreComments);
+            }
+            i++;
+        }
+
     }
 
     /**

@@ -1,7 +1,7 @@
 package com.ddiehl.android.simpleredditreader.events;
 
+import com.ddiehl.android.simpleredditreader.model.listings.Listing;
 import com.ddiehl.android.simpleredditreader.model.listings.ListingResponse;
-import com.ddiehl.android.simpleredditreader.model.listings.RedditComment;
 import com.ddiehl.android.simpleredditreader.model.listings.RedditLink;
 
 import java.util.List;
@@ -9,7 +9,7 @@ import java.util.List;
 
 public class CommentsLoadedEvent {
     private RedditLink mLink;
-    private List<RedditComment> mComments;
+    private List<Listing> mComments;
 
     public CommentsLoadedEvent(List<ListingResponse> listingResponseList) {
         // Link is responseList.get(0), comments are responseList.get(1)
@@ -24,7 +24,7 @@ public class CommentsLoadedEvent {
         return mLink;
     }
 
-    public List<RedditComment> getComments() {
+    public List<Listing> getComments() {
         return mComments;
     }
 }
