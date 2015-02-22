@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.ddiehl.android.simpleredditreader.R;
@@ -264,11 +265,23 @@ public class CommentsFragment extends ListFragment {
 
         @Override
         public View getView(int position, View view, ViewGroup parent) {
+            LayoutInflater inflater = getActivity().getLayoutInflater();
             if (view == null) {
-                view = getActivity().getLayoutInflater().inflate(R.layout.reddit_comment_item, null);
+                view = inflater.inflate(R.layout.reddit_comment_item, null);
             }
 
             Listing comment = mData.get(position);
+
+            // Add padding views to indentation_wrapper based on depth of comment
+            LinearLayout indentationWrapper = (LinearLayout) view.findViewById(R.id.indentation_wrapper);
+            indentationWrapper.removeAllViews(); // Reset padding for recycled views
+            int depth = comment instanceof RedditComment ?
+                    ((RedditComment) comment).getDepth() : ((RedditMoreComments) comment).getDepth();
+            for (int i = 0; i < depth - 1; i++) {
+                inflater.inflate(R.layout.comment_padding_view, indentationWrapper);
+            }
+
+            // Populate attributes of comment in layout
             if (comment instanceof RedditComment) {
                 TextView vAuthor = (TextView) view.findViewById(R.id.comment_author);
                 vAuthor.setText("/u/" + ((RedditComment) comment).getAuthor());
