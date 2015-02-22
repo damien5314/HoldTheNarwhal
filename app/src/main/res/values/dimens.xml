@@ -12,6 +12,7 @@
     <dimen name="listing_row_height">48dp</dimen>
     <dimen name="navigation_drawer_width">240dp</dimen>
     <dimen name="text_view_margin">5dp</dimen>
-    <dimen name="comment_indentation_width">5dp</dimen>
+    <dimen name="comment_indentation_width">3dp</dimen>
+    <dimen name="comment_indentation_margin">3dp</dimen>
 
 </resources>

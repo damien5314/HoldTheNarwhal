@@ -281,19 +281,20 @@ public class CommentsFragment extends ListFragment {
             int depth = comment instanceof RedditComment ?
                     ((RedditComment) comment).getDepth() : ((RedditMoreComments) comment).getDepth();
             for (int i = 0; i < depth - 1; i++) {
-                View paddingView = inflater.inflate(R.layout.comment_padding_view, indentationWrapper);
-                // Set background color for padding view
-//                int[] colors = getResources().getIntArray(R.array.indentation_colors);
-//                int color = Math.min(i, colors.length - 1);
-//                paddingView.setBackgroundColor(colors[color]);
-            }
-
-            for (int j = 0; j < indentationWrapper.getChildCount(); j++) {
+                View paddingView = inflater.inflate(R.layout.comment_padding_view, indentationWrapper, false);
                 // Set background color for padding view
                 int[] colors = getResources().getIntArray(R.array.indentation_colors);
-                int color = Math.min(j, colors.length - 1);
-                indentationWrapper.getChildAt(j).setBackgroundColor(colors[color]);
+                int index = Math.min(i, colors.length - 1);
+                paddingView.setBackgroundColor(colors[index]);
+                indentationWrapper.addView(paddingView);
             }
+
+//            for (int j = 0; j < indentationWrapper.getChildCount(); j++) {
+//                // Set background color for padding view
+//                int[] colors = getResources().getIntArray(R.array.indentation_colors);
+//                int color = Math.min(j, colors.length - 1);
+//                indentationWrapper.getChildAt(j).setBackgroundColor(colors[color]);
+//            }
 
             // Populate attributes of comment in layout
             if (comment instanceof RedditComment) {
