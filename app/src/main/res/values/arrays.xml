@@ -29,7 +29,7 @@
         <item>#99B3FF</item>
         <item>#B3C6FF</item>
         <item>#CCD9FF</item>
-        <item>#E6ECFF</item>
+        <!--<item>#E6ECFF</item>  too light to be visible -->
     </array>
 
 </resources>
