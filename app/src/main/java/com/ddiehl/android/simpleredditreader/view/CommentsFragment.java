@@ -301,13 +301,13 @@ public class CommentsFragment extends ListFragment {
                 vScore.setText("[" + ((RedditComment) comment).getScore() + "]");
                 vTimestamp.setText(Utils.getFormattedDateStringFromUtc(((RedditComment) comment).getCreateUtc().longValue()));
                 vBody.setText(((RedditComment) comment).getBody());
-                vBody.setTypeface(vBody.getTypeface(), Typeface.NORMAL);
+                vBody.setTypeface(null, Typeface.NORMAL);
             } else {
                 vAuthor.setText(null);
                 vScore.setText(null);
                 vTimestamp.setText(null);
                 vBody.setText(getString(R.string.more_comments) + " (" + ((RedditMoreComments) comment).getCount() + ")");
-                vBody.setTypeface(vBody.getTypeface(), Typeface.ITALIC);
+                vBody.setTypeface(null, Typeface.ITALIC);
             }
 
             return view;
