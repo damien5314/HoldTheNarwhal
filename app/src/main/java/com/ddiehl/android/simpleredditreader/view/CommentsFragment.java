@@ -285,7 +285,8 @@ public class CommentsFragment extends ListFragment {
                 // Set background color for padding view
                 int[] colors = getResources().getIntArray(R.array.indentation_colors);
                 int index = Math.min(i, colors.length - 1);
-                paddingView.setBackgroundColor(colors[index]);
+//                paddingView.setBackgroundColor(colors[index]);
+                paddingView.setBackgroundColor(0xFFCCD9FF);
                 indentationWrapper.addView(paddingView);
             }
 
@@ -304,7 +305,7 @@ public class CommentsFragment extends ListFragment {
                 vTimestamp.setVisibility(View.VISIBLE);
                 vBody.setVisibility(View.VISIBLE);
                 vMoreComments.setVisibility(View.GONE);
-                vAuthor.setText("/u/" + ((RedditComment) comment).getAuthor());
+                vAuthor.setText(((RedditComment) comment).getAuthor());
                 vScore.setText("[" + ((RedditComment) comment).getScore() + "]");
                 vTimestamp.setText(Utils.getFormattedDateStringFromUtc(((RedditComment) comment).getCreateUtc().longValue()));
                 vBody.setText(((RedditComment) comment).getBody());

@@ -15,7 +15,7 @@
         android:id="@id/title_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/text_view_margin"
+        android:layout_margin="@dimen/web_view_text_margin"
         android:layout_above="@+id/progress_bar"/>
 
     <ProgressBar

@@ -54,7 +54,7 @@
         <item name="android:layout_height">fill_parent</item>
         <item name="android:layout_marginLeft">4dp</item>
         <item name="android:layout_marginRight">4dp</item>
-        <item name="android:textSize">@dimen/listing_score_text_size</item>
+        <item name="android:textSize">@dimen/link_score_text_size</item>
         <item name="android:textStyle">bold</item>
         <item name="android:singleLine">true</item>
     </style>
@@ -63,7 +63,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginBottom">5dp</item>
-        <item name="android:textSize">@dimen/listing_title_text_size</item>
+        <item name="android:textSize">@dimen/link_title_text_size</item>
         <item name="android:textColor">@color/link_title</item>
         <item name="android:minLines">2</item>
         <item name="android:maxLines">2</item>
@@ -74,7 +74,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginRight">5dp</item>
-        <item name="android:textSize">@dimen/listing_author_text_size</item>
+        <item name="android:textSize">@dimen/link_author_text_size</item>
         <item name="android:textStyle">italic</item>
     </style>
 
@@ -82,14 +82,14 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginRight">5dp</item>
-        <item name="android:textSize">@dimen/listing_subreddit_text_size</item>
+        <item name="android:textSize">@dimen/link_subreddit_text_size</item>
         <item name="android:textStyle">italic</item>
     </style>
 
     <style name="ListingTimestampTextView">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/listing_timestamp_text_size</item>
+        <item name="android:textSize">@dimen/link_timestamp_text_size</item>
         <item name="android:textStyle">italic</item>
     </style>
 
@@ -97,7 +97,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginRight">5dp</item>
-        <item name="android:textSize">@dimen/listing_domain_text_size</item>
+        <item name="android:textSize">@dimen/link_domain_text_size</item>
         <item name="android:textStyle">italic</item>
     </style>
 
