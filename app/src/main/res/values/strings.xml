@@ -33,5 +33,6 @@
     <string name="link_score_default">•</string>
     <string name="comment_score_unit">points</string>
     <string name="action_open_comments_in_browser">view comments in browser</string>
+    <string name="more_comments">view more comments</string>
 
 </resources>

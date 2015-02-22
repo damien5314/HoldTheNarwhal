@@ -2,6 +2,7 @@ package com.ddiehl.android.simpleredditreader.view;
 
 import android.annotation.TargetApi;
 import android.graphics.Bitmap;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -289,19 +290,24 @@ public class CommentsFragment extends ListFragment {
                 indentationWrapper.addView(paddingView);
             }
 
+            TextView vAuthor = (TextView) view.findViewById(R.id.comment_author);
+            TextView vScore = (TextView) view.findViewById(R.id.comment_score);
+            TextView vTimestamp = (TextView) view.findViewById(R.id.comment_timestamp);
+            TextView vBody = (TextView) view.findViewById(R.id.comment_body);
+
             // Populate attributes of comment in layout
             if (comment instanceof RedditComment) {
-                TextView vAuthor = (TextView) view.findViewById(R.id.comment_author);
                 vAuthor.setText("/u/" + ((RedditComment) comment).getAuthor());
-                TextView vScore = (TextView) view.findViewById(R.id.comment_score);
                 vScore.setText("[" + ((RedditComment) comment).getScore() + "]");
-                TextView vTimestamp = (TextView) view.findViewById(R.id.comment_timestamp);
                 vTimestamp.setText(Utils.getFormattedDateStringFromUtc(((RedditComment) comment).getCreateUtc().longValue()));
-                TextView vBody = (TextView) view.findViewById(R.id.comment_body);
                 vBody.setText(((RedditComment) comment).getBody());
+                vBody.setTypeface(vBody.getTypeface(), Typeface.NORMAL);
             } else {
-                TextView vBody = (TextView) view.findViewById(R.id.comment_body);
-                vBody.setText("More comments (" + ((RedditMoreComments) comment).getCount() + ")");
+                vAuthor.setText(null);
+                vScore.setText(null);
+                vTimestamp.setText(null);
+                vBody.setText(getString(R.string.more_comments) + " (" + ((RedditMoreComments) comment).getCount() + ")");
+                vBody.setTypeface(vBody.getTypeface(), Typeface.ITALIC);
             }
 
             return view;
