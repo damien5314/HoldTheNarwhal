@@ -13,9 +13,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.ddiehl.android.simpleredditreader.R;
@@ -53,6 +56,7 @@ public class CommentsFragment extends ListFragment {
     private CommentAdapter mCommentAdapter;
     private boolean mCommentsRetrieved = false;
 
+    private TextView mSelfText;
     private TextView mLinkScore, mLinkTitle, mLinkAuthor, mLinkTimestamp, mLinkSubreddit, mLinkDomain;
     private ImageView mThumbnailView;
 
@@ -103,6 +107,10 @@ public class CommentsFragment extends ListFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.comments_fragment, null);
 
+        ListView listView = (ListView) v.findViewById(android.R.id.list);
+        setListViewHeightBasedOnChildren(listView);
+
+        mSelfText = (TextView) v.findViewById(R.id.link_self_text);
         mLinkScore = (TextView) v.findViewById(R.id.link_score);
         mLinkTitle = (TextView) v.findViewById(R.id.link_title);
         mLinkAuthor = (TextView) v.findViewById(R.id.link_author);
@@ -116,11 +124,6 @@ public class CommentsFragment extends ListFragment {
         }
         
         return v;
-    }
-
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
     }
 
     @Override
@@ -193,6 +196,12 @@ public class CommentsFragment extends ListFragment {
             mThumbnailView.setVisibility(View.VISIBLE);
         } else {
             mThumbnailView.setVisibility(View.GONE);
+        }
+
+        if (mLink.isSelf()) {
+            mSelfText.setText(mLink.getSelftext());
+        } else {
+            mSelfText.setVisibility(View.GONE);
         }
     }
 
@@ -333,5 +342,30 @@ public class CommentsFragment extends ListFragment {
             mBus = BusProvider.getInstance();
         }
         return mBus;
+    }
+
+    /**** Method for Setting the Height of the ListView dynamically.
+     **** Hack to fix the issue of not showing all the items of the ListView
+     **** when placed inside a ScrollView  ****/
+    public static void setListViewHeightBasedOnChildren(ListView listView) {
+        ListAdapter listAdapter = listView.getAdapter();
+        if (listAdapter == null)
+            return;
+
+        int desiredWidth = View.MeasureSpec.makeMeasureSpec(listView.getWidth(), View.MeasureSpec.UNSPECIFIED);
+        int totalHeight = 0;
+        View view = null;
+        for (int i = 0; i < listAdapter.getCount(); i++) {
+            view = listAdapter.getView(i, view, listView);
+            if (i == 0)
+                view.setLayoutParams(new ViewGroup.LayoutParams(desiredWidth, AbsListView.LayoutParams.WRAP_CONTENT));
+
+            view.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
+            totalHeight += view.getMeasuredHeight();
+        }
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+        listView.setLayoutParams(params);
+        listView.requestLayout();
     }
 }
