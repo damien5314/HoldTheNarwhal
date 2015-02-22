@@ -270,7 +270,7 @@ public class CommentsFragment extends ListFragment {
         public View getView(int position, View view, ViewGroup parent) {
             LayoutInflater inflater = getActivity().getLayoutInflater();
             if (view == null) {
-                view = inflater.inflate(R.layout.reddit_comment_item, null);
+                view = inflater.inflate(R.layout.reddit_comment_item, parent, false);
             }
 
             Listing comment = mData.get(position);
@@ -288,13 +288,6 @@ public class CommentsFragment extends ListFragment {
                 paddingView.setBackgroundColor(colors[index]);
                 indentationWrapper.addView(paddingView);
             }
-
-//            for (int j = 0; j < indentationWrapper.getChildCount(); j++) {
-//                // Set background color for padding view
-//                int[] colors = getResources().getIntArray(R.array.indentation_colors);
-//                int color = Math.min(j, colors.length - 1);
-//                indentationWrapper.getChildAt(j).setBackgroundColor(colors[color]);
-//            }
 
             // Populate attributes of comment in layout
             if (comment instanceof RedditComment) {
