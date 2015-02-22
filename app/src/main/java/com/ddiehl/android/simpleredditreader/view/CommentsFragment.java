@@ -2,7 +2,6 @@ package com.ddiehl.android.simpleredditreader.view;
 
 import android.annotation.TargetApi;
 import android.graphics.Bitmap;
-import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -290,24 +289,38 @@ public class CommentsFragment extends ListFragment {
                 indentationWrapper.addView(paddingView);
             }
 
+            ImageView vExpander = (ImageView) view.findViewById(R.id.comment_expander);
             TextView vAuthor = (TextView) view.findViewById(R.id.comment_author);
             TextView vScore = (TextView) view.findViewById(R.id.comment_score);
             TextView vTimestamp = (TextView) view.findViewById(R.id.comment_timestamp);
+            TextView vMoreComments = (TextView) view.findViewById(R.id.comment_more);
             TextView vBody = (TextView) view.findViewById(R.id.comment_body);
 
             // Populate attributes of comment in layout
             if (comment instanceof RedditComment) {
+                vExpander.setImageResource(R.drawable.ic_thread_contract);
+                vAuthor.setVisibility(View.VISIBLE);
+                vScore.setVisibility(View.VISIBLE);
+                vTimestamp.setVisibility(View.VISIBLE);
+                vBody.setVisibility(View.VISIBLE);
+                vMoreComments.setVisibility(View.GONE);
                 vAuthor.setText("/u/" + ((RedditComment) comment).getAuthor());
                 vScore.setText("[" + ((RedditComment) comment).getScore() + "]");
                 vTimestamp.setText(Utils.getFormattedDateStringFromUtc(((RedditComment) comment).getCreateUtc().longValue()));
                 vBody.setText(((RedditComment) comment).getBody());
-                vBody.setTypeface(null, Typeface.NORMAL);
             } else {
-                vAuthor.setText(null);
-                vScore.setText(null);
-                vTimestamp.setText(null);
-                vBody.setText(getString(R.string.more_comments) + " (" + ((RedditMoreComments) comment).getCount() + ")");
-                vBody.setTypeface(null, Typeface.ITALIC);
+                vExpander.setImageResource(R.drawable.ic_thread_expand);
+                vAuthor.setVisibility(View.GONE);
+                vScore.setVisibility(View.GONE);
+                vTimestamp.setVisibility(View.GONE);
+                vBody.setVisibility(View.GONE);
+                vMoreComments.setVisibility(View.VISIBLE);
+                int count = ((RedditMoreComments) comment).getCount();
+                if (count == 0) { // continue thread
+                    vMoreComments.setText(getString(R.string.continue_thread));
+                } else { // more comments in current thread
+                    vMoreComments.setText(getString(R.string.more_comments) + " (" + count + ")");
+                }
             }
 
             return view;
