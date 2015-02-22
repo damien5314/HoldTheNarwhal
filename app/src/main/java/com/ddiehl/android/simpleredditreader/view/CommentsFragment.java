@@ -16,7 +16,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.ddiehl.android.simpleredditreader.R;
@@ -277,12 +276,23 @@ public class CommentsFragment extends ListFragment {
             Listing comment = mData.get(position);
 
             // Add padding views to indentation_wrapper based on depth of comment
-            LinearLayout indentationWrapper = (LinearLayout) view.findViewById(R.id.indentation_wrapper);
-            indentationWrapper.removeAllViews(); // Reset padding for recycled views
+            ViewGroup indentationWrapper = (ViewGroup) view.findViewById(R.id.indentation_wrapper);
+            indentationWrapper.removeAllViews(); // Reset padding for recycled comment views
             int depth = comment instanceof RedditComment ?
                     ((RedditComment) comment).getDepth() : ((RedditMoreComments) comment).getDepth();
             for (int i = 0; i < depth - 1; i++) {
-                inflater.inflate(R.layout.comment_padding_view, indentationWrapper);
+                View paddingView = inflater.inflate(R.layout.comment_padding_view, indentationWrapper);
+                // Set background color for padding view
+//                int[] colors = getResources().getIntArray(R.array.indentation_colors);
+//                int color = Math.min(i, colors.length - 1);
+//                paddingView.setBackgroundColor(colors[color]);
+            }
+
+            for (int j = 0; j < indentationWrapper.getChildCount(); j++) {
+                // Set background color for padding view
+                int[] colors = getResources().getIntArray(R.array.indentation_colors);
+                int color = Math.min(j, colors.length - 1);
+                indentationWrapper.getChildAt(j).setBackgroundColor(colors[color]);
             }
 
             // Populate attributes of comment in layout
