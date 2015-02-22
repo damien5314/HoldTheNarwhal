@@ -111,6 +111,10 @@ public class CommentsFragment extends ListFragment {
         mLinkSubreddit = (TextView) v.findViewById(R.id.link_subreddit);
         mLinkDomain = (TextView) v.findViewById(R.id.link_domain);
         mThumbnailView = (ImageView) v.findViewById(R.id.link_thumbnail);
+
+        if (mLink != null) {
+            populateLinkData();
+        }
         
         return v;
     }
