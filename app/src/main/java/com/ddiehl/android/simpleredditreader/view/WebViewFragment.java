@@ -10,7 +10,6 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.ddiehl.android.simpleredditreader.R;
 
@@ -38,7 +37,6 @@ public class WebViewFragment extends Fragment {
 
         final ProgressBar progressBar = (ProgressBar) v.findViewById(R.id.progress_bar);
         progressBar.setMax(100);
-        final TextView titleTextView = (TextView) v.findViewById(R.id.title_text_view);
 
         mWebView = (WebView) v.findViewById(R.id.web_view);
 
@@ -64,7 +62,7 @@ public class WebViewFragment extends Fragment {
 
             @Override
             public void onReceivedTitle(WebView view, String title) {
-                titleTextView.setText(title);
+                getActivity().setTitle(title);
             }
         });
 

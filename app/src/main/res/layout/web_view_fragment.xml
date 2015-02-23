@@ -7,22 +7,14 @@
     <WebView
         android:id="@+id/web_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/title_text_view"
-        android:layout_alignParentTop="true"/>
-
-    <TextView
-        android:id="@id/title_text_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/web_view_text_margin"
-        android:layout_above="@+id/progress_bar"/>
+        android:layout_height="fill_parent"/>
 
     <ProgressBar
-        android:id="@id/progress_bar"
+        android:id="@+id/progress_bar"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="-8dp"
         android:visibility="invisible"
         style="?android:attr/progressBarStyleHorizontal"/>
 
