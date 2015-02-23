@@ -4,7 +4,7 @@ import android.util.Log;
 
 import com.ddiehl.android.simpleredditreader.events.CommentsLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.LinksLoadedEvent;
-import com.ddiehl.android.simpleredditreader.events.LoadHotCommentsEvent;
+import com.ddiehl.android.simpleredditreader.events.LoadCommentsEvent;
 import com.ddiehl.android.simpleredditreader.events.LoadLinksEvent;
 import com.ddiehl.android.simpleredditreader.events.VoteEvent;
 import com.ddiehl.android.simpleredditreader.events.VoteSubmittedEvent;
@@ -75,12 +75,13 @@ public class RedditService {
      * Retrieves comment listings for link passed as parameter
      */
     @Subscribe
-    public void onLoadComments(LoadHotCommentsEvent event) {
+    public void onLoadComments(LoadCommentsEvent event) {
         String subreddit = event.getSubreddit();
         String article = event.getArticle();
+        String sort = event.getSort();
 
-        Log.i(TAG, "Loading comments for /r/" + subreddit + "/" + article);
-        mApi.getComments(subreddit, article, new Callback<List<ListingResponse>>() {
+        Log.i(TAG, "Loading /r/" + subreddit + "/comments/" + article + "/.json?sort=" + sort);
+        mApi.getComments(subreddit, article, sort, new Callback<List<ListingResponse>>() {
             @Override
             public void success(List<ListingResponse> listingsList, Response response) {
                 Log.i(TAG, "Comments loaded successfully");
@@ -91,6 +92,7 @@ public class RedditService {
             @Override
             public void failure(RetrofitError error) {
                 Log.e(TAG, "RetrofitError: " + error.getMessage(), error);
+                mBus.post(new CommentsLoadedEvent(error));
             }
         });
     }

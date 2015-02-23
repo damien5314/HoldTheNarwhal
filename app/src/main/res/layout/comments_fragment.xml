@@ -25,10 +25,11 @@
                 android:padding="10dp"
                 android:background="@drawable/self_text_background" />
 
+            <!-- Note: Configuration changes (rotation) are very slow with this layout as-is -->
             <com.ddiehl.android.simpleredditreader.view.NestedListView
                 android:id="@android:id/list"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:divider="@null"/>
 
             <FrameLayout

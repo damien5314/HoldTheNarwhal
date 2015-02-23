@@ -1,15 +1,21 @@
 package com.ddiehl.android.simpleredditreader.view;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.ListFragment;
+import android.util.Log;
 import android.view.ActionMode;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,10 +28,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.ddiehl.android.simpleredditreader.R;
+import com.ddiehl.android.simpleredditreader.RedditPreferences;
 import com.ddiehl.android.simpleredditreader.Utils;
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
 import com.ddiehl.android.simpleredditreader.events.CommentsLoadedEvent;
-import com.ddiehl.android.simpleredditreader.events.LoadHotCommentsEvent;
+import com.ddiehl.android.simpleredditreader.events.LoadCommentsEvent;
 import com.ddiehl.android.simpleredditreader.events.VoteEvent;
 import com.ddiehl.android.simpleredditreader.model.listings.Listing;
 import com.ddiehl.android.simpleredditreader.model.listings.RedditComment;
@@ -44,6 +51,10 @@ public class CommentsFragment extends ListFragment {
 
     private static final String ARG_SUBREDDIT = "subreddit";
     private static final String ARG_ARTICLE = "article";
+    private static final String ARG_SORT = "sort";
+
+    private static final int REQUEST_CHOOSE_SORT = 0;
+    private static final String DIALOG_CHOOSE_SORT = "dialog_choose_sort";
 
     private Bus mBus;
     private ThumbnailDownloader<ImageView> mThumbnailThread;
@@ -51,6 +62,7 @@ public class CommentsFragment extends ListFragment {
 
     private String mSubreddit;
     private String mArticleId;
+    private String mSort;
     private RedditLink mLink;
     private List<Listing> mData;
     private CommentAdapter mCommentAdapter;
@@ -59,6 +71,7 @@ public class CommentsFragment extends ListFragment {
     private TextView mSelfText;
     private TextView mLinkScore, mLinkTitle, mLinkAuthor, mLinkTimestamp, mLinkSubreddit, mLinkDomain;
     private ImageView mThumbnailView;
+    private ProgressDialog mProgressBar;
 
     public CommentsFragment() { /* Default constructor */ }
 
@@ -96,6 +109,8 @@ public class CommentsFragment extends ListFragment {
         mSubreddit = args.getString(ARG_SUBREDDIT);
         mArticleId = args.getString(ARG_ARTICLE);
 
+        mSort = RedditPreferences.getCommentSort(getActivity());
+
         mData = new ArrayList<>();
         mCommentAdapter = new CommentAdapter(mData);
         setListAdapter(mCommentAdapter);
@@ -132,7 +147,7 @@ public class CommentsFragment extends ListFragment {
         getBus().register(this);
 
         if (!mCommentsRetrieved) {
-            getBus().post(new LoadHotCommentsEvent(mSubreddit, mArticleId));
+            getComments();
         }
     }
 
@@ -144,6 +159,12 @@ public class CommentsFragment extends ListFragment {
 
     @Subscribe
     public void onCommentsLoaded(CommentsLoadedEvent event) {
+        dismissSpinner();
+        if (event.isFailed()) {
+            Log.e(TAG, "Error loading links", event.getError());
+            return;
+        }
+
         mCommentsRetrieved = true;
 
         mLink = event.getLink();
@@ -205,6 +226,18 @@ public class CommentsFragment extends ListFragment {
         }
     }
 
+    public void updateSort(String sort) {
+        mData.clear();
+        mSort = sort;
+        getComments();
+    }
+
+    private void getComments() {
+        showSpinner();
+        mCommentsRetrieved = true;
+        getBus().post(new LoadCommentsEvent(mSubreddit, mArticleId, mSort));
+    }
+
     @TargetApi(11)
     private void openLinkContextMenu() {
         getActivity().startActionMode(new ActionMode.Callback() {
@@ -243,6 +276,16 @@ public class CommentsFragment extends ListFragment {
         });
     }
 
+    private void upvote(RedditLink link) {
+        int dir = (link.isLiked() == null || !link.isLiked()) ? 1 : 0;
+        getBus().post(new VoteEvent(link.getId(), dir));
+    }
+
+    private void downvote(RedditLink link) {
+        int dir = (link.isLiked() == null || link.isLiked()) ? -1 : 0;
+        getBus().post(new VoteEvent(link.getId(), dir));
+    }
+
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         getActivity().getMenuInflater().inflate(R.menu.menu_link_context, menu);
@@ -260,14 +303,60 @@ public class CommentsFragment extends ListFragment {
         return super.onContextItemSelected(item);
     }
 
-    private void upvote(RedditLink link) {
-        int dir = (link.isLiked() == null || !link.isLiked()) ? 1 : 0;
-        getBus().post(new VoteEvent(link.getId(), dir));
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case REQUEST_CHOOSE_SORT:
+                if (resultCode == Activity.RESULT_OK) {
+                    String selectedSort = data.getStringExtra(ChooseLinkSortDialog.EXTRA_SORT);
+                    if (!mSort.equals(selectedSort)) {
+                        mSort = selectedSort;
+                        RedditPreferences.saveCommentSort(getActivity(), selectedSort);
+                        mData.clear();
+                        getComments();
+                    }
+                }
+                getActivity().supportInvalidateOptionsMenu();
+                break;
+        }
     }
 
-    private void downvote(RedditLink link) {
-        int dir = (link.isLiked() == null || link.isLiked()) ? -1 : 0;
-        getBus().post(new VoteEvent(link.getId(), dir));
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.comments_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        FragmentManager fm = getActivity().getSupportFragmentManager();
+        switch (item.getItemId()) {
+            case R.id.action_change_sort:
+                ChooseCommentSortDialog chooseCommentSortDialog = ChooseCommentSortDialog.newInstance(mSort);
+                chooseCommentSortDialog.setTargetFragment(this, REQUEST_CHOOSE_SORT);
+                chooseCommentSortDialog.show(fm, DIALOG_CHOOSE_SORT);
+                return true;
+            case R.id.action_refresh:
+                mData.clear();
+                getComments();
+                return true;
+            case R.id.action_settings:
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void showSpinner() {
+        if (mProgressBar == null) {
+            mProgressBar = new ProgressDialog(getActivity(), R.style.ProgressDialog);
+            mProgressBar.setCancelable(false);
+            mProgressBar.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        }
+        mProgressBar.show();
+    }
+
+    private void dismissSpinner() {
+        mProgressBar.dismiss();
     }
 
     private class CommentAdapter extends ArrayAdapter<Listing> {

@@ -118,7 +118,7 @@ public class LinksFragment extends ListFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.links_fragment, null);
+        View v = inflater.inflate(R.layout.links_fragment, container, false);
 
         mListView = (ListView) v.findViewById(android.R.id.list);
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
@@ -373,7 +373,7 @@ public class LinksFragment extends ListFragment {
         switch (requestCode) {
             case REQUEST_CHOOSE_SORT:
                 if (resultCode == Activity.RESULT_OK) {
-                    String selectedSort = data.getStringExtra(ChooseSortDialog.EXTRA_SORT);
+                    String selectedSort = data.getStringExtra(ChooseLinkSortDialog.EXTRA_SORT);
                     if (!mSort.equals(selectedSort)) {
                         mSort = selectedSort;
                         mData.clear();
@@ -417,7 +417,7 @@ public class LinksFragment extends ListFragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_links, menu);
+        inflater.inflate(R.menu.links_menu, menu);
 
         // Disable timespan option if current sort does not support it
         if (mSort.equals("hot") ||
@@ -434,9 +434,9 @@ public class LinksFragment extends ListFragment {
         FragmentManager fm = getActivity().getSupportFragmentManager();
         switch (item.getItemId()) {
             case R.id.action_change_sort:
-                ChooseSortDialog chooseSortDialog = ChooseSortDialog.newInstance(mSort);
-                chooseSortDialog.setTargetFragment(this, REQUEST_CHOOSE_SORT);
-                chooseSortDialog.show(fm, DIALOG_CHOOSE_SORT);
+                ChooseLinkSortDialog chooseLinkSortDialog = ChooseLinkSortDialog.newInstance(mSort);
+                chooseLinkSortDialog.setTargetFragment(this, REQUEST_CHOOSE_SORT);
+                chooseLinkSortDialog.show(fm, DIALOG_CHOOSE_SORT);
                 return true;
             case R.id.action_change_timespan:
                 ChooseTimespanDialog chooseTimespanDialog = ChooseTimespanDialog.newInstance(mTimeSpan);

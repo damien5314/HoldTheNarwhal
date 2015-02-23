@@ -6,10 +6,14 @@ import com.ddiehl.android.simpleredditreader.model.listings.RedditLink;
 
 import java.util.List;
 
+import retrofit.RetrofitError;
+
 
 public class CommentsLoadedEvent {
     private RedditLink mLink;
     private List<Listing> mComments;
+    private RetrofitError mError;
+    private boolean mFailed = false;
 
     public CommentsLoadedEvent(List<ListingResponse> listingResponseList) {
         // Link is responseList.get(0), comments are responseList.get(1)
@@ -20,11 +24,24 @@ public class CommentsLoadedEvent {
         mComments = commentsResponse.getData().getChildren();
     }
 
+    public CommentsLoadedEvent(RetrofitError error) {
+        mError = error;
+        mFailed = true;
+    }
+
     public RedditLink getLink() {
         return mLink;
     }
 
     public List<Listing> getComments() {
         return mComments;
+    }
+
+    public RetrofitError getError() {
+        return mError;
+    }
+
+    public boolean isFailed() {
+        return mFailed;
     }
 }

@@ -35,5 +35,6 @@
     <string name="action_open_comments_in_browser">view comments in browser</string>
     <string name="more_comments">view more comments</string>
     <string name="continue_thread">continue thread</string>
+    <string name="default_comment_sort">hot</string>
 
 </resources>

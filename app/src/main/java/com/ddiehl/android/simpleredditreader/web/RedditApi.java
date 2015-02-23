@@ -26,9 +26,10 @@ public interface RedditApi {
                          @Query("after") String after,
                          Callback<ListingResponse> callback);
 
-    @GET("/r/{subreddit}/comments/{articleId}/top.json")
+    @GET("/r/{subreddit}/comments/{articleId}/.json")
     void getComments(@Path("subreddit") String subreddit,
                      @Path("articleId") String articleId,
+                     @Query("sort") String sort,
                      Callback<List<ListingResponse>> callback);
 
     @POST("/api/vote")

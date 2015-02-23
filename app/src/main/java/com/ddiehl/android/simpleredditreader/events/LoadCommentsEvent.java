@@ -1,13 +1,15 @@
 package com.ddiehl.android.simpleredditreader.events;
 
-public class LoadHotCommentsEvent {
+public class LoadCommentsEvent {
 
     private String mSubreddit;
     private String mArticle;
+    private String mSort;
 
-    public LoadHotCommentsEvent(String subreddit, String article) {
+    public LoadCommentsEvent(String subreddit, String article, String sort) {
         mSubreddit = subreddit;
         mArticle = article;
+        mSort = sort;
     }
 
     public String getSubreddit() {
@@ -16,5 +18,9 @@ public class LoadHotCommentsEvent {
 
     public String getArticle() {
         return mArticle;
+    }
+
+    public String getSort() {
+        return mSort;
     }
 }
