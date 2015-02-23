@@ -3,10 +3,13 @@ package com.ddiehl.android.simpleredditreader.view;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
@@ -40,7 +43,9 @@ public class WebViewFragment extends Fragment {
 
         mWebView = (WebView) v.findViewById(R.id.web_view);
 
-        mWebView.getSettings().setJavaScriptEnabled(true);
+        WebSettings settings = mWebView.getSettings();
+        settings.setJavaScriptEnabled(true);
+        settings.setBuiltInZoomControls(true);
 
         mWebView.setWebViewClient(new WebViewClient() {
             @Override
@@ -67,7 +72,30 @@ public class WebViewFragment extends Fragment {
         });
 
         mWebView.loadUrl(mUrl);
+        mWebView.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                // Check if the key event was the Back button and if there's history
+                if (event.getAction() == KeyEvent.ACTION_UP
+                        && (keyCode == KeyEvent.KEYCODE_BACK) && mWebView.canGoBack()) {
+                    Log.d(TAG, "WebView key listener triggered: " + keyCode);
+                    mWebView.goBack();
+                    return true;
+                }
+                return false;
+            }
+        });
 
         return v;
+    }
+
+    @Override
+    public void onDestroyView() {
+        mWebView.destroy();
+        super.onDestroyView();
+    }
+
+    public boolean canGoBack() {
+        return mWebView != null && mWebView.canGoBack();
     }
 }
