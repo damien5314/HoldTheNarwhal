@@ -57,6 +57,6 @@
         style="@style/ListingThumbnail"
         android:layout_gravity="center_vertical"
         android:background="@drawable/thumbnail_background"
-        android:src="@android:drawable/ic_menu_help"/>
+        android:src="@drawable/ic_thumbnail_placeholder"/>
 
 </LinearLayout>

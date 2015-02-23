@@ -475,7 +475,7 @@ public class LinksFragment extends ListFragment {
         @Override
         public View getView(final int position, View view, ViewGroup parent) {
             if (view == null) {
-                view = getActivity().getLayoutInflater().inflate(R.layout.reddit_link_item, null);
+                view = getActivity().getLayoutInflater().inflate(R.layout.reddit_link_item, parent, false);
             }
 
             RedditLink link = getItem(position);
@@ -511,6 +511,7 @@ public class LinksFragment extends ListFragment {
 
             // Queue thumbnail to be downloaded, if one exists
             ImageView thumbnailImageView = (ImageView) view.findViewById(R.id.link_thumbnail);
+            thumbnailImageView.setImageResource(R.drawable.ic_thumbnail_placeholder);
             String thumbnailUrl = link.getThumbnail();
             if (thumbnailUrl.equals("nsfw")) {
                 thumbnailImageView.setImageResource(R.drawable.ic_nsfw);

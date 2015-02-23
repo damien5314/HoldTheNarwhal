@@ -105,7 +105,7 @@ public class CommentsFragment extends ListFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.comments_fragment, null);
+        View v = inflater.inflate(R.layout.comments_fragment, container, false);
 
         ListView listView = (ListView) v.findViewById(android.R.id.list);
         setListViewHeightBasedOnChildren(listView);
