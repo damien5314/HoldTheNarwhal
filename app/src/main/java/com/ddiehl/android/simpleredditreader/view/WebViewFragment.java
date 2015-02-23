@@ -3,7 +3,6 @@ package com.ddiehl.android.simpleredditreader.view;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,7 +44,9 @@ public class WebViewFragment extends Fragment {
 
         WebSettings settings = mWebView.getSettings();
         settings.setJavaScriptEnabled(true);
-        settings.setBuiltInZoomControls(true);
+        settings.setUseWideViewPort(true);
+        settings.setLoadWithOverviewMode(true);
+//        settings.setBuiltInZoomControls(true);
 
         mWebView.setWebViewClient(new WebViewClient() {
             @Override
@@ -78,7 +79,6 @@ public class WebViewFragment extends Fragment {
                 // Check if the key event was the Back button and if there's history
                 if (event.getAction() == KeyEvent.ACTION_UP
                         && (keyCode == KeyEvent.KEYCODE_BACK) && mWebView.canGoBack()) {
-                    Log.d(TAG, "WebView key listener triggered: " + keyCode);
                     mWebView.goBack();
                     return true;
                 }
