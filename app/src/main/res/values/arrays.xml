@@ -39,8 +39,9 @@
         <!--<item>#B3C6FF</item>-->
         <!--<item>#CCD9FF</item>-->
         <item>#33FF0000</item>
-        <item>#3300FF00</item>
+        <item>#6600FF00</item>
         <item>#330000FF</item>
+        <item>#AAFFED00</item>
     </array>
 
 </resources>
