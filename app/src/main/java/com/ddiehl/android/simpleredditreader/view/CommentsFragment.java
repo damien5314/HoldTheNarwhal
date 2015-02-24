@@ -405,7 +405,7 @@ public class CommentsFragment extends ListFragment {
                 vBody.setVisibility(View.VISIBLE);
                 vMoreComments.setVisibility(View.GONE);
                 vAuthor.setText(((RedditComment) comment).getAuthor());
-                vScore.setText("[" + ((RedditComment) comment).getScore() + "]");
+                vScore.setText("• " + ((RedditComment) comment).getScore() + " •");
                 vTimestamp.setText(Utils.getFormattedDateStringFromUtc(((RedditComment) comment).getCreateUtc().longValue()));
                 vBody.setText(((RedditComment) comment).getBody());
                 if (comment.isCollapsed()) {

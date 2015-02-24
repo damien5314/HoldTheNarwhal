@@ -22,50 +22,59 @@
         android:paddingLeft="5dp"
         android:paddingRight="5dp">
 
-        <ImageView
-            android:id="@+id/comment_expander"
-            android:layout_width="@dimen/comment_expander_size"
-            android:layout_height="@dimen/comment_expander_size"
-            android:src="@drawable/ic_thread_collapse"/>
-
-        <TextView
-            android:id="@+id/comment_author"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/comment_data"
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/comment_expander"
-            android:layout_marginRight="@dimen/comment_author_padding"
-            android:textStyle="bold"
-            android:textSize="@dimen/comment_author_text_size"/>
+            android:gravity="center_vertical">
 
-        <TextView
-            android:id="@+id/comment_score"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/comment_author"
-            android:layout_marginRight="@dimen/comment_score_padding"
-            android:textSize="@dimen/comment_score_text_size"/>
+            <ImageView
+                android:id="@+id/comment_expander"
+                android:layout_width="@dimen/comment_expander_size"
+                android:layout_height="@dimen/comment_expander_size"
+                android:src="@drawable/ic_thread_collapse"/>
 
-        <TextView
-            android:id="@+id/comment_timestamp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/comment_score"
-            android:textStyle="italic"
-            android:textSize="@dimen/comment_timestamp_text_size"/>
+            <TextView
+                android:id="@+id/comment_author"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/comment_expander"
+                android:layout_marginRight="@dimen/comment_author_padding"
+                android:textStyle="bold"
+                android:textSize="@dimen/comment_author_text_size"/>
 
-        <TextView
-            android:id="@+id/comment_more"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/comment_timestamp"
-            android:textStyle="italic"
-            android:textSize="@dimen/comment_more_text_size"/>
+            <TextView
+                android:id="@+id/comment_score"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/comment_author"
+                android:layout_marginRight="@dimen/comment_score_padding"
+                android:textSize="@dimen/comment_score_text_size"/>
+
+            <TextView
+                android:id="@+id/comment_timestamp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/comment_score"
+                android:textStyle="italic"
+                android:textSize="@dimen/comment_timestamp_text_size"/>
+
+            <TextView
+                android:id="@+id/comment_more"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/comment_timestamp"
+                android:textStyle="italic"
+                android:textSize="@dimen/comment_more_text_size"/>
+
+        </LinearLayout>
 
         <TextView
             android:id="@+id/comment_body"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/comment_author"
+            android:layout_below="@id/comment_data"
             android:layout_marginTop="@dimen/comment_body_margin"
             android:textSize="@dimen/comment_body_text_size"
             android:textColor="@color/black"/>
