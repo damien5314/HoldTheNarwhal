@@ -388,7 +388,8 @@ public class CommentsFragment extends ListFragment {
                 int[] colors = getResources().getIntArray(R.array.indentation_colors);
                 int index = Math.min(i, colors.length - 1);
 //                paddingView.setBackgroundColor(colors[index]);
-                paddingView.setBackgroundColor(0xFFCCD9FF);
+                if (i == depth-2)
+                    paddingView.setBackgroundColor(colors[i % colors.length]);
                 indentationWrapper.addView(paddingView);
             }
 
