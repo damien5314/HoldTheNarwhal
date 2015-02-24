@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 @SuppressWarnings("unused")
-public class RedditMoreComments extends Listing {
+public class RedditMoreComments extends AbsRedditComment {
 
     @Expose
     private RedditMoreCommentsData data;
@@ -14,23 +14,7 @@ public class RedditMoreComments extends Listing {
 
     @Override
     public RedditMoreCommentsData getData() {
-        return null;
-    }
-
-    public int getDepth() {
-        return data.depth;
-    }
-
-    public void setDepth(int depth) {
-        data.depth = depth;
-    }
-
-    public boolean isVisible() {
-        return data.isVisible;
-    }
-
-    public void isVisible(boolean b) {
-        data.isVisible = b;
+        return data;
     }
 
     public Integer getCount() {
@@ -54,9 +38,6 @@ public class RedditMoreComments extends Listing {
     }
 
     private static class RedditMoreCommentsData {
-
-        private int depth;
-        private boolean isVisible = true;
 
         @Expose
         private Integer count;

@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 @SuppressWarnings("unused")
-public class RedditComment extends Listing {
+public class RedditComment extends AbsRedditComment {
 
     @Expose
     private RedditCommentData data;
@@ -15,30 +15,6 @@ public class RedditComment extends Listing {
     @Override
     public RedditCommentData getData() {
         return data;
-    }
-
-    public int getDepth() {
-        return data.depth;
-    }
-
-    public void setDepth(int depth) {
-        data.depth = depth;
-    }
-
-    public boolean isCollapsed() {
-        return data.isCollapsed;
-    }
-
-    public void isCollapsed(boolean b) {
-        data.isCollapsed = b;
-    }
-
-    public boolean isVisible() {
-        return data.isVisible;
-    }
-
-    public void isVisible(boolean b) {
-        data.isVisible = b;
     }
 
     public String getSubredditId() {
@@ -170,10 +146,6 @@ public class RedditComment extends Listing {
     }
 
     public static class RedditCommentData {
-
-        private int depth;
-        private boolean isCollapsed = false;
-        private boolean isVisible = true;
 
         @Expose
         private ListingResponse replies;

@@ -34,6 +34,7 @@ import com.ddiehl.android.simpleredditreader.events.BusProvider;
 import com.ddiehl.android.simpleredditreader.events.CommentsLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.LoadCommentsEvent;
 import com.ddiehl.android.simpleredditreader.events.VoteEvent;
+import com.ddiehl.android.simpleredditreader.model.listings.AbsRedditComment;
 import com.ddiehl.android.simpleredditreader.model.listings.Listing;
 import com.ddiehl.android.simpleredditreader.model.listings.RedditComment;
 import com.ddiehl.android.simpleredditreader.model.listings.RedditLink;
@@ -366,9 +367,8 @@ public class CommentsFragment extends ListFragment {
 
         @Override
         public View getView(final int position, View view, ViewGroup parent) {
-            final Listing comment = mData.get(position);
-            if (comment instanceof RedditComment ?
-                    !((RedditComment) comment).isVisible() : !((RedditMoreComments) comment).isVisible()) {
+            final AbsRedditComment comment = (AbsRedditComment) mData.get(position);
+            if (!comment.isVisible()) {
                 return new View(getContext());
             }
 
@@ -380,14 +380,11 @@ public class CommentsFragment extends ListFragment {
             // Add padding views to indentation_wrapper based on depth of comment
             ViewGroup indentationWrapper = (ViewGroup) view.findViewById(R.id.indentation_wrapper);
             indentationWrapper.removeAllViews(); // Reset padding for recycled comment views
-            int depth = comment instanceof RedditComment ?
-                    ((RedditComment) comment).getDepth() : ((RedditMoreComments) comment).getDepth();
+            int depth = comment.getDepth();
             for (int i = 0; i < depth - 1; i++) {
                 View paddingView = inflater.inflate(R.layout.comment_padding_view, indentationWrapper, false);
                 // Set background color for padding view
                 int[] colors = getResources().getIntArray(R.array.indentation_colors);
-                int index = Math.min(i, colors.length - 1);
-//                paddingView.setBackgroundColor(colors[index]);
                 if (i == depth-2)
                     paddingView.setBackgroundColor(colors[i % colors.length]);
                 indentationWrapper.addView(paddingView);
@@ -411,7 +408,7 @@ public class CommentsFragment extends ListFragment {
                 vScore.setText("[" + ((RedditComment) comment).getScore() + "]");
                 vTimestamp.setText(Utils.getFormattedDateStringFromUtc(((RedditComment) comment).getCreateUtc().longValue()));
                 vBody.setText(((RedditComment) comment).getBody());
-                if (((RedditComment) comment).isCollapsed()) {
+                if (comment.isCollapsed()) {
                     vBody.setVisibility(View.GONE);
                     vExpander.setImageResource(R.drawable.ic_thread_expand);
                 } else {
@@ -433,11 +430,11 @@ public class CommentsFragment extends ListFragment {
                 }
             }
 
-            vExpander.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (comment instanceof RedditComment) {
-                        if (((RedditComment) comment).isCollapsed()) {
+            if (comment instanceof RedditComment) {
+                vExpander.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (comment.isCollapsed()) {
                             setThreadVisible(position, true);
                             getListView().invalidateViews();
                         } else {
@@ -445,8 +442,8 @@ public class CommentsFragment extends ListFragment {
                             getListView().invalidateViews();
                         }
                     }
-                }
-            });
+                });
+            }
 
             return view;
         }
@@ -455,24 +452,22 @@ public class CommentsFragment extends ListFragment {
     private void setThreadVisible(int position, boolean b) {
         ListAdapter listAdapter = getListAdapter();
         RedditComment parentComment = (RedditComment) listAdapter.getItem(position);
-        parentComment.isCollapsed(!b);
+        parentComment.setCollapsed(!b);
         int parentCommentDepth = parentComment.getDepth();
 
         if (position < listAdapter.getCount() - 1) {
             int currentPosition = position + 1;
-            Listing currentComment = (Listing) listAdapter.getItem(currentPosition);
-            int currentCommentDepth = currentComment instanceof RedditComment ?
-                    ((RedditComment) currentComment).getDepth() : ((RedditMoreComments) currentComment).getDepth();
+            AbsRedditComment currentComment = (AbsRedditComment) listAdapter.getItem(currentPosition);
+            int currentCommentDepth = currentComment.getDepth();
             while (currentCommentDepth > parentCommentDepth) {
                 if (currentComment instanceof RedditComment) {
-                    ((RedditComment) currentComment).isVisible(b);
+                    currentComment.setVisible(b);
                 } else {
-                    ((RedditMoreComments) currentComment).isVisible(b);
+                    currentComment.setVisible(b);
                 }
                 currentPosition++;
-                currentComment = (Listing) listAdapter.getItem(currentPosition);
-                currentCommentDepth = currentComment instanceof RedditComment ?
-                        ((RedditComment) currentComment).getDepth() : ((RedditMoreComments) currentComment).getDepth();
+                currentComment = (AbsRedditComment) listAdapter.getItem(currentPosition);
+                currentCommentDepth = currentComment.getDepth();
             }
         }
     }
