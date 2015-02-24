@@ -1,5 +1,6 @@
 package com.ddiehl.android.simpleredditreader.view;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -12,6 +13,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
+import android.widget.ZoomButtonsController;
 
 import com.ddiehl.android.simpleredditreader.R;
 
@@ -46,7 +48,8 @@ public class WebViewFragment extends Fragment {
         settings.setJavaScriptEnabled(true);
         settings.setUseWideViewPort(true);
         settings.setLoadWithOverviewMode(true);
-//        settings.setBuiltInZoomControls(true);
+        settings.setBuiltInZoomControls(true);
+        disableWebViewZoomControls(mWebView);
 
         mWebView.setWebViewClient(new WebViewClient() {
             @Override
@@ -97,5 +100,34 @@ public class WebViewFragment extends Fragment {
 
     public boolean canGoBack() {
         return mWebView != null && mWebView.canGoBack();
+    }
+
+    /**
+     * Disable zoom buttons for WebView.
+     * http://twigstechtips.blogspot.com/2013/09/android-disable-webview-zoom-controls.html
+     */
+    public void disableWebViewZoomControls(final WebView webView) {
+        webView.getSettings().setSupportZoom(true);
+        webView.getSettings().setBuiltInZoomControls(true);
+
+        // Use the API 11+ calls to disable the controls
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB) {
+            new Runnable() {
+                @SuppressLint("NewApi")
+                public void run() {
+                    webView.getSettings().setDisplayZoomControls(false);
+                }
+            }.run();
+        } else {
+            try {
+                ZoomButtonsController zoom_control;
+                zoom_control = ((ZoomButtonsController) webView.getClass()
+                        .getMethod("getZoomButtonsController").invoke(webView, (Object[]) null));
+                zoom_control.getContainer().setVisibility(View.GONE);
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
