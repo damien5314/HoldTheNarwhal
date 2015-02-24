@@ -437,10 +437,10 @@ public class CommentsFragment extends ListFragment {
                 public void onClick(View v) {
                     if (comment instanceof RedditComment) {
                         if (((RedditComment) comment).isCollapsed()) {
-                            expandThread(position);
+                            setThreadVisible(position, true);
                             getListView().invalidateViews();
                         } else {
-                            collapseThread(position);
+                            setThreadVisible(position, false);
                             getListView().invalidateViews();
                         }
                     }
@@ -451,51 +451,28 @@ public class CommentsFragment extends ListFragment {
         }
     }
 
-    private void collapseThread(int position) {
-        Log.d(TAG, "Collapsing thread at position: " + position);
+    private void setThreadVisible(int position, boolean b) {
         ListAdapter listAdapter = getListAdapter();
         RedditComment parentComment = (RedditComment) listAdapter.getItem(position);
-        parentComment.isCollapsed(true);
+        parentComment.isCollapsed(!b);
         int parentCommentDepth = parentComment.getDepth();
 
-        int currentPosition = position + 1;
-        Listing currentComment = (Listing) listAdapter.getItem(currentPosition);
-        int currentCommentDepth = currentComment instanceof RedditComment ?
-                ((RedditComment) currentComment).getDepth() : ((RedditMoreComments) currentComment).getDepth();
-        while (currentCommentDepth > parentCommentDepth) {
-            if (currentComment instanceof RedditComment) {
-                ((RedditComment) currentComment).isVisible(false);
-            } else {
-                ((RedditMoreComments) currentComment).isVisible(false);
-            }
-            currentPosition++;
-            currentComment = (Listing) listAdapter.getItem(currentPosition);
-            currentCommentDepth = currentComment instanceof RedditComment ?
+        if (position < listAdapter.getCount() - 1) {
+            int currentPosition = position + 1;
+            Listing currentComment = (Listing) listAdapter.getItem(currentPosition);
+            int currentCommentDepth = currentComment instanceof RedditComment ?
                     ((RedditComment) currentComment).getDepth() : ((RedditMoreComments) currentComment).getDepth();
-        }
-    }
-
-    private void expandThread(int position) {
-        Log.d(TAG, "Expanding thread at position: " + position);
-        ListAdapter listAdapter = getListAdapter();
-        RedditComment parentComment = (RedditComment) listAdapter.getItem(position);
-        parentComment.isCollapsed(false);
-        int parentCommentDepth = parentComment.getDepth();
-
-        int currentPosition = position + 1;
-        Listing currentComment = (Listing) listAdapter.getItem(currentPosition);
-        int currentCommentDepth = currentComment instanceof RedditComment ?
-                ((RedditComment) currentComment).getDepth() : ((RedditMoreComments) currentComment).getDepth();
-        while (currentCommentDepth > parentCommentDepth) {
-            if (currentComment instanceof RedditComment) {
-                ((RedditComment) currentComment).isVisible(true);
-            } else {
-                ((RedditMoreComments) currentComment).isVisible(true);
+            while (currentCommentDepth > parentCommentDepth) {
+                if (currentComment instanceof RedditComment) {
+                    ((RedditComment) currentComment).isVisible(b);
+                } else {
+                    ((RedditMoreComments) currentComment).isVisible(b);
+                }
+                currentPosition++;
+                currentComment = (Listing) listAdapter.getItem(currentPosition);
+                currentCommentDepth = currentComment instanceof RedditComment ?
+                        ((RedditComment) currentComment).getDepth() : ((RedditMoreComments) currentComment).getDepth();
             }
-            currentPosition++;
-            currentComment = (Listing) listAdapter.getItem(currentPosition);
-            currentCommentDepth = currentComment instanceof RedditComment ?
-                    ((RedditComment) currentComment).getDepth() : ((RedditMoreComments) currentComment).getDepth();
         }
     }
 
