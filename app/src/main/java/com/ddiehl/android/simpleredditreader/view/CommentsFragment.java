@@ -365,13 +365,17 @@ public class CommentsFragment extends ListFragment {
         }
 
         @Override
-        public View getView(int position, View view, ViewGroup parent) {
-            LayoutInflater inflater = getActivity().getLayoutInflater();
-            if (view == null) {
-                view = inflater.inflate(R.layout.reddit_comment_item, parent, false);
+        public View getView(final int position, View view, ViewGroup parent) {
+            final Listing comment = mData.get(position);
+            if (comment instanceof RedditComment ?
+                    !((RedditComment) comment).isVisible() : !((RedditMoreComments) comment).isVisible()) {
+                return new View(getContext());
             }
 
-            Listing comment = mData.get(position);
+            LayoutInflater inflater = getActivity().getLayoutInflater();
+            if (view == null || !(view instanceof ViewGroup)) { // Make sure the view isn't a blank
+                view = inflater.inflate(R.layout.reddit_comment_item, parent, false);
+            }
 
             // Add padding views to indentation_wrapper based on depth of comment
             ViewGroup indentationWrapper = (ViewGroup) view.findViewById(R.id.indentation_wrapper);
@@ -397,7 +401,6 @@ public class CommentsFragment extends ListFragment {
 
             // Populate attributes of comment in layout
             if (comment instanceof RedditComment) {
-                vExpander.setImageResource(R.drawable.ic_thread_contract);
                 vAuthor.setVisibility(View.VISIBLE);
                 vScore.setVisibility(View.VISIBLE);
                 vTimestamp.setVisibility(View.VISIBLE);
@@ -407,6 +410,13 @@ public class CommentsFragment extends ListFragment {
                 vScore.setText("[" + ((RedditComment) comment).getScore() + "]");
                 vTimestamp.setText(Utils.getFormattedDateStringFromUtc(((RedditComment) comment).getCreateUtc().longValue()));
                 vBody.setText(((RedditComment) comment).getBody());
+                if (((RedditComment) comment).isCollapsed()) {
+                    vBody.setVisibility(View.GONE);
+                    vExpander.setImageResource(R.drawable.ic_thread_expand);
+                } else {
+                    vBody.setVisibility(View.VISIBLE);
+                    vExpander.setImageResource(R.drawable.ic_thread_collapse);
+                }
             } else {
                 vExpander.setImageResource(R.drawable.ic_thread_expand);
                 vAuthor.setVisibility(View.GONE);
@@ -422,7 +432,70 @@ public class CommentsFragment extends ListFragment {
                 }
             }
 
+            vExpander.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (comment instanceof RedditComment) {
+                        if (((RedditComment) comment).isCollapsed()) {
+                            expandThread(position);
+                            getListView().invalidateViews();
+                        } else {
+                            collapseThread(position);
+                            getListView().invalidateViews();
+                        }
+                    }
+                }
+            });
+
             return view;
+        }
+    }
+
+    private void collapseThread(int position) {
+        Log.d(TAG, "Collapsing thread at position: " + position);
+        ListAdapter listAdapter = getListAdapter();
+        RedditComment parentComment = (RedditComment) listAdapter.getItem(position);
+        parentComment.isCollapsed(true);
+        int parentCommentDepth = parentComment.getDepth();
+
+        int currentPosition = position + 1;
+        Listing currentComment = (Listing) listAdapter.getItem(currentPosition);
+        int currentCommentDepth = currentComment instanceof RedditComment ?
+                ((RedditComment) currentComment).getDepth() : ((RedditMoreComments) currentComment).getDepth();
+        while (currentCommentDepth > parentCommentDepth) {
+            if (currentComment instanceof RedditComment) {
+                ((RedditComment) currentComment).isVisible(false);
+            } else {
+                ((RedditMoreComments) currentComment).isVisible(false);
+            }
+            currentPosition++;
+            currentComment = (Listing) listAdapter.getItem(currentPosition);
+            currentCommentDepth = currentComment instanceof RedditComment ?
+                    ((RedditComment) currentComment).getDepth() : ((RedditMoreComments) currentComment).getDepth();
+        }
+    }
+
+    private void expandThread(int position) {
+        Log.d(TAG, "Expanding thread at position: " + position);
+        ListAdapter listAdapter = getListAdapter();
+        RedditComment parentComment = (RedditComment) listAdapter.getItem(position);
+        parentComment.isCollapsed(false);
+        int parentCommentDepth = parentComment.getDepth();
+
+        int currentPosition = position + 1;
+        Listing currentComment = (Listing) listAdapter.getItem(currentPosition);
+        int currentCommentDepth = currentComment instanceof RedditComment ?
+                ((RedditComment) currentComment).getDepth() : ((RedditMoreComments) currentComment).getDepth();
+        while (currentCommentDepth > parentCommentDepth) {
+            if (currentComment instanceof RedditComment) {
+                ((RedditComment) currentComment).isVisible(true);
+            } else {
+                ((RedditMoreComments) currentComment).isVisible(true);
+            }
+            currentPosition++;
+            currentComment = (Listing) listAdapter.getItem(currentPosition);
+            currentCommentDepth = currentComment instanceof RedditComment ?
+                    ((RedditComment) currentComment).getDepth() : ((RedditMoreComments) currentComment).getDepth();
         }
     }
 

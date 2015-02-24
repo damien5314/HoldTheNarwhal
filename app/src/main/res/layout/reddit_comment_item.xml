@@ -26,7 +26,7 @@
             android:id="@+id/comment_expander"
             android:layout_width="@dimen/comment_expander_size"
             android:layout_height="@dimen/comment_expander_size"
-            android:src="@drawable/ic_thread_contract"/>
+            android:src="@drawable/ic_thread_collapse"/>
 
         <TextView
             android:id="@+id/comment_author"
