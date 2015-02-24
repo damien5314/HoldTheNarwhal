@@ -10,18 +10,20 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 
 /**
- * Taken from StackOverflow
  * http://stackoverflow.com/questions/6210895/listview-inside-scrollview-is-not-scrolling-on-android/17503823#17503823
  */
 public class NestedListView extends ListView implements View.OnTouchListener, AbsListView.OnScrollListener {
     private int listViewTouchAction;
     private static final int MAXIMUM_LIST_ITEMS_VIEWABLE = 99999;
 
+    private LayoutParams mLayoutParams;
+
     public NestedListView(Context context, AttributeSet attrs) {
         super(context, attrs);
         listViewTouchAction = -1;
         setOnScrollListener(this);
         setOnTouchListener(this);
+        mLayoutParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
     }
 
     @Override
@@ -48,14 +50,13 @@ public class NestedListView extends ListView implements View.OnTouchListener, Ab
         if (heightMode != MeasureSpec.EXACTLY) {
             ListAdapter listAdapter = getAdapter();
             if (listAdapter != null && !listAdapter.isEmpty()) {
-                int listPosition = 0;
+                int listPosition;
                 for (listPosition = 0; listPosition < listAdapter.getCount()
                         && listPosition < MAXIMUM_LIST_ITEMS_VIEWABLE; listPosition++) {
                     View listItem = listAdapter.getView(listPosition, null, this);
                     //now it will not throw a NPE if listItem is a ViewGroup instance
                     if (listItem instanceof ViewGroup) {
-                        listItem.setLayoutParams(new LayoutParams(
-                                LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+                        listItem.setLayoutParams(mLayoutParams);
                     }
                     listItem.measure(widthMeasureSpec, heightMeasureSpec);
                     newHeight += listItem.getMeasuredHeight();

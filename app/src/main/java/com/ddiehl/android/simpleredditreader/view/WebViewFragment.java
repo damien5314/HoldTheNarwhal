@@ -98,10 +98,6 @@ public class WebViewFragment extends Fragment {
         super.onDestroyView();
     }
 
-    public boolean canGoBack() {
-        return mWebView != null && mWebView.canGoBack();
-    }
-
     /**
      * Disable zoom buttons for WebView.
      * http://twigstechtips.blogspot.com/2013/09/android-disable-webview-zoom-controls.html
