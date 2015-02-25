@@ -244,7 +244,7 @@ public class CommentsFragment extends ListFragment {
         getActivity().startActionMode(new ActionMode.Callback() {
             @Override
             public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-                mode.getMenuInflater().inflate(R.menu.menu_link_context, menu);
+                mode.getMenuInflater().inflate(R.menu.link_context_menu, menu);
                 menu.findItem(R.id.action_show_comments).setVisible(false); // Already on comments page
                 return true;
             }
@@ -289,7 +289,7 @@ public class CommentsFragment extends ListFragment {
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        getActivity().getMenuInflater().inflate(R.menu.menu_link_context, menu);
+        getActivity().getMenuInflater().inflate(R.menu.link_context_menu, menu);
     }
 
     @Override

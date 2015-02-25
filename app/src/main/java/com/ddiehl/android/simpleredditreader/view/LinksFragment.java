@@ -196,7 +196,7 @@ public class LinksFragment extends ListFragment {
         getActivity().startActionMode(new ActionMode.Callback() {
             @Override
             public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-                mode.getMenuInflater().inflate(R.menu.menu_link_context, menu);
+                mode.getMenuInflater().inflate(R.menu.link_context_menu, menu);
                 return true;
             }
 
@@ -398,7 +398,7 @@ public class LinksFragment extends ListFragment {
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        getActivity().getMenuInflater().inflate(R.menu.menu_link_context, menu);
+        getActivity().getMenuInflater().inflate(R.menu.link_context_menu, menu);
     }
 
     @Override
