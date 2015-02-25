@@ -26,5 +26,6 @@
     <dimen name="comment_expander_margin">5dp</dimen>
     <dimen name="comment_data_margin_vertical">5dp</dimen>
     <dimen name="comment_data_margin_horizontal">5dp</dimen>
+    <dimen name="toolbar_elevation">8dp</dimen>
 
 </resources>
