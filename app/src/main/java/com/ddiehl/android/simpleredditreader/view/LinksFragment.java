@@ -11,7 +11,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.ListFragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.ActionMode;
 import android.view.ContextMenu;
@@ -21,11 +22,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,7 +43,7 @@ import com.squareup.otto.Subscribe;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LinksFragment extends ListFragment {
+public class LinksFragment extends Fragment {
     private static final String TAG = LinksFragment.class.getSimpleName();
 
     private static final String ARG_SUBREDDIT = "subreddit";
@@ -65,12 +63,14 @@ public class LinksFragment extends ListFragment {
     private String mSort;
     private String mTimeSpan;
     private List<RedditLink> mData;
-    private LinkAdapter mLinkAdapter;
     private String mLastDisplayedLink;
     private boolean mLinksRequested = false;
+    private int mFirstVisibleItem, mVisibleItemCount, mTotalItemCount;
 
+    private RecyclerView mRecyclerView;
+    private LinearLayoutManager mLayoutManager;
+    private LinkAdapter mLinkAdapter;
     private ProgressDialog mProgressBar;
-    private ListView mListView;
 
     public LinksFragment() { /* Default constructor required */ }
 
@@ -112,37 +112,38 @@ public class LinksFragment extends ListFragment {
         updateTitle();
 
         mData = new ArrayList<>();
-        mLinkAdapter = new LinkAdapter(mData);
-        setListAdapter(mLinkAdapter);
+        mLinkAdapter = new LinkAdapter();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.links_fragment, container, false);
 
-        mListView = (ListView) v.findViewById(android.R.id.list);
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
-            // Register view for context menu
-            registerForContextMenu(mListView);
-        } else {
-            // Set up contextual action bar
-            mListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-        }
+        mRecyclerView = (RecyclerView) v.findViewById(R.id.recycler_view);
+        mLayoutManager = new LinearLayoutManager(getActivity());
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setAdapter(mLinkAdapter);
 
-        mListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+        mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) { }
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                mVisibleItemCount = mLayoutManager.getChildCount();
+                mTotalItemCount = mLayoutManager.getItemCount();
+                mFirstVisibleItem = mLayoutManager.findFirstVisibleItemPosition();
 
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                if ((firstVisibleItem + visibleItemCount) == totalItemCount
-                        && totalItemCount > 0
-                        && !mLinksRequested) {
-                    mLinksRequested = true;
-                    getBus().post(new LoadLinksEvent(mSubreddit, mSort, mTimeSpan, mLastDisplayedLink));
+                if (!mLinksRequested) {
+                    if ( (mVisibleItemCount + mFirstVisibleItem) >= mTotalItemCount) {
+                        mLinksRequested = true;
+                        getBus().post(new LoadLinksEvent(mSubreddit, mSort, mTimeSpan, mLastDisplayedLink));
+                    }
                 }
             }
         });
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+            // Register view for context menu
+            registerForContextMenu(mRecyclerView);
+        }
 
         return v;
     }
@@ -177,22 +178,8 @@ public class LinksFragment extends ListFragment {
         mThumbnailThread.clearQueue();
     }
 
-    @Override
-    public void onListItemClick(ListView l, View v, final int position, long id) {
-        RedditLink link = mData.get(position);
-
-        if (link.isSelf()) {
-            openCommentsForLink(mData.get(position));
-        } else {
-            Uri webViewUri = Uri.parse(link.getUrl());
-            Intent i = new Intent(getActivity(), WebViewActivity.class);
-            i.setData(webViewUri);
-            startActivity(i);
-        }
-    }
-
     @TargetApi(11)
-    private void openLinkContextMenu(final int position) {
+    private void openLinkContextMenu(final RedditLink link) {
         getActivity().startActionMode(new ActionMode.Callback() {
             @Override
             public boolean onCreateActionMode(ActionMode mode, Menu menu) {
@@ -207,7 +194,6 @@ public class LinksFragment extends ListFragment {
 
             @Override
             public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-                RedditLink link = mData.get(position);
                 switch (item.getItemId()) {
                     case R.id.action_upvote:
                         mode.finish();
@@ -244,7 +230,7 @@ public class LinksFragment extends ListFragment {
 
             @Override
             public void onDestroyActionMode(ActionMode mode) {
-                mListView.setItemChecked(position, false);
+//                mListView.setItemChecked(position, false);
             }
         });
     }
@@ -405,8 +391,7 @@ public class LinksFragment extends ListFragment {
     public boolean onContextItemSelected(MenuItem item) {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         int position = info.position;
-        LinkAdapter adapter = (LinkAdapter) getListAdapter();
-        RedditLink link = adapter.getItem(position);
+        RedditLink link = mData.get(position);
 
         switch (item.getItemId()) {
             // Set actions for each menu item
@@ -467,69 +452,108 @@ public class LinksFragment extends ListFragment {
         mProgressBar.dismiss();
     }
 
-    private class LinkAdapter extends ArrayAdapter<RedditLink> {
-        public LinkAdapter(List<RedditLink> data) {
-            super(getActivity(), 0, data);
+    private class LinkAdapter extends RecyclerView.Adapter<LinkHolder> {
+        @Override
+        public LinkHolder onCreateViewHolder(ViewGroup parent, int i) {
+            View view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.reddit_link_item, parent, false);
+            return new LinkHolder(view);
         }
 
         @Override
-        public View getView(final int position, View view, ViewGroup parent) {
-            if (view == null) {
-                view = getActivity().getLayoutInflater().inflate(R.layout.reddit_link_item, parent, false);
-            }
+        public void onBindViewHolder(LinkHolder linkHolder, int i) {
+            RedditLink link = mData.get(i);
+            linkHolder.bindLink(link);
+        }
 
-            RedditLink link = getItem(position);
+        @Override
+        public int getItemCount() {
+            return mData.size();
+        }
+    }
+
+    private class LinkHolder extends RecyclerView.ViewHolder
+            implements View.OnClickListener {
+        private RedditLink mRedditLink;
+        private TextView mScoreView;
+        private TextView mTitleView;
+        private TextView mAuthorView;
+        private TextView mTimestampView;
+        private TextView mSubredditView;
+        private TextView mDomainView;
+        private ImageView mThumbnailView;
+
+        public LinkHolder(View itemView) {
+            super(itemView);
+            itemView.setOnClickListener(this);
+            mScoreView = (TextView) itemView.findViewById(R.id.link_score);
+            mTitleView = (TextView) itemView.findViewById(R.id.link_title);
+            mAuthorView = (TextView) itemView.findViewById(R.id.link_author);
+            mTimestampView = (TextView) itemView.findViewById(R.id.link_timestamp);
+            mSubredditView = (TextView) itemView.findViewById(R.id.link_subreddit);
+            mDomainView = (TextView) itemView.findViewById(R.id.link_domain);
+            mThumbnailView = (ImageView) itemView.findViewById(R.id.link_thumbnail);
+        }
+
+        public void bindLink(RedditLink link) {
+            mRedditLink = link;
 
             String createDateFormatted = Utils.getFormattedDateStringFromUtc(link.getCreatedUtc().longValue());
 
             // Set content for each TextView
-            TextView vScore = (TextView) view.findViewById(R.id.link_score);
-            vScore.setText(String.valueOf(link.getScore()));
-            TextView vTitle = (TextView) view.findViewById(R.id.link_title);
-            vTitle.setText(link.getTitle());
-            TextView vAuthor = (TextView) view.findViewById(R.id.link_author);
-            vAuthor.setText("/u/" + link.getAuthor());
-            TextView vTimestamp = (TextView) view.findViewById(R.id.link_timestamp);
-            vTimestamp.setText(createDateFormatted);
-            TextView vSubreddit = (TextView) view.findViewById(R.id.link_subreddit);
-            vSubreddit.setText("/r/" + link.getSubreddit());
-            TextView vDomain = (TextView) view.findViewById(R.id.link_domain);
-            vDomain.setText("(" + link.getDomain() + ")");
+            mScoreView.setText(String.valueOf(link.getScore()));
+            mTitleView.setText(link.getTitle());
+            mAuthorView.setText("/u/" + link.getAuthor());
+            mTimestampView.setText(createDateFormatted);
+            mSubredditView.setText("/r/" + link.getSubreddit());
+            mDomainView.setText("(" + link.getDomain() + ")");
 
             // Register context menu to click event for score view
-            vScore.setOnClickListener(new View.OnClickListener() {
+            mScoreView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
 
                     } else { // Activate contextual action bar
-                        mListView.setItemChecked(position, true);
-                        openLinkContextMenu(position);
+//                        mListView.setItemChecked(position, true);
+                        openLinkContextMenu(mRedditLink);
                     }
                 }
             });
 
             // Queue thumbnail to be downloaded, if one exists
-            ImageView thumbnailImageView = (ImageView) view.findViewById(R.id.link_thumbnail);
-            thumbnailImageView.setImageResource(R.drawable.ic_thumbnail_placeholder);
+            mThumbnailView.setImageResource(R.drawable.ic_thumbnail_placeholder);
+
             String thumbnailUrl = link.getThumbnail();
             if (thumbnailUrl.equals("nsfw")) {
-                thumbnailImageView.setImageResource(R.drawable.ic_nsfw);
+                mThumbnailView.setImageResource(R.drawable.ic_nsfw);
             } else if (!thumbnailUrl.equals("")
                     && !thumbnailUrl.equals("default")
                     && !thumbnailUrl.equals("self")) {
                 Bitmap thumbnail = mThumbnailCache.getThumbnail(thumbnailUrl);
                 if (thumbnail == null) {
-                    mThumbnailThread.queueThumbnail(thumbnailImageView, thumbnailUrl);
+                    mThumbnailThread.queueThumbnail(mThumbnailView, thumbnailUrl);
                 } else {
-                    thumbnailImageView.setImageBitmap(thumbnail);
+                    mThumbnailView.setImageBitmap(thumbnail);
                 }
-                thumbnailImageView.setVisibility(View.VISIBLE);
+                mThumbnailView.setVisibility(View.VISIBLE);
             } else {
-                thumbnailImageView.setVisibility(View.GONE);
+                mThumbnailView.setVisibility(View.GONE);
             }
+        }
 
-            return view;
+        @Override
+        public void onClick(View v) {
+            if (mRedditLink != null) {
+                if (mRedditLink.isSelf()) {
+                    openCommentsForLink(mRedditLink);
+                } else {
+                    Uri webViewUri = Uri.parse(mRedditLink.getUrl());
+                    Intent i = new Intent(getActivity(), WebViewActivity.class);
+                    i.setData(webViewUri);
+                    startActivity(i);
+                }
+            }
         }
     }
 }
