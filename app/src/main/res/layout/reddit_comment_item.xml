@@ -17,10 +17,10 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp">
+        android:paddingTop="@dimen/comment_data_margin_vertical"
+        android:paddingBottom="@dimen/comment_data_margin_vertical"
+        android:paddingLeft="@dimen/comment_data_margin_horizontal"
+        android:paddingRight="@dimen/comment_data_margin_horizontal">
 
         <LinearLayout
             android:id="@+id/comment_data"
@@ -33,7 +33,7 @@
                 android:id="@+id/comment_expander"
                 android:layout_width="@dimen/comment_expander_size"
                 android:layout_height="@dimen/comment_expander_size"
-                android:layout_margin="@dimen/comment_expander_margin"
+                android:layout_marginRight="@dimen/comment_expander_margin"
                 android:src="@drawable/ic_thread_collapse"
                 android:background="@drawable/comment_expander_background"/>
 
@@ -43,6 +43,7 @@
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@id/comment_expander"
                 android:layout_marginRight="@dimen/comment_author_padding"
+                android:textColor="@color/secondary_text"
                 android:textStyle="bold"
                 android:textSize="@dimen/comment_author_text_size"/>
 
@@ -52,6 +53,7 @@
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@id/comment_author"
                 android:layout_marginRight="@dimen/comment_score_padding"
+                android:textColor="@color/secondary_text"
                 android:textSize="@dimen/comment_score_text_size"/>
 
             <TextView
@@ -59,6 +61,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@id/comment_score"
+                android:textColor="@color/secondary_text"
                 android:textStyle="italic"
                 android:textSize="@dimen/comment_timestamp_text_size"/>
 
@@ -67,6 +70,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@id/comment_timestamp"
+                android:textColor="@color/secondary_text"
                 android:textStyle="italic"
                 android:textSize="@dimen/comment_more_text_size"/>
 
@@ -77,9 +81,8 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/comment_data"
-            android:layout_marginTop="@dimen/comment_body_margin"
             android:textSize="@dimen/comment_body_text_size"
-            android:textColor="@color/black"/>
+            android:textColor="@color/primary_text"/>
 
     </RelativeLayout>
 

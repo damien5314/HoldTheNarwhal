@@ -20,9 +20,11 @@
     <dimen name="comment_score_padding">5dp</dimen>
     <dimen name="comment_score_text_size">14sp</dimen>
     <dimen name="comment_timestamp_text_size">14sp</dimen>
-    <dimen name="comment_body_margin">3sp</dimen>
+    <dimen name="comment_body_margin">3dp</dimen>
     <dimen name="comment_body_text_size">16sp</dimen>
     <dimen name="comment_more_text_size">16sp</dimen>
     <dimen name="comment_expander_margin">5dp</dimen>
+    <dimen name="comment_data_margin_vertical">5dp</dimen>
+    <dimen name="comment_data_margin_horizontal">5dp</dimen>
 
 </resources>

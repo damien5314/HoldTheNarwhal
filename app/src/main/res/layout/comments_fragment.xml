@@ -20,7 +20,7 @@
                 android:id="@+id/link_self_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/black"
+                android:textColor="@color/primary_text"
                 android:layout_margin="10dp"
                 android:padding="10dp"
                 android:background="@drawable/self_text_background" />

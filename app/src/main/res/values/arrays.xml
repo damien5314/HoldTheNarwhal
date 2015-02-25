@@ -38,10 +38,13 @@
         <!--<item>#99B3FF</item>-->
         <!--<item>#B3C6FF</item>-->
         <!--<item>#CCD9FF</item>-->
-        <item>#33FF0000</item>
-        <item>#6600FF00</item>
-        <item>#330000FF</item>
-        <item>#AAFFED00</item>
+
+        <!--<item>#33FF0000</item>-->
+        <!--<item>#6600FF00</item>-->
+        <!--<item>#330000FF</item>-->
+        <!--<item>#AAFFED00</item>-->
+
+        <item>@color/indentation</item>
     </array>
 
 </resources>

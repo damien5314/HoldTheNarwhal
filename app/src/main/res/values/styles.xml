@@ -1,11 +1,23 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light">
+    <style name="AppTheme" parent="AppTheme.Base"/>
+
+    <style name="AppTheme.Base" parent="Theme.AppCompat.Light">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primary_dark</item>
+        <item name="colorAccent">@color/accent</item>
+
         <!-- to remove the default action -->
         <item name="android:windowNoTitle">true</item>
         <item name="windowActionBar">false</item> <!-- For 2.x version -->
         <item name="android:windowActionModeOverlay">true</item>
+    </style>
+
+    <style name="ToolbarThemeLightText" parent="Theme.AppCompat.Light">
+        <item name="android:textColorPrimary">@color/icons</item>
+        <item name="actionMenuTextColor">@color/icons</item>
+        <item name="android:textColorSecondary">@color/icons</item>
     </style>
 
     <style name="NavigationDrawer">
@@ -13,9 +25,7 @@
         <item name="android:layout_height">match_parent</item>
         <item name="android:layout_gravity">start</item>
         <item name="android:choiceMode">singleChoice</item>
-        <item name="android:divider">@android:color/transparent</item>
-        <item name="android:dividerHeight">0dp</item>
-        <item name="android:background">#030304</item>
+        <item name="android:background">@android:color/white</item>
     </style>
 
     <style name="NavigationDrawerItem">
@@ -31,12 +41,13 @@
     <style name="NavigationDrawerItemIcon">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="android:color">@color/accent</item>
     </style>
 
     <style name="NavigationDrawerItemText">
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textColor">@color/primary_text</item>
         <item name="android:textAppearance">?android:attr/textAppearanceListItemSmall</item>
     </style>
 
@@ -45,63 +56,68 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_weight">1</item>
         <item name="android:textAppearance">?android:attr/textAppearanceListItemSmall</item>
-        <item name="android:textColor">@android:color/white</item>
-        <item name="android:textColorHint">@android:color/darker_gray</item>
+        <item name="android:textColor">@color/primary_text</item>
+        <item name="android:textColorHint">@color/secondary_text</item>
     </style>
 
-    <style name="ListingScoreTextView">
+    <style name="LinkScoreTextView">
         <item name="android:layout_width">42dp</item>
         <item name="android:layout_height">fill_parent</item>
         <item name="android:layout_marginLeft">4dp</item>
         <item name="android:layout_marginRight">4dp</item>
         <item name="android:textSize">@dimen/link_score_text_size</item>
         <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/secondary_text</item>
         <item name="android:singleLine">true</item>
     </style>
 
-    <style name="ListingTitleTextView">
+    <style name="LinkTitleTextView">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginBottom">5dp</item>
         <item name="android:textSize">@dimen/link_title_text_size</item>
-        <item name="android:textColor">@color/link_title</item>
+        <item name="android:textColor">@color/primary_text</item>
         <item name="android:minLines">2</item>
         <item name="android:maxLines">2</item>
         <item name="android:ellipsize">end</item>
     </style>
 
-    <style name="ListingAuthorTextView">
+    <style name="LinkAuthorTextView">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginRight">5dp</item>
         <item name="android:textSize">@dimen/link_author_text_size</item>
         <item name="android:textStyle">italic</item>
+        <item name="android:textColor">@color/secondary_text</item>
     </style>
 
-    <style name="ListingSubredditTextView">
+    <style name="LinkSubredditTextView">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginRight">5dp</item>
         <item name="android:textSize">@dimen/link_subreddit_text_size</item>
         <item name="android:textStyle">italic</item>
+        <item name="android:textColor">@color/secondary_text</item>
     </style>
 
-    <style name="ListingTimestampTextView">
+    <style name="LinkTimestampTextView">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">@dimen/link_timestamp_text_size</item>
         <item name="android:textStyle">italic</item>
+        <item name="android:textColor">@color/secondary_text</item>
     </style>
 
-    <style name="ListingDomainTextView">
+    <style name="LinkDomainTextView">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginRight">5dp</item>
         <item name="android:textSize">@dimen/link_domain_text_size</item>
         <item name="android:textStyle">italic</item>
+        <item name="android:textColor">@color/secondary_text</item>
     </style>
 
-    <style name="ListingThumbnail">
+    <style name="LinkThumbnail">
         <item name="android:layout_width">72dp</item>
         <item name="android:layout_height">72dp</item>
         <item name="android:layout_marginLeft">4dp</item>
@@ -111,9 +127,9 @@
     <style name="ProgressDialog" parent="Theme.AppCompat.Dialog">
         <item name="android:alertDialogStyle">@style/CustomAlertDialogStyle</item>
         <item name="android:windowBackground">@color/transparent</item>
-        <item name="android:textColorPrimary">#FFFFFF</item>
+        <item name="android:textColorPrimary">@color/icons</item>
         <item name="android:backgroundDimEnabled">true</item>
-        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:textColor">@color/icons</item>
         <item name="android:textStyle">normal</item>
         <item name="android:textSize">12sp</item>
     </style>

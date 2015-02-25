@@ -10,7 +10,7 @@
 
     <TextView
         android:id="@+id/link_score"
-        style="@style/ListingScoreTextView"
+        style="@style/LinkScoreTextView"
         android:gravity="center"
         android:text="@string/link_score_default"/>
 
@@ -21,31 +21,31 @@
 
         <TextView
             android:id="@+id/link_title"
-            style="@style/ListingTitleTextView"
+            style="@style/LinkTitleTextView"
             android:layout_gravity="center_vertical"/>
 
         <TextView
             android:id="@+id/link_author"
-            style="@style/ListingAuthorTextView"
+            style="@style/LinkAuthorTextView"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_below="@id/link_title"/>
 
         <TextView
             android:id="@+id/link_timestamp"
-            style="@style/ListingTimestampTextView"
+            style="@style/LinkTimestampTextView"
             android:layout_below="@id/link_author"/>
 
         <TextView
             android:id="@+id/link_domain"
-            style="@style/ListingDomainTextView"
+            style="@style/LinkDomainTextView"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_below="@id/link_title"/>
 
         <TextView
             android:id="@+id/link_subreddit"
-            style="@style/ListingSubredditTextView"
+            style="@style/LinkSubredditTextView"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_below="@id/link_domain"/>
@@ -54,7 +54,7 @@
 
     <ImageView
         android:id="@+id/link_thumbnail"
-        style="@style/ListingThumbnail"
+        style="@style/LinkThumbnail"
         android:layout_gravity="center_vertical"
         android:background="@drawable/thumbnail_background"
         android:src="@drawable/ic_thumbnail_placeholder"/>
