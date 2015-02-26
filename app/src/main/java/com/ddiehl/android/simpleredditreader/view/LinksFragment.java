@@ -70,6 +70,7 @@ public class LinksFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLayoutManager;
     private LinkAdapter mLinkAdapter;
+    private SingleSelector mSelector;
     private ProgressDialog mProgressBar;
 
     public LinksFragment() { /* Default constructor required */ }
@@ -113,6 +114,7 @@ public class LinksFragment extends Fragment {
 
         mData = new ArrayList<>();
         mLinkAdapter = new LinkAdapter();
+        mSelector = new SingleSelector();
     }
 
     @Override
@@ -230,7 +232,9 @@ public class LinksFragment extends Fragment {
 
             @Override
             public void onDestroyActionMode(ActionMode mode) {
-//                mListView.setItemChecked(position, false);
+                int selectedPosition = mSelector.getSelectedPosition();
+                mSelector.setItemSelected(selectedPosition, false);
+                mLinkAdapter.notifyItemChanged(selectedPosition);
             }
         });
     }
@@ -515,8 +519,10 @@ public class LinksFragment extends Fragment {
                     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
 
                     } else { // Activate contextual action bar
-//                        mListView.setItemChecked(position, true);
                         openLinkContextMenu(mRedditLink);
+                        int pos = getPosition();
+                        mSelector.setItemSelected(pos, true);
+                        mLinkAdapter.notifyItemChanged(pos);
                     }
                 }
             });
@@ -540,6 +546,9 @@ public class LinksFragment extends Fragment {
             } else {
                 mThumbnailView.setVisibility(View.GONE);
             }
+
+            boolean isSelected = mSelector.isItemSelected(getPosition());
+            itemView.setActivated(isSelected);
         }
 
         @Override
