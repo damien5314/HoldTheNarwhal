@@ -27,5 +27,11 @@
     <dimen name="comment_data_margin_vertical">5dp</dimen>
     <dimen name="comment_data_margin_horizontal">5dp</dimen>
     <dimen name="toolbar_elevation">8dp</dimen>
+    <dimen name="link_score_margin">4dp</dimen>
+    <dimen name="link_self_text_padding">8dp</dimen>
+    <dimen name="link_title_margin">5dp</dimen>
+    <dimen name="link_list_item_margin_vertical">5dp</dimen>
+    <dimen name="link_list_item_margin_horizontal">5dp</dimen>
+    <dimen name="link_thumbnail_margin">2dp</dimen>
 
 </resources>

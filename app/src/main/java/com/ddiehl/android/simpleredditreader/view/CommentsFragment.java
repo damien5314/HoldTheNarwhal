@@ -71,7 +71,6 @@ public class CommentsFragment extends ListFragment {
 
     private TextView mSelfText;
     private TextView mLinkScore, mLinkTitle, mLinkAuthor, mLinkTimestamp, mLinkSubreddit, mLinkDomain;
-    private ImageView mThumbnailView;
     private ProgressDialog mProgressBar;
 
     public CommentsFragment() { /* Default constructor */ }
@@ -116,7 +115,7 @@ public class CommentsFragment extends ListFragment {
         mCommentAdapter = new CommentAdapter(mData);
         setListAdapter(mCommentAdapter);
 
-        getActivity().setTitle(mArticleId);
+        getActivity().setTitle(getString(R.string.comments_fragment_default_title));
     }
 
     @Override
@@ -133,7 +132,6 @@ public class CommentsFragment extends ListFragment {
         mLinkTimestamp = (TextView) v.findViewById(R.id.link_timestamp);
         mLinkSubreddit = (TextView) v.findViewById(R.id.link_subreddit);
         mLinkDomain = (TextView) v.findViewById(R.id.link_domain);
-        mThumbnailView = (ImageView) v.findViewById(R.id.link_thumbnail);
 
         if (mLink != null) {
             populateLinkData();
@@ -170,6 +168,7 @@ public class CommentsFragment extends ListFragment {
 
         mLink = event.getLink();
         populateLinkData();
+        getActivity().setTitle(mLink.getTitle());
 
         mData.clear();
         mData.addAll(event.getComments());
@@ -201,24 +200,6 @@ public class CommentsFragment extends ListFragment {
                 }
             }
         });
-
-        // Queue thumbnail to be downloaded, if one exists
-        String thumbnailUrl = mLink.getThumbnail();
-        if (thumbnailUrl.equals("nsfw")) {
-            mThumbnailView.setImageResource(R.drawable.ic_nsfw);
-        } else if (!thumbnailUrl.equals("")
-                && !thumbnailUrl.equals("default")
-                && !thumbnailUrl.equals("self")) {
-            Bitmap thumbnail = mThumbnailCache.getThumbnail(thumbnailUrl);
-            if (thumbnail == null) {
-                mThumbnailThread.queueThumbnail(mThumbnailView, thumbnailUrl);
-            } else {
-                mThumbnailView.setImageBitmap(thumbnail);
-            }
-            mThumbnailView.setVisibility(View.VISIBLE);
-        } else {
-            mThumbnailView.setVisibility(View.GONE);
-        }
 
         if (mLink.isSelf()) {
             mSelfText.setText(mLink.getSelftext());
