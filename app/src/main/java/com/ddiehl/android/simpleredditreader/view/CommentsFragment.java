@@ -8,8 +8,10 @@ import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.ListFragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.ActionMode;
 import android.view.ContextMenu;
@@ -21,8 +23,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -47,12 +49,11 @@ import com.squareup.otto.Subscribe;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CommentsFragment extends ListFragment {
+public class CommentsFragment extends Fragment {
     private static final String TAG = CommentsFragment.class.getSimpleName();
 
     private static final String ARG_SUBREDDIT = "subreddit";
     private static final String ARG_ARTICLE = "article";
-    private static final String ARG_SORT = "sort";
 
     private static final int REQUEST_CHOOSE_SORT = 0;
     private static final String DIALOG_CHOOSE_SORT = "dialog_choose_sort";
@@ -112,8 +113,7 @@ public class CommentsFragment extends ListFragment {
         mSort = RedditPreferences.getCommentSort(getActivity());
 
         mData = new ArrayList<>();
-        mCommentAdapter = new CommentAdapter(mData);
-        setListAdapter(mCommentAdapter);
+        mCommentAdapter = new CommentAdapter();
 
         getActivity().setTitle(getString(R.string.comments_fragment_default_title));
     }
@@ -122,8 +122,9 @@ public class CommentsFragment extends ListFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.comments_fragment, container, false);
 
-        ListView listView = (ListView) v.findViewById(android.R.id.list);
-        setListViewHeightBasedOnChildren(listView);
+        RecyclerView recyclerView = (RecyclerView) v.findViewById(R.id.recycler_view);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setAdapter(mCommentAdapter);
 
         mSelfText = (TextView) v.findViewById(R.id.link_self_text);
         mLinkScore = (TextView) v.findViewById(R.id.link_score);
@@ -136,7 +137,7 @@ public class CommentsFragment extends ListFragment {
         if (mLink != null) {
             populateLinkData();
         }
-        
+
         return v;
     }
 
@@ -341,118 +342,6 @@ public class CommentsFragment extends ListFragment {
         mProgressBar.dismiss();
     }
 
-    private class CommentAdapter extends ArrayAdapter<Listing> {
-        public CommentAdapter(List<Listing> data) {
-            super(getActivity(), 0, data);
-        }
-
-        @Override
-        public View getView(final int position, View view, ViewGroup parent) {
-            final AbsRedditComment comment = (AbsRedditComment) mData.get(position);
-            if (!comment.isVisible()) {
-                return new View(getContext());
-            }
-
-            LayoutInflater inflater = getActivity().getLayoutInflater();
-            if (view == null || !(view instanceof ViewGroup)) { // Make sure the view isn't a blank
-                view = inflater.inflate(R.layout.reddit_comment_item, parent, false);
-            }
-
-            // Add padding views to indentation_wrapper based on depth of comment
-            ViewGroup indentationWrapper = (ViewGroup) view.findViewById(R.id.indentation_wrapper);
-            indentationWrapper.removeAllViews(); // Reset padding for recycled comment views
-            int depth = comment.getDepth();
-            for (int i = 0; i < depth - 1; i++) {
-                View paddingView = inflater.inflate(R.layout.comment_padding_view, indentationWrapper, false);
-                // Set background color for padding view
-                int[] colors = getResources().getIntArray(R.array.indentation_colors);
-                if (i == depth-2)
-                    paddingView.setBackgroundColor(colors[i % colors.length]);
-                indentationWrapper.addView(paddingView);
-            }
-
-            ImageView vExpander = (ImageView) view.findViewById(R.id.comment_expander);
-            TextView vAuthor = (TextView) view.findViewById(R.id.comment_author);
-            TextView vScore = (TextView) view.findViewById(R.id.comment_score);
-            TextView vTimestamp = (TextView) view.findViewById(R.id.comment_timestamp);
-            TextView vMoreComments = (TextView) view.findViewById(R.id.comment_more);
-            TextView vBody = (TextView) view.findViewById(R.id.comment_body);
-
-            // Populate attributes of comment in layout
-            if (comment instanceof RedditComment) {
-                vAuthor.setVisibility(View.VISIBLE);
-                vScore.setVisibility(View.VISIBLE);
-                vTimestamp.setVisibility(View.VISIBLE);
-                vBody.setVisibility(View.VISIBLE);
-                vMoreComments.setVisibility(View.GONE);
-                vAuthor.setText(((RedditComment) comment).getAuthor());
-                vScore.setText("• " + ((RedditComment) comment).getScore() + " •");
-                vTimestamp.setText(Utils.getFormattedDateStringFromUtc(((RedditComment) comment).getCreateUtc().longValue()));
-                vBody.setText(((RedditComment) comment).getBody());
-                if (comment.isCollapsed()) {
-                    vBody.setVisibility(View.GONE);
-                    vExpander.setImageResource(R.drawable.ic_thread_expand);
-                } else {
-                    vBody.setVisibility(View.VISIBLE);
-                    vExpander.setImageResource(R.drawable.ic_thread_collapse);
-                }
-            } else {
-                vExpander.setImageResource(R.drawable.ic_thread_expand);
-                vAuthor.setVisibility(View.GONE);
-                vScore.setVisibility(View.GONE);
-                vTimestamp.setVisibility(View.GONE);
-                vBody.setVisibility(View.GONE);
-                vMoreComments.setVisibility(View.VISIBLE);
-                int count = ((RedditMoreComments) comment).getCount();
-                if (count == 0) { // continue thread
-                    vMoreComments.setText(getString(R.string.continue_thread));
-                } else { // more comments in current thread
-                    vMoreComments.setText(getString(R.string.more_comments) + " (" + count + ")");
-                }
-            }
-
-            if (comment instanceof RedditComment) {
-                vExpander.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (comment.isCollapsed()) {
-                            setThreadVisible(position, true);
-                            getListView().invalidateViews();
-                        } else {
-                            setThreadVisible(position, false);
-                            getListView().invalidateViews();
-                        }
-                    }
-                });
-            }
-
-            return view;
-        }
-    }
-
-    private void setThreadVisible(int position, boolean b) {
-        ListAdapter listAdapter = getListAdapter();
-        RedditComment parentComment = (RedditComment) listAdapter.getItem(position);
-        parentComment.setCollapsed(!b);
-        int parentCommentDepth = parentComment.getDepth();
-
-        if (position < listAdapter.getCount() - 1) {
-            int currentPosition = position + 1;
-            AbsRedditComment currentComment = (AbsRedditComment) listAdapter.getItem(currentPosition);
-            int currentCommentDepth = currentComment.getDepth();
-            while (currentCommentDepth > parentCommentDepth) {
-                if (currentComment instanceof RedditComment) {
-                    currentComment.setVisible(b);
-                } else {
-                    currentComment.setVisible(b);
-                }
-                currentPosition++;
-                currentComment = (AbsRedditComment) listAdapter.getItem(currentPosition);
-                currentCommentDepth = currentComment.getDepth();
-            }
-        }
-    }
-
     private Bus getBus() {
         if (mBus == null) {
             mBus = BusProvider.getInstance();
@@ -483,5 +372,135 @@ public class CommentsFragment extends ListFragment {
         params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
         listView.setLayoutParams(params);
         listView.requestLayout();
+    }
+
+    private class CommentAdapter extends RecyclerView.Adapter<CommentHolder> {
+        @Override
+        public CommentHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.reddit_comment_item, parent, false);
+            return new CommentHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(CommentHolder holder, int position) {
+            AbsRedditComment comment = (AbsRedditComment) mData.get(position);
+            holder.bindComment(comment);
+        }
+
+        @Override
+        public int getItemCount() {
+            return mData.size();
+        }
+    }
+
+    private class CommentHolder extends RecyclerView.ViewHolder {
+        private AbsRedditComment mRedditComment;
+        private View mCommentItemRow;
+        private ViewGroup mIndentationWrapper;
+        private ImageView mExpanderView;
+        private TextView mAuthorView;
+        private TextView mScoreView;
+        private TextView mTimestampView;
+        private TextView mMoreCommentsView;
+        private TextView mBodyView;
+
+        public CommentHolder(View view) {
+            super(view);
+            mCommentItemRow = view;
+            mIndentationWrapper = (ViewGroup) view.findViewById(R.id.indentation_wrapper);
+            mExpanderView = (ImageView) view.findViewById(R.id.comment_expander);
+            mAuthorView = (TextView) view.findViewById(R.id.comment_author);
+            mScoreView = (TextView) view.findViewById(R.id.comment_score);
+            mTimestampView = (TextView) view.findViewById(R.id.comment_timestamp);
+            mMoreCommentsView = (TextView) view.findViewById(R.id.comment_more);
+            mBodyView = (TextView) view.findViewById(R.id.comment_body);
+        }
+
+        public void bindComment(final AbsRedditComment comment) {
+            mRedditComment = comment;
+
+            if (!comment.isVisible()) {
+                mCommentItemRow.setLayoutParams(new LinearLayout.LayoutParams(0, 0));
+                return;
+            }
+
+            // Add padding views to indentation_wrapper based on depth of comment
+            LayoutInflater inflater = getActivity().getLayoutInflater();
+            mIndentationWrapper.removeAllViews(); // Reset padding for recycled comment views
+            int depth = comment.getDepth();
+            for (int i = 0; i < depth - 1; i++) {
+                View paddingView = inflater.inflate(R.layout.comment_padding_view, mIndentationWrapper, false);
+                // Set background color for padding view
+                int[] colors = getResources().getIntArray(R.array.indentation_colors);
+                if (i == depth-2)
+                    paddingView.setBackgroundColor(colors[i % colors.length]);
+                mIndentationWrapper.addView(paddingView);
+            }
+
+            // Populate attributes of comment in layout
+            if (comment instanceof RedditComment) {
+                mAuthorView.setVisibility(View.VISIBLE);
+                mScoreView.setVisibility(View.VISIBLE);
+                mTimestampView.setVisibility(View.VISIBLE);
+                mBodyView.setVisibility(View.VISIBLE);
+                mMoreCommentsView.setVisibility(View.GONE);
+                mAuthorView.setText(((RedditComment) comment).getAuthor());
+                mScoreView.setText("• " + ((RedditComment) comment).getScore() + " •");
+                mTimestampView.setText(Utils.getFormattedDateStringFromUtc(((RedditComment) comment).getCreateUtc().longValue()));
+                mBodyView.setText(((RedditComment) comment).getBody());
+                if (comment.isCollapsed()) {
+                    mBodyView.setVisibility(View.GONE);
+                    mExpanderView.setImageResource(R.drawable.ic_thread_expand);
+                } else {
+                    mBodyView.setVisibility(View.VISIBLE);
+                    mExpanderView.setImageResource(R.drawable.ic_thread_collapse);
+                }
+            } else {
+                mExpanderView.setImageResource(R.drawable.ic_thread_expand);
+                mAuthorView.setVisibility(View.GONE);
+                mScoreView.setVisibility(View.GONE);
+                mTimestampView.setVisibility(View.GONE);
+                mBodyView.setVisibility(View.GONE);
+                mMoreCommentsView.setVisibility(View.VISIBLE);
+                int count = ((RedditMoreComments) comment).getCount();
+                if (count == 0) { // continue thread
+                    mMoreCommentsView.setText(getString(R.string.continue_thread));
+                } else { // more comments in current thread
+                    mMoreCommentsView.setText(getString(R.string.more_comments) + " (" + count + ")");
+                }
+            }
+
+            if (comment instanceof RedditComment) {
+                mExpanderView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        setThreadVisible(getPosition(), comment.isCollapsed());
+                        mCommentAdapter.notifyDataSetChanged();
+                    }
+                });
+            }
+
+            mCommentItemRow.setLayoutParams(new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+        }
+    }
+
+    private void setThreadVisible(int position, boolean b) {
+        RedditComment parentComment = (RedditComment) mData.get(position);
+        parentComment.setCollapsed(!b);
+        int parentCommentDepth = parentComment.getDepth();
+
+        if (position + 1 < mCommentAdapter.getItemCount() - 1) {
+            int currentPosition = position + 1;
+            AbsRedditComment currentComment = (AbsRedditComment) mData.get(currentPosition);
+            int currentCommentDepth = currentComment.getDepth();
+            while (currentCommentDepth > parentCommentDepth) {
+                currentComment.setVisible(b);
+                currentPosition++;
+                currentComment = (AbsRedditComment) mData.get(currentPosition);
+                currentCommentDepth = currentComment.getDepth();
+            }
+        }
     }
 }

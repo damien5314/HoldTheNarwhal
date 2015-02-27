@@ -5,106 +5,74 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingTop="16dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="horizontal">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingTop="16dp"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp">
+            <TextView
+                android:id="@+id/link_score"
+                style="@style/LinkScoreTextView"
+                android:layout_marginRight="@dimen/link_score_margin"
+                android:gravity="center"
+                android:text="@string/link_score_default"/>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/link_score"
-                        style="@style/LinkScoreTextView"
-                        android:layout_marginRight="@dimen/link_score_margin"
-                        android:gravity="center"
-                        android:text="@string/link_score_default"/>
-
-                    <TextView
-                        android:id="@+id/link_title"
-                        style="@style/LinkTitleTextView"/>
-
-                </LinearLayout>
-
-                <RelativeLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="5dp">
-
-                    <TextView
-                        android:id="@+id/link_author"
-                        style="@style/LinkAuthorTextView"/>
-
-                    <TextView
-                        android:id="@+id/link_timestamp"
-                        style="@style/LinkTimestampTextView"
-                        android:layout_below="@id/link_author"/>
-
-                    <TextView
-                        android:id="@+id/link_domain"
-                        style="@style/LinkDomainTextView"
-                        android:layout_alignParentEnd="true"
-                        android:layout_alignParentRight="true"/>
-
-                    <TextView
-                        android:id="@+id/link_subreddit"
-                        style="@style/LinkSubredditTextView"
-                        android:layout_alignParentEnd="true"
-                        android:layout_alignParentRight="true"
-                        android:layout_below="@id/link_domain"/>
-
-                </RelativeLayout>
-
-                <TextView
-                    android:id="@+id/link_self_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/primary_text"
-                    android:padding="@dimen/link_self_text_padding"
-                    android:background="@drawable/self_text_background" />
-
-            </LinearLayout>
-
-            <!-- Note: Configuration changes (rotation) are very slow with this layout as-is -->
-            <com.ddiehl.android.simpleredditreader.view.NestedListView
-                android:id="@android:id/list"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:divider="@null"/>
-
-            <FrameLayout
-                android:id="@android:id/empty"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="@dimen/activity_vertical_margin"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:layout_marginRight="@dimen/activity_horizontal_margin"
-                android:layout_marginTop="@dimen/activity_vertical_margin">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="@string/no_comments_found"/>
-
-            </FrameLayout>
+            <TextView
+                android:id="@+id/link_title"
+                style="@style/LinkTitleTextView"/>
 
         </LinearLayout>
 
-    </ScrollView>
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp">
+
+            <TextView
+                android:id="@+id/link_author"
+                style="@style/LinkAuthorTextView"/>
+
+            <TextView
+                android:id="@+id/link_timestamp"
+                style="@style/LinkTimestampTextView"
+                android:layout_below="@id/link_author"/>
+
+            <TextView
+                android:id="@+id/link_domain"
+                style="@style/LinkDomainTextView"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"/>
+
+            <TextView
+                android:id="@+id/link_subreddit"
+                style="@style/LinkSubredditTextView"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_below="@id/link_domain"/>
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/link_self_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/primary_text"
+            android:padding="@dimen/link_self_text_padding"
+            android:background="@drawable/self_text_background" />
+
+    </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
 </LinearLayout>
