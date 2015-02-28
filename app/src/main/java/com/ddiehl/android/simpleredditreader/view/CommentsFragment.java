@@ -399,7 +399,8 @@ public class CommentsFragment extends Fragment {
         private AbsRedditComment mRedditComment;
         private View mCommentItemRow;
         private ViewGroup mIndentationWrapper;
-        private ImageView mExpanderView;
+        private ViewGroup mExpanderView;
+        private ImageView mExpanderIcon;
         private TextView mAuthorView;
         private TextView mScoreView;
         private TextView mTimestampView;
@@ -410,7 +411,8 @@ public class CommentsFragment extends Fragment {
             super(view);
             mCommentItemRow = view;
             mIndentationWrapper = (ViewGroup) view.findViewById(R.id.indentation_wrapper);
-            mExpanderView = (ImageView) view.findViewById(R.id.comment_expander);
+            mExpanderView = (ViewGroup) view.findViewById(R.id.comment_expander_view);
+            mExpanderIcon = (ImageView) view.findViewById(R.id.comment_expander_icon);
             mAuthorView = (TextView) view.findViewById(R.id.comment_author);
             mScoreView = (TextView) view.findViewById(R.id.comment_score);
             mTimestampView = (TextView) view.findViewById(R.id.comment_timestamp);
@@ -452,13 +454,13 @@ public class CommentsFragment extends Fragment {
                 mBodyView.setText(((RedditComment) comment).getBody());
                 if (comment.isCollapsed()) {
                     mBodyView.setVisibility(View.GONE);
-                    mExpanderView.setImageResource(R.drawable.ic_thread_expand);
+                    mExpanderIcon.setImageResource(R.drawable.ic_thread_expand);
                 } else {
                     mBodyView.setVisibility(View.VISIBLE);
-                    mExpanderView.setImageResource(R.drawable.ic_thread_collapse);
+                    mExpanderIcon.setImageResource(R.drawable.ic_thread_collapse);
                 }
             } else {
-                mExpanderView.setImageResource(R.drawable.ic_thread_expand);
+                mExpanderIcon.setImageResource(R.drawable.ic_thread_expand);
                 mAuthorView.setVisibility(View.GONE);
                 mScoreView.setVisibility(View.GONE);
                 mTimestampView.setVisibility(View.GONE);
