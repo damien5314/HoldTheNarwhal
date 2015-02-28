@@ -211,4 +211,9 @@ public class RedditComment extends AbsRedditComment {
         private Object distinguished;
 
     }
+
+    @Override
+    public String toString() {
+        return "Comment: " + getAuthor() + " - " + "depth " + getDepth();
+    }
 }

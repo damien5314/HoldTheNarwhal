@@ -51,4 +51,9 @@ public class RedditMoreComments extends AbsRedditComment {
         private List<String> children;
         
     }
+
+    @Override
+    public String toString() {
+        return "MoreComments (" + getCount() + ")";
+    }
 }

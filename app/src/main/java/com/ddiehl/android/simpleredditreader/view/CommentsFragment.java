@@ -486,20 +486,53 @@ public class CommentsFragment extends Fragment {
         }
     }
 
-    private void setThreadVisible(int position, boolean b) {
+    private void setThreadVisible(int position, boolean visible) {
         RedditComment parentComment = (RedditComment) mData.get(position);
-        parentComment.setCollapsed(!b);
-        int parentCommentDepth = parentComment.getDepth();
+        parentComment.setCollapsed(!visible);
+        ArrayList<Integer> collapsedCommentLevels = new ArrayList<>();
+        if (parentComment.isCollapsed()) {
+            collapsedCommentLevels.add(parentComment.getDepth());
+        }
 
-        if (position + 1 < mCommentAdapter.getItemCount() - 1) {
-            int currentPosition = position + 1;
-            AbsRedditComment currentComment = (AbsRedditComment) mData.get(currentPosition);
-            int currentCommentDepth = currentComment.getDepth();
-            while (currentCommentDepth > parentCommentDepth) {
-                currentComment.setVisible(b);
-                currentPosition++;
-                currentComment = (AbsRedditComment) mData.get(currentPosition);
-                currentCommentDepth = currentComment.getDepth();
+        // Check to make sure the next comment isn't out of range of the full list
+        if (position + 1 < mCommentAdapter.getItemCount()) {
+            // Retrieve first child comment
+            int currentChildCommentPosition = position + 1;
+            AbsRedditComment currentChildComment = (AbsRedditComment) mData.get(currentChildCommentPosition);
+            // Loop through remaining comments until we reach another comment at same depth
+            // as the parent, or we reach the end of the comment list
+            while (currentChildComment.getDepth() > parentComment.getDepth()
+                    && currentChildCommentPosition < mCommentAdapter.getItemCount()) {
+                // Loop through list of collapsed depths
+                // If the current comment is less than a depth, remove that depth from the list
+                for (int i = 0; i < collapsedCommentLevels.size(); i++) {
+                    if (currentChildComment.getDepth() <= collapsedCommentLevels.get(i)) {
+                        collapsedCommentLevels.remove(i);
+                    }
+                }
+                // If the comment is collapsed, add it to the list of collapsed depths
+                if (currentChildComment.isCollapsed()) {
+                    collapsedCommentLevels.add(currentChildComment.getDepth());
+                }
+                // Loop through collapsed depth list from parent depth until child depth
+                // If any depth is collapsed less than child depth, set child to invisible
+                boolean collapsedFromParent = false;
+                for (int i = parentComment.getDepth(); i < currentChildComment.getDepth(); i++) {
+                    if (collapsedCommentLevels.contains(i)) {
+                        currentChildComment.setVisible(false);
+                        collapsedFromParent = true;
+                    }
+                }
+                // If comment was not collapsed from any collapsed parent, set visibility
+                if (!collapsedFromParent) {
+                    currentChildComment.setVisible(visible);
+                }
+                // Increment position
+                currentChildCommentPosition++;
+                // Retrieve comment at current position
+                if (currentChildCommentPosition < mCommentAdapter.getItemCount()) {
+                    currentChildComment = (AbsRedditComment) mData.get(currentChildCommentPosition);
+                }
             }
         }
     }
