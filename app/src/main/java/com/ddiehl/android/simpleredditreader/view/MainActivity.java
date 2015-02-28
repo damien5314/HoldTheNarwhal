@@ -124,32 +124,47 @@ public class MainActivity extends ActionBarActivity
 
     @Override
     public void onClick(View v) {
-        LinksFragment fragment = (LinksFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container);
         switch (v.getId()) {
             case R.id.drawer_log_in:
                 break;
             case R.id.drawer_user_profile:
                 break;
             case R.id.drawer_front_page:
-                fragment.updateSubreddit(null);
+                showSubreddit(null);
                 break;
             case R.id.drawer_r_all:
-                fragment.updateSubreddit("all");
+                showSubreddit("all");
                 break;
             case R.id.drawer_subreddits:
                 break;
             case R.id.drawer_random_subreddit:
-                fragment.updateSubreddit("random");
+                showSubreddit("random");
                 break;
             case R.id.drawer_navigate_to_subreddit_go:
                 String inputSubreddit = mNavToSubredditText.getText().toString();
                 if (!inputSubreddit.equals("")) {
                     mNavToSubredditText.setText("");
-                    fragment.updateSubreddit(inputSubreddit);
+                    showSubreddit(inputSubreddit);
                 }
                 break;
         }
 
         mDrawerLayout.closeDrawer(GravityCompat.START);
+    }
+
+    public void showSubreddit(String subreddit) {
+        FragmentManager fm = getSupportFragmentManager();
+        Fragment currentFragment = fm.findFragmentById(R.id.fragment_container);
+        // If the current fragment is a LinksFragment, just update the subreddit
+        // Else, swap in a LinksFragment
+        if (currentFragment instanceof LinksFragment) {
+            ((LinksFragment) currentFragment).updateSubreddit(subreddit);
+        } else {
+            Fragment newFragment = LinksFragment.newInstance(subreddit, "hot", "year");
+            fm.beginTransaction()
+                    .replace(R.id.fragment_container, newFragment)
+                    .addToBackStack(null)
+                    .commit();
+        }
     }
 }

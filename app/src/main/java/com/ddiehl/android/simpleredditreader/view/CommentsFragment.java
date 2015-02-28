@@ -136,6 +136,7 @@ public class CommentsFragment extends Fragment {
 
         if (mLink != null) {
             populateLinkData();
+            getActivity().setTitle(mLink.getTitle());
         }
 
         return v;
