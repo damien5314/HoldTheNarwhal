@@ -24,7 +24,6 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -174,6 +173,7 @@ public class CommentsFragment extends Fragment {
 
         mData.clear();
         mData.addAll(event.getComments());
+        syncVisibleData();
         mCommentAdapter.notifyDataSetChanged();
     }
 
@@ -375,6 +375,17 @@ public class CommentsFragment extends Fragment {
         listView.requestLayout();
     }
 
+    private List<AbsRedditComment> mDataDisplayed = new ArrayList<>();
+
+    private void syncVisibleData() {
+        mDataDisplayed.clear();
+        for (Listing comment : mData) {
+            if (((AbsRedditComment) comment).isVisible()) {
+                mDataDisplayed.add((AbsRedditComment) comment);
+            }
+        }
+    }
+
     private class CommentAdapter extends RecyclerView.Adapter<CommentHolder> {
         @Override
         public CommentHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -385,19 +396,18 @@ public class CommentsFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(CommentHolder holder, int position) {
-            AbsRedditComment comment = (AbsRedditComment) mData.get(position);
+            AbsRedditComment comment = mDataDisplayed.get(position);
             holder.bindComment(comment);
         }
 
         @Override
         public int getItemCount() {
-            return mData.size();
+            return mDataDisplayed.size();
         }
     }
 
     private class CommentHolder extends RecyclerView.ViewHolder {
         private AbsRedditComment mRedditComment;
-        private View mCommentItemRow;
         private ViewGroup mIndentationWrapper;
         private ViewGroup mExpanderView;
         private ImageView mExpanderIcon;
@@ -409,7 +419,6 @@ public class CommentsFragment extends Fragment {
 
         public CommentHolder(View view) {
             super(view);
-            mCommentItemRow = view;
             mIndentationWrapper = (ViewGroup) view.findViewById(R.id.indentation_wrapper);
             mExpanderView = (ViewGroup) view.findViewById(R.id.comment_expander_view);
             mExpanderIcon = (ImageView) view.findViewById(R.id.comment_expander_icon);
@@ -422,11 +431,6 @@ public class CommentsFragment extends Fragment {
 
         public void bindComment(final AbsRedditComment comment) {
             mRedditComment = comment;
-
-            if (!comment.isVisible()) {
-                mCommentItemRow.setLayoutParams(new LinearLayout.LayoutParams(0, 0));
-                return;
-            }
 
             // Add padding views to indentation_wrapper based on depth of comment
             LayoutInflater inflater = getActivity().getLayoutInflater();
@@ -478,19 +482,17 @@ public class CommentsFragment extends Fragment {
                 mExpanderView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        setThreadVisible(getPosition(), comment.isCollapsed());
+                        Log.d(TAG, "Expanding/Collapsing comment: " + comment.toString());
+                        setThreadVisible(mData.indexOf(comment), comment.isCollapsed());
                         mCommentAdapter.notifyDataSetChanged();
                     }
                 });
             }
-
-            mCommentItemRow.setLayoutParams(new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
         }
     }
 
     private void setThreadVisible(int position, boolean visible) {
-        int totalItemCount = mCommentAdapter.getItemCount();
+        int totalItemCount = mData.size();
         RedditComment parentComment = (RedditComment) mData.get(position);
         int parentCommentDepth = parentComment.getDepth();
         parentComment.setCollapsed(!visible);
@@ -542,5 +544,7 @@ public class CommentsFragment extends Fragment {
                 }
             }
         }
+
+        syncVisibleData();
     }
 }
