@@ -36,6 +36,8 @@
     <string name="more_comments">view more comments</string>
     <string name="continue_thread">continue thread</string>
     <string name="default_comment_sort">hot</string>
+    <string name="default_links_sort">hot</string>
+    <string name="default_links_timespan">all</string>
     <string name="comments_fragment_default_title">Comments</string>
 
 </resources>

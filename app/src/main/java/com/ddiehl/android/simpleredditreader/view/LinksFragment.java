@@ -24,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ddiehl.android.simpleredditreader.R;
+import com.ddiehl.android.simpleredditreader.RedditPreferences;
 import com.ddiehl.android.simpleredditreader.Utils;
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
 import com.ddiehl.android.simpleredditreader.events.LinksLoadedEvent;
@@ -43,8 +44,6 @@ public class LinksFragment extends Fragment {
     private static final String TAG = LinksFragment.class.getSimpleName();
 
     private static final String ARG_SUBREDDIT = "subreddit";
-    private static final String ARG_SORT = "sort";
-    private static final String ARG_TIMESPAN = "timespan";
 
     private static final int REQUEST_CHOOSE_SORT = 0;
     private static final int REQUEST_CHOOSE_TIMESPAN = 1;
@@ -70,11 +69,9 @@ public class LinksFragment extends Fragment {
 
     public LinksFragment() { /* Default constructor required */ }
 
-    public static LinksFragment newInstance(String subreddit, String sort, String timespan) {
+    public static LinksFragment newInstance(String subreddit) {
         Bundle args = new Bundle();
         args.putString(ARG_SUBREDDIT, subreddit);
-        args.putString(ARG_SORT, sort);
-        args.putString(ARG_TIMESPAN, timespan);
         LinksFragment fragment = new LinksFragment();
         fragment.setArguments(args);
         return fragment;
@@ -103,8 +100,8 @@ public class LinksFragment extends Fragment {
 
         Bundle args = getArguments();
         mSubreddit = args.getString(ARG_SUBREDDIT);
-        mSort = args.getString(ARG_SORT);
-        mTimeSpan = args.getString(ARG_TIMESPAN);
+        mSort = RedditPreferences.getLinksSort(getActivity());
+        mTimeSpan = RedditPreferences.getLinksTimespan(getActivity());
         updateTitle();
 
         mData = new ArrayList<>();
@@ -135,9 +132,6 @@ public class LinksFragment extends Fragment {
                 }
             }
         });
-
-        // Register view for context menu
-//        registerForContextMenu(mRecyclerView);
 
         updateTitle();
 
@@ -182,12 +176,14 @@ public class LinksFragment extends Fragment {
     public void updateSort(String sort) {
         mData.clear();
         mSort = sort;
+        RedditPreferences.saveLinksSort(getActivity(), sort);
         getLinks();
     }
 
     public void updateTimeSpan(String timespan) {
         mData.clear();
         mTimeSpan = timespan;
+        RedditPreferences.saveLinksTimespan(getActivity(), timespan);
         getLinks();
     }
 
@@ -242,9 +238,7 @@ public class LinksFragment extends Fragment {
                 if (resultCode == Activity.RESULT_OK) {
                     String selectedSort = data.getStringExtra(ChooseLinkSortDialog.EXTRA_SORT);
                     if (!mSort.equals(selectedSort)) {
-                        mSort = selectedSort;
-                        mData.clear();
-                        getLinks();
+                        updateSort(selectedSort);
                     }
                 }
                 getActivity().supportInvalidateOptionsMenu();
@@ -253,9 +247,7 @@ public class LinksFragment extends Fragment {
                 if (resultCode == Activity.RESULT_OK) {
                     String selectedTimespan = data.getStringExtra(ChooseTimespanDialog.EXTRA_TIMESPAN);
                     if (!mTimeSpan.equals(selectedTimespan)) {
-                        mTimeSpan = selectedTimespan;
-                        mData.clear();
-                        getLinks();
+                        updateTimeSpan(selectedTimespan);
                     }
                 }
                 getActivity().supportInvalidateOptionsMenu();

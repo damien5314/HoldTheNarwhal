@@ -102,7 +102,7 @@ public class MainActivity extends ActionBarActivity
         }
 
         if (savedInstanceState == null) {
-            Fragment fragment = LinksFragment.newInstance(subreddit, Sort.HOT, TimeSpan.ALL);
+            Fragment fragment = LinksFragment.newInstance(subreddit);
             FragmentManager fm = getSupportFragmentManager();
             fm.beginTransaction()
                     .replace(R.id.fragment_container, fragment)
@@ -160,7 +160,7 @@ public class MainActivity extends ActionBarActivity
         if (currentFragment instanceof LinksFragment) {
             ((LinksFragment) currentFragment).updateSubreddit(subreddit);
         } else {
-            Fragment newFragment = LinksFragment.newInstance(subreddit, "hot", "year");
+            Fragment newFragment = LinksFragment.newInstance(subreddit);
             fm.beginTransaction()
                     .replace(R.id.fragment_container, newFragment)
                     .addToBackStack(null)
