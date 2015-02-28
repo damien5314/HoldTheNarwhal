@@ -1,12 +1,10 @@
 package com.ddiehl.android.simpleredditreader.view;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -14,7 +12,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.ActionMode;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -22,7 +19,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -70,7 +66,6 @@ public class LinksFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLayoutManager;
     private LinkAdapter mLinkAdapter;
-    private SingleSelector mSelector;
     private ProgressDialog mProgressBar;
 
     public LinksFragment() { /* Default constructor required */ }
@@ -114,7 +109,6 @@ public class LinksFragment extends Fragment {
 
         mData = new ArrayList<>();
         mLinkAdapter = new LinkAdapter();
-        mSelector = new SingleSelector();
     }
 
     @Override
@@ -134,7 +128,7 @@ public class LinksFragment extends Fragment {
                 mFirstVisibleItem = mLayoutManager.findFirstVisibleItemPosition();
 
                 if (!mLinksRequested) {
-                    if ( (mVisibleItemCount + mFirstVisibleItem) >= mTotalItemCount) {
+                    if ((mVisibleItemCount + mFirstVisibleItem) >= mTotalItemCount) {
                         mLinksRequested = true;
                         getBus().post(new LoadLinksEvent(mSubreddit, mSort, mTimeSpan, mLastDisplayedLink));
                     }
@@ -142,10 +136,10 @@ public class LinksFragment extends Fragment {
             }
         });
 
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
-            // Register view for context menu
-            registerForContextMenu(mRecyclerView);
-        }
+        // Register view for context menu
+//        registerForContextMenu(mRecyclerView);
+
+        updateTitle();
 
         return v;
     }
@@ -154,8 +148,6 @@ public class LinksFragment extends Fragment {
     public void onResume() {
         super.onResume();
         getBus().register(this);
-
-        updateTitle();
 
         if (mLastDisplayedLink == null) {
             getLinks();
@@ -178,77 +170,6 @@ public class LinksFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         mThumbnailThread.clearQueue();
-    }
-
-    @TargetApi(11)
-    private void openLinkContextMenu(final RedditLink link) {
-        getActivity().startActionMode(new ActionMode.Callback() {
-            @Override
-            public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-                mode.getMenuInflater().inflate(R.menu.link_context_menu, menu);
-                return true;
-            }
-
-            @Override
-            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-                return false;
-            }
-
-            @Override
-            public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.action_upvote:
-                        mode.finish();
-                        upvote(link);
-                        return true;
-                    case R.id.action_downvote:
-                        mode.finish();
-                        downvote(link);
-                        return true;
-                    case R.id.action_show_comments:
-                        mode.finish();
-                        openCommentsForLink(link);
-                        return true;
-                    case R.id.action_save:
-                        mode.finish();
-                        saveLink(link);
-                        return true;
-                    case R.id.action_share:
-                        mode.finish();
-                        shareLink(link);
-                        return true;
-                    case R.id.action_open_in_browser:
-                        mode.finish();
-                        openLinkInBrowser(link);
-                        return true;
-                    case R.id.action_open_comments_in_browser:
-                        mode.finish();
-                        openCommentsInBrowser(link);
-                        return true;
-                    default:
-                        return false;
-                }
-            }
-
-            @Override
-            public void onDestroyActionMode(ActionMode mode) {
-                int selectedPosition = mSelector.getSelectedPosition();
-                mSelector.setItemSelected(selectedPosition, false);
-                mLinkAdapter.notifyItemChanged(selectedPosition);
-            }
-        });
-    }
-
-    public void openCommentsForLink(RedditLink link) {
-        String subreddit = link.getSubreddit();
-        String articleId = link.getId();
-
-        Fragment fragment = CommentsFragment.newInstance(subreddit, articleId);
-        FragmentManager fm = getActivity().getSupportFragmentManager();
-        fm.beginTransaction()
-                .replace(R.id.fragment_container, fragment)
-                .addToBackStack(null)
-                .commit();
     }
 
     public void updateSubreddit(String subreddit) {
@@ -284,43 +205,6 @@ public class LinksFragment extends Fragment {
         getBus().post(new LoadLinksEvent(mSubreddit, mSort, mTimeSpan));
     }
 
-    private void upvote(RedditLink link) {
-        int dir = (link.isLiked() == null || !link.isLiked()) ? 1 : 0;
-        getBus().post(new VoteEvent(link.getId(), dir));
-    }
-
-    private void downvote(RedditLink link) {
-        int dir = (link.isLiked() == null || link.isLiked()) ? -1 : 0;
-        getBus().post(new VoteEvent(link.getId(), dir));
-    }
-
-    private void saveLink(RedditLink link) {
-
-    }
-
-    private void shareLink(RedditLink link) {
-        String url = "http://www.reddit.com" + link.getPermalink();
-        Intent i = new Intent(Intent.ACTION_SEND);
-        i.setType("text/plain");
-        i.putExtra(Intent.EXTRA_TEXT, url);
-        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(i);
-    }
-
-    private void openLinkInBrowser(RedditLink link) {
-        Uri uri = Uri.parse(link.getUrl());
-        Intent i = new Intent(Intent.ACTION_VIEW, uri);
-        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(i);
-    }
-
-    private void openCommentsInBrowser(RedditLink link) {
-        Uri uri = Uri.parse("http://www.reddit.com" + link.getPermalink());
-        Intent i = new Intent(Intent.ACTION_VIEW, uri);
-        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(i);
-    }
-
     @Subscribe
     public void onLinksLoaded(LinksLoadedEvent event) {
         dismissSpinner();
@@ -351,13 +235,6 @@ public class LinksFragment extends Fragment {
         Log.i(TAG, "Vote submitted successfully");
     }
 
-    private Bus getBus() {
-        if (mBus == null) {
-            mBus = BusProvider.getInstance();
-        }
-        return mBus;
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
@@ -384,24 +261,6 @@ public class LinksFragment extends Fragment {
                 getActivity().supportInvalidateOptionsMenu();
                 break;
         }
-    }
-
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        getActivity().getMenuInflater().inflate(R.menu.link_context_menu, menu);
-    }
-
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        int position = info.position;
-        RedditLink link = mData.get(position);
-
-        switch (item.getItemId()) {
-            // Set actions for each menu item
-        }
-
-        return super.onContextItemSelected(item);
     }
 
     @Override
@@ -443,6 +302,13 @@ public class LinksFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
+    private Bus getBus() {
+        if (mBus == null) {
+            mBus = BusProvider.getInstance();
+        }
+        return mBus;
+    }
+
     private void showSpinner() {
         if (mProgressBar == null) {
             mProgressBar = new ProgressDialog(getActivity(), R.style.ProgressDialog);
@@ -477,7 +343,7 @@ public class LinksFragment extends Fragment {
     }
 
     private class LinkHolder extends RecyclerView.ViewHolder
-            implements View.OnClickListener {
+            implements View.OnClickListener, View.OnCreateContextMenuListener {
         private RedditLink mRedditLink;
         private TextView mScoreView;
         private TextView mTitleView;
@@ -489,7 +355,6 @@ public class LinksFragment extends Fragment {
 
         public LinkHolder(View itemView) {
             super(itemView);
-            itemView.setOnClickListener(this);
             mScoreView = (TextView) itemView.findViewById(R.id.link_score);
             mTitleView = (TextView) itemView.findViewById(R.id.link_title);
             mAuthorView = (TextView) itemView.findViewById(R.id.link_author);
@@ -497,6 +362,11 @@ public class LinksFragment extends Fragment {
             mSubredditView = (TextView) itemView.findViewById(R.id.link_subreddit);
             mDomainView = (TextView) itemView.findViewById(R.id.link_domain);
             mThumbnailView = (ImageView) itemView.findViewById(R.id.link_thumbnail);
+
+            itemView.setOnClickListener(this);
+//            mTitleView.setOnClickListener(this);
+//            mThumbnailView.setOnClickListener(this);
+            itemView.setOnCreateContextMenuListener(this);
         }
 
         public void bindLink(RedditLink link) {
@@ -511,21 +381,6 @@ public class LinksFragment extends Fragment {
             mTimestampView.setText(createDateFormatted);
             mSubredditView.setText("/r/" + link.getSubreddit());
             mDomainView.setText("(" + link.getDomain() + ")");
-
-            // Register context menu to click event for score view
-            mScoreView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
-
-                    } else { // Activate contextual action bar
-                        openLinkContextMenu(mRedditLink);
-                        int pos = getPosition();
-                        mSelector.setItemSelected(pos, true);
-                        mLinkAdapter.notifyItemChanged(pos);
-                    }
-                }
-            });
 
             // Queue thumbnail to be downloaded, if one exists
             mThumbnailView.setImageResource(R.drawable.ic_thumbnail_placeholder);
@@ -546,9 +401,6 @@ public class LinksFragment extends Fragment {
             } else {
                 mThumbnailView.setVisibility(View.GONE);
             }
-
-            boolean isSelected = mSelector.isItemSelected(getPosition());
-            itemView.setActivated(isSelected);
         }
 
         @Override
@@ -564,5 +416,100 @@ public class LinksFragment extends Fragment {
                 }
             }
         }
+
+        @Override
+        public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+            getActivity().getMenuInflater().inflate(R.menu.link_context_menu, menu);
+            mClickedLinkPosition = getPosition();
+        }
+    }
+
+    private int mClickedLinkPosition;
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        RedditLink link = mData.get(mClickedLinkPosition);
+
+        switch (item.getItemId()) {
+            case R.id.action_upvote:
+                upvote(link);
+                break;
+            case R.id.action_downvote:
+                downvote(link);
+                break;
+            case R.id.action_show_comments:
+                openCommentsForLink(link);
+                break;
+            case R.id.action_save:
+                saveLink(link);
+                break;
+            case R.id.action_share:
+                shareLink(link);
+                break;
+            case R.id.action_open_in_browser:
+                openLinkInBrowser(link);
+                break;
+            case R.id.action_open_comments_in_browser:
+                openCommentsInBrowser(link);
+                break;
+            case R.id.action_report:
+                reportLink(link);
+                break;
+        }
+
+        return super.onContextItemSelected(item);
+    }
+
+    private void upvote(RedditLink link) {
+        int dir = (link.isLiked() == null || !link.isLiked()) ? 1 : 0;
+        getBus().post(new VoteEvent(link.getId(), dir));
+    }
+
+    private void downvote(RedditLink link) {
+        int dir = (link.isLiked() == null || link.isLiked()) ? -1 : 0;
+        getBus().post(new VoteEvent(link.getId(), dir));
+    }
+
+    public void openCommentsForLink(RedditLink link) {
+        String subreddit = link.getSubreddit();
+        String articleId = link.getId();
+
+        Fragment fragment = CommentsFragment.newInstance(subreddit, articleId);
+        FragmentManager fm = getActivity().getSupportFragmentManager();
+        fm.beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .addToBackStack(null)
+                .commit();
+    }
+
+    private void saveLink(RedditLink link) {
+
+    }
+
+    private void shareLink(RedditLink link) {
+        String url = "http://www.reddit.com" + link.getPermalink();
+        Intent i = new Intent(Intent.ACTION_SEND);
+        i.setType("text/plain");
+        i.putExtra(Intent.EXTRA_TEXT, url);
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(i);
+    }
+
+    private void openLinkInBrowser(RedditLink link) {
+        Uri uri = Uri.parse(link.getUrl());
+        Intent i = new Intent(Intent.ACTION_VIEW, uri);
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(i);
+    }
+
+    private void openCommentsInBrowser(RedditLink link) {
+        Uri uri = Uri.parse("http://www.reddit.com" + link.getPermalink());
+        Intent i = new Intent(Intent.ACTION_VIEW, uri);
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(i);
+    }
+
+    private void reportLink(RedditLink link) {
+
     }
 }
