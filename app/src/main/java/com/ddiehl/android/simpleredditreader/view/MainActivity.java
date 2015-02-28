@@ -18,8 +18,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.ddiehl.android.simpleredditreader.R;
-import com.ddiehl.android.simpleredditreader.model.Sort;
-import com.ddiehl.android.simpleredditreader.model.TimeSpan;
 
 public class MainActivity extends ActionBarActivity
         implements View.OnClickListener {
