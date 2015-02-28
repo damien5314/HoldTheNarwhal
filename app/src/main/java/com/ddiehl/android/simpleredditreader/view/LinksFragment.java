@@ -364,8 +364,8 @@ public class LinksFragment extends Fragment {
             mThumbnailView = (ImageView) itemView.findViewById(R.id.link_thumbnail);
 
             itemView.setOnClickListener(this);
-//            mTitleView.setOnClickListener(this);
-//            mThumbnailView.setOnClickListener(this);
+            mTitleView.setOnClickListener(this);
+            mThumbnailView.setOnClickListener(this);
             itemView.setOnCreateContextMenuListener(this);
         }
 
@@ -405,15 +405,23 @@ public class LinksFragment extends Fragment {
 
         @Override
         public void onClick(View v) {
-            if (mRedditLink != null) {
-                if (mRedditLink.isSelf()) {
-                    openCommentsForLink(mRedditLink);
-                } else {
-                    Uri webViewUri = Uri.parse(mRedditLink.getUrl());
-                    Intent i = new Intent(getActivity(), WebViewActivity.class);
-                    i.setData(webViewUri);
-                    startActivity(i);
-                }
+            switch (v.getId()) {
+                case R.id.link_title:
+                case R.id.link_thumbnail:
+                    if (mRedditLink != null) {
+                        if (mRedditLink.isSelf()) {
+                            openCommentsForLink(mRedditLink);
+                        } else {
+                            Uri webViewUri = Uri.parse(mRedditLink.getUrl());
+                            Intent i = new Intent(getActivity(), WebViewActivity.class);
+                            i.setData(webViewUri);
+                            startActivity(i);
+                        }
+                    }
+                    break;
+                default:
+                    v.showContextMenu();
+                    break;
             }
         }
 
