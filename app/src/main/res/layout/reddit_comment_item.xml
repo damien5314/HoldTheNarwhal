@@ -34,6 +34,7 @@
                 android:layout_width="@dimen/comment_expander_size"
                 android:layout_height="@dimen/comment_expander_size"
                 android:layout_marginRight="@dimen/comment_expander_margin"
+                android:layout_marginEnd="@dimen/comment_expander_margin"
                 android:src="@drawable/ic_thread_collapse"
                 android:background="@drawable/comment_expander_background"/>
 
@@ -41,7 +42,6 @@
                 android:id="@+id/comment_author"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/comment_expander"
                 android:layout_marginRight="@dimen/comment_author_padding"
                 android:textColor="@color/secondary_text"
                 android:textStyle="bold"
@@ -51,7 +51,6 @@
                 android:id="@+id/comment_score"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/comment_author"
                 android:layout_marginRight="@dimen/comment_score_padding"
                 android:textColor="@color/secondary_text"
                 android:textSize="@dimen/comment_score_text_size"/>
@@ -60,7 +59,6 @@
                 android:id="@+id/comment_timestamp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/comment_score"
                 android:textColor="@color/secondary_text"
                 android:textStyle="italic"
                 android:textSize="@dimen/comment_timestamp_text_size"/>
@@ -69,7 +67,6 @@
                 android:id="@+id/comment_more"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/comment_timestamp"
                 android:textColor="@color/secondary_text"
                 android:textStyle="italic"
                 android:textSize="@dimen/comment_more_text_size"/>
