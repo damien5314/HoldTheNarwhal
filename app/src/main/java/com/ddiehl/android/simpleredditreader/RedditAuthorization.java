@@ -24,17 +24,17 @@ public class RedditAuthorization {
             "&redirect_uri=" + REDIRECT_URI +
             "&scope=" + SCOPE;
 
+    // If expiration time is less than this config, isAuthorized returns false
+    // Provides a buffer in case of lag between reddit servers and app client
+    public static final int AUTHORIZATION_TIME_THRESHOLD = 10;
+
+    private static boolean mIsAuthorized = false;
     private static String mAccessToken;
     private static String mTokenType;
     private static String mState;
     private static Date mExpiration;
     private static String[] mScopes;
-
-    private static RedditAuthorization _instance = new RedditAuthorization();
-
-    public static RedditAuthorization getInstance() {
-        return _instance;
-    }
+    private static String mError;
 
     public static Intent getAuthorizationIntent(Context context) {
         Intent intent = new Intent(context, WebViewActivity.class);
@@ -49,12 +49,24 @@ public class RedditAuthorization {
         String fragment = uri.getFragment();
         String[] params = fragment.split("&");
 
-        mAccessToken = params[0].substring(params[0].indexOf("=") + 1);
-        mTokenType = params[1].substring(params[1].indexOf("=") + 1);
-        mState = params[2].substring(params[2].indexOf("=") + 1);
-        int expiresIn = Integer.valueOf(params[3].substring(params[3].indexOf("=") + 1));
-        mExpiration = new Date(System.currentTimeMillis() + (expiresIn * 1000));
-        mScopes = params[4].substring(params[4].indexOf("=") + 1).split("\\+");
+        // Expecting 5 parameters in a positive response
+        if (params.length == 5) {
+            mIsAuthorized = true;
+            mAccessToken = params[0].substring(params[0].indexOf("=") + 1);
+            mTokenType = params[1].substring(params[1].indexOf("=") + 1);
+            mState = params[2].substring(params[2].indexOf("=") + 1);
+            int expiresIn = Integer.valueOf(params[3].substring(params[3].indexOf("=") + 1));
+            mExpiration = new Date(System.currentTimeMillis() + (expiresIn * 1000));
+            mScopes = params[4].substring(params[4].indexOf("=") + 1).split("\\+");
+        } else { // User declined to authorize application
+            mIsAuthorized = false;
+            mState = params[0].substring(params[0].indexOf("=") + 1);
+            mError = params[1].substring(params[1].indexOf("=") + 1);
+        }
+    }
+
+    public static boolean isAuthorized() {
+        return mIsAuthorized && secondsUntilExpiration() > AUTHORIZATION_TIME_THRESHOLD;
     }
 
     public static long secondsUntilExpiration() {

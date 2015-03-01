@@ -39,5 +39,7 @@
     <string name="default_links_sort">hot</string>
     <string name="default_links_timespan">all</string>
     <string name="comments_fragment_default_title">Comments</string>
+    <string name="toast_authorized">Authorization granted</string>
+    <string name="toast_not_authorized">Not authorized</string>
 
 </resources>

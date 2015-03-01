@@ -17,6 +17,7 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.RedditAuthorization;
@@ -26,6 +27,7 @@ public class MainActivity extends ActionBarActivity
     private static final String TAG = MainActivity.class.getSimpleName();
 
     public static final String EXTRA_SUBREDDIT = "com.ddiehl.android.simpleredditreader.extra_subreddit";
+    public static final int REQUEST_AUTHORIZE = 1000;
 
     // Navigation drawer
     private DrawerLayout mDrawerLayout;
@@ -127,7 +129,7 @@ public class MainActivity extends ActionBarActivity
         switch (v.getId()) {
             case R.id.drawer_log_in:
                 Intent intent = RedditAuthorization.getAuthorizationIntent(this);
-                startActivity(intent);
+                startActivityForResult(intent, REQUEST_AUTHORIZE);
                 break;
             case R.id.drawer_user_profile:
                 break;
@@ -167,6 +169,20 @@ public class MainActivity extends ActionBarActivity
                     .replace(R.id.fragment_container, newFragment)
                     .addToBackStack(null)
                     .commit();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case REQUEST_AUTHORIZE:
+                boolean authorized = RedditAuthorization.isAuthorized();
+                if (authorized) {
+                    Toast.makeText(this, getString(R.string.toast_authorized), Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this, getString(R.string.toast_not_authorized), Toast.LENGTH_SHORT).show();
+                }
+                break;
         }
     }
 }
