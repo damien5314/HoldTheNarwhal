@@ -1,6 +1,7 @@
 package com.ddiehl.android.simpleredditreader.view;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -18,6 +19,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.ddiehl.android.simpleredditreader.R;
+import com.ddiehl.android.simpleredditreader.RedditAuthorization;
 
 public class MainActivity extends ActionBarActivity
         implements View.OnClickListener {
@@ -124,6 +126,8 @@ public class MainActivity extends ActionBarActivity
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.drawer_log_in:
+                Intent intent = RedditAuthorization.getAuthorizationIntent(this);
+                startActivity(intent);
                 break;
             case R.id.drawer_user_profile:
                 break;

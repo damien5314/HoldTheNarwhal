@@ -16,6 +16,7 @@ import android.widget.ProgressBar;
 import android.widget.ZoomButtonsController;
 
 import com.ddiehl.android.simpleredditreader.R;
+import com.ddiehl.android.simpleredditreader.RedditAuthorization;
 
 /**
  * Created by Damien on 2/6/2015.
@@ -54,6 +55,10 @@ public class WebViewFragment extends Fragment {
         mWebView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                if (url.contains(RedditAuthorization.REDIRECT_URI)) {
+                    RedditAuthorization.saveAuthenticationState(url);
+                    getActivity().finish();
+                }
                 return false;
             }
         });

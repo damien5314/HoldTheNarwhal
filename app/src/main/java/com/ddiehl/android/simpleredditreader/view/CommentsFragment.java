@@ -482,7 +482,6 @@ public class CommentsFragment extends Fragment {
                 mExpanderView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Log.d(TAG, "Expanding/Collapsing comment: " + comment.toString());
                         setThreadVisible(mData.indexOf(comment), comment.isCollapsed());
                         mCommentAdapter.notifyDataSetChanged();
                     }
