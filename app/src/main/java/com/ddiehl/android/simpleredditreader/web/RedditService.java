@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.ddiehl.android.simpleredditreader.RedditAuthorization;
 import com.ddiehl.android.simpleredditreader.RedditPreferences;
+import com.ddiehl.android.simpleredditreader.Utils;
 import com.ddiehl.android.simpleredditreader.events.ApplicationAuthorizedEvent;
 import com.ddiehl.android.simpleredditreader.events.AuthorizationEvent;
 import com.ddiehl.android.simpleredditreader.events.AuthorizeApplicationEvent;
@@ -126,6 +127,7 @@ public class RedditService {
             mApi.getDefaultLinks(sort, timespan, after, new Callback<ListingResponse>() {
                 @Override
                 public void success(ListingResponse linksResponse, Response response) {
+                    Utils.printResponse(response);
                     mBus.post(new LinksLoadedEvent(linksResponse));
                 }
 
