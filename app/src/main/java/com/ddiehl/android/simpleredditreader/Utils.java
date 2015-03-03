@@ -64,17 +64,26 @@ public class Utils {
     }
 
     public static void printResponse(Response response) {
+        printResponseStatus(response);
+//        printResponseHeaders(response);
+//        printResponseBody(response);
+    }
+
+    public static void printResponseStatus(Response response) {
+        System.out.println("URL: " + response.getUrl() + " (STATUS: " + response.getStatus() + ")");
+//        System.out.println("REASON: " + response.getReason());
+    }
+
+    public static void printResponseHeaders(Response response) {
+        System.out.println("--HEADERS--");
+        List<Header> headersList = response.getHeaders();
+        for (Header header : headersList) {
+            System.out.println(header.toString());
+        }
+    }
+
+    public static void printResponseBody(Response response) {
         try {
-            System.out.println("STATUS: " + response.getStatus());
-            System.out.println("URL:    " + response.getUrl());
-            System.out.println("REASON: " + response.getReason());
-
-            System.out.println("--HEADERS--");
-            List<Header> headersList = response.getHeaders();
-            for (Header header : headersList) {
-                System.out.println(header.toString());
-            }
-
             System.out.println("--BODY--");
             TypedInput body = response.getBody();
             System.out.println("LENGTH: " + body.length());

@@ -11,7 +11,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -144,7 +143,6 @@ public class MainActivity extends ActionBarActivity
     @Subscribe
     public void onApplicationAuthorized(ApplicationAuthorizedEvent event) {
         if (!event.isFailed()) {
-            Log.i(TAG, "Application successfully authorized");
             AccessTokenResponse response = event.getResponse();
             RedditAuthorization.saveAccessToken(response);
 
@@ -152,8 +150,6 @@ public class MainActivity extends ActionBarActivity
 
             // Display default fragment
             showSubreddit(null);
-        } else {
-            Log.e(TAG, "Application authorization failed", event.getError());
         }
     }
 

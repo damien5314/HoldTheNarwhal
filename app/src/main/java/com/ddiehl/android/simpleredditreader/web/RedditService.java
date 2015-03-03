@@ -101,12 +101,14 @@ public class RedditService {
         mApi.getApplicationAccessToken(grantType, deviceId, new Callback<AccessTokenResponse>() {
             @Override
             public void success(AccessTokenResponse accessTokenResponse, Response response) {
+                Utils.printResponse(response);
                 mEndpoint.setUrl(RedditEndpoint.AUTHORIZED);
                 mBus.post(new ApplicationAuthorizedEvent(accessTokenResponse));
             }
 
             @Override
             public void failure(RetrofitError error) {
+                Utils.printResponse(error.getResponse());
                 mBus.post(new ApplicationAuthorizedEvent(error));
             }
         });
@@ -121,7 +123,6 @@ public class RedditService {
         String sort = event.getSort();
         String timespan = event.getTimeSpan();
         String after = event.getAfter();
-        Log.i(TAG, "Loading links for /r/" + subreddit + "/" + sort + ".json?t=" + timespan);
 
         if (subreddit == null) {
             mApi.getDefaultLinks(sort, timespan, after, new Callback<ListingResponse>() {
@@ -133,19 +134,20 @@ public class RedditService {
 
                 @Override
                 public void failure(RetrofitError error) {
-                    Log.e(TAG, "RetrofitError: " + error.getMessage(), error);
+                    Utils.printResponse(error.getResponse());
                 }
             });
         } else {
             mApi.getLinks(subreddit, sort, timespan, after, new Callback<ListingResponse>() {
                 @Override
                 public void success(ListingResponse linksResponse, Response response) {
+                    Utils.printResponse(response);
                     mBus.post(new LinksLoadedEvent(linksResponse));
                 }
 
                 @Override
                 public void failure(RetrofitError error) {
-                    Log.e(TAG, "RetrofitError: " + error.getMessage(), error);
+                    Utils.printResponse(error.getResponse());
                     mBus.post(new LinksLoadedEvent(error));
                 }
             });
@@ -166,6 +168,7 @@ public class RedditService {
             @Override
             public void success(List<ListingResponse> listingsList, Response response) {
                 Log.i(TAG, "Comments loaded successfully");
+                Utils.printResponse(response);
                 flattenList(listingsList.get(1));
                 mBus.post(new CommentsLoadedEvent(listingsList));
             }
@@ -216,11 +219,13 @@ public class RedditService {
         mApi.vote(id, direction, new Callback<Response>() {
             @Override
             public void success(Response response, Response response2) {
+                Utils.printResponse(response);
                 mBus.post(new VoteSubmittedEvent(response));
             }
 
             @Override
             public void failure(RetrofitError error) {
+                Utils.printResponse(error.getResponse());
                 mBus.post(new VoteSubmittedEvent(error));
             }
         });
