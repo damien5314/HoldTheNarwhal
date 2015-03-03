@@ -1,5 +1,7 @@
 package com.ddiehl.android.simpleredditreader;
 
+import android.util.Base64;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -81,6 +83,10 @@ public class Utils {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static String getHttpAuthHeader(String username, String password) {
+        return "Basic " + Base64.encodeToString(String.format("%s:%s", username, password).getBytes(), Base64.NO_WRAP);
     }
 
     public static String inputStreamToString(InputStream i) throws IOException {

@@ -1,12 +1,34 @@
 package com.ddiehl.android.simpleredditreader;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import java.util.UUID;
+
 public class RedditPreferences {
+    public static final String PREFS_DEVICE_ID = "prefs_device_id";
+    public static final String PREF_DEVICE_ID = "pref_device_id";
+
     public static final String COMMENT_SORT = "pref_comment_sort";
     public static final String LINKS_SORT = "pref_links_sort";
     public static final String LINKS_TIMESPAN = "pref_links_timespan";
+
+    public static String getDeviceId(Context c) {
+        SharedPreferences sp = c.getSharedPreferences(PREFS_DEVICE_ID, Context.MODE_PRIVATE);
+        String deviceId = sp.getString(PREF_DEVICE_ID, null);
+        if (deviceId == null) {
+            deviceId = generateDeviceId(c);
+        }
+        return deviceId;
+    }
+
+    private static String generateDeviceId(Context c) {
+        SharedPreferences sp = c.getSharedPreferences(PREFS_DEVICE_ID, Context.MODE_PRIVATE);
+        String deviceId = UUID.randomUUID().toString();
+        sp.edit().putString(PREF_DEVICE_ID, deviceId).apply();
+        return deviceId;
+    }
 
     public static String getCommentSort(Context c) {
         return PreferenceManager.getDefaultSharedPreferences(c)

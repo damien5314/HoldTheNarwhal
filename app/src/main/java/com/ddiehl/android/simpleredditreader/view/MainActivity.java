@@ -11,6 +11,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -19,8 +20,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ddiehl.android.simpleredditreader.AuthorizationState;
 import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.RedditAuthorization;
+import com.ddiehl.android.simpleredditreader.events.ApplicationAuthorizedEvent;
+import com.ddiehl.android.simpleredditreader.events.AuthorizeApplicationEvent;
+import com.ddiehl.android.simpleredditreader.events.BusProvider;
+import com.ddiehl.android.simpleredditreader.web.AccessTokenResponse;
+import com.squareup.otto.Bus;
+import com.squareup.otto.Subscribe;
 
 public class MainActivity extends ActionBarActivity
         implements View.OnClickListener {
@@ -29,10 +37,12 @@ public class MainActivity extends ActionBarActivity
     public static final String EXTRA_SUBREDDIT = "com.ddiehl.android.simpleredditreader.extra_subreddit";
     public static final int REQUEST_AUTHORIZE = 1000;
 
+    private Bus mBus;
+
     // Navigation drawer
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
-    private View mLogIn, mUserProfile, mFrontPage, mRAll, mSubreddits,
+    private View mLogIn, mUserProfile, mFrontPage, mAllSubreddits, mSubreddits,
             mRandomSubreddit, mNavigationDrawer, mNavToSubredditGo;
     private EditText mNavToSubredditText;
 
@@ -40,6 +50,8 @@ public class MainActivity extends ActionBarActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mBus = BusProvider.getInstance();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -60,8 +72,8 @@ public class MainActivity extends ActionBarActivity
         mFrontPage = findViewById(R.id.drawer_front_page);
         mFrontPage.setOnClickListener(this);
 
-        mRAll = findViewById(R.id.drawer_r_all);
-        mRAll.setOnClickListener(this);
+        mAllSubreddits = findViewById(R.id.drawer_r_all);
+        mAllSubreddits.setOnClickListener(this);
 
         mSubreddits = findViewById(R.id.drawer_subreddits);
         mSubreddits.setOnClickListener(this);
@@ -96,20 +108,6 @@ public class MainActivity extends ActionBarActivity
         // Set onClick to null to intercept click events from background
         mNavigationDrawer = findViewById(R.id.navigation_drawer);
         mNavigationDrawer.setOnClickListener(null);
-
-        String subreddit = null;
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            subreddit = extras.getString(EXTRA_SUBREDDIT);
-        }
-
-        if (savedInstanceState == null) {
-            Fragment fragment = LinksFragment.newInstance(subreddit);
-            FragmentManager fm = getSupportFragmentManager();
-            fm.beginTransaction()
-                    .replace(R.id.fragment_container, fragment)
-                    .commit();
-        }
     }
 
     @Override
@@ -122,6 +120,41 @@ public class MainActivity extends ActionBarActivity
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         mDrawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mBus.register(this);
+
+        if (RedditAuthorization.getAuthorizationState() == AuthorizationState.Unauthorized) {
+            // TODO Display waiting overlay
+
+            // Post event to authorize application
+            mBus.post(new AuthorizeApplicationEvent(this));
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mBus.unregister(this);
+    }
+
+    @Subscribe
+    public void onApplicationAuthorized(ApplicationAuthorizedEvent event) {
+        if (!event.isFailed()) {
+            Log.i(TAG, "Application successfully authorized");
+            AccessTokenResponse response = event.getResponse();
+            RedditAuthorization.saveAccessToken(response);
+
+            // TODO Dismiss waiting overlay
+
+            // Display default fragment
+            showSubreddit(null);
+        } else {
+            Log.e(TAG, "Application authorization failed", event.getError());
+        }
     }
 
     @Override
@@ -176,7 +209,9 @@ public class MainActivity extends ActionBarActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case REQUEST_AUTHORIZE:
-                boolean authorized = RedditAuthorization.isAuthorized();
+                AuthorizationState state = RedditAuthorization.getAuthorizationState();
+                boolean authorized = state == AuthorizationState.ApplicationAuthorized
+                        || state == AuthorizationState.UserAuthorized;
                 if (authorized) {
                     Toast.makeText(this, getString(R.string.toast_authorized), Toast.LENGTH_SHORT).show();
                 } else {
