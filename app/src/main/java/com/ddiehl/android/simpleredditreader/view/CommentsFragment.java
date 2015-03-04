@@ -12,7 +12,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.ActionMode;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -161,7 +160,6 @@ public class CommentsFragment extends Fragment {
     public void onCommentsLoaded(CommentsLoadedEvent event) {
         dismissSpinner();
         if (event.isFailed()) {
-            Log.e(TAG, "Error loading links", event.getError());
             return;
         }
 
@@ -171,6 +169,8 @@ public class CommentsFragment extends Fragment {
         populateLinkData();
         getActivity().setTitle(mLink.getTitle());
 
+        List<Listing> comments = event.getComments();
+        AbsRedditComment.flattenCommentList(comments);
         mData.clear();
         mData.addAll(event.getComments());
         syncVisibleData();

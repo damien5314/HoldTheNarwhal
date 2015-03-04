@@ -1,5 +1,7 @@
 package com.ddiehl.android.simpleredditreader.model.listings;
 
+import java.util.List;
+
 public abstract class AbsRedditComment extends Listing {
     
     private int depth;
@@ -28,6 +30,34 @@ public abstract class AbsRedditComment extends Listing {
 
     public void setCollapsed(boolean b) {
         this.isCollapsed = b;
+    }
+
+    /**
+     * Flattens list of comments, marking each comment with depth
+     */
+    public static void flattenCommentList(List<Listing> commentList) {
+        int i = 0;
+        while (i < commentList.size()) {
+            Listing listing = commentList.get(i);
+            if (listing instanceof RedditComment) {
+                RedditComment comment = (RedditComment) listing;
+                ListingResponse repliesListing = comment.getReplies();
+                if (repliesListing != null) {
+                    List<Listing> replies = repliesListing.getData().getChildren();
+                    flattenCommentList(replies);
+                }
+                comment.setDepth(comment.getDepth() + 1); // Increase depth by 1
+                if (comment.getReplies() != null) {
+                    commentList.addAll(i+1, comment.getReplies().getData().getChildren()); // Add all of the replies to commentList
+                    comment.setReplies(null); // Remove replies for comment
+                }
+            } else { // Listing is a RedditMoreComments
+                RedditMoreComments moreComments = (RedditMoreComments) listing;
+                moreComments.setDepth(moreComments.getDepth() + 1); // Increase depth by 1
+            }
+            i++;
+        }
+
     }
     
 }

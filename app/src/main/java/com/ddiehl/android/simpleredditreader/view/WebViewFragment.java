@@ -17,7 +17,7 @@ import android.widget.ZoomButtonsController;
 
 import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.RedditAuthorization;
-import com.ddiehl.android.simpleredditreader.events.AuthorizationEvent;
+import com.ddiehl.android.simpleredditreader.events.AuthorizeUserEvent;
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
 
 /**
@@ -59,7 +59,7 @@ public class WebViewFragment extends Fragment {
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 if (url.contains(RedditAuthorization.REDIRECT_URI)) {
                     RedditAuthorization.saveAuthorizationCode(url);
-                    BusProvider.getInstance().post(new AuthorizationEvent());
+                    BusProvider.getInstance().post(new AuthorizeUserEvent());
                     getActivity().finish();
                 }
                 return false;

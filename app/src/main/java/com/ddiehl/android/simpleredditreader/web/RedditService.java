@@ -7,7 +7,7 @@ import com.ddiehl.android.simpleredditreader.RedditAuthorization;
 import com.ddiehl.android.simpleredditreader.RedditPreferences;
 import com.ddiehl.android.simpleredditreader.Utils;
 import com.ddiehl.android.simpleredditreader.events.ApplicationAuthorizedEvent;
-import com.ddiehl.android.simpleredditreader.events.AuthorizationEvent;
+import com.ddiehl.android.simpleredditreader.events.AuthorizeUserEvent;
 import com.ddiehl.android.simpleredditreader.events.AuthorizeApplicationEvent;
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
 import com.ddiehl.android.simpleredditreader.events.CommentsLoadedEvent;
@@ -20,8 +20,6 @@ import com.ddiehl.android.simpleredditreader.model.adapters.ListingDeserializer;
 import com.ddiehl.android.simpleredditreader.model.adapters.ListingResponseDeserializer;
 import com.ddiehl.android.simpleredditreader.model.listings.Listing;
 import com.ddiehl.android.simpleredditreader.model.listings.ListingResponse;
-import com.ddiehl.android.simpleredditreader.model.listings.RedditComment;
-import com.ddiehl.android.simpleredditreader.model.listings.RedditMoreComments;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -87,7 +85,7 @@ public class RedditService {
      * Notification that authentication state has changed
      */
     @Subscribe
-    public void onAuthorizationEvent(AuthorizationEvent event) {
+    public void onAuthorizeUser(AuthorizeUserEvent event) {
 
     }
 
@@ -167,46 +165,16 @@ public class RedditService {
         mApi.getComments(subreddit, article, sort, new Callback<List<ListingResponse>>() {
             @Override
             public void success(List<ListingResponse> listingsList, Response response) {
-                Log.i(TAG, "Comments loaded successfully");
                 Utils.printResponse(response);
-                flattenList(listingsList.get(1));
                 mBus.post(new CommentsLoadedEvent(listingsList));
             }
 
             @Override
             public void failure(RetrofitError error) {
-                Log.e(TAG, "RetrofitError: " + error.getMessage(), error);
+                Utils.printResponse(error.getResponse());
                 mBus.post(new CommentsLoadedEvent(error));
             }
         });
-    }
-
-    /**
-     * Flattens list of comments, marking each comment with depth
-     */
-    private void flattenList(ListingResponse commentsResponse) {
-        List<Listing> commentList = commentsResponse.getData().getChildren();
-        int i = 0;
-        while (i < commentList.size()) {
-            Listing listing = commentList.get(i);
-            if (listing instanceof RedditComment) {
-                RedditComment comment = (RedditComment) listing;
-                ListingResponse replies = comment.getReplies();
-                if (replies != null) {
-                    flattenList(replies);
-                }
-                comment.setDepth(comment.getDepth() + 1); // Increase depth by 1
-                if (comment.getReplies() != null) {
-                    commentList.addAll(i+1, comment.getReplies().getData().getChildren()); // Add all of the replies to commentList
-                    comment.setReplies(null); // Remove replies for comment
-                }
-            } else { // Listing is a RedditMoreComments
-                RedditMoreComments moreComments = (RedditMoreComments) listing;
-                moreComments.setDepth(moreComments.getDepth() + 1); // Increase depth by 1
-            }
-            i++;
-        }
-
     }
 
     /**
