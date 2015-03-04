@@ -48,6 +48,7 @@ public class RedditService {
     private RedditApi mApi;
     private RedditEndpoint mEndpoint;
     private Bus mBus = BusProvider.getInstance();
+    private RedditAuthorization mRedditAuthorization = RedditAuthorization.getInstance();
 
     private RedditService() {
         mEndpoint = new RedditEndpoint();
@@ -73,7 +74,7 @@ public class RedditService {
                     @Override
                     public void intercept(RequestFacade request) {
                         request.addHeader("User-Agent", USER_AGENT);
-                        request.addHeader("Authorization", RedditAuthorization.getAuthHeader());
+                        request.addHeader("Authorization", mRedditAuthorization.getAuthHeader());
                     }
                 })
                 .build();

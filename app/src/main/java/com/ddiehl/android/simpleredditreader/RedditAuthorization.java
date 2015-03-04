@@ -30,24 +30,26 @@ public class RedditAuthorization {
             "&redirect_uri=" + REDIRECT_URI +
             "&scope=" + SCOPE;
 
-    // If expiration time is less than this config, isAuthorized returns false
-    // Provides a buffer in case of lag between reddit servers and app client
-    public static final int AUTHORIZATION_TIME_THRESHOLD = 10;
+    private static RedditAuthorization _instance = new RedditAuthorization();
 
-    private static AuthorizationState mAuthorizationState = AuthorizationState.Unauthorized;
+    private AuthorizationState mAuthorizationState = AuthorizationState.Unauthorized;
 
-    private static String mState;
-    private static String mCode;
-    private static String mError;
+    private String mState;
+    private String mCode;
+    private String mError;
 
-    private static String mAccessToken;
-    private static String mTokenType;
-    private static Date mExpiration;
-    private static String mScope;
+    private String mAccessToken;
+    private String mTokenType;
+    private Date mExpiration;
+    private String mScope;
 
     private RedditAuthorization() { }
 
-    public static Intent getAuthorizationIntent(Context context) {
+    public static RedditAuthorization getInstance() {
+        return _instance;
+    }
+
+    public Intent getAuthorizationIntent(Context context) {
         Intent intent = new Intent(context, WebViewActivity.class);
         mState = getRandomString();
         Uri uri = Uri.parse(AUTHORIZATION_URL);
@@ -55,7 +57,7 @@ public class RedditAuthorization {
         return intent;
     }
 
-    public static void saveAuthorizationCode(String url) {
+    public void saveAuthorizationCode(String url) {
         Uri uri = Uri.parse(url);
         Log.d(TAG, "URI: " + uri.toString());
         String query = uri.getQuery();
@@ -78,7 +80,7 @@ public class RedditAuthorization {
         }
     }
 
-    public static void saveAccessToken(AccessTokenResponse response) {
+    public void saveAccessToken(AccessTokenResponse response) {
         mAuthorizationState = AuthorizationState.ApplicationAuthorized;
 
         mAccessToken = response.getAccessToken();
@@ -88,11 +90,11 @@ public class RedditAuthorization {
         mScope = response.getScope();
     }
 
-    public static AuthorizationState getAuthorizationState() {
+    public AuthorizationState getAuthorizationState() {
         return mAuthorizationState;
     }
 
-    public static String getAuthHeader() {
+    public String getAuthHeader() {
         if (mAccessToken != null) {
             return "bearer " + mAccessToken;
         } else {
@@ -100,7 +102,7 @@ public class RedditAuthorization {
         }
     }
 
-    public static long secondsUntilExpiration() {
+    public long secondsUntilExpiration() {
         return Math.max(0, (mExpiration.getTime() - System.currentTimeMillis()) / 1000);
     }
 

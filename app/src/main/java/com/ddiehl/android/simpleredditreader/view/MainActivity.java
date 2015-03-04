@@ -37,6 +37,7 @@ public class MainActivity extends ActionBarActivity
     public static final int REQUEST_AUTHORIZE = 1000;
 
     private Bus mBus;
+    private RedditAuthorization mRedditAuthorization;
 
     // Navigation drawer
     private DrawerLayout mDrawerLayout;
@@ -51,6 +52,7 @@ public class MainActivity extends ActionBarActivity
         setContentView(R.layout.activity_main);
 
         mBus = BusProvider.getInstance();
+        mRedditAuthorization = RedditAuthorization.getInstance();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -126,7 +128,7 @@ public class MainActivity extends ActionBarActivity
         super.onStart();
         mBus.register(this);
 
-        if (RedditAuthorization.getAuthorizationState() == AuthorizationState.Unauthorized) {
+        if (mRedditAuthorization.getAuthorizationState() == AuthorizationState.Unauthorized) {
             // TODO Display waiting overlay
 
             // Post event to authorize application
@@ -144,7 +146,7 @@ public class MainActivity extends ActionBarActivity
     public void onApplicationAuthorized(ApplicationAuthorizedEvent event) {
         if (!event.isFailed()) {
             AccessTokenResponse response = event.getResponse();
-            RedditAuthorization.saveAccessToken(response);
+            mRedditAuthorization.saveAccessToken(response);
 
             // TODO Dismiss waiting overlay
 
@@ -157,7 +159,7 @@ public class MainActivity extends ActionBarActivity
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.drawer_log_in:
-                Intent intent = RedditAuthorization.getAuthorizationIntent(this);
+                Intent intent = mRedditAuthorization.getAuthorizationIntent(this);
                 startActivityForResult(intent, REQUEST_AUTHORIZE);
                 break;
             case R.id.drawer_user_profile:
@@ -205,7 +207,7 @@ public class MainActivity extends ActionBarActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case REQUEST_AUTHORIZE:
-                AuthorizationState state = RedditAuthorization.getAuthorizationState();
+                AuthorizationState state = mRedditAuthorization.getAuthorizationState();
                 boolean authorized = state == AuthorizationState.ApplicationAuthorized
                         || state == AuthorizationState.UserAuthorized;
                 if (authorized) {
