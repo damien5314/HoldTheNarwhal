@@ -43,20 +43,30 @@ public class RedditService {
     private static final String USER_AGENT =
             "android:com.ddiehl.android.simpleredditreader:v0.1 (by /u/damien5314)";
 
-    private static RedditService _instance = new RedditService();
+    private static RedditService _instance;
 
+    private Context mContext;
     private RedditApi mApi;
     private RedditEndpoint mEndpoint;
     private Bus mBus = BusProvider.getInstance();
-    private RedditAuthorization mRedditAuthorization = RedditAuthorization.getInstance();
+    private RedditAuthorization mRedditAuthorization;
 
-    private RedditService() {
+    private RedditService(Context context) {
+        mContext = context.getApplicationContext();
         mEndpoint = new RedditEndpoint();
         mEndpoint.setUrl(RedditEndpoint.NORMAL);
         mApi = buildApi();
+        mRedditAuthorization = RedditAuthorization.getInstance(mContext);
     }
 
-    public static RedditService getInstance() {
+    public static RedditService getInstance(Context context) {
+        if (_instance == null) {
+            synchronized (RedditService.class) {
+                if (_instance == null) {
+                    _instance = new RedditService(context);
+                }
+            }
+        }
         return _instance;
     }
 

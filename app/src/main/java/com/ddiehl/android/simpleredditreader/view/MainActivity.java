@@ -52,7 +52,7 @@ public class MainActivity extends ActionBarActivity
         setContentView(R.layout.activity_main);
 
         mBus = BusProvider.getInstance();
-        mRedditAuthorization = RedditAuthorization.getInstance();
+        mRedditAuthorization = RedditAuthorization.getInstance(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -128,7 +128,7 @@ public class MainActivity extends ActionBarActivity
         super.onStart();
         mBus.register(this);
 
-        if (mRedditAuthorization.getAuthorizationState() == AuthorizationState.Unauthorized) {
+        if (!mRedditAuthorization.hasValidAccessToken()) {
             // TODO Display waiting overlay
 
             // Post event to authorize application
@@ -159,7 +159,7 @@ public class MainActivity extends ActionBarActivity
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.drawer_log_in:
-                Intent intent = mRedditAuthorization.getAuthorizationIntent(this);
+                Intent intent = mRedditAuthorization.getUserAuthorizationIntent();
                 startActivityForResult(intent, REQUEST_AUTHORIZE);
                 break;
             case R.id.drawer_user_profile:

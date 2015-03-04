@@ -25,8 +25,12 @@ public class RedditReaderApplication extends Application {
         Log.d(TAG, "Creating RedditReaderApplication");
 
         Bus mBus = BusProvider.getInstance();
-        mBus.register(RedditService.getInstance());
+        mBus.register(RedditService.getInstance(this));
         mBus.register(this); // Listen for "global" events
+
+        // Retrieve authorization state from shared preferences
+        RedditAuthorization auth = RedditAuthorization.getInstance(this);
+        auth.retrieveAccessToken();
 
         // Stetho debugging tool
         Stetho.initialize(Stetho.newInitializerBuilder(this)

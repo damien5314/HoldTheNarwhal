@@ -58,7 +58,7 @@ public class WebViewFragment extends Fragment {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 if (url.contains(RedditAuthorization.REDIRECT_URI)) {
-                    RedditAuthorization.getInstance().saveAuthorizationCode(url);
+                    RedditAuthorization.getInstance(getActivity()).saveAuthorizationCode(url);
                     BusProvider.getInstance().post(new AuthorizeUserEvent());
                     getActivity().finish();
                 }

@@ -2,7 +2,9 @@ package com.ddiehl.android.simpleredditreader;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.ddiehl.android.simpleredditreader.view.WebViewActivity;
@@ -30,27 +32,43 @@ public class RedditAuthorization {
             "&redirect_uri=" + REDIRECT_URI +
             "&scope=" + SCOPE;
 
-    private static RedditAuthorization _instance = new RedditAuthorization();
+    // Seconds within expiration we should try to retrieve a new access token
+    private static final int EXPIRATION_THRESHOLD = 360;
 
+    public static final String PREF_ACCESS_TOKEN = "pref_access_token";
+    public static final String PREF_TOKEN_TYPE = "pref_token_type";
+    public static final String PREF_EXPIRATION = "pref_expiration";
+    public static final String PREF_SCOPE = "pref_scope";
+
+    private static RedditAuthorization _instance;
+
+    private Context mContext;
     private AuthorizationState mAuthorizationState = AuthorizationState.Unauthorized;
-
     private String mState;
     private String mCode;
     private String mError;
-
     private String mAccessToken;
     private String mTokenType;
     private Date mExpiration;
     private String mScope;
 
-    private RedditAuthorization() { }
+    private RedditAuthorization(Context context) {
+        mContext = context.getApplicationContext();
+    }
 
-    public static RedditAuthorization getInstance() {
+    public static RedditAuthorization getInstance(Context context) {
+        if (_instance == null) {
+            synchronized (RedditAuthorization.class) {
+                if (_instance == null) {
+                    _instance = new RedditAuthorization(context);
+                }
+            }
+        }
         return _instance;
     }
 
-    public Intent getAuthorizationIntent(Context context) {
-        Intent intent = new Intent(context, WebViewActivity.class);
+    public Intent getUserAuthorizationIntent() {
+        Intent intent = new Intent(mContext, WebViewActivity.class);
         mState = getRandomString();
         Uri uri = Uri.parse(AUTHORIZATION_URL);
         intent.setData(uri);
@@ -88,10 +106,37 @@ public class RedditAuthorization {
         long expiresIn = response.getExpiresIn();
         mExpiration = new Date(System.currentTimeMillis() + (expiresIn * 1000));
         mScope = response.getScope();
+
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mContext);
+        sp.edit()
+                .putString(PREF_ACCESS_TOKEN, mAccessToken)
+                .putString(PREF_TOKEN_TYPE, mTokenType)
+                .putLong(PREF_EXPIRATION, mExpiration.getTime())
+                .putString(PREF_SCOPE, mScope)
+                .apply();
+    }
+
+    public void retrieveAccessToken() {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mContext);
+        mAccessToken = sp.getString(PREF_ACCESS_TOKEN, null);
+        mTokenType = sp.getString(PREF_TOKEN_TYPE, null);
+        long expirationTime = sp.getLong(PREF_EXPIRATION, 0);
+        mExpiration = new Date(expirationTime);
+        mScope = sp.getString(PREF_SCOPE, null);
+
+        if (hasValidAccessToken()) {
+            mAuthorizationState = AuthorizationState.ApplicationAuthorized;
+        }
     }
 
     public AuthorizationState getAuthorizationState() {
         return mAuthorizationState;
+    }
+
+    public boolean hasValidAccessToken() {
+        return (mAuthorizationState == AuthorizationState.ApplicationAuthorized
+                || mAuthorizationState == AuthorizationState.UserAuthorized)
+                && secondsUntilExpiration() > EXPIRATION_THRESHOLD;
     }
 
     public String getAuthHeader() {
