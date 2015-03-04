@@ -43,7 +43,7 @@ public class RedditAuthorization {
     private static RedditAuthorization _instance;
 
     private Context mContext;
-    private AuthorizationState mAuthorizationState = AuthorizationState.Unauthorized;
+    private boolean mIsAuthorized = false;
     private String mState;
     private String mCode;
     private String mError;
@@ -99,13 +99,16 @@ public class RedditAuthorization {
     }
 
     public void saveAccessToken(AccessTokenResponse response) {
-        mAuthorizationState = AuthorizationState.ApplicationAuthorized;
+        if (response.getAccessToken() == null)
+            return;
 
         mAccessToken = response.getAccessToken();
         mTokenType = response.getTokenType();
         long expiresIn = response.getExpiresIn();
         mExpiration = new Date(System.currentTimeMillis() + (expiresIn * 1000));
         mScope = response.getScope();
+
+        mIsAuthorized = true;
 
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mContext);
         sp.edit()
@@ -124,19 +127,16 @@ public class RedditAuthorization {
         mExpiration = new Date(expirationTime);
         mScope = sp.getString(PREF_SCOPE, null);
 
-        if (hasValidAccessToken()) {
-            mAuthorizationState = AuthorizationState.ApplicationAuthorized;
+        if (mAccessToken != null) {
+            mIsAuthorized = true;
         }
     }
 
-    public AuthorizationState getAuthorizationState() {
-        return mAuthorizationState;
-    }
-
     public boolean hasValidAccessToken() {
-        return (mAuthorizationState == AuthorizationState.ApplicationAuthorized
-                || mAuthorizationState == AuthorizationState.UserAuthorized)
-                && secondsUntilExpiration() > EXPIRATION_THRESHOLD;
+        if (mAccessToken == null) {
+            retrieveAccessToken();
+        }
+        return mIsAuthorized && secondsUntilExpiration() > EXPIRATION_THRESHOLD;
     }
 
     public String getAuthHeader() {

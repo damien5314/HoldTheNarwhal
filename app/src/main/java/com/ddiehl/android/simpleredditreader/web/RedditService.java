@@ -53,10 +53,13 @@ public class RedditService {
 
     private RedditService(Context context) {
         mContext = context.getApplicationContext();
-        mEndpoint = new RedditEndpoint();
-        mEndpoint.setUrl(RedditEndpoint.NORMAL);
-        mApi = buildApi();
         mRedditAuthorization = RedditAuthorization.getInstance(mContext);
+
+        mEndpoint = new RedditEndpoint();
+        mEndpoint.setUrl(mRedditAuthorization.hasValidAccessToken()
+                ? RedditEndpoint.AUTHORIZED : RedditEndpoint.NORMAL);
+
+        mApi = buildApi();
     }
 
     public static RedditService getInstance(Context context) {

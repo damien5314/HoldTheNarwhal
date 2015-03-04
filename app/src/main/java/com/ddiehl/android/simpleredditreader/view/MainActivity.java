@@ -11,6 +11,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -19,7 +20,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.ddiehl.android.simpleredditreader.AuthorizationState;
 import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.RedditAuthorization;
 import com.ddiehl.android.simpleredditreader.events.ApplicationAuthorizedEvent;
@@ -128,7 +128,11 @@ public class MainActivity extends ActionBarActivity
         super.onStart();
         mBus.register(this);
 
-        if (!mRedditAuthorization.hasValidAccessToken()) {
+        if (mRedditAuthorization.hasValidAccessToken()) {
+            Log.i(TAG, "Already have valid access token, loading LinksFragment");
+            showSubreddit(null);
+        } else {
+            Log.i(TAG, "No valid access token, retrieving from /api/v1/access_token");
             // TODO Display waiting overlay
 
             // Post event to authorize application
@@ -150,7 +154,6 @@ public class MainActivity extends ActionBarActivity
 
             // TODO Dismiss waiting overlay
 
-            // Display default fragment
             showSubreddit(null);
         }
     }
@@ -207,10 +210,7 @@ public class MainActivity extends ActionBarActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case REQUEST_AUTHORIZE:
-                AuthorizationState state = mRedditAuthorization.getAuthorizationState();
-                boolean authorized = state == AuthorizationState.ApplicationAuthorized
-                        || state == AuthorizationState.UserAuthorized;
-                if (authorized) {
+                if (mRedditAuthorization.hasValidAccessToken()) {
                     Toast.makeText(this, getString(R.string.toast_authorized), Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(this, getString(R.string.toast_not_authorized), Toast.LENGTH_SHORT).show();
