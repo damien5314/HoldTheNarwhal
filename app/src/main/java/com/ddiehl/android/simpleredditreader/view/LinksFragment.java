@@ -11,7 +11,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -205,7 +204,6 @@ public class LinksFragment extends Fragment {
     public void onLinksLoaded(LinksLoadedEvent event) {
         dismissSpinner();
         if (event.isFailed()) {
-            Log.e(TAG, "Error loading links", event.getError());
             return;
         }
 

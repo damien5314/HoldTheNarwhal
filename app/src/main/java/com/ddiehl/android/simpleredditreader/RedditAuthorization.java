@@ -67,7 +67,7 @@ public class RedditAuthorization {
         return _instance;
     }
 
-    public Intent getUserAuthorizationIntent() {
+    public Intent getUserAuthCodeIntent() {
         Intent intent = new Intent(mContext, WebViewActivity.class);
         mState = getRandomString();
         Uri uri = Uri.parse(AUTHORIZATION_URL);
@@ -75,7 +75,7 @@ public class RedditAuthorization {
         return intent;
     }
 
-    public void saveAuthorizationCode(String url) {
+    public void saveUserAuthCode(String url) {
         Uri uri = Uri.parse(url);
         Log.d(TAG, "URI: " + uri.toString());
         String query = uri.getQuery();
@@ -96,6 +96,10 @@ public class RedditAuthorization {
         } else { // User declined to authorize application, or an error occurred
             mError = getValueFromQuery(params[1]);
         }
+    }
+
+    public String getUserAuthCode() {
+        return mCode;
     }
 
     public void saveAccessToken(AccessTokenResponse response) {
@@ -140,7 +144,7 @@ public class RedditAuthorization {
     }
 
     public String getAuthHeader() {
-        if (mAccessToken != null) {
+        if (hasValidAccessToken()) {
             return "bearer " + mAccessToken;
         } else {
             return HTTP_AUTH_HEADER;

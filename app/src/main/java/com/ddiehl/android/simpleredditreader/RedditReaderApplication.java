@@ -45,6 +45,6 @@ public class RedditReaderApplication extends Application {
     @Subscribe
     public void onApiError(ApiErrorEvent event) {
         Toast.makeText(this, "Something went wrong, please try again", Toast.LENGTH_SHORT).show();
-        Log.e("ReaderApp", event.getErrorMessage());
+        Log.e(TAG, event.getErrorMessage());
     }
 }

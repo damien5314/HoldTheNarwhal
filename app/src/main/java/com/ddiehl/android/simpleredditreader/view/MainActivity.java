@@ -162,7 +162,7 @@ public class MainActivity extends ActionBarActivity
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.drawer_log_in:
-                Intent intent = mRedditAuthorization.getUserAuthorizationIntent();
+                Intent intent = mRedditAuthorization.getUserAuthCodeIntent();
                 startActivityForResult(intent, REQUEST_AUTHORIZE);
                 break;
             case R.id.drawer_user_profile:

@@ -1,19 +1,18 @@
 package com.ddiehl.android.simpleredditreader.web;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.ddiehl.android.simpleredditreader.RedditAuthorization;
 import com.ddiehl.android.simpleredditreader.RedditPreferences;
 import com.ddiehl.android.simpleredditreader.Utils;
 import com.ddiehl.android.simpleredditreader.events.ApplicationAuthorizedEvent;
-import com.ddiehl.android.simpleredditreader.events.AuthorizeUserEvent;
 import com.ddiehl.android.simpleredditreader.events.AuthorizeApplicationEvent;
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
 import com.ddiehl.android.simpleredditreader.events.CommentsLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.LinksLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.LoadCommentsEvent;
 import com.ddiehl.android.simpleredditreader.events.LoadLinksEvent;
+import com.ddiehl.android.simpleredditreader.events.UserAuthCodeReceivedEvent;
 import com.ddiehl.android.simpleredditreader.events.VoteEvent;
 import com.ddiehl.android.simpleredditreader.events.VoteSubmittedEvent;
 import com.ddiehl.android.simpleredditreader.model.adapters.ListingDeserializer;
@@ -99,8 +98,23 @@ public class RedditService {
      * Notification that authentication state has changed
      */
     @Subscribe
-    public void onAuthorizeUser(AuthorizeUserEvent event) {
+    public void onUserAuthCodeReceived(UserAuthCodeReceivedEvent event) {
+        String grantType = "https://oauth.reddit.com/grants/installed_client";
 
+        // Retrieve access token from authorization code
+        mApi.getUserAccessToken(grantType, mRedditAuthorization.getUserAuthCode(), RedditAuthorization.REDIRECT_URI,
+                new Callback<AccessTokenResponse>() {
+            @Override
+            public void success(AccessTokenResponse response, Response response2) {
+
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Utils.showError(mContext, error);
+                Utils.printResponse(error.getResponse());
+            }
+        });
     }
 
     @Subscribe
@@ -109,7 +123,6 @@ public class RedditService {
         String grantType = "https://oauth.reddit.com/grants/installed_client";
         String deviceId = RedditPreferences.getDeviceId(context);
 
-        Log.i(TAG, "Attempting to authorize application...");
         mApi.getApplicationAccessToken(grantType, deviceId, new Callback<AccessTokenResponse>() {
             @Override
             public void success(AccessTokenResponse accessTokenResponse, Response response) {
@@ -120,6 +133,7 @@ public class RedditService {
 
             @Override
             public void failure(RetrofitError error) {
+                Utils.showError(mContext, error);
                 Utils.printResponse(error.getResponse());
                 mBus.post(new ApplicationAuthorizedEvent(error));
             }
@@ -146,7 +160,9 @@ public class RedditService {
 
                 @Override
                 public void failure(RetrofitError error) {
+                    Utils.showError(mContext, error);
                     Utils.printResponse(error.getResponse());
+                    mBus.post(new LinksLoadedEvent(error));
                 }
             });
         } else {
@@ -159,6 +175,7 @@ public class RedditService {
 
                 @Override
                 public void failure(RetrofitError error) {
+                    Utils.showError(mContext, error);
                     Utils.printResponse(error.getResponse());
                     mBus.post(new LinksLoadedEvent(error));
                 }
@@ -184,6 +201,7 @@ public class RedditService {
 
             @Override
             public void failure(RetrofitError error) {
+                Utils.showError(mContext, error);
                 Utils.printResponse(error.getResponse());
                 mBus.post(new CommentsLoadedEvent(error));
             }
@@ -207,6 +225,7 @@ public class RedditService {
 
             @Override
             public void failure(RetrofitError error) {
+                Utils.showError(mContext, error);
                 Utils.printResponse(error.getResponse());
                 mBus.post(new VoteSubmittedEvent(error));
             }

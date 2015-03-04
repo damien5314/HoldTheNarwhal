@@ -1,4 +1,5 @@
 package com.ddiehl.android.simpleredditreader.events;
 
-public class AuthorizeUserEvent {
+public class UserAuthCodeReceivedEvent {
+
 }

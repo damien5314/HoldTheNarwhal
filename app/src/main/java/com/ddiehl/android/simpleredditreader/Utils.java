@@ -1,6 +1,8 @@
 package com.ddiehl.android.simpleredditreader;
 
+import android.content.Context;
 import android.util.Base64;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -9,6 +11,7 @@ import java.io.InputStreamReader;
 import java.util.Date;
 import java.util.List;
 
+import retrofit.RetrofitError;
 import retrofit.client.Header;
 import retrofit.client.Response;
 import retrofit.mime.TypedInput;
@@ -17,6 +20,17 @@ import retrofit.mime.TypedInput;
  * Created by Damien on 1/19/2015.
  */
 public class Utils {
+
+    public static void showError(Context context, RetrofitError error) {
+        Response response = error.getResponse();
+        switch (response.getStatus()) {
+            default:
+                Toast.makeText(context, "An error has occurred (" + response.getStatus() + ")",
+                        Toast.LENGTH_LONG).show();
+                break;
+
+        }
+    }
 
     public static String getFormattedDateStringFromUtc(long utc) {
         return getFormattedDateString(new Date(utc*1000));
