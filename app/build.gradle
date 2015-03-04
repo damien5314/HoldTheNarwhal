@@ -5,7 +5,7 @@ android {
     buildToolsVersion "21.1.2"
 
     defaultConfig {
-        applicationId "com.ddiehl.android.simplereaderforreddit"
+        applicationId "com.ddiehl.android.simpleredditreader"
         minSdkVersion 10
         targetSdkVersion 21
         versionCode 1

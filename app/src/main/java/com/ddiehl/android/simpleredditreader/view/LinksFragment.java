@@ -227,8 +227,6 @@ public class LinksFragment extends Fragment {
             Toast.makeText(getActivity(), R.string.vote_failed, Toast.LENGTH_SHORT).show();
             return;
         }
-
-        Log.i(TAG, "Vote submitted successfully");
     }
 
     @Override

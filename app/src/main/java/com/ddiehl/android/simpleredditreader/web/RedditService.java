@@ -99,7 +99,7 @@ public class RedditService {
         mApi.getApplicationAccessToken(grantType, deviceId, new Callback<AccessTokenResponse>() {
             @Override
             public void success(AccessTokenResponse accessTokenResponse, Response response) {
-                Utils.printResponse(response);
+                Utils.printResponseStatus(response);
                 mEndpoint.setUrl(RedditEndpoint.AUTHORIZED);
                 mBus.post(new ApplicationAuthorizedEvent(accessTokenResponse));
             }
@@ -126,7 +126,7 @@ public class RedditService {
             mApi.getDefaultLinks(sort, timespan, after, new Callback<ListingResponse>() {
                 @Override
                 public void success(ListingResponse linksResponse, Response response) {
-                    Utils.printResponse(response);
+                    Utils.printResponseStatus(response);
                     mBus.post(new LinksLoadedEvent(linksResponse));
                 }
 
@@ -139,7 +139,7 @@ public class RedditService {
             mApi.getLinks(subreddit, sort, timespan, after, new Callback<ListingResponse>() {
                 @Override
                 public void success(ListingResponse linksResponse, Response response) {
-                    Utils.printResponse(response);
+                    Utils.printResponseStatus(response);
                     mBus.post(new LinksLoadedEvent(linksResponse));
                 }
 
@@ -161,11 +161,10 @@ public class RedditService {
         String article = event.getArticle();
         String sort = event.getSort();
 
-        Log.i(TAG, "Loading /r/" + subreddit + "/comments/" + article + "/.json?sort=" + sort);
         mApi.getComments(subreddit, article, sort, new Callback<List<ListingResponse>>() {
             @Override
             public void success(List<ListingResponse> listingsList, Response response) {
-                Utils.printResponse(response);
+                Utils.printResponseStatus(response);
                 mBus.post(new CommentsLoadedEvent(listingsList));
             }
 
@@ -187,7 +186,8 @@ public class RedditService {
         mApi.vote(id, direction, new Callback<Response>() {
             @Override
             public void success(Response response, Response response2) {
-                Utils.printResponse(response);
+                Utils.printResponseStatus(response);
+                Utils.printResponseBody(response);
                 mBus.post(new VoteSubmittedEvent(response));
             }
 

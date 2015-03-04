@@ -65,8 +65,8 @@ public class Utils {
 
     public static void printResponse(Response response) {
         printResponseStatus(response);
-//        printResponseHeaders(response);
-//        printResponseBody(response);
+        printResponseHeaders(response);
+        printResponseBody(response);
     }
 
     public static void printResponseStatus(Response response) {
