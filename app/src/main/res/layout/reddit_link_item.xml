@@ -27,9 +27,7 @@
             style="@style/LinkTitleTextView"
             android:layout_gravity="center_vertical"
             android:layout_marginBottom="@dimen/link_title_margin"
-            android:minLines="2"
-            android:maxLines="2"
-            android:ellipsize="end"/>
+            android:minLines="2"/>
 
         <TextView
             android:id="@+id/link_author"
