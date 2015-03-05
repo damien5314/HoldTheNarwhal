@@ -1,5 +1,6 @@
 package com.ddiehl.android.simpleredditreader.view;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -45,6 +46,7 @@ public class MainActivity extends ActionBarActivity
     private View mLogIn, mUserProfile, mFrontPage, mAllSubreddits, mSubreddits,
             mRandomSubreddit, mNavigationDrawer, mNavToSubredditGo;
     private EditText mNavToSubredditText;
+    private ProgressDialog mProgressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,7 +135,8 @@ public class MainActivity extends ActionBarActivity
             showSubreddit(null);
         } else {
             Log.i(TAG, "No valid access token, retrieving from /api/v1/access_token");
-            // TODO Display waiting overlay
+            // Display waiting overlay
+            showSpinner("Authorizing...");
 
             // Post event to authorize application
             mBus.post(new AuthorizeApplicationEvent(this));
@@ -148,11 +151,10 @@ public class MainActivity extends ActionBarActivity
 
     @Subscribe
     public void onApplicationAuthorized(ApplicationAuthorizedEvent event) {
+        dismissSpinner();
         if (!event.isFailed()) {
             AccessTokenResponse response = event.getResponse();
             mRedditAuthorization.saveAccessToken(response);
-
-            // TODO Dismiss waiting overlay
 
             showSubreddit(null);
         }
@@ -216,6 +218,22 @@ public class MainActivity extends ActionBarActivity
                     Toast.makeText(this, getString(R.string.toast_not_authorized), Toast.LENGTH_SHORT).show();
                 }
                 break;
+        }
+    }
+
+    public void showSpinner(String message) {
+        if (mProgressBar == null) {
+            mProgressBar = new ProgressDialog(this, R.style.ProgressDialog);
+            mProgressBar.setCancelable(false);
+            mProgressBar.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        }
+        mProgressBar.setMessage(message);
+        mProgressBar.show();
+    }
+
+    public void dismissSpinner() {
+        if (mProgressBar != null && mProgressBar.isShowing()) {
+            mProgressBar.dismiss();
         }
     }
 }

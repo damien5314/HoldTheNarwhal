@@ -1,7 +1,6 @@
 package com.ddiehl.android.simpleredditreader.view;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -64,7 +63,6 @@ public class LinksFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLayoutManager;
     private LinkAdapter mLinkAdapter;
-    private ProgressDialog mProgressBar;
 
     public LinksFragment() { /* Default constructor required */ }
 
@@ -195,14 +193,14 @@ public class LinksFragment extends Fragment {
     }
 
     private void getLinks() {
-        showSpinner();
+        ((MainActivity) getActivity()).showSpinner("Getting submissions...");
         mLinksRequested = true;
         getBus().post(new LoadLinksEvent(mSubreddit, mSort, mTimeSpan));
     }
 
     @Subscribe
     public void onLinksLoaded(LinksLoadedEvent event) {
-        dismissSpinner();
+        ((MainActivity) getActivity()).dismissSpinner();
         if (event.isFailed()) {
             return;
         }
@@ -295,19 +293,6 @@ public class LinksFragment extends Fragment {
             mBus = BusProvider.getInstance();
         }
         return mBus;
-    }
-
-    private void showSpinner() {
-        if (mProgressBar == null) {
-            mProgressBar = new ProgressDialog(getActivity(), R.style.ProgressDialog);
-            mProgressBar.setCancelable(false);
-            mProgressBar.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        }
-        mProgressBar.show();
-    }
-
-    private void dismissSpinner() {
-        mProgressBar.dismiss();
     }
 
     private class LinkAdapter extends RecyclerView.Adapter<LinkHolder> {

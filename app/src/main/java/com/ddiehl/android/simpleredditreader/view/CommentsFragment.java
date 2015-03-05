@@ -158,7 +158,7 @@ public class CommentsFragment extends Fragment {
 
     @Subscribe
     public void onCommentsLoaded(CommentsLoadedEvent event) {
-        dismissSpinner();
+        ((MainActivity) getActivity()).dismissSpinner();
         if (event.isFailed()) {
             return;
         }
@@ -217,7 +217,7 @@ public class CommentsFragment extends Fragment {
     }
 
     private void getComments() {
-        showSpinner();
+        ((MainActivity) getActivity()).showSpinner(null);
         mCommentsRetrieved = true;
         getBus().post(new LoadCommentsEvent(mSubreddit, mArticleId, mSort));
     }
@@ -328,19 +328,6 @@ public class CommentsFragment extends Fragment {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    private void showSpinner() {
-        if (mProgressBar == null) {
-            mProgressBar = new ProgressDialog(getActivity(), R.style.ProgressDialog);
-            mProgressBar.setCancelable(false);
-            mProgressBar.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        }
-        mProgressBar.show();
-    }
-
-    private void dismissSpinner() {
-        mProgressBar.dismiss();
     }
 
     private Bus getBus() {
