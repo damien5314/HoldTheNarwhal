@@ -111,6 +111,19 @@ public class MainActivity extends ActionBarActivity
         // Set onClick to null to intercept click events from background
         mNavigationDrawer = findViewById(R.id.navigation_drawer);
         mNavigationDrawer.setOnClickListener(null);
+
+        // Note: Potential race condition between retrieval of access token and bus registration
+        if (mRedditAuthorization.hasValidAccessToken()) {
+            Log.i(TAG, "Already have valid access token, loading LinksFragment");
+            showSubreddit(null);
+        } else {
+            Log.i(TAG, "No valid access token, retrieving from /api/v1/access_token");
+            // Display waiting overlay
+            showSpinner("Authorizing...");
+
+            // Post event to authorize application
+            mBus.post(new AuthorizeApplicationEvent(this));
+        }
     }
 
     @Override
@@ -129,18 +142,6 @@ public class MainActivity extends ActionBarActivity
     protected void onStart() {
         super.onStart();
         mBus.register(this);
-
-        if (mRedditAuthorization.hasValidAccessToken()) {
-            Log.i(TAG, "Already have valid access token, loading LinksFragment");
-            showSubreddit(null);
-        } else {
-            Log.i(TAG, "No valid access token, retrieving from /api/v1/access_token");
-            // Display waiting overlay
-            showSpinner("Authorizing...");
-
-            // Post event to authorize application
-            mBus.post(new AuthorizeApplicationEvent(this));
-        }
     }
 
     @Override
