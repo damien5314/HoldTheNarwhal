@@ -1,12 +1,18 @@
 package com.ddiehl.android.simpleredditreader.text;
 
 import android.content.Context;
+import android.graphics.Typeface;
+import android.text.Spannable;
+import android.text.style.StyleSpan;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
 /**
  * Decorates a TextView with logic to set spans with stylization based on
  * reddit's markup syntax.
+ *
+ * Formatting test post
+ * http://www.reddit.com/r/test/comments/2w70qo/formatting_test_post/
  *
  * ### Rules ###
  * Single line breaks are removed.
@@ -34,6 +40,8 @@ import android.widget.TextView;
  *
  * Valid links automatically should link to the formatted URL.
  * Text wrapped in brackets ([]) should be formatted as a link to the succeeding text in (parentheses).
+ * Text preceded by /u/ will link to a user profile.
+ * Text preceded by /r/ will link to a subreddit.
  *
  * Lines preceded by an angle bracket (>) are formatted as a quote.
  *
@@ -46,13 +54,48 @@ import android.widget.TextView;
  * Backslashes will escape any succeeding special character.
  *
  * A line with 5 or more asterisks is a horizontal rule.
+ *
+ * Special characters should be decoded (e.g. &#3232; ಠ_ಠ)
  */
-public class RedditTextDecorator extends TextView {
-    private static final String TAG = RedditTextDecorator.class.getSimpleName();
+public class RedditTextView extends TextView {
+    private static final String TAG = RedditTextView.class.getSimpleName();
 
-    public RedditTextDecorator(Context context, AttributeSet attrs) {
+    public RedditTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
+    /**
+     * *check*\n\n**check**\n\n*check*\n**check**\n\n***check***\n\n^^^^I ^^^^swear ^^^^to ^^^^god ^^^^I ^^^^can ^^^^never ^^^^get ^^^^this ^^^^right ^^^^check\n\n*1\n*2\n*3\n\n* 1\n* 2\n* 3\n\n&gt;check\n\n&gt;&gt;check\n&gt;&gt;&gt;check\n\n&gt;&gt;&gt;&gt;check\n\n    System.out.println(\"check\");\n\n~~check~~\n~~~check~~~\n\n[stuff](https://reddit.com/r/test)\n\n/r/test\n\n/u/test\n\n|check1|check2|check3|\n:--------|:-----:|--------:\n|c|d|e|\n|a|b|c|\n\n48. 46.
+     */
+    @Override
+    public CharSequence getText() {
+        Spannable text = (Spannable) super.getText();
 
+        final String LINE_DELIMITER = "\n";
+        String[] lines = text.toString().split(LINE_DELIMITER);
+
+        int lineStartIndex;
+        int lineEndIndex = 0 - LINE_DELIMITER.length();
+        for (String line : lines) {
+            lineStartIndex = lineEndIndex + LINE_DELIMITER.length();
+            lineEndIndex = lineStartIndex + line.length();
+
+            // Process formatting at line level
+
+            // Process formatting at character level
+            for (int i = lineStartIndex; i < lineEndIndex; i++) {
+                if (line.substring(i, i+2).equals("**")) {
+                    int boldStartIndex = i+1;
+                    for (int j = i+2; j < lineEndIndex; j++) {
+                        if (line.substring(j, j+2).equals("**")) {
+                            text.setSpan(new StyleSpan(Typeface.BOLD), i, j, Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+
+                        }
+                    }
+                }
+            }
+        }
+
+        return text;
+    }
 }
