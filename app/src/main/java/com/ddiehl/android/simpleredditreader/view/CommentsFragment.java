@@ -160,6 +160,7 @@ public class CommentsFragment extends Fragment {
     public void updateSort(String sort) {
         mData.clear();
         mSort = sort;
+        RedditPreferences.getInstance(getActivity()).saveCommentSort(sort);
         getComments();
     }
 
@@ -203,10 +204,7 @@ public class CommentsFragment extends Fragment {
                 if (resultCode == Activity.RESULT_OK) {
                     String selectedSort = data.getStringExtra(ChooseLinkSortDialog.EXTRA_SORT);
                     if (!mSort.equals(selectedSort)) {
-                        mSort = selectedSort;
-                        RedditPreferences.getInstance(getActivity()).saveCommentSort(selectedSort);
-                        mData.clear();
-                        getComments();
+                        updateSort(selectedSort);
                     }
                 }
                 getActivity().supportInvalidateOptionsMenu();
