@@ -1,6 +1,6 @@
 package com.ddiehl.android.simpleredditreader.events;
 
-import com.ddiehl.android.simpleredditreader.model.listings.Listing;
+import com.ddiehl.android.simpleredditreader.model.listings.AbsRedditComment;
 import com.ddiehl.android.simpleredditreader.model.listings.ListingResponse;
 import com.ddiehl.android.simpleredditreader.model.listings.RedditLink;
 
@@ -11,7 +11,7 @@ import retrofit.RetrofitError;
 
 public class CommentsLoadedEvent {
     private RedditLink mLink;
-    private List<Listing> mComments;
+    private List<AbsRedditComment> mComments;
     private RetrofitError mError;
     private boolean mFailed = false;
 
@@ -33,7 +33,7 @@ public class CommentsLoadedEvent {
         return mLink;
     }
 
-    public List<Listing> getComments() {
+    public List<AbsRedditComment> getComments() {
         return mComments;
     }
 

@@ -119,10 +119,10 @@ public class RedditService {
 
     @Subscribe
     public void onAuthorizeApplication(AuthorizeApplicationEvent event) {
-        Context context = event.getContext();
         String grantType = "https://oauth.reddit.com/grants/installed_client";
-        String deviceId = RedditPreferences.getDeviceId(context);
+        String deviceId = RedditPreferences.getInstance(mContext).getDeviceId();
 
+        mEndpoint.setUrl(RedditEndpoint.NORMAL);
         mApi.getApplicationAccessToken(grantType, deviceId, new Callback<AccessTokenResponse>() {
             @Override
             public void success(AccessTokenResponse accessTokenResponse, Response response) {

@@ -14,53 +14,72 @@ public class RedditPreferences {
     public static final String LINKS_SORT = "pref_links_sort";
     public static final String LINKS_TIMESPAN = "pref_links_timespan";
 
-    public static String getDeviceId(Context c) {
-        SharedPreferences sp = c.getSharedPreferences(PREFS_DEVICE_ID, Context.MODE_PRIVATE);
+    private static RedditPreferences _instance;
+
+    private Context mContext;
+
+    private RedditPreferences(Context context) {
+        mContext = context.getApplicationContext();
+    }
+
+    public static RedditPreferences getInstance(Context context) {
+        if (_instance == null) {
+            synchronized (RedditPreferences.class) {
+                if (_instance == null) {
+                    _instance = new RedditPreferences(context);
+                }
+            }
+        }
+        return _instance;
+    }
+
+    public String getDeviceId() {
+        SharedPreferences sp = mContext.getSharedPreferences(PREFS_DEVICE_ID, Context.MODE_PRIVATE);
         String deviceId = sp.getString(PREF_DEVICE_ID, null);
         if (deviceId == null) {
-            deviceId = generateDeviceId(c);
+            deviceId = generateDeviceId();
         }
         return deviceId;
     }
 
-    private static String generateDeviceId(Context c) {
-        SharedPreferences sp = c.getSharedPreferences(PREFS_DEVICE_ID, Context.MODE_PRIVATE);
+    private String generateDeviceId() {
+        SharedPreferences sp = mContext.getSharedPreferences(PREFS_DEVICE_ID, Context.MODE_PRIVATE);
         String deviceId = UUID.randomUUID().toString();
         sp.edit().putString(PREF_DEVICE_ID, deviceId).apply();
         return deviceId;
     }
 
-    public static String getCommentSort(Context c) {
-        return PreferenceManager.getDefaultSharedPreferences(c)
-                .getString(COMMENT_SORT, c.getString(R.string.default_comment_sort));
+    public String getCommentSort() {
+        return PreferenceManager.getDefaultSharedPreferences(mContext)
+                .getString(COMMENT_SORT, mContext.getString(R.string.default_comment_sort));
     }
 
-    public static void saveCommentSort(Context c, String pref) {
-        PreferenceManager.getDefaultSharedPreferences(c)
+    public void saveCommentSort(String pref) {
+        PreferenceManager.getDefaultSharedPreferences(mContext)
                 .edit()
                 .putString(COMMENT_SORT, pref)
                 .apply();
     }
 
-    public static String getLinksSort(Context c) {
-        return PreferenceManager.getDefaultSharedPreferences(c)
-                .getString(LINKS_SORT, c.getString(R.string.default_links_sort));
+    public String getLinksSort() {
+        return PreferenceManager.getDefaultSharedPreferences(mContext)
+                .getString(LINKS_SORT, mContext.getString(R.string.default_links_sort));
     }
 
-    public static void saveLinksSort(Context c, String pref) {
-        PreferenceManager.getDefaultSharedPreferences(c)
+    public void saveLinksSort(String pref) {
+        PreferenceManager.getDefaultSharedPreferences(mContext)
                 .edit()
                 .putString(LINKS_SORT, pref)
                 .apply();
     }
 
-    public static String getLinksTimespan(Context c) {
-        return PreferenceManager.getDefaultSharedPreferences(c)
-                .getString(LINKS_TIMESPAN, c.getString(R.string.default_links_timespan));
+    public String getLinksTimespan() {
+        return PreferenceManager.getDefaultSharedPreferences(mContext)
+                .getString(LINKS_TIMESPAN, mContext.getString(R.string.default_links_timespan));
     }
 
-    public static void saveLinksTimespan(Context c, String pref) {
-        PreferenceManager.getDefaultSharedPreferences(c)
+    public void saveLinksTimespan(String pref) {
+        PreferenceManager.getDefaultSharedPreferences(mContext)
                 .edit()
                 .putString(LINKS_TIMESPAN, pref)
                 .apply();

@@ -97,8 +97,8 @@ public class LinksFragment extends Fragment {
 
         Bundle args = getArguments();
         mSubreddit = args.getString(ARG_SUBREDDIT);
-        mSort = RedditPreferences.getLinksSort(getActivity());
-        mTimeSpan = RedditPreferences.getLinksTimespan(getActivity());
+        mSort = RedditPreferences.getInstance(getActivity()).getLinksSort();
+        mTimeSpan = RedditPreferences.getInstance(getActivity()).getLinksTimespan();
         updateTitle();
 
         mData = new ArrayList<>();
@@ -173,14 +173,14 @@ public class LinksFragment extends Fragment {
     public void updateSort(String sort) {
         mData.clear();
         mSort = sort;
-        RedditPreferences.saveLinksSort(getActivity(), sort);
+        RedditPreferences.getInstance(getActivity()).saveLinksSort(sort);
         getLinks();
     }
 
     public void updateTimeSpan(String timespan) {
         mData.clear();
         mTimeSpan = timespan;
-        RedditPreferences.saveLinksTimespan(getActivity(), timespan);
+        RedditPreferences.getInstance(getActivity()).saveLinksTimespan(timespan);
         getLinks();
     }
 

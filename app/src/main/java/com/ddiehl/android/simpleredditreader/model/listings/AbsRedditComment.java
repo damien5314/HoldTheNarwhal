@@ -35,7 +35,7 @@ public abstract class AbsRedditComment extends Listing {
     /**
      * Flattens list of comments, marking each comment with depth
      */
-    public static void flattenCommentList(List<Listing> commentList) {
+    public static void flattenCommentList(List<AbsRedditComment> commentList) {
         int i = 0;
         while (i < commentList.size()) {
             Listing listing = commentList.get(i);
@@ -43,7 +43,7 @@ public abstract class AbsRedditComment extends Listing {
                 RedditComment comment = (RedditComment) listing;
                 ListingResponse repliesListing = comment.getReplies();
                 if (repliesListing != null) {
-                    List<Listing> replies = repliesListing.getData().getChildren();
+                    List<AbsRedditComment> replies = repliesListing.getData().getChildren();
                     flattenCommentList(replies);
                 }
                 comment.setDepth(comment.getDepth() + 1); // Increase depth by 1

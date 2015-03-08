@@ -143,7 +143,7 @@ public class MainActivity extends ActionBarActivity
             showSpinner("Authorizing...");
 
             // Post event to authorize application
-            mBus.post(new AuthorizeApplicationEvent(this));
+            mBus.post(new AuthorizeApplicationEvent());
         }
     }
 
