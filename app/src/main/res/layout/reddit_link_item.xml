@@ -3,75 +3,91 @@
 <android.support.v7.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="5dp"
-    card_view:cardElevation="8dp"
-    card_view:cardCornerRadius="0dp">
+    android:layout_margin="@dimen/link_card_margin"
+    card_view:cardElevation="@dimen/link_card_elevation"
+    card_view:cardCornerRadius="@dimen/link_card_corner_radius">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:paddingTop="@dimen/link_list_item_margin_vertical"
         android:paddingBottom="@dimen/link_list_item_margin_vertical"
         android:paddingLeft="@dimen/link_list_item_margin_horizontal"
         android:paddingRight="@dimen/link_list_item_margin_horizontal">
 
         <TextView
-            android:id="@+id/link_score"
-            style="@style/LinkScoreTextView"
-            android:layout_marginRight="@dimen/link_score_margin"
-            android:gravity="center"
-            android:text="@string/link_score_default"/>
+            android:id="@+id/link_title"
+            style="@style/LinkTitleTextView"/>
 
-        <RelativeLayout
-            android:layout_width="0dp"
+        <TextView
+            android:id="@+id/link_domain"
+            style="@style/LinkDomainTextView"/>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1">
+            android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/link_title"
-                style="@style/LinkTitleTextView"
-                android:layout_gravity="center_vertical"
-                android:layout_marginBottom="@dimen/link_title_margin"
-                android:minLines="2"/>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/link_author"
-                style="@style/LinkAuthorTextView"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_below="@id/link_title"/>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/link_timestamp"
-                style="@style/LinkTimestampTextView"
-                android:layout_below="@id/link_author"/>
+                    <TextView
+                        android:id="@+id/link_score"
+                        style="@style/LinkScoreTextView"
+                        android:text="@string/link_score_default"/>
 
-            <TextView
-                android:id="@+id/link_domain"
-                style="@style/LinkDomainTextView"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_below="@id/link_title"/>
+                    <TextView
+                        android:id="@+id/link_timestamp"
+                        style="@style/LinkTimestampTextView"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"/>
 
-            <TextView
-                android:id="@+id/link_subreddit"
-                style="@style/LinkSubredditTextView"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_below="@id/link_domain"/>
+                </RelativeLayout>
 
-        </RelativeLayout>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
-        <ImageView
-            android:id="@+id/link_thumbnail"
-            style="@style/LinkThumbnail"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="@dimen/link_thumbnail_margin"
-            android:background="@drawable/thumbnail_background"
-            android:src="@drawable/ic_thumbnail_placeholder"/>
+                    <TextView
+                        android:id="@+id/link_author"
+                        style="@style/LinkAuthorTextView"/>
+
+                    <TextView
+                        android:id="@+id/link_subreddit"
+                        style="@style/LinkSubredditTextView"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"/>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/link_comment_count"
+                        style="@style/LinkCommentCountTextView"/>
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/link_thumbnail"
+                style="@style/LinkThumbnail"
+                android:src="@drawable/ic_thumbnail_placeholder"/>
+
+        </LinearLayout>
 
     </LinearLayout>
 

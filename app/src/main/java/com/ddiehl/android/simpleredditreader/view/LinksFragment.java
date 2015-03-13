@@ -325,6 +325,7 @@ public class LinksFragment extends Fragment {
         private TextView mSubredditView;
         private TextView mDomainView;
         private ImageView mThumbnailView;
+        private TextView mCommentsView;
 
         public LinkHolder(View itemView) {
             super(itemView);
@@ -335,10 +336,12 @@ public class LinksFragment extends Fragment {
             mSubredditView = (TextView) itemView.findViewById(R.id.link_subreddit);
             mDomainView = (TextView) itemView.findViewById(R.id.link_domain);
             mThumbnailView = (ImageView) itemView.findViewById(R.id.link_thumbnail);
+            mCommentsView = (TextView) itemView.findViewById(R.id.link_comment_count);
 
             itemView.setOnClickListener(this);
             mTitleView.setOnClickListener(this);
             mThumbnailView.setOnClickListener(this);
+            mCommentsView.setOnClickListener(this);
             itemView.setOnCreateContextMenuListener(this);
         }
 
@@ -354,6 +357,7 @@ public class LinksFragment extends Fragment {
             mTimestampView.setText(createDateFormatted);
             mSubredditView.setText("/r/" + link.getSubreddit());
             mDomainView.setText("(" + link.getDomain() + ")");
+            mCommentsView.setText(link.getNumComments() + " comments");
 
             // Queue thumbnail to be downloaded, if one exists
             mThumbnailView.setImageResource(R.drawable.ic_thumbnail_placeholder);
@@ -391,6 +395,9 @@ public class LinksFragment extends Fragment {
                             startActivity(i);
                         }
                     }
+                    break;
+                case R.id.link_comment_count:
+                    openCommentsForLink(mRedditLink);
                     break;
                 default:
                     v.showContextMenu();

@@ -23,12 +23,14 @@ public class Utils {
 
     public static void showError(Context context, RetrofitError error) {
         Response response = error.getResponse();
-        switch (response.getStatus()) {
-            default:
-                Toast.makeText(context, "An error has occurred (" + response.getStatus() + ")",
-                        Toast.LENGTH_LONG).show();
-                break;
+        if (response != null) {
+            switch (response.getStatus()) {
+                default:
+                    Toast.makeText(context, "An error has occurred (" + response.getStatus() + ")",
+                            Toast.LENGTH_LONG).show();
+                    break;
 
+            }
         }
     }
 
@@ -84,27 +86,33 @@ public class Utils {
     }
 
     public static void printResponseStatus(Response response) {
-        System.out.println("URL: " + response.getUrl() + " (STATUS: " + response.getStatus() + ")");
+        if (response != null) {
+            System.out.println("URL: " + response.getUrl() + " (STATUS: " + response.getStatus() + ")");
 //        System.out.println("REASON: " + response.getReason());
+        }
     }
 
     public static void printResponseHeaders(Response response) {
-        System.out.println("--HEADERS--");
-        List<Header> headersList = response.getHeaders();
-        for (Header header : headersList) {
-            System.out.println(header.toString());
+        if (response != null) {
+            System.out.println("--HEADERS--");
+            List<Header> headersList = response.getHeaders();
+            for (Header header : headersList) {
+                System.out.println(header.toString());
+            }
         }
     }
 
     public static void printResponseBody(Response response) {
-        try {
-            System.out.println("--BODY--");
-            TypedInput body = response.getBody();
-            System.out.println("LENGTH: " + body.length());
-            System.out.println("-CONTENT-");
-            System.out.println(inputStreamToString(body.in()));
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (response != null) {
+            try {
+                System.out.println("--BODY--");
+                TypedInput body = response.getBody();
+                System.out.println("LENGTH: " + body.length());
+                System.out.println("-CONTENT-");
+                System.out.println(inputStreamToString(body.in()));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 

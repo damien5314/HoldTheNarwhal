@@ -33,5 +33,8 @@
     <dimen name="link_list_item_margin_vertical">5dp</dimen>
     <dimen name="link_list_item_margin_horizontal">5dp</dimen>
     <dimen name="link_thumbnail_margin">2dp</dimen>
+    <dimen name="link_card_margin">5dp</dimen>
+    <dimen name="link_card_elevation">6dp</dimen>
+    <dimen name="link_card_corner_radius">0dp</dimen>
 
 </resources>
