@@ -67,39 +67,11 @@
         <item name="android:textColorHint">@color/secondary_text</item>
     </style>
 
-    <style name="LinkScoreTextView">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/link_score_text_size</item>
-        <item name="android:textColor">@color/secondary_text</item>
-    </style>
-
     <style name="LinkTitleTextView">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">@dimen/link_title_text_size</item>
         <item name="android:textColor">@color/primary_text</item>
-    </style>
-
-    <style name="LinkAuthorTextView">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/link_author_text_size</item>
-        <item name="android:textColor">@color/secondary_text</item>
-    </style>
-
-    <style name="LinkSubredditTextView">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/link_subreddit_text_size</item>
-        <item name="android:textColor">@color/secondary_text</item>
-    </style>
-
-    <style name="LinkTimestampTextView">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/link_timestamp_text_size</item>
-        <item name="android:textColor">@color/secondary_text</item>
     </style>
 
     <style name="LinkDomainTextView">
@@ -110,14 +82,44 @@
         <item name="android:textStyle">italic</item>
     </style>
 
+    <style name="LinkScoreTextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/link_score_text_size</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="LinkAuthorTextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/link_author_text_size</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="LinkSubredditTextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/link_subreddit_text_size</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="LinkTimestampTextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/link_timestamp_text_size</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
     <style name="LinkCommentCountTextView">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/link_comments_text_size</item>
+        <item name="android:textColor">@android:color/white</item>
     </style>
 
     <style name="LinkThumbnail">
-        <item name="android:layout_width">72dp</item>
-        <item name="android:layout_height">72dp</item>
+        <item name="android:layout_width">54dp</item>
+        <item name="android:layout_height">54dp</item>
     </style>
 
     <style name="ProgressDialog" parent="Theme.AppCompat.Dialog">

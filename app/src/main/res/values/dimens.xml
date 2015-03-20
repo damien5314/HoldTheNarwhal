@@ -3,12 +3,13 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
-    <dimen name="link_score_text_size">14dp</dimen> <!-- In dp so it doesn't overflow -->
-    <dimen name="link_title_text_size">16sp</dimen>
-    <dimen name="link_author_text_size">12sp</dimen>
-    <dimen name="link_timestamp_text_size">12sp</dimen>
-    <dimen name="link_subreddit_text_size">12sp</dimen>
-    <dimen name="link_domain_text_size">12sp</dimen>
+    <dimen name="link_title_text_size">20sp</dimen>
+    <dimen name="link_domain_text_size">16sp</dimen>
+    <dimen name="link_score_text_size">14sp</dimen>
+    <dimen name="link_author_text_size">14sp</dimen>
+    <dimen name="link_timestamp_text_size">14sp</dimen>
+    <dimen name="link_subreddit_text_size">14sp</dimen>
+    <dimen name="link_comments_text_size">14sp</dimen>
     <dimen name="link_row_height">48dp</dimen>
     <dimen name="navigation_drawer_width">240dp</dimen>
     <dimen name="web_view_text_margin">5dp</dimen>
@@ -30,11 +31,12 @@
     <dimen name="link_score_margin">4dp</dimen>
     <dimen name="link_self_text_padding">8dp</dimen>
     <dimen name="link_title_margin">5dp</dimen>
-    <dimen name="link_list_item_margin_vertical">5dp</dimen>
-    <dimen name="link_list_item_margin_horizontal">5dp</dimen>
+    <dimen name="link_list_item_margin_vertical">8dp</dimen>
+    <dimen name="link_list_item_margin_horizontal">8dp</dimen>
     <dimen name="link_thumbnail_margin">2dp</dimen>
     <dimen name="link_card_margin">5dp</dimen>
     <dimen name="link_card_elevation">6dp</dimen>
     <dimen name="link_card_corner_radius">0dp</dimen>
+    <dimen name="link_data_margin">5dp</dimen>
 
 </resources>

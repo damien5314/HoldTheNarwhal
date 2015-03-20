@@ -318,14 +318,14 @@ public class LinksFragment extends Fragment {
     private class LinkHolder extends RecyclerView.ViewHolder
             implements View.OnClickListener, View.OnCreateContextMenuListener {
         private RedditLink mRedditLink;
-        private TextView mScoreView;
         private TextView mTitleView;
+        private TextView mDomainView;
+        private TextView mScoreView;
         private TextView mAuthorView;
         private TextView mTimestampView;
         private TextView mSubredditView;
-        private TextView mDomainView;
-        private ImageView mThumbnailView;
         private TextView mCommentsView;
+        private ImageView mThumbnailView;
 
         public LinkHolder(View itemView) {
             super(itemView);
@@ -351,7 +351,7 @@ public class LinksFragment extends Fragment {
             String createDateFormatted = Utils.getFormattedDateStringFromUtc(link.getCreatedUtc().longValue());
 
             // Set content for each TextView
-            mScoreView.setText(String.valueOf(link.getScore()));
+            mScoreView.setText(String.valueOf(link.getScore()) + " points");
             mTitleView.setText(link.getTitle());
             mAuthorView.setText("/u/" + link.getAuthor());
             mTimestampView.setText(createDateFormatted);

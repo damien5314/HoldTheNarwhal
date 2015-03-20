@@ -56,7 +56,7 @@ public class CommentsFragment extends Fragment {
     private String mSubreddit;
     private String mArticleId;
     private String mSort;
-    private RedditLink mLink;
+    private RedditLink mRedditLink;
     private List<AbsRedditComment> mData;
     private List<AbsRedditComment> mDataDisplayed = new ArrayList<>();
     private CommentAdapter mCommentAdapter;
@@ -114,8 +114,8 @@ public class CommentsFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(mCommentAdapter);
 
-        if (mLink != null) {
-            getActivity().setTitle(mLink.getTitle());
+        if (mRedditLink != null) {
+            getActivity().setTitle(mRedditLink.getTitle());
         }
 
         return v;
@@ -146,8 +146,8 @@ public class CommentsFragment extends Fragment {
 
         mCommentsRetrieved = true;
 
-        mLink = event.getLink();
-        getActivity().setTitle(mLink.getTitle());
+        mRedditLink = event.getLink();
+        getActivity().setTitle(mRedditLink.getTitle());
 
         List<AbsRedditComment> comments = event.getComments();
         AbsRedditComment.flattenCommentList(comments);
@@ -279,7 +279,7 @@ public class CommentsFragment extends Fragment {
                 AbsRedditComment comment = mDataDisplayed.get(position - 1);
                 ((CommentHolder) holder).bindComment(comment);
             } else if (holder instanceof HeaderHolder) {
-                ((HeaderHolder) holder).bindLink(mLink);
+                ((HeaderHolder) holder).bindLink(mRedditLink);
             }
         }
 
@@ -299,45 +299,57 @@ public class CommentsFragment extends Fragment {
 
         private class HeaderHolder extends RecyclerView.ViewHolder {
             private TextView mSelfText;
-            private TextView mLinkScore, mLinkTitle, mLinkAuthor, mLinkTimestamp, mLinkSubreddit, mLinkDomain;
+            private TextView mLinkTitle, mLinkDomain, mLinkScore, mLinkAuthor, mLinkTimestamp, mLinkSubreddit, mLinkComments;
+            private ImageView mLinkThumbnail;
 
             public HeaderHolder(View v) {
                 super(v);
                 mSelfText = (TextView) v.findViewById(R.id.link_self_text);
-                mLinkScore = (TextView) v.findViewById(R.id.link_score);
                 mLinkTitle = (TextView) v.findViewById(R.id.link_title);
+                mLinkDomain = (TextView) v.findViewById(R.id.link_domain);
+                mLinkScore = (TextView) v.findViewById(R.id.link_score);
                 mLinkAuthor = (TextView) v.findViewById(R.id.link_author);
                 mLinkTimestamp = (TextView) v.findViewById(R.id.link_timestamp);
                 mLinkSubreddit = (TextView) v.findViewById(R.id.link_subreddit);
-                mLinkDomain = (TextView) v.findViewById(R.id.link_domain);
+                mLinkComments = (TextView) v.findViewById(R.id.link_comment_count);
+                mLinkThumbnail = (ImageView) v.findViewById(R.id.link_thumbnail);
             }
 
             public void bindLink(RedditLink link) {
                 if (link == null)
                     return;
 
+                mRedditLink = link;
+
                 String createDateFormatted = Utils.getFormattedDateStringFromUtc(link.getCreatedUtc().longValue());
 
                 // Set content for each TextView
-                mLinkScore.setText(String.valueOf(link.getScore()));
+                mLinkScore.setText(String.valueOf(link.getScore()) + " points");
                 mLinkTitle.setText(link.getTitle());
                 mLinkAuthor.setText("/u/" + link.getAuthor());
                 mLinkTimestamp.setText(createDateFormatted);
                 mLinkSubreddit.setText("/r/" + link.getSubreddit());
                 mLinkDomain.setText("(" + link.getDomain() + ")");
+                mLinkComments.setText(link.getNumComments() + " comments");
 
-                // Register context menu to click event for score view
-                mLinkScore.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
+                // Queue thumbnail to be downloaded, if one exists
+                mLinkThumbnail.setImageResource(R.drawable.ic_thumbnail_placeholder);
 
+                String thumbnailUrl = link.getThumbnail();
+                if (thumbnailUrl.equals("nsfw")) {
+                    mLinkThumbnail.setImageResource(R.drawable.ic_nsfw);
+                } else if (!thumbnailUrl.equals("")
+                        && !thumbnailUrl.equals("default")
+                        && !thumbnailUrl.equals("self")) {
+                    Bitmap thumbnail = mThumbnailCache.getThumbnail(thumbnailUrl);
+                    if (thumbnail == null) {
+                        mThumbnailThread.queueThumbnail(mLinkThumbnail, thumbnailUrl);
+                    } else {
+                        mLinkThumbnail.setImageBitmap(thumbnail);
                     }
-                });
-
-                if (link.isSelf()) {
-                    mSelfText.setText(link.getSelftext());
+                    mLinkThumbnail.setVisibility(View.VISIBLE);
                 } else {
-                    mSelfText.setVisibility(View.GONE);
+                    mLinkThumbnail.setVisibility(View.GONE);
                 }
             }
         }
