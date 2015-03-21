@@ -263,7 +263,7 @@ public class CommentsFragment extends Fragment {
                 case TYPE_HEADER:
                     View view = LayoutInflater.from(parent.getContext())
                             .inflate(R.layout.comments_fragment_link_header, parent, false);
-                    return new HeaderHolder(view);
+                    return new LinkHolder(view);
                 case TYPE_ITEM:
                     view = LayoutInflater.from(parent.getContext())
                             .inflate(R.layout.reddit_comment_item, parent, false);
@@ -278,8 +278,8 @@ public class CommentsFragment extends Fragment {
             if (holder instanceof CommentHolder) {
                 AbsRedditComment comment = mDataDisplayed.get(position - 1);
                 ((CommentHolder) holder).bindComment(comment);
-            } else if (holder instanceof HeaderHolder) {
-                ((HeaderHolder) holder).bindLink(mRedditLink);
+            } else if (holder instanceof LinkHolder) {
+                ((LinkHolder) holder).bindLink(mRedditLink);
             }
         }
 
@@ -297,14 +297,15 @@ public class CommentsFragment extends Fragment {
             return TYPE_ITEM;
         }
 
-        private class HeaderHolder extends RecyclerView.ViewHolder {
-            private TextView mSelfText;
+        private class LinkHolder extends RecyclerView.ViewHolder {
+            private View mLinkView;
             private TextView mLinkTitle, mLinkDomain, mLinkScore, mLinkAuthor, mLinkTimestamp, mLinkSubreddit, mLinkComments;
+            private TextView mSelfText;
             private ImageView mLinkThumbnail;
 
-            public HeaderHolder(View v) {
+            public LinkHolder(View v) {
                 super(v);
-                mSelfText = (TextView) v.findViewById(R.id.link_self_text);
+                mLinkView = v.findViewById(R.id.link_view);
                 mLinkTitle = (TextView) v.findViewById(R.id.link_title);
                 mLinkDomain = (TextView) v.findViewById(R.id.link_domain);
                 mLinkScore = (TextView) v.findViewById(R.id.link_score);
@@ -313,13 +314,19 @@ public class CommentsFragment extends Fragment {
                 mLinkSubreddit = (TextView) v.findViewById(R.id.link_subreddit);
                 mLinkComments = (TextView) v.findViewById(R.id.link_comment_count);
                 mLinkThumbnail = (ImageView) v.findViewById(R.id.link_thumbnail);
+                mSelfText = (TextView) v.findViewById(R.id.link_self_text);
             }
 
             public void bindLink(RedditLink link) {
-                if (link == null)
+                if (link == null) {
+                    mLinkView.setVisibility(View.GONE);
+                    mSelfText.setVisibility(View.GONE);
                     return;
+                }
 
-                mRedditLink = link;
+                mLinkView.setVisibility(View.VISIBLE);
+                if (link.getSelftext() != null && !link.getSelftext().equals(""))
+                    mSelfText.setVisibility(View.VISIBLE);
 
                 String createDateFormatted = Utils.getFormattedDateStringFromUtc(link.getCreatedUtc().longValue());
 
@@ -351,6 +358,8 @@ public class CommentsFragment extends Fragment {
                 } else {
                     mLinkThumbnail.setVisibility(View.GONE);
                 }
+
+                mSelfText.setText(link.getSelftext());
             }
         }
 
