@@ -84,6 +84,13 @@
 
                 </RelativeLayout>
 
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="@dimen/comment_data_divider_width"
+                    android:layout_marginTop="@dimen/comment_data_divider_margin"
+                    android:layout_marginBottom="@dimen/comment_data_divider_margin"
+                    android:background="#C4C4C4" />
+
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
@@ -99,6 +106,7 @@
             <ImageView
                 android:id="@+id/link_thumbnail"
                 style="@style/LinkThumbnail"
+                android:background="@drawable/thumbnail_background"
                 android:src="@drawable/ic_thumbnail_placeholder"/>
 
         </LinearLayout>
