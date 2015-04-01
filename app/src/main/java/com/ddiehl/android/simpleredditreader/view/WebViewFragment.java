@@ -16,9 +16,9 @@ import android.widget.ProgressBar;
 import android.widget.ZoomButtonsController;
 
 import com.ddiehl.android.simpleredditreader.R;
-import com.ddiehl.android.simpleredditreader.RedditAuthorization;
-import com.ddiehl.android.simpleredditreader.events.UserAuthCodeReceivedEvent;
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
+import com.ddiehl.android.simpleredditreader.events.UserAuthCodeReceivedEvent;
+import com.ddiehl.android.simpleredditreader.web.RedditAuthProxy;
 
 /**
  * Created by Damien on 2/6/2015.
@@ -57,8 +57,8 @@ public class WebViewFragment extends Fragment {
         mWebView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                if (url.contains(RedditAuthorization.REDIRECT_URI)) {
-                    RedditAuthorization.getInstance(getActivity()).saveUserAuthCode(url);
+                if (url.contains(RedditAuthProxy.REDIRECT_URI)) {
+                    RedditAuthProxy.getInstance(getActivity()).saveUserAuthCode(url);
                     BusProvider.getInstance().post(new UserAuthCodeReceivedEvent());
                     getActivity().finish();
                 }

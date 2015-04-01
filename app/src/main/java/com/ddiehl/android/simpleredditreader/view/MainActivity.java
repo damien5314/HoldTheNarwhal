@@ -12,7 +12,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -22,13 +21,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ddiehl.android.simpleredditreader.R;
-import com.ddiehl.android.simpleredditreader.RedditAuthorization;
-import com.ddiehl.android.simpleredditreader.events.ApplicationAuthorizedEvent;
-import com.ddiehl.android.simpleredditreader.events.AuthorizeApplicationEvent;
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
-import com.ddiehl.android.simpleredditreader.web.AccessTokenResponse;
+import com.ddiehl.android.simpleredditreader.web.RedditAuthProxy;
 import com.squareup.otto.Bus;
-import com.squareup.otto.Subscribe;
 
 public class MainActivity extends ActionBarActivity
         implements View.OnClickListener {
@@ -38,7 +33,7 @@ public class MainActivity extends ActionBarActivity
     public static final int REQUEST_AUTHORIZE = 1000;
 
     private Bus mBus;
-    private RedditAuthorization mRedditAuthorization;
+    private RedditAuthProxy mAuthProxy;
 
     // Navigation drawer
     private DrawerLayout mDrawerLayout;
@@ -54,7 +49,7 @@ public class MainActivity extends ActionBarActivity
         setContentView(R.layout.activity_main);
 
         mBus = BusProvider.getInstance();
-        mRedditAuthorization = RedditAuthorization.getInstance(this);
+        mAuthProxy = RedditAuthProxy.getInstance(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -130,20 +125,9 @@ public class MainActivity extends ActionBarActivity
         super.onStart();
         mBus.register(this);
 
-        if (mRedditAuthorization.hasValidAccessToken()) {
-            Log.i(TAG, "Already have valid access token");
-            FragmentManager fm = getSupportFragmentManager();
-            Fragment currentFragment = fm.findFragmentById(R.id.fragment_container);
-            if (currentFragment == null) {
-                showSubreddit(null);
-            }
-        } else {
-            Log.i(TAG, "No valid access token, retrieving from API");
-            // Display waiting overlay
-            showSpinner("Authorizing...");
-
-            // Post event to authorize application
-            mBus.post(new AuthorizeApplicationEvent());
+        Fragment currentFragment = getCurrentFragment();
+        if (currentFragment == null) {
+            showSubreddit(null);
         }
     }
 
@@ -153,22 +137,11 @@ public class MainActivity extends ActionBarActivity
         mBus.unregister(this);
     }
 
-    @Subscribe
-    public void onApplicationAuthorized(ApplicationAuthorizedEvent event) {
-        dismissSpinner();
-        if (!event.isFailed()) {
-            AccessTokenResponse response = event.getResponse();
-            mRedditAuthorization.saveAccessToken(response);
-
-            showSubreddit(null);
-        }
-    }
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.drawer_log_in:
-                Intent intent = mRedditAuthorization.getUserAuthCodeIntent();
+                Intent intent = mAuthProxy.getUserAuthCodeIntent();
                 startActivityForResult(intent, REQUEST_AUTHORIZE);
                 break;
             case R.id.drawer_user_profile:
@@ -196,6 +169,11 @@ public class MainActivity extends ActionBarActivity
         mDrawerLayout.closeDrawer(GravityCompat.START);
     }
 
+    public Fragment getCurrentFragment() {
+        FragmentManager fm = getSupportFragmentManager();
+        return fm.findFragmentById(R.id.fragment_container);
+    }
+
     public void showSubreddit(String subreddit) {
         FragmentManager fm = getSupportFragmentManager();
         Fragment currentFragment = fm.findFragmentById(R.id.fragment_container);
@@ -216,7 +194,7 @@ public class MainActivity extends ActionBarActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case REQUEST_AUTHORIZE:
-                if (mRedditAuthorization.hasValidAccessToken()) {
+                if (mAuthProxy.hasValidAccessToken()) {
                     Toast.makeText(this, getString(R.string.toast_authorized), Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(this, getString(R.string.toast_not_authorized), Toast.LENGTH_SHORT).show();
