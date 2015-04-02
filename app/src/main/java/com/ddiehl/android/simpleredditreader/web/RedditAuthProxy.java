@@ -56,10 +56,10 @@ public class RedditAuthProxy implements IRedditService {
             "&redirect_uri=" + REDIRECT_URI +
             "&scope=" + SCOPE;
 
-    // Seconds within expiration we should try to retrieve a new access token
+    // Seconds within expiration we should try to retrieve a new auth token
     private static final int EXPIRATION_THRESHOLD = 360;
 
-    public static final String PREF_ACCESS_TOKEN = "pref_access_token";
+    public static final String PREF_AUTH_TOKEN = "pref_auth_token";
     public static final String PREF_TOKEN_TYPE = "pref_token_type";
     public static final String PREF_EXPIRATION = "pref_expiration";
     public static final String PREF_SCOPE = "pref_scope";
@@ -73,7 +73,7 @@ public class RedditAuthProxy implements IRedditService {
     private Bus mBus;
 
     private boolean mIsAuthorized = false;
-    private String mAccessToken;
+    private String mAuthToken;
     private String mTokenType;
     private Date mExpiration;
     private String mScope;
@@ -125,11 +125,11 @@ public class RedditAuthProxy implements IRedditService {
         return restAdapter.create(RedditApi.class);
     }
 
-    public void saveAuthToken(AccessTokenResponse response) {
+    public void saveAuthToken(AuthTokenResponse response) {
         if (response.getAuthToken() == null)
             return;
 
-        mAccessToken = response.getAuthToken();
+        mAuthToken = response.getAuthToken();
         mTokenType = response.getTokenType();
         long expiresIn = response.getExpiresIn();
         mExpiration = new Date(System.currentTimeMillis() + (expiresIn * 1000));
@@ -139,7 +139,7 @@ public class RedditAuthProxy implements IRedditService {
 
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mContext);
         sp.edit()
-                .putString(PREF_ACCESS_TOKEN, mAccessToken)
+                .putString(PREF_AUTH_TOKEN, mAuthToken)
                 .putString(PREF_TOKEN_TYPE, mTokenType)
                 .putLong(PREF_EXPIRATION, mExpiration.getTime())
                 .putString(PREF_SCOPE, mScope)
@@ -148,19 +148,19 @@ public class RedditAuthProxy implements IRedditService {
 
     public void retrieveAuthToken() {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mContext);
-        mAccessToken = sp.getString(PREF_ACCESS_TOKEN, null);
+        mAuthToken = sp.getString(PREF_AUTH_TOKEN, null);
         mTokenType = sp.getString(PREF_TOKEN_TYPE, null);
         long expirationTime = sp.getLong(PREF_EXPIRATION, 0);
         mExpiration = new Date(expirationTime);
         mScope = sp.getString(PREF_SCOPE, null);
 
-        if (mAccessToken != null) {
+        if (mAuthToken != null) {
             mIsAuthorized = true;
         }
     }
 
     public boolean hasValidAuthToken() {
-        if (mAccessToken == null) {
+        if (mAuthToken == null) {
             retrieveAuthToken();
         }
         return mIsAuthorized && secondsUntilExpiration() > EXPIRATION_THRESHOLD;
@@ -168,7 +168,7 @@ public class RedditAuthProxy implements IRedditService {
 
     public String getAuthHeader() {
         if (hasValidAuthToken()) {
-            return "bearer " + mAccessToken;
+            return "bearer " + mAuthToken;
         } else {
             return HTTP_AUTH_HEADER;
         }
@@ -186,11 +186,11 @@ public class RedditAuthProxy implements IRedditService {
         String grantType = "https://oauth.reddit.com/grants/installed_client";
         String authCode = event.getCode();
 
-        // Retrieve access token from authorization code
+        // Retrieve auth token from authorization code
         mApi.getUserAuthToken(grantType, authCode, RedditAuthProxy.REDIRECT_URI,
-                new Callback<AccessTokenResponse>() {
+                new Callback<AuthTokenResponse>() {
                     @Override
-                    public void success(AccessTokenResponse response, Response response2) {
+                    public void success(AuthTokenResponse response, Response response2) {
                         Log.d(TAG, "User auth token retrieved successfully");
                     }
 
@@ -208,12 +208,12 @@ public class RedditAuthProxy implements IRedditService {
         String deviceId = RedditPreferences.getInstance(mContext).getDeviceId();
 
         mEndpoint.setUrl(RedditEndpoint.NORMAL);
-        mApi.getApplicationAuthToken(grantType, deviceId, new Callback<AccessTokenResponse>() {
+        mApi.getApplicationAuthToken(grantType, deviceId, new Callback<AuthTokenResponse>() {
             @Override
-            public void success(AccessTokenResponse accessTokenResponse, Response response) {
+            public void success(AuthTokenResponse authTokenResponse, Response response) {
                 BaseUtils.printResponseStatus(response);
                 mEndpoint.setUrl(RedditEndpoint.AUTHORIZED);
-                mBus.post(new ApplicationAuthorizedEvent(accessTokenResponse));
+                mBus.post(new ApplicationAuthorizedEvent(authTokenResponse));
             }
 
             @Override
@@ -228,7 +228,7 @@ public class RedditAuthProxy implements IRedditService {
     @Subscribe
     public void onApplicationAuthorized(ApplicationAuthorizedEvent event) {
         if (!event.isFailed()) {
-            AccessTokenResponse response = event.getResponse();
+            AuthTokenResponse response = event.getResponse();
             saveAuthToken(response);
             if (mQueuedEvent != null) {
                 mBus.post(mQueuedEvent);

@@ -18,13 +18,13 @@ public interface RedditApi {
     @FormUrlEncoded @POST("/api/v1/access_token")
     void getApplicationAuthToken(@Field("grant_type") String grantType,
                                  @Field("device_id") String deviceId,
-                                 Callback<AccessTokenResponse> callback);
+                                 Callback<AuthTokenResponse> callback);
 
     @FormUrlEncoded @POST("/api/v1/access_token")
     void getUserAuthToken(@Field("grant_type") String grantType,
                           @Field("code") String code,
                           @Field("redirect_uri") String redirectUri,
-                          Callback<AccessTokenResponse> callback);
+                          Callback<AuthTokenResponse> callback);
 
     @GET("/r/{subreddit}/{sort}.json")
     void getLinks(@Path("subreddit") String subreddit,

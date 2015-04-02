@@ -3,7 +3,7 @@ package com.ddiehl.android.simpleredditreader.web;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class AccessTokenResponse {
+public class AuthTokenResponse {
 
 // Response format
 //{
