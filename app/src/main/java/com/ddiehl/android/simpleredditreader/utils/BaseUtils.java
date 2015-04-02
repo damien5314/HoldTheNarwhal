@@ -1,4 +1,4 @@
-package com.ddiehl.android.simpleredditreader;
+package com.ddiehl.android.simpleredditreader.utils;
 
 import android.content.Context;
 import android.util.Base64;
@@ -11,6 +11,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import retrofit.RetrofitError;
 import retrofit.client.Header;
@@ -20,8 +21,8 @@ import retrofit.mime.TypedInput;
 /**
  * Created by Damien on 1/19/2015.
  */
-public class Utils {
-    private static final String TAG = Utils.class.getSimpleName();
+public class BaseUtils {
+    private static final String TAG = BaseUtils.class.getSimpleName();
 
     public static void showError(Context context, RetrofitError error) {
         Log.e(TAG, "RetrofitError: " + error.getKind().toString());
@@ -132,5 +133,9 @@ public class Utils {
         }
         in.close();
         return output.toString();
+    }
+
+    public static String getRandomString() {
+        return UUID.randomUUID().toString();
     }
 }

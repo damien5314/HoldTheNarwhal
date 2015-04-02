@@ -3,7 +3,7 @@ package com.ddiehl.android.simpleredditreader.web;
 import android.content.Context;
 import android.util.Log;
 
-import com.ddiehl.android.simpleredditreader.Utils;
+import com.ddiehl.android.simpleredditreader.utils.BaseUtils;
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
 import com.ddiehl.android.simpleredditreader.events.CommentsLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.LinksLoadedEvent;
@@ -47,14 +47,14 @@ public class RedditService implements IRedditService {
             mApi.getDefaultLinks(sort, timespan, after, new Callback<ListingResponse>() {
                 @Override
                 public void success(ListingResponse linksResponse, Response response) {
-                    Utils.printResponseStatus(response);
+                    BaseUtils.printResponseStatus(response);
                     mBus.post(new LinksLoadedEvent(linksResponse));
                 }
 
                 @Override
                 public void failure(RetrofitError error) {
-                    Utils.showError(mContext, error);
-                    Utils.printResponse(error.getResponse());
+                    BaseUtils.showError(mContext, error);
+                    BaseUtils.printResponse(error.getResponse());
                     mBus.post(new LinksLoadedEvent(error));
                 }
             });
@@ -62,14 +62,14 @@ public class RedditService implements IRedditService {
             mApi.getLinks(subreddit, sort, timespan, after, new Callback<ListingResponse>() {
                 @Override
                 public void success(ListingResponse linksResponse, Response response) {
-                    Utils.printResponseStatus(response);
+                    BaseUtils.printResponseStatus(response);
                     mBus.post(new LinksLoadedEvent(linksResponse));
                 }
 
                 @Override
                 public void failure(RetrofitError error) {
-                    Utils.showError(mContext, error);
-                    Utils.printResponse(error.getResponse());
+                    BaseUtils.showError(mContext, error);
+                    BaseUtils.printResponse(error.getResponse());
                     mBus.post(new LinksLoadedEvent(error));
                 }
             });
@@ -87,14 +87,14 @@ public class RedditService implements IRedditService {
         mApi.getComments(subreddit, article, sort, new Callback<List<ListingResponse>>() {
             @Override
             public void success(List<ListingResponse> listingsList, Response response) {
-                Utils.printResponseStatus(response);
+                BaseUtils.printResponseStatus(response);
                 mBus.post(new CommentsLoadedEvent(listingsList));
             }
 
             @Override
             public void failure(RetrofitError error) {
-                Utils.showError(mContext, error);
-                Utils.printResponse(error.getResponse());
+                BaseUtils.showError(mContext, error);
+                BaseUtils.printResponse(error.getResponse());
                 mBus.post(new CommentsLoadedEvent(error));
             }
         });
@@ -109,15 +109,15 @@ public class RedditService implements IRedditService {
         mApi.vote(id, direction, new Callback<Response>() {
             @Override
             public void success(Response response, Response response2) {
-                Utils.printResponseStatus(response);
-                Utils.printResponseBody(response);
+                BaseUtils.printResponseStatus(response);
+                BaseUtils.printResponseBody(response);
                 mBus.post(new VoteSubmittedEvent(response));
             }
 
             @Override
             public void failure(RetrofitError error) {
-                Utils.showError(mContext, error);
-                Utils.printResponse(error.getResponse());
+                BaseUtils.showError(mContext, error);
+                BaseUtils.printResponse(error.getResponse());
                 mBus.post(new VoteSubmittedEvent(error));
             }
         });

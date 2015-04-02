@@ -21,9 +21,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ddiehl.android.simpleredditreader.utils.BaseUtils;
 import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.RedditPreferences;
-import com.ddiehl.android.simpleredditreader.Utils;
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
 import com.ddiehl.android.simpleredditreader.events.LinksLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.LoadLinksEvent;
@@ -341,7 +341,7 @@ public class LinksFragment extends Fragment {
 
         public void bindLink(RedditLink link) {
             mRedditLink = link;
-            String createDateFormatted = Utils.getFormattedDateStringFromUtc(link.getCreatedUtc().longValue());
+            String createDateFormatted = BaseUtils.getFormattedDateStringFromUtc(link.getCreatedUtc().longValue());
 
             // Set content for each TextView
             mScoreView.setText(String.valueOf(link.getScore()) + " points");

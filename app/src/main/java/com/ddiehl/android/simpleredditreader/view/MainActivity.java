@@ -23,7 +23,7 @@ import android.widget.Toast;
 
 import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
-import com.ddiehl.android.simpleredditreader.web.RedditAuthProxy;
+import com.ddiehl.android.simpleredditreader.utils.AuthUtils;
 import com.squareup.otto.Bus;
 
 public class MainActivity extends ActionBarActivity
@@ -140,7 +140,7 @@ public class MainActivity extends ActionBarActivity
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.drawer_log_in:
-                Intent intent = RedditAuthProxy.getUserAuthCodeIntent(this);
+                Intent intent = AuthUtils.getUserAuthCodeIntent(this);
                 startActivityForResult(intent, REQUEST_AUTHORIZE);
                 break;
             case R.id.drawer_user_profile:

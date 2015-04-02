@@ -2,14 +2,11 @@ package com.ddiehl.android.simpleredditreader.web;
 
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.ddiehl.android.simpleredditreader.RedditPreferences;
-import com.ddiehl.android.simpleredditreader.Utils;
 import com.ddiehl.android.simpleredditreader.events.ApplicationAuthorizedEvent;
 import com.ddiehl.android.simpleredditreader.events.AuthorizeApplicationEvent;
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
@@ -21,7 +18,7 @@ import com.ddiehl.android.simpleredditreader.model.adapters.ListingDeserializer;
 import com.ddiehl.android.simpleredditreader.model.adapters.ListingResponseDeserializer;
 import com.ddiehl.android.simpleredditreader.model.listings.Listing;
 import com.ddiehl.android.simpleredditreader.model.listings.ListingResponse;
-import com.ddiehl.android.simpleredditreader.view.WebViewActivity;
+import com.ddiehl.android.simpleredditreader.utils.BaseUtils;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -29,7 +26,6 @@ import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import java.util.Date;
-import java.util.UUID;
 
 import retrofit.Callback;
 import retrofit.RequestInterceptor;
@@ -47,10 +43,10 @@ public class RedditAuthProxy implements IRedditService {
     public static final String CLIENT_ID = "***REMOVED***";
     public static final String RESPONSE_TYPE = "code";
     public static final String DURATION = "permanent";
-    public static final String STATE = getRandomString();
+    public static final String STATE = BaseUtils.getRandomString();
     public static final String REDIRECT_URI = "http://127.0.0.1/";
     public static final String SCOPE = "mysubreddits,privatemessages,read,report,save,submit,vote";
-    public static final String HTTP_AUTH_HEADER = Utils.getHttpAuthHeader(CLIENT_ID, "");
+    public static final String HTTP_AUTH_HEADER = BaseUtils.getHttpAuthHeader(CLIENT_ID, "");
 
     public static final String AUTHORIZATION_URL = "https://www.reddit.com/api/v1/authorize.compact" +
             "?client_id=" + CLIENT_ID +
@@ -179,18 +175,6 @@ public class RedditAuthProxy implements IRedditService {
         return Math.max(0, (mExpiration.getTime() - System.currentTimeMillis()) / 1000);
     }
 
-    private static String getNameFromQuery(String query) {
-        return query.substring(0, query.indexOf("="));
-    }
-
-    private static String getValueFromQuery(String query) {
-        return query.substring(query.indexOf("=") + 1);
-    }
-
-    private static String getRandomString() {
-        return UUID.randomUUID().toString();
-    }
-
     /**
      * Notification that authentication state has changed
      */
@@ -200,17 +184,17 @@ public class RedditAuthProxy implements IRedditService {
         String authCode = event.getCode();
 
         // Retrieve access token from authorization code
-        mApi.getUserAccessToken(grantType, authCode, RedditAuthProxy.REDIRECT_URI,
+        mApi.getUserAuthToken(grantType, authCode, RedditAuthProxy.REDIRECT_URI,
                 new Callback<AccessTokenResponse>() {
                     @Override
                     public void success(AccessTokenResponse response, Response response2) {
-
+                        Log.d(TAG, "User auth token retrieved successfully");
                     }
 
                     @Override
                     public void failure(RetrofitError error) {
-                        Utils.showError(mContext, error);
-                        Utils.printResponse(error.getResponse());
+                        BaseUtils.showError(mContext, error);
+                        BaseUtils.printResponse(error.getResponse());
                     }
                 });
     }
@@ -224,15 +208,15 @@ public class RedditAuthProxy implements IRedditService {
         mApi.getApplicationAuthToken(grantType, deviceId, new Callback<AccessTokenResponse>() {
             @Override
             public void success(AccessTokenResponse accessTokenResponse, Response response) {
-                Utils.printResponseStatus(response);
+                BaseUtils.printResponseStatus(response);
                 mEndpoint.setUrl(RedditEndpoint.AUTHORIZED);
                 mBus.post(new ApplicationAuthorizedEvent(accessTokenResponse));
             }
 
             @Override
             public void failure(RetrofitError error) {
-                Utils.showError(mContext, error);
-                Utils.printResponse(error.getResponse());
+                BaseUtils.showError(mContext, error);
+                BaseUtils.printResponse(error.getResponse());
                 mBus.post(new ApplicationAuthorizedEvent(error));
             }
         });
@@ -292,38 +276,6 @@ public class RedditAuthProxy implements IRedditService {
         } else {
             Log.d(TAG, "Found valid auth token");
             mService.onVote(event);
-        }
-    }
-
-    public static Intent getUserAuthCodeIntent(Context context) {
-        Intent intent = new Intent(context, WebViewActivity.class);
-        Uri uri = Uri.parse(AUTHORIZATION_URL);
-        intent.setData(uri);
-        return intent;
-    }
-
-    public static String getUserAuthCodeFromRedirectUri(String url) {
-        Uri uri = Uri.parse(url);
-        Log.d(TAG, "URI: " + uri.toString());
-        String query = uri.getQuery();
-        String[] params = query.split("&");
-
-        // Verify state parameter is correct
-        String returnedState = getValueFromQuery(params[0]);
-        if (!returnedState.equals(STATE)) {
-            Log.e(TAG, "STATE does not match: " + returnedState + " (EXPECTED: " + STATE + ")");
-            return null;
-        }
-
-        // If successfully authorized, params[1] will be a grant code
-        // Otherwise, params[1] is an error message
-        String name = getNameFromQuery(params[1]);
-        if (name.equals("code")) {
-            return getValueFromQuery(params[1]);
-        } else { // User declined to authorize application, or an error occurred
-            String error = getValueFromQuery(params[1]);
-            Log.e(TAG, "Error during authorization flow: " + error);
-            return null;
         }
     }
 }

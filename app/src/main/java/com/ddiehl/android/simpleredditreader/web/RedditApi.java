@@ -21,10 +21,10 @@ public interface RedditApi {
                                  Callback<AccessTokenResponse> callback);
 
     @FormUrlEncoded @POST("/api/v1/access_token")
-    void getUserAccessToken(@Field("grant_type") String grantType,
-                            @Field("code") String code,
-                            @Field("redirect_uri") String redirectUri,
-                            Callback<AccessTokenResponse> callback);
+    void getUserAuthToken(@Field("grant_type") String grantType,
+                          @Field("code") String code,
+                          @Field("redirect_uri") String redirectUri,
+                          Callback<AccessTokenResponse> callback);
 
     @GET("/r/{subreddit}/{sort}.json")
     void getLinks(@Path("subreddit") String subreddit,

@@ -20,9 +20,9 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.ddiehl.android.simpleredditreader.utils.BaseUtils;
 import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.RedditPreferences;
-import com.ddiehl.android.simpleredditreader.Utils;
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
 import com.ddiehl.android.simpleredditreader.events.CommentsLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.LoadCommentsEvent;
@@ -328,7 +328,7 @@ public class CommentsFragment extends Fragment {
                 if (link.getSelftext() != null && !link.getSelftext().equals(""))
                     mSelfText.setVisibility(View.VISIBLE);
 
-                String createDateFormatted = Utils.getFormattedDateStringFromUtc(link.getCreatedUtc().longValue());
+                String createDateFormatted = BaseUtils.getFormattedDateStringFromUtc(link.getCreatedUtc().longValue());
 
                 // Set content for each TextView
                 mLinkScore.setText(String.valueOf(link.getScore()) + " points");
@@ -408,7 +408,7 @@ public class CommentsFragment extends Fragment {
                     mMoreCommentsView.setVisibility(View.GONE);
                     mAuthorView.setText(((RedditComment) comment).getAuthor());
                     mScoreView.setText("• " + ((RedditComment) comment).getScore() + " •");
-                    mTimestampView.setText(Utils.getFormattedDateStringFromUtc(((RedditComment) comment).getCreateUtc().longValue()));
+                    mTimestampView.setText(BaseUtils.getFormattedDateStringFromUtc(((RedditComment) comment).getCreateUtc().longValue()));
                     mBodyView.setText(((RedditComment) comment).getBody());
                     if (comment.isCollapsed()) {
                         mBodyView.setVisibility(View.GONE);
