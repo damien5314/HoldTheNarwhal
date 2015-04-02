@@ -52,7 +52,7 @@ public class RedditAuthProxy implements IRedditService {
     public static final String SCOPE = "mysubreddits,privatemessages,read,report,save,submit,vote";
     public static final String HTTP_AUTH_HEADER = Utils.getHttpAuthHeader(CLIENT_ID, "");
 
-    public static final String AUTHORIZATION_URL = "https://www.reddit.com/api/v1/authorize" +
+    public static final String AUTHORIZATION_URL = "https://www.reddit.com/api/v1/authorize.compact" +
             "?client_id=" + CLIENT_ID +
             "&response_type=" + RESPONSE_TYPE +
             "&duration=" + DURATION +
@@ -77,9 +77,6 @@ public class RedditAuthProxy implements IRedditService {
     private Bus mBus;
 
     private boolean mIsAuthorized = false;
-    private String mState;
-    private String mCode;
-    private String mError;
     private String mAccessToken;
     private String mTokenType;
     private Date mExpiration;
@@ -91,6 +88,7 @@ public class RedditAuthProxy implements IRedditService {
         mContext = context.getApplicationContext();
         mBus = BusProvider.getInstance();
         mEndpoint = new RedditEndpoint();
+        mEndpoint.setUrl(RedditEndpoint.AUTHORIZED);
         mApi = buildApi();
         mService = new RedditService(mContext, mApi);
     }
@@ -126,41 +124,6 @@ public class RedditAuthProxy implements IRedditService {
                 .build();
 
         return restAdapter.create(RedditApi.class);
-    }
-
-    public Intent getUserAuthCodeIntent() {
-        Intent intent = new Intent(mContext, WebViewActivity.class);
-        mState = getRandomString();
-        Uri uri = Uri.parse(AUTHORIZATION_URL);
-        intent.setData(uri);
-        return intent;
-    }
-
-    public void saveUserAuthCode(String url) {
-        Uri uri = Uri.parse(url);
-        Log.d(TAG, "URI: " + uri.toString());
-        String query = uri.getQuery();
-        String[] params = query.split("&");
-
-        // Verify state parameter is correct
-        mState = getValueFromQuery(params[0]);
-        if (!mState.equals(STATE)) {
-            Log.e(TAG, "STATE in response does not match request: " + mState);
-            return;
-        }
-
-        // If successfully authorized, params[1] will be a grant code
-        // Otherwise, params[1] is an error message
-        String name = getNameFromQuery(params[1]);
-        if (name.equals("code")) {
-            mCode = getValueFromQuery(params[1]);
-        } else { // User declined to authorize application, or an error occurred
-            mError = getValueFromQuery(params[1]);
-        }
-    }
-
-    public String getUserAuthCode() {
-        return mCode;
     }
 
     public void saveAccessToken(AccessTokenResponse response) {
@@ -234,9 +197,10 @@ public class RedditAuthProxy implements IRedditService {
     @Subscribe
     public void onUserAuthCodeReceived(UserAuthCodeReceivedEvent event) {
         String grantType = "https://oauth.reddit.com/grants/installed_client";
+        String authCode = event.getCode();
 
         // Retrieve access token from authorization code
-        mApi.getUserAccessToken(grantType, getUserAuthCode(), RedditAuthProxy.REDIRECT_URI,
+        mApi.getUserAccessToken(grantType, authCode, RedditAuthProxy.REDIRECT_URI,
                 new Callback<AccessTokenResponse>() {
                     @Override
                     public void success(AccessTokenResponse response, Response response2) {
@@ -257,7 +221,7 @@ public class RedditAuthProxy implements IRedditService {
         String deviceId = RedditPreferences.getInstance(mContext).getDeviceId();
 
         mEndpoint.setUrl(RedditEndpoint.NORMAL);
-        mApi.getApplicationAccessToken(grantType, deviceId, new Callback<AccessTokenResponse>() {
+        mApi.getApplicationAuthToken(grantType, deviceId, new Callback<AccessTokenResponse>() {
             @Override
             public void success(AccessTokenResponse accessTokenResponse, Response response) {
                 Utils.printResponseStatus(response);
@@ -296,7 +260,7 @@ public class RedditAuthProxy implements IRedditService {
             mQueuedEvent = event;
             mBus.post(new AuthorizeApplicationEvent());
         } else {
-            Log.d(TAG, "Already have valid auth token");
+            Log.d(TAG, "Found valid auth token");
             mService.onLoadLinks(event);
         }
     }
@@ -307,11 +271,11 @@ public class RedditAuthProxy implements IRedditService {
     @Subscribe
     public void onLoadComments(LoadCommentsEvent event) {
         if (!hasValidAccessToken()) {
-            Log.d(TAG, "No valid access token, requesting");
+            Log.d(TAG, "No valid auth token, requesting");
             mQueuedEvent = event;
             mBus.post(new AuthorizeApplicationEvent());
         } else {
-            Log.d(TAG, "Already have valid auth token");
+            Log.d(TAG, "Found valid auth token");
             mService.onLoadComments(event);
         }
     }
@@ -322,12 +286,44 @@ public class RedditAuthProxy implements IRedditService {
     @Subscribe
     public void onVote(VoteEvent event) {
         if (!hasValidAccessToken()) {
-            Log.d(TAG, "No valid access token, requesting");
+            Log.d(TAG, "No valid auth token, requesting");
             mQueuedEvent = event;
             mBus.post(new AuthorizeApplicationEvent());
         } else {
-            Log.d(TAG, "Already have valid auth token");
+            Log.d(TAG, "Found valid auth token");
             mService.onVote(event);
+        }
+    }
+
+    public static Intent getUserAuthCodeIntent(Context context) {
+        Intent intent = new Intent(context, WebViewActivity.class);
+        Uri uri = Uri.parse(AUTHORIZATION_URL);
+        intent.setData(uri);
+        return intent;
+    }
+
+    public static String getUserAuthCodeFromRedirectUri(String url) {
+        Uri uri = Uri.parse(url);
+        Log.d(TAG, "URI: " + uri.toString());
+        String query = uri.getQuery();
+        String[] params = query.split("&");
+
+        // Verify state parameter is correct
+        String returnedState = getValueFromQuery(params[0]);
+        if (!returnedState.equals(STATE)) {
+            Log.e(TAG, "STATE does not match: " + returnedState + " (EXPECTED: " + STATE + ")");
+            return null;
+        }
+
+        // If successfully authorized, params[1] will be a grant code
+        // Otherwise, params[1] is an error message
+        String name = getNameFromQuery(params[1]);
+        if (name.equals("code")) {
+            return getValueFromQuery(params[1]);
+        } else { // User declined to authorize application, or an error occurred
+            String error = getValueFromQuery(params[1]);
+            Log.e(TAG, "Error during authorization flow: " + error);
+            return null;
         }
     }
 }

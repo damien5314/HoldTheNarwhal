@@ -1,6 +1,7 @@
 package com.ddiehl.android.simpleredditreader.view;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -19,6 +20,7 @@ import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
 import com.ddiehl.android.simpleredditreader.events.UserAuthCodeReceivedEvent;
 import com.ddiehl.android.simpleredditreader.web.RedditAuthProxy;
+import com.squareup.otto.Bus;
 
 /**
  * Created by Damien on 2/6/2015.
@@ -26,6 +28,7 @@ import com.ddiehl.android.simpleredditreader.web.RedditAuthProxy;
 public class WebViewFragment extends Fragment {
     public static final String TAG = WebViewFragment.class.getSimpleName();
 
+    private Bus mBus = BusProvider.getInstance();
     private String mUrl;
     private WebView mWebView;
 
@@ -58,8 +61,9 @@ public class WebViewFragment extends Fragment {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 if (url.contains(RedditAuthProxy.REDIRECT_URI)) {
-                    RedditAuthProxy.getInstance(getActivity()).saveUserAuthCode(url);
-                    BusProvider.getInstance().post(new UserAuthCodeReceivedEvent());
+                    String authCode = RedditAuthProxy.getUserAuthCodeFromRedirectUri(url);
+                    mBus.post(new UserAuthCodeReceivedEvent(authCode));
+                    getActivity().setResult(authCode != null ? Activity.RESULT_OK : Activity.RESULT_CANCELED);
                     getActivity().finish();
                 }
                 return false;

@@ -16,9 +16,9 @@ import retrofit.http.Query;
 public interface RedditApi {
 
     @FormUrlEncoded @POST("/api/v1/access_token")
-    void getApplicationAccessToken(@Field("grant_type") String grantType,
-                                   @Field("device_id") String deviceId,
-                                   Callback<AccessTokenResponse> callback);
+    void getApplicationAuthToken(@Field("grant_type") String grantType,
+                                 @Field("device_id") String deviceId,
+                                 Callback<AccessTokenResponse> callback);
 
     @FormUrlEncoded @POST("/api/v1/access_token")
     void getUserAccessToken(@Field("grant_type") String grantType,

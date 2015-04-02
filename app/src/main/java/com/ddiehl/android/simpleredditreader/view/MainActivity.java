@@ -1,5 +1,6 @@
 package com.ddiehl.android.simpleredditreader.view;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -33,7 +34,6 @@ public class MainActivity extends ActionBarActivity
     public static final int REQUEST_AUTHORIZE = 1000;
 
     private Bus mBus;
-    private RedditAuthProxy mAuthProxy;
 
     // Navigation drawer
     private DrawerLayout mDrawerLayout;
@@ -49,7 +49,6 @@ public class MainActivity extends ActionBarActivity
         setContentView(R.layout.activity_main);
 
         mBus = BusProvider.getInstance();
-        mAuthProxy = RedditAuthProxy.getInstance(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -141,7 +140,7 @@ public class MainActivity extends ActionBarActivity
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.drawer_log_in:
-                Intent intent = mAuthProxy.getUserAuthCodeIntent();
+                Intent intent = RedditAuthProxy.getUserAuthCodeIntent(this);
                 startActivityForResult(intent, REQUEST_AUTHORIZE);
                 break;
             case R.id.drawer_user_profile:
@@ -194,7 +193,7 @@ public class MainActivity extends ActionBarActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case REQUEST_AUTHORIZE:
-                if (mAuthProxy.hasValidAccessToken()) {
+                if (resultCode == Activity.RESULT_OK) {
                     Toast.makeText(this, getString(R.string.toast_authorized), Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(this, getString(R.string.toast_not_authorized), Toast.LENGTH_SHORT).show();

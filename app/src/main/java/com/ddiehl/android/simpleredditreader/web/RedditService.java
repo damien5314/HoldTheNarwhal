@@ -47,14 +47,12 @@ public class RedditService implements IRedditService {
             mApi.getDefaultLinks(sort, timespan, after, new Callback<ListingResponse>() {
                 @Override
                 public void success(ListingResponse linksResponse, Response response) {
-                    Log.d(TAG, "getDefaultLinks success");
                     Utils.printResponseStatus(response);
                     mBus.post(new LinksLoadedEvent(linksResponse));
                 }
 
                 @Override
                 public void failure(RetrofitError error) {
-                    Log.d(TAG, "getDefaultLinks failure");
                     Utils.showError(mContext, error);
                     Utils.printResponse(error.getResponse());
                     mBus.post(new LinksLoadedEvent(error));
@@ -64,14 +62,12 @@ public class RedditService implements IRedditService {
             mApi.getLinks(subreddit, sort, timespan, after, new Callback<ListingResponse>() {
                 @Override
                 public void success(ListingResponse linksResponse, Response response) {
-                    Log.d(TAG, "getLinks success");
                     Utils.printResponseStatus(response);
                     mBus.post(new LinksLoadedEvent(linksResponse));
                 }
 
                 @Override
                 public void failure(RetrofitError error) {
-                    Log.d(TAG, "getLinks failure");
                     Utils.showError(mContext, error);
                     Utils.printResponse(error.getResponse());
                     mBus.post(new LinksLoadedEvent(error));

@@ -2,6 +2,7 @@ package com.ddiehl.android.simpleredditreader;
 
 import android.content.Context;
 import android.util.Base64;
+import android.util.Log;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
@@ -20,8 +21,10 @@ import retrofit.mime.TypedInput;
  * Created by Damien on 1/19/2015.
  */
 public class Utils {
+    private static final String TAG = Utils.class.getSimpleName();
 
     public static void showError(Context context, RetrofitError error) {
+        Log.e(TAG, "RetrofitError: " + error.getKind().toString());
         Response response = error.getResponse();
         if (response != null) {
             switch (response.getStatus()) {
