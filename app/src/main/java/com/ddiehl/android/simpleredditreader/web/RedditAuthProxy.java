@@ -87,6 +87,9 @@ public class RedditAuthProxy implements IRedditService {
         mEndpoint.setUrl(RedditEndpoint.AUTHORIZED);
         mApi = buildApi();
         mService = new RedditService(mContext, mApi);
+
+        // Retrieve authorization state from shared preferences
+        retrieveAuthToken();
     }
 
     public static RedditAuthProxy getInstance(Context context) {
@@ -122,11 +125,11 @@ public class RedditAuthProxy implements IRedditService {
         return restAdapter.create(RedditApi.class);
     }
 
-    public void saveAccessToken(AccessTokenResponse response) {
-        if (response.getAccessToken() == null)
+    public void saveAuthToken(AccessTokenResponse response) {
+        if (response.getAuthToken() == null)
             return;
 
-        mAccessToken = response.getAccessToken();
+        mAccessToken = response.getAuthToken();
         mTokenType = response.getTokenType();
         long expiresIn = response.getExpiresIn();
         mExpiration = new Date(System.currentTimeMillis() + (expiresIn * 1000));
@@ -143,7 +146,7 @@ public class RedditAuthProxy implements IRedditService {
                 .apply();
     }
 
-    public void retrieveAccessToken() {
+    public void retrieveAuthToken() {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mContext);
         mAccessToken = sp.getString(PREF_ACCESS_TOKEN, null);
         mTokenType = sp.getString(PREF_TOKEN_TYPE, null);
@@ -156,15 +159,15 @@ public class RedditAuthProxy implements IRedditService {
         }
     }
 
-    public boolean hasValidAccessToken() {
+    public boolean hasValidAuthToken() {
         if (mAccessToken == null) {
-            retrieveAccessToken();
+            retrieveAuthToken();
         }
         return mIsAuthorized && secondsUntilExpiration() > EXPIRATION_THRESHOLD;
     }
 
     public String getAuthHeader() {
-        if (hasValidAccessToken()) {
+        if (hasValidAuthToken()) {
             return "bearer " + mAccessToken;
         } else {
             return HTTP_AUTH_HEADER;
@@ -226,7 +229,7 @@ public class RedditAuthProxy implements IRedditService {
     public void onApplicationAuthorized(ApplicationAuthorizedEvent event) {
         if (!event.isFailed()) {
             AccessTokenResponse response = event.getResponse();
-            saveAccessToken(response);
+            saveAuthToken(response);
             if (mQueuedEvent != null) {
                 mBus.post(mQueuedEvent);
             }
@@ -239,7 +242,7 @@ public class RedditAuthProxy implements IRedditService {
     @Subscribe
     public void onLoadLinks(LoadLinksEvent event) {
         Log.d(TAG, "RedditAuthProxy.onLoadLinks");
-        if (!hasValidAccessToken()) {
+        if (!hasValidAuthToken()) {
             Log.d(TAG, "No valid auth token, requesting");
             mQueuedEvent = event;
             mBus.post(new AuthorizeApplicationEvent());
@@ -254,7 +257,7 @@ public class RedditAuthProxy implements IRedditService {
      */
     @Subscribe
     public void onLoadComments(LoadCommentsEvent event) {
-        if (!hasValidAccessToken()) {
+        if (!hasValidAuthToken()) {
             Log.d(TAG, "No valid auth token, requesting");
             mQueuedEvent = event;
             mBus.post(new AuthorizeApplicationEvent());
@@ -269,7 +272,7 @@ public class RedditAuthProxy implements IRedditService {
      */
     @Subscribe
     public void onVote(VoteEvent event) {
-        if (!hasValidAccessToken()) {
+        if (!hasValidAuthToken()) {
             Log.d(TAG, "No valid auth token, requesting");
             mQueuedEvent = event;
             mBus.post(new AuthorizeApplicationEvent());

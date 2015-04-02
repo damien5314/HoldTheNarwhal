@@ -6,6 +6,7 @@ import android.widget.Toast;
 
 import com.ddiehl.android.simpleredditreader.events.ApiErrorEvent;
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
+import com.ddiehl.android.simpleredditreader.web.IRedditService;
 import com.ddiehl.android.simpleredditreader.web.RedditAuthProxy;
 import com.facebook.stetho.Stetho;
 import com.facebook.stetho.okhttp.StethoInterceptor;
@@ -25,12 +26,9 @@ public class RedditReaderApplication extends Application {
         Log.d(TAG, "Creating RedditReaderApplication");
 
         Bus mBus = BusProvider.getInstance();
-        RedditAuthProxy authProxy = RedditAuthProxy.getInstance(this);
+        IRedditService authProxy = RedditAuthProxy.getInstance(this);
         mBus.register(authProxy);
         mBus.register(this); // Listen for "global" events
-
-        // Retrieve authorization state from shared preferences
-        authProxy.retrieveAccessToken();
 
         // Stetho debugging tool
         Stetho.initialize(Stetho.newInitializerBuilder(this)

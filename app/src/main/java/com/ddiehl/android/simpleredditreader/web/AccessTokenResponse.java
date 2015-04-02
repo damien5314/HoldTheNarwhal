@@ -25,7 +25,7 @@ public class AccessTokenResponse {
     @Expose
     private String scope;
 
-    public String getAccessToken() {
+    public String getAuthToken() {
         return accessToken;
     }
 
