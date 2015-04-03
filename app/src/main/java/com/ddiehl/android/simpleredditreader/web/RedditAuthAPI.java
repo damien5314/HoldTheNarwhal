@@ -18,4 +18,9 @@ public interface RedditAuthAPI {
                           @Field("redirect_uri") String redirectUri,
                           Callback<AuthTokenResponse> callback);
 
+    @FormUrlEncoded @POST("/api/v1/access_token")
+    void refreshUserAuthToken(@Field("grant_type") String grantType,
+                              @Field("refresh_token") String refreshToken,
+                              Callback<AuthTokenResponse> callback);
+
 }

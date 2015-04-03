@@ -25,6 +25,9 @@ public class AuthTokenResponse {
     @Expose
     private String scope;
 
+    @Expose @SerializedName("refresh_token")
+    private String refreshToken;
+
     public String getAuthToken() {
         return accessToken;
     }
@@ -39,5 +42,9 @@ public class AuthTokenResponse {
 
     public String getScope() {
         return scope;
+    }
+
+    public String getRefreshToken() {
+        return refreshToken;
     }
 }

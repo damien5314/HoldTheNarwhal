@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.ddiehl.android.simpleredditreader.RedditPreferences;
 import com.ddiehl.android.simpleredditreader.RedditReaderApplication;
@@ -13,6 +14,7 @@ import com.ddiehl.android.simpleredditreader.events.AuthorizeApplicationEvent;
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
 import com.ddiehl.android.simpleredditreader.events.LoadCommentsEvent;
 import com.ddiehl.android.simpleredditreader.events.LoadLinksEvent;
+import com.ddiehl.android.simpleredditreader.events.RefreshUserAccessTokenEvent;
 import com.ddiehl.android.simpleredditreader.events.UserAuthCodeReceivedEvent;
 import com.ddiehl.android.simpleredditreader.events.UserAuthorizedEvent;
 import com.ddiehl.android.simpleredditreader.events.VoteEvent;
@@ -59,6 +61,7 @@ public class RedditAuthProxy implements IRedditService {
     public static final String PREF_TOKEN_TYPE = "pref_token_type";
     public static final String PREF_EXPIRATION = "pref_expiration";
     public static final String PREF_SCOPE = "pref_scope";
+    public static final String PREF_REFRESH_TOKEN = "pref_refresh_token";
 
     private static RedditAuthProxy _instance;
 
@@ -71,6 +74,7 @@ public class RedditAuthProxy implements IRedditService {
     private String mTokenType;
     private Date mExpiration;
     private String mScope;
+    private String mRefreshToken;
 
     private Object mQueuedEvent;
 
@@ -82,6 +86,7 @@ public class RedditAuthProxy implements IRedditService {
 
         // Retrieve authorization state from shared preferences
         retrieveAuthToken();
+        mService.setAuthToken(mAuthToken);
     }
 
     public static RedditAuthProxy getInstance(Context context) {
@@ -119,15 +124,19 @@ public class RedditAuthProxy implements IRedditService {
         String authToken = response.getAuthToken();
         if (authToken == null)
             return;
-        Log.d(TAG, "Auth token retrieved: " + authToken);
 
         mAuthToken = authToken;
         mTokenType = response.getTokenType();
         long expiresIn = response.getExpiresIn();
         mExpiration = new Date(System.currentTimeMillis() + (expiresIn * 1000));
         mScope = response.getScope();
+        mRefreshToken = response.getRefreshToken();
 
-        mService.setAuthToken(authToken);
+        Log.d(TAG, "--AUTH TOKEN RESPONSE--");
+        Log.d(TAG, "Access Token: " + mAuthToken);
+        Log.d(TAG, "Refresh Token: " + mRefreshToken);
+
+        mService.setAuthToken(mAuthToken);
 
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mContext);
         sp.edit()
@@ -135,6 +144,7 @@ public class RedditAuthProxy implements IRedditService {
                 .putString(PREF_TOKEN_TYPE, mTokenType)
                 .putLong(PREF_EXPIRATION, mExpiration.getTime())
                 .putString(PREF_SCOPE, mScope)
+                .putString(PREF_REFRESH_TOKEN, mRefreshToken)
                 .apply();
     }
 
@@ -145,8 +155,7 @@ public class RedditAuthProxy implements IRedditService {
         long expirationTime = sp.getLong(PREF_EXPIRATION, 0);
         mExpiration = new Date(expirationTime);
         mScope = sp.getString(PREF_SCOPE, null);
-
-        mService.setAuthToken(mAuthToken);
+        mRefreshToken = sp.getString(PREF_REFRESH_TOKEN, null);
     }
 
     public boolean hasValidAuthToken() {
@@ -181,6 +190,7 @@ public class RedditAuthProxy implements IRedditService {
     @Subscribe
     public void onApplicationAuthorized(ApplicationAuthorizedEvent event) {
         if (!event.isFailed()) {
+            Toast.makeText(mContext, "Application authorized", Toast.LENGTH_SHORT).show();
             AuthTokenResponse response = event.getResponse();
             saveAuthToken(response);
             if (mQueuedEvent != null) {
@@ -192,14 +202,13 @@ public class RedditAuthProxy implements IRedditService {
     }
 
     /**
-     * Notification that authentication state has changed
+     * Retrieves access token when an authorization code is received
      */
     @Subscribe
     public void onUserAuthCodeReceived(UserAuthCodeReceivedEvent event) {
         String grantType = "authorization_code";
         String authCode = event.getCode();
 
-        // Retrieve auth token from authorization code
         mAPI.getUserAuthToken(grantType, authCode, RedditAuthProxy.REDIRECT_URI,
                 new Callback<AuthTokenResponse>() {
                     @Override
@@ -210,7 +219,6 @@ public class RedditAuthProxy implements IRedditService {
 
                     @Override
                     public void failure(RetrofitError error) {
-                        Log.e(TAG, "Error retrieving auth token for user");
                         BaseUtils.showError(mContext, error);
                         BaseUtils.printResponse(error.getResponse());
                         mBus.post(new UserAuthorizedEvent(error));
@@ -218,9 +226,34 @@ public class RedditAuthProxy implements IRedditService {
                 });
     }
 
+    /**
+     * Retrieves access token when application has a refresh token available
+     */
+    @Subscribe
+    public void onRefreshUserAccessToken(RefreshUserAccessTokenEvent event) {
+        String grantType = "refresh_token";
+        String refreshToken = event.getRefreshToken();
+
+        mAPI.refreshUserAuthToken(grantType, refreshToken, new Callback<AuthTokenResponse>() {
+            @Override
+            public void success(AuthTokenResponse authTokenResponse, Response response) {
+                BaseUtils.printResponseStatus(response);
+                mBus.post(new UserAuthorizedEvent(authTokenResponse));
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                BaseUtils.showError(mContext, error);
+                BaseUtils.printResponse(error.getResponse());
+                mBus.post(new UserAuthorizedEvent(error));
+            }
+        });
+    }
+
     @Subscribe
     public void onUserAuthorized(UserAuthorizedEvent event) {
         if (!event.isFailed()) {
+            Toast.makeText(mContext, "User authorized", Toast.LENGTH_SHORT).show();
             AuthTokenResponse response = event.getResponse();
             saveAuthToken(response);
             if (mQueuedEvent != null) {
@@ -238,7 +271,11 @@ public class RedditAuthProxy implements IRedditService {
     public void onLoadLinks(LoadLinksEvent event) {
         if (!hasValidAuthToken()) {
             mQueuedEvent = event;
-            mBus.post(new AuthorizeApplicationEvent());
+            if (mRefreshToken != null) {
+                mBus.post(new RefreshUserAccessTokenEvent(mRefreshToken));
+            } else {
+                mBus.post(new AuthorizeApplicationEvent());
+            }
         } else {
             mService.onLoadLinks(event);
         }
