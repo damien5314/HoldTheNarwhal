@@ -21,7 +21,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.ddiehl.android.simpleredditreader.utils.BaseUtils;
 import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.RedditPreferences;
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
@@ -30,6 +29,7 @@ import com.ddiehl.android.simpleredditreader.events.LoadLinksEvent;
 import com.ddiehl.android.simpleredditreader.events.VoteEvent;
 import com.ddiehl.android.simpleredditreader.events.VoteSubmittedEvent;
 import com.ddiehl.android.simpleredditreader.model.listings.RedditLink;
+import com.ddiehl.android.simpleredditreader.utils.BaseUtils;
 import com.ddiehl.android.simpleredditreader.web.ThumbnailCache;
 import com.ddiehl.android.simpleredditreader.web.ThumbnailDownloader;
 import com.squareup.otto.Bus;
@@ -223,6 +223,15 @@ public class LinksFragment extends Fragment {
             Toast.makeText(getActivity(), R.string.vote_failed, Toast.LENGTH_SHORT).show();
             return;
         }
+
+        // Loop through the list of data and update the vote for the appropriate link
+        for (RedditLink link : mData) {
+            if (link.getId().equals(event.getId())) {
+                link.applyVote(event.getDirection());
+                break;
+            }
+        }
+        mLinkAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -443,12 +452,12 @@ public class LinksFragment extends Fragment {
 
     private void upvote(RedditLink link) {
         int dir = (link.isLiked() == null || !link.isLiked()) ? 1 : 0;
-        getBus().post(new VoteEvent(link.getId(), dir));
+        getBus().post(new VoteEvent(link.getKind(), link.getId(), dir));
     }
 
     private void downvote(RedditLink link) {
         int dir = (link.isLiked() == null || link.isLiked()) ? -1 : 0;
-        getBus().post(new VoteEvent(link.getId(), dir));
+        getBus().post(new VoteEvent(link.getKind(), link.getId(), dir));
     }
 
     public void openCommentsForLink(RedditLink link) {

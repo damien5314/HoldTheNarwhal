@@ -4,7 +4,6 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
 import java.util.List;
@@ -117,7 +116,7 @@ public class BaseUtils {
         }
     }
 
-    public static String inputStreamToString(InputStream i) throws IOException {
+    public static String inputStreamToString(InputStream i) {
         Scanner s = new Scanner(i).useDelimiter("\\A");
         return s.hasNext() ? s.next() : "";
     }

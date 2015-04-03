@@ -10,6 +10,7 @@ import com.ddiehl.android.simpleredditreader.events.LoadCommentsEvent;
 import com.ddiehl.android.simpleredditreader.events.LoadLinksEvent;
 import com.ddiehl.android.simpleredditreader.events.VoteEvent;
 import com.ddiehl.android.simpleredditreader.events.VoteSubmittedEvent;
+import com.ddiehl.android.simpleredditreader.exceptions.UserRequiredException;
 import com.ddiehl.android.simpleredditreader.model.adapters.ListingDeserializer;
 import com.ddiehl.android.simpleredditreader.model.adapters.ListingResponseDeserializer;
 import com.ddiehl.android.simpleredditreader.model.listings.Listing;
@@ -20,6 +21,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.squareup.otto.Bus;
 
+import java.io.InputStream;
 import java.util.List;
 
 import retrofit.Callback;
@@ -28,6 +30,8 @@ import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
+
+;
 
 
 public class RedditService implements IRedditService {
@@ -140,14 +144,25 @@ public class RedditService implements IRedditService {
      * Submits a vote on a link or comment
      */
     public void onVote(VoteEvent event) {
-        String id = event.getId();
-        int direction = event.getDirection();
-        mAPI.vote(id, direction, new Callback<Response>() {
+        final String type = event.getType();
+        final String id = event.getId();
+        String fullname = String.format("%s_%s", type, id);
+        final int direction = event.getDirection();
+        mAPI.vote(fullname, direction, new Callback<Response>() {
             @Override
             public void success(Response response, Response response2) {
                 BaseUtils.printResponseStatus(response);
-                BaseUtils.printResponseBody(response);
-                mBus.post(new VoteSubmittedEvent(response));
+
+                try {
+                    InputStream in = response.getBody().in();
+                    if (BaseUtils.inputStreamToString(in).contains("USER_REQUIRED")) {
+                        throw new UserRequiredException();
+                    } else {
+                        mBus.post(new VoteSubmittedEvent(id, direction));
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override

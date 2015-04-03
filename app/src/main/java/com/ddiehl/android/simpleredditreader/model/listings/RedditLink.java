@@ -46,6 +46,10 @@ public class RedditLink extends Listing {
         return data.likes;
     }
 
+    public void setLiked(Boolean b) {
+        data.likes = b;
+    }
+
     public List<Object> getUserReports() {
         return data.userReports;
     }
@@ -88,6 +92,25 @@ public class RedditLink extends Listing {
 
     public Integer getScore() {
         return data.score;
+    }
+
+    public void applyVote(Integer direction) {
+        int scoreDiff = direction - getLikedScore();
+        data.score += scoreDiff;
+        switch (direction) {
+            case 0: setLiked(null); break;
+            case 1: setLiked(true); break;
+            case -1: setLiked(false); break;
+        }
+    }
+
+    public int getLikedScore() {
+        if (isLiked() == null)
+            return 0;
+        else if (isLiked())
+            return 1;
+        else
+            return -1;
     }
 
     public Object getApprovedBy() {

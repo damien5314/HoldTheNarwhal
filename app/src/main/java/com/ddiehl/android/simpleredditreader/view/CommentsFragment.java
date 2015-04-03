@@ -172,12 +172,12 @@ public class CommentsFragment extends Fragment {
 
     private void upvote(RedditLink link) {
         int dir = (link.isLiked() == null || !link.isLiked()) ? 1 : 0;
-        getBus().post(new VoteEvent(link.getId(), dir));
+        getBus().post(new VoteEvent(link.getKind(), link.getId(), dir));
     }
 
     private void downvote(RedditLink link) {
         int dir = (link.isLiked() == null || link.isLiked()) ? -1 : 0;
-        getBus().post(new VoteEvent(link.getId(), dir));
+        getBus().post(new VoteEvent(link.getKind(), link.getId(), dir));
     }
 
     @Override
