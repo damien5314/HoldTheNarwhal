@@ -31,9 +31,6 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
 
-;
-
-
 public class RedditService implements IRedditService {
     private static final String TAG = RedditService.class.getSimpleName();
 
