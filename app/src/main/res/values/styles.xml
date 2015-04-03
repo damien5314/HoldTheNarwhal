@@ -79,7 +79,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">@dimen/link_domain_text_size</item>
         <item name="android:textColor">@color/secondary_text</item>
-        <item name="android:textStyle">italic</item>
+        <!--<item name="android:textStyle">italic</item>-->
     </style>
 
     <style name="LinkScoreTextView">

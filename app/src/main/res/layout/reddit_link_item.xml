@@ -3,7 +3,6 @@
 <android.support.v7.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/link_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/link_card_margin"
@@ -11,6 +10,7 @@
     card_view:cardCornerRadius="@dimen/link_card_corner_radius">
 
     <LinearLayout
+        android:id="@+id/link_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/link_card_background"
@@ -31,6 +31,7 @@
 
             <TextView
                 android:id="@+id/link_domain"
+                android:layout_gravity="end"
                 style="@style/LinkDomainTextView"/>
 
         </LinearLayout>

@@ -6,7 +6,7 @@
         android:color="@android:color/black"/>
 
     <solid
-        android:color="#FFFFFFFF" />
+        android:color="@color/reddit_blue" />
 
     <padding
         android:top="1dp"

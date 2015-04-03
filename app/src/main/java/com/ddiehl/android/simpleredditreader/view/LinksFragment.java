@@ -327,11 +327,13 @@ public class LinksFragment extends Fragment {
     private class LinkHolder extends RecyclerView.ViewHolder
             implements View.OnClickListener, View.OnCreateContextMenuListener {
         private RedditLink mRedditLink;
+        private View mLinkView;
         private TextView mTitleView, mDomainView, mScoreView, mAuthorView, mTimestampView, mSubredditView, mCommentsView;
         private ImageView mThumbnailView;
 
         public LinkHolder(View itemView) {
             super(itemView);
+            mLinkView = itemView.findViewById(R.id.link_view);
             mScoreView = (TextView) itemView.findViewById(R.id.link_score);
             mTitleView = (TextView) itemView.findViewById(R.id.link_title);
             mAuthorView = (TextView) itemView.findViewById(R.id.link_author);
@@ -379,6 +381,15 @@ public class LinksFragment extends Fragment {
                 mThumbnailView.setVisibility(View.VISIBLE);
             } else {
                 mThumbnailView.setVisibility(View.GONE);
+            }
+
+            // Set background tint based on isLiked
+            if (link.isLiked() == null) {
+                mLinkView.setBackgroundResource(R.drawable.link_card_background);
+            } else if (link.isLiked()) {
+                mLinkView.setBackgroundResource(R.drawable.link_card_background_upvoted);
+            } else {
+                mLinkView.setBackgroundResource(R.drawable.link_card_background_downvoted);
             }
         }
 

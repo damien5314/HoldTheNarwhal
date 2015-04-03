@@ -13,5 +13,7 @@
 
     <color name="transparent">#00000000</color>
     <color name="indentation">@color/primary_light</color>
+    <color name="reddit_orange">#90FF8B60</color>
+    <color name="reddit_blue">#909494FF</color>
 
 </resources>

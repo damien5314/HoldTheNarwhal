@@ -360,6 +360,15 @@ public class CommentsFragment extends Fragment {
                 }
 
                 mSelfText.setText(link.getSelftext());
+
+                // Set background tint based on isLiked
+                if (link.isLiked() == null) {
+                    mLinkView.setBackgroundResource(R.drawable.link_card_background);
+                } else if (link.isLiked()) {
+                    mLinkView.setBackgroundResource(R.drawable.link_card_background_upvoted);
+                } else {
+                    mLinkView.setBackgroundResource(R.drawable.link_card_background_downvoted);
+                }
             }
         }
 
