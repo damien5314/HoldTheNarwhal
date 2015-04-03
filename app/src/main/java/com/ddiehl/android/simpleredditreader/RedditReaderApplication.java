@@ -20,6 +20,9 @@ import com.squareup.otto.Subscribe;
 public class RedditReaderApplication extends Application {
     private static final String TAG = RedditReaderApplication.class.getSimpleName();
 
+    public static final String USER_AGENT =
+            "android:com.ddiehl.android.simpleredditreader:v0.1 (by /u/damien5314)";
+
     @Override
     public void onCreate() {
         super.onCreate();

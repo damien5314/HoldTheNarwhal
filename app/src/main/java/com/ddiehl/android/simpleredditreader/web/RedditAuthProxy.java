@@ -7,17 +7,20 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.ddiehl.android.simpleredditreader.RedditPreferences;
+import com.ddiehl.android.simpleredditreader.RedditReaderApplication;
 import com.ddiehl.android.simpleredditreader.events.ApplicationAuthorizedEvent;
 import com.ddiehl.android.simpleredditreader.events.AuthorizeApplicationEvent;
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
 import com.ddiehl.android.simpleredditreader.events.LoadCommentsEvent;
 import com.ddiehl.android.simpleredditreader.events.LoadLinksEvent;
 import com.ddiehl.android.simpleredditreader.events.UserAuthCodeReceivedEvent;
+import com.ddiehl.android.simpleredditreader.events.UserAuthorizedEvent;
 import com.ddiehl.android.simpleredditreader.events.VoteEvent;
 import com.ddiehl.android.simpleredditreader.model.adapters.ListingDeserializer;
 import com.ddiehl.android.simpleredditreader.model.adapters.ListingResponseDeserializer;
 import com.ddiehl.android.simpleredditreader.model.listings.Listing;
 import com.ddiehl.android.simpleredditreader.model.listings.ListingResponse;
+import com.ddiehl.android.simpleredditreader.utils.AuthUtils;
 import com.ddiehl.android.simpleredditreader.utils.BaseUtils;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
@@ -37,16 +40,13 @@ import retrofit.converter.GsonConverter;
 public class RedditAuthProxy implements IRedditService {
     public static final String TAG = RedditAuthProxy.class.getSimpleName();
 
-    private static final String USER_AGENT =
-            "android:com.ddiehl.android.simpleredditreader:v0.1 (by /u/damien5314)";
-
     public static final String CLIENT_ID = "***REMOVED***";
     public static final String RESPONSE_TYPE = "code";
     public static final String DURATION = "permanent";
     public static final String STATE = BaseUtils.getRandomString();
     public static final String REDIRECT_URI = "http://127.0.0.1/";
     public static final String SCOPE = "mysubreddits,privatemessages,read,report,save,submit,vote";
-    public static final String HTTP_AUTH_HEADER = BaseUtils.getHttpAuthHeader(CLIENT_ID, "");
+    public static final String HTTP_AUTH_HEADER = AuthUtils.getHttpAuthHeader(CLIENT_ID, "");
 
     public static final String AUTHORIZATION_URL = "https://www.reddit.com/api/v1/authorize.compact" +
             "?client_id=" + CLIENT_ID +
@@ -116,7 +116,7 @@ public class RedditAuthProxy implements IRedditService {
                 .setRequestInterceptor(new RequestInterceptor() {
                     @Override
                     public void intercept(RequestFacade request) {
-                        request.addHeader("User-Agent", USER_AGENT);
+                        request.addHeader("User-Agent", RedditReaderApplication.USER_AGENT);
                         request.addHeader("Authorization", getAuthHeader());
                     }
                 })
@@ -178,30 +178,6 @@ public class RedditAuthProxy implements IRedditService {
         return Math.max(0, (mExpiration.getTime() - System.currentTimeMillis()) / 1000);
     }
 
-    /**
-     * Notification that authentication state has changed
-     */
-    @Subscribe
-    public void onUserAuthCodeReceived(UserAuthCodeReceivedEvent event) {
-        String grantType = "https://oauth.reddit.com/grants/installed_client";
-        String authCode = event.getCode();
-
-        // Retrieve auth token from authorization code
-        mApi.getUserAuthToken(grantType, authCode, RedditAuthProxy.REDIRECT_URI,
-                new Callback<AuthTokenResponse>() {
-                    @Override
-                    public void success(AuthTokenResponse response, Response response2) {
-                        Log.d(TAG, "User auth token retrieved successfully");
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        BaseUtils.showError(mContext, error);
-                        BaseUtils.printResponse(error.getResponse());
-                    }
-                });
-    }
-
     @Subscribe
     public void onAuthorizeApplication(AuthorizeApplicationEvent event) {
         String grantType = "https://oauth.reddit.com/grants/installed_client";
@@ -237,17 +213,54 @@ public class RedditAuthProxy implements IRedditService {
     }
 
     /**
+     * Notification that authentication state has changed
+     */
+    @Subscribe
+    public void onUserAuthCodeReceived(UserAuthCodeReceivedEvent event) {
+        String grantType = "https://oauth.reddit.com/grants/installed_client";
+        String authCode = event.getCode();
+
+        mEndpoint.setUrl(RedditEndpoint.NORMAL);
+        // Retrieve auth token from authorization code
+        mApi.getUserAuthToken(grantType, authCode, RedditAuthProxy.REDIRECT_URI,
+                new Callback<AuthTokenResponse>() {
+                    @Override
+                    public void success(AuthTokenResponse response, Response response2) {
+                        Log.d(TAG, "User auth token retrieved successfully");
+                        BaseUtils.printResponse(response2);
+//                        mBus.post(new UserAuthorizedEvent(response));
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        Log.e(TAG, "Error retrieving auth token for user");
+                        BaseUtils.showError(mContext, error);
+                        BaseUtils.printResponse(error.getResponse());
+                        mBus.post(new UserAuthorizedEvent(error));
+                    }
+                });
+    }
+
+    @Subscribe
+    public void onUserAuthorized(UserAuthorizedEvent event) {
+        if (!event.isFailed()) {
+            AuthTokenResponse response = event.getResponse();
+            saveAuthToken(response);
+            if (mQueuedEvent != null) {
+                mBus.post(mQueuedEvent);
+            }
+        }
+    }
+
+    /**
      * Retrieves link listings for subreddit
      */
     @Subscribe
     public void onLoadLinks(LoadLinksEvent event) {
-        Log.d(TAG, "RedditAuthProxy.onLoadLinks");
         if (!hasValidAuthToken()) {
-            Log.d(TAG, "No valid auth token, requesting");
             mQueuedEvent = event;
             mBus.post(new AuthorizeApplicationEvent());
         } else {
-            Log.d(TAG, "Found valid auth token");
             mService.onLoadLinks(event);
         }
     }
@@ -258,11 +271,9 @@ public class RedditAuthProxy implements IRedditService {
     @Subscribe
     public void onLoadComments(LoadCommentsEvent event) {
         if (!hasValidAuthToken()) {
-            Log.d(TAG, "No valid auth token, requesting");
             mQueuedEvent = event;
             mBus.post(new AuthorizeApplicationEvent());
         } else {
-            Log.d(TAG, "Found valid auth token");
             mService.onLoadComments(event);
         }
     }
@@ -273,11 +284,9 @@ public class RedditAuthProxy implements IRedditService {
     @Subscribe
     public void onVote(VoteEvent event) {
         if (!hasValidAuthToken()) {
-            Log.d(TAG, "No valid auth token, requesting");
             mQueuedEvent = event;
             mBus.post(new AuthorizeApplicationEvent());
         } else {
-            Log.d(TAG, "Found valid auth token");
             mService.onVote(event);
         }
     }

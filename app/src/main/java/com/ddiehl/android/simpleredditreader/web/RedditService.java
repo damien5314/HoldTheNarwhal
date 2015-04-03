@@ -1,9 +1,7 @@
 package com.ddiehl.android.simpleredditreader.web;
 
 import android.content.Context;
-import android.util.Log;
 
-import com.ddiehl.android.simpleredditreader.utils.BaseUtils;
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
 import com.ddiehl.android.simpleredditreader.events.CommentsLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.LinksLoadedEvent;
@@ -12,6 +10,7 @@ import com.ddiehl.android.simpleredditreader.events.LoadLinksEvent;
 import com.ddiehl.android.simpleredditreader.events.VoteEvent;
 import com.ddiehl.android.simpleredditreader.events.VoteSubmittedEvent;
 import com.ddiehl.android.simpleredditreader.model.listings.ListingResponse;
+import com.ddiehl.android.simpleredditreader.utils.BaseUtils;
 import com.squareup.otto.Bus;
 
 import java.util.List;
@@ -37,7 +36,6 @@ public class RedditService implements IRedditService {
      * Retrieves link listings for subreddit
      */
     public void onLoadLinks(LoadLinksEvent event) {
-        Log.d(TAG, "RedditService.onLoadLinks");
         String subreddit = event.getSubreddit();
         String sort = event.getSort();
         String timespan = event.getTimeSpan();
