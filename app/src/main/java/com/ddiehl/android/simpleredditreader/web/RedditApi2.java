@@ -13,7 +13,7 @@ import retrofit.http.POST;
 import retrofit.http.Path;
 import retrofit.http.Query;
 
-public interface RedditApi {
+public interface RedditApi2 {
 
     @FormUrlEncoded @POST("/api/v1/access_token")
     void getApplicationAuthToken(@Field("grant_type") String grantType,
