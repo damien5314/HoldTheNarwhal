@@ -2,6 +2,7 @@ package com.ddiehl.android.simpleredditreader.web;
 
 import android.content.Context;
 
+import com.ddiehl.android.simpleredditreader.RedditReaderApplication;
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
 import com.ddiehl.android.simpleredditreader.events.CommentsLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.LinksLoadedEvent;
@@ -9,27 +10,64 @@ import com.ddiehl.android.simpleredditreader.events.LoadCommentsEvent;
 import com.ddiehl.android.simpleredditreader.events.LoadLinksEvent;
 import com.ddiehl.android.simpleredditreader.events.VoteEvent;
 import com.ddiehl.android.simpleredditreader.events.VoteSubmittedEvent;
+import com.ddiehl.android.simpleredditreader.model.adapters.ListingDeserializer;
+import com.ddiehl.android.simpleredditreader.model.adapters.ListingResponseDeserializer;
+import com.ddiehl.android.simpleredditreader.model.listings.Listing;
 import com.ddiehl.android.simpleredditreader.model.listings.ListingResponse;
 import com.ddiehl.android.simpleredditreader.utils.BaseUtils;
+import com.google.gson.FieldNamingPolicy;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.squareup.otto.Bus;
 
 import java.util.List;
 
 import retrofit.Callback;
+import retrofit.RequestInterceptor;
+import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+import retrofit.converter.GsonConverter;
 
 
 public class RedditService implements IRedditService {
     private static final String TAG = RedditService.class.getSimpleName();
 
     private Context mContext;
-    private RedditApi mApi;
+    private RedditAPI mAPI;
     private Bus mBus = BusProvider.getInstance();
 
-    protected RedditService(Context context, RedditApi api) {
+    private String mAuthToken;
+
+    protected RedditService(Context context) {
         mContext = context.getApplicationContext();
-        mApi = api;
+        mAPI = buildApi();
+    }
+
+    private RedditAPI buildApi() {
+        Gson gson = new GsonBuilder()
+                .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+                .registerTypeAdapter(ListingResponse.class, new ListingResponseDeserializer())
+                .registerTypeAdapter(Listing.class, new ListingDeserializer())
+                .create();
+
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setEndpoint(RedditEndpoint.AUTHORIZED)
+                .setConverter(new GsonConverter(gson))
+                .setRequestInterceptor(new RequestInterceptor() {
+                    @Override
+                    public void intercept(RequestFacade request) {
+                        request.addHeader("User-Agent", RedditReaderApplication.USER_AGENT);
+                        request.addHeader("Authorization", "bearer " + mAuthToken);
+                    }
+                })
+                .build();
+
+        return restAdapter.create(RedditAPI.class);
+    }
+
+    public void setAuthToken(String token) {
+        mAuthToken = token;
     }
 
     /**
@@ -42,7 +80,7 @@ public class RedditService implements IRedditService {
         String after = event.getAfter();
 
         if (subreddit == null) {
-            mApi.getDefaultLinks(sort, timespan, after, new Callback<ListingResponse>() {
+            mAPI.getDefaultLinks(sort, timespan, after, new Callback<ListingResponse>() {
                 @Override
                 public void success(ListingResponse linksResponse, Response response) {
                     BaseUtils.printResponseStatus(response);
@@ -57,7 +95,7 @@ public class RedditService implements IRedditService {
                 }
             });
         } else {
-            mApi.getLinks(subreddit, sort, timespan, after, new Callback<ListingResponse>() {
+            mAPI.getLinks(subreddit, sort, timespan, after, new Callback<ListingResponse>() {
                 @Override
                 public void success(ListingResponse linksResponse, Response response) {
                     BaseUtils.printResponseStatus(response);
@@ -82,7 +120,7 @@ public class RedditService implements IRedditService {
         String article = event.getArticle();
         String sort = event.getSort();
 
-        mApi.getComments(subreddit, article, sort, new Callback<List<ListingResponse>>() {
+        mAPI.getComments(subreddit, article, sort, new Callback<List<ListingResponse>>() {
             @Override
             public void success(List<ListingResponse> listingsList, Response response) {
                 BaseUtils.printResponseStatus(response);
@@ -104,7 +142,7 @@ public class RedditService implements IRedditService {
     public void onVote(VoteEvent event) {
         String id = event.getId();
         int direction = event.getDirection();
-        mApi.vote(id, direction, new Callback<Response>() {
+        mAPI.vote(id, direction, new Callback<Response>() {
             @Override
             public void success(Response response, Response response2) {
                 BaseUtils.printResponseStatus(response);

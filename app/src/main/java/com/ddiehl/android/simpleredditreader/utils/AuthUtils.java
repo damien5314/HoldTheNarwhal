@@ -25,7 +25,6 @@ public class AuthUtils {
 
     public static String getUserAuthCodeFromRedirectUri(String url) {
         Uri uri = Uri.parse(url);
-        Log.d(TAG, "URI: " + uri.toString());
         String query = uri.getQuery();
         String[] params = query.split("&");
 

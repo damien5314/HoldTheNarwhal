@@ -1,16 +1,14 @@
 package com.ddiehl.android.simpleredditreader.utils;
 
 import android.content.Context;
-import android.util.Base64;
 import android.util.Log;
 import android.widget.Toast;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.Date;
 import java.util.List;
+import java.util.Scanner;
 import java.util.UUID;
 
 import retrofit.RetrofitError;
@@ -91,17 +89,16 @@ public class BaseUtils {
 
     public static void printResponseStatus(Response response) {
         if (response != null) {
-            System.out.println("URL: " + response.getUrl() + " (STATUS: " + response.getStatus() + ")");
-//        System.out.println("REASON: " + response.getReason());
+            Log.d(TAG, "URL: " + response.getUrl() + " (STATUS: " + response.getStatus() + ")");
         }
     }
 
     public static void printResponseHeaders(Response response) {
         if (response != null) {
-            System.out.println("--HEADERS--");
+            Log.d(TAG, "--HEADERS--");
             List<Header> headersList = response.getHeaders();
             for (Header header : headersList) {
-                System.out.println(header.toString());
+                Log.d(TAG, header.toString());
             }
         }
     }
@@ -109,11 +106,11 @@ public class BaseUtils {
     public static void printResponseBody(Response response) {
         if (response != null) {
             try {
-                System.out.println("--BODY--");
                 TypedInput body = response.getBody();
-                System.out.println("LENGTH: " + body.length());
-                System.out.println("-CONTENT-");
-                System.out.println(inputStreamToString(body.in()));
+                Log.d(TAG, "--BODY-- LENGTH: " + body.length());
+                InputStream in_s = body.in();
+                Log.d(TAG, inputStreamToString(in_s));
+                in_s.close();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -121,14 +118,8 @@ public class BaseUtils {
     }
 
     public static String inputStreamToString(InputStream i) throws IOException {
-        StringBuilder output = new StringBuilder();
-        BufferedReader in = new BufferedReader(new InputStreamReader(i));
-        String inputLine;
-        while ((inputLine = in.readLine()) != null) {
-            output.append(inputLine).append("\n");
-        }
-        in.close();
-        return output.toString();
+        Scanner s = new Scanner(i).useDelimiter("\\A");
+        return s.hasNext() ? s.next() : "";
     }
 
     public static String getRandomString() {
