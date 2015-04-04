@@ -12,6 +12,7 @@ import com.ddiehl.android.simpleredditreader.RedditReaderApplication;
 import com.ddiehl.android.simpleredditreader.events.ApplicationAuthorizedEvent;
 import com.ddiehl.android.simpleredditreader.events.AuthorizeApplicationEvent;
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
+import com.ddiehl.android.simpleredditreader.events.GetUserIdentityEvent;
 import com.ddiehl.android.simpleredditreader.events.LoadCommentsEvent;
 import com.ddiehl.android.simpleredditreader.events.LoadLinksEvent;
 import com.ddiehl.android.simpleredditreader.events.RefreshUserAccessTokenEvent;
@@ -265,6 +266,20 @@ public class RedditAuthProxy implements IRedditService {
                 mQueuedEvent = null;
                 mBus.post(e);
             }
+        }
+    }
+
+    @Subscribe
+    public void onGetUserIdentity(GetUserIdentityEvent event) {
+        if (!hasValidAuthToken()) {
+            mQueuedEvent = event;
+            if (mRefreshToken != null) {
+                mBus.post(new RefreshUserAccessTokenEvent(mRefreshToken));
+            } else {
+                mBus.post(new AuthorizeApplicationEvent());
+            }
+        } else {
+            mService.onGetUserIdentity(event);
         }
     }
 

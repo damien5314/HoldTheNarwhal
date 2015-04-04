@@ -5,12 +5,15 @@ import android.content.Context;
 import com.ddiehl.android.simpleredditreader.RedditReaderApplication;
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
 import com.ddiehl.android.simpleredditreader.events.CommentsLoadedEvent;
+import com.ddiehl.android.simpleredditreader.events.GetUserIdentityEvent;
 import com.ddiehl.android.simpleredditreader.events.LinksLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.LoadCommentsEvent;
 import com.ddiehl.android.simpleredditreader.events.LoadLinksEvent;
+import com.ddiehl.android.simpleredditreader.events.UserIdentityRetrievedEvent;
 import com.ddiehl.android.simpleredditreader.events.VoteEvent;
 import com.ddiehl.android.simpleredditreader.events.VoteSubmittedEvent;
 import com.ddiehl.android.simpleredditreader.exceptions.UserRequiredException;
+import com.ddiehl.android.simpleredditreader.model.UserIdentity;
 import com.ddiehl.android.simpleredditreader.model.adapters.ListingDeserializer;
 import com.ddiehl.android.simpleredditreader.model.adapters.ListingResponseDeserializer;
 import com.ddiehl.android.simpleredditreader.model.listings.Listing;
@@ -69,6 +72,23 @@ public class RedditService implements IRedditService {
 
     public void setAuthToken(String token) {
         mAuthToken = token;
+    }
+
+    public void onGetUserIdentity(GetUserIdentityEvent event) {
+        mAPI.getUserIdentity(new Callback<UserIdentity>() {
+            @Override
+            public void success(UserIdentity userIdentity, Response response) {
+                BaseUtils.printResponseStatus(response);
+                mBus.post(new UserIdentityRetrievedEvent(userIdentity));
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                BaseUtils.showError(mContext, error);
+                BaseUtils.printResponse(error.getResponse());
+                mBus.post(new UserIdentityRetrievedEvent(error));
+            }
+        });
     }
 
     /**
