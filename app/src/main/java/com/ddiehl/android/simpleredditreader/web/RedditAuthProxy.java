@@ -292,7 +292,11 @@ public class RedditAuthProxy implements IRedditService {
     public void onLoadComments(LoadCommentsEvent event) {
         if (!hasValidAuthToken()) {
             mQueuedEvent = event;
-            mBus.post(new AuthorizeApplicationEvent());
+            if (mRefreshToken != null) {
+                mBus.post(new RefreshUserAccessTokenEvent(mRefreshToken));
+            } else {
+                mBus.post(new AuthorizeApplicationEvent());
+            }
         } else {
             mService.onLoadComments(event);
         }
@@ -305,7 +309,11 @@ public class RedditAuthProxy implements IRedditService {
     public void onVote(VoteEvent event) {
         if (!hasValidAuthToken()) {
             mQueuedEvent = event;
-            mBus.post(new AuthorizeApplicationEvent());
+            if (mRefreshToken != null) {
+                mBus.post(new RefreshUserAccessTokenEvent(mRefreshToken));
+            } else {
+                mBus.post(new AuthorizeApplicationEvent());
+            }
         } else {
             mService.onVote(event);
         }

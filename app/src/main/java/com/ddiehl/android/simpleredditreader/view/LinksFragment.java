@@ -64,6 +64,8 @@ public class LinksFragment extends Fragment {
     private LinearLayoutManager mLayoutManager;
     private LinkAdapter mLinkAdapter;
 
+    private int mClickedLinkPosition;
+
     public LinksFragment() { /* Default constructor required */ }
 
     public static LinksFragment newInstance(String subreddit) {
@@ -424,8 +426,6 @@ public class LinksFragment extends Fragment {
             mClickedLinkPosition = getPosition();
         }
     }
-
-    private int mClickedLinkPosition;
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {

@@ -325,8 +325,12 @@ public class CommentsFragment extends Fragment {
                 }
 
                 mLinkView.setVisibility(View.VISIBLE);
-                if (link.getSelftext() != null && !link.getSelftext().equals(""))
+                if (link.getSelftext() != null && !link.getSelftext().equals("")) {
+                    mSelfText.setText(link.getSelftext());
                     mSelfText.setVisibility(View.VISIBLE);
+                } else {
+                    mSelfText.setVisibility(View.GONE);
+                }
 
                 String createDateFormatted = BaseUtils.getFormattedDateStringFromUtc(link.getCreatedUtc().longValue());
 
@@ -358,8 +362,6 @@ public class CommentsFragment extends Fragment {
                 } else {
                     mLinkThumbnail.setVisibility(View.GONE);
                 }
-
-                mSelfText.setText(link.getSelftext());
 
                 // Set background tint based on isLiked
                 if (link.isLiked() == null) {
