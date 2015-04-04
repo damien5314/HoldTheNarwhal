@@ -330,25 +330,27 @@ public class LinksFragment extends Fragment {
             implements View.OnClickListener, View.OnCreateContextMenuListener {
         private RedditLink mRedditLink;
         private View mLinkView;
-        private TextView mTitleView, mDomainView, mScoreView, mAuthorView, mTimestampView, mSubredditView, mCommentsView;
-        private ImageView mThumbnailView;
+        private TextView mLinkTitle, mLinkDomain, mLinkScore, mLinkAuthor, mLinkTimestamp,
+                mLinkSubreddit, mLinkComments, mSelfText;
+        private ImageView mLinkThumbnail;
 
         public LinkHolder(View itemView) {
             super(itemView);
             mLinkView = itemView.findViewById(R.id.link_view);
-            mScoreView = (TextView) itemView.findViewById(R.id.link_score);
-            mTitleView = (TextView) itemView.findViewById(R.id.link_title);
-            mAuthorView = (TextView) itemView.findViewById(R.id.link_author);
-            mTimestampView = (TextView) itemView.findViewById(R.id.link_timestamp);
-            mSubredditView = (TextView) itemView.findViewById(R.id.link_subreddit);
-            mDomainView = (TextView) itemView.findViewById(R.id.link_domain);
-            mThumbnailView = (ImageView) itemView.findViewById(R.id.link_thumbnail);
-            mCommentsView = (TextView) itemView.findViewById(R.id.link_comment_count);
+            mLinkScore = (TextView) itemView.findViewById(R.id.link_score);
+            mLinkTitle = (TextView) itemView.findViewById(R.id.link_title);
+            mLinkAuthor = (TextView) itemView.findViewById(R.id.link_author);
+            mLinkTimestamp = (TextView) itemView.findViewById(R.id.link_timestamp);
+            mLinkSubreddit = (TextView) itemView.findViewById(R.id.link_subreddit);
+            mLinkDomain = (TextView) itemView.findViewById(R.id.link_domain);
+            mLinkThumbnail = (ImageView) itemView.findViewById(R.id.link_thumbnail);
+            mLinkComments = (TextView) itemView.findViewById(R.id.link_comment_count);
+            mSelfText = (TextView) itemView.findViewById(R.id.link_self_text);
 
             itemView.setOnClickListener(this);
-            mTitleView.setOnClickListener(this);
-            mThumbnailView.setOnClickListener(this);
-            mCommentsView.setOnClickListener(this);
+            mLinkTitle.setOnClickListener(this);
+            mLinkThumbnail.setOnClickListener(this);
+            mLinkComments.setOnClickListener(this);
             itemView.setOnCreateContextMenuListener(this);
         }
 
@@ -357,32 +359,33 @@ public class LinksFragment extends Fragment {
             String createDateFormatted = BaseUtils.getFormattedDateStringFromUtc(link.getCreatedUtc().longValue());
 
             // Set content for each TextView
-            mScoreView.setText(String.valueOf(link.getScore()) + " points");
-            mTitleView.setText(link.getTitle());
-            mAuthorView.setText("/u/" + link.getAuthor());
-            mTimestampView.setText(createDateFormatted);
-            mSubredditView.setText("/r/" + link.getSubreddit());
-            mDomainView.setText("(" + link.getDomain() + ")");
-            mCommentsView.setText(link.getNumComments() + " comments");
+            mLinkScore.setText(String.valueOf(link.getScore()) + " points");
+            mLinkTitle.setText(link.getTitle());
+            mLinkAuthor.setText("/u/" + link.getAuthor());
+            mLinkTimestamp.setText(createDateFormatted);
+            mLinkSubreddit.setText("/r/" + link.getSubreddit());
+            mLinkDomain.setText("(" + link.getDomain() + ")");
+            mLinkComments.setText(link.getNumComments() + " comments");
+            mSelfText.setVisibility(View.GONE);
 
             // Queue thumbnail to be downloaded, if one exists
-            mThumbnailView.setImageResource(R.drawable.ic_thumbnail_placeholder);
+            mLinkThumbnail.setImageResource(R.drawable.ic_thumbnail_placeholder);
 
             String thumbnailUrl = link.getThumbnail();
             if (thumbnailUrl.equals("nsfw")) {
-                mThumbnailView.setImageResource(R.drawable.ic_nsfw);
+                mLinkThumbnail.setImageResource(R.drawable.ic_nsfw);
             } else if (!thumbnailUrl.equals("")
                     && !thumbnailUrl.equals("default")
                     && !thumbnailUrl.equals("self")) {
                 Bitmap thumbnail = mThumbnailCache.getThumbnail(thumbnailUrl);
                 if (thumbnail == null) {
-                    mThumbnailThread.queueThumbnail(mThumbnailView, thumbnailUrl);
+                    mThumbnailThread.queueThumbnail(mLinkThumbnail, thumbnailUrl);
                 } else {
-                    mThumbnailView.setImageBitmap(thumbnail);
+                    mLinkThumbnail.setImageBitmap(thumbnail);
                 }
-                mThumbnailView.setVisibility(View.VISIBLE);
+                mLinkThumbnail.setVisibility(View.VISIBLE);
             } else {
-                mThumbnailView.setVisibility(View.GONE);
+                mLinkThumbnail.setVisibility(View.GONE);
             }
 
             // Set background tint based on isLiked

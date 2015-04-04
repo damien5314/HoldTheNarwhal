@@ -262,7 +262,7 @@ public class CommentsFragment extends Fragment {
             switch (viewType) {
                 case TYPE_HEADER:
                     View view = LayoutInflater.from(parent.getContext())
-                            .inflate(R.layout.comments_fragment_link_header, parent, false);
+                            .inflate(R.layout.reddit_link_item, parent, false);
                     return new LinkHolder(view);
                 case TYPE_ITEM:
                     view = LayoutInflater.from(parent.getContext())
@@ -299,8 +299,8 @@ public class CommentsFragment extends Fragment {
 
         private class LinkHolder extends RecyclerView.ViewHolder {
             private View mLinkView;
-            private TextView mLinkTitle, mLinkDomain, mLinkScore, mLinkAuthor, mLinkTimestamp, mLinkSubreddit, mLinkComments;
-            private TextView mSelfText;
+            private TextView mLinkTitle, mLinkDomain, mLinkScore, mLinkAuthor, mLinkTimestamp,
+                    mLinkSubreddit, mLinkComments, mSelfText;
             private ImageView mLinkThumbnail;
 
             public LinkHolder(View v) {
