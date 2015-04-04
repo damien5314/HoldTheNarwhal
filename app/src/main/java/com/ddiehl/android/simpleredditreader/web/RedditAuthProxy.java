@@ -43,7 +43,7 @@ public class RedditAuthProxy implements IRedditService {
     public static final String DURATION = "permanent";
     public static final String STATE = BaseUtils.getRandomString();
     public static final String REDIRECT_URI = "http://127.0.0.1/";
-    public static final String SCOPE = "mysubreddits,privatemessages,read,report,save,submit,vote";
+    public static final String SCOPE = "identity,mysubreddits,privatemessages,read,report,save,submit,vote";
     public static final String HTTP_AUTH_HEADER = AuthUtils.getHttpAuthHeader(CLIENT_ID, "");
 
     public static final String AUTHORIZATION_URL = "https://www.reddit.com/api/v1/authorize.compact" +
@@ -130,7 +130,11 @@ public class RedditAuthProxy implements IRedditService {
         long expiresIn = response.getExpiresIn();
         mExpiration = new Date(System.currentTimeMillis() + (expiresIn * 1000));
         mScope = response.getScope();
-        mRefreshToken = response.getRefreshToken();
+
+        String refreshToken = response.getRefreshToken();
+        if (refreshToken != null) {
+            mRefreshToken = refreshToken;
+        }
 
         Log.d(TAG, "--AUTH TOKEN RESPONSE--");
         Log.d(TAG, "Access Token: " + mAuthToken);

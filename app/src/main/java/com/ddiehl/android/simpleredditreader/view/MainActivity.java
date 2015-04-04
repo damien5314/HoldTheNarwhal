@@ -1,6 +1,5 @@
 package com.ddiehl.android.simpleredditreader.view;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -19,7 +18,6 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
@@ -191,15 +189,7 @@ public class MainActivity extends ActionBarActivity
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-            case REQUEST_AUTHORIZE:
-                if (resultCode == Activity.RESULT_OK) {
-                    Toast.makeText(this, getString(R.string.toast_authorized), Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(this, getString(R.string.toast_not_authorized), Toast.LENGTH_SHORT).show();
-                }
-                break;
-        }
+        // Removed unneeded Toasts after authorizing application
     }
 
     public void showSpinner(String message) {

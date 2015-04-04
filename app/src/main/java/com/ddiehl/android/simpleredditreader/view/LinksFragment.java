@@ -225,13 +225,13 @@ public class LinksFragment extends Fragment {
         }
 
         // Loop through the list of data and update the vote for the appropriate link
-        for (RedditLink link : mData) {
+        for (int i = 0; i < mData.size(); i++) {
+            RedditLink link = mData.get(i);
             if (link.getId().equals(event.getId())) {
                 link.applyVote(event.getDirection());
-                break;
+                mLinkAdapter.notifyItemChanged(i);
             }
         }
-        mLinkAdapter.notifyDataSetChanged();
     }
 
     @Override

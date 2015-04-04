@@ -13,6 +13,9 @@ import retrofit.http.Query;
 
 public interface RedditAPI {
 
+    @GET("/api/v1/me")
+    void getUserIdentity(Callback<Response> callback);
+
     @GET("/r/{subreddit}/{sort}.json")
     void getLinks(@Path("subreddit") String subreddit,
                   @Path("sort") String sort,
