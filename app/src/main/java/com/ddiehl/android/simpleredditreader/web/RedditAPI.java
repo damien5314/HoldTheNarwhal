@@ -1,5 +1,6 @@
 package com.ddiehl.android.simpleredditreader.web;
 
+import com.ddiehl.android.simpleredditreader.model.UserIdentity;
 import com.ddiehl.android.simpleredditreader.model.listings.ListingResponse;
 
 import java.util.List;
@@ -14,7 +15,7 @@ import retrofit.http.Query;
 public interface RedditAPI {
 
     @GET("/api/v1/me")
-    void getUserIdentity(Callback<Response> callback);
+    void getUserIdentity(Callback<UserIdentity> callback);
 
     @GET("/r/{subreddit}/{sort}.json")
     void getLinks(@Path("subreddit") String subreddit,
