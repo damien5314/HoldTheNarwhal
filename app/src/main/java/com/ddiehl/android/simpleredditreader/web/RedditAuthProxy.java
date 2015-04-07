@@ -12,11 +12,11 @@ import com.ddiehl.android.simpleredditreader.RedditReaderApplication;
 import com.ddiehl.android.simpleredditreader.events.ApplicationAuthorizedEvent;
 import com.ddiehl.android.simpleredditreader.events.AuthorizeApplicationEvent;
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
-import com.ddiehl.android.simpleredditreader.events.GetUserIdentityEvent;
 import com.ddiehl.android.simpleredditreader.events.LoadCommentsEvent;
 import com.ddiehl.android.simpleredditreader.events.LoadLinksEvent;
 import com.ddiehl.android.simpleredditreader.events.RefreshUserAccessTokenEvent;
 import com.ddiehl.android.simpleredditreader.events.UserAuthCodeReceivedEvent;
+import com.ddiehl.android.simpleredditreader.events.UserAuthorizationRefreshedEvent;
 import com.ddiehl.android.simpleredditreader.events.UserAuthorizedEvent;
 import com.ddiehl.android.simpleredditreader.events.VoteEvent;
 import com.ddiehl.android.simpleredditreader.utils.AuthUtils;
@@ -243,14 +243,14 @@ public class RedditAuthProxy implements IRedditService {
             @Override
             public void success(AuthTokenResponse authTokenResponse, Response response) {
                 BaseUtils.printResponseStatus(response);
-                mBus.post(new UserAuthorizedEvent(authTokenResponse));
+                mBus.post(new UserAuthorizationRefreshedEvent(authTokenResponse));
             }
 
             @Override
             public void failure(RetrofitError error) {
                 BaseUtils.showError(mContext, error);
                 BaseUtils.printResponse(error.getResponse());
-                mBus.post(new UserAuthorizedEvent(error));
+                mBus.post(new UserAuthorizationRefreshedEvent(error));
             }
         });
     }
@@ -261,6 +261,7 @@ public class RedditAuthProxy implements IRedditService {
             Toast.makeText(mContext, "User authorized", Toast.LENGTH_SHORT).show();
             AuthTokenResponse response = event.getResponse();
             saveAuthToken(response);
+            mService.getUserIdentity();
             if (mQueuedEvent != null) {
                 Object e = mQueuedEvent;
                 mQueuedEvent = null;
@@ -270,16 +271,17 @@ public class RedditAuthProxy implements IRedditService {
     }
 
     @Subscribe
-    public void onGetUserIdentity(GetUserIdentityEvent event) {
-        if (!hasValidAuthToken()) {
-            mQueuedEvent = event;
-            if (mRefreshToken != null) {
-                mBus.post(new RefreshUserAccessTokenEvent(mRefreshToken));
-            } else {
-                mBus.post(new AuthorizeApplicationEvent());
+    public void onUserAuthorizationRefreshed(UserAuthorizationRefreshedEvent event) {
+        if (!event.isFailed()) {
+            Toast.makeText(mContext, "User authorization refreshed", Toast.LENGTH_SHORT).show();
+            AuthTokenResponse response = event.getResponse();
+            saveAuthToken(response);
+//            mService.getUserIdentity();
+            if (mQueuedEvent != null) {
+                Object e = mQueuedEvent;
+                mQueuedEvent = null;
+                mBus.post(e);
             }
-        } else {
-            mService.onGetUserIdentity(event);
         }
     }
 

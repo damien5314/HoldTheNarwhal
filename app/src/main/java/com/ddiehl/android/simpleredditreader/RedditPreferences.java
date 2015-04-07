@@ -4,11 +4,17 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import com.ddiehl.android.simpleredditreader.events.UserIdentityRetrievedEvent;
+import com.ddiehl.android.simpleredditreader.model.UserIdentity;
+import com.squareup.otto.Subscribe;
+
 import java.util.UUID;
 
 public class RedditPreferences {
     public static final String PREFS_DEVICE_ID = "prefs_device_id";
     public static final String PREF_DEVICE_ID = "pref_device_id";
+
+    // User identity preferences
 
     public static final String COMMENT_SORT = "pref_comment_sort";
     public static final String LINKS_SORT = "pref_links_sort";
@@ -47,6 +53,14 @@ public class RedditPreferences {
         String deviceId = UUID.randomUUID().toString();
         sp.edit().putString(PREF_DEVICE_ID, deviceId).apply();
         return deviceId;
+    }
+
+    @Subscribe
+    public void saveUserIdentity(UserIdentityRetrievedEvent event) {
+        if (event.isFailed())
+            return;
+
+        UserIdentity identity = event.getUserIdentity();
     }
 
     public String getCommentSort() {
