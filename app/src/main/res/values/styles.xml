@@ -37,30 +37,30 @@
 
     <style name="NavigationDrawerItem">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_height">@dimen/navigation_drawer_item_height</item>
         <item name="android:orientation">horizontal</item>
-        <item name="android:gravity">center_vertical</item>
         <item name="android:paddingLeft">?android:attr/listPreferredItemPaddingStart</item>
         <item name="android:paddingRight">?android:attr/listPreferredItemPaddingEnd</item>
-        <item name="android:minHeight">?android:attr/listPreferredItemHeightSmall</item>
     </style>
 
     <style name="NavigationDrawerItemIcon">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center</item>
         <item name="android:color">@color/accent</item>
     </style>
 
     <style name="NavigationDrawerItemText">
         <item name="android:layout_width">fill_parent</item>
-        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_height">fill_parent</item>
+        <item name="android:gravity">center_vertical</item>
         <item name="android:textColor">@color/primary_text</item>
         <item name="android:textAppearance">?android:attr/textAppearanceListItemSmall</item>
     </style>
 
     <style name="NavigationDrawerEditText">
         <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_height">fill_parent</item>
         <item name="android:layout_weight">1</item>
         <item name="android:textAppearance">?android:attr/textAppearanceListItemSmall</item>
         <item name="android:textColor">@color/primary_text</item>
@@ -145,4 +145,5 @@
         <item name="android:topDark">@color/transparent</item>
     </style>
 
+    <dimen name="navigation_drawer_item_height">48dp</dimen>
 </resources>
