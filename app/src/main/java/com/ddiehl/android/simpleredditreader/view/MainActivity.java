@@ -1,7 +1,6 @@
 package com.ddiehl.android.simpleredditreader.view;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -11,12 +10,13 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
+import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ddiehl.android.simpleredditreader.R;
@@ -36,9 +36,10 @@ public class MainActivity extends ActionBarActivity
     // Navigation drawer
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
-    private View mLogIn, mUserProfile, mFrontPage, mAllSubreddits, mSubreddits,
-            mRandomSubreddit, mNavigationDrawer, mNavToSubredditGo;
-    private EditText mNavToSubredditText;
+    private RecyclerView mNavigationDrawerListView;
+    private RecyclerView.LayoutManager mLayoutManager;
+    private RecyclerView.Adapter mLayoutAdapter;
+
     private ProgressDialog mProgressBar;
 
     @Override
@@ -58,51 +59,39 @@ public class MainActivity extends ActionBarActivity
         mDrawerToggle.setHomeAsUpIndicator(R.drawable.ic_drawer);
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
-        mLogIn = findViewById(R.id.drawer_log_in);
-        mLogIn.setOnClickListener(this);
+        mNavigationDrawerListView = (RecyclerView) findViewById(R.id.navigation_drawer_list_view);
+        mLayoutManager = new LinearLayoutManager(this);
+        mNavigationDrawerListView.setLayoutManager(mLayoutManager);
+        mLayoutAdapter = new NavDrawerItemAdapter();
+        mNavigationDrawerListView.setAdapter(mLayoutAdapter);
 
-        mUserProfile = findViewById(R.id.drawer_user_profile);
-        mUserProfile.setOnClickListener(this);
-
-        mFrontPage = findViewById(R.id.drawer_front_page);
-        mFrontPage.setOnClickListener(this);
-
-        mAllSubreddits = findViewById(R.id.drawer_r_all);
-        mAllSubreddits.setOnClickListener(this);
-
-        mSubreddits = findViewById(R.id.drawer_subreddits);
-        mSubreddits.setOnClickListener(this);
-
-        mRandomSubreddit = findViewById(R.id.drawer_random_subreddit);
-        mRandomSubreddit.setOnClickListener(this);
-
-        mNavToSubredditGo = findViewById(R.id.drawer_navigate_to_subreddit_go);
-        mNavToSubredditGo.setOnClickListener(this);
-
-        mNavToSubredditText = (EditText) findViewById(R.id.drawer_navigate_to_subreddit_text);
-        mNavToSubredditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) { // Hide keyboard
-                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-                }
-            }
-        });
-        mNavToSubredditText.setOnEditorActionListener(new EditText.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    mNavToSubredditGo.performClick();
-                    return true;
-                }
-                return false;
-            }
-        });
-
-        // Set onClick to null to intercept click events from background
-        mNavigationDrawer = findViewById(R.id.navigation_drawer);
-        mNavigationDrawer.setOnClickListener(null);
+//        mNavToSubredditGo = findViewById(R.id.drawer_navigate_to_subreddit_go);
+//        mNavToSubredditGo.setOnClickListener(this);
+//
+//        mNavToSubredditText = (EditText) findViewById(R.id.drawer_navigate_to_subreddit_text);
+//        mNavToSubredditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+//            @Override
+//            public void onFocusChange(View v, boolean hasFocus) {
+//                if (!hasFocus) { // Hide keyboard
+//                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+//                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+//                }
+//            }
+//        });
+//        mNavToSubredditText.setOnEditorActionListener(new EditText.OnEditorActionListener() {
+//            @Override
+//            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+//                if (actionId == EditorInfo.IME_ACTION_DONE) {
+//                    mNavToSubredditGo.performClick();
+//                    return true;
+//                }
+//                return false;
+//            }
+//        });
+//
+//        // Set onClick to null to intercept click events from background
+//        mNavigationDrawer = findViewById(R.id.navigation_drawer);
+//        mNavigationDrawer.setOnClickListener(null);
     }
 
     @Override
@@ -137,30 +126,6 @@ public class MainActivity extends ActionBarActivity
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.drawer_log_in:
-                Intent intent = AuthUtils.getUserAuthCodeIntent(this);
-                startActivityForResult(intent, REQUEST_AUTHORIZE);
-                break;
-            case R.id.drawer_user_profile:
-                break;
-            case R.id.drawer_front_page:
-                showSubreddit(null);
-                break;
-            case R.id.drawer_r_all:
-                showSubreddit("all");
-                break;
-            case R.id.drawer_subreddits:
-                break;
-            case R.id.drawer_random_subreddit:
-                showSubreddit("random");
-                break;
-            case R.id.drawer_navigate_to_subreddit_go:
-                String inputSubreddit = mNavToSubredditText.getText().toString();
-                if (!inputSubreddit.equals("")) {
-                    mNavToSubredditText.setText("");
-                    showSubreddit(inputSubreddit);
-                }
-                break;
         }
 
         mDrawerLayout.closeDrawer(GravityCompat.START);
@@ -207,4 +172,115 @@ public class MainActivity extends ActionBarActivity
             mProgressBar.dismiss();
         }
     }
+
+    private class NavDrawerItemAdapter extends RecyclerView.Adapter<NavDrawerItemHolder> {
+        @Override
+        public NavDrawerItemHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View v = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.navigation_drawer_row, parent, false);
+            return new NavDrawerItemHolder(v);
+        }
+
+        @Override
+        public void onBindViewHolder(NavDrawerItemHolder holder, int position) {
+            holder.displayPosition(position);
+        }
+
+        @Override
+        public int getItemCount() {
+            return 7;
+        }
+    }
+
+    private class NavDrawerItemHolder extends RecyclerView.ViewHolder {
+        private View mItemRow;
+        private ImageView mItemIcon;
+        private TextView mItemLabel;
+
+        public NavDrawerItemHolder(View itemView) {
+            super(itemView);
+            mItemRow = itemView.findViewById(R.id.navigation_drawer_item);
+            mItemIcon = (ImageView) itemView.findViewById(R.id.navigation_drawer_item_icon);
+            mItemLabel = (TextView) itemView.findViewById(R.id.navigation_drawer_item_text);
+        }
+
+        public void displayPosition(int position) {
+            switch (position) {
+                // Set label, icon, and onClick behavior for the row
+                case 0: // Go to subreddit
+                    mItemLabel.setText(getString(R.string.go_to_subreddit));
+                    mItemRow.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            mDrawerLayout.closeDrawer(GravityCompat.START);
+                        }
+                    });
+                    break;
+                case 1:
+                    mItemLabel.setText(getString(R.string.drawer_log_in));
+                    mItemRow.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            mDrawerLayout.closeDrawer(GravityCompat.START);
+                            Intent intent = AuthUtils.getUserAuthCodeIntent(v.getContext());
+                            startActivityForResult(intent, REQUEST_AUTHORIZE);
+                        }
+                    });
+                    break;
+                case 2:
+                    mItemLabel.setText(getString(R.string.drawer_user_profile));
+                    mItemRow.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            mDrawerLayout.closeDrawer(GravityCompat.START);
+                        }
+                    });
+                    break;
+                case 3:
+                    mItemLabel.setText(getString(R.string.drawer_front_page));
+                    mItemRow.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            mDrawerLayout.closeDrawer(GravityCompat.START);
+                            showSubreddit(null);
+                        }
+                    });
+                    break;
+                case 4:
+                    mItemLabel.setText(getString(R.string.drawer_r_all));
+                    mItemRow.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            mDrawerLayout.closeDrawer(GravityCompat.START);
+                            showSubreddit("all");
+                        }
+                    });
+                    break;
+                case 5:
+                    mItemLabel.setText(getString(R.string.drawer_subreddits));
+                    mItemRow.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            mDrawerLayout.closeDrawer(GravityCompat.START);
+                        }
+                    });
+                    break;
+                case 6:
+                    mItemLabel.setText(getString(R.string.drawer_random_subreddit));
+                    mItemRow.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            mDrawerLayout.closeDrawer(GravityCompat.START);
+                            showSubreddit("random");
+                        }
+                    });
+                    break;
+            }
+        }
+    }
 }
+
+// String inputSubreddit = mNavToSubredditText.getText().toString();
+// if (!inputSubreddit.equals("")) {
+// mNavToSubredditText.setText("");
+// showSubreddit(inputSubreddit);

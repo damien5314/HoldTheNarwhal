@@ -30,9 +30,9 @@
     <style name="NavigationDrawer">
         <item name="android:layout_width">@dimen/navigation_drawer_width</item>
         <item name="android:layout_height">match_parent</item>
+        <item name="android:elevation">@dimen/navigation_drawer_elevation</item>
         <item name="android:layout_gravity">start</item>
         <item name="android:choiceMode">singleChoice</item>
-        <item name="android:background">@android:color/white</item>
     </style>
 
     <style name="NavigationDrawerItem">
@@ -146,4 +146,5 @@
     </style>
 
     <dimen name="navigation_drawer_item_height">48dp</dimen>
+    <dimen name="navigation_drawer_elevation">6dp</dimen>
 </resources>

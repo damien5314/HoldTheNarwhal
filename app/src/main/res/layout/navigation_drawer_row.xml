@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/navigation_drawer_item"
+    style="@style/NavigationDrawerItem">
+
+    <ImageView
+        android:id="@+id/navigation_drawer_item_icon"
+        style="@style/NavigationDrawerItemIcon"/>
+
+    <TextView
+        android:id="@+id/navigation_drawer_item_text"
+        style="@style/NavigationDrawerItemText"/>
+
+</LinearLayout>

@@ -2,103 +2,42 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/navigation_drawer"
     style="@style/NavigationDrawer"
+    android:background="@drawable/navigation_drawer_background"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:id="@+id/drawer_navigate_to_subreddit"
-        style="@style/NavigationDrawerItem">
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/navigation_drawer_header_background">
 
-        <EditText
-            android:id="@+id/drawer_navigate_to_subreddit_text"
-            style="@style/NavigationDrawerEditText"
-            android:hint="@string/go_to_subreddit"
-            android:imeOptions="actionDone"
-            android:inputType="text"
-            android:singleLine="true"/>
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center"
+            android:orientation="horizontal">
 
-        <ImageView
-            android:id="@+id/drawer_navigate_to_subreddit_go"
-            style="@style/NavigationDrawerItemIcon"
-            android:src="@drawable/ic_navigation_go"/>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_user_account"/>
 
-    </LinearLayout>
+            <TextView
+                android:id="@+id/account_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:textColor="#ffffff"
+                android:text="damien5314"
+                android:textSize="14sp"
+                android:textStyle="bold" />
 
-    <LinearLayout
-        android:id="@+id/drawer_log_in"
-        style="@style/NavigationDrawerItem">
+        </LinearLayout>
 
-        <ImageView
-            style="@style/NavigationDrawerItemIcon"/>
+    </FrameLayout>
 
-        <TextView
-            style="@style/NavigationDrawerItemText"
-            android:text="@string/drawer_log_in"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/drawer_user_profile"
-        style="@style/NavigationDrawerItem">
-
-        <ImageView
-            style="@style/NavigationDrawerItemIcon"/>
-
-        <TextView
-            style="@style/NavigationDrawerItemText"
-            android:text="@string/drawer_user_profile"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/drawer_front_page"
-        style="@style/NavigationDrawerItem">
-
-        <ImageView
-            style="@style/NavigationDrawerItemIcon"/>
-
-        <TextView
-            style="@style/NavigationDrawerItemText"
-            android:text="@string/drawer_front_page"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/drawer_r_all"
-        style="@style/NavigationDrawerItem">
-
-        <ImageView
-            style="@style/NavigationDrawerItemIcon"/>
-
-        <TextView
-            style="@style/NavigationDrawerItemText"
-            android:text="@string/drawer_r_all"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/drawer_subreddits"
-        style="@style/NavigationDrawerItem">
-
-        <ImageView
-            style="@style/NavigationDrawerItemIcon"/>
-
-        <TextView
-            style="@style/NavigationDrawerItemText"
-            android:text="@string/drawer_subreddits"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/drawer_random_subreddit"
-        style="@style/NavigationDrawerItem">
-
-        <ImageView
-            style="@style/NavigationDrawerItemIcon"/>
-
-        <TextView
-            style="@style/NavigationDrawerItemText"
-            android:text="@string/drawer_random_subreddit"/>
-
-    </LinearLayout>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/navigation_drawer_list_view"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"/>
 
 </LinearLayout>
