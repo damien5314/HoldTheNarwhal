@@ -21,7 +21,7 @@ import android.widget.TextView;
 
 import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
-import com.ddiehl.android.simpleredditreader.utils.AuthUtils;
+import com.ddiehl.android.simpleredditreader.web.RedditAuthProxy;
 import com.squareup.otto.Bus;
 
 public class MainActivity extends ActionBarActivity {
@@ -146,6 +146,20 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
+    public void openWebViewForURL(String url) {
+        FragmentManager fm = getSupportFragmentManager();
+        Fragment currentFragment = fm.findFragmentById(R.id.fragment_container);
+        if (currentFragment instanceof WebViewFragment) {
+//          ((WebViewFragment) currentFragment).updateSubreddit(subreddit);
+        } else {
+            Fragment newFragment = WebViewFragment.newInstance(url);
+            fm.beginTransaction()
+                    .replace(R.id.fragment_container, newFragment)
+                    .addToBackStack(null)
+                    .commit();
+        }
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // Removed unneeded Toasts after authorizing application
@@ -216,8 +230,9 @@ public class MainActivity extends ActionBarActivity {
                         @Override
                         public void onClick(View v) {
                             mDrawerLayout.closeDrawer(GravityCompat.START);
-                            Intent intent = AuthUtils.getUserAuthCodeIntent(v.getContext());
-                            startActivityForResult(intent, REQUEST_AUTHORIZE);
+                            openWebViewForURL(RedditAuthProxy.AUTHORIZATION_URL);
+//                            Intent intent = AuthUtils.getUserAuthCodeIntent(v.getContext());
+//                            startActivityForResult(intent, REQUEST_AUTHORIZE);
                         }
                     });
                     break;

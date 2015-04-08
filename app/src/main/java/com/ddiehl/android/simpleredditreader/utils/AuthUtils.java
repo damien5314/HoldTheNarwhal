@@ -1,12 +1,9 @@
 package com.ddiehl.android.simpleredditreader.utils;
 
-import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.util.Base64;
 import android.util.Log;
 
-import com.ddiehl.android.simpleredditreader.view.WebViewActivity;
 import com.ddiehl.android.simpleredditreader.web.RedditAuthProxy;
 
 public class AuthUtils {
@@ -14,13 +11,6 @@ public class AuthUtils {
 
     public static String getHttpAuthHeader(String username, String password) {
         return "Basic " + Base64.encodeToString(String.format("%s:%s", username, password).getBytes(), Base64.NO_WRAP);
-    }
-
-    public static Intent getUserAuthCodeIntent(Context context) {
-        Intent intent = new Intent(context, WebViewActivity.class);
-        Uri uri = Uri.parse(RedditAuthProxy.AUTHORIZATION_URL);
-        intent.setData(uri);
-        return intent;
     }
 
     public static String getUserAuthCodeFromRedirectUri(String url) {

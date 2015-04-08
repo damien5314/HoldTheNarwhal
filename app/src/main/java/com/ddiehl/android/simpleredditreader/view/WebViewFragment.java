@@ -1,7 +1,6 @@
 package com.ddiehl.android.simpleredditreader.view;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -29,16 +28,29 @@ import com.squareup.otto.Bus;
 public class WebViewFragment extends Fragment {
     public static final String TAG = WebViewFragment.class.getSimpleName();
 
+    private static final String ARG_URL = "url";
+
     private Bus mBus = BusProvider.getInstance();
     private String mUrl;
     private WebView mWebView;
+
+    public static Fragment newInstance(String url) {
+        Bundle args = new Bundle();
+        args.putString(ARG_URL, url);
+        Fragment fragment = new WebViewFragment();
+        fragment.setArguments(args);
+
+        return fragment;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
 
-        mUrl = getActivity().getIntent().getData().toString();
+        Bundle args = getArguments();
+
+        mUrl = args.getString(ARG_URL);
         getActivity().setTitle(R.string.app_name);
     }
 
@@ -64,8 +76,9 @@ public class WebViewFragment extends Fragment {
                 if (url.contains(RedditAuthProxy.REDIRECT_URI)) {
                     String authCode = AuthUtils.getUserAuthCodeFromRedirectUri(url);
                     mBus.post(new UserAuthCodeReceivedEvent(authCode));
-                    getActivity().setResult(authCode != null ? Activity.RESULT_OK : Activity.RESULT_CANCELED);
-                    getActivity().finish();
+//                    getActivity().setResult(authCode != null ? Activity.RESULT_OK : Activity.RESULT_CANCELED);
+//                    getActivity().finish();
+                    getFragmentManager().popBackStack();
                 }
                 return false;
             }
