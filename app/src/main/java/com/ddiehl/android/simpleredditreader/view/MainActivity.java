@@ -24,8 +24,7 @@ import com.ddiehl.android.simpleredditreader.events.BusProvider;
 import com.ddiehl.android.simpleredditreader.utils.AuthUtils;
 import com.squareup.otto.Bus;
 
-public class MainActivity extends ActionBarActivity
-        implements View.OnClickListener {
+public class MainActivity extends ActionBarActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
 
     public static final String EXTRA_SUBREDDIT = "com.ddiehl.android.simpleredditreader.extra_subreddit";
@@ -34,6 +33,7 @@ public class MainActivity extends ActionBarActivity
     private Bus mBus;
 
     // Navigation drawer
+    private View mNavigationDrawer;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
     private RecyclerView mNavigationDrawerListView;
@@ -60,6 +60,8 @@ public class MainActivity extends ActionBarActivity
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
         mNavigationDrawerListView = (RecyclerView) findViewById(R.id.navigation_drawer_list_view);
+        mNavigationDrawerListView.addItemDecoration(
+                new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST));
         mLayoutManager = new LinearLayoutManager(this);
         mNavigationDrawerListView.setLayoutManager(mLayoutManager);
         mLayoutAdapter = new NavDrawerItemAdapter();
@@ -88,10 +90,10 @@ public class MainActivity extends ActionBarActivity
 //                return false;
 //            }
 //        });
-//
-//        // Set onClick to null to intercept click events from background
-//        mNavigationDrawer = findViewById(R.id.navigation_drawer);
-//        mNavigationDrawer.setOnClickListener(null);
+
+        // Set onClick to null to intercept click events from background
+        mNavigationDrawer = findViewById(R.id.navigation_drawer);
+        mNavigationDrawer.setOnClickListener(null);
     }
 
     @Override
@@ -121,14 +123,6 @@ public class MainActivity extends ActionBarActivity
     protected void onStop() {
         super.onStop();
         mBus.unregister(this);
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-        }
-
-        mDrawerLayout.closeDrawer(GravityCompat.START);
     }
 
     public Fragment getCurrentFragment() {

@@ -40,5 +40,6 @@
     <dimen name="link_data_margin">5dp</dimen>
     <dimen name="comment_data_divider_width">1dp</dimen>
     <dimen name="comment_data_divider_margin">3dp</dimen>
+    <dimen name="navigation_drawer_header_height">160dp</dimen>
 
 </resources>
