@@ -408,9 +408,6 @@ public class LinksFragment extends Fragment {
                             openCommentsForLink(mRedditLink);
                         } else {
                             Uri webViewUri = Uri.parse(mRedditLink.getUrl());
-//                            Intent i = new Intent(getActivity(), WebViewActivity.class);
-//                            i.setData(webViewUri);
-//                            startActivity(i);
                             ((MainActivity) getActivity()).openWebViewForURL(mRedditLink.getUrl());
                         }
                     }

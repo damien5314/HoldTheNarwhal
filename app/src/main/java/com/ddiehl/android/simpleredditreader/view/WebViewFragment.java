@@ -76,8 +76,6 @@ public class WebViewFragment extends Fragment {
                 if (url.contains(RedditAuthProxy.REDIRECT_URI)) {
                     String authCode = AuthUtils.getUserAuthCodeFromRedirectUri(url);
                     mBus.post(new UserAuthCodeReceivedEvent(authCode));
-//                    getActivity().setResult(authCode != null ? Activity.RESULT_OK : Activity.RESULT_CANCELED);
-//                    getActivity().finish();
                     getFragmentManager().popBackStack();
                 }
                 return false;

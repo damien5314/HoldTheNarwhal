@@ -1,7 +1,6 @@
 package com.ddiehl.android.simpleredditreader.view;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -148,21 +147,11 @@ public class MainActivity extends ActionBarActivity {
 
     public void openWebViewForURL(String url) {
         FragmentManager fm = getSupportFragmentManager();
-        Fragment currentFragment = fm.findFragmentById(R.id.fragment_container);
-        if (currentFragment instanceof WebViewFragment) {
-//          ((WebViewFragment) currentFragment).updateSubreddit(subreddit);
-        } else {
-            Fragment newFragment = WebViewFragment.newInstance(url);
-            fm.beginTransaction()
-                    .replace(R.id.fragment_container, newFragment)
-                    .addToBackStack(null)
-                    .commit();
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // Removed unneeded Toasts after authorizing application
+        Fragment newFragment = WebViewFragment.newInstance(url);
+        fm.beginTransaction()
+                .replace(R.id.fragment_container, newFragment)
+                .addToBackStack(null)
+                .commit();
     }
 
     public void showSpinner(String message) {
@@ -221,6 +210,11 @@ public class MainActivity extends ActionBarActivity {
                         @Override
                         public void onClick(View v) {
                             mDrawerLayout.closeDrawer(GravityCompat.START);
+//                            String inputSubreddit = mNavToSubredditText.getText().toString();
+//                            if (!inputSubreddit.equals("")) {
+//                                mNavToSubredditText.setText("");
+//                                showSubreddit(inputSubreddit);
+//                            }
                         }
                     });
                     break;
@@ -231,8 +225,6 @@ public class MainActivity extends ActionBarActivity {
                         public void onClick(View v) {
                             mDrawerLayout.closeDrawer(GravityCompat.START);
                             openWebViewForURL(RedditAuthProxy.AUTHORIZATION_URL);
-//                            Intent intent = AuthUtils.getUserAuthCodeIntent(v.getContext());
-//                            startActivityForResult(intent, REQUEST_AUTHORIZE);
                         }
                     });
                     break;
@@ -288,8 +280,3 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 }
-
-// String inputSubreddit = mNavToSubredditText.getText().toString();
-// if (!inputSubreddit.equals("")) {
-// mNavToSubredditText.setText("");
-// showSubreddit(inputSubreddit);
