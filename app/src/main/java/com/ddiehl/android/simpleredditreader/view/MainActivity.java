@@ -15,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -170,112 +171,146 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
-    private class NavDrawerItemAdapter extends RecyclerView.Adapter<NavDrawerItemHolder> {
+    private class NavDrawerItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+        private static final int TYPE_EDIT_TEXT = 0;
+        private static final int TYPE_TEXT_VIEW = 1;
+
         @Override
-        public NavDrawerItemHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View v = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.navigation_drawer_row, parent, false);
-            return new NavDrawerItemHolder(v);
+        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            switch (viewType) {
+                case TYPE_EDIT_TEXT:
+                    View v = LayoutInflater.from(parent.getContext())
+                            .inflate(R.layout.navigation_drawer_edit_text_row, parent, false);
+                    return new NavEditTextViewHolder(v);
+                case TYPE_TEXT_VIEW:
+                    v = LayoutInflater.from(parent.getContext())
+                            .inflate(R.layout.navigation_drawer_text_view_row, parent, false);
+                    return new NavTextViewHolder(v);
+                default:
+                    throw new RuntimeException("Unexpected ViewHolder type: " + viewType);
+            }
         }
 
         @Override
-        public void onBindViewHolder(NavDrawerItemHolder holder, int position) {
-            holder.displayPosition(position);
+        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+            if (holder instanceof NavEditTextViewHolder) {
+                ((NavEditTextViewHolder) holder).bind();
+            } else if (holder instanceof NavTextViewHolder) {
+                ((NavTextViewHolder) holder).displayPosition(position - 1);
+            }
         }
 
         @Override
         public int getItemCount() {
             return 7;
         }
-    }
 
-    private class NavDrawerItemHolder extends RecyclerView.ViewHolder {
-        private View mItemRow;
-        private ImageView mItemIcon;
-        private TextView mItemLabel;
-
-        public NavDrawerItemHolder(View itemView) {
-            super(itemView);
-            mItemRow = itemView.findViewById(R.id.navigation_drawer_item);
-            mItemIcon = (ImageView) itemView.findViewById(R.id.navigation_drawer_item_icon);
-            mItemLabel = (TextView) itemView.findViewById(R.id.navigation_drawer_item_text);
+        @Override
+        public int getItemViewType(int position) {
+            if (position == 0)
+                return TYPE_EDIT_TEXT;
+            return TYPE_TEXT_VIEW;
         }
 
-        public void displayPosition(int position) {
-            switch (position) {
-                // Set label, icon, and onClick behavior for the row
-                case 0: // Go to subreddit
-                    mItemLabel.setText(getString(R.string.go_to_subreddit));
-                    mItemRow.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            mDrawerLayout.closeDrawer(GravityCompat.START);
-//                            String inputSubreddit = mNavToSubredditText.getText().toString();
-//                            if (!inputSubreddit.equals("")) {
-//                                mNavToSubredditText.setText("");
-//                                showSubreddit(inputSubreddit);
-//                            }
+        private class NavEditTextViewHolder extends RecyclerView.ViewHolder {
+            private EditText mEditText;
+            private View mSubmitView;
+
+            public NavEditTextViewHolder(View itemView) {
+                super(itemView);
+                mEditText = (EditText) itemView.findViewById(R.id.drawer_navigate_to_subreddit_text);
+                mSubmitView = itemView.findViewById(R.id.drawer_navigate_to_subreddit_go);
+            }
+
+            public void bind() {
+                mSubmitView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mDrawerLayout.closeDrawer(GravityCompat.START);
+                        String inputSubreddit = mEditText.getText().toString();
+                        if (!inputSubreddit.equals("")) {
+                            mEditText.setText("");
+                            showSubreddit(inputSubreddit);
                         }
-                    });
-                    break;
-                case 1:
-                    mItemLabel.setText(getString(R.string.drawer_log_in));
-                    mItemRow.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            mDrawerLayout.closeDrawer(GravityCompat.START);
-                            openWebViewForURL(RedditAuthProxy.AUTHORIZATION_URL);
-                        }
-                    });
-                    break;
-                case 2:
-                    mItemLabel.setText(getString(R.string.drawer_user_profile));
-                    mItemRow.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            mDrawerLayout.closeDrawer(GravityCompat.START);
-                        }
-                    });
-                    break;
-                case 3:
-                    mItemLabel.setText(getString(R.string.drawer_front_page));
-                    mItemRow.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            mDrawerLayout.closeDrawer(GravityCompat.START);
-                            showSubreddit(null);
-                        }
-                    });
-                    break;
-                case 4:
-                    mItemLabel.setText(getString(R.string.drawer_r_all));
-                    mItemRow.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            mDrawerLayout.closeDrawer(GravityCompat.START);
-                            showSubreddit("all");
-                        }
-                    });
-                    break;
-                case 5:
-                    mItemLabel.setText(getString(R.string.drawer_subreddits));
-                    mItemRow.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            mDrawerLayout.closeDrawer(GravityCompat.START);
-                        }
-                    });
-                    break;
-                case 6:
-                    mItemLabel.setText(getString(R.string.drawer_random_subreddit));
-                    mItemRow.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            mDrawerLayout.closeDrawer(GravityCompat.START);
-                            showSubreddit("random");
-                        }
-                    });
-                    break;
+                    }
+                });
+            }
+        }
+
+        private class NavTextViewHolder extends RecyclerView.ViewHolder {
+            private View mItemRow;
+            private ImageView mItemIcon;
+            private TextView mItemLabel;
+
+            public NavTextViewHolder(View itemView) {
+                super(itemView);
+                mItemRow = itemView.findViewById(R.id.navigation_drawer_item);
+                mItemIcon = (ImageView) itemView.findViewById(R.id.navigation_drawer_item_icon);
+                mItemLabel = (TextView) itemView.findViewById(R.id.navigation_drawer_item_text);
+            }
+
+            public void displayPosition(int position) {
+                switch (position) {
+                    // Set label, icon, and onClick behavior for the row
+                    case 0:
+                        mItemLabel.setText(getString(R.string.drawer_log_in));
+                        mItemRow.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                mDrawerLayout.closeDrawer(GravityCompat.START);
+                                openWebViewForURL(RedditAuthProxy.AUTHORIZATION_URL);
+                            }
+                        });
+                        break;
+                    case 1:
+                        mItemLabel.setText(getString(R.string.drawer_user_profile));
+                        mItemRow.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                mDrawerLayout.closeDrawer(GravityCompat.START);
+                            }
+                        });
+                        break;
+                    case 2:
+                        mItemLabel.setText(getString(R.string.drawer_front_page));
+                        mItemRow.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                mDrawerLayout.closeDrawer(GravityCompat.START);
+                                showSubreddit(null);
+                            }
+                        });
+                        break;
+                    case 3:
+                        mItemLabel.setText(getString(R.string.drawer_r_all));
+                        mItemRow.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                mDrawerLayout.closeDrawer(GravityCompat.START);
+                                showSubreddit("all");
+                            }
+                        });
+                        break;
+                    case 4:
+                        mItemLabel.setText(getString(R.string.drawer_subreddits));
+                        mItemRow.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                mDrawerLayout.closeDrawer(GravityCompat.START);
+                            }
+                        });
+                        break;
+                    case 5:
+                        mItemLabel.setText(getString(R.string.drawer_random_subreddit));
+                        mItemRow.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                mDrawerLayout.closeDrawer(GravityCompat.START);
+                                showSubreddit("random");
+                            }
+                        });
+                        break;
+                }
             }
         }
     }

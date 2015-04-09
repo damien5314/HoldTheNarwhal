@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/navigation_drawer_item"
+    style="@style/NavigationDrawerItem">
+
+    <EditText
+        android:id="@+id/drawer_navigate_to_subreddit_text"
+        style="@style/NavigationDrawerEditText"
+        android:hint="@string/drawer_navigate_to_subreddit_text"
+        android:imeOptions="actionDone"
+        android:inputType="text"
+        android:singleLine="true"/>
+
+    <ImageView
+        android:id="@+id/drawer_navigate_to_subreddit_go"
+        style="@style/NavigationDrawerItemIcon"
+        android:src="@drawable/ic_navigation_go"/>
+
+</LinearLayout>

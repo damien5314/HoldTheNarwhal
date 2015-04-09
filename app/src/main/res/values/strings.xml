@@ -28,7 +28,7 @@
     <string name="action_open_in_browser">view in browser</string>
     <string name="action_report">report</string>
     <string name="vote_failed">Failed to cast vote, please try again</string>
-    <string name="go_to_subreddit">Go to subreddit</string>
+    <string name="drawer_navigate_to_subreddit_text">Go to subreddit</string>
     <string name="action_refresh">Refresh</string>
     <string name="link_score_default">•</string>
     <string name="comment_score_unit">points</string>
