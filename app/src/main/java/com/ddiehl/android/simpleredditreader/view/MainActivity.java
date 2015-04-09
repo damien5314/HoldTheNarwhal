@@ -1,6 +1,7 @@
 package com.ddiehl.android.simpleredditreader.view;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,9 +13,12 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -26,9 +30,6 @@ import com.squareup.otto.Bus;
 
 public class MainActivity extends ActionBarActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
-
-    public static final String EXTRA_SUBREDDIT = "com.ddiehl.android.simpleredditreader.extra_subreddit";
-    public static final int REQUEST_AUTHORIZE = 1000;
 
     private Bus mBus;
 
@@ -66,30 +67,6 @@ public class MainActivity extends ActionBarActivity {
         mNavigationDrawerListView.setLayoutManager(mLayoutManager);
         mLayoutAdapter = new NavDrawerItemAdapter();
         mNavigationDrawerListView.setAdapter(mLayoutAdapter);
-
-//        mNavToSubredditGo = findViewById(R.id.drawer_navigate_to_subreddit_go);
-//        mNavToSubredditGo.setOnClickListener(this);
-//
-//        mNavToSubredditText = (EditText) findViewById(R.id.drawer_navigate_to_subreddit_text);
-//        mNavToSubredditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-//            @Override
-//            public void onFocusChange(View v, boolean hasFocus) {
-//                if (!hasFocus) { // Hide keyboard
-//                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-//                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-//                }
-//            }
-//        });
-//        mNavToSubredditText.setOnEditorActionListener(new EditText.OnEditorActionListener() {
-//            @Override
-//            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-//                if (actionId == EditorInfo.IME_ACTION_DONE) {
-//                    mNavToSubredditGo.performClick();
-//                    return true;
-//                }
-//                return false;
-//            }
-//        });
 
         // Set onClick to null to intercept click events from background
         mNavigationDrawer = findViewById(R.id.navigation_drawer);
@@ -196,7 +173,7 @@ public class MainActivity extends ActionBarActivity {
             if (holder instanceof NavEditTextViewHolder) {
                 ((NavEditTextViewHolder) holder).bind();
             } else if (holder instanceof NavTextViewHolder) {
-                ((NavTextViewHolder) holder).displayPosition(position - 1);
+                ((NavTextViewHolder) holder).bind(position - 1);
             }
         }
 
@@ -220,6 +197,26 @@ public class MainActivity extends ActionBarActivity {
                 super(itemView);
                 mEditText = (EditText) itemView.findViewById(R.id.drawer_navigate_to_subreddit_text);
                 mSubmitView = itemView.findViewById(R.id.drawer_navigate_to_subreddit_go);
+
+                mEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                    @Override
+                    public void onFocusChange(View v, boolean hasFocus) {
+                        if (!hasFocus) { // Hide keyboard
+                            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                        }
+                    }
+                });
+                mEditText.setOnEditorActionListener(new EditText.OnEditorActionListener() {
+                    @Override
+                    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                        if (actionId == EditorInfo.IME_ACTION_DONE) {
+                            mSubmitView.performClick();
+                            return true;
+                        }
+                        return false;
+                    }
+                });
             }
 
             public void bind() {
@@ -249,7 +246,7 @@ public class MainActivity extends ActionBarActivity {
                 mItemLabel = (TextView) itemView.findViewById(R.id.navigation_drawer_item_text);
             }
 
-            public void displayPosition(int position) {
+            public void bind(int position) {
                 switch (position) {
                     // Set label, icon, and onClick behavior for the row
                     case 0:
