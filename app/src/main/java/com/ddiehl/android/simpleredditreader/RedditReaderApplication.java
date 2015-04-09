@@ -31,15 +31,6 @@ public class RedditReaderApplication extends Application {
         Bus mBus = BusProvider.getInstance();
         mBus.register(this); // Listen for "global" events
 
-        RedditPreferences prefs = RedditPreferences.getInstance(this);
-        mBus.register(prefs);
-
-        IRedditService authProxy = RedditAuthProxy.getInstance(this);
-        mBus.register(authProxy);
-
-        UserIdentityAccessProxy userIdentity = UserIdentityAccessProxy.getInstance(this);
-        mBus.register(userIdentity);
-
         // Stetho debugging tool
         Stetho.initialize(Stetho.newInitializerBuilder(this)
                 .enableDumpapp(Stetho.defaultDumperPluginsProvider(this))

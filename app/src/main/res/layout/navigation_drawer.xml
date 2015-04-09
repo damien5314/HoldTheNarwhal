@@ -27,7 +27,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:textColor="#ffffff"
-                android:text="damien5314"
+                android:text="Not signed in"
                 android:textSize="14sp"
                 android:textStyle="bold" />
 

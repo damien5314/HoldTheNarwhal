@@ -24,9 +24,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ddiehl.android.simpleredditreader.R;
+import com.ddiehl.android.simpleredditreader.RedditPreferences;
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
+import com.ddiehl.android.simpleredditreader.events.UserIdentityUpdatedEvent;
+import com.ddiehl.android.simpleredditreader.model.UserIdentity;
+import com.ddiehl.android.simpleredditreader.web.IRedditService;
 import com.ddiehl.android.simpleredditreader.web.RedditAuthProxy;
 import com.squareup.otto.Bus;
+import com.squareup.otto.Subscribe;
 
 public class MainActivity extends ActionBarActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -40,6 +45,7 @@ public class MainActivity extends ActionBarActivity {
     private RecyclerView mNavigationDrawerListView;
     private RecyclerView.LayoutManager mLayoutManager;
     private RecyclerView.Adapter mLayoutAdapter;
+    private TextView mAccountNameView;
 
     private ProgressDialog mProgressBar;
 
@@ -47,8 +53,6 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        mBus = BusProvider.getInstance();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -71,6 +75,17 @@ public class MainActivity extends ActionBarActivity {
         // Set onClick to null to intercept click events from background
         mNavigationDrawer = findViewById(R.id.navigation_drawer);
         mNavigationDrawer.setOnClickListener(null);
+
+        mAccountNameView = (TextView) findViewById(R.id.account_name);
+
+        mBus = BusProvider.getInstance();
+        mBus.register(this);
+
+        RedditPreferences prefs = RedditPreferences.getInstance(this);
+        mBus.register(prefs);
+
+        IRedditService authProxy = RedditAuthProxy.getInstance(this);
+        mBus.register(authProxy);
     }
 
     @Override
@@ -88,7 +103,6 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        mBus.register(this);
 
         Fragment currentFragment = getCurrentFragment();
         if (currentFragment == null) {
@@ -145,6 +159,15 @@ public class MainActivity extends ActionBarActivity {
     public void dismissSpinner() {
         if (mProgressBar != null && mProgressBar.isShowing()) {
             mProgressBar.dismiss();
+        }
+    }
+
+    @Subscribe
+    public void onUserIdentityUpdated(UserIdentityUpdatedEvent event) {
+        UserIdentity identity = event.getUserIdentity();
+
+        if (identity != null) {
+            mAccountNameView.setText(identity.getName());
         }
     }
 
