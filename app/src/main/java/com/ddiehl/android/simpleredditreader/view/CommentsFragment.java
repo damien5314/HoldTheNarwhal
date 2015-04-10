@@ -413,6 +413,14 @@ public class CommentsFragment extends Fragment {
                 // Populate attributes of comment in layout
                 if (comment instanceof RedditComment) {
                     mAuthorView.setVisibility(View.VISIBLE);
+                    // Set background to blue if author is OP
+                    if (((RedditComment) comment).getAuthor().equals(mRedditLink.getAuthor())) {
+                        mAuthorView.setBackgroundResource(R.drawable.original_poster_background);
+                        mAuthorView.setTextColor(getResources().getColor(R.color.op_text));
+                    } else { // Else, set it to transparent
+                        mAuthorView.setBackgroundDrawable(null);
+                        mAuthorView.setTextColor(getResources().getColor(R.color.secondary_text));
+                    }
                     mScoreView.setVisibility(View.VISIBLE);
                     mTimestampView.setVisibility(View.VISIBLE);
                     mBodyView.setVisibility(View.VISIBLE);
