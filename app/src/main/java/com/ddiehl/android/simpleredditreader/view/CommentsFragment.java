@@ -262,11 +262,11 @@ public class CommentsFragment extends Fragment {
             switch (viewType) {
                 case TYPE_HEADER:
                     View view = LayoutInflater.from(parent.getContext())
-                            .inflate(R.layout.reddit_link_item, parent, false);
+                            .inflate(R.layout.link_item, parent, false);
                     return new LinkHolder(view);
                 case TYPE_ITEM:
                     view = LayoutInflater.from(parent.getContext())
-                            .inflate(R.layout.reddit_comment_item, parent, false);
+                            .inflate(R.layout.comment_item, parent, false);
                     return new CommentHolder(view);
                 default:
                     throw new RuntimeException("Unexpected ViewHolder type: " + viewType);

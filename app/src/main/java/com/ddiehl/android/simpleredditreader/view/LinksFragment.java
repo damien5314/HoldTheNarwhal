@@ -310,7 +310,7 @@ public class LinksFragment extends Fragment {
         @Override
         public LinkHolder onCreateViewHolder(ViewGroup parent, int i) {
             View view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.reddit_link_item, parent, false);
+                    .inflate(R.layout.link_item, parent, false);
             return new LinkHolder(view);
         }
 
