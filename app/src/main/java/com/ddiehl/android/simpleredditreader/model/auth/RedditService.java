@@ -1,4 +1,4 @@
-package com.ddiehl.android.simpleredditreader.web;
+package com.ddiehl.android.simpleredditreader.model.auth;
 
 import android.content.Context;
 
@@ -19,6 +19,7 @@ import com.ddiehl.android.simpleredditreader.model.adapters.ListingResponseDeser
 import com.ddiehl.android.simpleredditreader.model.listings.Listing;
 import com.ddiehl.android.simpleredditreader.model.listings.ListingResponse;
 import com.ddiehl.android.simpleredditreader.utils.BaseUtils;
+import com.ddiehl.android.simpleredditreader.model.web.RedditEndpoint;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

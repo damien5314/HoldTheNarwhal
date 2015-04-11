@@ -28,8 +28,8 @@ import com.ddiehl.android.simpleredditreader.RedditPreferences;
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
 import com.ddiehl.android.simpleredditreader.events.UserIdentityUpdatedEvent;
 import com.ddiehl.android.simpleredditreader.model.UserIdentity;
-import com.ddiehl.android.simpleredditreader.web.IRedditService;
-import com.ddiehl.android.simpleredditreader.web.RedditAuthProxy;
+import com.ddiehl.android.simpleredditreader.model.auth.IRedditService;
+import com.ddiehl.android.simpleredditreader.model.auth.RedditAuthProxy;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -54,6 +54,15 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mBus = BusProvider.getInstance();
+        mBus.register(this);
+
+        RedditPreferences prefs = RedditPreferences.getInstance(this);
+        mBus.register(prefs);
+
+        IRedditService authProxy = RedditAuthProxy.getInstance(this);
+        mBus.register(authProxy);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -77,15 +86,6 @@ public class MainActivity extends ActionBarActivity {
         mNavigationDrawer.setOnClickListener(null);
 
         mAccountNameView = (TextView) findViewById(R.id.account_name);
-
-        mBus = BusProvider.getInstance();
-        mBus.register(this);
-
-        RedditPreferences prefs = RedditPreferences.getInstance(this);
-        mBus.register(prefs);
-
-        IRedditService authProxy = RedditAuthProxy.getInstance(this);
-        mBus.register(authProxy);
     }
 
     @Override
@@ -103,6 +103,7 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        mBus.register(this);
 
         Fragment currentFragment = getCurrentFragment();
         if (currentFragment == null) {

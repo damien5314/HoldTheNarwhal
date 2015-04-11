@@ -19,7 +19,7 @@ import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
 import com.ddiehl.android.simpleredditreader.events.UserAuthCodeReceivedEvent;
 import com.ddiehl.android.simpleredditreader.utils.AuthUtils;
-import com.ddiehl.android.simpleredditreader.web.RedditAuthProxy;
+import com.ddiehl.android.simpleredditreader.model.auth.RedditAuthProxy;
 import com.squareup.otto.Bus;
 
 /**

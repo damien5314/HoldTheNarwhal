@@ -1,4 +1,4 @@
-package com.ddiehl.android.simpleredditreader.web;
+package com.ddiehl.android.simpleredditreader.model.web;
 
 import retrofit.Endpoint;
 

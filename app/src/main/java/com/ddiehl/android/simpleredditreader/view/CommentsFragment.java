@@ -32,8 +32,8 @@ import com.ddiehl.android.simpleredditreader.model.listings.Listing;
 import com.ddiehl.android.simpleredditreader.model.listings.RedditComment;
 import com.ddiehl.android.simpleredditreader.model.listings.RedditLink;
 import com.ddiehl.android.simpleredditreader.model.listings.RedditMoreComments;
-import com.ddiehl.android.simpleredditreader.web.ThumbnailCache;
-import com.ddiehl.android.simpleredditreader.web.ThumbnailDownloader;
+import com.ddiehl.android.simpleredditreader.model.web.ThumbnailCache;
+import com.ddiehl.android.simpleredditreader.model.web.ThumbnailDownloader;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 

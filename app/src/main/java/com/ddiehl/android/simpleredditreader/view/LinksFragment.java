@@ -30,8 +30,8 @@ import com.ddiehl.android.simpleredditreader.events.VoteEvent;
 import com.ddiehl.android.simpleredditreader.events.VoteSubmittedEvent;
 import com.ddiehl.android.simpleredditreader.model.listings.RedditLink;
 import com.ddiehl.android.simpleredditreader.utils.BaseUtils;
-import com.ddiehl.android.simpleredditreader.web.ThumbnailCache;
-import com.ddiehl.android.simpleredditreader.web.ThumbnailDownloader;
+import com.ddiehl.android.simpleredditreader.model.web.ThumbnailCache;
+import com.ddiehl.android.simpleredditreader.model.web.ThumbnailDownloader;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 

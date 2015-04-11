@@ -1,4 +1,4 @@
-package com.ddiehl.android.simpleredditreader.web;
+package com.ddiehl.android.simpleredditreader.model.auth;
 
 import com.ddiehl.android.simpleredditreader.model.UserIdentity;
 import com.ddiehl.android.simpleredditreader.model.listings.ListingResponse;

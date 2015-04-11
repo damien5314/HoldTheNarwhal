@@ -4,7 +4,7 @@ import android.net.Uri;
 import android.util.Base64;
 import android.util.Log;
 
-import com.ddiehl.android.simpleredditreader.web.RedditAuthProxy;
+import com.ddiehl.android.simpleredditreader.model.auth.RedditAuthProxy;
 
 public class AuthUtils {
     private static final String TAG = AuthUtils.class.getSimpleName();
