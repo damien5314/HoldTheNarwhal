@@ -29,14 +29,6 @@
                     android:scheme="http" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".view.CommentsActivity"
-            android:label="@string/app_name" >
-        </activity>
-        <activity
-            android:name=".view.WebViewActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize" >
-        </activity>
     </application>
 
 </manifest>
