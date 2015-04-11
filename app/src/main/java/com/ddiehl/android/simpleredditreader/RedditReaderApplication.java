@@ -6,15 +6,14 @@ import android.widget.Toast;
 
 import com.ddiehl.android.simpleredditreader.events.ApiErrorEvent;
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
+import com.ddiehl.android.simpleredditreader.model.identity.UserIdentityInteractor;
 import com.facebook.stetho.Stetho;
 import com.facebook.stetho.okhttp.StethoInterceptor;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
-/**
- * Created by Damien on 1/19/2015.
- */
+
 public class RedditReaderApplication extends Application {
     private static final String TAG = RedditReaderApplication.class.getSimpleName();
 
@@ -26,8 +25,11 @@ public class RedditReaderApplication extends Application {
         super.onCreate();
         Log.d(TAG, "Creating RedditReaderApplication");
 
-        Bus mBus = BusProvider.getInstance();
-        mBus.register(this); // Listen for "global" events
+        Bus bus = BusProvider.getInstance();
+        bus.register(this); // Listen for global events
+
+        UserIdentityInteractor userIdentityInteractor = new UserIdentityInteractor(this);
+        bus.register(userIdentityInteractor);
 
         // Stetho debugging tool
         Stetho.initialize(Stetho.newInitializerBuilder(this)

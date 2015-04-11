@@ -26,10 +26,12 @@ import android.widget.TextView;
 import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.RedditPreferences;
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
-import com.ddiehl.android.simpleredditreader.events.UserIdentityUpdatedEvent;
-import com.ddiehl.android.simpleredditreader.model.UserIdentity;
+import com.ddiehl.android.simpleredditreader.events.GetSavedUserIdentityEvent;
+import com.ddiehl.android.simpleredditreader.events.SavedUserIdentityRetrievedEvent;
+import com.ddiehl.android.simpleredditreader.events.UserIdentitySavedEvent;
 import com.ddiehl.android.simpleredditreader.model.auth.IRedditService;
 import com.ddiehl.android.simpleredditreader.model.auth.RedditAuthProxy;
+import com.ddiehl.android.simpleredditreader.model.identity.UserIdentity;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -86,6 +88,7 @@ public class MainActivity extends ActionBarActivity {
         mNavigationDrawer.setOnClickListener(null);
 
         mAccountNameView = (TextView) findViewById(R.id.account_name);
+        mBus.post(new GetSavedUserIdentityEvent());
     }
 
     @Override
@@ -164,11 +167,21 @@ public class MainActivity extends ActionBarActivity {
     }
 
     @Subscribe
-    public void onUserIdentityUpdated(UserIdentityUpdatedEvent event) {
+    public void onSavedUserIdentityRetrieved(SavedUserIdentityRetrievedEvent event) {
         UserIdentity identity = event.getUserIdentity();
+        updateAccountNameView(identity);
+    }
 
+    @Subscribe
+    public void onUserIdentitySaved(UserIdentitySavedEvent event) {
+        UserIdentity identity = event.getUserIdentity();
+        updateAccountNameView(identity);
+    }
+
+    private void updateAccountNameView(UserIdentity identity) {
+        String name = identity == null ? getString(R.string.account_name_unauthorized) : identity.getName();
         if (identity != null) {
-            mAccountNameView.setText(identity.getName());
+            mAccountNameView.setText(name);
         }
     }
 

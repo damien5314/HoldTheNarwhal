@@ -41,5 +41,6 @@
     <string name="comments_fragment_default_title">Comments</string>
     <string name="toast_authorized">Authorization granted</string>
     <string name="toast_not_authorized">Not authorized</string>
+    <string name="account_name_unauthorized">Not signed in</string>
 
 </resources>

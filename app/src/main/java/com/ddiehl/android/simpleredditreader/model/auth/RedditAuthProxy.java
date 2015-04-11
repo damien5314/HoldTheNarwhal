@@ -19,13 +19,10 @@ import com.ddiehl.android.simpleredditreader.events.RefreshUserAccessTokenEvent;
 import com.ddiehl.android.simpleredditreader.events.UserAuthCodeReceivedEvent;
 import com.ddiehl.android.simpleredditreader.events.UserAuthorizationRefreshedEvent;
 import com.ddiehl.android.simpleredditreader.events.UserAuthorizedEvent;
-import com.ddiehl.android.simpleredditreader.events.UserIdentityRetrievedEvent;
-import com.ddiehl.android.simpleredditreader.events.UserIdentityUpdatedEvent;
 import com.ddiehl.android.simpleredditreader.events.VoteEvent;
-import com.ddiehl.android.simpleredditreader.model.UserIdentity;
+import com.ddiehl.android.simpleredditreader.model.web.RedditEndpoint;
 import com.ddiehl.android.simpleredditreader.utils.AuthUtils;
 import com.ddiehl.android.simpleredditreader.utils.BaseUtils;
-import com.ddiehl.android.simpleredditreader.model.web.RedditEndpoint;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -86,26 +83,6 @@ public class RedditAuthProxy implements IRedditService {
 
     private Object mQueuedEvent;
 
-    private static final String PREFS_USER_IDENTITY = "user_identity";
-    private static final String PREF_HAS_MAIL = "pref_has_mail";
-    private static final String PREF_NAME = "pref_name";
-    private static final String PREF_CREATED = "pref_created";
-    private static final String PREF_HIDE_FROM_ROBOTS = "pref_hide_from_robots";
-    private static final String PREF_GOLD_CREDDITS = "pref_gold_creddits";
-    private static final String PREF_CREATED_UTC = "pref_created_utc";
-    private static final String PREF_HAS_MOD_MAIL = "pref_has_mod_mail";
-    private static final String PREF_LINK_KARMA = "pref_link_karma";
-    private static final String PREF_COMMENT_KARMA = "pref_comment_karma";
-    private static final String PREF_IS_OVER_18 = "pref_is_over_18";
-    private static final String PREF_IS_GOLD = "pref_is_gold";
-    private static final String PREF_IS_MOD = "pref_is_mod";
-    private static final String PREF_GOLD_EXPIRATION = "pref_gold_expiration";
-    private static final String PREF_HAS_VERIFIED_EMAIL = "pref_has_verified_email";
-    private static final String PREF_ID = "pref_id";
-    private static final String PREF_INBOX_COUNT = "pref_inbox_count";
-
-    private UserIdentity mUserIdentity;
-
     private RedditAuthProxy(Context context) {
         mContext = context.getApplicationContext();
         mBus = BusProvider.getInstance();
@@ -114,13 +91,6 @@ public class RedditAuthProxy implements IRedditService {
 
         retrieveSavedAuthToken();
         mService.setAuthToken(mAuthToken);
-
-        retrieveSavedIdentity();
-        mBus.post(new UserIdentityUpdatedEvent(mUserIdentity));
-
-        if (hasValidUserAccessToken() && mUserIdentity == null) {
-            mBus.post(new GetUserIdentityEvent());
-        }
     }
 
     public static RedditAuthProxy getInstance(Context context) {
@@ -209,90 +179,6 @@ public class RedditAuthProxy implements IRedditService {
                 .putString(PREF_REFRESH_TOKEN, mRefreshToken)
                 .putBoolean(PREF_IS_USER_ACCESS_TOKEN, mIsUserAccessToken)
                 .apply();
-    }
-
-    private UserIdentity retrieveSavedIdentity() {
-        SharedPreferences prefs = mContext.getSharedPreferences(PREFS_USER_IDENTITY, Context.MODE_PRIVATE);
-
-        if (prefs.contains(PREF_ID)) {
-            mUserIdentity = new UserIdentity();
-            mUserIdentity.hasMail(prefs.getBoolean(PREF_HAS_MAIL, false));
-            mUserIdentity.setName(prefs.getString(PREF_NAME, null));
-            mUserIdentity.setCreated(prefs.getLong(PREF_CREATED, new Date().getTime()));
-            mUserIdentity.isHiddenFromRobots(prefs.getBoolean(PREF_HIDE_FROM_ROBOTS, false));
-            mUserIdentity.setGoldCreddits(prefs.getInt(PREF_GOLD_CREDDITS, 0));
-            mUserIdentity.setCreatedUTC(prefs.getLong(PREF_CREATED_UTC, new Date().getTime()));
-            mUserIdentity.hasModMail(prefs.getBoolean(PREF_HAS_MOD_MAIL, false));
-            mUserIdentity.setLinkKarma(prefs.getInt(PREF_LINK_KARMA, 0));
-            mUserIdentity.setCommentKarma(prefs.getInt(PREF_COMMENT_KARMA, 0));
-            mUserIdentity.isOver18(prefs.getBoolean(PREF_IS_OVER_18, false));
-            mUserIdentity.isGold(prefs.getBoolean(PREF_IS_GOLD, false));
-            mUserIdentity.isMod(prefs.getBoolean(PREF_IS_MOD, false));
-            mUserIdentity.setGoldExpiration(prefs.getLong(PREF_GOLD_EXPIRATION, 0));
-            mUserIdentity.hasVerifiedEmail(prefs.getBoolean(PREF_HAS_VERIFIED_EMAIL, false));
-            mUserIdentity.setId(prefs.getString(PREF_ID, null));
-            mUserIdentity.setInboxCount(prefs.getInt(PREF_INBOX_COUNT, 0));
-        }
-
-        return mUserIdentity;
-    }
-
-    private void saveUserIdentity(UserIdentity identity) {
-        Boolean hasMail = identity.hasMail();
-        String name = identity.getName();
-        Long created = identity.getCreated();
-        Boolean isHiddenFromRobots = identity.isHiddenFromRobots();
-        Integer goldCreddits = identity.getGoldCreddits();
-        Long createdUTC = identity.getCreatedUTC();
-        Boolean hasModMail = identity.hasModMail();
-        Integer linkKarma = identity.getLinkKarma();
-        Integer commentKarma = identity.getCommentKarma();
-        Boolean isOver18 = identity.isOver18();
-        Boolean isGold = identity.isGold();
-        Boolean isMod = identity.isMod();
-        Long goldExpiration = identity.getGoldExpiration();
-        Boolean hasVerifiedEmail = identity.hasVerifiedEmail();
-        String id = identity.getId();
-        Integer inboxCount = identity.getInboxCount();
-
-        SharedPreferences prefs = mContext.getSharedPreferences(PREFS_USER_IDENTITY, Context.MODE_PRIVATE);
-        prefs.edit()
-                .putBoolean(PREF_HAS_MAIL, hasMail)
-                .putString(PREF_NAME, name)
-                .putLong(PREF_CREATED, created)
-                .putBoolean(PREF_HIDE_FROM_ROBOTS, isHiddenFromRobots)
-                .putInt(PREF_GOLD_CREDDITS, goldCreddits)
-                .putLong(PREF_CREATED_UTC, createdUTC)
-                .putBoolean(PREF_HAS_MOD_MAIL, hasModMail)
-                .putInt(PREF_LINK_KARMA, linkKarma)
-                .putInt(PREF_COMMENT_KARMA, commentKarma)
-                .putBoolean(PREF_IS_OVER_18, isOver18)
-                .putBoolean(PREF_IS_GOLD, isGold)
-                .putBoolean(PREF_IS_MOD, isMod)
-                .putLong(PREF_GOLD_EXPIRATION, goldExpiration != null ? goldExpiration : 0)
-                .putBoolean(PREF_HAS_VERIFIED_EMAIL, hasVerifiedEmail)
-                .putString(PREF_ID, id)
-                .putInt(PREF_INBOX_COUNT, inboxCount)
-                .apply();
-    }
-
-    private void clearUserIdentity() {
-        mUserIdentity = null;
-        SharedPreferences prefs = mContext.getSharedPreferences(PREFS_USER_IDENTITY, Context.MODE_PRIVATE);
-        prefs.edit().clear().apply();
-    }
-
-    @Subscribe
-    public void onUserIdentityRetrieved(UserIdentityRetrievedEvent event) {
-        if (event.isFailed()) {
-            Log.d(TAG, "Error retrieving user identity");
-            return;
-        }
-
-        mUserIdentity = event.getUserIdentity();
-        Toast.makeText(mContext, mUserIdentity.getName() + " authorized", Toast.LENGTH_LONG).show();
-        saveUserIdentity(mUserIdentity);
-        mBus.post(new UserIdentityUpdatedEvent(mUserIdentity));
     }
 
     @Subscribe
@@ -407,9 +293,6 @@ public class RedditAuthProxy implements IRedditService {
         Toast.makeText(mContext, "User authorization refreshed", Toast.LENGTH_SHORT).show();
         AuthTokenResponse response = event.getResponse();
         saveAuthToken(response, true);
-        if (mUserIdentity == null) {
-            mBus.post(new GetUserIdentityEvent());
-        }
         if (mQueuedEvent != null) {
             Object e = mQueuedEvent;
             mQueuedEvent = null;

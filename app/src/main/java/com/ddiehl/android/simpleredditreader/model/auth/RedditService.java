@@ -13,7 +13,7 @@ import com.ddiehl.android.simpleredditreader.events.UserIdentityRetrievedEvent;
 import com.ddiehl.android.simpleredditreader.events.VoteEvent;
 import com.ddiehl.android.simpleredditreader.events.VoteSubmittedEvent;
 import com.ddiehl.android.simpleredditreader.exceptions.UserRequiredException;
-import com.ddiehl.android.simpleredditreader.model.UserIdentity;
+import com.ddiehl.android.simpleredditreader.model.identity.UserIdentity;
 import com.ddiehl.android.simpleredditreader.model.adapters.ListingDeserializer;
 import com.ddiehl.android.simpleredditreader.model.adapters.ListingResponseDeserializer;
 import com.ddiehl.android.simpleredditreader.model.listings.Listing;
