@@ -20,6 +20,7 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.ddiehl.android.simpleredditreader.events.LoadMoreCommentsEvent;
 import com.ddiehl.android.simpleredditreader.utils.BaseUtils;
 import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.RedditPreferences;
@@ -449,6 +450,12 @@ public class CommentsFragment extends Fragment {
                     } else { // more comments in current thread
                         mMoreCommentsView.setText(getString(R.string.more_comments) + " (" + count + ")");
                     }
+                    mMoreCommentsView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            mBus.post(new LoadMoreCommentsEvent((RedditMoreComments) comment, "top"));
+                        }
+                    });
                 }
 
                 if (comment instanceof RedditComment) {

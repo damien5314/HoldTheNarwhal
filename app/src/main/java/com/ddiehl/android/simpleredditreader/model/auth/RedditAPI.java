@@ -36,6 +36,15 @@ public interface RedditAPI {
                      @Query("sort") String sort,
                      Callback<List<ListingResponse>> callback);
 
+    @GET("/api/morechildren")
+    void getMoreChildren(@Query("link_id") String linkId,
+                         @Query("sort") String sort,
+                         @Query("children") String children,
+                         @Query("depth") String depth,
+                         @Query("id") String id,
+//                         @Query("r") String subreddit,
+                         Callback<List<ListingResponse>> callback);
+
     @POST("/api/vote")
     void vote(@Query("id") String id,
               @Query("dir") int dir,

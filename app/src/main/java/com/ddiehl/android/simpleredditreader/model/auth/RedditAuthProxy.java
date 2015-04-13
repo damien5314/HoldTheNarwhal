@@ -15,6 +15,7 @@ import com.ddiehl.android.simpleredditreader.events.BusProvider;
 import com.ddiehl.android.simpleredditreader.events.GetUserIdentityEvent;
 import com.ddiehl.android.simpleredditreader.events.LoadCommentsEvent;
 import com.ddiehl.android.simpleredditreader.events.LoadLinksEvent;
+import com.ddiehl.android.simpleredditreader.events.LoadMoreCommentsEvent;
 import com.ddiehl.android.simpleredditreader.events.RefreshUserAccessTokenEvent;
 import com.ddiehl.android.simpleredditreader.events.UserAuthCodeReceivedEvent;
 import com.ddiehl.android.simpleredditreader.events.UserAuthorizationRefreshedEvent;
@@ -331,6 +332,23 @@ public class RedditAuthProxy implements IRedditService {
             }
         } else {
             mService.onLoadComments(event);
+        }
+    }
+
+    /**
+     * Retrieves more comments for link passed as parameter
+     */
+    @Subscribe
+    public void onLoadMoreComments(LoadMoreCommentsEvent event) {
+        if (!hasValidAuthToken()) {
+            mQueuedEvent = event;
+            if (mRefreshToken != null) {
+                mBus.post(new RefreshUserAccessTokenEvent(mRefreshToken));
+            } else {
+                mBus.post(new AuthorizeApplicationEvent());
+            }
+        } else {
+            mService.onLoadMoreComments(event);
         }
     }
 

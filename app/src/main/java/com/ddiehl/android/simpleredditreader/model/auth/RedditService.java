@@ -9,17 +9,20 @@ import com.ddiehl.android.simpleredditreader.events.GetUserIdentityEvent;
 import com.ddiehl.android.simpleredditreader.events.LinksLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.LoadCommentsEvent;
 import com.ddiehl.android.simpleredditreader.events.LoadLinksEvent;
+import com.ddiehl.android.simpleredditreader.events.LoadMoreCommentsEvent;
+import com.ddiehl.android.simpleredditreader.events.MoreCommentsLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.UserIdentityRetrievedEvent;
 import com.ddiehl.android.simpleredditreader.events.VoteEvent;
 import com.ddiehl.android.simpleredditreader.events.VoteSubmittedEvent;
 import com.ddiehl.android.simpleredditreader.exceptions.UserRequiredException;
-import com.ddiehl.android.simpleredditreader.model.identity.UserIdentity;
 import com.ddiehl.android.simpleredditreader.model.adapters.ListingDeserializer;
 import com.ddiehl.android.simpleredditreader.model.adapters.ListingResponseDeserializer;
+import com.ddiehl.android.simpleredditreader.model.identity.UserIdentity;
 import com.ddiehl.android.simpleredditreader.model.listings.Listing;
 import com.ddiehl.android.simpleredditreader.model.listings.ListingResponse;
-import com.ddiehl.android.simpleredditreader.utils.BaseUtils;
+import com.ddiehl.android.simpleredditreader.model.listings.RedditMoreComments;
 import com.ddiehl.android.simpleredditreader.model.web.RedditEndpoint;
+import com.ddiehl.android.simpleredditreader.utils.BaseUtils;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -152,6 +155,50 @@ public class RedditService implements IRedditService {
                 BaseUtils.showError(mContext, error);
                 BaseUtils.printResponse(error.getResponse());
                 mBus.post(new CommentsLoadedEvent(error));
+            }
+        });
+    }
+
+//    link_id=t3_32c9vd&
+//    sort=top&
+//    children=cq9zth3%2Ccqa1vhh%2Ccqa8ak3&
+//    depth=7&
+//    id=t1_cq9zth3&
+//    r=gaming&
+//    uh=6lgjdu4p67bf2529e5faf328fb875fa269838157d5fbbaa828&
+//    renderstyle=html
+
+    public void onLoadMoreComments(LoadMoreCommentsEvent event) {
+        RedditMoreComments moreComments = event.getMoreComments();
+        String linkId = moreComments.getParentId();
+        String sort = event.getSort(); // How can we get the sort?
+
+        List<String> childList = moreComments.getChildren();
+        String children = "";
+        for (int i = 0; i < childList.size(); i++) {
+            children += childList.get(i) + ",";
+        }
+        children = children.substring(0, children.length() - 1); // Delete the last comma
+
+        String depth = String.valueOf(moreComments.getDepth());
+        String id = moreComments.getId();
+        String subreddit = null; // How can we get the subreddit?
+
+//        mAPI.getMoreChildren(linkId, sort, children, depth, id, subreddit, new Callback<List<ListingResponse>>() {
+        mAPI.getMoreChildren(linkId, sort, children, depth, id, new Callback<List<ListingResponse>>() {
+//        mAPI.getMoreChildren(linkId, children, depth, id, new Callback<List<ListingResponse>>() {
+            @Override
+            public void success(List<ListingResponse> listingResponses, Response response) {
+//                BaseUtils.printResponseStatus(response);
+                BaseUtils.printResponse(response);
+                mBus.post(new MoreCommentsLoadedEvent(listingResponses));
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                BaseUtils.showError(mContext, error);
+                BaseUtils.printResponse(error.getResponse());
+                mBus.post(new MoreCommentsLoadedEvent(error));
             }
         });
     }
