@@ -57,7 +57,6 @@ public abstract class AbsRedditComment extends Listing {
             }
             i++;
         }
-
     }
     
 }

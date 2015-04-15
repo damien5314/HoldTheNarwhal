@@ -36,10 +36,10 @@ public interface RedditAPI {
                      @Query("sort") String sort,
                      Callback<List<ListingResponse>> callback);
 
-    @GET("/r/{subreddit}/comments/{articleId}/{commentId}.json")
+    @GET("/r/{subreddit}/comments/{articleId}.json")
     void getCommentThread(@Path("subreddit") String subreddit,
                      @Path("articleId") String articleId,
-                     @Path("commentId") String commentId,
+                     @Query("comment") String commentId,
                      @Query("sort") String sort,
                      @Query("context") Integer context,
                      Callback<List<ListingResponse>> callback);

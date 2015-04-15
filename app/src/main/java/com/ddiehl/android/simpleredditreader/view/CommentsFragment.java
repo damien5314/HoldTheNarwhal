@@ -20,12 +20,12 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.ddiehl.android.simpleredditreader.events.LoadCommentThreadEvent;
-import com.ddiehl.android.simpleredditreader.utils.BaseUtils;
 import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.RedditPreferences;
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
+import com.ddiehl.android.simpleredditreader.events.CommentThreadLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.CommentsLoadedEvent;
+import com.ddiehl.android.simpleredditreader.events.LoadCommentThreadEvent;
 import com.ddiehl.android.simpleredditreader.events.LoadCommentsEvent;
 import com.ddiehl.android.simpleredditreader.events.VoteEvent;
 import com.ddiehl.android.simpleredditreader.model.listings.AbsRedditComment;
@@ -35,6 +35,7 @@ import com.ddiehl.android.simpleredditreader.model.listings.RedditLink;
 import com.ddiehl.android.simpleredditreader.model.listings.RedditMoreComments;
 import com.ddiehl.android.simpleredditreader.model.web.ThumbnailCache;
 import com.ddiehl.android.simpleredditreader.model.web.ThumbnailDownloader;
+import com.ddiehl.android.simpleredditreader.utils.BaseUtils;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -154,6 +155,39 @@ public class CommentsFragment extends Fragment {
         AbsRedditComment.flattenCommentList(comments);
         mData.clear();
         mData.addAll(event.getComments());
+        syncVisibleData();
+        mCommentAdapter.notifyDataSetChanged();
+    }
+
+    @Subscribe
+    public void onCommentThreadLoaded(CommentThreadLoadedEvent event) {
+        ((MainActivity) getActivity()).dismissSpinner();
+        if (event.isFailed()) {
+            return;
+        }
+
+        List<AbsRedditComment> comments = event.getComments();
+        AbsRedditComment.flattenCommentList(comments);
+
+        // Increase each comment by the parent depth
+        for (AbsRedditComment comment : comments) {
+            comment.setDepth(comment.getDepth() + event.getParentDepth() - 1);
+        }
+
+        // Iterate through the existing data list to find where the base comment lies
+        RedditComment targetComment = (RedditComment) comments.get(0);
+        for (int i = 0; i < mData.size(); i++) {
+            AbsRedditComment comment = mData.get(i);
+            if (comment instanceof RedditMoreComments) {
+                String id = ((RedditMoreComments) comment).getId();
+                if (id.equals(targetComment.getId())) { // Found the base comment
+                    mData.remove(i);
+                    mData.addAll(i, comments);
+                    break;
+                }
+            }
+        }
+
         syncVisibleData();
         mCommentAdapter.notifyDataSetChanged();
     }

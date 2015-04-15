@@ -169,11 +169,13 @@ public class RedditService implements IRedditService {
         String commentId = more.getId();
         String sort = event.getSort();
 
+        final int parentDepth = more.getDepth();
+
         mAPI.getCommentThread(subreddit, article, commentId, sort, 0, new Callback<List<ListingResponse>>() {
             @Override
             public void success(List<ListingResponse> listingsList, Response response) {
                 BaseUtils.printResponseStatus(response);
-                mBus.post(new CommentThreadLoadedEvent(listingsList));
+                mBus.post(new CommentThreadLoadedEvent(listingsList, parentDepth));
             }
 
             @Override
