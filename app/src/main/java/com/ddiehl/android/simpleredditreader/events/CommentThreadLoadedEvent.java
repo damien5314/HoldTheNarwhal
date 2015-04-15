@@ -9,13 +9,13 @@ import java.util.List;
 import retrofit.RetrofitError;
 
 
-public class MoreCommentsLoadedEvent {
+public class CommentThreadLoadedEvent {
     private RedditLink mLink;
     private List<AbsRedditComment> mComments;
     private RetrofitError mError;
     private boolean mFailed = false;
 
-    public MoreCommentsLoadedEvent(List<ListingResponse> listingResponseList) {
+    public CommentThreadLoadedEvent(List<ListingResponse> listingResponseList) {
         // Link is responseList.get(0), comments are responseList.get(1)
         ListingResponse linkResponse = listingResponseList.get(0);
         ListingResponse commentsResponse = listingResponseList.get(1);
@@ -24,7 +24,7 @@ public class MoreCommentsLoadedEvent {
         mComments = commentsResponse.getData().getChildren();
     }
 
-    public MoreCommentsLoadedEvent(RetrofitError error) {
+    public CommentThreadLoadedEvent(RetrofitError error) {
         mError = error;
         mFailed = true;
     }

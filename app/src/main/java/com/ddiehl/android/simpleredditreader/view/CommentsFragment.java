@@ -20,7 +20,7 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.ddiehl.android.simpleredditreader.events.LoadMoreCommentsEvent;
+import com.ddiehl.android.simpleredditreader.events.LoadCommentThreadEvent;
 import com.ddiehl.android.simpleredditreader.utils.BaseUtils;
 import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.RedditPreferences;
@@ -453,7 +453,7 @@ public class CommentsFragment extends Fragment {
                     mMoreCommentsView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            mBus.post(new LoadMoreCommentsEvent((RedditMoreComments) comment, "top"));
+                            mBus.post(new LoadCommentThreadEvent(mRedditLink, (RedditMoreComments) comment, mSort));
                         }
                     });
                 }

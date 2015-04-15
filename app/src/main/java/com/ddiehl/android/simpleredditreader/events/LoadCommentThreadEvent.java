@@ -1,15 +1,22 @@
 package com.ddiehl.android.simpleredditreader.events;
 
+import com.ddiehl.android.simpleredditreader.model.listings.RedditLink;
 import com.ddiehl.android.simpleredditreader.model.listings.RedditMoreComments;
 
-public class LoadMoreCommentsEvent {
+public class LoadCommentThreadEvent {
 
+    private RedditLink mLink;
     private RedditMoreComments mMoreComments;
     private String mSort;
 
-    public LoadMoreCommentsEvent(RedditMoreComments moreComments, String sort) {
+    public LoadCommentThreadEvent(RedditLink link, RedditMoreComments moreComments, String sort) {
+        mLink = link;
         mMoreComments = moreComments;
         mSort = sort;
+    }
+
+    public RedditLink getLink() {
+        return mLink;
     }
 
     public RedditMoreComments getMoreComments() {
