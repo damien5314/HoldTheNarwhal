@@ -241,6 +241,12 @@ public class CommentsFragment extends Fragment {
         getBus().post(new LoadCommentsEvent(mSubreddit, mArticleId, mSort));
     }
 
+    private void getMoreChildren(RedditMoreComments comment) {
+        ((MainActivity) getActivity()).showSpinner(null);
+        List<String> children = comment.getChildren();
+        mBus.post(new LoadMoreChildrenEvent(mRedditLink, comment, children, mSort));
+    }
+
     private void upvote(RedditLink link) {
         int dir = (link.isLiked() == null || !link.isLiked()) ? 1 : 0;
         getBus().post(new VoteEvent(link.getKind(), link.getId(), dir));
@@ -523,8 +529,7 @@ public class CommentsFragment extends Fragment {
                     mMoreCommentsView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            List<String> children = ((RedditMoreComments) comment).getChildren();
-                            mBus.post(new LoadMoreChildrenEvent(mRedditLink, (RedditMoreComments) comment, children, mSort));
+                            getMoreChildren((RedditMoreComments) comment);
                         }
                     });
                 }
