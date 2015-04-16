@@ -32,6 +32,7 @@ import com.ddiehl.android.simpleredditreader.events.MoreChildrenLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.VoteEvent;
 import com.ddiehl.android.simpleredditreader.model.listings.AbsRedditComment;
 import com.ddiehl.android.simpleredditreader.model.listings.CommentBank;
+import com.ddiehl.android.simpleredditreader.model.listings.CommentBankList;
 import com.ddiehl.android.simpleredditreader.model.listings.RedditComment;
 import com.ddiehl.android.simpleredditreader.model.listings.RedditLink;
 import com.ddiehl.android.simpleredditreader.model.listings.RedditMoreComments;
@@ -103,7 +104,7 @@ public class CommentsFragment extends Fragment {
 
         mSort = RedditPreferences.getInstance(getActivity()).getCommentSort();
 
-        mCommentBank = new CommentBank();
+        mCommentBank = new CommentBankList();
         mCommentAdapter = new CommentAdapter();
 
         getActivity().setTitle(getString(R.string.comments_fragment_default_title));
