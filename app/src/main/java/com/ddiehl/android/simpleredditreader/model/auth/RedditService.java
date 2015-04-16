@@ -1,6 +1,7 @@
 package com.ddiehl.android.simpleredditreader.model.auth;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.ddiehl.android.simpleredditreader.RedditReaderApplication;
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
@@ -168,10 +169,14 @@ public class RedditService implements IRedditService {
         String article = link.getId();
         String commentId = more.getId();
         String sort = event.getSort();
+        int context = 0;
 
         final int parentDepth = more.getDepth();
 
-        mAPI.getCommentThread(subreddit, article, commentId, sort, 0, new Callback<List<ListingResponse>>() {
+        Log.d(TAG, "Loading more comments; commentId: " + commentId
+                + " - sort: " + sort + " - context: " + context);
+
+        mAPI.getCommentThread(subreddit, article, commentId, sort, context, new Callback<List<ListingResponse>>() {
             @Override
             public void success(List<ListingResponse> listingsList, Response response) {
                 BaseUtils.printResponseStatus(response);

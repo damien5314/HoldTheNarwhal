@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -173,6 +174,15 @@ public class CommentsFragment extends Fragment {
         for (AbsRedditComment comment : comments) {
             comment.setDepth(comment.getDepth() + event.getParentDepth() - 1);
         }
+
+        Log.d(TAG, "Children found: " + comments.size());
+        for (AbsRedditComment comment : comments) {
+            Log.d(TAG, "Child: " + ((comment instanceof RedditComment) ?
+                    ((RedditComment) comment).getId() : ((RedditMoreComments) comment).getId()));
+        }
+
+        if (comments.size() == 0)
+            return;
 
         // Iterate through the existing data list to find where the base comment lies
         RedditComment targetComment = (RedditComment) comments.get(0);
