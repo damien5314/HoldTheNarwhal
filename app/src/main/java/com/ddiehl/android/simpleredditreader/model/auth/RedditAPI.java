@@ -2,6 +2,7 @@ package com.ddiehl.android.simpleredditreader.model.auth;
 
 import com.ddiehl.android.simpleredditreader.model.identity.UserIdentity;
 import com.ddiehl.android.simpleredditreader.model.listings.ListingResponse;
+import com.ddiehl.android.simpleredditreader.model.listings.MoreChildrenResponse;
 
 import java.util.List;
 
@@ -47,9 +48,9 @@ public interface RedditAPI {
     /** https://snap.apigee.com/1cqZR33 */
     @POST("/api/morechildren?api_type=json")
     void getMoreChildren(@Query("link_id") String linkId,
-                         @Query("sort") String sort,
                          @Query("children") String children,
-                         Callback<List<ListingResponse>> callback);
+                         @Query("sort") String sort,
+                         Callback<MoreChildrenResponse> callback);
 
     @POST("/api/vote")
     void vote(@Query("id") String id,

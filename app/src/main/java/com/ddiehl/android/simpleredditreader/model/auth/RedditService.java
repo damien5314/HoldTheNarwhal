@@ -12,15 +12,20 @@ import com.ddiehl.android.simpleredditreader.events.LinksLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.LoadCommentThreadEvent;
 import com.ddiehl.android.simpleredditreader.events.LoadCommentsEvent;
 import com.ddiehl.android.simpleredditreader.events.LoadLinksEvent;
+import com.ddiehl.android.simpleredditreader.events.LoadMoreChildrenEvent;
+import com.ddiehl.android.simpleredditreader.events.MoreChildrenLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.UserIdentityRetrievedEvent;
 import com.ddiehl.android.simpleredditreader.events.VoteEvent;
 import com.ddiehl.android.simpleredditreader.events.VoteSubmittedEvent;
 import com.ddiehl.android.simpleredditreader.exceptions.UserRequiredException;
+import com.ddiehl.android.simpleredditreader.model.adapters.AbsRedditCommentDeserializer;
 import com.ddiehl.android.simpleredditreader.model.adapters.ListingDeserializer;
 import com.ddiehl.android.simpleredditreader.model.adapters.ListingResponseDeserializer;
 import com.ddiehl.android.simpleredditreader.model.identity.UserIdentity;
+import com.ddiehl.android.simpleredditreader.model.listings.AbsRedditComment;
 import com.ddiehl.android.simpleredditreader.model.listings.Listing;
 import com.ddiehl.android.simpleredditreader.model.listings.ListingResponse;
+import com.ddiehl.android.simpleredditreader.model.listings.MoreChildrenResponse;
 import com.ddiehl.android.simpleredditreader.model.listings.RedditLink;
 import com.ddiehl.android.simpleredditreader.model.listings.RedditMoreComments;
 import com.ddiehl.android.simpleredditreader.model.web.RedditEndpoint;
@@ -62,6 +67,7 @@ public class RedditService implements IRedditService {
                 .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
                 .registerTypeAdapter(ListingResponse.class, new ListingResponseDeserializer())
                 .registerTypeAdapter(Listing.class, new ListingDeserializer())
+                .registerTypeAdapter(AbsRedditComment.class, new AbsRedditCommentDeserializer())
                 .create();
 
         RestAdapter restAdapter = new RestAdapter.Builder()
@@ -157,6 +163,35 @@ public class RedditService implements IRedditService {
                 BaseUtils.showError(mContext, error);
                 BaseUtils.printResponse(error.getResponse());
                 mBus.post(new CommentsLoadedEvent(error));
+            }
+        });
+    }
+
+    @Override
+    public void onLoadMoreChildren(LoadMoreChildrenEvent event) {
+        RedditLink link = event.getRedditLink();
+        final RedditMoreComments parentStub = event.getParentCommentStub();
+        List<String> children = event.getChildren();
+        String sort = event.getSort();
+
+        StringBuilder b = new StringBuilder();
+        for (String child : children)
+            b.append(child).append(",");
+        String childrenString = b.toString();
+        childrenString = childrenString.substring(0, childrenString.length() - 1);
+
+        mAPI.getMoreChildren(link.getName(), childrenString, sort, new Callback<MoreChildrenResponse>() {
+            @Override
+            public void success(MoreChildrenResponse moreChildrenResponse, Response response) {
+                BaseUtils.printResponseStatus(response);
+                mBus.post(new MoreChildrenLoadedEvent(parentStub, moreChildrenResponse));
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                BaseUtils.showError(mContext, error);
+                BaseUtils.printResponse(error.getResponse());
+                mBus.post(new MoreChildrenLoadedEvent(error));
             }
         });
     }

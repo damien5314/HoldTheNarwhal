@@ -26,8 +26,9 @@ import com.ddiehl.android.simpleredditreader.RedditPreferences;
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
 import com.ddiehl.android.simpleredditreader.events.CommentThreadLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.CommentsLoadedEvent;
-import com.ddiehl.android.simpleredditreader.events.LoadCommentThreadEvent;
 import com.ddiehl.android.simpleredditreader.events.LoadCommentsEvent;
+import com.ddiehl.android.simpleredditreader.events.LoadMoreChildrenEvent;
+import com.ddiehl.android.simpleredditreader.events.MoreChildrenLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.VoteEvent;
 import com.ddiehl.android.simpleredditreader.model.listings.AbsRedditComment;
 import com.ddiehl.android.simpleredditreader.model.listings.Listing;
@@ -161,6 +162,42 @@ public class CommentsFragment extends Fragment {
     }
 
     @Subscribe
+    public void onMoreChildrenLoaded(MoreChildrenLoadedEvent event) {
+        ((MainActivity) getActivity()).dismissSpinner();
+        if (event.isFailed()) {
+            return;
+        }
+
+        RedditMoreComments parentStub = event.getParentStub();
+        List<AbsRedditComment> comments = event.getComments();
+        AbsRedditComment.flattenCommentList(comments);
+        Log.d(TAG, "Children retrieved: " + comments.size());
+
+        if (comments.size() == 0)
+            return;
+
+        int parentDepth = parentStub.getDepth();
+        for (AbsRedditComment comment : comments) {
+            comment.setDepth(comment.getDepth() + parentDepth - 1);
+        }
+
+        for (int i = 0; i < mData.size(); i++) {
+            AbsRedditComment comment = mData.get(i);
+            if (comment instanceof RedditMoreComments) {
+                String id = ((RedditMoreComments) comment).getId();
+                if (id.equals(parentStub.getId())) { // Found the base comment
+                    mData.remove(i);
+                    mData.addAll(i, comments);
+                    break;
+                }
+            }
+        }
+
+        syncVisibleData();
+        mCommentAdapter.notifyDataSetChanged();
+    }
+
+    @Subscribe
     public void onCommentThreadLoaded(CommentThreadLoadedEvent event) {
         ((MainActivity) getActivity()).dismissSpinner();
         if (event.isFailed()) {
@@ -170,19 +207,13 @@ public class CommentsFragment extends Fragment {
         List<AbsRedditComment> comments = event.getComments();
         AbsRedditComment.flattenCommentList(comments);
 
+        if (comments.size() == 0)
+            return;
+
         // Increase each comment by the parent depth
         for (AbsRedditComment comment : comments) {
             comment.setDepth(comment.getDepth() + event.getParentDepth() - 1);
         }
-
-        Log.d(TAG, "Children found: " + comments.size());
-        for (AbsRedditComment comment : comments) {
-            Log.d(TAG, "Child: " + ((comment instanceof RedditComment) ?
-                    ((RedditComment) comment).getId() : ((RedditMoreComments) comment).getId()));
-        }
-
-        if (comments.size() == 0)
-            return;
 
         // Iterate through the existing data list to find where the base comment lies
         RedditComment targetComment = (RedditComment) comments.get(0);
@@ -497,7 +528,8 @@ public class CommentsFragment extends Fragment {
                     mMoreCommentsView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            mBus.post(new LoadCommentThreadEvent(mRedditLink, (RedditMoreComments) comment, mSort));
+                            List<String> children = ((RedditMoreComments) comment).getChildren();
+                            mBus.post(new LoadMoreChildrenEvent(mRedditLink, (RedditMoreComments) comment, children, mSort));
                         }
                     });
                 }

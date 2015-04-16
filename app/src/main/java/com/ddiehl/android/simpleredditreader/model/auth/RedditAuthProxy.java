@@ -16,6 +16,7 @@ import com.ddiehl.android.simpleredditreader.events.GetUserIdentityEvent;
 import com.ddiehl.android.simpleredditreader.events.LoadCommentThreadEvent;
 import com.ddiehl.android.simpleredditreader.events.LoadCommentsEvent;
 import com.ddiehl.android.simpleredditreader.events.LoadLinksEvent;
+import com.ddiehl.android.simpleredditreader.events.LoadMoreChildrenEvent;
 import com.ddiehl.android.simpleredditreader.events.RefreshUserAccessTokenEvent;
 import com.ddiehl.android.simpleredditreader.events.UserAuthCodeReceivedEvent;
 import com.ddiehl.android.simpleredditreader.events.UserAuthorizationRefreshedEvent;
@@ -337,6 +338,23 @@ public class RedditAuthProxy implements IRedditService {
 
     /**
      * Retrieves more comments for link passed as parameter
+     */
+    @Subscribe
+    public void onLoadMoreChildren(LoadMoreChildrenEvent event) {
+        if (!hasValidAuthToken()) {
+            mQueuedEvent = event;
+            if (mRefreshToken != null) {
+                mBus.post(new RefreshUserAccessTokenEvent(mRefreshToken));
+            } else {
+                mBus.post(new AuthorizeApplicationEvent());
+            }
+        } else {
+            mService.onLoadMoreChildren(event);
+        }
+    }
+
+    /**
+     * Retrieves comments for link, focused on comment ID passed as a parameter
      */
     @Subscribe
     public void onLoadCommentThread(LoadCommentThreadEvent event) {
