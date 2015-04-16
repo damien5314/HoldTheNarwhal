@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import com.ddiehl.android.simpleredditreader.events.UserIdentityRetrievedEvent;
+import com.ddiehl.android.simpleredditreader.events.responses.UserIdentityRetrievedEvent;
 import com.ddiehl.android.simpleredditreader.model.identity.UserIdentity;
 import com.squareup.otto.Subscribe;
 

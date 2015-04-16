@@ -4,11 +4,11 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
-import com.ddiehl.android.simpleredditreader.events.ClearUserIdentityEvent;
-import com.ddiehl.android.simpleredditreader.events.GetSavedUserIdentityEvent;
-import com.ddiehl.android.simpleredditreader.events.SavedUserIdentityRetrievedEvent;
-import com.ddiehl.android.simpleredditreader.events.UserIdentityRetrievedEvent;
-import com.ddiehl.android.simpleredditreader.events.UserIdentitySavedEvent;
+import com.ddiehl.android.simpleredditreader.events.requests.ClearUserIdentityEvent;
+import com.ddiehl.android.simpleredditreader.events.requests.GetSavedUserIdentityEvent;
+import com.ddiehl.android.simpleredditreader.events.responses.SavedUserIdentityRetrievedEvent;
+import com.ddiehl.android.simpleredditreader.events.responses.UserIdentityRetrievedEvent;
+import com.ddiehl.android.simpleredditreader.events.responses.UserIdentitySavedEvent;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 

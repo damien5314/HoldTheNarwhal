@@ -4,7 +4,7 @@ import android.app.Application;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.ddiehl.android.simpleredditreader.events.ApiErrorEvent;
+import com.ddiehl.android.simpleredditreader.events.errors.ApiErrorEvent;
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
 import com.ddiehl.android.simpleredditreader.model.identity.UserIdentityInteractor;
 import com.facebook.stetho.Stetho;

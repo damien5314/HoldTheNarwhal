@@ -1,4 +1,4 @@
-package com.ddiehl.android.simpleredditreader.events;
+package com.ddiehl.android.simpleredditreader.events.errors;
 
 /**
  * Created by Damien on 1/19/2015.

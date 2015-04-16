@@ -1,10 +1,10 @@
 package com.ddiehl.android.simpleredditreader.model.auth;
 
-import com.ddiehl.android.simpleredditreader.events.LoadCommentThreadEvent;
-import com.ddiehl.android.simpleredditreader.events.LoadCommentsEvent;
-import com.ddiehl.android.simpleredditreader.events.LoadLinksEvent;
-import com.ddiehl.android.simpleredditreader.events.LoadMoreChildrenEvent;
-import com.ddiehl.android.simpleredditreader.events.VoteEvent;
+import com.ddiehl.android.simpleredditreader.events.requests.LoadCommentThreadEvent;
+import com.ddiehl.android.simpleredditreader.events.requests.LoadCommentsEvent;
+import com.ddiehl.android.simpleredditreader.events.requests.LoadLinksEvent;
+import com.ddiehl.android.simpleredditreader.events.requests.LoadMoreChildrenEvent;
+import com.ddiehl.android.simpleredditreader.events.requests.VoteEvent;
 
 
 public interface IRedditService {

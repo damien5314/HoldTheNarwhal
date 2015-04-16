@@ -1,20 +1,20 @@
-package com.ddiehl.android.simpleredditreader.events;
+package com.ddiehl.android.simpleredditreader.events.responses;
 
 import com.ddiehl.android.simpleredditreader.model.auth.AuthTokenResponse;
 
 import retrofit.RetrofitError;
 
 
-public class UserAuthorizationRefreshedEvent {
+public class UserAuthorizedEvent {
     private AuthTokenResponse mResponse;
     private RetrofitError mError;
     private boolean mFailed = false;
 
-    public UserAuthorizationRefreshedEvent(AuthTokenResponse response) {
+    public UserAuthorizedEvent(AuthTokenResponse response) {
         mResponse = response;
     }
 
-    public UserAuthorizationRefreshedEvent(RetrofitError error) {
+    public UserAuthorizedEvent(RetrofitError error) {
         mError = error;
         mFailed = true;
     }

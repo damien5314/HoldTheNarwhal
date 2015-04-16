@@ -1,4 +1,4 @@
-package com.ddiehl.android.simpleredditreader.events;
+package com.ddiehl.android.simpleredditreader.events.requests;
 
 import com.ddiehl.android.simpleredditreader.model.listings.RedditLink;
 import com.ddiehl.android.simpleredditreader.model.listings.RedditMoreComments;

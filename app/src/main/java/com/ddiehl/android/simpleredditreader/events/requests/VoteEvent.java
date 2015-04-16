@@ -1,4 +1,4 @@
-package com.ddiehl.android.simpleredditreader.events;
+package com.ddiehl.android.simpleredditreader.events.requests;
 
 public class VoteEvent {
     private String mType;
