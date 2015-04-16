@@ -56,7 +56,7 @@ public class CommentsFragment extends Fragment {
     private ThumbnailDownloader<ImageView> mThumbnailThread;
     private ThumbnailCache mThumbnailCache;
 
-    private CommentBank mData;
+    private CommentBank mCommentBank;
 
     private String mSubreddit;
     private String mArticleId;
@@ -103,7 +103,7 @@ public class CommentsFragment extends Fragment {
 
         mSort = RedditPreferences.getInstance(getActivity()).getCommentSort();
 
-        mData = new CommentBank();
+        mCommentBank = new CommentBank();
         mCommentAdapter = new CommentAdapter();
 
         getActivity().setTitle(getString(R.string.comments_fragment_default_title));
@@ -154,7 +154,7 @@ public class CommentsFragment extends Fragment {
 
         List<AbsRedditComment> comments = event.getComments();
         AbsRedditComment.flattenCommentList(comments);
-        mData.setData(event.getComments());
+        mCommentBank.setData(event.getComments());
         mCommentAdapter.notifyDataSetChanged();
     }
 
@@ -169,17 +169,17 @@ public class CommentsFragment extends Fragment {
         List<AbsRedditComment> comments = event.getComments();
 
         if (comments.size() == 0) {
-            mData.remove(parentStub);
+            mCommentBank.remove(parentStub);
         } else {
             AbsRedditComment.setDepthForCommentsList(comments, parentStub.getDepth());
 
-            for (int i = 0; i < mData.size(); i++) {
-                AbsRedditComment comment = mData.get(i);
+            for (int i = 0; i < mCommentBank.size(); i++) {
+                AbsRedditComment comment = mCommentBank.get(i);
                 if (comment instanceof RedditMoreComments) {
                     String id = ((RedditMoreComments) comment).getId();
                     if (id.equals(parentStub.getId())) { // Found the base comment
-                        mData.remove(i);
-                        mData.addAll(i, comments);
+                        mCommentBank.remove(i);
+                        mCommentBank.addAll(i, comments);
                         break;
                     }
                 }
@@ -209,13 +209,13 @@ public class CommentsFragment extends Fragment {
 
         // Iterate through the existing data list to find where the base comment lies
         RedditComment targetComment = (RedditComment) comments.get(0);
-        for (int i = 0; i < mData.size(); i++) {
-            AbsRedditComment comment = mData.get(i);
+        for (int i = 0; i < mCommentBank.size(); i++) {
+            AbsRedditComment comment = mCommentBank.get(i);
             if (comment instanceof RedditMoreComments) {
                 String id = ((RedditMoreComments) comment).getId();
                 if (id.equals(targetComment.getId())) { // Found the base comment
-                    mData.remove(i);
-                    mData.addAll(i, comments);
+                    mCommentBank.remove(i);
+                    mCommentBank.addAll(i, comments);
                     break;
                 }
             }
@@ -225,7 +225,7 @@ public class CommentsFragment extends Fragment {
     }
 
     public void updateSort(String sort) {
-        mData.clear();
+        mCommentBank.clear();
         mSort = sort;
         RedditPreferences.getInstance(getActivity()).saveCommentSort(sort);
         getComments();
@@ -300,7 +300,7 @@ public class CommentsFragment extends Fragment {
                 chooseCommentSortDialog.show(fm, DIALOG_CHOOSE_SORT);
                 return true;
             case R.id.action_refresh:
-                mData.clear();
+                mCommentBank.clear();
                 getComments();
                 return true;
             case R.id.action_settings:
@@ -333,7 +333,7 @@ public class CommentsFragment extends Fragment {
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
             if (holder instanceof CommentHolder) {
-                AbsRedditComment comment = mData.getVisibleComment(position - 1);
+                AbsRedditComment comment = mCommentBank.getVisibleComment(position - 1);
                 ((CommentHolder) holder).bindComment(comment);
             } else if (holder instanceof LinkHolder) {
                 ((LinkHolder) holder).bindLink(mRedditLink);
@@ -343,7 +343,7 @@ public class CommentsFragment extends Fragment {
         @Override
         public int getItemCount() {
             // Add 1 for each header and footer view
-            return mData.getNumVisible() + 1;
+            return mCommentBank.getNumVisible() + 1;
         }
 
         @Override
@@ -520,7 +520,7 @@ public class CommentsFragment extends Fragment {
                     mExpanderView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            mData.setThreadVisible(mData.indexOf(comment), comment.isCollapsed());
+                            mCommentBank.setThreadVisible(mCommentBank.indexOf(comment), comment.isCollapsed());
                             mCommentAdapter.notifyDataSetChanged();
                         }
                     });
