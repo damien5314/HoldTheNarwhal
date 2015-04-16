@@ -9,7 +9,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -170,21 +169,21 @@ public class CommentsFragment extends Fragment {
 
         RedditMoreComments parentStub = event.getParentStub();
         List<AbsRedditComment> comments = event.getComments();
-        Log.d(TAG, "Children retrieved: " + comments.size());
 
-        if (comments.size() == 0)
-            return;
+        if (comments.size() == 0) {
+            mData.remove(parentStub);
+        } else {
+            AbsRedditComment.setDepthForCommentsList(comments, parentStub.getDepth());
 
-        AbsRedditComment.setDepthForCommentsList(comments, parentStub.getDepth());
-
-        for (int i = 0; i < mData.size(); i++) {
-            AbsRedditComment comment = mData.get(i);
-            if (comment instanceof RedditMoreComments) {
-                String id = ((RedditMoreComments) comment).getId();
-                if (id.equals(parentStub.getId())) { // Found the base comment
-                    mData.remove(i);
-                    mData.addAll(i, comments);
-                    break;
+            for (int i = 0; i < mData.size(); i++) {
+                AbsRedditComment comment = mData.get(i);
+                if (comment instanceof RedditMoreComments) {
+                    String id = ((RedditMoreComments) comment).getId();
+                    if (id.equals(parentStub.getId())) { // Found the base comment
+                        mData.remove(i);
+                        mData.addAll(i, comments);
+                        break;
+                    }
                 }
             }
         }
