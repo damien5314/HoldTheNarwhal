@@ -31,7 +31,7 @@ import com.ddiehl.android.simpleredditreader.events.LoadMoreChildrenEvent;
 import com.ddiehl.android.simpleredditreader.events.MoreChildrenLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.VoteEvent;
 import com.ddiehl.android.simpleredditreader.model.listings.AbsRedditComment;
-import com.ddiehl.android.simpleredditreader.model.listings.Listing;
+import com.ddiehl.android.simpleredditreader.model.listings.CommentBank;
 import com.ddiehl.android.simpleredditreader.model.listings.RedditComment;
 import com.ddiehl.android.simpleredditreader.model.listings.RedditLink;
 import com.ddiehl.android.simpleredditreader.model.listings.RedditMoreComments;
@@ -41,7 +41,6 @@ import com.ddiehl.android.simpleredditreader.utils.BaseUtils;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class CommentsFragment extends Fragment {
@@ -53,16 +52,16 @@ public class CommentsFragment extends Fragment {
     private static final int REQUEST_CHOOSE_SORT = 0;
     private static final String DIALOG_CHOOSE_SORT = "dialog_choose_sort";
 
-    private Bus mBus;
+    private Bus mBus = BusProvider.getInstance();
     private ThumbnailDownloader<ImageView> mThumbnailThread;
     private ThumbnailCache mThumbnailCache;
+
+    private CommentBank mData;
 
     private String mSubreddit;
     private String mArticleId;
     private String mSort;
     private RedditLink mRedditLink;
-    private List<AbsRedditComment> mData;
-    private List<AbsRedditComment> mDataDisplayed = new ArrayList<>();
     private CommentAdapter mCommentAdapter;
     private boolean mCommentsRetrieved = false;
 
@@ -104,7 +103,7 @@ public class CommentsFragment extends Fragment {
 
         mSort = RedditPreferences.getInstance(getActivity()).getCommentSort();
 
-        mData = new ArrayList<>();
+        mData = new CommentBank();
         mCommentAdapter = new CommentAdapter();
 
         getActivity().setTitle(getString(R.string.comments_fragment_default_title));
@@ -128,7 +127,7 @@ public class CommentsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        getBus().register(this);
+        mBus.register(this);
 
         if (!mCommentsRetrieved) {
             getComments();
@@ -138,7 +137,7 @@ public class CommentsFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        getBus().unregister(this);
+        mBus.unregister(this);
     }
 
     @Subscribe
@@ -155,9 +154,7 @@ public class CommentsFragment extends Fragment {
 
         List<AbsRedditComment> comments = event.getComments();
         AbsRedditComment.flattenCommentList(comments);
-        mData.clear();
-        mData.addAll(event.getComments());
-        syncVisibleData();
+        mData.setData(event.getComments());
         mCommentAdapter.notifyDataSetChanged();
     }
 
@@ -189,7 +186,6 @@ public class CommentsFragment extends Fragment {
             }
         }
 
-        syncVisibleData();
         mCommentAdapter.notifyDataSetChanged();
     }
 
@@ -225,7 +221,6 @@ public class CommentsFragment extends Fragment {
             }
         }
 
-        syncVisibleData();
         mCommentAdapter.notifyDataSetChanged();
     }
 
@@ -239,7 +234,7 @@ public class CommentsFragment extends Fragment {
     private void getComments() {
         ((MainActivity) getActivity()).showSpinner(null);
         mCommentsRetrieved = true;
-        getBus().post(new LoadCommentsEvent(mSubreddit, mArticleId, mSort));
+        mBus.post(new LoadCommentsEvent(mSubreddit, mArticleId, mSort));
     }
 
     private void getMoreChildren(RedditMoreComments comment) {
@@ -250,12 +245,12 @@ public class CommentsFragment extends Fragment {
 
     private void upvote(RedditLink link) {
         int dir = (link.isLiked() == null || !link.isLiked()) ? 1 : 0;
-        getBus().post(new VoteEvent(link.getKind(), link.getId(), dir));
+        mBus.post(new VoteEvent(link.getKind(), link.getId(), dir));
     }
 
     private void downvote(RedditLink link) {
         int dir = (link.isLiked() == null || link.isLiked()) ? -1 : 0;
-        getBus().post(new VoteEvent(link.getKind(), link.getId(), dir));
+        mBus.post(new VoteEvent(link.getKind(), link.getId(), dir));
     }
 
     @Override
@@ -315,22 +310,6 @@ public class CommentsFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-    private Bus getBus() {
-        if (mBus == null) {
-            mBus = BusProvider.getInstance();
-        }
-        return mBus;
-    }
-
-    private void syncVisibleData() {
-        mDataDisplayed.clear();
-        for (Listing comment : mData) {
-            if (((AbsRedditComment) comment).isVisible()) {
-                mDataDisplayed.add((AbsRedditComment) comment);
-            }
-        }
-    }
-
     private class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         private static final int TYPE_HEADER = 0;
         private static final int TYPE_ITEM = 1;
@@ -354,7 +333,7 @@ public class CommentsFragment extends Fragment {
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
             if (holder instanceof CommentHolder) {
-                AbsRedditComment comment = mDataDisplayed.get(position - 1);
+                AbsRedditComment comment = mData.getVisibleComment(position - 1);
                 ((CommentHolder) holder).bindComment(comment);
             } else if (holder instanceof LinkHolder) {
                 ((LinkHolder) holder).bindLink(mRedditLink);
@@ -364,7 +343,7 @@ public class CommentsFragment extends Fragment {
         @Override
         public int getItemCount() {
             // Add 1 for each header and footer view
-            return mDataDisplayed.size() + 1;
+            return mData.getNumVisible() + 1;
         }
 
         @Override
@@ -541,69 +520,12 @@ public class CommentsFragment extends Fragment {
                     mExpanderView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            setThreadVisible(mData.indexOf(comment), comment.isCollapsed());
+                            mData.setThreadVisible(mData.indexOf(comment), comment.isCollapsed());
                             mCommentAdapter.notifyDataSetChanged();
                         }
                     });
                 }
             }
         }
-    }
-
-    private void setThreadVisible(int position, boolean visible) {
-        int totalItemCount = mData.size();
-        RedditComment parentComment = (RedditComment) mData.get(position);
-        int parentCommentDepth = parentComment.getDepth();
-        parentComment.setCollapsed(!visible);
-        ArrayList<Integer> collapsedCommentLevels = new ArrayList<>();
-        if (parentComment.isCollapsed()) {
-            collapsedCommentLevels.add(parentCommentDepth);
-        }
-
-        // Check to make sure the next comment isn't out of range of the full list
-        if (position + 1 < totalItemCount) {
-            // Retrieve first child comment
-            int currentChildCommentPosition = position + 1;
-            AbsRedditComment currentChildComment = (AbsRedditComment) mData.get(currentChildCommentPosition);
-            int currentChildCommentDepth = currentChildComment.getDepth();
-            // Loop through remaining comments until we reach another comment at same depth
-            // as the parent, or we reach the end of the comment list
-            while (currentChildCommentDepth > parentCommentDepth
-                    && currentChildCommentPosition < totalItemCount) {
-                // Loop through list of collapsed depths
-                // If the current comment is less than a depth, remove that depth from the list
-                for (int i = 0; i < collapsedCommentLevels.size(); i++) {
-                    if (currentChildCommentDepth <= collapsedCommentLevels.get(i)) {
-                        collapsedCommentLevels.remove(i);
-                    }
-                }
-                // If the comment is collapsed, add it to the list of collapsed depths
-                if (currentChildComment.isCollapsed()) {
-                    collapsedCommentLevels.add(currentChildCommentDepth);
-                }
-                // Loop through collapsed depth list from parent depth until child depth
-                // If any depth is collapsed less than child depth, set child to invisible
-                boolean collapsedFromParent = false;
-                for (int i = parentCommentDepth; i < currentChildCommentDepth; i++) {
-                    if (collapsedCommentLevels.contains(i)) {
-                        currentChildComment.setVisible(false);
-                        collapsedFromParent = true;
-                    }
-                }
-                // If comment was not collapsed from any collapsed parent, set visibility
-                if (!collapsedFromParent) {
-                    currentChildComment.setVisible(visible);
-                }
-                // Increment position
-                currentChildCommentPosition++;
-                // Retrieve comment at current position
-                if (currentChildCommentPosition < totalItemCount) {
-                    currentChildComment = (AbsRedditComment) mData.get(currentChildCommentPosition);
-                    currentChildCommentDepth = currentChildComment.getDepth();
-                }
-            }
-        }
-
-        syncVisibleData();
     }
 }
