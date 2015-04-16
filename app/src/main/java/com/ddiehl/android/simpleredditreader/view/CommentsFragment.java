@@ -170,16 +170,12 @@ public class CommentsFragment extends Fragment {
 
         RedditMoreComments parentStub = event.getParentStub();
         List<AbsRedditComment> comments = event.getComments();
-        AbsRedditComment.flattenCommentList(comments);
         Log.d(TAG, "Children retrieved: " + comments.size());
 
         if (comments.size() == 0)
             return;
 
-        int parentDepth = parentStub.getDepth();
-        for (AbsRedditComment comment : comments) {
-            comment.setDepth(comment.getDepth() + parentDepth - 1);
-        }
+        AbsRedditComment.setDepthForCommentsList(comments, parentStub.getDepth());
 
         for (int i = 0; i < mData.size(); i++) {
             AbsRedditComment comment = mData.get(i);

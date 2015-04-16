@@ -1,5 +1,6 @@
 package com.ddiehl.android.simpleredditreader.model.listings;
 
+import java.util.HashMap;
 import java.util.List;
 
 public abstract class AbsRedditComment extends Listing {
@@ -56,6 +57,26 @@ public abstract class AbsRedditComment extends Listing {
                 moreComments.setDepth(moreComments.getDepth() + 1); // Increase depth by 1
             }
             i++;
+        }
+    }
+
+    /**
+     * Sets depth for comments in a flat comments list
+     */
+    public static void setDepthForCommentsList(List<AbsRedditComment> comments, int parentDepth) {
+        HashMap<String, Integer> depthMap = new HashMap<>();
+
+        for (AbsRedditComment comment : comments) {
+            String id = ((comment instanceof RedditComment)
+                    ? ((RedditComment) comment).getName() : ((RedditMoreComments) comment).getName());
+            String parentId = ((comment instanceof RedditComment)
+                    ? ((RedditComment) comment).getParentId() : ((RedditMoreComments) comment).getParentId());
+            if (depthMap.containsKey(parentId)) {
+                comment.setDepth(depthMap.get(parentId) + 1);
+            } else {
+                comment.setDepth(parentDepth);
+            }
+            depthMap.put(id, comment.getDepth());
         }
     }
     
