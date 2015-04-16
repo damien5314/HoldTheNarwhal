@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.ddiehl.android.simpleredditreader.R;
@@ -452,7 +453,8 @@ public class CommentsFragment extends Fragment {
         }
 
         private class CommentHolder extends RecyclerView.ViewHolder {
-            private ViewGroup mIndentationWrapper;
+            private View mView;
+            private View mIndentation;
             private ViewGroup mExpanderView;
             private ImageView mExpanderIcon;
             private TextView mAuthorView;
@@ -463,7 +465,8 @@ public class CommentsFragment extends Fragment {
 
             public CommentHolder(View view) {
                 super(view);
-                mIndentationWrapper = (ViewGroup) view.findViewById(R.id.indentation_wrapper);
+                mView = view;
+                mIndentation = view.findViewById(R.id.indentation);
                 mExpanderView = (ViewGroup) view.findViewById(R.id.comment_expander_view);
                 mExpanderIcon = (ImageView) view.findViewById(R.id.comment_expander_icon);
                 mAuthorView = (TextView) view.findViewById(R.id.comment_author);
@@ -475,16 +478,16 @@ public class CommentsFragment extends Fragment {
 
             public void bindComment(final AbsRedditComment comment) {
                 // Add padding views to indentation_wrapper based on depth of comment
-                LayoutInflater inflater = getActivity().getLayoutInflater();
-                mIndentationWrapper.removeAllViews(); // Reset padding for recycled comment views
-                int depth = comment.getDepth();
-                for (int i = 0; i < depth - 1; i++) {
-                    View paddingView = inflater.inflate(R.layout.comment_padding_view, mIndentationWrapper, false);
-                    // Set background color for padding view
-                    int[] colors = getResources().getIntArray(R.array.indentation_colors);
-                    if (i == depth-2)
-                        paddingView.setBackgroundColor(colors[i % colors.length]);
-                    mIndentationWrapper.addView(paddingView);
+                int viewMargin = (comment.getDepth() - 2) * (int) getResources().getDimension(R.dimen.comment_indentation_margin);
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                params.setMargins(viewMargin, 0, 0, 0);
+                mView.setLayoutParams(params);
+
+                if (comment.getDepth() == 0) {
+                    mIndentation.setVisibility(View.GONE);
+                } else {
+                    mIndentation.setVisibility(View.VISIBLE);
                 }
 
                 // Populate attributes of comment in layout

@@ -13,7 +13,7 @@
     <dimen name="link_row_height">48dp</dimen>
     <dimen name="navigation_drawer_width">240dp</dimen>
     <dimen name="web_view_text_margin">5dp</dimen>
-    <dimen name="comment_indentation_width">2dp</dimen>
+    <!--<dimen name="comment_indentation_width">2dp</dimen>-->
     <dimen name="comment_indentation_margin">6dp</dimen>
     <dimen name="comment_expander_size">12dp</dimen>
     <dimen name="comment_author_text_size">16sp</dimen>

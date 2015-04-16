@@ -4,15 +4,14 @@
     android:id="@+id/comment_item_row"
     android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@drawable/comment_background">
 
-    <LinearLayout
-        android:id="@+id/indentation_wrapper"
-        android:orientation="horizontal"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent">
-
-    </LinearLayout>
+    <View
+        android:id="@+id/indentation"
+        android:background="@color/primary_dark"
+        android:layout_width="@dimen/comment_indentation_margin"
+        android:layout_height="match_parent" />
 
     <RelativeLayout
         android:layout_width="match_parent"

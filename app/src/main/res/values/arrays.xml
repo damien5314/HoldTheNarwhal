@@ -27,24 +27,4 @@
         <item>all</item>
     </string-array>
 
-    <!-- Colors for comment indentation -->
-    <array name="indentation_colors">
-        <!--<item>#0040FF</item>-->
-        <!--<item>#1953FF</item>-->
-        <!--<item>#3366FF</item>-->
-        <!--<item>#4D79FF</item>-->
-        <!--<item>#668CFF</item>-->
-        <!--<item>#809FFF</item>-->
-        <!--<item>#99B3FF</item>-->
-        <!--<item>#B3C6FF</item>-->
-        <!--<item>#CCD9FF</item>-->
-
-        <!--<item>#33FF0000</item>-->
-        <!--<item>#6600FF00</item>-->
-        <!--<item>#330000FF</item>-->
-        <!--<item>#AAFFED00</item>-->
-
-        <item>@color/indentation</item>
-    </array>
-
 </resources>
