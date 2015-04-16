@@ -520,7 +520,7 @@ public class CommentsFragment extends Fragment {
                     mExpanderView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            mCommentBank.setThreadVisible(mCommentBank.indexOf(comment), comment.isCollapsed());
+                            mCommentBank.toggleThreadVisible(comment);
                             mCommentAdapter.notifyDataSetChanged();
                         }
                     });

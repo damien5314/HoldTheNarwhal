@@ -89,7 +89,11 @@ public class CommentBank {
         }
     }
 
-    public void setThreadVisible(int position, boolean visible) {
+    public void toggleThreadVisible(AbsRedditComment comment) {
+        setThreadVisible(indexOf(comment), comment.isCollapsed());
+    }
+
+    private void setThreadVisible(int position, boolean visible) {
         int totalItemCount = mData.size();
         RedditComment parentComment = (RedditComment) mData.get(position);
         int parentCommentDepth = parentComment.getDepth();
