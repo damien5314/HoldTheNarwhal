@@ -302,10 +302,7 @@ public class RedditAuthProxy implements IRedditService {
         }
     }
 
-    /**
-     * Retrieves link listings for subreddit
-     */
-    @Subscribe
+    @Subscribe @Override
     public void onLoadLinks(LoadLinksEvent event) {
         if (!hasValidAuthToken()) {
             mQueuedEvent = event;
@@ -319,10 +316,7 @@ public class RedditAuthProxy implements IRedditService {
         }
     }
 
-    /**
-     * Retrieves comment listings for link passed as parameter
-     */
-    @Subscribe
+    @Subscribe @Override
     public void onLoadComments(LoadCommentsEvent event) {
         if (!hasValidAuthToken()) {
             mQueuedEvent = event;
@@ -336,10 +330,7 @@ public class RedditAuthProxy implements IRedditService {
         }
     }
 
-    /**
-     * Retrieves more comments for link passed as parameter
-     */
-    @Subscribe
+    @Subscribe @Override
     public void onLoadMoreChildren(LoadMoreChildrenEvent event) {
         if (!hasValidAuthToken()) {
             mQueuedEvent = event;
@@ -353,10 +344,7 @@ public class RedditAuthProxy implements IRedditService {
         }
     }
 
-    /**
-     * Retrieves comments for link, focused on comment ID passed as a parameter
-     */
-    @Subscribe
+    @Subscribe @Override
     public void onLoadCommentThread(LoadCommentThreadEvent event) {
         if (!hasValidAuthToken()) {
             mQueuedEvent = event;
@@ -370,10 +358,7 @@ public class RedditAuthProxy implements IRedditService {
         }
     }
 
-    /**
-     * Submits a vote on a link or comment
-     */
-    @Subscribe
+    @Subscribe @Override
     public void onVote(VoteEvent event) {
         if (!hasValidAuthToken()) {
             mQueuedEvent = event;

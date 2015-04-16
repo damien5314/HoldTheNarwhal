@@ -107,6 +107,10 @@ public class RedditService implements IRedditService {
         });
     }
 
+    /**
+     * Retrieves link listings for subreddit
+     */
+    @Override
     public void onLoadLinks(LoadLinksEvent event) {
         String subreddit = event.getSubreddit();
         String sort = event.getSort();
@@ -146,6 +150,10 @@ public class RedditService implements IRedditService {
         }
     }
 
+    /**
+     * Retrieves comment listings for link passed as parameter
+     */
+    @Override
     public void onLoadComments(LoadCommentsEvent event) {
         String subreddit = event.getSubreddit();
         String article = event.getArticle();
@@ -167,6 +175,9 @@ public class RedditService implements IRedditService {
         });
     }
 
+    /**
+     * Retrieves more comments for link, with comment stub passed as parameter
+     */
     @Override
     public void onLoadMoreChildren(LoadMoreChildrenEvent event) {
         RedditLink link = event.getRedditLink();
@@ -196,6 +207,10 @@ public class RedditService implements IRedditService {
         });
     }
 
+    /**
+     * Retrieves comments for link, focused on comment passed as a parameter
+     */
+    @Override
     public void onLoadCommentThread(LoadCommentThreadEvent event) {
         RedditLink link = event.getLink();
         RedditMoreComments more = event.getMoreComments();
@@ -227,6 +242,10 @@ public class RedditService implements IRedditService {
         });
     }
 
+    /**
+     * Submits a vote on a link or comment
+     */
+    @Override
     public void onVote(VoteEvent event) {
         final String type = event.getType();
         final String id = event.getId();
