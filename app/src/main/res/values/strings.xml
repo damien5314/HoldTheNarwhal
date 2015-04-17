@@ -31,9 +31,9 @@
     <string name="drawer_navigate_to_subreddit_text">Go to subreddit</string>
     <string name="action_refresh">Refresh</string>
     <string name="link_score_default">•</string>
-    <string name="comment_score_unit">points</string>
+    <string name="comment_score">%s</string> <!-- add units in other locales -->
     <string name="action_open_comments_in_browser">view comments in browser</string>
-    <string name="more_comments">view more comments</string>
+    <string name="more_comments">view %s more comments</string>
     <string name="continue_thread">continue thread</string>
     <string name="default_comment_sort">hot</string>
     <string name="default_links_sort">hot</string>
@@ -42,5 +42,11 @@
     <string name="toast_authorized">Authorization granted</string>
     <string name="toast_not_authorized">Not authorized</string>
     <string name="account_name_unauthorized">Not signed in</string>
+
+    <string name="lorem_ipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas at velit ex.
+            Aliquam vitae tellus eget dolor rutrum bibendum bibendum ac mauris. Morbi dui sapien, efficitur eget
+            dui et, blandit vulputate quam. Sed vehicula, mauris ac sollicitudin commodo, risus tortor imperdiet ipsum,
+            id consequat eros velit eget leo. Aliquam at purus tincidunt ipsum blandit fermentum eget quis risus.
+            Vestibulum molestie auctor maximus. Ut euismod ipsum velit, eu iaculis quam fermentum blandit.</string>
 
 </resources>

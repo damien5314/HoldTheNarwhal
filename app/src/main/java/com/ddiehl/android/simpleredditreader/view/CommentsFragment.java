@@ -18,18 +18,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.RedditPreferences;
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
-import com.ddiehl.android.simpleredditreader.events.responses.CommentThreadLoadedEvent;
-import com.ddiehl.android.simpleredditreader.events.responses.CommentsLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.LoadCommentsEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.LoadMoreChildrenEvent;
-import com.ddiehl.android.simpleredditreader.events.responses.MoreChildrenLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.VoteEvent;
+import com.ddiehl.android.simpleredditreader.events.responses.CommentThreadLoadedEvent;
+import com.ddiehl.android.simpleredditreader.events.responses.CommentsLoadedEvent;
+import com.ddiehl.android.simpleredditreader.events.responses.MoreChildrenLoadedEvent;
 import com.ddiehl.android.simpleredditreader.model.listings.AbsRedditComment;
 import com.ddiehl.android.simpleredditreader.model.listings.CommentBank;
 import com.ddiehl.android.simpleredditreader.model.listings.CommentBankList;
@@ -434,10 +433,11 @@ public class CommentsFragment extends Fragment {
 
         private class CommentHolder extends RecyclerView.ViewHolder {
             private View mView;
-            private View mIndentation;
-            private ViewGroup mExpanderView;
+//            private View mIndentation;
+            private ViewGroup mCommentData;
             private ImageView mExpanderIcon;
             private TextView mAuthorView;
+            private View mSecondaryData;
             private TextView mScoreView;
             private TextView mTimestampView;
             private TextView mMoreCommentsView;
@@ -446,10 +446,11 @@ public class CommentsFragment extends Fragment {
             public CommentHolder(View view) {
                 super(view);
                 mView = view;
-                mIndentation = view.findViewById(R.id.indentation);
-                mExpanderView = (ViewGroup) view.findViewById(R.id.comment_expander_view);
+//                mIndentation = view.findViewById(R.id.indentation);
+                mCommentData = (ViewGroup) view.findViewById(R.id.comment_data_row);
                 mExpanderIcon = (ImageView) view.findViewById(R.id.comment_expander_icon);
                 mAuthorView = (TextView) view.findViewById(R.id.comment_author);
+                mSecondaryData = view.findViewById(R.id.comment_secondary_data);
                 mScoreView = (TextView) view.findViewById(R.id.comment_score);
                 mTimestampView = (TextView) view.findViewById(R.id.comment_timestamp);
                 mMoreCommentsView = (TextView) view.findViewById(R.id.comment_more);
@@ -458,17 +459,15 @@ public class CommentsFragment extends Fragment {
 
             public void bindComment(final AbsRedditComment comment) {
                 // Add padding views to indentation_wrapper based on depth of comment
-                int viewMargin = (comment.getDepth() - 2) * (int) getResources().getDimension(R.dimen.comment_indentation_margin);
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                int viewMargin = (comment.getDepth() - 1) * (int) getResources().getDimension(R.dimen.comment_indentation_margin);
+                RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) mView.getLayoutParams();
                 params.setMargins(viewMargin, 0, 0, 0);
-                mView.setLayoutParams(params);
 
-                if (comment.getDepth() == 0) {
-                    mIndentation.setVisibility(View.GONE);
-                } else {
-                    mIndentation.setVisibility(View.VISIBLE);
-                }
+//                if (comment.getDepth() == 0) {
+//                    mIndentation.setVisibility(View.GONE);
+//                } else {
+//                    mIndentation.setVisibility(View.VISIBLE);
+//                }
 
                 // Populate attributes of comment in layout
                 if (comment instanceof RedditComment) {
@@ -481,12 +480,13 @@ public class CommentsFragment extends Fragment {
                         mAuthorView.setBackgroundDrawable(null);
                         mAuthorView.setTextColor(getResources().getColor(R.color.secondary_text));
                     }
-                    mScoreView.setVisibility(View.VISIBLE);
-                    mTimestampView.setVisibility(View.VISIBLE);
+                    mSecondaryData.setVisibility(View.VISIBLE);
+//                    mScoreView.setVisibility(View.VISIBLE);
+//                    mTimestampView.setVisibility(View.VISIBLE);
                     mBodyView.setVisibility(View.VISIBLE);
                     mMoreCommentsView.setVisibility(View.GONE);
                     mAuthorView.setText(((RedditComment) comment).getAuthor());
-                    mScoreView.setText("• " + ((RedditComment) comment).getScore() + " •");
+                    mScoreView.setText(String.format(getString(R.string.comment_score), ((RedditComment) comment).getScore()));
                     mTimestampView.setText(BaseUtils.getFormattedDateStringFromUtc(((RedditComment) comment).getCreateUtc().longValue()));
                     mBodyView.setText(((RedditComment) comment).getBody());
                     if (comment.isCollapsed()) {
@@ -499,15 +499,16 @@ public class CommentsFragment extends Fragment {
                 } else {
                     mExpanderIcon.setImageResource(R.drawable.ic_thread_expand);
                     mAuthorView.setVisibility(View.GONE);
-                    mScoreView.setVisibility(View.GONE);
-                    mTimestampView.setVisibility(View.GONE);
+                    mSecondaryData.setVisibility(View.GONE);
+//                    mScoreView.setVisibility(View.GONE);
+//                    mTimestampView.setVisibility(View.GONE);
                     mBodyView.setVisibility(View.GONE);
                     mMoreCommentsView.setVisibility(View.VISIBLE);
                     int count = ((RedditMoreComments) comment).getCount();
                     if (count == 0) { // continue thread
                         mMoreCommentsView.setText(getString(R.string.continue_thread));
                     } else { // more comments in current thread
-                        mMoreCommentsView.setText(getString(R.string.more_comments) + " (" + count + ")");
+                        mMoreCommentsView.setText(String.format(getString(R.string.more_comments), count));
                     }
                     mMoreCommentsView.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -518,7 +519,7 @@ public class CommentsFragment extends Fragment {
                 }
 
                 if (comment instanceof RedditComment) {
-                    mExpanderView.setOnClickListener(new View.OnClickListener() {
+                    mCommentData.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             mCommentBank.toggleThreadVisible(comment);

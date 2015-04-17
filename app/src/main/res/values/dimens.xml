@@ -15,18 +15,19 @@
     <dimen name="web_view_text_margin">5dp</dimen>
     <!--<dimen name="comment_indentation_width">2dp</dimen>-->
     <dimen name="comment_indentation_margin">6dp</dimen>
-    <dimen name="comment_expander_size">12dp</dimen>
+    <dimen name="comment_expander_size">12dp</dimen> <!-- 12dp -->
     <dimen name="comment_author_text_size">16sp</dimen>
-    <dimen name="comment_score_text_size">14sp</dimen>
-    <dimen name="comment_timestamp_text_size">14sp</dimen>
+    <dimen name="comment_secondary_data_text_size">14sp</dimen>
+    <dimen name="comment_score_text_size">@dimen/comment_secondary_data_text_size</dimen>
+    <dimen name="comment_timestamp_text_size">@dimen/comment_secondary_data_text_size</dimen>
     <dimen name="comment_body_text_size">16sp</dimen>
     <dimen name="comment_more_text_size">16sp</dimen>
-    <dimen name="comment_author_margin">5dp</dimen>
-    <dimen name="comment_score_margin">5dp</dimen>
-    <dimen name="comment_body_margin">3dp</dimen>
-    <dimen name="comment_expander_margin">5dp</dimen>
-    <dimen name="comment_data_margin_vertical">5dp</dimen>
-    <dimen name="comment_data_margin_horizontal">5dp</dimen>
+    <dimen name="comment_author_margin">0dp</dimen> <!-- 5dp -->
+    <dimen name="comment_score_margin">0dp</dimen> <!-- 5dp -->
+    <dimen name="comment_body_margin">0dp</dimen> <!-- 3dp -->
+    <dimen name="comment_expander_margin_horizontal">@dimen/comment_data_margin_horizontal</dimen> <!-- 5dp -->
+    <dimen name="comment_data_margin_vertical">0dp</dimen> <!-- 5dp -->
+    <dimen name="comment_data_margin_horizontal">5dp</dimen> <!-- 5dp -->
     <dimen name="toolbar_elevation">4dp</dimen>
     <dimen name="link_score_margin">4dp</dimen>
     <dimen name="link_self_text_padding">8dp</dimen>
@@ -43,5 +44,6 @@
     <dimen name="navigation_drawer_header_height">160dp</dimen>
     <dimen name="navigation_drawer_item_height">48dp</dimen>
     <dimen name="navigation_drawer_elevation">6dp</dimen>
+    <dimen name="comment_secondary_data_margin">5dp</dimen>
 
 </resources>
