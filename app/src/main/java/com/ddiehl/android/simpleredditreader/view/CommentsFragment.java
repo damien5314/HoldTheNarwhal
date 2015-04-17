@@ -433,8 +433,7 @@ public class CommentsFragment extends Fragment {
 
         private class CommentHolder extends RecyclerView.ViewHolder {
             private View mView;
-//            private View mIndentation;
-            private ViewGroup mCommentData;
+            private View mCommentData;
             private ImageView mExpanderIcon;
             private TextView mAuthorView;
             private View mSecondaryData;
@@ -446,7 +445,6 @@ public class CommentsFragment extends Fragment {
             public CommentHolder(View view) {
                 super(view);
                 mView = view;
-//                mIndentation = view.findViewById(R.id.indentation);
                 mCommentData = (ViewGroup) view.findViewById(R.id.comment_data_row);
                 mExpanderIcon = (ImageView) view.findViewById(R.id.comment_expander_icon);
                 mAuthorView = (TextView) view.findViewById(R.id.comment_author);
@@ -463,12 +461,6 @@ public class CommentsFragment extends Fragment {
                 RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) mView.getLayoutParams();
                 params.setMargins(viewMargin, 0, 0, 0);
 
-//                if (comment.getDepth() == 0) {
-//                    mIndentation.setVisibility(View.GONE);
-//                } else {
-//                    mIndentation.setVisibility(View.VISIBLE);
-//                }
-
                 // Populate attributes of comment in layout
                 if (comment instanceof RedditComment) {
                     mAuthorView.setVisibility(View.VISIBLE);
@@ -481,8 +473,6 @@ public class CommentsFragment extends Fragment {
                         mAuthorView.setTextColor(getResources().getColor(R.color.secondary_text));
                     }
                     mSecondaryData.setVisibility(View.VISIBLE);
-//                    mScoreView.setVisibility(View.VISIBLE);
-//                    mTimestampView.setVisibility(View.VISIBLE);
                     mBodyView.setVisibility(View.VISIBLE);
                     mMoreCommentsView.setVisibility(View.GONE);
                     mAuthorView.setText(((RedditComment) comment).getAuthor());
@@ -500,8 +490,6 @@ public class CommentsFragment extends Fragment {
                     mExpanderIcon.setImageResource(R.drawable.ic_thread_expand);
                     mAuthorView.setVisibility(View.GONE);
                     mSecondaryData.setVisibility(View.GONE);
-//                    mScoreView.setVisibility(View.GONE);
-//                    mTimestampView.setVisibility(View.GONE);
                     mBodyView.setVisibility(View.GONE);
                     mMoreCommentsView.setVisibility(View.VISIBLE);
                     int count = ((RedditMoreComments) comment).getCount();

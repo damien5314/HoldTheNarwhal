@@ -9,7 +9,7 @@
 
     <View
         android:id="@+id/indentation"
-        android:background="@color/primary_dark"
+        android:background="@color/primary"
         android:layout_width="@dimen/comment_indentation_margin"
         android:layout_height="match_parent" />
 
