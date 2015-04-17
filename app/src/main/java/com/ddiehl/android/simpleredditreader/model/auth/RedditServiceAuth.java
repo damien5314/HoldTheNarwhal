@@ -40,8 +40,8 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
 
-public class RedditAuthProxy implements IRedditService {
-    public static final String TAG = RedditAuthProxy.class.getSimpleName();
+public class RedditServiceAuth implements RedditService {
+    public static final String TAG = RedditServiceAuth.class.getSimpleName();
 
     public static final String CLIENT_ID = "***REMOVED***";
     public static final String RESPONSE_TYPE = "code";
@@ -69,11 +69,11 @@ public class RedditAuthProxy implements IRedditService {
     private static final String PREF_REFRESH_TOKEN = "pref_refresh_token";
     private static final String PREF_IS_USER_ACCESS_TOKEN = "pref_is_user_access_token";
 
-    private static RedditAuthProxy _instance;
+    private static RedditServiceAuth _instance;
 
     private Context mContext;
     private RedditAuthAPI mAPI;
-    private RedditService mService;
+    private RedditServiceAPI mService;
     private Bus mBus;
 
     private String mAuthToken;
@@ -85,21 +85,21 @@ public class RedditAuthProxy implements IRedditService {
 
     private Object mQueuedEvent;
 
-    private RedditAuthProxy(Context context) {
+    private RedditServiceAuth(Context context) {
         mContext = context.getApplicationContext();
         mBus = BusProvider.getInstance();
         mAPI = buildApi();
-        mService = new RedditService(mContext);
+        mService = new RedditServiceAPI(mContext);
 
         retrieveSavedAuthToken();
         mService.setAuthToken(mAuthToken);
     }
 
-    public static RedditAuthProxy getInstance(Context context) {
+    public static RedditServiceAuth getInstance(Context context) {
         if (_instance == null) {
-            synchronized (RedditAuthProxy.class) {
+            synchronized (RedditServiceAuth.class) {
                 if (_instance == null) {
-                    _instance = new RedditAuthProxy(context);
+                    _instance = new RedditServiceAuth(context);
                 }
             }
         }
@@ -228,7 +228,7 @@ public class RedditAuthProxy implements IRedditService {
         String grantType = "authorization_code";
         String authCode = event.getCode();
 
-        mAPI.getUserAuthToken(grantType, authCode, RedditAuthProxy.REDIRECT_URI,
+        mAPI.getUserAuthToken(grantType, authCode, RedditServiceAuth.REDIRECT_URI,
                 new Callback<AuthTokenResponse>() {
                     @Override
                     public void success(AuthTokenResponse authTokenResponse, Response response) {

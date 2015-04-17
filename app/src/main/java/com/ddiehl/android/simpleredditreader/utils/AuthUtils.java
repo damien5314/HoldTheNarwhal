@@ -4,7 +4,7 @@ import android.net.Uri;
 import android.util.Base64;
 import android.util.Log;
 
-import com.ddiehl.android.simpleredditreader.model.auth.RedditAuthProxy;
+import com.ddiehl.android.simpleredditreader.model.auth.RedditServiceAuth;
 
 public class AuthUtils {
     private static final String TAG = AuthUtils.class.getSimpleName();
@@ -20,8 +20,8 @@ public class AuthUtils {
 
         // Verify state parameter is correct
         String returnedState = getValueFromQuery(params[0]);
-        if (!returnedState.equals(RedditAuthProxy.STATE)) {
-            Log.e(TAG, "STATE does not match: " + returnedState + " (EXPECTED: " + RedditAuthProxy.STATE + ")");
+        if (!returnedState.equals(RedditServiceAuth.STATE)) {
+            Log.e(TAG, "STATE does not match: " + returnedState + " (EXPECTED: " + RedditServiceAuth.STATE + ")");
             return null;
         }
 

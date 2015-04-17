@@ -29,8 +29,8 @@ import com.ddiehl.android.simpleredditreader.events.BusProvider;
 import com.ddiehl.android.simpleredditreader.events.requests.GetSavedUserIdentityEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.SavedUserIdentityRetrievedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.UserIdentitySavedEvent;
-import com.ddiehl.android.simpleredditreader.model.auth.IRedditService;
-import com.ddiehl.android.simpleredditreader.model.auth.RedditAuthProxy;
+import com.ddiehl.android.simpleredditreader.model.auth.RedditService;
+import com.ddiehl.android.simpleredditreader.model.auth.RedditServiceAuth;
 import com.ddiehl.android.simpleredditreader.model.identity.UserIdentity;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
@@ -62,7 +62,7 @@ public class MainActivity extends ActionBarActivity {
         RedditPreferences prefs = RedditPreferences.getInstance(this);
         mBus.register(prefs);
 
-        IRedditService authProxy = RedditAuthProxy.getInstance(this);
+        RedditService authProxy = RedditServiceAuth.getInstance(this);
         mBus.register(authProxy);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -292,7 +292,7 @@ public class MainActivity extends ActionBarActivity {
                             @Override
                             public void onClick(View v) {
                                 mDrawerLayout.closeDrawer(GravityCompat.START);
-                                openWebViewForURL(RedditAuthProxy.AUTHORIZATION_URL);
+                                openWebViewForURL(RedditServiceAuth.AUTHORIZATION_URL);
                             }
                         });
                         break;

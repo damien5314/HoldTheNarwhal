@@ -18,8 +18,8 @@ import android.widget.ZoomButtonsController;
 import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
 import com.ddiehl.android.simpleredditreader.events.responses.UserAuthCodeReceivedEvent;
+import com.ddiehl.android.simpleredditreader.model.auth.RedditServiceAuth;
 import com.ddiehl.android.simpleredditreader.utils.AuthUtils;
-import com.ddiehl.android.simpleredditreader.model.auth.RedditAuthProxy;
 import com.squareup.otto.Bus;
 
 /**
@@ -73,7 +73,7 @@ public class WebViewFragment extends Fragment {
         mWebView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                if (url.contains(RedditAuthProxy.REDIRECT_URI)) {
+                if (url.contains(RedditServiceAuth.REDIRECT_URI)) {
                     String authCode = AuthUtils.getUserAuthCodeFromRedirectUri(url);
                     mBus.post(new UserAuthCodeReceivedEvent(authCode));
                     getFragmentManager().popBackStack();
