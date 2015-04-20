@@ -95,7 +95,9 @@ public class WebViewFragment extends Fragment {
 
             @Override
             public void onReceivedTitle(WebView view, String title) {
-                getActivity().setTitle(title);
+                if (title != null) {
+                    getActivity().setTitle(title);
+                }
             }
         });
 
