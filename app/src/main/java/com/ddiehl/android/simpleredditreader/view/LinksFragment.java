@@ -2,10 +2,8 @@ package com.ddiehl.android.simpleredditreader.view;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -24,16 +22,15 @@ import android.widget.Toast;
 import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.RedditPreferences;
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
-import com.ddiehl.android.simpleredditreader.events.responses.LinksLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.LoadLinksEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.VoteEvent;
+import com.ddiehl.android.simpleredditreader.events.responses.LinksLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.VoteSubmittedEvent;
 import com.ddiehl.android.simpleredditreader.model.listings.RedditLink;
 import com.ddiehl.android.simpleredditreader.utils.BaseUtils;
-import com.ddiehl.android.simpleredditreader.model.web.ThumbnailCache;
-import com.ddiehl.android.simpleredditreader.model.web.ThumbnailDownloader;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,8 +46,6 @@ public class LinksFragment extends Fragment {
     private static final String DIALOG_CHOOSE_TIMESPAN = "dialog_choose_timespan";
 
     private Bus mBus;
-    private ThumbnailDownloader<ImageView> mThumbnailThread;
-    private ThumbnailCache mThumbnailCache;
 
     private String mSubreddit;
     private String mSort;
@@ -81,21 +76,6 @@ public class LinksFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
         setHasOptionsMenu(true);
-
-        mThumbnailThread = new ThumbnailDownloader<>(new Handler());
-        mThumbnailThread.setListener(new ThumbnailDownloader.Listener<ImageView>() {
-            @Override
-            public void onThumbnailDownloaded(ImageView imageView, String url, Bitmap thumbnail) {
-                if (isVisible()) {
-                    mThumbnailCache.addThumbnail(url, thumbnail);
-                    imageView.setImageBitmap(thumbnail);
-                }
-            }
-        });
-        mThumbnailThread.start();
-        mThumbnailThread.getLooper();
-
-        mThumbnailCache = ThumbnailCache.getInstance();
 
         Bundle args = getArguments();
         mSubreddit = args.getString(ARG_SUBREDDIT);
@@ -156,13 +136,11 @@ public class LinksFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mThumbnailThread.quit();
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        mThumbnailThread.clearQueue();
     }
 
     public void updateSubreddit(String subreddit) {
@@ -368,24 +346,21 @@ public class LinksFragment extends Fragment {
             mLinkComments.setText(link.getNumComments() + " comments");
             mSelfText.setVisibility(View.GONE);
 
-            // Queue thumbnail to be downloaded, if one exists
-            mLinkThumbnail.setImageResource(R.drawable.ic_thumbnail_placeholder);
-
             String thumbnailUrl = link.getThumbnail();
-            if (thumbnailUrl.equals("nsfw")) {
-                mLinkThumbnail.setImageResource(R.drawable.ic_nsfw);
-            } else if (!thumbnailUrl.equals("")
-                    && !thumbnailUrl.equals("default")
-                    && !thumbnailUrl.equals("self")) {
-                Bitmap thumbnail = mThumbnailCache.getThumbnail(thumbnailUrl);
-                if (thumbnail == null) {
-                    mThumbnailThread.queueThumbnail(mLinkThumbnail, thumbnailUrl);
-                } else {
-                    mLinkThumbnail.setImageBitmap(thumbnail);
-                }
-                mLinkThumbnail.setVisibility(View.VISIBLE);
-            } else {
-                mLinkThumbnail.setVisibility(View.GONE);
+            switch (thumbnailUrl) {
+                case "nsfw":
+                    mLinkThumbnail.setImageResource(R.drawable.ic_nsfw);
+                    break;
+                case "": case "default": case "self":
+                    mLinkThumbnail.setVisibility(View.GONE);
+                    break;
+                default:
+                    Picasso.with(getActivity())
+                            .load(thumbnailUrl)
+                            .placeholder(R.drawable.ic_thumbnail_placeholder)
+//                        .error(null)
+                            .into(mLinkThumbnail);
+                    mLinkThumbnail.setVisibility(View.VISIBLE);
             }
 
             // Set background tint based on isLiked

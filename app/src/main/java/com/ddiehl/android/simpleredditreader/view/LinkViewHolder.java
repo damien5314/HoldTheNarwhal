@@ -11,6 +11,7 @@ import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.model.listings.RedditLink;
 import com.ddiehl.android.simpleredditreader.presenter.CommentsPresenter;
 import com.ddiehl.android.simpleredditreader.utils.BaseUtils;
+import com.squareup.picasso.Picasso;
 
 class LinkViewHolder extends RecyclerView.ViewHolder {
     private View mLinkView;
@@ -64,9 +65,22 @@ class LinkViewHolder extends RecyclerView.ViewHolder {
         mLinkDomain.setText("(" + link.getDomain() + ")");
         mLinkComments.setText(link.getNumComments() + " comments");
 
-        // Queue thumbnail to be downloaded, if one exists
-        mLinkThumbnail.setImageResource(R.drawable.ic_thumbnail_placeholder);
-        // TODO Get thumbnail
+        String thumbnailUrl = link.getThumbnail();
+        switch (thumbnailUrl) {
+            case "nsfw":
+                mLinkThumbnail.setImageResource(R.drawable.ic_nsfw);
+                break;
+            case "": case "default": case "self":
+                mLinkThumbnail.setVisibility(View.GONE);
+                break;
+            default:
+                Picasso.with(mContext)
+                        .load(thumbnailUrl)
+                        .placeholder(R.drawable.ic_thumbnail_placeholder)
+//                        .error(null)
+                        .into(mLinkThumbnail);
+                mLinkThumbnail.setVisibility(View.VISIBLE);
+        }
 
         // Set background tint based on isLiked
         if (link.isLiked() == null) {

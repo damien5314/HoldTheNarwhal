@@ -4,14 +4,15 @@ import android.app.Application;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.ddiehl.android.simpleredditreader.events.errors.ApiErrorEvent;
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
+import com.ddiehl.android.simpleredditreader.events.errors.ApiErrorEvent;
 import com.ddiehl.android.simpleredditreader.model.identity.UserIdentityInteractor;
 import com.facebook.stetho.Stetho;
 import com.facebook.stetho.okhttp.StethoInterceptor;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
+import com.squareup.picasso.Picasso;
 
 
 public class RedditReaderApplication extends Application {
@@ -39,6 +40,9 @@ public class RedditReaderApplication extends Application {
 
         // Network inspection through Stetho
         new OkHttpClient().networkInterceptors().add(new StethoInterceptor());
+
+        if (BuildConfig.DEBUG)
+            Picasso.with(this).setIndicatorsEnabled(true);
     }
 
     @Subscribe
