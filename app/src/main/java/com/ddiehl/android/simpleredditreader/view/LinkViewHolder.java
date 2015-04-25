@@ -68,7 +68,9 @@ class LinkViewHolder extends RecyclerView.ViewHolder {
         String thumbnailUrl = link.getThumbnail();
         switch (thumbnailUrl) {
             case "nsfw":
-                mLinkThumbnail.setImageResource(R.drawable.ic_nsfw);
+                Picasso.with(mContext)
+                        .load(R.drawable.ic_nsfw)
+                        .into(mLinkThumbnail);
                 break;
             case "": case "default": case "self":
                 mLinkThumbnail.setVisibility(View.GONE);
@@ -77,7 +79,7 @@ class LinkViewHolder extends RecyclerView.ViewHolder {
                 Picasso.with(mContext)
                         .load(thumbnailUrl)
                         .placeholder(R.drawable.ic_thumbnail_placeholder)
-//                        .error(null)
+                        .error(R.drawable.ic_alert_error)
                         .into(mLinkThumbnail);
                 mLinkThumbnail.setVisibility(View.VISIBLE);
         }

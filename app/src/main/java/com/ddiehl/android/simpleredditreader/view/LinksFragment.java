@@ -349,7 +349,9 @@ public class LinksFragment extends Fragment {
             String thumbnailUrl = link.getThumbnail();
             switch (thumbnailUrl) {
                 case "nsfw":
-                    mLinkThumbnail.setImageResource(R.drawable.ic_nsfw);
+                    Picasso.with(getActivity())
+                            .load(R.drawable.ic_nsfw)
+                            .into(mLinkThumbnail);
                     break;
                 case "": case "default": case "self":
                     mLinkThumbnail.setVisibility(View.GONE);
@@ -358,7 +360,7 @@ public class LinksFragment extends Fragment {
                     Picasso.with(getActivity())
                             .load(thumbnailUrl)
                             .placeholder(R.drawable.ic_thumbnail_placeholder)
-//                        .error(null)
+                            .error(R.drawable.ic_alert_error)
                             .into(mLinkThumbnail);
                     mLinkThumbnail.setVisibility(View.VISIBLE);
             }
