@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.model.listings.RedditComment;
-import com.ddiehl.android.simpleredditreader.model.listings.RedditLink;
 import com.ddiehl.android.simpleredditreader.presenter.CommentsPresenter;
 import com.ddiehl.android.simpleredditreader.utils.BaseUtils;
 
@@ -25,24 +24,7 @@ class CommentViewHolder extends RecyclerView.ViewHolder {
     private TextView mBodyView;
 
     private Context mContext;
-    private RedditLink mRedditLink;
     private CommentsPresenter mCommentsPresenter;
-
-    public CommentViewHolder(RedditLink link, View view) {
-        super(view);
-        mView = view;
-        mCommentData = view.findViewById(R.id.comment_data_row);
-        mExpanderIcon = (ImageView) view.findViewById(R.id.comment_expander_icon);
-        mAuthorView = (TextView) view.findViewById(R.id.comment_author);
-        mSecondaryData = view.findViewById(R.id.comment_secondary_data);
-        mScoreView = (TextView) view.findViewById(R.id.comment_score);
-        mTimestampView = (TextView) view.findViewById(R.id.comment_timestamp);
-        mMoreCommentsView = (TextView) view.findViewById(R.id.comment_more);
-        mBodyView = (TextView) view.findViewById(R.id.comment_body);
-
-        mContext = view.getContext().getApplicationContext();
-        mRedditLink = link;
-    }
 
     public CommentViewHolder(View view, CommentsPresenter presenter) {
         super(view);
@@ -58,7 +40,6 @@ class CommentViewHolder extends RecyclerView.ViewHolder {
 
         mContext = view.getContext().getApplicationContext();
         mCommentsPresenter = presenter;
-        mRedditLink = mCommentsPresenter.getRedditLink();
     }
 
     public void bind(final RedditComment comment) {
@@ -69,13 +50,13 @@ class CommentViewHolder extends RecyclerView.ViewHolder {
 
         mAuthorView.setVisibility(View.VISIBLE);
         // Set background to blue if author is OP
-        if (comment.getAuthor().equals(mRedditLink.getAuthor())) {
-            mAuthorView.setBackgroundResource(R.drawable.original_poster_background);
-            mAuthorView.setTextColor(mContext.getResources().getColor(R.color.op_text));
-        } else { // Else, set it to transparent
-            mAuthorView.setBackgroundDrawable(null);
-            mAuthorView.setTextColor(mContext.getResources().getColor(R.color.secondary_text));
-        }
+//        if (comment.getAuthor().equals(mRedditLink.getAuthor())) {
+//            mAuthorView.setBackgroundResource(R.drawable.original_poster_background);
+//            mAuthorView.setTextColor(mContext.getResources().getColor(R.color.op_text));
+//        } else { // Else, set it to transparent
+//            mAuthorView.setBackgroundDrawable(null);
+//            mAuthorView.setTextColor(mContext.getResources().getColor(R.color.secondary_text));
+//        }
         mSecondaryData.setVisibility(View.VISIBLE);
         mBodyView.setVisibility(View.VISIBLE);
         mMoreCommentsView.setVisibility(View.GONE);

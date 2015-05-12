@@ -6,15 +6,12 @@ import com.ddiehl.android.simpleredditreader.model.listings.RedditMoreComments;
 
 public interface CommentsPresenter {
 
-    public void getComments();
-    public void getMoreChildren(RedditMoreComments comment);
-    public void updateSort(String sort);
-    public void upvoteLink();
-    public void downvoteLink();
-    public void onContextItemSelected(int id);
-    public RedditLink getRedditLink();
-    public AbsRedditComment getCommentAtPosition(int position);
-    public void toggleThreadVisible(AbsRedditComment comment);
-    public int getNumComments();
-
+    void getComments();
+    RedditLink getLink();
+    void setLink(RedditLink link);
+    void getMoreChildren(RedditMoreComments comment);
+    void updateSort(String sort);
+    AbsRedditComment getCommentAtPosition(int position);
+    void toggleThreadVisible(AbsRedditComment comment);
+    int getNumComments();
 }

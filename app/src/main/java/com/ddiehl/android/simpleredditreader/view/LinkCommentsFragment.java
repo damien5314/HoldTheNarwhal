@@ -2,6 +2,7 @@ package com.ddiehl.android.simpleredditreader.view;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -14,18 +15,19 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
+import android.widget.Toast;
 
 import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
-import com.ddiehl.android.simpleredditreader.model.listings.CommentBank;
 import com.ddiehl.android.simpleredditreader.model.listings.RedditLink;
 import com.ddiehl.android.simpleredditreader.presenter.CommentsPresenter;
 import com.ddiehl.android.simpleredditreader.presenter.CommentsPresenterImpl;
+import com.ddiehl.android.simpleredditreader.presenter.LinksPresenter;
+import com.ddiehl.android.simpleredditreader.presenter.LinksPresenterImpl;
 import com.squareup.otto.Bus;
 
-public class CommentsFragment extends Fragment implements CommentsView {
-    private static final String TAG = CommentsFragment.class.getSimpleName();
+public class LinkCommentsFragment extends Fragment implements LinksView, CommentsView {
+    private static final String TAG = LinkCommentsFragment.class.getSimpleName();
 
     private static final String ARG_SUBREDDIT = "subreddit";
     private static final String ARG_ARTICLE = "article";
@@ -34,17 +36,18 @@ public class CommentsFragment extends Fragment implements CommentsView {
     private static final String DIALOG_CHOOSE_SORT = "dialog_choose_sort";
 
     private Bus mBus;
+    private LinksPresenter mLinksPresenter;
     private CommentsPresenter mCommentsPresenter;
 
-    private CommentsAdapter mCommentsAdapter;
+    private LinkCommentsAdapter mLinkCommentsAdapter;
 
-    public CommentsFragment() { /* Default constructor */ }
+    public LinkCommentsFragment() { /* Default constructor */ }
 
-    public static CommentsFragment newInstance(String subreddit, String article) {
+    public static LinkCommentsFragment newInstance(String subreddit, String article) {
         Bundle args = new Bundle();
         args.putString(ARG_SUBREDDIT, subreddit);
         args.putString(ARG_ARTICLE, article);
-        CommentsFragment fragment = new CommentsFragment();
+        LinkCommentsFragment fragment = new LinkCommentsFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -62,9 +65,10 @@ public class CommentsFragment extends Fragment implements CommentsView {
         String articleId = args.getString(ARG_ARTICLE);
 
         mBus = BusProvider.getInstance();
+        mLinksPresenter = new LinksPresenterImpl(getActivity(), this, subreddit);
         mCommentsPresenter = new CommentsPresenterImpl(getActivity(), this, subreddit, articleId);
 
-        mCommentsAdapter = new CommentsAdapter(mCommentsPresenter);
+        mLinkCommentsAdapter = new LinkCommentsAdapter(mLinksPresenter, mCommentsPresenter);
     }
 
     @Override
@@ -73,7 +77,7 @@ public class CommentsFragment extends Fragment implements CommentsView {
 
         RecyclerView recyclerView = (RecyclerView) v.findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerView.setAdapter(mCommentsAdapter);
+        recyclerView.setAdapter(mLinkCommentsAdapter);
 
         return v;
     }
@@ -81,9 +85,10 @@ public class CommentsFragment extends Fragment implements CommentsView {
     @Override
     public void onResume() {
         super.onResume();
+        mBus.register(mLinksPresenter);
         mBus.register(mCommentsPresenter);
 
-        if (mCommentsAdapter.getItemCount() == 0) {
+        if (mLinkCommentsAdapter.getItemCount() == 0) {
             mCommentsPresenter.getComments();
         }
     }
@@ -91,20 +96,18 @@ public class CommentsFragment extends Fragment implements CommentsView {
     @Override
     public void onPause() {
         super.onPause();
+        mBus.unregister(mLinksPresenter);
         mBus.unregister(mCommentsPresenter);
     }
 
     @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+    public void showLinkContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         getActivity().getMenuInflater().inflate(R.menu.link_context_menu, menu);
     }
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        mCommentsPresenter.onContextItemSelected(item.getItemId());
-
-        return super.onContextItemSelected(item);
+        return mLinksPresenter.onContextItemSelected(item);
     }
 
     @Override
@@ -159,8 +162,8 @@ public class CommentsFragment extends Fragment implements CommentsView {
     }
 
     @Override
-    public boolean isViewVisible() {
-        return isVisible();
+    public void showToast(int resId) {
+        Toast.makeText(getActivity(), resId, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -170,16 +173,21 @@ public class CommentsFragment extends Fragment implements CommentsView {
 
     @Override
     public void updateAdapter() {
-        mCommentsAdapter.notifyDataSetChanged();
+        mLinkCommentsAdapter.notifyDataSetChanged();
     }
 
     @Override
-    public void showLink(RedditLink link) {
-        mCommentsAdapter.setRedditLink(link);
+    public void openIntent(Intent i) {
+        startActivity(i);
     }
 
     @Override
-    public void showComments(CommentBank bank) {
-        mCommentsAdapter.setCommentBank(bank);
+    public void showLink(Uri uri) {
+        ((MainActivity) getActivity()).openWebViewForURL(uri.toString());
+    }
+
+    @Override
+    public void showCommentsForLink(RedditLink link) {
+
     }
 }

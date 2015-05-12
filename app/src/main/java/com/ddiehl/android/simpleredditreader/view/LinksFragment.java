@@ -15,27 +15,16 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ddiehl.android.simpleredditreader.R;
-import com.ddiehl.android.simpleredditreader.RedditPreferences;
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
-import com.ddiehl.android.simpleredditreader.events.requests.LoadLinksEvent;
-import com.ddiehl.android.simpleredditreader.events.requests.VoteEvent;
-import com.ddiehl.android.simpleredditreader.events.responses.LinksLoadedEvent;
-import com.ddiehl.android.simpleredditreader.events.responses.VoteSubmittedEvent;
 import com.ddiehl.android.simpleredditreader.model.listings.RedditLink;
-import com.ddiehl.android.simpleredditreader.utils.BaseUtils;
+import com.ddiehl.android.simpleredditreader.presenter.LinksPresenter;
+import com.ddiehl.android.simpleredditreader.presenter.LinksPresenterImpl;
 import com.squareup.otto.Bus;
-import com.squareup.otto.Subscribe;
-import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class LinksFragment extends Fragment {
+public class LinksFragment extends Fragment implements LinksView {
     private static final String TAG = LinksFragment.class.getSimpleName();
 
     private static final String ARG_SUBREDDIT = "subreddit";
@@ -47,19 +36,15 @@ public class LinksFragment extends Fragment {
 
     private Bus mBus;
 
-    private String mSubreddit;
-    private String mSort;
-    private String mTimeSpan;
-    private List<RedditLink> mData;
-    private String mLastDisplayedLink;
-    private boolean mLinksRequested = false;
-    private int mFirstVisibleItem, mVisibleItemCount, mTotalItemCount;
+    private LinksPresenter mLinksPresenter;
 
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLayoutManager;
-    private LinkAdapter mLinkAdapter;
+    private LinksAdapter mLinksAdapter;
 
-    private int mClickedLinkPosition;
+    private String mLastDisplayedLink;
+    private boolean mLinksRequested = false;
+    private int mFirstVisibleItem, mVisibleItemCount, mTotalItemCount;
 
     public LinksFragment() { /* Default constructor required */ }
 
@@ -77,14 +62,14 @@ public class LinksFragment extends Fragment {
         setRetainInstance(true);
         setHasOptionsMenu(true);
 
-        Bundle args = getArguments();
-        mSubreddit = args.getString(ARG_SUBREDDIT);
-        mSort = RedditPreferences.getInstance(getActivity()).getLinksSort();
-        mTimeSpan = RedditPreferences.getInstance(getActivity()).getLinksTimespan();
-        updateTitle();
+        mBus = BusProvider.getInstance();
 
-        mData = new ArrayList<>();
-        mLinkAdapter = new LinkAdapter();
+        Bundle args = getArguments();
+        String subreddit = args.getString(ARG_SUBREDDIT);
+        mLinksPresenter = new LinksPresenterImpl(getActivity(), this, subreddit);
+        mLinksAdapter = new LinksAdapter(mLinksPresenter, this);
+
+        mLinksPresenter.updateTitle();
     }
 
     @Override
@@ -94,7 +79,7 @@ public class LinksFragment extends Fragment {
         mRecyclerView = (RecyclerView) v.findViewById(R.id.recycler_view);
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setAdapter(mLinkAdapter);
+        mRecyclerView.setAdapter(mLinksAdapter);
 
         mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -105,14 +90,13 @@ public class LinksFragment extends Fragment {
 
                 if (!mLinksRequested) {
                     if ((mVisibleItemCount + mFirstVisibleItem) >= mTotalItemCount) {
-                        mLinksRequested = true;
-                        getBus().post(new LoadLinksEvent(mSubreddit, mSort, mTimeSpan, mLastDisplayedLink));
+                        getLinks();
                     }
                 }
             }
         });
 
-        updateTitle();
+        mLinksPresenter.updateTitle();
 
         return v;
     }
@@ -120,7 +104,7 @@ public class LinksFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        getBus().register(this);
+        mBus.register(mLinksPresenter);
 
         if (mLastDisplayedLink == null) {
             getLinks();
@@ -130,88 +114,12 @@ public class LinksFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        getBus().unregister(this);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-    }
-
-    public void updateSubreddit(String subreddit) {
-        mData.clear();
-        mSubreddit = subreddit;
-        updateTitle();
-        getLinks();
-    }
-
-    public void updateSort(String sort) {
-        mData.clear();
-        mSort = sort;
-        RedditPreferences.getInstance(getActivity()).saveLinksSort(sort);
-        getLinks();
-    }
-
-    public void updateTimeSpan(String timespan) {
-        mData.clear();
-        mTimeSpan = timespan;
-        RedditPreferences.getInstance(getActivity()).saveLinksTimespan(timespan);
-        getLinks();
-    }
-
-    private void updateTitle() {
-        if (mSubreddit == null) {
-            getActivity().setTitle(getString(R.string.front_page_title));
-        } else {
-            getActivity().setTitle("/r/" + mSubreddit);
-        }
+        mBus.unregister(mLinksPresenter);
     }
 
     private void getLinks() {
-        ((MainActivity) getActivity()).showSpinner("Getting submissions...");
         mLinksRequested = true;
-        getBus().post(new LoadLinksEvent(mSubreddit, mSort, mTimeSpan));
-    }
-
-    @Subscribe
-    public void onLinksLoaded(LinksLoadedEvent event) {
-        ((MainActivity) getActivity()).dismissSpinner();
-        if (event.isFailed()) {
-            return;
-        }
-
-        mLinksRequested = false;
-        mLastDisplayedLink = event.getResponse().getData().getAfter();
-
-        if (mSubreddit != null && mSubreddit.equals("random")) {
-            mSubreddit = event.getLinks().get(0).getSubreddit();
-        }
-
-        updateTitle();
-        mData.addAll(event.getLinks());
-        mLinkAdapter.notifyDataSetChanged();
-    }
-
-    @Subscribe
-    public void onVoteSubmitted(VoteSubmittedEvent event) {
-        if (event.isFailed()) {
-            Toast.makeText(getActivity(), R.string.vote_failed, Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        // Loop through the list of data and update the vote for the appropriate link
-        for (int i = 0; i < mData.size(); i++) {
-            RedditLink link = mData.get(i);
-            if (link.getId().equals(event.getId())) {
-                link.applyVote(event.getDirection());
-                mLinkAdapter.notifyItemChanged(i);
-            }
-        }
+        mLinksPresenter.getLinks();
     }
 
     @Override
@@ -220,18 +128,14 @@ public class LinksFragment extends Fragment {
             case REQUEST_CHOOSE_SORT:
                 if (resultCode == Activity.RESULT_OK) {
                     String selectedSort = data.getStringExtra(ChooseLinkSortDialog.EXTRA_SORT);
-                    if (!mSort.equals(selectedSort)) {
-                        updateSort(selectedSort);
-                    }
+                    mLinksPresenter.updateSort(selectedSort);
                 }
                 getActivity().supportInvalidateOptionsMenu();
                 break;
             case REQUEST_CHOOSE_TIMESPAN:
                 if (resultCode == Activity.RESULT_OK) {
                     String selectedTimespan = data.getStringExtra(ChooseTimespanDialog.EXTRA_TIMESPAN);
-                    if (!mTimeSpan.equals(selectedTimespan)) {
-                        updateTimeSpan(selectedTimespan);
-                    }
+                    mLinksPresenter.updateTimeSpan(selectedTimespan);
                 }
                 getActivity().supportInvalidateOptionsMenu();
                 break;
@@ -243,9 +147,8 @@ public class LinksFragment extends Fragment {
         inflater.inflate(R.menu.links_menu, menu);
 
         // Disable timespan option if current sort does not support it
-        if (mSort.equals("hot") ||
-                mSort.equals("new") ||
-                mSort.equals("rising")) {
+        String sort = mLinksPresenter.getSort();
+        if (sort.equals("hot") || sort.equals("new") || sort.equals("rising")) {
             menu.findItem(R.id.action_change_timespan).setVisible(false);
         } else { // controversial, rising
             menu.findItem(R.id.action_change_timespan).setVisible(true);
@@ -257,17 +160,16 @@ public class LinksFragment extends Fragment {
         FragmentManager fm = getActivity().getSupportFragmentManager();
         switch (item.getItemId()) {
             case R.id.action_change_sort:
-                ChooseLinkSortDialog chooseLinkSortDialog = ChooseLinkSortDialog.newInstance(mSort);
+                ChooseLinkSortDialog chooseLinkSortDialog = ChooseLinkSortDialog.newInstance(null);
                 chooseLinkSortDialog.setTargetFragment(this, REQUEST_CHOOSE_SORT);
                 chooseLinkSortDialog.show(fm, DIALOG_CHOOSE_SORT);
                 return true;
             case R.id.action_change_timespan:
-                ChooseTimespanDialog chooseTimespanDialog = ChooseTimespanDialog.newInstance(mTimeSpan);
+                ChooseTimespanDialog chooseTimespanDialog = ChooseTimespanDialog.newInstance(null);
                 chooseTimespanDialog.setTargetFragment(this, REQUEST_CHOOSE_TIMESPAN);
                 chooseTimespanDialog.show(fm, DIALOG_CHOOSE_TIMESPAN);
                 return true;
             case R.id.action_refresh:
-                mData.clear();
                 getLinks();
                 return true;
             case R.id.action_settings:
@@ -277,183 +179,52 @@ public class LinksFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-    private Bus getBus() {
-        if (mBus == null) {
-            mBus = BusProvider.getInstance();
-        }
-        return mBus;
-    }
-
-    private class LinkAdapter extends RecyclerView.Adapter<LinkHolder> {
-        @Override
-        public LinkHolder onCreateViewHolder(ViewGroup parent, int i) {
-            View view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.link_item, parent, false);
-            return new LinkHolder(view);
-        }
-
-        @Override
-        public void onBindViewHolder(LinkHolder linkHolder, int i) {
-            RedditLink link = mData.get(i);
-            linkHolder.bindLink(link);
-        }
-
-        @Override
-        public int getItemCount() {
-            return mData.size();
-        }
-    }
-
-    private class LinkHolder extends RecyclerView.ViewHolder
-            implements View.OnClickListener, View.OnCreateContextMenuListener {
-        private RedditLink mRedditLink;
-        private View mLinkView;
-        private TextView mLinkTitle, mLinkDomain, mLinkScore, mLinkAuthor, mLinkTimestamp,
-                mLinkSubreddit, mLinkComments, mSelfText;
-        private ImageView mLinkThumbnail;
-
-        public LinkHolder(View itemView) {
-            super(itemView);
-            mLinkView = itemView.findViewById(R.id.link_view);
-            mLinkScore = (TextView) itemView.findViewById(R.id.link_score);
-            mLinkTitle = (TextView) itemView.findViewById(R.id.link_title);
-            mLinkAuthor = (TextView) itemView.findViewById(R.id.link_author);
-            mLinkTimestamp = (TextView) itemView.findViewById(R.id.link_timestamp);
-            mLinkSubreddit = (TextView) itemView.findViewById(R.id.link_subreddit);
-            mLinkDomain = (TextView) itemView.findViewById(R.id.link_domain);
-            mLinkThumbnail = (ImageView) itemView.findViewById(R.id.link_thumbnail);
-            mLinkComments = (TextView) itemView.findViewById(R.id.link_comment_count);
-            mSelfText = (TextView) itemView.findViewById(R.id.link_self_text);
-
-            itemView.setOnClickListener(this);
-            mLinkTitle.setOnClickListener(this);
-            mLinkThumbnail.setOnClickListener(this);
-            mLinkComments.setOnClickListener(this);
-            itemView.setOnCreateContextMenuListener(this);
-        }
-
-        public void bindLink(RedditLink link) {
-            mRedditLink = link;
-            String createDateFormatted = BaseUtils.getFormattedDateStringFromUtc(link.getCreatedUtc().longValue());
-
-            // Set content for each TextView
-            mLinkScore.setText(String.valueOf(link.getScore()) + " points");
-            mLinkTitle.setText(link.getTitle());
-            mLinkAuthor.setText("/u/" + link.getAuthor());
-            mLinkTimestamp.setText(createDateFormatted);
-            mLinkSubreddit.setText("/r/" + link.getSubreddit());
-            mLinkDomain.setText("(" + link.getDomain() + ")");
-            mLinkComments.setText(link.getNumComments() + " comments");
-            mSelfText.setVisibility(View.GONE);
-
-            String thumbnailUrl = link.getThumbnail();
-            switch (thumbnailUrl) {
-                case "nsfw":
-                    Picasso.with(getActivity())
-                            .load(R.drawable.ic_nsfw)
-                            .into(mLinkThumbnail);
-                    break;
-                case "": case "default": case "self":
-                    mLinkThumbnail.setVisibility(View.GONE);
-                    break;
-                default:
-                    Picasso.with(getActivity())
-                            .load(thumbnailUrl)
-                            .placeholder(R.drawable.ic_thumbnail_placeholder)
-                            .error(R.drawable.ic_alert_error)
-                            .into(mLinkThumbnail);
-                    mLinkThumbnail.setVisibility(View.VISIBLE);
-            }
-
-            // Set background tint based on isLiked
-            if (link.isLiked() == null) {
-                mLinkView.setBackgroundResource(R.drawable.link_card_background);
-            } else if (link.isLiked()) {
-                mLinkView.setBackgroundResource(R.drawable.link_card_background_upvoted);
-            } else {
-                mLinkView.setBackgroundResource(R.drawable.link_card_background_downvoted);
-            }
-        }
-
-        @Override
-        public void onClick(View v) {
-            switch (v.getId()) {
-                case R.id.link_title:
-                case R.id.link_thumbnail:
-                    if (mRedditLink != null) {
-                        if (mRedditLink.isSelf()) {
-                            openCommentsForLink(mRedditLink);
-                        } else {
-                            Uri webViewUri = Uri.parse(mRedditLink.getUrl());
-                            ((MainActivity) getActivity()).openWebViewForURL(mRedditLink.getUrl());
-                        }
-                    }
-                    break;
-                case R.id.link_comment_count:
-                    openCommentsForLink(mRedditLink);
-                    break;
-                default:
-                    v.showContextMenu();
-                    break;
-            }
-        }
-
-        @Override
-        public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-            getActivity().getMenuInflater().inflate(R.menu.link_context_menu, menu);
-            mClickedLinkPosition = getPosition();
-        }
+    @Override
+    public void showLinkContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        getActivity().getMenuInflater().inflate(R.menu.link_context_menu, menu);
     }
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        RedditLink link = mData.get(mClickedLinkPosition);
-
-        switch (item.getItemId()) {
-            case R.id.action_upvote:
-                upvote(link);
-                break;
-            case R.id.action_downvote:
-                downvote(link);
-                break;
-            case R.id.action_show_comments:
-                openCommentsForLink(link);
-                break;
-            case R.id.action_save:
-                saveLink(link);
-                break;
-            case R.id.action_share:
-                shareLink(link);
-                break;
-            case R.id.action_open_in_browser:
-                openLinkInBrowser(link);
-                break;
-            case R.id.action_open_comments_in_browser:
-                openCommentsInBrowser(link);
-                break;
-            case R.id.action_report:
-                reportLink(link);
-                break;
-        }
-
-        return super.onContextItemSelected(item);
+        return mLinksPresenter.onContextItemSelected(item);
     }
 
-    private void upvote(RedditLink link) {
-        int dir = (link.isLiked() == null || !link.isLiked()) ? 1 : 0;
-        getBus().post(new VoteEvent(link.getKind(), link.getId(), dir));
+    @Override
+    public void openIntent(Intent i) {
+        startActivity(i);
     }
 
-    private void downvote(RedditLink link) {
-        int dir = (link.isLiked() == null || link.isLiked()) ? -1 : 0;
-        getBus().post(new VoteEvent(link.getKind(), link.getId(), dir));
+    @Override
+    public void setTitle(String title) {
+        getActivity().setTitle(title);
     }
 
-    public void openCommentsForLink(RedditLink link) {
+    @Override
+    public void showSpinner(String msg) {
+        ((MainActivity) getActivity()).showSpinner(msg);
+    }
+
+    @Override
+    public void dismissSpinner() {
+        ((MainActivity) getActivity()).dismissSpinner();
+    }
+
+    @Override
+    public void showToast(int resId) {
+        Toast.makeText(getActivity(), resId, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showLink(Uri uri) {
+        ((MainActivity) getActivity()).openWebViewForURL(uri.toString());
+    }
+
+    @Override
+    public void showCommentsForLink(RedditLink link) {
         String subreddit = link.getSubreddit();
         String articleId = link.getId();
 
-        Fragment fragment = CommentsFragment.newInstance(subreddit, articleId);
+        Fragment fragment = LinkCommentsFragment.newInstance(subreddit, articleId);
         FragmentManager fm = getActivity().getSupportFragmentManager();
         fm.beginTransaction()
                 .replace(R.id.fragment_container, fragment)
@@ -461,34 +232,12 @@ public class LinksFragment extends Fragment {
                 .commit();
     }
 
-    private void saveLink(RedditLink link) {
-
+    public void updateSubreddit(String subreddit) {
+        mLinksPresenter.updateSubreddit(subreddit);
     }
 
-    private void shareLink(RedditLink link) {
-        String url = "http://www.reddit.com" + link.getPermalink();
-        Intent i = new Intent(Intent.ACTION_SEND);
-        i.setType("text/plain");
-        i.putExtra(Intent.EXTRA_TEXT, url);
-        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(i);
-    }
-
-    private void openLinkInBrowser(RedditLink link) {
-        Uri uri = Uri.parse(link.getUrl());
-        Intent i = new Intent(Intent.ACTION_VIEW, uri);
-        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(i);
-    }
-
-    private void openCommentsInBrowser(RedditLink link) {
-        Uri uri = Uri.parse("http://www.reddit.com" + link.getPermalink());
-        Intent i = new Intent(Intent.ACTION_VIEW, uri);
-        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(i);
-    }
-
-    private void reportLink(RedditLink link) {
-
+    @Override
+    public void updateAdapter() {
+        mLinksAdapter.notifyDataSetChanged();
     }
 }

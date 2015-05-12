@@ -1,15 +1,11 @@
 package com.ddiehl.android.simpleredditreader.presenter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.os.Handler;
-import android.widget.ImageView;
 
 import com.ddiehl.android.simpleredditreader.RedditPreferences;
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
 import com.ddiehl.android.simpleredditreader.events.requests.LoadCommentsEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.LoadMoreChildrenEvent;
-import com.ddiehl.android.simpleredditreader.events.requests.VoteEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.CommentThreadLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.CommentsLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.MoreChildrenLoadedEvent;
@@ -19,8 +15,6 @@ import com.ddiehl.android.simpleredditreader.model.listings.CommentBankList;
 import com.ddiehl.android.simpleredditreader.model.listings.RedditComment;
 import com.ddiehl.android.simpleredditreader.model.listings.RedditLink;
 import com.ddiehl.android.simpleredditreader.model.listings.RedditMoreComments;
-import com.ddiehl.android.simpleredditreader.model.web.ThumbnailCache;
-import com.ddiehl.android.simpleredditreader.model.web.ThumbnailDownloader;
 import com.ddiehl.android.simpleredditreader.view.CommentsView;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
@@ -28,24 +22,22 @@ import com.squareup.otto.Subscribe;
 import java.util.List;
 
 public class CommentsPresenterImpl implements CommentsPresenter {
+
     private Context mContext;
 
     private CommentsView mCommentsView;
     private RedditLink mRedditLink;
     private CommentBank mCommentBank;
     private Bus mBus;
-
     private RedditPreferences mPreferences;
-    private ThumbnailDownloader<ImageView> mThumbnailThread;
-    private ThumbnailCache mThumbnailCache;
 
     private String mSubreddit;
     private String mArticleId;
     private String mSort;
 
-    public CommentsPresenterImpl(Context context, CommentsView view, String subreddit, String articleId) {
+    public CommentsPresenterImpl(Context context, CommentsView commentsView, String subreddit, String articleId) {
         mContext = context.getApplicationContext();
-        mCommentsView = view;
+        mCommentsView = commentsView;
         mCommentBank = new CommentBankList();
         mBus = BusProvider.getInstance();
 
@@ -54,28 +46,22 @@ public class CommentsPresenterImpl implements CommentsPresenter {
         mSubreddit = subreddit;
         mArticleId = articleId;
         mSort = mPreferences.getCommentSort();
-
-        mThumbnailThread = new ThumbnailDownloader<>(new Handler());
-        mThumbnailThread.setListener(new ThumbnailDownloader.Listener<ImageView>() {
-            @Override
-            public void onThumbnailDownloaded(ImageView imageView, String url, Bitmap image) {
-                mThumbnailCache.addThumbnail(url, image);
-                if (mCommentsView.isViewVisible()) {
-                    imageView.setImageBitmap(image);
-                }
-            }
-        });
-        mThumbnailThread.start();
-        mThumbnailThread.getLooper();
-
-        mThumbnailCache = ThumbnailCache.getInstance();
     }
 
     @Override
     public void getComments() {
-//        mCommentBank.clear(); // Don't think we need this here
         mCommentsView.showSpinner(null);
         mBus.post(new LoadCommentsEvent(mSubreddit, mArticleId, mSort));
+    }
+
+    @Override
+    public RedditLink getLink() {
+        return mRedditLink;
+    }
+
+    @Override
+    public void setLink(RedditLink link) {
+        mRedditLink = link;
     }
 
     @Override
@@ -95,18 +81,6 @@ public class CommentsPresenterImpl implements CommentsPresenter {
     }
 
     @Override
-    public void onContextItemSelected(int id) {
-        switch (id) {
-            // TODO Set actions for each menu item
-        }
-    }
-
-    @Override
-    public RedditLink getRedditLink() {
-        return mRedditLink;
-    }
-
-    @Override
     public AbsRedditComment getCommentAtPosition(int position) {
         return mCommentBank.getVisibleComment(position);
     }
@@ -122,18 +96,6 @@ public class CommentsPresenterImpl implements CommentsPresenter {
         return mCommentBank.getNumVisible();
     }
 
-    @Override
-    public void upvoteLink() {
-        int dir = (mRedditLink.isLiked() == null || !mRedditLink.isLiked()) ? 1 : 0;
-        mBus.post(new VoteEvent(mRedditLink.getKind(), mRedditLink.getId(), dir));
-    }
-
-    @Override
-    public void downvoteLink() {
-        int dir = (mRedditLink.isLiked() == null || mRedditLink.isLiked()) ? -1 : 0;
-        mBus.post(new VoteEvent(mRedditLink.getKind(), mRedditLink.getId(), dir));
-    }
-
     @Subscribe
     public void onCommentsLoaded(CommentsLoadedEvent event) {
         mCommentsView.dismissSpinner();
@@ -143,13 +105,10 @@ public class CommentsPresenterImpl implements CommentsPresenter {
 
         mRedditLink = event.getLink();
         mCommentsView.setTitle(mRedditLink.getTitle());
-//        mCommentsView.showLink(mRedditLink);
 
         List<AbsRedditComment> comments = event.getComments();
         AbsRedditComment.flattenCommentList(comments);
-//        mCommentBank.setData(event.getComments());
         mCommentBank.setData(comments);
-//        mCommentsView.showComments(mCommentBank);
         mCommentsView.updateAdapter();
     }
 

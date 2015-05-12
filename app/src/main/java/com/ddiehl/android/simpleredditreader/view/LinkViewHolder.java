@@ -3,26 +3,32 @@ package com.ddiehl.android.simpleredditreader.view;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.view.ContextMenu;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.model.listings.RedditLink;
-import com.ddiehl.android.simpleredditreader.presenter.CommentsPresenter;
+import com.ddiehl.android.simpleredditreader.presenter.LinksPresenter;
 import com.ddiehl.android.simpleredditreader.utils.BaseUtils;
 import com.squareup.picasso.Picasso;
 
-class LinkViewHolder extends RecyclerView.ViewHolder {
+class LinkViewHolder extends RecyclerView.ViewHolder
+        implements View.OnClickListener, View.OnCreateContextMenuListener {
+    private static final String TAG = LinkViewHolder.class.getSimpleName();
+
+    private RedditLink mRedditLink;
+
     private View mLinkView;
     private TextView mLinkTitle, mLinkDomain, mLinkScore, mLinkAuthor, mLinkTimestamp,
             mLinkSubreddit, mLinkComments, mSelfText;
     private ImageView mLinkThumbnail;
 
     private Context mContext;
-    private CommentsPresenter mCommentsPresenter;
+    private LinksPresenter mLinksPresenter;
 
-    public LinkViewHolder(View v, CommentsPresenter presenter) {
+    public LinkViewHolder(View v, LinksPresenter presenter) {
         super(v);
         mLinkView = v.findViewById(R.id.link_view);
         mLinkTitle = (TextView) v.findViewById(R.id.link_title);
@@ -35,11 +41,19 @@ class LinkViewHolder extends RecyclerView.ViewHolder {
         mLinkThumbnail = (ImageView) v.findViewById(R.id.link_thumbnail);
         mSelfText = (TextView) v.findViewById(R.id.link_self_text);
 
+        itemView.setOnClickListener(this);
+        mLinkTitle.setOnClickListener(this);
+        mLinkThumbnail.setOnClickListener(this);
+        mLinkComments.setOnClickListener(this);
+        itemView.setOnCreateContextMenuListener(this);
+
         mContext = v.getContext().getApplicationContext();
-        mCommentsPresenter = presenter;
+        mLinksPresenter = presenter;
     }
 
-    public void bind(RedditLink link) {
+    public void bind(RedditLink link, boolean showSelfText) {
+        mRedditLink = link;
+
         if (link == null) {
             mLinkView.setVisibility(View.GONE);
             mSelfText.setVisibility(View.GONE);
@@ -47,7 +61,7 @@ class LinkViewHolder extends RecyclerView.ViewHolder {
         }
 
         mLinkView.setVisibility(View.VISIBLE);
-        if (link.getSelftext() != null && !link.getSelftext().equals("")) {
+        if (link.getSelftext() != null && !link.getSelftext().equals("") && showSelfText) {
             mSelfText.setText(link.getSelftext());
             mSelfText.setVisibility(View.VISIBLE);
         } else {
@@ -57,13 +71,13 @@ class LinkViewHolder extends RecyclerView.ViewHolder {
         String createDateFormatted = BaseUtils.getFormattedDateStringFromUtc(link.getCreatedUtc().longValue());
 
         // Set content for each TextView
-        mLinkScore.setText(String.valueOf(link.getScore()) + " points");
+        mLinkScore.setText(String.valueOf(String.format("%s points", link.getScore())));
         mLinkTitle.setText(link.getTitle());
-        mLinkAuthor.setText("/u/" + link.getAuthor());
+        mLinkAuthor.setText(String.format("/u/%s", link.getAuthor()));
         mLinkTimestamp.setText(createDateFormatted);
-        mLinkSubreddit.setText("/r/" + link.getSubreddit());
-        mLinkDomain.setText("(" + link.getDomain() + ")");
-        mLinkComments.setText(link.getNumComments() + " comments");
+        mLinkSubreddit.setText(String.format("/r/%s", link.getSubreddit()));
+        mLinkDomain.setText(String.format("(%s)", link.getDomain()));
+        mLinkComments.setText(String.format("%s comments", link.getNumComments()));
 
         String thumbnailUrl = link.getThumbnail();
         switch (thumbnailUrl) {
@@ -92,5 +106,26 @@ class LinkViewHolder extends RecyclerView.ViewHolder {
         } else {
             mLinkView.setBackgroundResource(R.drawable.link_card_background_downvoted);
         }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.link_title:
+            case R.id.link_thumbnail:
+                mLinksPresenter.openLink(mRedditLink);
+                break;
+            case R.id.link_comment_count:
+                mLinksPresenter.openCommentsForLink(mRedditLink);
+                break;
+            default:
+                v.showContextMenu();
+                break;
+        }
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        mLinksPresenter.createContextMenu(menu, v, menuInfo, mRedditLink);
     }
 }
