@@ -9,6 +9,7 @@ import com.ddiehl.android.simpleredditreader.model.listings.RedditLink;
 public interface LinksPresenter {
 
     void getLinks();
+    void getMoreLinks();
     RedditLink getLink(int position);
     int getNumLinks();
     String getSubreddit();

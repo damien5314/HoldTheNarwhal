@@ -10,12 +10,6 @@ public class LoadLinksEvent {
     private String mTimeSpan;
     private String mAfter;
 
-    public LoadLinksEvent(String subreddit, String sort, String timespan) {
-        mSubreddit = subreddit;
-        mSort = sort;
-        mTimeSpan = timespan;
-    }
-
     public LoadLinksEvent(String subreddit, String sort, String timespan, String after) {
         mSubreddit = subreddit;
         mSort = sort;

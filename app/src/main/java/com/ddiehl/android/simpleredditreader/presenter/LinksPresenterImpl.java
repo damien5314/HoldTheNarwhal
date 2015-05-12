@@ -34,6 +34,7 @@ public class LinksPresenterImpl implements LinksPresenter {
     private String mSubreddit;
     private String mSort;
     private String mTimeSpan;
+    private boolean mLinksRequested = false;
 
     private RedditLink mLinkSelected;
 
@@ -52,9 +53,19 @@ public class LinksPresenterImpl implements LinksPresenter {
 
     @Override
     public void getLinks() {
+        mLinks.clear();
+        getMoreLinks();
+    }
+
+    @Override
+    public void getMoreLinks() {
+        if (mLinksRequested)
+            return;
+
+        mLinksRequested = true;
         mLinksView.showSpinner("Getting submissions...");
         String id = mLinks == null || mLinks.size() == 0
-                ? null : mLinks.get(mLinks.size() - 1).getId();
+                ? null : "t3_" + mLinks.get(mLinks.size() - 1).getId();
         mBus.post(new LoadLinksEvent(mSubreddit, mSort, mTimeSpan, id));
     }
 
@@ -128,6 +139,7 @@ public class LinksPresenterImpl implements LinksPresenter {
     public void onLinksLoaded(LinksLoadedEvent event) {
         mLinksView.dismissSpinner();
         if (event.isFailed()) {
+            mLinksRequested = false;
             return;
         }
 
@@ -135,9 +147,10 @@ public class LinksPresenterImpl implements LinksPresenter {
             mSubreddit = event.getLinks().get(0).getSubreddit();
         }
 
-        updateTitle();
         mLinks.addAll(event.getLinks());
         mLinksView.updateAdapter();
+        updateTitle();
+        mLinksRequested = false;
     }
 
     @Subscribe
@@ -197,7 +210,8 @@ public class LinksPresenterImpl implements LinksPresenter {
 
     @Override
     public void openLink(RedditLink link) {
-        if (link == null) return;
+        if (link == null)
+            return;
 
         if (link.isSelf()) {
             mLinksView.showCommentsForLink(link);

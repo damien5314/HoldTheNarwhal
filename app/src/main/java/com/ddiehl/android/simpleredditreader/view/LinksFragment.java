@@ -42,8 +42,6 @@ public class LinksFragment extends Fragment implements LinksView {
     private LinearLayoutManager mLayoutManager;
     private LinksAdapter mLinksAdapter;
 
-    private String mLastDisplayedLink;
-    private boolean mLinksRequested = false;
     private int mFirstVisibleItem, mVisibleItemCount, mTotalItemCount;
 
     public LinksFragment() { /* Default constructor required */ }
@@ -68,8 +66,6 @@ public class LinksFragment extends Fragment implements LinksView {
         String subreddit = args.getString(ARG_SUBREDDIT);
         mLinksPresenter = new LinksPresenterImpl(getActivity(), this, subreddit);
         mLinksAdapter = new LinksAdapter(mLinksPresenter, this);
-
-        mLinksPresenter.updateTitle();
     }
 
     @Override
@@ -88,10 +84,8 @@ public class LinksFragment extends Fragment implements LinksView {
                 mTotalItemCount = mLayoutManager.getItemCount();
                 mFirstVisibleItem = mLayoutManager.findFirstVisibleItemPosition();
 
-                if (!mLinksRequested) {
-                    if ((mVisibleItemCount + mFirstVisibleItem) >= mTotalItemCount) {
-                        getLinks();
-                    }
+                if ((mVisibleItemCount + mFirstVisibleItem) >= mTotalItemCount) {
+                    mLinksPresenter.getMoreLinks();
                 }
             }
         });
@@ -106,8 +100,8 @@ public class LinksFragment extends Fragment implements LinksView {
         super.onResume();
         mBus.register(mLinksPresenter);
 
-        if (mLastDisplayedLink == null) {
-            getLinks();
+        if (mLinksAdapter.getItemCount() == 0) {
+            mLinksPresenter.getLinks();
         }
     }
 
@@ -115,11 +109,6 @@ public class LinksFragment extends Fragment implements LinksView {
     public void onPause() {
         super.onPause();
         mBus.unregister(mLinksPresenter);
-    }
-
-    private void getLinks() {
-        mLinksRequested = true;
-        mLinksPresenter.getLinks();
     }
 
     @Override
@@ -170,7 +159,7 @@ public class LinksFragment extends Fragment implements LinksView {
                 chooseTimespanDialog.show(fm, DIALOG_CHOOSE_TIMESPAN);
                 return true;
             case R.id.action_refresh:
-                getLinks();
+                mLinksPresenter.getLinks();
                 return true;
             case R.id.action_settings:
                 return true;
