@@ -13,11 +13,9 @@ import com.ddiehl.android.simpleredditreader.presenter.LinksPresenter;
 public class LinksAdapter extends RecyclerView.Adapter<LinkViewHolder> {
 
     private LinksPresenter mLinksPresenter;
-    private LinksView mLinksView;
 
-    public LinksAdapter(LinksPresenter presenter, LinksView view) {
+    public LinksAdapter(LinksPresenter presenter) {
         mLinksPresenter = presenter;
-        mLinksView = view;
     }
 
     @Override

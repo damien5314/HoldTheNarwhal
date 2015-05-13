@@ -64,15 +64,15 @@ public class LinksFragment extends Fragment implements LinksView {
         Bundle args = getArguments();
         String subreddit = args.getString(ARG_SUBREDDIT);
         mLinksPresenter = new LinksPresenterImpl(getActivity(), this, subreddit);
-        mLinksAdapter = new LinksAdapter(mLinksPresenter, this);
+        mLinksAdapter = new LinksAdapter(mLinksPresenter);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.links_fragment, container, false);
 
-        mRecyclerView = (RecyclerView) v.findViewById(R.id.recycler_view);
         mLayoutManager = new LinearLayoutManager(getActivity());
+        mRecyclerView = (RecyclerView) v.findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mLinksAdapter);
 

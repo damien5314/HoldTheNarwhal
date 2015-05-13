@@ -160,14 +160,8 @@ public class LinksPresenterImpl implements LinksPresenter {
             return;
         }
 
-        // Loop through the list of data and update the vote for the appropriate link
-        for (int i = 0; i < mLinks.size(); i++) {
-            RedditLink link = mLinks.get(i);
-            if (link.getId().equals(event.getId())) {
-                link.applyVote(event.getDirection());
-                mLinksView.updateAdapter();
-            }
-        }
+        mLinkSelected.applyVote(event.getDirection());
+        mLinksView.updateAdapter();
     }
 
     @Override
