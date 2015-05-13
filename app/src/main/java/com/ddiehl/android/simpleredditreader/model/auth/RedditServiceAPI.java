@@ -265,6 +265,7 @@ public class RedditServiceAPI implements RedditService {
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
+                    mBus.post(new VoteSubmittedEvent(RetrofitError.unexpectedError(response.getUrl(), e)));
                 }
             }
 
