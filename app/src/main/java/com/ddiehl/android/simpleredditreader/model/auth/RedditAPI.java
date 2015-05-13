@@ -57,4 +57,19 @@ public interface RedditAPI {
               @Query("dir") int dir,
               Callback<Response> response);
 
+    @POST("/api/save")
+    void save(@Query("id") String id,
+              @Query("category") String category,
+              Callback<Response> response);
+
+    @POST("/api/unsave")
+    void unsave(@Query("id") String id,
+                Callback<Response> response);
+
+    @POST("/api/report?api_type=json")
+    void report(@Query("thing_id") String id,
+                @Query("reason") String reason,
+                @Query("otherReason") String otherReason,
+                Callback<Response> response);
+
 }

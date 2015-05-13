@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.ddiehl.android.simpleredditreader.RedditReaderApplication;
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
+import com.ddiehl.android.simpleredditreader.events.requests.SaveEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.CommentThreadLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.CommentsLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.GetUserIdentityEvent;
@@ -14,6 +15,7 @@ import com.ddiehl.android.simpleredditreader.events.requests.LoadCommentsEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.LoadLinksEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.LoadMoreChildrenEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.MoreChildrenLoadedEvent;
+import com.ddiehl.android.simpleredditreader.events.responses.SaveSubmittedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.UserIdentityRetrievedEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.VoteEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.VoteSubmittedEvent;
@@ -274,6 +276,41 @@ public class RedditServiceAPI implements RedditService {
                 BaseUtils.showError(mContext, error);
                 BaseUtils.printResponse(error.getResponse());
                 mBus.post(new VoteSubmittedEvent(error));
+            }
+        });
+    }
+
+    /**
+     * Saves a link or comment
+     */
+    @Override
+    public void onSave(SaveEvent event) {
+        final String id = event.getId();
+        final String category = event.getCategory();
+
+        mAPI.save(id, category, new Callback<Response>() {
+            @Override
+            public void success(Response response, Response response2) {
+                BaseUtils.printResponseStatus(response);
+
+                try {
+                    InputStream in = response.getBody().in();
+                    if (BaseUtils.inputStreamToString(in).contains("USER_REQUIRED")) {
+                        throw new UserRequiredException();
+                    } else {
+                        mBus.post(new SaveSubmittedEvent(id));
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    mBus.post(new SaveSubmittedEvent(RetrofitError.unexpectedError(response.getUrl(), e)));
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                BaseUtils.showError(mContext, error);
+                BaseUtils.printResponse(error.getResponse());
+                mBus.post(new SaveSubmittedEvent(error));
             }
         });
     }

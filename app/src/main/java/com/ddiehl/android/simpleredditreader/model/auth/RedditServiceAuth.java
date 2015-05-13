@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import com.ddiehl.android.simpleredditreader.RedditPreferences;
 import com.ddiehl.android.simpleredditreader.RedditReaderApplication;
+import com.ddiehl.android.simpleredditreader.events.requests.SaveEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.ApplicationAuthorizedEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.AuthorizeApplicationEvent;
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
@@ -369,6 +370,20 @@ public class RedditServiceAuth implements RedditService {
             }
         } else {
             mService.onVote(event);
+        }
+    }
+
+    @Subscribe @Override
+    public void onSave(SaveEvent event) {
+        if (!hasValidAuthToken()) {
+            mQueuedEvent = event;
+            if (mRefreshToken != null) {
+                mBus.post(new RefreshUserAccessTokenEvent(mRefreshToken));
+            } else {
+                mBus.post(new AuthorizeApplicationEvent());
+            }
+        } else {
+            mService.onSave(event);
         }
     }
 }

@@ -9,6 +9,7 @@ import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.RedditPreferences;
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
 import com.ddiehl.android.simpleredditreader.events.requests.LoadLinksEvent;
+import com.ddiehl.android.simpleredditreader.events.requests.SaveEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.VoteEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.LinksLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.VoteSubmittedEvent;
@@ -232,7 +233,7 @@ public class LinksPresenterImpl implements LinksPresenter {
     }
 
     private void saveLink() {
-
+        mBus.post(new SaveEvent(mLinkSelected.getName(), null));
     }
 
     private void shareLink() {
