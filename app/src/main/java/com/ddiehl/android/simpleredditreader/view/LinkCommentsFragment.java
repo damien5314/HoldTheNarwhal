@@ -2,7 +2,6 @@ package com.ddiehl.android.simpleredditreader.view;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -182,8 +181,8 @@ public class LinkCommentsFragment extends Fragment implements LinksView, Comment
     }
 
     @Override
-    public void showLink(Uri uri) {
-        ((MainActivity) getActivity()).openWebViewForURL(uri.toString());
+    public void openWebViewForLink(RedditLink link) {
+        ((MainActivity) getActivity()).openWebViewForURL(link.getUrl());
     }
 
     @Override

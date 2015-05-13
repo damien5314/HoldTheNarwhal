@@ -1,7 +1,6 @@
 package com.ddiehl.android.simpleredditreader.view;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.view.ContextMenu;
 import android.view.View;
 
@@ -13,7 +12,7 @@ public interface LinksView {
     void showSpinner(String msg);
     void dismissSpinner();
     void showToast(int resId);
-    void showLink(Uri uri);
+    void openWebViewForLink(RedditLink link);
     void showCommentsForLink(RedditLink link);
     void updateAdapter();
     void showLinkContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo);

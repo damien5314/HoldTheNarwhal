@@ -216,8 +216,7 @@ public class LinksPresenterImpl implements LinksPresenter {
         if (link.isSelf()) {
             mLinksView.showCommentsForLink(link);
         } else {
-            Uri webViewUri = Uri.parse(link.getUrl());
-            mLinksView.showLink(webViewUri);
+            mLinksView.openWebViewForLink(link);
         }
     }
 
