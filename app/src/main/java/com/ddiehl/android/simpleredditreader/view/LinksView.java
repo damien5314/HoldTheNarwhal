@@ -1,6 +1,5 @@
 package com.ddiehl.android.simpleredditreader.view;
 
-import android.content.Intent;
 import android.view.ContextMenu;
 import android.view.View;
 
@@ -17,5 +16,7 @@ public interface LinksView {
     void updateAdapter();
     void showLinkContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo);
 
-    void openIntent(Intent i);
+    void openShareView(RedditLink link);
+    void openLinkInBrowser(RedditLink link);
+    void openCommentsInBrowser(RedditLink link);
 }

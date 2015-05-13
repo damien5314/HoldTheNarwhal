@@ -2,6 +2,7 @@ package com.ddiehl.android.simpleredditreader.view;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -105,6 +106,31 @@ public class LinkCommentsFragment extends Fragment implements LinksView, Comment
     }
 
     @Override
+    public void openShareView(RedditLink link) {
+        Intent i = new Intent(Intent.ACTION_SEND);
+        i.setType("text/plain");
+        i.putExtra(Intent.EXTRA_TEXT, "http://www.reddit.com" + link.getPermalink());
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(i);
+    }
+
+    @Override
+    public void openLinkInBrowser(RedditLink link) {
+        Uri uri = Uri.parse(link.getUrl());
+        Intent i = new Intent(Intent.ACTION_VIEW, uri);
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(i);
+    }
+
+    @Override
+    public void openCommentsInBrowser(RedditLink link) {
+        Uri uri = Uri.parse("http://www.reddit.com" + link.getPermalink());
+        Intent i = new Intent(Intent.ACTION_VIEW, uri);
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(i);
+    }
+
+    @Override
     public boolean onContextItemSelected(MenuItem item) {
         return mLinksPresenter.onContextItemSelected(item);
     }
@@ -173,11 +199,6 @@ public class LinkCommentsFragment extends Fragment implements LinksView, Comment
     @Override
     public void updateAdapter() {
         mLinkCommentsAdapter.notifyDataSetChanged();
-    }
-
-    @Override
-    public void openIntent(Intent i) {
-        startActivity(i);
     }
 
     @Override

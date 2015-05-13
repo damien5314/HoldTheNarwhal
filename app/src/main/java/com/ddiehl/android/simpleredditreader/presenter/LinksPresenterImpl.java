@@ -1,8 +1,6 @@
 package com.ddiehl.android.simpleredditreader.presenter;
 
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
@@ -238,25 +236,15 @@ public class LinksPresenterImpl implements LinksPresenter {
     }
 
     private void shareLink() {
-        Intent i = new Intent(Intent.ACTION_SEND);
-        i.setType("text/plain");
-        i.putExtra(Intent.EXTRA_TEXT, mLinkSelected.getPermalink());
-        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        mLinksView.openIntent(i);
+        mLinksView.openShareView(mLinkSelected);
     }
 
     private void openLinkInBrowser() {
-        Uri uri = Uri.parse(mLinkSelected.getUrl());
-        Intent i = new Intent(Intent.ACTION_VIEW, uri);
-        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        mLinksView.openIntent(i);
+        mLinksView.openLinkInBrowser(mLinkSelected);
     }
 
     private void openCommentsInBrowser() {
-        Uri uri = Uri.parse("http://www.reddit.com" + mLinkSelected.getPermalink());
-        Intent i = new Intent(Intent.ACTION_VIEW, uri);
-        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        mLinksView.openIntent(i);
+        mLinksView.openCommentsInBrowser(mLinkSelected);
     }
 
     private void reportLink() {
