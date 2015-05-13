@@ -1,4 +1,6 @@
-package com.ddiehl.android.simpleredditreader.model.auth;
+package com.ddiehl.android.simpleredditreader.io;
+
+import com.ddiehl.android.simpleredditreader.model.identity.AuthTokenResponse;
 
 import retrofit.Callback;
 import retrofit.http.Field;

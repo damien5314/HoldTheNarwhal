@@ -1,4 +1,4 @@
-package com.ddiehl.android.simpleredditreader.model.auth;
+package com.ddiehl.android.simpleredditreader.io;
 
 import com.ddiehl.android.simpleredditreader.events.requests.LoadCommentThreadEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.LoadCommentsEvent;
@@ -9,6 +9,9 @@ import com.ddiehl.android.simpleredditreader.events.requests.VoteEvent;
 
 
 public interface RedditService {
+    String ENDPOINT_NORMAL = "https://www.reddit.com";
+    String ENDPOINT_AUTHORIZED = "https://oauth.reddit.com";
+
     void onLoadLinks(LoadLinksEvent event);
     void onLoadComments(LoadCommentsEvent event);
     void onLoadMoreChildren(LoadMoreChildrenEvent event);

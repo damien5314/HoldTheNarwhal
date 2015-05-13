@@ -1,4 +1,4 @@
-package com.ddiehl.android.simpleredditreader.model.auth;
+package com.ddiehl.android.simpleredditreader.io;
 
 import android.content.Context;
 import android.util.Log;
@@ -30,7 +30,6 @@ import com.ddiehl.android.simpleredditreader.model.listings.ListingResponse;
 import com.ddiehl.android.simpleredditreader.model.listings.MoreChildrenResponse;
 import com.ddiehl.android.simpleredditreader.model.listings.RedditLink;
 import com.ddiehl.android.simpleredditreader.model.listings.RedditMoreComments;
-import com.ddiehl.android.simpleredditreader.model.web.RedditEndpoint;
 import com.ddiehl.android.simpleredditreader.utils.BaseUtils;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
@@ -73,7 +72,7 @@ public class RedditServiceAPI implements RedditService {
                 .create();
 
         RestAdapter restAdapter = new RestAdapter.Builder()
-                .setEndpoint(RedditEndpoint.AUTHORIZED)
+                .setEndpoint(ENDPOINT_AUTHORIZED)
                 .setConverter(new GsonConverter(gson))
                 .setRequestInterceptor(new RequestInterceptor() {
                     @Override

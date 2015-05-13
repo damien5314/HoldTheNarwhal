@@ -1,4 +1,4 @@
-package com.ddiehl.android.simpleredditreader.model.auth;
+package com.ddiehl.android.simpleredditreader.model.identity;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

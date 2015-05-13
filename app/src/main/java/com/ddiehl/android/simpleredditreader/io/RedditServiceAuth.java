@@ -1,4 +1,4 @@
-package com.ddiehl.android.simpleredditreader.model.auth;
+package com.ddiehl.android.simpleredditreader.io;
 
 
 import android.content.Context;
@@ -23,7 +23,7 @@ import com.ddiehl.android.simpleredditreader.events.responses.UserAuthCodeReceiv
 import com.ddiehl.android.simpleredditreader.events.responses.UserAuthorizationRefreshedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.UserAuthorizedEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.VoteEvent;
-import com.ddiehl.android.simpleredditreader.model.web.RedditEndpoint;
+import com.ddiehl.android.simpleredditreader.model.identity.AuthTokenResponse;
 import com.ddiehl.android.simpleredditreader.utils.AuthUtils;
 import com.ddiehl.android.simpleredditreader.utils.BaseUtils;
 import com.google.gson.FieldNamingPolicy;
@@ -113,7 +113,7 @@ public class RedditServiceAuth implements RedditService {
                 .create();
 
         RestAdapter restAdapter = new RestAdapter.Builder()
-                .setEndpoint(RedditEndpoint.NORMAL)
+                .setEndpoint(ENDPOINT_NORMAL)
                 .setConverter(new GsonConverter(gson))
                 .setRequestInterceptor(new RequestInterceptor() {
                     @Override
