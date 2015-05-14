@@ -31,6 +31,7 @@
     <string name="drawer_navigate_to_subreddit_text">Go to subreddit</string>
     <string name="action_refresh">Refresh</string>
     <string name="link_score_default">•</string>
+    <string name="gilded_text_view">x %s</string>
     <string name="comment_score">%s</string> <!-- add units in other locales -->
     <string name="action_open_comments_in_browser">view comments in browser</string>
     <string name="more_comments">view %s more comments</string>

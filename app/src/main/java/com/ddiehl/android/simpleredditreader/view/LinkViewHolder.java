@@ -20,9 +20,9 @@ class LinkViewHolder extends RecyclerView.ViewHolder
 
     private RedditLink mRedditLink;
 
-    private View mLinkView;
+    private View mLinkView, mGildedView;
     private TextView mLinkTitle, mLinkDomain, mLinkScore, mLinkAuthor, mLinkTimestamp,
-            mLinkSubreddit, mLinkComments, mSelfText;
+            mLinkSubreddit, mLinkComments, mSelfText, mGildedText;
     private ImageView mLinkThumbnail;
 
     private Context mContext;
@@ -31,6 +31,7 @@ class LinkViewHolder extends RecyclerView.ViewHolder
     public LinkViewHolder(View v, LinksPresenter presenter) {
         super(v);
         mLinkView = v.findViewById(R.id.link_view);
+        mGildedView = v.findViewById(R.id.gilded_view);
         mLinkTitle = (TextView) v.findViewById(R.id.link_title);
         mLinkDomain = (TextView) v.findViewById(R.id.link_domain);
         mLinkScore = (TextView) v.findViewById(R.id.link_score);
@@ -40,6 +41,7 @@ class LinkViewHolder extends RecyclerView.ViewHolder
         mLinkComments = (TextView) v.findViewById(R.id.link_comment_count);
         mLinkThumbnail = (ImageView) v.findViewById(R.id.link_thumbnail);
         mSelfText = (TextView) v.findViewById(R.id.link_self_text);
+        mGildedText = (TextView) v.findViewById(R.id.gilded_text_view);
 
         itemView.setOnClickListener(this);
         mLinkTitle.setOnClickListener(this);
@@ -105,6 +107,15 @@ class LinkViewHolder extends RecyclerView.ViewHolder
             mLinkView.setBackgroundResource(R.drawable.link_card_background_upvoted);
         } else {
             mLinkView.setBackgroundResource(R.drawable.link_card_background_downvoted);
+        }
+
+        // Show gilding view if appropriate, else hide
+        Integer gilded = link.getGilded();
+        if (gilded != null && gilded > 0) {
+            mGildedText.setText(String.format(mContext.getString(R.string.gilded_text_view), gilded));
+            mGildedView.setVisibility(View.VISIBLE);
+        } else {
+            mGildedView.setVisibility(View.GONE);
         }
     }
 
