@@ -122,8 +122,8 @@
     </style>
 
     <style name="LinkThumbnail">
-        <item name="android:layout_width">54dp</item>
-        <item name="android:layout_height">54dp</item>
+        <item name="android:layout_width">@dimen/link_thumbnail_size</item>
+        <item name="android:layout_height">@dimen/link_thumbnail_size</item>
     </style>
 
     <style name="ProgressDialog" parent="Theme.AppCompat.Dialog">
@@ -149,4 +149,5 @@
         <item name="android:topDark">@color/transparent</item>
     </style>
 
+    <dimen name="link_thumbnail_size">64dp</dimen>
 </resources>
