@@ -19,7 +19,7 @@ import android.widget.Toast;
 
 import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
-import com.ddiehl.android.simpleredditreader.model.listings.RedditLink;
+import com.ddiehl.reddit.listings.RedditLink;
 import com.ddiehl.android.simpleredditreader.presenter.LinksPresenter;
 import com.ddiehl.android.simpleredditreader.presenter.LinksPresenterImpl;
 import com.squareup.otto.Bus;

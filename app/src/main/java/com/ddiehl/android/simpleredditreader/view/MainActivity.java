@@ -31,7 +31,7 @@ import com.ddiehl.android.simpleredditreader.events.responses.SavedUserIdentityR
 import com.ddiehl.android.simpleredditreader.events.responses.UserIdentitySavedEvent;
 import com.ddiehl.android.simpleredditreader.io.RedditService;
 import com.ddiehl.android.simpleredditreader.io.RedditServiceAuth;
-import com.ddiehl.android.simpleredditreader.model.identity.UserIdentity;
+import com.ddiehl.reddit.identity.UserIdentity;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 

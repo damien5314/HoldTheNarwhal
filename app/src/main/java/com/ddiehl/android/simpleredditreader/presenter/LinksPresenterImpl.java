@@ -13,7 +13,7 @@ import com.ddiehl.android.simpleredditreader.events.requests.SaveEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.VoteEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.LinksLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.VoteSubmittedEvent;
-import com.ddiehl.android.simpleredditreader.model.listings.RedditLink;
+import com.ddiehl.reddit.listings.RedditLink;
 import com.ddiehl.android.simpleredditreader.view.LinksView;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;

@@ -1,8 +1,8 @@
 package com.ddiehl.android.simpleredditreader.presenter;
 
-import com.ddiehl.android.simpleredditreader.model.listings.AbsRedditComment;
-import com.ddiehl.android.simpleredditreader.model.listings.RedditLink;
-import com.ddiehl.android.simpleredditreader.model.listings.RedditMoreComments;
+import com.ddiehl.reddit.listings.AbsRedditComment;
+import com.ddiehl.reddit.listings.RedditLink;
+import com.ddiehl.reddit.listings.RedditMoreComments;
 
 public interface CommentsPresenter {
 

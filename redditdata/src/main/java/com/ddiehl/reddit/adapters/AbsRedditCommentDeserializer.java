@@ -1,10 +1,8 @@
-package com.ddiehl.android.simpleredditreader.model.adapters;
+package com.ddiehl.reddit.adapters;
 
-import android.util.Log;
-
-import com.ddiehl.android.simpleredditreader.model.listings.Listing;
-import com.ddiehl.android.simpleredditreader.model.listings.RedditComment;
-import com.ddiehl.android.simpleredditreader.model.listings.RedditMoreComments;
+import com.ddiehl.reddit.listings.Listing;
+import com.ddiehl.reddit.listings.RedditComment;
+import com.ddiehl.reddit.listings.RedditMoreComments;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
@@ -30,7 +28,7 @@ public class AbsRedditCommentDeserializer implements JsonDeserializer<Listing> {
                 listing = context.deserialize(json, RedditMoreComments.class);
                 return listing;
             default:
-                Log.w(TAG, "No deserialization class set for listing type: " + kind);
+                System.out.println("No deserialization class set for listing type: " + kind);
                 return null;
         }
     }

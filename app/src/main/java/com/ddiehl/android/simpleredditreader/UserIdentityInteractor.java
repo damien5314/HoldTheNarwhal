@@ -1,4 +1,4 @@
-package com.ddiehl.android.simpleredditreader.model.identity;
+package com.ddiehl.android.simpleredditreader;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -9,6 +9,7 @@ import com.ddiehl.android.simpleredditreader.events.requests.GetSavedUserIdentit
 import com.ddiehl.android.simpleredditreader.events.responses.SavedUserIdentityRetrievedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.UserIdentityRetrievedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.UserIdentitySavedEvent;
+import com.ddiehl.reddit.identity.UserIdentity;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 

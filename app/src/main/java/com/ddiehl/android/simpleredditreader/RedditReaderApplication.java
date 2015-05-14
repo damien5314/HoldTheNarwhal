@@ -6,7 +6,6 @@ import android.widget.Toast;
 
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
 import com.ddiehl.android.simpleredditreader.events.errors.ApiErrorEvent;
-import com.ddiehl.android.simpleredditreader.model.identity.UserIdentityInteractor;
 import com.facebook.stetho.Stetho;
 import com.facebook.stetho.okhttp.StethoInterceptor;
 import com.squareup.okhttp.OkHttpClient;

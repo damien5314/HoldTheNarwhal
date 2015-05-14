@@ -1,6 +1,7 @@
 package com.ddiehl.android.simpleredditreader.events.responses;
 
-import com.ddiehl.android.simpleredditreader.model.identity.AuthTokenResponse;
+
+import com.ddiehl.reddit.identity.AuthTokenResponse;
 
 import retrofit.RetrofitError;
 

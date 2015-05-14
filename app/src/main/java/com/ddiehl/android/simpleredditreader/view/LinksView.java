@@ -3,7 +3,7 @@ package com.ddiehl.android.simpleredditreader.view;
 import android.view.ContextMenu;
 import android.view.View;
 
-import com.ddiehl.android.simpleredditreader.model.listings.RedditLink;
+import com.ddiehl.reddit.listings.RedditLink;
 
 public interface LinksView {
 

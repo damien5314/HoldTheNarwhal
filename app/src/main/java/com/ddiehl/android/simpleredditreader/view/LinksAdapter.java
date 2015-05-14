@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ddiehl.android.simpleredditreader.R;
-import com.ddiehl.android.simpleredditreader.model.listings.RedditLink;
+import com.ddiehl.reddit.listings.RedditLink;
 import com.ddiehl.android.simpleredditreader.presenter.LinksPresenter;
 
 public class LinksAdapter extends RecyclerView.Adapter<LinkViewHolder> {

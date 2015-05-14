@@ -1,8 +1,8 @@
 package com.ddiehl.android.simpleredditreader.io;
 
-import com.ddiehl.android.simpleredditreader.model.identity.UserIdentity;
-import com.ddiehl.android.simpleredditreader.model.listings.ListingResponse;
-import com.ddiehl.android.simpleredditreader.model.listings.MoreChildrenResponse;
+import com.ddiehl.reddit.identity.UserIdentity;
+import com.ddiehl.reddit.listings.ListingResponse;
+import com.ddiehl.reddit.listings.MoreChildrenResponse;
 
 import java.util.List;
 

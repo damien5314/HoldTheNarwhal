@@ -1,7 +1,7 @@
 package com.ddiehl.android.simpleredditreader.events.requests;
 
-import com.ddiehl.android.simpleredditreader.model.listings.RedditLink;
-import com.ddiehl.android.simpleredditreader.model.listings.RedditMoreComments;
+import com.ddiehl.reddit.listings.RedditLink;
+import com.ddiehl.reddit.listings.RedditMoreComments;
 
 public class LoadCommentThreadEvent {
 

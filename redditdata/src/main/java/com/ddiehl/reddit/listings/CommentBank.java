@@ -1,4 +1,4 @@
-package com.ddiehl.android.simpleredditreader.model.listings;
+package com.ddiehl.reddit.listings;
 
 import java.util.Collection;
 import java.util.List;

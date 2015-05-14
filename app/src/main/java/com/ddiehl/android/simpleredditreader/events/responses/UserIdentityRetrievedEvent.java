@@ -1,6 +1,7 @@
 package com.ddiehl.android.simpleredditreader.events.responses;
 
-import com.ddiehl.android.simpleredditreader.model.identity.UserIdentity;
+
+import com.ddiehl.reddit.identity.UserIdentity;
 
 import retrofit.RetrofitError;
 

@@ -6,10 +6,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ddiehl.android.simpleredditreader.R;
-import com.ddiehl.android.simpleredditreader.model.listings.AbsRedditComment;
-import com.ddiehl.android.simpleredditreader.model.listings.RedditComment;
-import com.ddiehl.android.simpleredditreader.model.listings.RedditLink;
-import com.ddiehl.android.simpleredditreader.model.listings.RedditMoreComments;
+import com.ddiehl.reddit.listings.AbsRedditComment;
+import com.ddiehl.reddit.listings.RedditComment;
+import com.ddiehl.reddit.listings.RedditLink;
+import com.ddiehl.reddit.listings.RedditMoreComments;
 import com.ddiehl.android.simpleredditreader.presenter.CommentsPresenter;
 import com.ddiehl.android.simpleredditreader.presenter.LinksPresenter;
 

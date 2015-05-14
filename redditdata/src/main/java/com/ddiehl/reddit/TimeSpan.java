@@ -1,4 +1,4 @@
-package com.ddiehl.android.simpleredditreader.model;
+package com.ddiehl.reddit;
 
 public class TimeSpan {
     public static final String HOUR = "hour";

@@ -1,8 +1,8 @@
 package com.ddiehl.android.simpleredditreader.events.responses;
 
-import com.ddiehl.android.simpleredditreader.model.listings.AbsRedditComment;
-import com.ddiehl.android.simpleredditreader.model.listings.ListingResponse;
-import com.ddiehl.android.simpleredditreader.model.listings.RedditLink;
+import com.ddiehl.reddit.listings.AbsRedditComment;
+import com.ddiehl.reddit.listings.ListingResponse;
+import com.ddiehl.reddit.listings.RedditLink;
 
 import java.util.List;
 

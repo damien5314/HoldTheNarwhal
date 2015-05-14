@@ -28,17 +28,16 @@ android {
 }
 
 dependencies {
+    compile project(':redditdata')
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:22.1.1'
     compile 'com.android.support:support-v4:22.1.1'
     compile 'com.android.support:recyclerview-v7:21.0.0'
     compile 'com.android.support:cardview-v7:21.0.0'
-
     compile 'com.squareup.retrofit:retrofit:1.9.0'
     compile 'com.squareup:otto:1.3.5'
-    compile 'com.google.code.gson:gson:2.3.1'
+//    compile 'com.google.code.gson:gson:2.3.1'
     compile 'com.squareup.picasso:picasso:2.5.2'
-
     // Debugging tools
     compile 'com.facebook.stetho:stetho:1.0.0'
     compile 'com.facebook.stetho:stetho-okhttp:1.0.0'

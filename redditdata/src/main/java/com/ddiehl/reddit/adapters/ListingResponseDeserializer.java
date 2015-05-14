@@ -1,7 +1,7 @@
-package com.ddiehl.android.simpleredditreader.model.adapters;
+package com.ddiehl.reddit.adapters;
 
-import com.ddiehl.android.simpleredditreader.model.listings.ListingResponse;
-import com.ddiehl.android.simpleredditreader.model.listings.ListingResponseData;
+import com.ddiehl.reddit.listings.ListingResponse;
+import com.ddiehl.reddit.listings.ListingResponseData;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;

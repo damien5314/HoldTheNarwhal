@@ -8,7 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ddiehl.android.simpleredditreader.R;
-import com.ddiehl.android.simpleredditreader.model.listings.RedditMoreComments;
+import com.ddiehl.reddit.listings.RedditMoreComments;
 import com.ddiehl.android.simpleredditreader.presenter.CommentsPresenter;
 
 class CommentStubViewHolder extends RecyclerView.ViewHolder {
