@@ -53,6 +53,7 @@ public class LinksPresenterImpl implements LinksPresenter {
     @Override
     public void getLinks() {
         mLinks.clear();
+        mLinksView.updateAdapter();
         getMoreLinks();
     }
 
