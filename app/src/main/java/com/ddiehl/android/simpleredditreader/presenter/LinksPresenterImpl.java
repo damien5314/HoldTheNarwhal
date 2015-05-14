@@ -6,15 +6,16 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.ddiehl.android.simpleredditreader.R;
-import com.ddiehl.android.simpleredditreader.RedditPreferences;
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
 import com.ddiehl.android.simpleredditreader.events.requests.LoadLinksEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.SaveEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.VoteEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.LinksLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.VoteSubmittedEvent;
-import com.ddiehl.reddit.listings.RedditLink;
 import com.ddiehl.android.simpleredditreader.view.LinksView;
+import com.ddiehl.reddit.Sort;
+import com.ddiehl.reddit.TimeSpan;
+import com.ddiehl.reddit.listings.RedditLink;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -25,7 +26,6 @@ public class LinksPresenterImpl implements LinksPresenter {
     private static final String TAG = LinksPresenterImpl.class.getSimpleName();
 
     private Context mContext;
-    private RedditPreferences mPreferences;
     private Bus mBus;
     private List<RedditLink> mLinks;
     private LinksView mLinksView;
@@ -43,11 +43,9 @@ public class LinksPresenterImpl implements LinksPresenter {
         mLinks = new ArrayList<>();
         mBus = BusProvider.getInstance();
 
-        mPreferences = RedditPreferences.getInstance(mContext);
-
         mSubreddit = subreddit;
-        mSort = mPreferences.getLinksSort();
-        mTimeSpan = mPreferences.getLinksTimespan();
+        mSort = Sort.HOT;
+        mTimeSpan = TimeSpan.ALL;
     }
 
     @Override
@@ -107,6 +105,8 @@ public class LinksPresenterImpl implements LinksPresenter {
     public void updateSubreddit(String subreddit) {
         mLinks.clear();
         mSubreddit = subreddit;
+        mSort = Sort.HOT;
+        mTimeSpan = TimeSpan.ALL;
         updateTitle();
         getLinks();
     }
@@ -119,7 +119,6 @@ public class LinksPresenterImpl implements LinksPresenter {
 
         mLinks.clear();
         mSort = sort;
-        mPreferences.saveLinksSort(sort);
         getLinks();
     }
 
@@ -131,7 +130,6 @@ public class LinksPresenterImpl implements LinksPresenter {
 
         mLinks.clear();
         mTimeSpan = timespan;
-        mPreferences.saveLinksTimespan(timespan);
         getLinks();
     }
 
