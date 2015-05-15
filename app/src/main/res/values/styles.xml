@@ -124,6 +124,7 @@
     <style name="LinkThumbnail">
         <item name="android:layout_width">@dimen/link_thumbnail_size</item>
         <item name="android:layout_height">@dimen/link_thumbnail_size</item>
+        <item name="android:layout_gravity">center_vertical</item>
     </style>
 
     <style name="ProgressDialog" parent="Theme.AppCompat.Dialog">
