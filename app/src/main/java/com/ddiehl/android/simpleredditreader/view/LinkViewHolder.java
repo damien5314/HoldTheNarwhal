@@ -42,7 +42,7 @@ class LinkViewHolder extends RecyclerView.ViewHolder
         mLinkThumbnail = (ImageView) v.findViewById(R.id.link_thumbnail);
         mSelfText = (TextView) v.findViewById(R.id.link_self_text);
         mGildedText = (TextView) v.findViewById(R.id.link_gilded_text_view);
-        mSavedText = v.findViewById(R.id.link_saved_text);
+        mSavedText = v.findViewById(R.id.link_saved_view);
 
         itemView.setOnClickListener(this);
         mLinkTitle.setOnClickListener(this);
