@@ -23,6 +23,7 @@ public class BaseUtils {
 
     public static void showError(Context context, RetrofitError error) {
         Log.e(TAG, "RetrofitError: " + error.getKind().toString());
+        Log.d(TAG, Log.getStackTraceString(error));
         Response response = error.getResponse();
         if (response != null) {
             switch (response.getStatus()) {
