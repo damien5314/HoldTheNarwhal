@@ -51,5 +51,7 @@
             dui et, blandit vulputate quam. Sed vehicula, mauris ac sollicitudin commodo, risus tortor imperdiet ipsum,
             id consequat eros velit eget leo. Aliquam at purus tincidunt ipsum blandit fermentum eget quis risus.
             Vestibulum molestie auctor maximus. Ut euismod ipsum velit, eu iaculis quam fermentum blandit.</string>
+    <string name="save_failed">Failed to save, please try again</string>
+    <string name="action_unsave">unsave</string>
 
 </resources>

@@ -11,6 +11,7 @@ import com.ddiehl.android.simpleredditreader.events.requests.LoadLinksEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.SaveEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.VoteEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.LinksLoadedEvent;
+import com.ddiehl.android.simpleredditreader.events.responses.SaveSubmittedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.VoteSubmittedEvent;
 import com.ddiehl.android.simpleredditreader.view.LinksView;
 import com.ddiehl.reddit.Sort;
@@ -162,10 +163,23 @@ public class LinksPresenterImpl implements LinksPresenter {
         mLinksView.updateAdapter();
     }
 
+    @Subscribe
+    public void onSaveSubmitted(SaveSubmittedEvent event) {
+        if (event.isFailed()) {
+            mLinksView.showToast(R.string.save_failed);
+            return;
+        }
+
+        mLinkSelected.isSaved(event.isToSave());
+        mLinksView.updateAdapter();
+    }
+
     @Override
     public void createContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, RedditLink link) {
         mLinkSelected = link;
         mLinksView.showLinkContextMenu(menu, v, menuInfo);
+        menu.findItem(R.id.action_save).setVisible(!link.isSaved());
+        menu.findItem(R.id.action_unsave).setVisible(link.isSaved());
     }
 
     @Override
@@ -182,6 +196,9 @@ public class LinksPresenterImpl implements LinksPresenter {
                 return true;
             case R.id.action_save:
                 saveLink();
+                return true;
+            case R.id.action_unsave:
+                unsaveLink();
                 return true;
             case R.id.action_share:
                 shareLink();
@@ -232,7 +249,11 @@ public class LinksPresenterImpl implements LinksPresenter {
     }
 
     private void saveLink() {
-        mBus.post(new SaveEvent(mLinkSelected.getName(), null));
+        mBus.post(new SaveEvent(mLinkSelected.getName(), null, true));
+    }
+
+    private void unsaveLink() {
+        mBus.post(new SaveEvent(mLinkSelected.getName(), null, false));
     }
 
     private void shareLink() {

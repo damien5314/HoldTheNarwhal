@@ -11,6 +11,7 @@ public interface LinksView {
     void showSpinner(String msg);
     void dismissSpinner();
     void showToast(int resId);
+    void showToast(String string);
     void openWebViewForLink(RedditLink link);
     void showCommentsForLink(RedditLink link);
     void updateAdapter();

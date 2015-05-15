@@ -4,11 +4,13 @@ import retrofit.RetrofitError;
 
 public class SaveSubmittedEvent {
     private String mId;
+    private boolean mToSave;
     private RetrofitError mRetrofitError;
     private boolean mFailed = false;
 
-    public SaveSubmittedEvent(String id) {
+    public SaveSubmittedEvent(String id, boolean toSave) {
         mId = id;
+        mToSave = toSave;
     }
 
     public SaveSubmittedEvent(RetrofitError error) {
@@ -18,6 +20,10 @@ public class SaveSubmittedEvent {
 
     public String getId() {
         return mId;
+    }
+
+    public boolean isToSave() {
+        return mToSave;
     }
 
     public RetrofitError getError() {

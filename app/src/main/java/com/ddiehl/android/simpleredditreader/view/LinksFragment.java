@@ -220,7 +220,12 @@ public class LinksFragment extends Fragment implements LinksView {
 
     @Override
     public void showToast(int resId) {
-        Toast.makeText(getActivity(), resId, Toast.LENGTH_SHORT).show();
+        showToast(getString(resId));
+    }
+
+    @Override
+    public void showToast(String s) {
+        Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
     }
 
     @Override

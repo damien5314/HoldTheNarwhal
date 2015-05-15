@@ -153,6 +153,10 @@ public class RedditLink extends Listing {
         return data.saved;
     }
 
+    public void isSaved(boolean b) {
+        data.saved = b;
+    }
+
     public Boolean getStickied() {
         return data.stickied;
     }

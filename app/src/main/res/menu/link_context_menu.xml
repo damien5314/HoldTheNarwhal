@@ -18,9 +18,14 @@
         app:showAsAction="never"/>
 
     <item android:id="@+id/action_save"
-        android:title="@string/action_save"
-        android:icon="@drawable/ic_action_save"
-        app:showAsAction="never"/>
+          android:title="@string/action_save"
+          android:icon="@drawable/ic_action_save"
+          app:showAsAction="never"/>
+
+    <item android:id="@+id/action_unsave"
+          android:title="@string/action_unsave"
+          android:icon="@drawable/ic_action_save"
+          app:showAsAction="never"/>
 
     <item android:id="@+id/action_share"
         android:title="@string/action_share"

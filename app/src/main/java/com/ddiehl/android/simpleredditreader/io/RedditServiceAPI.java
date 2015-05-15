@@ -280,38 +280,61 @@ public class RedditServiceAPI implements RedditService {
     }
 
     /**
-     * Saves a link or comment
+     * (un)Saves a link or comment
      */
     @Override
     public void onSave(SaveEvent event) {
         final String id = event.getId();
         final String category = event.getCategory();
+        final boolean toSave = event.isToSave();
 
-        mAPI.save(id, category, new Callback<Response>() {
-            @Override
-            public void success(Response response, Response response2) {
-                BaseUtils.printResponseStatus(response);
-
-                try {
-                    InputStream in = response.getBody().in();
-                    if (BaseUtils.inputStreamToString(in).contains("USER_REQUIRED")) {
-                        throw new UserRequiredException();
-                    } else {
-                        mBus.post(new SaveSubmittedEvent(id));
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    mBus.post(new SaveSubmittedEvent(RetrofitError.unexpectedError(response.getUrl(), e)));
+        if (toSave) {
+            mAPI.save(id, category, new Callback<Response>() {
+                @Override
+                public void success(Response response, Response response2) {
+                    saveOpSuccess(response, response2, id, toSave);
                 }
-            }
 
-            @Override
-            public void failure(RetrofitError error) {
-                BaseUtils.showError(mContext, error);
-                BaseUtils.printResponse(error.getResponse());
-                mBus.post(new SaveSubmittedEvent(error));
+                @Override
+                public void failure(RetrofitError error) {
+                    saveOpFailure(error);
+                }
+            });
+        } else {
+            mAPI.unsave(id, new Callback<Response>() {
+                @Override
+                public void success(Response response, Response response2) {
+                    saveOpSuccess(response, response2, id, toSave);
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                    saveOpFailure(error);
+                }
+            });
+        }
+    }
+
+    private void saveOpSuccess(Response response, Response response2, String id, boolean toSave) {
+        BaseUtils.printResponseStatus(response);
+
+        try {
+            InputStream in = response.getBody().in();
+            if (BaseUtils.inputStreamToString(in).contains("USER_REQUIRED")) {
+                throw new UserRequiredException();
+            } else {
+                mBus.post(new SaveSubmittedEvent(id, toSave));
             }
-        });
+        } catch (Exception e) {
+            e.printStackTrace();
+            mBus.post(new SaveSubmittedEvent(RetrofitError.unexpectedError(response.getUrl(), e)));
+        }
+    }
+
+    private void saveOpFailure(RetrofitError error) {
+        BaseUtils.showError(mContext, error);
+        BaseUtils.printResponse(error.getResponse());
+        mBus.post(new SaveSubmittedEvent(error));
     }
 
 }
