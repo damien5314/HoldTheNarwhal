@@ -18,18 +18,12 @@ public interface RedditAPI {
     @GET("/api/v1/me")
     void getUserIdentity(Callback<UserIdentity> callback);
 
-    @GET("/r/{subreddit}/{sort}.json")
-    void getLinks(@Path("subreddit") String subreddit,
+    @GET("/{sort}.json")
+    void getLinks(@Query("r") String subreddit,
                   @Path("sort") String sort,
                   @Query("t") String timespan,
                   @Query("after") String after,
                   Callback<ListingResponse> callback);
-
-    @GET("/{sort}.json")
-    void getDefaultLinks(@Path("sort") String sort,
-                         @Query("t") String timespan,
-                         @Query("after") String after,
-                         Callback<ListingResponse> callback);
 
     @GET("/r/{subreddit}/comments/{articleId}.json")
     void getComments(@Path("subreddit") String subreddit,

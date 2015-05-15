@@ -118,37 +118,20 @@ public class RedditServiceAPI implements RedditService {
         String timespan = event.getTimeSpan();
         String after = event.getAfter();
 
-        if (subreddit == null) {
-            mAPI.getDefaultLinks(sort, timespan, after, new Callback<ListingResponse>() {
-                @Override
-                public void success(ListingResponse linksResponse, Response response) {
-                    BaseUtils.printResponseStatus(response);
-                    mBus.post(new LinksLoadedEvent(linksResponse));
-                }
+        mAPI.getLinks(subreddit, sort, timespan, after, new Callback<ListingResponse>() {
+            @Override
+            public void success(ListingResponse linksResponse, Response response) {
+                BaseUtils.printResponseStatus(response);
+                mBus.post(new LinksLoadedEvent(linksResponse));
+            }
 
-                @Override
-                public void failure(RetrofitError error) {
-                    BaseUtils.showError(mContext, error);
-                    BaseUtils.printResponse(error.getResponse());
-                    mBus.post(new LinksLoadedEvent(error));
-                }
-            });
-        } else {
-            mAPI.getLinks(subreddit, sort, timespan, after, new Callback<ListingResponse>() {
-                @Override
-                public void success(ListingResponse linksResponse, Response response) {
-                    BaseUtils.printResponseStatus(response);
-                    mBus.post(new LinksLoadedEvent(linksResponse));
-                }
-
-                @Override
-                public void failure(RetrofitError error) {
-                    BaseUtils.showError(mContext, error);
-                    BaseUtils.printResponse(error.getResponse());
-                    mBus.post(new LinksLoadedEvent(error));
-                }
-            });
-        }
+            @Override
+            public void failure(RetrofitError error) {
+                BaseUtils.showError(mContext, error);
+                BaseUtils.printResponse(error.getResponse());
+                mBus.post(new LinksLoadedEvent(error));
+            }
+        });
     }
 
     /**
