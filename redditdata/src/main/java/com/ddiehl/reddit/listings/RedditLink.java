@@ -149,7 +149,7 @@ public class RedditLink extends Listing {
         return data.secureMediaEmbed;
     }
 
-    public Boolean getSaved() {
+    public Boolean isSaved() {
         return data.saved;
     }
 

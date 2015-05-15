@@ -121,6 +121,13 @@
         <item name="android:textColor">@android:color/white</item>
     </style>
 
+    <style name="LinkSavedView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/link_saved_text_size</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
     <style name="LinkThumbnail">
         <item name="android:layout_width">@dimen/link_thumbnail_size</item>
         <item name="android:layout_height">@dimen/link_thumbnail_size</item>
@@ -150,5 +157,4 @@
         <item name="android:topDark">@color/transparent</item>
     </style>
 
-    <dimen name="link_thumbnail_size">64dp</dimen>
 </resources>

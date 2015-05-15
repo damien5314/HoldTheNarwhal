@@ -48,7 +48,7 @@
                         android:src="@drawable/ic_gilded_filled_outlined"/>
 
                     <TextView
-                        android:id="@+id/gilded_text_view"
+                        android:id="@+id/link_gilded_text_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
@@ -129,7 +129,15 @@
 
                     <TextView
                         android:id="@+id/link_comment_count"
+                        android:layout_gravity="start"
                         style="@style/LinkCommentCountTextView"/>
+
+                    <TextView
+                        android:id="@+id/link_saved_text"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentStart="true"
+                        android:text="@string/link_saved_text"
+                        style="@style/LinkSavedView"/>
 
                 </RelativeLayout>
 

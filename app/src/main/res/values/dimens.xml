@@ -10,6 +10,7 @@
     <dimen name="link_timestamp_text_size">14sp</dimen>
     <dimen name="link_subreddit_text_size">14sp</dimen>
     <dimen name="link_comments_text_size">14sp</dimen>
+    <dimen name="link_saved_text_size">14sp</dimen>
     <dimen name="link_row_height">48dp</dimen>
     <dimen name="navigation_drawer_width">240dp</dimen>
     <dimen name="web_view_text_margin">5dp</dimen>
@@ -45,5 +46,6 @@
     <dimen name="navigation_drawer_item_height">48dp</dimen>
     <dimen name="navigation_drawer_elevation">6dp</dimen>
     <dimen name="comment_secondary_data_margin">5dp</dimen>
+    <dimen name="link_thumbnail_size">64dp</dimen>
 
 </resources>

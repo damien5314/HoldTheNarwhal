@@ -20,7 +20,7 @@ class LinkViewHolder extends RecyclerView.ViewHolder
 
     private RedditLink mRedditLink;
 
-    private View mLinkView, mGildedView;
+    private View mLinkView, mGildedView, mSavedText;
     private TextView mLinkTitle, mLinkDomain, mLinkScore, mLinkAuthor, mLinkTimestamp,
             mLinkSubreddit, mLinkComments, mSelfText, mGildedText;
     private ImageView mLinkThumbnail;
@@ -41,7 +41,8 @@ class LinkViewHolder extends RecyclerView.ViewHolder
         mLinkComments = (TextView) v.findViewById(R.id.link_comment_count);
         mLinkThumbnail = (ImageView) v.findViewById(R.id.link_thumbnail);
         mSelfText = (TextView) v.findViewById(R.id.link_self_text);
-        mGildedText = (TextView) v.findViewById(R.id.gilded_text_view);
+        mGildedText = (TextView) v.findViewById(R.id.link_gilded_text_view);
+        mSavedText = v.findViewById(R.id.link_saved_text);
 
         itemView.setOnClickListener(this);
         mLinkTitle.setOnClickListener(this);
@@ -80,6 +81,7 @@ class LinkViewHolder extends RecyclerView.ViewHolder
         mLinkSubreddit.setText(String.format("/r/%s", link.getSubreddit()));
         mLinkDomain.setText(String.format("(%s)", link.getDomain()));
         mLinkComments.setText(String.format("%s comments", link.getNumComments()));
+        mSavedText.setVisibility(link.isSaved() ? View.VISIBLE : View.GONE);
 
         String thumbnailUrl = link.getThumbnail();
         switch (thumbnailUrl) {
