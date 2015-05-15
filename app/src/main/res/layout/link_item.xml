@@ -45,7 +45,7 @@
                         android:layout_width="16dp"
                         android:layout_height="16dp"
                         android:layout_gravity="center_vertical"
-                        android:src="@drawable/ic_gilded"/>
+                        android:src="@drawable/ic_gilded_filled_outlined"/>
 
                     <TextView
                         android:id="@+id/gilded_text_view"
