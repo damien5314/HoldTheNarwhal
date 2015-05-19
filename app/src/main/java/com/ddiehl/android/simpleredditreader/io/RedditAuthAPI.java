@@ -4,6 +4,7 @@ package com.ddiehl.android.simpleredditreader.io;
 import com.ddiehl.reddit.identity.AuthTokenResponse;
 
 import retrofit.Callback;
+import retrofit.client.Response;
 import retrofit.http.Field;
 import retrofit.http.FormUrlEncoded;
 import retrofit.http.POST;
@@ -25,5 +26,10 @@ public interface RedditAuthAPI {
     void refreshUserAuthToken(@Field("grant_type") String grantType,
                               @Field("refresh_token") String refreshToken,
                               Callback<AuthTokenResponse> callback);
+
+    @FormUrlEncoded @POST("/api/v1/revoke_token")
+    void revokeUserAuthToken(@Field("token") String token,
+                             @Field("token_type_hint") String tokenTypeHint,
+                             Callback<Response> callback);
 
 }

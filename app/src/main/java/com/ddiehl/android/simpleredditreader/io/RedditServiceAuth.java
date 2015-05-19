@@ -3,7 +3,6 @@ package com.ddiehl.android.simpleredditreader.io;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -11,6 +10,7 @@ import com.ddiehl.android.simpleredditreader.RedditPreferences;
 import com.ddiehl.android.simpleredditreader.RedditReaderApplication;
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
 import com.ddiehl.android.simpleredditreader.events.requests.AuthorizeApplicationEvent;
+import com.ddiehl.android.simpleredditreader.events.requests.ClearUserIdentityEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.GetUserIdentityEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.LoadCommentThreadEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.LoadCommentsEvent;
@@ -18,8 +18,10 @@ import com.ddiehl.android.simpleredditreader.events.requests.LoadLinksEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.LoadMoreChildrenEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.RefreshUserAccessTokenEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.SaveEvent;
+import com.ddiehl.android.simpleredditreader.events.requests.UserSignOutEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.VoteEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.ApplicationAuthorizedEvent;
+import com.ddiehl.android.simpleredditreader.events.responses.SignedOutEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.UserAuthCodeReceivedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.UserAuthorizationRefreshedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.UserAuthorizedEvent;
@@ -63,6 +65,7 @@ public class RedditServiceAuth implements RedditService {
     // Seconds within expiration we should try to retrieve a new auth token
     private static final int EXPIRATION_THRESHOLD = 60;
 
+    private static final String PREFS_USER_ACCESS_TOKEN = "prefs_user_access_token";
     private static final String PREF_AUTH_TOKEN = "pref_auth_token";
     private static final String PREF_TOKEN_TYPE = "pref_token_type";
     private static final String PREF_EXPIRATION = "pref_expiration";
@@ -140,7 +143,7 @@ public class RedditServiceAuth implements RedditService {
     }
 
     private void retrieveSavedAuthToken() {
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mContext);
+        SharedPreferences sp = mContext.getSharedPreferences(PREFS_USER_ACCESS_TOKEN, Context.MODE_PRIVATE);
         mAuthToken = sp.getString(PREF_AUTH_TOKEN, null);
         mTokenType = sp.getString(PREF_TOKEN_TYPE, null);
         long expirationTime = sp.getLong(PREF_EXPIRATION, 0);
@@ -173,7 +176,8 @@ public class RedditServiceAuth implements RedditService {
 
         mService.setAuthToken(mAuthToken);
 
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mContext);
+//        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mContext);
+        SharedPreferences sp = mContext.getSharedPreferences(PREFS_USER_ACCESS_TOKEN, Context.MODE_PRIVATE);
         sp.edit()
                 .putString(PREF_AUTH_TOKEN, mAuthToken)
                 .putString(PREF_TOKEN_TYPE, mTokenType)
@@ -182,6 +186,21 @@ public class RedditServiceAuth implements RedditService {
                 .putString(PREF_REFRESH_TOKEN, mRefreshToken)
                 .putBoolean(PREF_IS_USER_ACCESS_TOKEN, mIsUserAccessToken)
                 .apply();
+    }
+
+    private void clearSavedAuthToken() {
+        mAuthToken = null;
+        mTokenType = null;
+        mExpiration = null;
+        mScope = null;
+        mRefreshToken = null;
+        mIsUserAccessToken = false;
+
+        mService.setAuthToken(null);
+        SharedPreferences sp = mContext.getSharedPreferences(PREFS_USER_ACCESS_TOKEN, Context.MODE_PRIVATE);
+        sp.edit().clear().apply();
+
+        mBus.post(new ClearUserIdentityEvent());
     }
 
     @Subscribe
@@ -268,6 +287,48 @@ public class RedditServiceAuth implements RedditService {
                 mBus.post(new UserAuthorizationRefreshedEvent(error));
             }
         });
+    }
+
+    /**
+     * Invalidates an access token when a user requests sign out
+     */
+    @Subscribe
+    public void onUserSignOut(UserSignOutEvent event) {
+        mAPI.revokeUserAuthToken(mAuthToken, "access_token", new Callback<Response>() {
+            @Override
+            public void success(Response response, Response response2) {
+                Toast.makeText(mContext, "Signed out successfully", Toast.LENGTH_SHORT).show();
+                BaseUtils.printResponseStatus(response);
+                mBus.post(new SignedOutEvent(response));
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Toast.makeText(mContext, "Error on sign out", Toast.LENGTH_SHORT).show();
+                BaseUtils.showError(mContext, error);
+                BaseUtils.printResponse(error.getResponse());
+                mBus.post(new SignedOutEvent(error));
+            }
+        });
+
+        mAPI.revokeUserAuthToken(mRefreshToken, "refresh_token", new Callback<Response>() {
+            @Override
+            public void success(Response response, Response response2) {
+                Toast.makeText(mContext, "Signed out successfully", Toast.LENGTH_SHORT).show();
+                BaseUtils.printResponseStatus(response);
+                mBus.post(new SignedOutEvent(response));
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Toast.makeText(mContext, "Error on sign out", Toast.LENGTH_SHORT).show();
+                BaseUtils.showError(mContext, error);
+                BaseUtils.printResponse(error.getResponse());
+                mBus.post(new SignedOutEvent(error));
+            }
+        });
+
+        clearSavedAuthToken();
     }
 
     @Subscribe

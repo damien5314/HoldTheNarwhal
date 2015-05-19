@@ -27,7 +27,9 @@ import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.RedditPreferences;
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
 import com.ddiehl.android.simpleredditreader.events.requests.GetSavedUserIdentityEvent;
+import com.ddiehl.android.simpleredditreader.events.requests.UserSignOutEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.SavedUserIdentityRetrievedEvent;
+import com.ddiehl.android.simpleredditreader.events.responses.SignedOutEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.UserIdentitySavedEvent;
 import com.ddiehl.android.simpleredditreader.io.RedditService;
 import com.ddiehl.android.simpleredditreader.io.RedditServiceAuth;
@@ -48,6 +50,7 @@ public class MainActivity extends ActionBarActivity {
     private RecyclerView.LayoutManager mLayoutManager;
     private RecyclerView.Adapter mLayoutAdapter;
     private TextView mAccountNameView;
+    private View mSignOutView;
 
     private ProgressDialog mProgressBar;
 
@@ -89,6 +92,14 @@ public class MainActivity extends ActionBarActivity {
 
         mAccountNameView = (TextView) findViewById(R.id.account_name);
         mBus.post(new GetSavedUserIdentityEvent());
+
+        mSignOutView = findViewById(R.id.sign_out_button);
+        mSignOutView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mBus.post(new UserSignOutEvent());
+            }
+        });
     }
 
     @Override
@@ -176,6 +187,11 @@ public class MainActivity extends ActionBarActivity {
     public void onUserIdentitySaved(UserIdentitySavedEvent event) {
         UserIdentity identity = event.getUserIdentity();
         updateAccountNameView(identity);
+    }
+
+    @Subscribe
+    public void onUserSignedOut(SignedOutEvent event) {
+
     }
 
     private void updateAccountNameView(UserIdentity identity) {
