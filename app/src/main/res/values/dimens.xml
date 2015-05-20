@@ -47,5 +47,6 @@
     <dimen name="navigation_drawer_elevation">6dp</dimen>
     <dimen name="comment_secondary_data_margin">5dp</dimen>
     <dimen name="link_thumbnail_size">64dp</dimen>
+    <dimen name="navigation_drawer_icon_size">32dp</dimen>
 
 </resources>

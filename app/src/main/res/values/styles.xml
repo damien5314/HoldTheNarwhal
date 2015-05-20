@@ -44,8 +44,8 @@
     </style>
 
     <style name="NavigationDrawerItemIcon">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">@dimen/navigation_drawer_icon_size</item>
+        <item name="android:layout_height">@dimen/navigation_drawer_icon_size</item>
         <item name="android:layout_gravity">center</item>
         <item name="android:color">@color/accent</item>
     </style>

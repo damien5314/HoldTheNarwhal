@@ -40,8 +40,8 @@
             <ImageView
                 android:id="@+id/sign_out_button"
                 android:contentDescription="@string/sign_out_cs"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/navigation_drawer_icon_size"
+                android:layout_height="@dimen/navigation_drawer_icon_size"
                 android:layout_marginEnd="?android:attr/listPreferredItemPaddingEnd"
                 android:layout_marginRight="?android:attr/listPreferredItemPaddingEnd"
                 android:layout_gravity="center_vertical"
