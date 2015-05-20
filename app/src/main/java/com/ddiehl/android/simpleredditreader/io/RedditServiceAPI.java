@@ -6,6 +6,7 @@ import android.util.Log;
 import com.ddiehl.android.simpleredditreader.RedditReaderApplication;
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
 import com.ddiehl.android.simpleredditreader.events.requests.GetUserIdentityEvent;
+import com.ddiehl.android.simpleredditreader.events.requests.HideEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.LoadCommentThreadEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.LoadCommentsEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.LoadLinksEvent;
@@ -14,6 +15,7 @@ import com.ddiehl.android.simpleredditreader.events.requests.SaveEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.VoteEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.CommentThreadLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.CommentsLoadedEvent;
+import com.ddiehl.android.simpleredditreader.events.responses.HideSubmittedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.LinksLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.MoreChildrenLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.SaveSubmittedEvent;
@@ -271,7 +273,7 @@ public class RedditServiceAPI implements RedditService {
         final String category = event.getCategory();
         final boolean toSave = event.isToSave();
 
-        if (toSave) {
+        if (toSave) { // Save
             mAPI.save(id, category, new Callback<Response>() {
                 @Override
                 public void success(Response response, Response response2) {
@@ -283,7 +285,7 @@ public class RedditServiceAPI implements RedditService {
                     saveOpFailure(error);
                 }
             });
-        } else {
+        } else { // Unsave
             mAPI.unsave(id, new Callback<Response>() {
                 @Override
                 public void success(Response response, Response response2) {
@@ -318,6 +320,60 @@ public class RedditServiceAPI implements RedditService {
         BaseUtils.showError(mContext, error);
         BaseUtils.printResponse(error.getResponse());
         mBus.post(new SaveSubmittedEvent(error));
+    }
+
+    @Override
+    public void onHide(HideEvent event) {
+        final String id = event.getId();
+        final boolean toHide = event.isToHide();
+
+        if (toHide) { // Hide
+            mAPI.hide(id, new Callback<Response>() {
+                @Override
+                public void success(Response response, Response response2) {
+                    hideOpSuccess(response, response2, id, toHide);
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                    hideOpFailure(error);
+                }
+            });
+        } else { // Unhide
+            mAPI.unhide(id, new Callback<Response>() {
+                @Override
+                public void success(Response response, Response response2) {
+                    hideOpSuccess(response, response2, id, toHide);
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                    hideOpFailure(error);
+                }
+            });
+        }
+    }
+
+    private void hideOpSuccess(Response response, Response response2, String id, boolean toHide) {
+        BaseUtils.printResponseStatus(response);
+
+        try {
+            InputStream in = response.getBody().in();
+            if (BaseUtils.inputStreamToString(in).contains("USER_REQUIRED")) {
+                throw new UserRequiredException();
+            } else {
+                mBus.post(new HideSubmittedEvent(id, toHide));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            mBus.post(new HideSubmittedEvent(RetrofitError.unexpectedError(response.getUrl(), e)));
+        }
+    }
+
+    private void hideOpFailure(RetrofitError error) {
+        BaseUtils.showError(mContext, error);
+        BaseUtils.printResponse(error.getResponse());
+        mBus.post(new HideSubmittedEvent(error));
     }
 
 }

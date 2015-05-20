@@ -57,7 +57,7 @@ class LinkViewHolder extends RecyclerView.ViewHolder
     public void bind(RedditLink link, boolean showSelfText) {
         mRedditLink = link;
 
-        if (link == null) {
+        if (link == null || mLinksPresenter.isHidden(link)) {
             mLinkView.setVisibility(View.GONE);
             mSelfText.setVisibility(View.GONE);
             return;

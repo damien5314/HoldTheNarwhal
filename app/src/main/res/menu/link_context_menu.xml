@@ -43,6 +43,12 @@
         android:icon="@drawable/ic_action_open_in_browser"
         app:showAsAction="never"/>
 
+    <item
+        android:id="@+id/action_hide"
+        android:title="@string/action_hide"
+        android:icon="@drawable/ic_navigation_close"
+        android:showAsAction="never" />
+
     <item android:id="@+id/action_report"
         android:title="@string/action_report"
         android:icon="@drawable/ic_action_report"

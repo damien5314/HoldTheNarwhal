@@ -25,4 +25,7 @@ public interface LinksPresenter {
 
     void openLink(RedditLink link);
     void openCommentsForLink(RedditLink link);
+
+    void hide(RedditLink link, boolean toHide);
+    boolean isHidden(RedditLink link);
 }

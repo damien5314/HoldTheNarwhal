@@ -7,9 +7,11 @@ import android.view.View;
 
 import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
+import com.ddiehl.android.simpleredditreader.events.requests.HideEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.LoadLinksEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.SaveEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.VoteEvent;
+import com.ddiehl.android.simpleredditreader.events.responses.HideSubmittedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.LinksLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.SaveSubmittedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.VoteSubmittedEvent;
@@ -21,7 +23,9 @@ import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class LinksPresenterImpl implements LinksPresenter {
     private static final String TAG = LinksPresenterImpl.class.getSimpleName();
@@ -29,6 +33,7 @@ public class LinksPresenterImpl implements LinksPresenter {
     private Context mContext;
     private Bus mBus;
     private List<RedditLink> mLinks;
+    private Set<String> mHiddenLinks;
     private LinksView mLinksView;
 
     private String mSubreddit;
@@ -42,6 +47,7 @@ public class LinksPresenterImpl implements LinksPresenter {
         mContext = context.getApplicationContext();
         mLinksView = view;
         mLinks = new ArrayList<>();
+        mHiddenLinks = new HashSet<>();
         mBus = BusProvider.getInstance();
 
         mSubreddit = subreddit;
@@ -174,6 +180,17 @@ public class LinksPresenterImpl implements LinksPresenter {
         mLinksView.updateAdapter();
     }
 
+    @Subscribe
+    public void onHideSubmitted(HideSubmittedEvent event) {
+        if (event.isFailed()) {
+            mLinksView.showToast(R.string.hide_failed);
+            return;
+        }
+
+        hide(mLinkSelected, event.isToHide());
+        mLinksView.updateAdapter();
+    }
+
     @Override
     public void createContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, RedditLink link) {
         mLinkSelected = link;
@@ -209,6 +226,9 @@ public class LinksPresenterImpl implements LinksPresenter {
             case R.id.action_open_comments_in_browser:
                 openCommentsInBrowser();
                 return true;
+            case R.id.action_hide:
+                hideLink();
+                return true;
             case R.id.action_report:
                 reportLink();
                 return true;
@@ -232,6 +252,22 @@ public class LinksPresenterImpl implements LinksPresenter {
     @Override
     public void openCommentsForLink(RedditLink link) {
         mLinksView.showCommentsForLink(link);
+    }
+
+    @Override
+    public void hide(RedditLink link, boolean toHide) {
+        if (toHide) {
+            mHiddenLinks.add(link.getId());
+            mLinksView.updateAdapter();
+        } else {
+            mHiddenLinks.remove(link.getId());
+            mLinksView.updateAdapter();
+        }
+    }
+
+    @Override
+    public boolean isHidden(RedditLink link) {
+        return mHiddenLinks.contains(link.getId());
     }
 
     private void openCommentsForLink() {
@@ -266,6 +302,14 @@ public class LinksPresenterImpl implements LinksPresenter {
 
     private void openCommentsInBrowser() {
         mLinksView.openCommentsInBrowser(mLinkSelected);
+    }
+
+    private void hideLink() {
+        mBus.post(new HideEvent(mLinkSelected.getName(), true));
+    }
+
+    private void unhideLink() {
+        mBus.post(new HideEvent(mLinkSelected.getName(), false));
     }
 
     private void reportLink() {

@@ -60,6 +60,14 @@ public interface RedditAPI {
     void unsave(@Query("id") String id,
                 Callback<Response> response);
 
+    @POST("/api/hide")
+    void hide(@Query("id") String id,
+              Callback<Response> response);
+
+    @POST("/api/unhide")
+    void unhide(@Query("id") String id,
+                Callback<Response> response);
+
     @POST("/api/report?api_type=json")
     void report(@Query("thing_id") String id,
                 @Query("reason") String reason,

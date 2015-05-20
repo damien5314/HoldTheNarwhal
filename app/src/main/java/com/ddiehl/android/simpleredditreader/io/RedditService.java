@@ -1,5 +1,6 @@
 package com.ddiehl.android.simpleredditreader.io;
 
+import com.ddiehl.android.simpleredditreader.events.requests.HideEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.LoadCommentThreadEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.LoadCommentsEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.LoadLinksEvent;
@@ -18,4 +19,5 @@ public interface RedditService {
     void onLoadCommentThread(LoadCommentThreadEvent event);
     void onVote(VoteEvent event);
     void onSave(SaveEvent event);
+    void onHide(HideEvent event);
 }

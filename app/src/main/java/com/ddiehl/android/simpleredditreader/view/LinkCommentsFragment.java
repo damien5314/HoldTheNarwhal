@@ -104,6 +104,7 @@ public class LinkCommentsFragment extends Fragment implements LinksView, Comment
     public void showLinkContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         getActivity().getMenuInflater().inflate(R.menu.link_context_menu, menu);
         menu.findItem(R.id.action_show_comments).setVisible(false);
+        menu.findItem(R.id.action_hide).setVisible(false);
     }
 
     @Override

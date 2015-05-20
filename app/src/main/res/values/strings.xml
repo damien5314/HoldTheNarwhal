@@ -55,5 +55,7 @@
     <string name="action_unsave">unsave</string>
     <string name="unauthenticated">Not signed in</string>
     <string name="sign_out_cs">Sign out</string>
+    <string name="action_hide">hide</string>
+    <string name="hide_failed">Failed to hide link, please try again</string>
 
 </resources>
