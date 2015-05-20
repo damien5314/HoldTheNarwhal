@@ -115,7 +115,7 @@
     </style>
 
     <style name="LinkCommentCountTextView">
-        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">@dimen/link_comments_text_size</item>
         <item name="android:textColor">@android:color/white</item>
