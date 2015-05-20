@@ -39,6 +39,6 @@ dependencies {
 //    compile 'com.google.code.gson:gson:2.3.1'
     compile 'com.squareup.picasso:picasso:2.5.2'
     // Debugging tools
-    compile 'com.facebook.stetho:stetho:1.0.0'
-    compile 'com.facebook.stetho:stetho-okhttp:1.0.0'
+//    compile 'com.facebook.stetho:stetho:1.0.0'
+//    compile 'com.facebook.stetho:stetho-okhttp:1.0.0' // Throwing exception on POST requests
 }

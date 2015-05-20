@@ -6,9 +6,6 @@ import android.widget.Toast;
 
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
 import com.ddiehl.android.simpleredditreader.events.errors.ApiErrorEvent;
-import com.facebook.stetho.Stetho;
-import com.facebook.stetho.okhttp.StethoInterceptor;
-import com.squareup.okhttp.OkHttpClient;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
@@ -32,13 +29,13 @@ public class RedditReaderApplication extends Application {
         bus.register(userIdentityInteractor);
 
         // Stetho debugging tool
-        Stetho.initialize(Stetho.newInitializerBuilder(this)
-                .enableDumpapp(Stetho.defaultDumperPluginsProvider(this))
-                .enableWebKitInspector(Stetho.defaultInspectorModulesProvider(this))
-                .build());
-
-        // Network inspection through Stetho
-        new OkHttpClient().networkInterceptors().add(new StethoInterceptor());
+//        Stetho.initialize(Stetho.newInitializerBuilder(this)
+//                .enableDumpapp(Stetho.defaultDumperPluginsProvider(this))
+//                .enableWebKitInspector(Stetho.defaultInspectorModulesProvider(this))
+//                .build());
+//
+//        // Network inspection through Stetho
+//        new OkHttpClient().networkInterceptors().add(new StethoInterceptor());
 
         if (BuildConfig.DEBUG)
             Picasso.with(this).setIndicatorsEnabled(true);
