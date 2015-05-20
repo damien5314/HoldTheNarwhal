@@ -11,6 +11,7 @@ import com.ddiehl.android.simpleredditreader.events.requests.LoadCommentThreadEv
 import com.ddiehl.android.simpleredditreader.events.requests.LoadCommentsEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.LoadLinksEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.LoadMoreChildrenEvent;
+import com.ddiehl.android.simpleredditreader.events.requests.ReportEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.SaveEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.VoteEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.CommentThreadLoadedEvent;
@@ -352,6 +353,11 @@ public class RedditServiceAPI implements RedditService {
                 }
             });
         }
+    }
+
+    @Override
+    public void onReport(ReportEvent event) {
+        // TODO
     }
 
     private void hideOpSuccess(Response response, Response response2, String id, boolean toHide) {
