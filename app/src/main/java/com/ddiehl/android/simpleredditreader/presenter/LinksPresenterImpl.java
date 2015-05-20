@@ -15,6 +15,7 @@ import com.ddiehl.android.simpleredditreader.events.responses.HideSubmittedEvent
 import com.ddiehl.android.simpleredditreader.events.responses.LinksLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.SaveSubmittedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.VoteSubmittedEvent;
+import com.ddiehl.android.simpleredditreader.exceptions.UserRequiredException;
 import com.ddiehl.android.simpleredditreader.view.LinksView;
 import com.ddiehl.reddit.Sort;
 import com.ddiehl.reddit.TimeSpan;
@@ -162,7 +163,6 @@ public class LinksPresenterImpl implements LinksPresenter {
     public void onVoteSubmitted(VoteSubmittedEvent event) {
         if (event.isFailed()) {
             mLinksView.showToast(R.string.vote_failed);
-            return;
         }
 
         mLinkSelected.applyVote(event.getDirection());
@@ -173,7 +173,6 @@ public class LinksPresenterImpl implements LinksPresenter {
     public void onSaveSubmitted(SaveSubmittedEvent event) {
         if (event.isFailed()) {
             mLinksView.showToast(R.string.save_failed);
-            return;
         }
 
         mLinkSelected.isSaved(event.isToSave());
@@ -184,11 +183,15 @@ public class LinksPresenterImpl implements LinksPresenter {
     public void onHideSubmitted(HideSubmittedEvent event) {
         if (event.isFailed()) {
             mLinksView.showToast(R.string.hide_failed);
-            return;
         }
 
         hide(mLinkSelected, event.isToHide());
         mLinksView.updateAdapter();
+    }
+
+    @Subscribe
+    public void onUserRequiredError(UserRequiredException e) {
+        mLinksView.showToast(R.string.user_required);
     }
 
     @Override

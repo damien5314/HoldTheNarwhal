@@ -252,7 +252,7 @@ public class RedditServiceAPI implements RedditService {
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    mBus.post(new VoteSubmittedEvent(RetrofitError.unexpectedError(response.getUrl(), e)));
+                    mBus.post(new VoteSubmittedEvent(e));
                 }
             }
 
@@ -313,7 +313,7 @@ public class RedditServiceAPI implements RedditService {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            mBus.post(new SaveSubmittedEvent(RetrofitError.unexpectedError(response.getUrl(), e)));
+            mBus.post(new SaveSubmittedEvent(e));
         }
     }
 
@@ -372,7 +372,7 @@ public class RedditServiceAPI implements RedditService {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            mBus.post(new HideSubmittedEvent(RetrofitError.unexpectedError(response.getUrl(), e)));
+            mBus.post(new HideSubmittedEvent(e));
         }
     }
 

@@ -27,6 +27,7 @@ import com.ddiehl.android.simpleredditreader.events.responses.UserSignedOutEvent
 import com.ddiehl.android.simpleredditreader.events.responses.UserAuthCodeReceivedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.UserAuthorizationRefreshedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.UserAuthorizedEvent;
+import com.ddiehl.android.simpleredditreader.exceptions.UserRequiredException;
 import com.ddiehl.android.simpleredditreader.utils.AuthUtils;
 import com.ddiehl.android.simpleredditreader.utils.BaseUtils;
 import com.ddiehl.reddit.identity.AuthTokenResponse;
@@ -436,7 +437,11 @@ public class RedditServiceAuth implements RedditService {
                 mBus.post(new AuthorizeApplicationEvent());
             }
         } else {
-            mService.onVote(event);
+            if (!mIsUserAccessToken) {
+                mBus.post(new UserRequiredException());
+            } else {
+                mService.onVote(event);
+            }
         }
     }
 
@@ -447,10 +452,17 @@ public class RedditServiceAuth implements RedditService {
             if (mRefreshToken != null) {
                 mBus.post(new RefreshUserAccessTokenEvent(mRefreshToken));
             } else {
+                if (!mIsUserAccessToken) {
+                    mBus.post(new UserRequiredException());
+                }
                 mBus.post(new AuthorizeApplicationEvent());
             }
         } else {
-            mService.onSave(event);
+            if (!mIsUserAccessToken) {
+                mBus.post(new UserRequiredException());
+            } else {
+                mService.onSave(event);
+            }
         }
     }
 
@@ -464,7 +476,11 @@ public class RedditServiceAuth implements RedditService {
                 mBus.post(new AuthorizeApplicationEvent());
             }
         } else {
-            mService.onHide(event);
+            if (!mIsUserAccessToken) {
+                mBus.post(new UserRequiredException());
+            } else {
+                mService.onHide(event);
+            }
         }
     }
 
@@ -478,7 +494,11 @@ public class RedditServiceAuth implements RedditService {
                 mBus.post(new AuthorizeApplicationEvent());
             }
         } else {
-            mService.onReport(event);
+            if (!mIsUserAccessToken) {
+                mBus.post(new UserRequiredException());
+            } else {
+                mService.onReport(event);
+            }
         }
     }
 }
