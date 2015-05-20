@@ -3,7 +3,7 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="AppTheme.Base"/>
 
-    <style name="AppTheme.Base" parent="Theme.AppCompat.NoActionBar">
+    <style name="AppTheme.Base" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>
         <item name="colorAccent">@color/accent</item>
@@ -14,7 +14,7 @@
         <item name="android:windowActionModeOverlay">true</item>
     </style>
 
-    <style name="ToolbarThemeLightText" parent="Theme.AppCompat.Light">
+    <style name="ToolbarThemeLightText" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:textColorPrimary">@color/icons</item>
         <item name="actionMenuTextColor">@color/icons</item>
         <item name="android:textColorSecondary">@color/icons</item>
