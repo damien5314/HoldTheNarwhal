@@ -29,16 +29,18 @@ import com.ddiehl.android.simpleredditreader.events.BusProvider;
 import com.ddiehl.android.simpleredditreader.events.requests.GetSavedUserIdentityEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.UserSignOutEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.SavedUserIdentityRetrievedEvent;
-import com.ddiehl.android.simpleredditreader.events.responses.SignedOutEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.UserIdentitySavedEvent;
+import com.ddiehl.android.simpleredditreader.events.responses.UserSignedOutEvent;
 import com.ddiehl.android.simpleredditreader.io.RedditService;
 import com.ddiehl.android.simpleredditreader.io.RedditServiceAuth;
 import com.ddiehl.reddit.identity.UserIdentity;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ActionBarActivity implements MainView {
     private static final String TAG = MainActivity.class.getSimpleName();
+
+    private static final String DIALOG_CONFIRM_SIGN_OUT = "dialog_confirm_sign_out";
 
     private Bus mBus;
 
@@ -91,15 +93,15 @@ public class MainActivity extends ActionBarActivity {
         mNavigationDrawer.setOnClickListener(null);
 
         mAccountNameView = (TextView) findViewById(R.id.account_name);
-        mBus.post(new GetSavedUserIdentityEvent());
-
         mSignOutView = findViewById(R.id.sign_out_button);
         mSignOutView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mBus.post(new UserSignOutEvent());
+                ConfirmSignOutDialog dialog = ConfirmSignOutDialog.newInstance();
+                dialog.show(getSupportFragmentManager(), DIALOG_CONFIRM_SIGN_OUT);
             }
         });
+        mBus.post(new GetSavedUserIdentityEvent());
     }
 
     @Override
@@ -190,15 +192,19 @@ public class MainActivity extends ActionBarActivity {
     }
 
     @Subscribe
-    public void onUserSignedOut(SignedOutEvent event) {
-
+    public void onUserSignedOut(UserSignedOutEvent event) {
+        updateAccountNameView(null);
     }
 
     private void updateAccountNameView(UserIdentity identity) {
         String name = identity == null ? getString(R.string.account_name_unauthorized) : identity.getName();
-        if (identity != null) {
-            mAccountNameView.setText(name);
-        }
+        mAccountNameView.setText(name);
+        mSignOutView.setVisibility(identity == null ? View.GONE : View.VISIBLE);
+    }
+
+    @Override
+    public void onUserSignOut() {
+        mBus.post(new UserSignOutEvent());
     }
 
     private class NavDrawerItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {

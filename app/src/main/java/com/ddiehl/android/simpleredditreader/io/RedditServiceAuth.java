@@ -22,7 +22,7 @@ import com.ddiehl.android.simpleredditreader.events.requests.SaveEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.UserSignOutEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.VoteEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.ApplicationAuthorizedEvent;
-import com.ddiehl.android.simpleredditreader.events.responses.SignedOutEvent;
+import com.ddiehl.android.simpleredditreader.events.responses.UserSignedOutEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.UserAuthCodeReceivedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.UserAuthorizationRefreshedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.UserAuthorizedEvent;
@@ -295,39 +295,43 @@ public class RedditServiceAuth implements RedditService {
      */
     @Subscribe
     public void onUserSignOut(UserSignOutEvent event) {
-        mAPI.revokeUserAuthToken(mAuthToken, "access_token", new Callback<Response>() {
-            @Override
-            public void success(Response response, Response response2) {
-                Toast.makeText(mContext, "Signed out successfully", Toast.LENGTH_SHORT).show();
-                BaseUtils.printResponseStatus(response);
-                mBus.post(new SignedOutEvent(response));
-            }
+        if (mAuthToken != null) {
+            mAPI.revokeUserAuthToken(mAuthToken, "access_token", new Callback<Response>() {
+                @Override
+                public void success(Response response, Response response2) {
+                    Toast.makeText(mContext, "Signed out successfully", Toast.LENGTH_SHORT).show();
+                    BaseUtils.printResponseStatus(response);
+                    mBus.post(new UserSignedOutEvent(response));
+                }
 
-            @Override
-            public void failure(RetrofitError error) {
-                Toast.makeText(mContext, "Error on sign out", Toast.LENGTH_SHORT).show();
-                BaseUtils.showError(mContext, error);
-                BaseUtils.printResponse(error.getResponse());
-                mBus.post(new SignedOutEvent(error));
-            }
-        });
+                @Override
+                public void failure(RetrofitError error) {
+                    Toast.makeText(mContext, "Error on sign out", Toast.LENGTH_SHORT).show();
+                    BaseUtils.showError(mContext, error);
+                    BaseUtils.printResponse(error.getResponse());
+                    mBus.post(new UserSignedOutEvent(error));
+                }
+            });
+        }
 
-        mAPI.revokeUserAuthToken(mRefreshToken, "refresh_token", new Callback<Response>() {
-            @Override
-            public void success(Response response, Response response2) {
-                Toast.makeText(mContext, "Signed out successfully", Toast.LENGTH_SHORT).show();
-                BaseUtils.printResponseStatus(response);
-                mBus.post(new SignedOutEvent(response));
-            }
+        if (mRefreshToken != null) {
+            mAPI.revokeUserAuthToken(mRefreshToken, "refresh_token", new Callback<Response>() {
+                @Override
+                public void success(Response response, Response response2) {
+                    Toast.makeText(mContext, "Signed out successfully", Toast.LENGTH_SHORT).show();
+                    BaseUtils.printResponseStatus(response);
+                    mBus.post(new UserSignedOutEvent(response));
+                }
 
-            @Override
-            public void failure(RetrofitError error) {
-                Toast.makeText(mContext, "Error on sign out", Toast.LENGTH_SHORT).show();
-                BaseUtils.showError(mContext, error);
-                BaseUtils.printResponse(error.getResponse());
-                mBus.post(new SignedOutEvent(error));
-            }
-        });
+                @Override
+                public void failure(RetrofitError error) {
+                    Toast.makeText(mContext, "Error on sign out", Toast.LENGTH_SHORT).show();
+                    BaseUtils.showError(mContext, error);
+                    BaseUtils.printResponse(error.getResponse());
+                    mBus.post(new UserSignedOutEvent(error));
+                }
+            });
+        }
 
         clearSavedAuthToken();
     }
