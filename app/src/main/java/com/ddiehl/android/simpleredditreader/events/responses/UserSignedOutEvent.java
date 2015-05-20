@@ -1,19 +1,18 @@
 package com.ddiehl.android.simpleredditreader.events.responses;
 
-import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 public class UserSignedOutEvent {
     private Response mResponse;
-    private RetrofitError mRetrofitError;
+    private Exception mError;
     private boolean mFailed = false;
 
     public UserSignedOutEvent(Response response) {
         mResponse = response;
     }
 
-    public UserSignedOutEvent(RetrofitError error) {
-        mRetrofitError = error;
+    public UserSignedOutEvent(Exception error) {
+        mError = error;
         mFailed = true;
     }
 
@@ -21,8 +20,8 @@ public class UserSignedOutEvent {
         return mResponse;
     }
 
-    public RetrofitError getRetrofitError() {
-        return mRetrofitError;
+    public Exception getError() {
+        return mError;
     }
 
     public boolean isFailed() {

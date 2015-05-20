@@ -1,18 +1,16 @@
 package com.ddiehl.android.simpleredditreader.events.responses;
 
-import retrofit.RetrofitError;
-
 public class ReportSubmittedEvent {
     private String mId;
-    private RetrofitError mRetrofitError;
+    private Exception mError;
     private boolean mFailed = false;
 
     public ReportSubmittedEvent(String id) {
         mId = id;
     }
 
-    public ReportSubmittedEvent(RetrofitError error) {
-        mRetrofitError = error;
+    public ReportSubmittedEvent(Exception error) {
+        mError = error;
         mFailed = true;
     }
 
@@ -20,8 +18,8 @@ public class ReportSubmittedEvent {
         return mId;
     }
 
-    public RetrofitError getError() {
-        return mRetrofitError;
+    public Exception getError() {
+        return mError;
     }
 
     public boolean isFailed() {

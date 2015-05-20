@@ -3,19 +3,17 @@ package com.ddiehl.android.simpleredditreader.events.responses;
 
 import com.ddiehl.reddit.identity.AuthTokenResponse;
 
-import retrofit.RetrofitError;
-
 
 public class ApplicationAuthorizedEvent {
     private AuthTokenResponse mResponse;
-    private RetrofitError mError;
+    private Exception mError;
     private boolean mFailed = false;
 
     public ApplicationAuthorizedEvent(AuthTokenResponse response) {
         mResponse = response;
     }
 
-    public ApplicationAuthorizedEvent(RetrofitError error) {
+    public ApplicationAuthorizedEvent(Exception error) {
         mError = error;
         mFailed = true;
     }
@@ -24,7 +22,7 @@ public class ApplicationAuthorizedEvent {
         return mResponse;
     }
 
-    public RetrofitError getError() {
+    public Exception getError() {
         return mError;
     }
 

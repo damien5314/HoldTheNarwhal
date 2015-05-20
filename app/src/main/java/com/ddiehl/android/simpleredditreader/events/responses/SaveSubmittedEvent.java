@@ -1,11 +1,9 @@
 package com.ddiehl.android.simpleredditreader.events.responses;
 
-import retrofit.RetrofitError;
-
 public class SaveSubmittedEvent {
     private String mId;
     private boolean mToSave;
-    private RetrofitError mRetrofitError;
+    private Exception mError;
     private boolean mFailed = false;
 
     public SaveSubmittedEvent(String id, boolean toSave) {
@@ -13,8 +11,8 @@ public class SaveSubmittedEvent {
         mToSave = toSave;
     }
 
-    public SaveSubmittedEvent(RetrofitError error) {
-        mRetrofitError = error;
+    public SaveSubmittedEvent(Exception error) {
+        mError = error;
         mFailed = true;
     }
 
@@ -26,8 +24,8 @@ public class SaveSubmittedEvent {
         return mToSave;
     }
 
-    public RetrofitError getError() {
-        return mRetrofitError;
+    public Exception getError() {
+        return mError;
     }
 
     public boolean isFailed() {

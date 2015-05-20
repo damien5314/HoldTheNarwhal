@@ -1,11 +1,9 @@
 package com.ddiehl.android.simpleredditreader.events.responses;
 
-import retrofit.RetrofitError;
-
 public class HideSubmittedEvent {
     private String mId;
     private boolean mToHide;
-    private RetrofitError mRetrofitError;
+    private Exception mRetrofitError;
     private boolean mFailed = false;
 
     public HideSubmittedEvent(String id, boolean toHide) {
@@ -13,7 +11,7 @@ public class HideSubmittedEvent {
         mToHide = toHide;
     }
 
-    public HideSubmittedEvent(RetrofitError error) {
+    public HideSubmittedEvent(Exception error) {
         mRetrofitError = error;
         mFailed = true;
     }
@@ -26,7 +24,7 @@ public class HideSubmittedEvent {
         return mToHide;
     }
 
-    public RetrofitError getError() {
+    public Exception getError() {
         return mRetrofitError;
     }
 

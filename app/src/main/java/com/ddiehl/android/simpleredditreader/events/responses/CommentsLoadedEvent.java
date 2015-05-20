@@ -6,13 +6,11 @@ import com.ddiehl.reddit.listings.RedditLink;
 
 import java.util.List;
 
-import retrofit.RetrofitError;
-
 
 public class CommentsLoadedEvent {
     private RedditLink mLink;
     private List<AbsRedditComment> mComments;
-    private RetrofitError mError;
+    private Exception mError;
     private boolean mFailed = false;
 
     public CommentsLoadedEvent(List<ListingResponse> listingResponseList) {
@@ -24,7 +22,7 @@ public class CommentsLoadedEvent {
         mComments = commentsResponse.getData().getChildren();
     }
 
-    public CommentsLoadedEvent(RetrofitError error) {
+    public CommentsLoadedEvent(Exception error) {
         mError = error;
         mFailed = true;
     }
@@ -37,7 +35,7 @@ public class CommentsLoadedEvent {
         return mComments;
     }
 
-    public RetrofitError getError() {
+    public Exception getError() {
         return mError;
     }
 

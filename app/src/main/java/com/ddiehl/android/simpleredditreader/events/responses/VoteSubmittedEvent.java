@@ -1,11 +1,9 @@
 package com.ddiehl.android.simpleredditreader.events.responses;
 
-import retrofit.RetrofitError;
-
 public class VoteSubmittedEvent {
     private String mId;
     private int mDirection;
-    private RetrofitError mRetrofitError;
+    private Exception mError;
     private boolean mFailed = false;
 
     public VoteSubmittedEvent(String id, int direction) {
@@ -13,8 +11,8 @@ public class VoteSubmittedEvent {
         mDirection = direction;
     }
 
-    public VoteSubmittedEvent(RetrofitError error) {
-        mRetrofitError = error;
+    public VoteSubmittedEvent(Exception error) {
+        mError = error;
         mFailed = true;
     }
 
@@ -26,8 +24,8 @@ public class VoteSubmittedEvent {
         return mDirection;
     }
 
-    public RetrofitError getError() {
-        return mRetrofitError;
+    public Exception getError() {
+        return mError;
     }
 
     public boolean isFailed() {

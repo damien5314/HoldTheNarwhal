@@ -6,14 +6,12 @@ import com.ddiehl.reddit.listings.RedditLink;
 
 import java.util.List;
 
-import retrofit.RetrofitError;
-
 
 public class CommentThreadLoadedEvent {
     private RedditLink mLink;
     private List<AbsRedditComment> mComments;
     private int mParentDepth;
-    private RetrofitError mError;
+    private Exception mError;
     private boolean mFailed = false;
 
     public CommentThreadLoadedEvent(List<ListingResponse> listingResponseList, int parentDepth) {
@@ -26,7 +24,7 @@ public class CommentThreadLoadedEvent {
         mParentDepth = parentDepth;
     }
 
-    public CommentThreadLoadedEvent(RetrofitError error) {
+    public CommentThreadLoadedEvent(Exception error) {
         mError = error;
         mFailed = true;
     }
@@ -43,7 +41,7 @@ public class CommentThreadLoadedEvent {
         return mParentDepth;
     }
 
-    public RetrofitError getError() {
+    public Exception getError() {
         return mError;
     }
 
