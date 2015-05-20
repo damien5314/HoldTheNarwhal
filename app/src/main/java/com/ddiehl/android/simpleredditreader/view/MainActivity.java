@@ -284,6 +284,7 @@ public class MainActivity extends ActionBarActivity implements MainView {
                     public void onClick(View v) {
                         mDrawerLayout.closeDrawer(GravityCompat.START);
                         String inputSubreddit = mEditText.getText().toString();
+                        inputSubreddit = inputSubreddit.trim();
                         if (!inputSubreddit.equals("")) {
                             mEditText.setText("");
                             showSubreddit(inputSubreddit);
