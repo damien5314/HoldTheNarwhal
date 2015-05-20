@@ -9,7 +9,8 @@
         android:hint="@string/drawer_navigate_to_subreddit_text"
         android:imeOptions="actionDone"
         android:inputType="text"
-        android:singleLine="true"/>
+        android:singleLine="true"
+        android:background="@null"/>
 
     <ImageView
         android:id="@+id/drawer_navigate_to_subreddit_go"
