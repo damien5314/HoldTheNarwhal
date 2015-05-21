@@ -6,12 +6,13 @@
     <string name="no_listings_found">No listings found</string>
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
-    <string name="drawer_log_in">Log In</string>
-    <string name="drawer_user_profile">User Profile</string>
-    <string name="drawer_front_page">Front Page</string>
+    <string name="drawer_navigate_to_subreddit_text">go to subreddit</string>
+    <string name="drawer_log_in">log in</string>
+    <string name="drawer_user_profile">user profile</string>
+    <string name="drawer_subreddits">subreddits</string>
+    <string name="drawer_front_page">front page</string>
     <string name="drawer_r_all">/r/all</string>
-    <string name="drawer_subreddits">Subreddits</string>
-    <string name="drawer_random_subreddit">Random Subreddit</string>
+    <string name="drawer_random_subreddit">random subreddit</string>
     <string name="front_page_title">front page</string>
     <string name="title_activity_listings">ListingsActivity</string>
     <string name="no_comments_found">No comments found</string>
@@ -28,7 +29,6 @@
     <string name="action_open_in_browser">view in browser</string>
     <string name="action_report">report</string>
     <string name="vote_failed">Failed to cast vote, please try again</string>
-    <string name="drawer_navigate_to_subreddit_text">Go to subreddit</string>
     <string name="action_refresh">Refresh</string>
     <string name="link_score_default">•</string>
     <string name="gilded_text_view">&#160;× %s</string>

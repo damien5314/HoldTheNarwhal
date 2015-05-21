@@ -329,6 +329,15 @@ public class MainActivity extends ActionBarActivity implements MainView {
                         });
                         break;
                     case 2:
+                        mItemLabel.setText(getString(R.string.drawer_subreddits));
+                        mItemRow.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                mDrawerLayout.closeDrawer(GravityCompat.START);
+                            }
+                        });
+                        break;
+                    case 3:
                         mItemLabel.setText(getString(R.string.drawer_front_page));
                         mItemRow.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -338,22 +347,13 @@ public class MainActivity extends ActionBarActivity implements MainView {
                             }
                         });
                         break;
-                    case 3:
+                    case 4:
                         mItemLabel.setText(getString(R.string.drawer_r_all));
                         mItemRow.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 mDrawerLayout.closeDrawer(GravityCompat.START);
                                 showSubreddit("all");
-                            }
-                        });
-                        break;
-                    case 4:
-                        mItemLabel.setText(getString(R.string.drawer_subreddits));
-                        mItemRow.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                mDrawerLayout.closeDrawer(GravityCompat.START);
                             }
                         });
                         break;
