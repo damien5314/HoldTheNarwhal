@@ -2,20 +2,29 @@ package com.ddiehl.android.simpleredditreader;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
-import com.ddiehl.android.simpleredditreader.events.requests.ClearUserIdentityEvent;
-import com.ddiehl.android.simpleredditreader.events.requests.GetSavedUserIdentityEvent;
-import com.ddiehl.android.simpleredditreader.events.responses.SavedUserIdentityRetrievedEvent;
-import com.ddiehl.android.simpleredditreader.events.responses.UserIdentityRetrievedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.UserIdentitySavedEvent;
+import com.ddiehl.reddit.identity.AccessToken;
+import com.ddiehl.reddit.identity.ApplicationAccessToken;
+import com.ddiehl.reddit.identity.AuthorizationResponse;
+import com.ddiehl.reddit.identity.UserAccessToken;
 import com.ddiehl.reddit.identity.UserIdentity;
 import com.squareup.otto.Bus;
-import com.squareup.otto.Subscribe;
 
 import java.util.Date;
 
 public class UserIdentityInteractor {
+    private static final String TAG = UserIdentityInteractor.class.getSimpleName();
+
+    private static final String PREFS_USER_ACCESS_TOKEN = "prefs_user_access_token";
+    private static final String PREFS_APPLICATION_ACCESS_TOKEN = "prefs_application_access_token";
+    private static final String PREF_AUTH_TOKEN = "pref_auth_token";
+    private static final String PREF_TOKEN_TYPE = "pref_token_type";
+    private static final String PREF_EXPIRATION = "pref_expiration";
+    private static final String PREF_SCOPE = "pref_scope";
+    private static final String PREF_REFRESH_TOKEN = "pref_refresh_token";
 
     private static final String PREFS_USER_IDENTITY = "user_identity";
     private static final String PREF_HAS_MAIL = "pref_has_mail";
@@ -35,22 +44,152 @@ public class UserIdentityInteractor {
     private static final String PREF_ID = "pref_id";
     private static final String PREF_INBOX_COUNT = "pref_inbox_count";
 
+    // Seconds within expiration we should try to retrieve a new auth token
+    private static final int EXPIRATION_THRESHOLD = 60;
+
     private Bus mBus;
     private Context mContext;
+    
+    private AccessToken mUserAccessToken;
+    private AccessToken mApplicationAccessToken;
+    private UserIdentity mUserIdentity;
 
     public UserIdentityInteractor(Context context) {
         mBus = BusProvider.getInstance();
         mContext = context;
+        mUserAccessToken = getSavedUserAccessToken();
+        mApplicationAccessToken = getSavedApplicationAccessToken();
+        mUserIdentity = getSavedUserIdentity();
     }
 
-    @Subscribe
-    public void getUserIdentity(GetSavedUserIdentityEvent event) {
-        SharedPreferences prefs = mContext.getSharedPreferences(PREFS_USER_IDENTITY, Context.MODE_PRIVATE);
+    public boolean hasValidUserAccessToken() {
+        AccessToken token = getUserAccessToken();
+        return token != null && token.secondsUntilExpiration() > EXPIRATION_THRESHOLD;
+    }
 
-        UserIdentity id = null;
+    public boolean hasValidApplicationAccessToken() {
+        AccessToken token = getApplicationAccessToken();
+        return token != null && token.secondsUntilExpiration() > EXPIRATION_THRESHOLD;
+    }
+
+    public boolean hasValidAccessToken() {
+        return hasValidUserAccessToken() || hasValidApplicationAccessToken();
+    }
+
+    public AccessToken getUserAccessToken() {
+        if (mUserAccessToken == null) {
+            mUserAccessToken = getSavedUserAccessToken();
+        }
+        return mUserAccessToken;
+    }
+
+    public AccessToken getApplicationAccessToken() {
+        if (mApplicationAccessToken == null) {
+            mApplicationAccessToken = getSavedApplicationAccessToken();
+        }
+        return mApplicationAccessToken;
+    }
+
+    public AccessToken getSavedUserAccessToken() {
+        SharedPreferences sp =  mContext.getSharedPreferences(PREFS_USER_ACCESS_TOKEN, Context.MODE_PRIVATE);
+        AccessToken token = new UserAccessToken();
+
+        token.setToken(sp.getString(PREF_AUTH_TOKEN, null));
+        token.setTokenType(sp.getString(PREF_TOKEN_TYPE, null));
+        token.setExpiration(sp.getLong(PREF_EXPIRATION, 0));
+        token.setScope(sp.getString(PREF_SCOPE, null));
+        token.setRefreshToken(sp.getString(PREF_REFRESH_TOKEN, null));
+        
+        return token;
+    }
+
+    public AccessToken getSavedApplicationAccessToken() {
+        SharedPreferences sp =  mContext.getSharedPreferences(PREFS_APPLICATION_ACCESS_TOKEN, Context.MODE_PRIVATE);
+        AccessToken token = new ApplicationAccessToken();
+
+        token.setToken(sp.getString(PREF_AUTH_TOKEN, null));
+        token.setTokenType(sp.getString(PREF_TOKEN_TYPE, null));
+        token.setExpiration(sp.getLong(PREF_EXPIRATION, 0));
+        token.setScope(sp.getString(PREF_SCOPE, null));
+        token.setRefreshToken(sp.getString(PREF_REFRESH_TOKEN, null));
+
+        return token;
+    }
+
+    public void saveUserAccessTokenResponse(AuthorizationResponse response) {
+        mUserAccessToken = new UserAccessToken();
+        mUserAccessToken.setToken(response.getToken());
+        mUserAccessToken.setTokenType(response.getTokenType());
+        mUserAccessToken.setExpiration(response.getExpiresIn()*1000 + new Date().getTime());
+        mUserAccessToken.setScope(response.getScope());
+        mUserAccessToken.setRefreshToken(response.getRefreshToken());
+        saveUserAccessToken();
+    }
+
+    public void saveApplicationAccessTokenResponse(AuthorizationResponse response) {
+        mApplicationAccessToken = new ApplicationAccessToken();
+        mApplicationAccessToken.setToken(response.getToken());
+        mApplicationAccessToken.setTokenType(response.getTokenType());
+        mApplicationAccessToken.setExpiration(response.getExpiresIn()*1000 + new Date().getTime());
+        mApplicationAccessToken.setScope(response.getScope());
+        mApplicationAccessToken.setRefreshToken(response.getRefreshToken());
+        saveApplicationAccessToken();
+    }
+
+    private void saveUserAccessToken() {
+        Log.d(TAG, "--AUTH TOKEN RESPONSE--");
+        Log.d(TAG, "Access Token: " + mUserAccessToken.getToken());
+        Log.d(TAG, "Refresh Token: " + mUserAccessToken.getRefreshToken());
+
+        SharedPreferences sp = mContext.getSharedPreferences(PREFS_USER_ACCESS_TOKEN, Context.MODE_PRIVATE);
+        sp.edit()
+                .putString(PREF_AUTH_TOKEN, mUserAccessToken.getToken())
+                .putString(PREF_TOKEN_TYPE, mUserAccessToken.getTokenType())
+                .putLong(PREF_EXPIRATION, mUserAccessToken.getExpiration())
+                .putString(PREF_SCOPE, mUserAccessToken.getScope())
+                .putString(PREF_REFRESH_TOKEN, mUserAccessToken.getRefreshToken())
+                .apply();
+    }
+
+    private void saveApplicationAccessToken() {
+        Log.d(TAG, "--AUTH TOKEN RESPONSE--");
+        Log.d(TAG, "Access Token: " + mApplicationAccessToken.getToken());
+        Log.d(TAG, "Refresh Token: " + mApplicationAccessToken.getRefreshToken());
+
+        SharedPreferences sp = mContext.getSharedPreferences(PREFS_APPLICATION_ACCESS_TOKEN, Context.MODE_PRIVATE);
+        sp.edit()
+                .putString(PREF_AUTH_TOKEN, mApplicationAccessToken.getToken())
+                .putString(PREF_TOKEN_TYPE, mApplicationAccessToken.getTokenType())
+                .putLong(PREF_EXPIRATION, mApplicationAccessToken.getExpiration())
+                .putString(PREF_SCOPE, mApplicationAccessToken.getScope())
+                .putString(PREF_REFRESH_TOKEN, mApplicationAccessToken.getRefreshToken())
+                .apply();
+    }
+
+    public void clearSavedUserAccessToken() {
+        mUserAccessToken = null;
+        mContext.getSharedPreferences(PREFS_USER_ACCESS_TOKEN, Context.MODE_PRIVATE)
+                .edit().clear().apply();
+    }
+
+    public void clearSavedApplicationAccessToken() {
+        mApplicationAccessToken = null;
+        mContext.getSharedPreferences(PREFS_APPLICATION_ACCESS_TOKEN, Context.MODE_PRIVATE)
+                .edit().clear().apply();
+    }
+
+    public UserIdentity getUserIdentity() {
+        if (mUserIdentity == null) {
+            mUserIdentity = getSavedUserIdentity();
+        }
+        return mUserIdentity;
+    }
+
+    public UserIdentity getSavedUserIdentity() {
+        SharedPreferences prefs = mContext.getSharedPreferences(PREFS_USER_IDENTITY, Context.MODE_PRIVATE);
+        UserIdentity id = new UserIdentity();
 
         if (prefs.contains(PREF_ID)) {
-            id = new UserIdentity();
             id.hasMail(prefs.getBoolean(PREF_HAS_MAIL, false));
             id.setName(prefs.getString(PREF_NAME, null));
             id.setCreated(prefs.getLong(PREF_CREATED, new Date().getTime()));
@@ -69,13 +208,10 @@ public class UserIdentityInteractor {
             id.setInboxCount(prefs.getInt(PREF_INBOX_COUNT, 0));
         }
 
-        mBus.post(new SavedUserIdentityRetrievedEvent(id));
+        return id;
     }
 
-    @Subscribe
-    public void saveUserIdentity(UserIdentityRetrievedEvent event) {
-        UserIdentity identity = event.getUserIdentity();
-
+    public void saveUserIdentity(UserIdentity identity) {
         Boolean hasMail = identity.hasMail();
         String name = identity.getName();
         Long created = identity.getCreated();
@@ -116,10 +252,10 @@ public class UserIdentityInteractor {
         mBus.post(new UserIdentitySavedEvent(identity));
     }
 
-    @Subscribe
-    public void clearUserIdentity(ClearUserIdentityEvent event) {
-        SharedPreferences prefs = mContext.getSharedPreferences(PREFS_USER_IDENTITY, Context.MODE_PRIVATE);
-        prefs.edit().clear().apply();
-        mBus.post(new UserIdentitySavedEvent(null));
+    public void clearUserIdentity() {
+        mUserIdentity = null;
+        mContext.getSharedPreferences(PREFS_USER_IDENTITY, Context.MODE_PRIVATE)
+                .edit().clear().apply();
+//        mBus.post(new UserIdentitySavedEvent(null));
     }
 }

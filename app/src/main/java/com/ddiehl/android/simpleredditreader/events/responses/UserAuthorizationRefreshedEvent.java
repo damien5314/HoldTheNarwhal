@@ -1,15 +1,15 @@
 package com.ddiehl.android.simpleredditreader.events.responses;
 
 
-import com.ddiehl.reddit.identity.AuthTokenResponse;
+import com.ddiehl.reddit.identity.AuthorizationResponse;
 
 
 public class UserAuthorizationRefreshedEvent {
-    private AuthTokenResponse mResponse;
+    private AuthorizationResponse mResponse;
     private Exception mError;
     private boolean mFailed = false;
 
-    public UserAuthorizationRefreshedEvent(AuthTokenResponse response) {
+    public UserAuthorizationRefreshedEvent(AuthorizationResponse response) {
         mResponse = response;
     }
 
@@ -18,7 +18,7 @@ public class UserAuthorizationRefreshedEvent {
         mFailed = true;
     }
 
-    public AuthTokenResponse getResponse() {
+    public AuthorizationResponse getResponse() {
         return mResponse;
     }
 

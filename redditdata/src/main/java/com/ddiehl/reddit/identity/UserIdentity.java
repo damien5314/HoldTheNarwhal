@@ -5,53 +5,23 @@ import com.google.gson.annotations.SerializedName;
 
 public class UserIdentity {
 
-    @Expose @SerializedName("has_mail")
-    private Boolean hasMail;
-
-    @Expose
-    private String name;
-
-    @Expose
-    private Long created;
-
-    @Expose @SerializedName("hide_from_robots")
-    private Boolean hideFromRobots;
-
-    @Expose @SerializedName("gold_creddits")
-    private Integer goldCreddits;
-
-    @Expose @SerializedName("created_utc")
-    private Long createdUTC;
-
-    @Expose @SerializedName("has_mod_mail")
-    private Boolean hasModMail;
-
-    @Expose @SerializedName("link_karma")
-    private Integer linkKarma;
-
-    @Expose @SerializedName("comment_karma")
-    private Integer commentKarma;
-
-    @Expose @SerializedName("over_18")
-    private Boolean isOver18;
-
-    @Expose @SerializedName("is_gold")
-    private Boolean isGold;
-
-    @Expose @SerializedName("is_mod")
-    private Boolean isMod;
-
-    @Expose @SerializedName("gold_expiration")
-    private Long goldExpiration;
-
-    @Expose @SerializedName("has_verified_email")
-    private Boolean hasVerifiedEmail;
-
-    @Expose
-    private String id;
-
-    @Expose @SerializedName("inbox_count")
-    private Integer inboxCount;
+    // Variables for response from me.json
+    @Expose @SerializedName("has_mail") private Boolean hasMail;
+    @Expose private String name;
+    @Expose private Long created;
+    @Expose @SerializedName("hide_from_robots") private Boolean hideFromRobots;
+    @Expose @SerializedName("gold_creddits") private Integer goldCreddits;
+    @Expose @SerializedName("created_utc") private Long createdUTC;
+    @Expose @SerializedName("has_mod_mail") private Boolean hasModMail;
+    @Expose @SerializedName("link_karma") private Integer linkKarma;
+    @Expose @SerializedName("comment_karma") private Integer commentKarma;
+    @Expose @SerializedName("over_18") private Boolean isOver18;
+    @Expose @SerializedName("is_gold") private Boolean isGold;
+    @Expose @SerializedName("is_mod") private Boolean isMod;
+    @Expose @SerializedName("gold_expiration") private Long goldExpiration;
+    @Expose @SerializedName("has_verified_email") private Boolean hasVerifiedEmail;
+    @Expose private String id;
+    @Expose @SerializedName("inbox_count") private Integer inboxCount;
 
     public Boolean hasMail() {
         return hasMail;

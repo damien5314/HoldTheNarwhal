@@ -14,9 +14,6 @@ import com.squareup.picasso.Picasso;
 public class RedditReaderApplication extends Application {
     private static final String TAG = RedditReaderApplication.class.getSimpleName();
 
-    public static final String USER_AGENT =
-            "android:com.ddiehl.android.simpleredditreader:v0.1 (by /u/damien5314)";
-
     @Override
     public void onCreate() {
         super.onCreate();
@@ -25,8 +22,8 @@ public class RedditReaderApplication extends Application {
         Bus bus = BusProvider.getInstance();
         bus.register(this); // Listen for global events
 
-        UserIdentityInteractor userIdentityInteractor = new UserIdentityInteractor(this);
-        bus.register(userIdentityInteractor);
+//        UserIdentityInteractor userIdentityInteractor = new UserIdentityInteractor(this);
+//        bus.register(userIdentityInteractor);
 
         // Stetho debugging tool
 //        Stetho.initialize(Stetho.newInitializerBuilder(this)

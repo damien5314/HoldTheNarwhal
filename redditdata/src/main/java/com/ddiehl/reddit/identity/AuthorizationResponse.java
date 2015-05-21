@@ -3,32 +3,24 @@ package com.ddiehl.reddit.identity;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class AuthTokenResponse {
-
-// Response format
-//{
-//    "access_token": Your access token,
-//    "token_type": "bearer",
-//    "expires_in": Unix Epoch Seconds,
-//    "scope": A scope string,
-//}
+public class AuthorizationResponse {
 
     @Expose @SerializedName("access_token")
-    private String accessToken;
+    protected String accessToken;
 
     @Expose @SerializedName("token_type")
-    private String tokenType;
+    protected String tokenType;
 
     @Expose @SerializedName("expires_in")
-    private long expiresIn;
+    protected long expiresIn; // seconds
 
-    @Expose
-    private String scope;
+    @Expose @SerializedName("scope")
+    protected String scope;
 
     @Expose @SerializedName("refresh_token")
-    private String refreshToken;
+    protected String refreshToken;
 
-    public String getAuthToken() {
+    public String getToken() {
         return accessToken;
     }
 

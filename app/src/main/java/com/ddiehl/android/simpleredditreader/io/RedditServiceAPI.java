@@ -2,8 +2,9 @@ package com.ddiehl.android.simpleredditreader.io;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
-import com.ddiehl.android.simpleredditreader.RedditReaderApplication;
+import com.ddiehl.android.simpleredditreader.UserIdentityInteractor;
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
 import com.ddiehl.android.simpleredditreader.events.requests.GetUserIdentityEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.HideEvent;
@@ -56,14 +57,14 @@ public class RedditServiceAPI implements RedditService {
     private Context mContext;
     private Bus mBus;
     private RedditAPI mAPI;
+    private UserIdentityInteractor mUserIdentityInteractor;
 
-    private String mAuthToken;
-
-    protected RedditServiceAPI(Context context) {
+    protected RedditServiceAPI(Context context, UserIdentityInteractor userIdentityInteractor) {
         mContext = context.getApplicationContext();
         mBus = BusProvider.getInstance();
         mBus.register(this);
         mAPI = buildApi();
+        mUserIdentityInteractor = userIdentityInteractor;
     }
 
     private RedditAPI buildApi() {
@@ -80,8 +81,8 @@ public class RedditServiceAPI implements RedditService {
                 .setRequestInterceptor(new RequestInterceptor() {
                     @Override
                     public void intercept(RequestFacade request) {
-                        request.addHeader("User-Agent", RedditReaderApplication.USER_AGENT);
-                        request.addHeader("Authorization", "bearer " + mAuthToken);
+                        request.addHeader("User-Agent", RedditService.USER_AGENT);
+                        request.addHeader("Authorization", "bearer " + getAccessToken());
                     }
                 })
                 .build();
@@ -89,8 +90,13 @@ public class RedditServiceAPI implements RedditService {
         return restAdapter.create(RedditAPI.class);
     }
 
-    public void setAuthToken(String token) {
-        mAuthToken = token;
+    private String getAccessToken() {
+        if (mUserIdentityInteractor.hasValidUserAccessToken()) {
+            return mUserIdentityInteractor.getUserAccessToken().getToken();
+        } else if (mUserIdentityInteractor.hasValidApplicationAccessToken()) {
+            return mUserIdentityInteractor.getApplicationAccessToken().getToken();
+        }
+        return null;
     }
 
     @Subscribe
@@ -109,6 +115,17 @@ public class RedditServiceAPI implements RedditService {
                 mBus.post(new UserIdentityRetrievedEvent(error));
             }
         });
+    }
+
+    @Subscribe
+    public void onUserIdentityRetrieved(UserIdentityRetrievedEvent event) {
+        if (event.isFailed()) {
+            return;
+        }
+
+        Toast.makeText(mContext, "User identity retrieved", Toast.LENGTH_SHORT).show();
+        UserIdentity id = event.getUserIdentity();
+        mUserIdentityInteractor.saveUserIdentity(id);
     }
 
     /**
