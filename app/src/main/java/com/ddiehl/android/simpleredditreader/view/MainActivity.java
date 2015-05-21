@@ -45,6 +45,8 @@ public class MainActivity extends ActionBarActivity implements MainView {
     private Bus mBus;
     private IdentityBroker mIdentityBroker;
 
+    private ProgressDialog mProgressBar;
+
     // Navigation drawer
     private View mNavigationDrawer;
     private DrawerLayout mDrawerLayout;
@@ -54,8 +56,6 @@ public class MainActivity extends ActionBarActivity implements MainView {
     private RecyclerView.Adapter mLayoutAdapter;
     private TextView mAccountNameView;
     private View mSignOutView;
-
-    private ProgressDialog mProgressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
