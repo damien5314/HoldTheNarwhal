@@ -15,8 +15,8 @@ import com.squareup.otto.Bus;
 
 import java.util.Date;
 
-public class UserIdentityInteractor {
-    private static final String TAG = UserIdentityInteractor.class.getSimpleName();
+public class IdentityBroker {
+    private static final String TAG = IdentityBroker.class.getSimpleName();
 
     private static final String PREFS_USER_ACCESS_TOKEN = "prefs_user_access_token";
     private static final String PREFS_APPLICATION_ACCESS_TOKEN = "prefs_application_access_token";
@@ -54,7 +54,7 @@ public class UserIdentityInteractor {
     private AccessToken mApplicationAccessToken;
     private UserIdentity mUserIdentity;
 
-    public UserIdentityInteractor(Context context) {
+    public IdentityBroker(Context context) {
         mBus = BusProvider.getInstance();
         mContext = context;
         mUserAccessToken = getSavedUserAccessToken();
@@ -92,28 +92,34 @@ public class UserIdentityInteractor {
 
     public AccessToken getSavedUserAccessToken() {
         SharedPreferences sp =  mContext.getSharedPreferences(PREFS_USER_ACCESS_TOKEN, Context.MODE_PRIVATE);
-        AccessToken token = new UserAccessToken();
 
-        token.setToken(sp.getString(PREF_AUTH_TOKEN, null));
-        token.setTokenType(sp.getString(PREF_TOKEN_TYPE, null));
-        token.setExpiration(sp.getLong(PREF_EXPIRATION, 0));
-        token.setScope(sp.getString(PREF_SCOPE, null));
-        token.setRefreshToken(sp.getString(PREF_REFRESH_TOKEN, null));
-        
-        return token;
+        if (sp.contains(PREF_AUTH_TOKEN)) {
+            AccessToken token = new UserAccessToken();
+            token.setToken(sp.getString(PREF_AUTH_TOKEN, null));
+            token.setTokenType(sp.getString(PREF_TOKEN_TYPE, null));
+            token.setExpiration(sp.getLong(PREF_EXPIRATION, 0));
+            token.setScope(sp.getString(PREF_SCOPE, null));
+            token.setRefreshToken(sp.getString(PREF_REFRESH_TOKEN, null));
+            return token;
+        }
+
+        return null;
     }
 
     public AccessToken getSavedApplicationAccessToken() {
         SharedPreferences sp =  mContext.getSharedPreferences(PREFS_APPLICATION_ACCESS_TOKEN, Context.MODE_PRIVATE);
-        AccessToken token = new ApplicationAccessToken();
 
-        token.setToken(sp.getString(PREF_AUTH_TOKEN, null));
-        token.setTokenType(sp.getString(PREF_TOKEN_TYPE, null));
-        token.setExpiration(sp.getLong(PREF_EXPIRATION, 0));
-        token.setScope(sp.getString(PREF_SCOPE, null));
-        token.setRefreshToken(sp.getString(PREF_REFRESH_TOKEN, null));
+        if (sp.contains(PREF_AUTH_TOKEN)) {
+            AccessToken token = new ApplicationAccessToken();
+            token.setToken(sp.getString(PREF_AUTH_TOKEN, null));
+            token.setTokenType(sp.getString(PREF_TOKEN_TYPE, null));
+            token.setExpiration(sp.getLong(PREF_EXPIRATION, 0));
+            token.setScope(sp.getString(PREF_SCOPE, null));
+            token.setRefreshToken(sp.getString(PREF_REFRESH_TOKEN, null));
+            return token;
+        }
 
-        return token;
+        return null;
     }
 
     public void saveUserAccessTokenResponse(AuthorizationResponse response) {
@@ -187,9 +193,9 @@ public class UserIdentityInteractor {
 
     public UserIdentity getSavedUserIdentity() {
         SharedPreferences prefs = mContext.getSharedPreferences(PREFS_USER_IDENTITY, Context.MODE_PRIVATE);
-        UserIdentity id = new UserIdentity();
 
         if (prefs.contains(PREF_ID)) {
+            UserIdentity id = new UserIdentity();
             id.hasMail(prefs.getBoolean(PREF_HAS_MAIL, false));
             id.setName(prefs.getString(PREF_NAME, null));
             id.setCreated(prefs.getLong(PREF_CREATED, new Date().getTime()));
@@ -206,9 +212,10 @@ public class UserIdentityInteractor {
             id.hasVerifiedEmail(prefs.getBoolean(PREF_HAS_VERIFIED_EMAIL, false));
             id.setId(prefs.getString(PREF_ID, null));
             id.setInboxCount(prefs.getInt(PREF_INBOX_COUNT, 0));
+            return id;
         }
 
-        return id;
+        return null;
     }
 
     public void saveUserIdentity(UserIdentity identity) {
@@ -252,10 +259,10 @@ public class UserIdentityInteractor {
         mBus.post(new UserIdentitySavedEvent(identity));
     }
 
-    public void clearUserIdentity() {
+    public void clearSavedUserIdentity() {
         mUserIdentity = null;
         mContext.getSharedPreferences(PREFS_USER_IDENTITY, Context.MODE_PRIVATE)
                 .edit().clear().apply();
-//        mBus.post(new UserIdentitySavedEvent(null));
+        mBus.post(new UserIdentitySavedEvent(null));
     }
 }

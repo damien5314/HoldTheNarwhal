@@ -4,7 +4,7 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.ddiehl.android.simpleredditreader.UserIdentityInteractor;
+import com.ddiehl.android.simpleredditreader.IdentityBroker;
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
 import com.ddiehl.android.simpleredditreader.events.requests.GetUserIdentityEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.HideEvent;
@@ -57,14 +57,14 @@ public class RedditServiceAPI implements RedditService {
     private Context mContext;
     private Bus mBus;
     private RedditAPI mAPI;
-    private UserIdentityInteractor mUserIdentityInteractor;
+    private IdentityBroker mIdentityBroker;
 
-    protected RedditServiceAPI(Context context, UserIdentityInteractor userIdentityInteractor) {
+    protected RedditServiceAPI(Context context, IdentityBroker identityBroker) {
         mContext = context.getApplicationContext();
         mBus = BusProvider.getInstance();
         mBus.register(this);
         mAPI = buildApi();
-        mUserIdentityInteractor = userIdentityInteractor;
+        mIdentityBroker = identityBroker;
     }
 
     private RedditAPI buildApi() {
@@ -91,10 +91,10 @@ public class RedditServiceAPI implements RedditService {
     }
 
     private String getAccessToken() {
-        if (mUserIdentityInteractor.hasValidUserAccessToken()) {
-            return mUserIdentityInteractor.getUserAccessToken().getToken();
-        } else if (mUserIdentityInteractor.hasValidApplicationAccessToken()) {
-            return mUserIdentityInteractor.getApplicationAccessToken().getToken();
+        if (mIdentityBroker.hasValidUserAccessToken()) {
+            return mIdentityBroker.getUserAccessToken().getToken();
+        } else if (mIdentityBroker.hasValidApplicationAccessToken()) {
+            return mIdentityBroker.getApplicationAccessToken().getToken();
         }
         return null;
     }
@@ -125,7 +125,7 @@ public class RedditServiceAPI implements RedditService {
 
         Toast.makeText(mContext, "User identity retrieved", Toast.LENGTH_SHORT).show();
         UserIdentity id = event.getUserIdentity();
-        mUserIdentityInteractor.saveUserIdentity(id);
+        mIdentityBroker.saveUserIdentity(id);
     }
 
     /**

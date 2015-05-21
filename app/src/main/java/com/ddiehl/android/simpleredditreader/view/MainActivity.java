@@ -25,8 +25,8 @@ import android.widget.TextView;
 
 import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.RedditPreferences;
+import com.ddiehl.android.simpleredditreader.IdentityBroker;
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
-import com.ddiehl.android.simpleredditreader.events.requests.GetSavedUserIdentityEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.UserSignOutEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.SavedUserIdentityRetrievedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.UserIdentitySavedEvent;
@@ -43,6 +43,7 @@ public class MainActivity extends ActionBarActivity implements MainView {
     private static final String DIALOG_CONFIRM_SIGN_OUT = "dialog_confirm_sign_out";
 
     private Bus mBus;
+    private IdentityBroker mIdentityBroker;
 
     // Navigation drawer
     private View mNavigationDrawer;
@@ -69,6 +70,8 @@ public class MainActivity extends ActionBarActivity implements MainView {
 
         RedditService authProxy = RedditServiceAuth.getInstance(this);
         mBus.register(authProxy);
+
+        mIdentityBroker = new IdentityBroker(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -101,7 +104,7 @@ public class MainActivity extends ActionBarActivity implements MainView {
                 dialog.show(getSupportFragmentManager(), DIALOG_CONFIRM_SIGN_OUT);
             }
         });
-        mBus.post(new GetSavedUserIdentityEvent());
+        updateAccountNameView(mIdentityBroker.getUserIdentity());
     }
 
     @Override
