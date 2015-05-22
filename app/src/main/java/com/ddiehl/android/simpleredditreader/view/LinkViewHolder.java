@@ -71,7 +71,7 @@ class LinkViewHolder extends RecyclerView.ViewHolder
             mSelfText.setVisibility(View.GONE);
         }
 
-        String createDateFormatted = BaseUtils.getFormattedDateStringFromUtc(link.getCreatedUtc().longValue());
+        String createDateFormatted = BaseUtils.getFormattedDateStringFromUtc(link.getCreatedUtc().longValue(), mContext);
 
         // Set content for each TextView
         mLinkScore.setText(String.valueOf(String.format("%s points", link.getScore())));

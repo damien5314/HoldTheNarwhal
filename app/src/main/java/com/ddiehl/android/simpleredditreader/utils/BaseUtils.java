@@ -1,8 +1,11 @@
 package com.ddiehl.android.simpleredditreader.utils;
 
 import android.content.Context;
+import android.text.format.DateUtils;
 import android.util.Log;
 import android.widget.Toast;
+
+import com.ddiehl.android.simpleredditreader.R;
 
 import java.io.InputStream;
 import java.util.Date;
@@ -36,11 +39,11 @@ public class BaseUtils {
         }
     }
 
-    public static String getFormattedDateStringFromUtc(long utc) {
-        return getFormattedDateString(new Date(utc*1000));
+    public static String getFormattedDateStringFromUtc(long utc, Context c) {
+        return getFormattedDateString(new Date(utc * 1000), c);
     }
 
-    public static String getFormattedDateString(Date date) {
+    public static String getFormattedDateString(Date date, Context c) {
         long currentTime = System.currentTimeMillis();
         long differential = currentTime - date.getTime();
 
@@ -54,31 +57,27 @@ public class BaseUtils {
         long output;
         String outputString;
         if (years > 0) {
-            output =  years;
-            outputString = " year";
+            output = years;
+            outputString = c.getString(R.string.timespan_year);
         } else if (weeks > 0) {
             output = weeks;
-            outputString = " week";
+            outputString = c.getString(R.string.timespan_weeks);
         } else if (days > 0) {
             output = days;
-            outputString = " day";
+            outputString = c.getString(R.string.timespan_days);
         } else if (hours > 0) {
             output = hours;
-            outputString = " hour";
+            outputString = c.getString(R.string.timespan_hours);
         } else if (minutes > 0) {
             output = minutes;
-            outputString = " minute";
+            outputString = c.getString(R.string.timespan_minutes);
         } else {
             output = seconds;
-            outputString = " second";
+            outputString = c.getString(R.string.timespan_seconds);
         }
 
-        if (output > 1)
-            outputString += "s";
-
-        outputString += " ago";
-
-        return output + outputString;
+//        return String.format(outputString, output);
+        return DateUtils.getRelativeTimeSpanString(date.getTime(), new Date().getTime(), DateUtils.MINUTE_IN_MILLIS).toString();
     }
 
     public static void printResponse(Response response) {

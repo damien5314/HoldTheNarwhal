@@ -56,6 +56,12 @@
     <string name="confirm_sign_out_dialog_ok">OK</string>
     <string name="confirm_sign_out_dialog_cancel">Cancel</string>
     <string name="user_required">Login required</string>
+    <string name="timespan_year">%s years ago</string>
+    <string name="timespan_weeks">%s weeks ago</string>
+    <string name="timespan_days">%s days ago</string>
+    <string name="timespan_hours">%s hours ago</string>
+    <string name="timespan_minutes">%s minutes ago</string>
+    <string name="timespan_seconds">%s seconds ago</string>
 
     <string name="lorem_ipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas at velit ex.
             Aliquam vitae tellus eget dolor rutrum bibendum bibendum ac mauris. Morbi dui sapien, efficitur eget
