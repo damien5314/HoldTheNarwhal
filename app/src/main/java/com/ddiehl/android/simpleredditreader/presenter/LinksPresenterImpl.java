@@ -198,41 +198,41 @@ public class LinksPresenterImpl implements LinksPresenter {
     public void createContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, RedditLink link) {
         mLinkSelected = link;
         mLinksView.showLinkContextMenu(menu, v, menuInfo);
-        menu.findItem(R.id.action_save).setVisible(!link.isSaved());
-        menu.findItem(R.id.action_unsave).setVisible(link.isSaved());
+        menu.findItem(R.id.action_link_save).setVisible(!link.isSaved());
+        menu.findItem(R.id.action_link_unsave).setVisible(link.isSaved());
     }
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_upvote:
+            case R.id.action_link_upvote:
                 upvote();
                 return true;
-            case R.id.action_downvote:
+            case R.id.action_link_downvote:
                 downvote();
                 return true;
-            case R.id.action_show_comments:
+            case R.id.action_link_show_comments:
                 openCommentsForLink();
                 return true;
-            case R.id.action_save:
+            case R.id.action_link_save:
                 saveLink();
                 return true;
-            case R.id.action_unsave:
+            case R.id.action_link_unsave:
                 unsaveLink();
                 return true;
-            case R.id.action_share:
+            case R.id.action_link_share:
                 shareLink();
                 return true;
-            case R.id.action_open_in_browser:
+            case R.id.action_link_open_in_browser:
                 openLinkInBrowser();
                 return true;
-            case R.id.action_open_comments_in_browser:
+            case R.id.action_link_open_comments_in_browser:
                 openCommentsInBrowser();
                 return true;
-            case R.id.action_hide:
+            case R.id.action_link_hide:
                 hideLink();
                 return true;
-            case R.id.action_report:
+            case R.id.action_link_report:
                 reportLink();
                 return true;
             default:

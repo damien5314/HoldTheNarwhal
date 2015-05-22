@@ -1,7 +1,11 @@
 package com.ddiehl.android.simpleredditreader.presenter;
 
 import android.content.Context;
+import android.view.ContextMenu;
+import android.view.MenuItem;
+import android.view.View;
 
+import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.RedditPreferences;
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
 import com.ddiehl.android.simpleredditreader.events.requests.LoadCommentsEvent;
@@ -9,13 +13,13 @@ import com.ddiehl.android.simpleredditreader.events.requests.LoadMoreChildrenEve
 import com.ddiehl.android.simpleredditreader.events.responses.CommentThreadLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.CommentsLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.MoreChildrenLoadedEvent;
+import com.ddiehl.android.simpleredditreader.view.CommentsView;
 import com.ddiehl.reddit.listings.AbsRedditComment;
 import com.ddiehl.reddit.listings.CommentBank;
 import com.ddiehl.reddit.listings.CommentBankList;
 import com.ddiehl.reddit.listings.RedditComment;
 import com.ddiehl.reddit.listings.RedditLink;
 import com.ddiehl.reddit.listings.RedditMoreComments;
-import com.ddiehl.android.simpleredditreader.view.CommentsView;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -34,6 +38,8 @@ public class CommentsPresenterImpl implements CommentsPresenter {
     private String mSubreddit;
     private String mArticleId;
     private String mSort;
+
+    private RedditComment mCommentSelected;
 
     public CommentsPresenterImpl(Context context, CommentsView commentsView, String subreddit, String articleId) {
         mContext = context.getApplicationContext();
@@ -94,6 +100,36 @@ public class CommentsPresenterImpl implements CommentsPresenter {
     @Override
     public int getNumComments() {
         return mCommentBank.getNumVisible();
+    }
+
+    @Override
+    public void createContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, RedditComment comment) {
+        mCommentSelected = comment;
+        mCommentsView.showCommentContextMenu(menu, v, menuInfo);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_comment_upvote:
+                return true;
+            case R.id.action_comment_downvote:
+                return true;
+            case R.id.action_comment_save:
+                return true;
+            case R.id.action_comment_unsave:
+                return true;
+            case R.id.action_comment_share:
+                return true;
+            case R.id.action_comment_open_in_browser:
+                return true;
+            case R.id.action_comment_hide:
+                return true;
+            case R.id.action_comment_report:
+                return true;
+            default:
+                return false;
+        }
     }
 
     @Subscribe

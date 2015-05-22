@@ -103,8 +103,13 @@ public class LinkCommentsFragment extends Fragment implements LinksView, Comment
     @Override
     public void showLinkContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         getActivity().getMenuInflater().inflate(R.menu.link_context_menu, menu);
-        menu.findItem(R.id.action_show_comments).setVisible(false);
-        menu.findItem(R.id.action_hide).setVisible(false);
+        menu.findItem(R.id.action_link_show_comments).setVisible(false);
+        menu.findItem(R.id.action_link_hide).setVisible(false);
+    }
+
+    @Override
+    public void showCommentContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        getActivity().getMenuInflater().inflate(R.menu.comment_context_menu, menu);
     }
 
     @Override
@@ -134,7 +139,7 @@ public class LinkCommentsFragment extends Fragment implements LinksView, Comment
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        return mLinksPresenter.onContextItemSelected(item);
+        return mCommentsPresenter.onContextItemSelected(item) || mLinksPresenter.onContextItemSelected(item);
     }
 
     @Override

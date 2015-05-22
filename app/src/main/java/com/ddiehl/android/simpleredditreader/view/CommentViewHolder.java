@@ -3,6 +3,7 @@ package com.ddiehl.android.simpleredditreader.view;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.view.ContextMenu;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -13,7 +14,12 @@ import com.ddiehl.android.simpleredditreader.presenter.CommentsPresenter;
 import com.ddiehl.android.simpleredditreader.utils.BaseUtils;
 import com.ddiehl.reddit.listings.RedditComment;
 
-class CommentViewHolder extends RecyclerView.ViewHolder {
+class CommentViewHolder extends RecyclerView.ViewHolder
+        implements View.OnClickListener, View.OnCreateContextMenuListener {
+    private static final String TAG = CommentViewHolder.class.getSimpleName();
+
+    private RedditComment mRedditComment;
+
     private View mView;
     private View mCommentDataRow;
     private ImageView mExpanderIcon;
@@ -38,11 +44,18 @@ class CommentViewHolder extends RecyclerView.ViewHolder {
         mTimestampView = (TextView) view.findViewById(R.id.comment_timestamp);
         mBodyView = (TextView) view.findViewById(R.id.comment_body);
 
+        itemView.setOnClickListener(this);
+        mCommentDataRow.setOnClickListener(this);
+        mBodyView.setOnClickListener(this);
+        itemView.setOnCreateContextMenuListener(this);
+
         mContext = view.getContext().getApplicationContext();
         mCommentsPresenter = presenter;
     }
 
     public void bind(final RedditComment comment) {
+        mRedditComment = comment;
+
         // Add padding views to indentation_wrapper based on depth of comment
         int viewMargin = (comment.getDepth() - 2)
                 * (int) mContext.getResources().getDimension(R.dimen.comment_indentation_margin);
@@ -77,12 +90,22 @@ class CommentViewHolder extends RecyclerView.ViewHolder {
                     new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
                             LinearLayout.LayoutParams.WRAP_CONTENT));
         }
+    }
 
-        mCommentDataRow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mCommentsPresenter.toggleThreadVisible(comment);
-            }
-        });
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.comment_data_row:
+                mCommentsPresenter.toggleThreadVisible(mRedditComment);
+                break;
+            default:
+                v.showContextMenu();
+                break;
+        }
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        mCommentsPresenter.createContextMenu(menu, v, menuInfo, mRedditComment);
     }
 }

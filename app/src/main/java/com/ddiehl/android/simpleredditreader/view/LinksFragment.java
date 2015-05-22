@@ -23,6 +23,9 @@ import com.ddiehl.android.simpleredditreader.presenter.LinksPresenter;
 import com.ddiehl.android.simpleredditreader.presenter.LinksPresenterImpl;
 import com.ddiehl.reddit.listings.RedditLink;
 import com.squareup.otto.Bus;
+import com.squareup.otto.Subscribe;
+
+import retrofit.RetrofitError;
 
 public class LinksFragment extends Fragment implements LinksView {
     private static final String TAG = LinksFragment.class.getSimpleName();
@@ -253,5 +256,10 @@ public class LinksFragment extends Fragment implements LinksView {
     @Override
     public void updateAdapter() {
         mLinksAdapter.notifyDataSetChanged();
+    }
+
+    @Subscribe
+    public void onError(RetrofitError error) {
+        dismissSpinner();
     }
 }
