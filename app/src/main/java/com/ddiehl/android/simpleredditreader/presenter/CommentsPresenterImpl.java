@@ -71,7 +71,7 @@ public class CommentsPresenterImpl implements CommentsPresenter {
     }
 
     @Override
-    public void getMoreChildren(RedditMoreComments comment) {
+    public void showMoreChildren(RedditMoreComments comment) {
         mCommentsView.showSpinner(null);
         List<String> children = comment.getChildren();
         mBus.post(new LoadMoreChildrenEvent(mRedditLink, comment, children, mSort));
@@ -130,6 +130,11 @@ public class CommentsPresenterImpl implements CommentsPresenter {
             default:
                 return false;
         }
+    }
+
+    @Override
+    public void navigateToCommentThread(RedditMoreComments comment) {
+        mCommentsView.showToast(R.string.implementation_tbd);
     }
 
     @Subscribe

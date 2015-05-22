@@ -36,14 +36,23 @@ class CommentStubViewHolder extends RecyclerView.ViewHolder {
         int count = comment.getCount();
         if (count == 0) { // continue thread
             mMoreCommentsView.setText(mContext.getString(R.string.continue_thread));
+            mMoreCommentsView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mCommentsPresenter.navigateToCommentThread(comment);
+                    // TODO
+                    // Stubs like this are actually permalinks to the comment itself on reddit.com
+                    // Once the comments-only view is ready we can add the link here
+                }
+            });
         } else { // more comments in current thread
             mMoreCommentsView.setText(String.format(mContext.getString(R.string.more_comments), count));
+            mMoreCommentsView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mCommentsPresenter.showMoreChildren(comment);
+                }
+            });
         }
-        mMoreCommentsView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mCommentsPresenter.getMoreChildren(comment);
-            }
-        });
     }
 }

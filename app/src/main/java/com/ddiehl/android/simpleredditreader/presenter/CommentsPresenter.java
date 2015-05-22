@@ -14,11 +14,12 @@ public interface CommentsPresenter {
     void getComments();
     RedditLink getLink();
     void setLink(RedditLink link);
-    void getMoreChildren(RedditMoreComments comment);
+    void showMoreChildren(RedditMoreComments comment);
     void updateSort(String sort);
     AbsRedditComment getCommentAtPosition(int position);
     void toggleThreadVisible(AbsRedditComment comment);
     int getNumComments();
     void createContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, RedditComment redditComment);
     boolean onContextItemSelected(MenuItem item);
+    void navigateToCommentThread(RedditMoreComments comment);
 }

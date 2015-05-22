@@ -12,9 +12,9 @@ public interface LinksView {
     void dismissSpinner();
     void showToast(int resId);
     void showToast(String string);
+    void updateAdapter();
     void openWebViewForLink(RedditLink link);
     void showCommentsForLink(RedditLink link);
-    void updateAdapter();
     void showLinkContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo);
 
     void openShareView(RedditLink link);
