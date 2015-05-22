@@ -107,14 +107,6 @@
 
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/comment_more"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/secondary_text"
-                android:textSize="@dimen/comment_more_text_size"
-                android:maxLines="1"/>
-
         </LinearLayout>
 
         <TextView

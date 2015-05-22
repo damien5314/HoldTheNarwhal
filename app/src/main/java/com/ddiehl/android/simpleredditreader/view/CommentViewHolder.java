@@ -35,7 +35,6 @@ class CommentViewHolder extends RecyclerView.ViewHolder {
         mSecondaryData = view.findViewById(R.id.comment_secondary_data);
         mScoreView = (TextView) view.findViewById(R.id.comment_score);
         mTimestampView = (TextView) view.findViewById(R.id.comment_timestamp);
-        mMoreCommentsView = (TextView) view.findViewById(R.id.comment_more);
         mBodyView = (TextView) view.findViewById(R.id.comment_body);
 
         mContext = view.getContext().getApplicationContext();
@@ -44,7 +43,7 @@ class CommentViewHolder extends RecyclerView.ViewHolder {
 
     public void bind(final RedditComment comment) {
         // Add padding views to indentation_wrapper based on depth of comment
-        int viewMargin = (comment.getDepth() - 1) * (int) mContext.getResources().getDimension(R.dimen.comment_indentation_margin);
+        int viewMargin = (comment.getDepth() - 2) * (int) mContext.getResources().getDimension(R.dimen.comment_indentation_margin);
         RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) mView.getLayoutParams();
         params.setMargins(viewMargin, 0, 0, 0);
 
@@ -59,7 +58,6 @@ class CommentViewHolder extends RecyclerView.ViewHolder {
 //        }
         mSecondaryData.setVisibility(View.VISIBLE);
         mBodyView.setVisibility(View.VISIBLE);
-        mMoreCommentsView.setVisibility(View.GONE);
         mAuthorView.setText(comment.getAuthor());
         mScoreView.setText(String.format(mContext.getString(R.string.comment_score), comment.getScore()));
         mTimestampView.setText(BaseUtils.getFormattedDateStringFromUtc(comment.getCreateUtc().longValue()));
@@ -76,8 +74,6 @@ class CommentViewHolder extends RecyclerView.ViewHolder {
             @Override
             public void onClick(View v) {
                 mCommentsPresenter.toggleThreadVisible(comment);
-//                mCommentBank.toggleThreadVisible(comment);
-//                mCommentAdapter.notifyDataSetChanged();
             }
         });
     }
