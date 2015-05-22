@@ -22,7 +22,7 @@
     <dimen name="comment_score_text_size">@dimen/comment_secondary_data_text_size</dimen>
     <dimen name="comment_timestamp_text_size">@dimen/comment_secondary_data_text_size</dimen>
     <dimen name="comment_body_text_size">16sp</dimen>
-    <dimen name="comment_more_text_size">16sp</dimen>
+    <dimen name="comment_more_text_size">12sp</dimen>
     <dimen name="comment_author_margin">0dp</dimen> <!-- 5dp -->
     <dimen name="comment_score_margin">0dp</dimen> <!-- 5dp -->
     <dimen name="comment_body_margin">0dp</dimen> <!-- 3dp -->

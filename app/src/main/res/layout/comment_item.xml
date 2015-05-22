@@ -102,6 +102,7 @@
             android:id="@+id/comment_body"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:paddingBottom="5dp"
             android:text="Lorem ipsum dolor sit amet"
             android:textSize="@dimen/comment_body_text_size"
             android:textColor="@color/primary_text"
