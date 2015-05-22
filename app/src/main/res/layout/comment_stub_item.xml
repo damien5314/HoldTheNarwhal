@@ -25,7 +25,7 @@
             android:orientation="horizontal"
             android:layout_width="fill_parent"
             android:layout_height="@dimen/comment_stub_row_height"
-            android:gravity="center_vertical">
+            android:gravity="center">
 
             <TextView
                 android:id="@+id/comment_more"

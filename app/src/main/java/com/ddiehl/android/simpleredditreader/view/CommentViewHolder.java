@@ -5,16 +5,17 @@ import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.ddiehl.android.simpleredditreader.R;
-import com.ddiehl.reddit.listings.RedditComment;
 import com.ddiehl.android.simpleredditreader.presenter.CommentsPresenter;
 import com.ddiehl.android.simpleredditreader.utils.BaseUtils;
+import com.ddiehl.reddit.listings.RedditComment;
 
 class CommentViewHolder extends RecyclerView.ViewHolder {
     private View mView;
-    private View mCommentData;
+    private View mCommentDataRow;
     private ImageView mExpanderIcon;
     private TextView mAuthorView;
     private View mSecondaryData;
@@ -29,7 +30,7 @@ class CommentViewHolder extends RecyclerView.ViewHolder {
     public CommentViewHolder(View view, CommentsPresenter presenter) {
         super(view);
         mView = view;
-        mCommentData = view.findViewById(R.id.comment_data_row);
+        mCommentDataRow = view.findViewById(R.id.comment_data_row);
         mExpanderIcon = (ImageView) view.findViewById(R.id.comment_expander_icon);
         mAuthorView = (TextView) view.findViewById(R.id.comment_author);
         mSecondaryData = view.findViewById(R.id.comment_secondary_data);
@@ -43,7 +44,8 @@ class CommentViewHolder extends RecyclerView.ViewHolder {
 
     public void bind(final RedditComment comment) {
         // Add padding views to indentation_wrapper based on depth of comment
-        int viewMargin = (comment.getDepth() - 2) * (int) mContext.getResources().getDimension(R.dimen.comment_indentation_margin);
+        int viewMargin = (comment.getDepth() - 2)
+                * (int) mContext.getResources().getDimension(R.dimen.comment_indentation_margin);
         RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) mView.getLayoutParams();
         params.setMargins(viewMargin, 0, 0, 0);
 
@@ -65,12 +67,18 @@ class CommentViewHolder extends RecyclerView.ViewHolder {
         if (comment.isCollapsed()) {
             mBodyView.setVisibility(View.GONE);
             mExpanderIcon.setImageResource(R.drawable.ic_thread_expand);
+            mCommentDataRow.setLayoutParams(
+                    new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                            (int) mContext.getResources().getDimension(R.dimen.comment_stub_row_height)));
         } else {
             mBodyView.setVisibility(View.VISIBLE);
             mExpanderIcon.setImageResource(R.drawable.ic_thread_collapse);
+            mCommentDataRow.setLayoutParams(
+                    new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT));
         }
 
-        mCommentData.setOnClickListener(new View.OnClickListener() {
+        mCommentDataRow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mCommentsPresenter.toggleThreadVisible(comment);
