@@ -6,7 +6,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.ddiehl.android.simpleredditreader.R;
@@ -80,15 +79,9 @@ class CommentViewHolder extends RecyclerView.ViewHolder
         if (comment.isCollapsed()) {
             mBodyView.setVisibility(View.GONE);
             mExpanderIcon.setImageResource(R.drawable.ic_thread_expand);
-            mCommentDataRow.setLayoutParams(
-                    new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-                            (int) mContext.getResources().getDimension(R.dimen.comment_stub_row_height)));
         } else {
             mBodyView.setVisibility(View.VISIBLE);
             mExpanderIcon.setImageResource(R.drawable.ic_thread_collapse);
-            mCommentDataRow.setLayoutParams(
-                    new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-                            LinearLayout.LayoutParams.WRAP_CONTENT));
         }
     }
 

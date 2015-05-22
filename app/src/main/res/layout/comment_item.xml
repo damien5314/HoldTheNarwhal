@@ -24,7 +24,7 @@
             android:id="@+id/comment_data_row"
             android:orientation="horizontal"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/comment_stub_row_height"
             android:gravity="center_vertical">
 
             <ImageView
