@@ -11,14 +11,17 @@ import com.ddiehl.android.simpleredditreader.events.requests.HideEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.LoadLinksEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.SaveEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.VoteEvent;
+import com.ddiehl.android.simpleredditreader.events.responses.CommentsLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.HideSubmittedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.LinksLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.SaveSubmittedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.VoteSubmittedEvent;
 import com.ddiehl.android.simpleredditreader.exceptions.UserRequiredException;
 import com.ddiehl.android.simpleredditreader.view.LinksView;
+import com.ddiehl.reddit.Savable;
 import com.ddiehl.reddit.Sort;
 import com.ddiehl.reddit.TimeSpan;
+import com.ddiehl.reddit.Votable;
 import com.ddiehl.reddit.listings.RedditLink;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
@@ -153,14 +156,30 @@ public class LinksPresenterImpl implements LinksPresenter {
     }
 
     @Subscribe
+    public void onCommentsLoaded(CommentsLoadedEvent event) {
+        mLinksView.dismissSpinner();
+        if (event.isFailed()) {
+            return;
+        }
+
+        RedditLink link = event.getLink();
+        mLinks.clear();
+        mLinks.add(link);
+        mLinksView.setTitle(link.getTitle());
+    }
+
+    @Subscribe
     public void onVoteSubmitted(VoteSubmittedEvent event) {
         if (event.isFailed()) {
             mLinksView.showToast(R.string.vote_failed);
             return;
         }
 
-        event.getLink().applyVote(event.getDirection());
-        mLinksView.getListAdapter().notifyItemChanged(mLinks.indexOf(event.getLink()));
+        Votable listing = event.getListing();
+        if (listing instanceof RedditLink) {
+            listing.applyVote(event.getDirection());
+            mLinksView.getListAdapter().notifyItemChanged(mLinks.indexOf(listing));
+        }
     }
 
     @Subscribe
@@ -170,8 +189,11 @@ public class LinksPresenterImpl implements LinksPresenter {
             return;
         }
 
-        event.getLink().isSaved(event.isToSave());
-        mLinksView.getListAdapter().notifyItemChanged(mLinks.indexOf(event.getLink()));
+        Savable listing = event.getListing();
+        if (listing instanceof RedditLink) {
+            listing.isSaved(event.isToSave());
+            mLinksView.getListAdapter().notifyItemChanged(mLinks.indexOf(listing));
+        }
     }
 
     @Subscribe

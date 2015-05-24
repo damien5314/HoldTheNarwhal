@@ -354,14 +354,14 @@ public class RedditServiceAuth implements RedditService {
         if (!mIdentityBroker.hasValidUserAccessToken()) {
             mQueuedEvent = event;
             AccessToken userAccessToken = mIdentityBroker.getUserAccessToken();
-            String refreshToken = null;
             if (userAccessToken != null) {
-                refreshToken = userAccessToken.getRefreshToken();
-            }
-            if (refreshToken != null) {
-                mBus.post(new RefreshUserAccessTokenEvent(refreshToken));
-            } else {
-                mBus.post(new UserRequiredException());
+                String rt = userAccessToken.getRefreshToken();
+                if (rt != null) {
+                    mBus.post(new RefreshUserAccessTokenEvent(rt));
+                } else {
+                    mQueuedEvent = null;
+                    mBus.post(new UserRequiredException());
+                }
             }
         } else {
             mServiceAPI.onVote(event);
@@ -373,14 +373,14 @@ public class RedditServiceAuth implements RedditService {
         if (!mIdentityBroker.hasValidUserAccessToken()) {
             mQueuedEvent = event;
             AccessToken userAccessToken = mIdentityBroker.getUserAccessToken();
-            String refreshToken = null;
             if (userAccessToken != null) {
-                refreshToken = userAccessToken.getRefreshToken();
-            }
-            if (refreshToken != null) {
-                mBus.post(new RefreshUserAccessTokenEvent(refreshToken));
-            } else {
-                mBus.post(new UserRequiredException());
+                String rt = userAccessToken.getRefreshToken();
+                if (rt != null) {
+                    mBus.post(new RefreshUserAccessTokenEvent(rt));
+                } else {
+                    mQueuedEvent = null;
+                    mBus.post(new UserRequiredException());
+                }
             }
         } else {
             mServiceAPI.onSave(event);
@@ -392,14 +392,14 @@ public class RedditServiceAuth implements RedditService {
         if (!mIdentityBroker.hasValidUserAccessToken()) {
             mQueuedEvent = event;
             AccessToken userAccessToken = mIdentityBroker.getUserAccessToken();
-            String refreshToken = null;
             if (userAccessToken != null) {
-                refreshToken = userAccessToken.getRefreshToken();
-            }
-            if (refreshToken != null) {
-                mBus.post(new RefreshUserAccessTokenEvent(refreshToken));
-            } else {
-                mBus.post(new UserRequiredException());
+                String rt = userAccessToken.getRefreshToken();
+                if (rt != null) {
+                    mBus.post(new RefreshUserAccessTokenEvent(rt));
+                } else {
+                    mQueuedEvent = null;
+                    mBus.post(new UserRequiredException());
+                }
             }
         } else {
             mServiceAPI.onHide(event);
@@ -411,14 +411,14 @@ public class RedditServiceAuth implements RedditService {
         if (!mIdentityBroker.hasValidUserAccessToken()) {
             mQueuedEvent = event;
             AccessToken userAccessToken = mIdentityBroker.getUserAccessToken();
-            String refreshToken = null;
             if (userAccessToken != null) {
-                refreshToken = userAccessToken.getRefreshToken();
-            }
-            if (refreshToken != null) {
-                mBus.post(new RefreshUserAccessTokenEvent(refreshToken));
-            } else {
-                mBus.post(new UserRequiredException());
+                String rt = userAccessToken.getRefreshToken();
+                if (rt != null) {
+                    mBus.post(new RefreshUserAccessTokenEvent(rt));
+                } else {
+                    mQueuedEvent = null;
+                    mBus.post(new UserRequiredException());
+                }
             }
         } else {
             mServiceAPI.onReport(event);

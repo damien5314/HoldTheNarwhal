@@ -1,15 +1,15 @@
 package com.ddiehl.android.simpleredditreader.events.responses;
 
-import com.ddiehl.reddit.listings.RedditLink;
+import com.ddiehl.reddit.Votable;
 
 public class VoteSubmittedEvent {
-    private RedditLink mRedditLink;
+    private Votable mListing;
     private int mDirection;
     private Exception mError;
     private boolean mFailed = false;
 
-    public VoteSubmittedEvent(RedditLink link, int direction) {
-        mRedditLink = link;
+    public VoteSubmittedEvent(Votable v, int direction) {
+        mListing = v;
         mDirection = direction;
     }
 
@@ -18,8 +18,8 @@ public class VoteSubmittedEvent {
         mFailed = true;
     }
 
-    public RedditLink getLink() {
-        return mRedditLink;
+    public Votable getListing() {
+        return mListing;
     }
 
     public int getDirection() {

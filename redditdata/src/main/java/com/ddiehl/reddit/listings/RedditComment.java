@@ -1,12 +1,14 @@
 package com.ddiehl.reddit.listings;
 
+import com.ddiehl.reddit.Savable;
+import com.ddiehl.reddit.Votable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
 @SuppressWarnings("unused")
-public class RedditComment extends AbsRedditComment {
+public class RedditComment extends AbsRedditComment implements Votable, Savable {
 
     @Expose
     private RedditCommentData data;
@@ -45,10 +47,17 @@ public class RedditComment extends AbsRedditComment {
         return data.userReports;
     }
 
-    public boolean isSaved() {
+    @Override
+    public Boolean isSaved() {
         return data.saved;
     }
 
+    @Override
+    public void isSaved(boolean b) {
+        data.saved = b;
+    }
+
+    @Override
     public String getId() {
         return data.id;
     }
@@ -145,6 +154,11 @@ public class RedditComment extends AbsRedditComment {
         return data.distinguished;
     }
 
+    @Override
+    public void applyVote(int direction) {
+        // TODO
+    }
+
     public static class RedditCommentData {
 
         @Expose
@@ -160,7 +174,7 @@ public class RedditComment extends AbsRedditComment {
         @Expose @SerializedName("user_reports")
         private List<Object> userReports;
         @Expose
-        private boolean saved;
+        private Boolean saved;
         @Expose
         private String id;
         @Expose

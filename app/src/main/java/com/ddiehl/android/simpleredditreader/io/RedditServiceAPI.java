@@ -25,6 +25,8 @@ import com.ddiehl.android.simpleredditreader.events.responses.UserIdentityRetrie
 import com.ddiehl.android.simpleredditreader.events.responses.VoteSubmittedEvent;
 import com.ddiehl.android.simpleredditreader.exceptions.UserRequiredException;
 import com.ddiehl.android.simpleredditreader.utils.BaseUtils;
+import com.ddiehl.reddit.Savable;
+import com.ddiehl.reddit.Votable;
 import com.ddiehl.reddit.adapters.AbsRedditCommentDeserializer;
 import com.ddiehl.reddit.adapters.ListingDeserializer;
 import com.ddiehl.reddit.adapters.ListingResponseDeserializer;
@@ -251,8 +253,8 @@ public class RedditServiceAPI implements RedditService {
      */
     @Override
     public void onVote(final VoteEvent event) {
-        final RedditLink link = event.getLink();
-        String fullname = String.format("%s_%s", event.getType(), link.getId());
+        final Votable listing = event.getListing();
+        String fullname = String.format("%s_%s", event.getType(), listing.getId());
 
         mAPI.vote(fullname, event.getDirection(), new Callback<Response>() {
             @Override
@@ -264,7 +266,7 @@ public class RedditServiceAPI implements RedditService {
                     if (BaseUtils.inputStreamToString(in).contains("USER_REQUIRED")) {
                         throw new UserRequiredException();
                     } else {
-                        mBus.post(new VoteSubmittedEvent(link, event.getDirection()));
+                        mBus.post(new VoteSubmittedEvent(listing, event.getDirection()));
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -286,13 +288,13 @@ public class RedditServiceAPI implements RedditService {
      */
     @Override
     public void onSave(final SaveEvent event) {
-        final RedditLink link = event.getLink();
+        final Savable listing = event.getListing();
 
         if (event.isToSave()) { // Save
-            mAPI.save(link.getName(), event.getCategory(), new Callback<Response>() {
+            mAPI.save(listing.getName(), event.getCategory(), new Callback<Response>() {
                 @Override
                 public void success(Response response, Response response2) {
-                    saveOpSuccess(response, link, event.getCategory(), true);
+                    saveOpSuccess(response, listing, event.getCategory(), true);
                 }
 
                 @Override
@@ -301,10 +303,10 @@ public class RedditServiceAPI implements RedditService {
                 }
             });
         } else { // Unsave
-            mAPI.unsave(link.getName(), new Callback<Response>() {
+            mAPI.unsave(listing.getName(), new Callback<Response>() {
                 @Override
                 public void success(Response response, Response response2) {
-                    saveOpSuccess(response, link, event.getCategory(), false);
+                    saveOpSuccess(response, listing, event.getCategory(), false);
                 }
 
                 @Override
@@ -315,7 +317,7 @@ public class RedditServiceAPI implements RedditService {
         }
     }
 
-    private void saveOpSuccess(Response response, RedditLink link, String category, boolean toSave) {
+    private void saveOpSuccess(Response response, Savable listing, String category, boolean toSave) {
         BaseUtils.printResponseStatus(response);
 
         try {
@@ -323,7 +325,7 @@ public class RedditServiceAPI implements RedditService {
             if (BaseUtils.inputStreamToString(in).contains("USER_REQUIRED")) {
                 throw new UserRequiredException();
             } else {
-                mBus.post(new SaveSubmittedEvent(link, category, toSave));
+                mBus.post(new SaveSubmittedEvent(listing, category, toSave));
             }
         } catch (Exception e) {
             e.printStackTrace();

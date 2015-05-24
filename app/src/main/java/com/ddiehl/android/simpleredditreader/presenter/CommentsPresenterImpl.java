@@ -13,6 +13,7 @@ import com.ddiehl.android.simpleredditreader.events.requests.LoadMoreChildrenEve
 import com.ddiehl.android.simpleredditreader.events.responses.CommentThreadLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.CommentsLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.MoreChildrenLoadedEvent;
+import com.ddiehl.android.simpleredditreader.events.responses.VoteSubmittedEvent;
 import com.ddiehl.android.simpleredditreader.view.CommentsView;
 import com.ddiehl.reddit.listings.AbsRedditComment;
 import com.ddiehl.reddit.listings.CommentBank;
@@ -145,7 +146,6 @@ public class CommentsPresenterImpl implements CommentsPresenter {
         }
 
         mRedditLink = event.getLink();
-        mCommentsView.setTitle(mRedditLink.getTitle());
 
         List<AbsRedditComment> comments = event.getComments();
         AbsRedditComment.flattenCommentList(comments);
@@ -216,6 +216,17 @@ public class CommentsPresenterImpl implements CommentsPresenter {
             }
         }
 
+        mCommentsView.updateAdapter();
+    }
+
+    @Subscribe
+    public void onVoteSubmitted(VoteSubmittedEvent event) {
+        if (event.isFailed()) {
+            mCommentsView.showToast(R.string.vote_failed);
+            return;
+        }
+
+        event.getListing().applyVote(event.getDirection());
         mCommentsView.updateAdapter();
     }
 }

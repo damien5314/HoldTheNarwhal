@@ -1,20 +1,20 @@
 package com.ddiehl.android.simpleredditreader.events.requests;
 
-import com.ddiehl.reddit.listings.RedditLink;
+import com.ddiehl.reddit.Votable;
 
 public class VoteEvent {
-    private RedditLink mRedditLink;
+    private Votable mListing;
     private String mType;
     private int mDirection;
 
-    public VoteEvent(RedditLink link, String type, int dir) {
-        mRedditLink = link;
+    public VoteEvent(Votable v, String type, int dir) {
+        mListing = v;
         mType = type;
         mDirection = dir;
     }
 
-    public RedditLink getLink() {
-        return mRedditLink;
+    public Votable getListing() {
+        return mListing;
     }
 
     public String getType() {

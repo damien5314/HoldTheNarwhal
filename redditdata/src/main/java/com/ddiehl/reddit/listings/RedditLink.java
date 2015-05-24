@@ -1,5 +1,7 @@
 package com.ddiehl.reddit.listings;
 
+import com.ddiehl.reddit.Savable;
+import com.ddiehl.reddit.Votable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -8,7 +10,7 @@ import java.util.List;
 
 
 @SuppressWarnings("unused")
-public class RedditLink extends Listing {
+public class RedditLink extends Listing implements Votable, Savable {
 
     @Expose
     private RedditLinkData data;
@@ -62,6 +64,7 @@ public class RedditLink extends Listing {
         return data.linkFlairText;
     }
 
+    @Override
     public String getId() {
         return data.id;
     }
@@ -94,7 +97,8 @@ public class RedditLink extends Listing {
         return data.score;
     }
 
-    public void applyVote(Integer direction) {
+    @Override
+    public void applyVote(int direction) {
         int scoreDiff = direction - getLikedScore();
         data.score += scoreDiff;
         switch (direction) {
@@ -149,10 +153,12 @@ public class RedditLink extends Listing {
         return data.secureMediaEmbed;
     }
 
+    @Override
     public Boolean isSaved() {
         return data.saved;
     }
 
+    @Override
     public void isSaved(boolean b) {
         data.saved = b;
     }
@@ -216,7 +222,7 @@ public class RedditLink extends Listing {
     public Integer getUps() {
         return data.ups;
     }
-    
+
     public static class RedditLinkData {
 
         @Expose

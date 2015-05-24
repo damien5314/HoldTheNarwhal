@@ -1,16 +1,16 @@
 package com.ddiehl.android.simpleredditreader.events.responses;
 
-import com.ddiehl.reddit.listings.RedditLink;
+import com.ddiehl.reddit.Savable;
 
 public class SaveSubmittedEvent {
-    private RedditLink mRedditLink;
+    private Savable mListing;
     private String mCategory;
     private boolean mToSave;
     private Exception mError;
     private boolean mFailed = false;
 
-    public SaveSubmittedEvent(RedditLink link, String category, boolean b) {
-        mRedditLink = link;
+    public SaveSubmittedEvent(Savable s, String category, boolean b) {
+        mListing = s;
         mCategory = category;
         mToSave = b;
     }
@@ -20,8 +20,8 @@ public class SaveSubmittedEvent {
         mFailed = true;
     }
 
-    public RedditLink getLink() {
-        return mRedditLink;
+    public Savable getListing() {
+        return mListing;
     }
 
     public boolean isToSave() {
