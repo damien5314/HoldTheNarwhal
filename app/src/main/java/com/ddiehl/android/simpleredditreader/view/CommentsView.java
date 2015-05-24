@@ -7,6 +7,7 @@ public interface CommentsView {
 
     void setTitle(String title);
     void showSpinner(String msg);
+    void showSpinner(int resId);
     void dismissSpinner();
     void showToast(int resId);
     void showToast(String string);

@@ -189,6 +189,11 @@ public class LinkCommentsFragment extends Fragment implements LinksView, Comment
     }
 
     @Override
+    public void showSpinner(int resId) {
+        showSpinner(getString(resId));
+    }
+
+    @Override
     public void dismissSpinner() {
         ((MainActivity) getActivity()).dismissSpinner();
     }

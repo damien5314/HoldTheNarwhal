@@ -217,6 +217,11 @@ public class LinksFragment extends Fragment implements LinksView {
     }
 
     @Override
+    public void showSpinner(int resId) {
+        showSpinner(getString(resId));
+    }
+
+    @Override
     public void dismissSpinner() {
         ((MainActivity) getActivity()).dismissSpinner();
     }

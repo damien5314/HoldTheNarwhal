@@ -62,6 +62,7 @@
     <string name="timespan_hours">%s hours ago</string>
     <string name="timespan_minutes">%s minutes ago</string>
     <string name="timespan_seconds">%s seconds ago</string>
+    <string name="spinner_getting_submissions">Getting submissions&#8230;</string>
 
     <string name="lorem_ipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas at velit ex.
             Aliquam vitae tellus eget dolor rutrum bibendum bibendum ac mauris. Morbi dui sapien, efficitur eget

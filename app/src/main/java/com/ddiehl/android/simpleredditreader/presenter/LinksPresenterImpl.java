@@ -68,7 +68,7 @@ public class LinksPresenterImpl implements LinksPresenter {
             return;
 
         mLinksRequested = true;
-        mLinksView.showSpinner("Getting submissions...");
+        mLinksView.showSpinner(R.string.spinner_getting_submissions);
         String id = mLinks == null || mLinks.size() == 0
                 ? null : "t3_" + mLinks.get(mLinks.size() - 1).getId();
         mBus.post(new LoadLinksEvent(mSubreddit, mSort, mTimeSpan, id));
@@ -211,10 +211,6 @@ public class LinksPresenterImpl implements LinksPresenter {
         } else {
             mLinksView.getListAdapter().notifyItemChanged(mLinks.indexOf(event.getLink()));
         }
-    }
-
-    @Override
-    public void hide(RedditLink link, boolean toHide) {
     }
 
     @Subscribe
