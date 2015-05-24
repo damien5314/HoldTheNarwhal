@@ -59,6 +59,7 @@ public class LinksPresenterImpl implements LinksPresenter {
     @Override
     public void getLinks() {
         mLinks.clear();
+        mHiddenLinks.clear();
         mLinksView.updateAdapter();
         getMoreLinks();
     }
@@ -111,7 +112,6 @@ public class LinksPresenterImpl implements LinksPresenter {
 
     @Override
     public void updateSubreddit(String subreddit) {
-        mLinks.clear();
         mSubreddit = subreddit;
         mSort = Sort.HOT;
         mTimeSpan = TimeSpan.ALL;
@@ -125,7 +125,6 @@ public class LinksPresenterImpl implements LinksPresenter {
             return;
         }
 
-        mLinks.clear();
         mSort = sort;
         getLinks();
     }
@@ -136,7 +135,6 @@ public class LinksPresenterImpl implements LinksPresenter {
             return;
         }
 
-        mLinks.clear();
         mTimeSpan = timespan;
         getLinks();
     }

@@ -342,7 +342,7 @@ public class RedditServiceAPI implements RedditService {
         final RedditLink link = event.getLink();
 
         if (event.isToHide()) { // Hide
-            mAPI.hide(link.getId(), new Callback<Response>() {
+            mAPI.hide(link.getName(), new Callback<Response>() {
                 @Override
                 public void success(Response response, Response response2) {
                     hideOpSuccess(response, link, true);
@@ -354,7 +354,7 @@ public class RedditServiceAPI implements RedditService {
                 }
             });
         } else { // Unhide
-            mAPI.unhide(link.getId(), new Callback<Response>() {
+            mAPI.unhide(link.getName(), new Callback<Response>() {
                 @Override
                 public void success(Response response, Response response2) {
                     hideOpSuccess(response, link, false);
