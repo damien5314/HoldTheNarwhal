@@ -24,18 +24,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ddiehl.android.simpleredditreader.R;
-import com.ddiehl.android.simpleredditreader.RedditPreferences;
-import com.ddiehl.android.simpleredditreader.IdentityBroker;
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
 import com.ddiehl.android.simpleredditreader.events.requests.UserSignOutEvent;
-import com.ddiehl.android.simpleredditreader.events.responses.SavedUserIdentityRetrievedEvent;
-import com.ddiehl.android.simpleredditreader.events.responses.UserIdentitySavedEvent;
-import com.ddiehl.android.simpleredditreader.events.responses.UserSignedOutEvent;
-import com.ddiehl.android.simpleredditreader.io.RedditService;
 import com.ddiehl.android.simpleredditreader.io.RedditServiceAuth;
+import com.ddiehl.android.simpleredditreader.presenter.MainPresenter;
+import com.ddiehl.android.simpleredditreader.presenter.MainPresenterImpl;
 import com.ddiehl.reddit.identity.UserIdentity;
 import com.squareup.otto.Bus;
-import com.squareup.otto.Subscribe;
 
 public class MainActivity extends ActionBarActivity implements MainView {
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -43,7 +38,7 @@ public class MainActivity extends ActionBarActivity implements MainView {
     private static final String DIALOG_CONFIRM_SIGN_OUT = "dialog_confirm_sign_out";
 
     private Bus mBus;
-    private IdentityBroker mIdentityBroker;
+    private MainPresenter mMainPresenter;
 
     private ProgressDialog mProgressBar;
 
@@ -61,17 +56,6 @@ public class MainActivity extends ActionBarActivity implements MainView {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        mBus = BusProvider.getInstance();
-        mBus.register(this);
-
-        RedditPreferences prefs = RedditPreferences.getInstance(this);
-        mBus.register(prefs);
-
-        RedditService authProxy = RedditServiceAuth.getInstance(this);
-        mBus.register(authProxy);
-
-        mIdentityBroker = new IdentityBroker(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -104,7 +88,11 @@ public class MainActivity extends ActionBarActivity implements MainView {
                 dialog.show(getSupportFragmentManager(), DIALOG_CONFIRM_SIGN_OUT);
             }
         });
-        updateAccountNameView(mIdentityBroker.getUserIdentity());
+
+        mMainPresenter = new MainPresenterImpl(this, this);
+
+        mBus = BusProvider.getInstance();
+        mBus.register(mMainPresenter);
     }
 
     @Override
@@ -122,7 +110,7 @@ public class MainActivity extends ActionBarActivity implements MainView {
     @Override
     protected void onStart() {
         super.onStart();
-        mBus.register(this);
+        mBus.register(mMainPresenter);
 
         Fragment currentFragment = getCurrentFragment();
         if (currentFragment == null) {
@@ -133,7 +121,7 @@ public class MainActivity extends ActionBarActivity implements MainView {
     @Override
     protected void onStop() {
         super.onStop();
-        mBus.unregister(this);
+        mBus.unregister(mMainPresenter);
     }
 
     public Fragment getCurrentFragment() {
@@ -182,24 +170,8 @@ public class MainActivity extends ActionBarActivity implements MainView {
         }
     }
 
-    @Subscribe
-    public void onSavedUserIdentityRetrieved(SavedUserIdentityRetrievedEvent event) {
-        UserIdentity identity = event.getUserIdentity();
-        updateAccountNameView(identity);
-    }
-
-    @Subscribe
-    public void onUserIdentitySaved(UserIdentitySavedEvent event) {
-        UserIdentity identity = event.getUserIdentity();
-        updateAccountNameView(identity);
-    }
-
-    @Subscribe
-    public void onUserSignedOut(UserSignedOutEvent event) {
-        updateAccountNameView(null);
-    }
-
-    private void updateAccountNameView(UserIdentity identity) {
+    @Override
+    public void setAccount(UserIdentity identity) {
         String name = identity == null ? getString(R.string.account_name_unauthorized) : identity.getName();
         mAccountNameView.setText(name);
         mSignOutView.setVisibility(identity == null ? View.GONE : View.VISIBLE);
