@@ -1,13 +1,15 @@
 package com.ddiehl.android.simpleredditreader.events.responses;
 
+import com.ddiehl.reddit.listings.RedditLink;
+
 public class VoteSubmittedEvent {
-    private String mId;
+    private RedditLink mRedditLink;
     private int mDirection;
     private Exception mError;
     private boolean mFailed = false;
 
-    public VoteSubmittedEvent(String id, int direction) {
-        mId = id;
+    public VoteSubmittedEvent(RedditLink link, int direction) {
+        mRedditLink = link;
         mDirection = direction;
     }
 
@@ -16,8 +18,8 @@ public class VoteSubmittedEvent {
         mFailed = true;
     }
 
-    public String getId() {
-        return mId;
+    public RedditLink getLink() {
+        return mRedditLink;
     }
 
     public int getDirection() {

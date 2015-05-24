@@ -139,6 +139,6 @@ class LinkViewHolder extends RecyclerView.ViewHolder
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        mLinksPresenter.createContextMenu(menu, v, menuInfo, mRedditLink);
+        mLinksPresenter.showContextMenu(menu, v, menuInfo, mRedditLink);
     }
 }

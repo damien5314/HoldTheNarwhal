@@ -12,6 +12,7 @@ import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.presenter.CommentsPresenter;
 import com.ddiehl.android.simpleredditreader.utils.BaseUtils;
 import com.ddiehl.reddit.listings.RedditComment;
+import com.ddiehl.reddit.listings.RedditLink;
 
 class CommentViewHolder extends RecyclerView.ViewHolder
         implements View.OnClickListener, View.OnCreateContextMenuListener {
@@ -52,7 +53,7 @@ class CommentViewHolder extends RecyclerView.ViewHolder
         mCommentsPresenter = presenter;
     }
 
-    public void bind(final RedditComment comment) {
+    public void bind(final RedditLink link, final RedditComment comment) {
         mRedditComment = comment;
 
         // Add padding views to indentation_wrapper based on depth of comment
@@ -62,14 +63,16 @@ class CommentViewHolder extends RecyclerView.ViewHolder
         params.setMargins(viewMargin, 0, 0, 0);
 
         mAuthorView.setVisibility(View.VISIBLE);
-        // Set background to blue if author is OP
-//        if (comment.getAuthor().equals(mRedditLink.getAuthor())) {
-//            mAuthorView.setBackgroundResource(R.drawable.original_poster_background);
-//            mAuthorView.setTextColor(mContext.getResources().getColor(R.color.op_text));
-//        } else { // Else, set it to transparent
-//            mAuthorView.setBackgroundDrawable(null);
-//            mAuthorView.setTextColor(mContext.getResources().getColor(R.color.secondary_text));
-//        }
+        if (link != null) {
+            // Set background to blue if author is OP
+            if (comment.getAuthor().equals(link.getAuthor())) {
+                mAuthorView.setBackgroundResource(R.drawable.original_poster_background);
+                mAuthorView.setTextColor(mContext.getResources().getColor(R.color.op_text));
+            } else { // Else, set it to transparent
+                mAuthorView.setBackgroundDrawable(null);
+                mAuthorView.setTextColor(mContext.getResources().getColor(R.color.secondary_text));
+            }
+        }
         mSecondaryData.setVisibility(View.VISIBLE);
         mBodyView.setVisibility(View.VISIBLE);
         mAuthorView.setText(comment.getAuthor());
@@ -83,6 +86,10 @@ class CommentViewHolder extends RecyclerView.ViewHolder
             mBodyView.setVisibility(View.VISIBLE);
             mExpanderIcon.setImageResource(R.drawable.ic_thread_collapse);
         }
+    }
+
+    public void bind(final RedditComment comment) {
+        bind(null, comment);
     }
 
     @Override

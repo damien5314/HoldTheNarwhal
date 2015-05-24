@@ -1,23 +1,25 @@
 package com.ddiehl.android.simpleredditreader.events.responses;
 
+import com.ddiehl.reddit.listings.RedditLink;
+
 public class HideSubmittedEvent {
-    private String mId;
+    private RedditLink mRedditLink;
     private boolean mToHide;
-    private Exception mRetrofitError;
+    private Exception mError;
     private boolean mFailed = false;
 
-    public HideSubmittedEvent(String id, boolean toHide) {
-        mId = id;
+    public HideSubmittedEvent(RedditLink link, boolean toHide) {
+        mRedditLink = link;
         mToHide = toHide;
     }
 
     public HideSubmittedEvent(Exception error) {
-        mRetrofitError = error;
+        mError = error;
         mFailed = true;
     }
 
-    public String getId() {
-        return mId;
+    public RedditLink getLink() {
+        return mRedditLink;
     }
 
     public boolean isToHide() {
@@ -25,7 +27,7 @@ public class HideSubmittedEvent {
     }
 
     public Exception getError() {
-        return mRetrofitError;
+        return mError;
     }
 
     public boolean isFailed() {

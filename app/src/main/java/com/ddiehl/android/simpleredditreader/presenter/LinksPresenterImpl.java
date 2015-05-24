@@ -163,9 +163,10 @@ public class LinksPresenterImpl implements LinksPresenter {
     public void onVoteSubmitted(VoteSubmittedEvent event) {
         if (event.isFailed()) {
             mLinksView.showToast(R.string.vote_failed);
+            return;
         }
 
-        mLinkSelected.applyVote(event.getDirection());
+        event.getLink().applyVote(event.getDirection());
         mLinksView.updateAdapter();
     }
 
@@ -173,9 +174,10 @@ public class LinksPresenterImpl implements LinksPresenter {
     public void onSaveSubmitted(SaveSubmittedEvent event) {
         if (event.isFailed()) {
             mLinksView.showToast(R.string.save_failed);
+            return;
         }
 
-        mLinkSelected.isSaved(event.isToSave());
+        event.getLink().isSaved(event.isToSave());
         mLinksView.updateAdapter();
     }
 
@@ -183,10 +185,27 @@ public class LinksPresenterImpl implements LinksPresenter {
     public void onHideSubmitted(HideSubmittedEvent event) {
         if (event.isFailed()) {
             mLinksView.showToast(R.string.hide_failed);
+            return;
         }
 
-        hide(mLinkSelected, event.isToHide());
+        hide(event.getLink(), event.isToHide());
         mLinksView.updateAdapter();
+    }
+
+    @Override
+    public void hide(RedditLink link, boolean toHide) {
+        if (toHide) {
+            mHiddenLinks.add(link.getId());
+            mLinksView.updateAdapter();
+        } else {
+            mHiddenLinks.remove(link.getId());
+            mLinksView.updateAdapter();
+        }
+    }
+
+    @Override
+    public boolean isHidden(RedditLink link) {
+        return mHiddenLinks.contains(link.getId());
     }
 
     @Subscribe
@@ -195,7 +214,7 @@ public class LinksPresenterImpl implements LinksPresenter {
     }
 
     @Override
-    public void createContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, RedditLink link) {
+    public void showContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, RedditLink link) {
         mLinkSelected = link;
         mLinksView.showLinkContextMenu(menu, v, menuInfo);
         menu.findItem(R.id.action_link_save).setVisible(!link.isSaved());
@@ -206,34 +225,34 @@ public class LinksPresenterImpl implements LinksPresenter {
     public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_link_upvote:
-                upvote();
+                upvote(mLinkSelected);
                 return true;
             case R.id.action_link_downvote:
-                downvote();
+                downvote(mLinkSelected);
                 return true;
             case R.id.action_link_show_comments:
-                openCommentsForLink();
+                openCommentsForLink(mLinkSelected);
                 return true;
             case R.id.action_link_save:
-                saveLink();
+                saveLink(mLinkSelected);
                 return true;
             case R.id.action_link_unsave:
-                unsaveLink();
+                unsaveLink(mLinkSelected);
                 return true;
             case R.id.action_link_share:
-                shareLink();
+                shareLink(mLinkSelected);
                 return true;
             case R.id.action_link_open_in_browser:
-                openLinkInBrowser();
+                openLinkInBrowser(mLinkSelected);
                 return true;
             case R.id.action_link_open_comments_in_browser:
-                openCommentsInBrowser();
+                openCommentsInBrowser(mLinkSelected);
                 return true;
             case R.id.action_link_hide:
-                hideLink();
+                hideLink(mLinkSelected);
                 return true;
             case R.id.action_link_report:
-                reportLink();
+                reportLink(mLinkSelected);
                 return true;
             default:
                 return false;
@@ -257,65 +276,45 @@ public class LinksPresenterImpl implements LinksPresenter {
         mLinksView.showCommentsForLink(link);
     }
 
-    @Override
-    public void hide(RedditLink link, boolean toHide) {
-        if (toHide) {
-            mHiddenLinks.add(link.getId());
-            mLinksView.updateAdapter();
-        } else {
-            mHiddenLinks.remove(link.getId());
-            mLinksView.updateAdapter();
-        }
+    private void upvote(RedditLink link) {
+        int dir = (link.isLiked() == null || !link.isLiked()) ? 1 : 0;
+        mBus.post(new VoteEvent(link, "t3", dir));
     }
 
-    @Override
-    public boolean isHidden(RedditLink link) {
-        return mHiddenLinks.contains(link.getId());
+    private void downvote(RedditLink link) {
+        int dir = (link.isLiked() == null || link.isLiked()) ? -1 : 0;
+        mBus.post(new VoteEvent(link, "t3", dir));
     }
 
-    private void openCommentsForLink() {
-        openCommentsForLink(mLinkSelected);
+    private void saveLink(RedditLink link) {
+        mBus.post(new SaveEvent(link, null, true));
     }
 
-    private void upvote() {
-        int dir = (mLinkSelected.isLiked() == null || !mLinkSelected.isLiked()) ? 1 : 0;
-        mBus.post(new VoteEvent(mLinkSelected.getKind(), mLinkSelected.getId(), dir));
+    private void unsaveLink(RedditLink link) {
+        mBus.post(new SaveEvent(link, null, false));
     }
 
-    private void downvote() {
-        int dir = (mLinkSelected.isLiked() == null || mLinkSelected.isLiked()) ? -1 : 0;
-        mBus.post(new VoteEvent(mLinkSelected.getKind(), mLinkSelected.getId(), dir));
+    private void shareLink(RedditLink link) {
+        mLinksView.openShareView(link);
     }
 
-    private void saveLink() {
-        mBus.post(new SaveEvent(mLinkSelected.getName(), null, true));
+    private void openLinkInBrowser(RedditLink link) {
+        mLinksView.openLinkInBrowser(link);
     }
 
-    private void unsaveLink() {
-        mBus.post(new SaveEvent(mLinkSelected.getName(), null, false));
+    private void openCommentsInBrowser(RedditLink link) {
+        mLinksView.openCommentsInBrowser(link);
     }
 
-    private void shareLink() {
-        mLinksView.openShareView(mLinkSelected);
+    private void hideLink(RedditLink link) {
+        mBus.post(new HideEvent(link, true));
     }
 
-    private void openLinkInBrowser() {
-        mLinksView.openLinkInBrowser(mLinkSelected);
+    private void unhideLink(RedditLink link) {
+        mBus.post(new HideEvent(link, false));
     }
 
-    private void openCommentsInBrowser() {
-        mLinksView.openCommentsInBrowser(mLinkSelected);
-    }
-
-    private void hideLink() {
-        mBus.post(new HideEvent(mLinkSelected.getName(), true));
-    }
-
-    private void unhideLink() {
-        mBus.post(new HideEvent(mLinkSelected.getName(), false));
-    }
-
-    private void reportLink() {
+    private void reportLink(RedditLink link) {
 
     }
 }

@@ -11,6 +11,5 @@ public interface CommentsView {
     void showToast(int resId);
     void showToast(String string);
     void updateAdapter();
-    void showLinkContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo);
     void showCommentContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo);
 }

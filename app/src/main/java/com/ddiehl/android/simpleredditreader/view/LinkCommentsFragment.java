@@ -19,11 +19,11 @@ import android.widget.Toast;
 
 import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
-import com.ddiehl.reddit.listings.RedditLink;
 import com.ddiehl.android.simpleredditreader.presenter.CommentsPresenter;
 import com.ddiehl.android.simpleredditreader.presenter.CommentsPresenterImpl;
 import com.ddiehl.android.simpleredditreader.presenter.LinksPresenter;
 import com.ddiehl.android.simpleredditreader.presenter.LinksPresenterImpl;
+import com.ddiehl.reddit.listings.RedditLink;
 import com.squareup.otto.Bus;
 
 public class LinkCommentsFragment extends Fragment implements LinksView, CommentsView {
@@ -139,7 +139,7 @@ public class LinkCommentsFragment extends Fragment implements LinksView, Comment
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        return mCommentsPresenter.onContextItemSelected(item) || mLinksPresenter.onContextItemSelected(item);
+        return mLinksPresenter.onContextItemSelected(item) || mCommentsPresenter.onContextItemSelected(item);
     }
 
     @Override

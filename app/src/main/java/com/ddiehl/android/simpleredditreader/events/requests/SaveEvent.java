@@ -1,18 +1,20 @@
 package com.ddiehl.android.simpleredditreader.events.requests;
 
+import com.ddiehl.reddit.listings.RedditLink;
+
 public class SaveEvent {
-    private String mId;
+    private RedditLink mRedditLink;
     private String mCategory;
     private boolean mToSave;
 
-    public SaveEvent(String id, String category, boolean save) {
-        mId = id;
+    public SaveEvent(RedditLink link, String category, boolean save) {
+        mRedditLink = link;
         mCategory = category;
         mToSave = save;
     }
 
-    public String getId() {
-        return mId;
+    public RedditLink getLink() {
+        return mRedditLink;
     }
 
     public String getCategory() {

@@ -250,12 +250,11 @@ public class RedditServiceAPI implements RedditService {
      * Submits a vote on a link or comment
      */
     @Override
-    public void onVote(VoteEvent event) {
-        final String type = event.getType();
-        final String id = event.getId();
-        String fullname = String.format("%s_%s", type, id);
-        final int direction = event.getDirection();
-        mAPI.vote(fullname, direction, new Callback<Response>() {
+    public void onVote(final VoteEvent event) {
+        final RedditLink link = event.getLink();
+        String fullname = String.format("%s_%s", event.getType(), link.getId());
+
+        mAPI.vote(fullname, event.getDirection(), new Callback<Response>() {
             @Override
             public void success(Response response, Response response2) {
                 BaseUtils.printResponseStatus(response);
@@ -265,7 +264,7 @@ public class RedditServiceAPI implements RedditService {
                     if (BaseUtils.inputStreamToString(in).contains("USER_REQUIRED")) {
                         throw new UserRequiredException();
                     } else {
-                        mBus.post(new VoteSubmittedEvent(id, direction));
+                        mBus.post(new VoteSubmittedEvent(link, event.getDirection()));
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -286,16 +285,14 @@ public class RedditServiceAPI implements RedditService {
      * (un)Saves a link or comment
      */
     @Override
-    public void onSave(SaveEvent event) {
-        final String id = event.getId();
-        final String category = event.getCategory();
-        final boolean toSave = event.isToSave();
+    public void onSave(final SaveEvent event) {
+        final RedditLink link = event.getLink();
 
-        if (toSave) { // Save
-            mAPI.save(id, category, new Callback<Response>() {
+        if (event.isToSave()) { // Save
+            mAPI.save(link.getName(), event.getCategory(), new Callback<Response>() {
                 @Override
                 public void success(Response response, Response response2) {
-                    saveOpSuccess(response, response2, id, toSave);
+                    saveOpSuccess(response, link, event.getCategory(), true);
                 }
 
                 @Override
@@ -304,10 +301,10 @@ public class RedditServiceAPI implements RedditService {
                 }
             });
         } else { // Unsave
-            mAPI.unsave(id, new Callback<Response>() {
+            mAPI.unsave(link.getName(), new Callback<Response>() {
                 @Override
                 public void success(Response response, Response response2) {
-                    saveOpSuccess(response, response2, id, toSave);
+                    saveOpSuccess(response, link, event.getCategory(), false);
                 }
 
                 @Override
@@ -318,7 +315,7 @@ public class RedditServiceAPI implements RedditService {
         }
     }
 
-    private void saveOpSuccess(Response response, Response response2, String id, boolean toSave) {
+    private void saveOpSuccess(Response response, RedditLink link, String category, boolean toSave) {
         BaseUtils.printResponseStatus(response);
 
         try {
@@ -326,7 +323,7 @@ public class RedditServiceAPI implements RedditService {
             if (BaseUtils.inputStreamToString(in).contains("USER_REQUIRED")) {
                 throw new UserRequiredException();
             } else {
-                mBus.post(new SaveSubmittedEvent(id, toSave));
+                mBus.post(new SaveSubmittedEvent(link, category, toSave));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -341,15 +338,14 @@ public class RedditServiceAPI implements RedditService {
     }
 
     @Override
-    public void onHide(HideEvent event) {
-        final String id = event.getId();
-        final boolean toHide = event.isToHide();
+    public void onHide(final HideEvent event) {
+        final RedditLink link = event.getLink();
 
-        if (toHide) { // Hide
-            mAPI.hide(id, new Callback<Response>() {
+        if (event.isToHide()) { // Hide
+            mAPI.hide(link.getId(), new Callback<Response>() {
                 @Override
                 public void success(Response response, Response response2) {
-                    hideOpSuccess(response, response2, id, toHide);
+                    hideOpSuccess(response, link, true);
                 }
 
                 @Override
@@ -358,10 +354,10 @@ public class RedditServiceAPI implements RedditService {
                 }
             });
         } else { // Unhide
-            mAPI.unhide(id, new Callback<Response>() {
+            mAPI.unhide(link.getId(), new Callback<Response>() {
                 @Override
                 public void success(Response response, Response response2) {
-                    hideOpSuccess(response, response2, id, toHide);
+                    hideOpSuccess(response, link, false);
                 }
 
                 @Override
@@ -373,11 +369,11 @@ public class RedditServiceAPI implements RedditService {
     }
 
     @Override
-    public void onReport(ReportEvent event) {
+    public void onReport(final ReportEvent event) {
         // TODO
     }
 
-    private void hideOpSuccess(Response response, Response response2, String id, boolean toHide) {
+    private void hideOpSuccess(Response response, RedditLink link, boolean toHide) {
         BaseUtils.printResponseStatus(response);
 
         try {
@@ -385,7 +381,7 @@ public class RedditServiceAPI implements RedditService {
             if (BaseUtils.inputStreamToString(in).contains("USER_REQUIRED")) {
                 throw new UserRequiredException();
             } else {
-                mBus.post(new HideSubmittedEvent(id, toHide));
+                mBus.post(new HideSubmittedEvent(link, toHide));
             }
         } catch (Exception e) {
             e.printStackTrace();
