@@ -24,9 +24,7 @@ import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class LinksPresenterImpl implements LinksPresenter {
     private static final String TAG = LinksPresenterImpl.class.getSimpleName();
@@ -34,7 +32,6 @@ public class LinksPresenterImpl implements LinksPresenter {
     private Context mContext;
     private Bus mBus;
     private List<RedditLink> mLinks;
-    private Set<String> mHiddenLinks;
     private LinksView mLinksView;
 
     private String mSubreddit;
@@ -48,7 +45,6 @@ public class LinksPresenterImpl implements LinksPresenter {
         mContext = context.getApplicationContext();
         mLinksView = view;
         mLinks = new ArrayList<>();
-        mHiddenLinks = new HashSet<>();
         mBus = BusProvider.getInstance();
 
         mSubreddit = subreddit;
@@ -59,8 +55,7 @@ public class LinksPresenterImpl implements LinksPresenter {
     @Override
     public void getLinks() {
         mLinks.clear();
-        mHiddenLinks.clear();
-        mLinksView.updateAdapter();
+        mLinksView.getListAdapter().notifyDataSetChanged();
         getMoreLinks();
     }
 
@@ -152,7 +147,7 @@ public class LinksPresenterImpl implements LinksPresenter {
         }
 
         mLinks.addAll(event.getLinks());
-        mLinksView.updateAdapter();
+        mLinksView.getListAdapter().notifyDataSetChanged();
         updateTitle();
         mLinksRequested = false;
     }
@@ -165,45 +160,39 @@ public class LinksPresenterImpl implements LinksPresenter {
         }
 
         event.getLink().applyVote(event.getDirection());
-        mLinksView.updateAdapter();
+        mLinksView.getListAdapter().notifyItemChanged(mLinks.indexOf(event.getLink()));
     }
 
     @Subscribe
-    public void onSaveSubmitted(SaveSubmittedEvent event) {
+    public void onLinkSaved(SaveSubmittedEvent event) {
         if (event.isFailed()) {
             mLinksView.showToast(R.string.save_failed);
             return;
         }
 
         event.getLink().isSaved(event.isToSave());
-        mLinksView.updateAdapter();
+        mLinksView.getListAdapter().notifyItemChanged(mLinks.indexOf(event.getLink()));
     }
 
     @Subscribe
-    public void onHideSubmitted(HideSubmittedEvent event) {
+    public void onLinkHidden(HideSubmittedEvent event) {
         if (event.isFailed()) {
             mLinksView.showToast(R.string.hide_failed);
             return;
         }
 
-        hide(event.getLink(), event.isToHide());
-        mLinksView.updateAdapter();
-    }
-
-    @Override
-    public void hide(RedditLink link, boolean toHide) {
-        if (toHide) {
-            mHiddenLinks.add(link.getId());
-            mLinksView.updateAdapter();
+        int pos = mLinks.indexOf(event.getLink());
+        if (event.isToHide()) {
+            mLinksView.showToast(R.string.link_hidden);
+            mLinks.remove(pos);
+            mLinksView.getListAdapter().notifyItemRemoved(mLinks.indexOf(event.getLink()));
         } else {
-            mHiddenLinks.remove(link.getId());
-            mLinksView.updateAdapter();
+            mLinksView.getListAdapter().notifyItemChanged(mLinks.indexOf(event.getLink()));
         }
     }
 
     @Override
-    public boolean isHidden(RedditLink link) {
-        return mHiddenLinks.contains(link.getId());
+    public void hide(RedditLink link, boolean toHide) {
     }
 
     @Subscribe

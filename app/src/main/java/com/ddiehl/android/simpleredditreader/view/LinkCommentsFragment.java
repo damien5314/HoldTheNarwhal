@@ -204,6 +204,11 @@ public class LinkCommentsFragment extends Fragment implements LinksView, Comment
     }
 
     @Override
+    public RecyclerView.Adapter<RecyclerView.ViewHolder> getListAdapter() {
+        return mLinkCommentsAdapter;
+    }
+
+    @Override
     public void setTitle(String title) {
         getActivity().setTitle(title);
     }

@@ -232,6 +232,11 @@ public class LinksFragment extends Fragment implements LinksView {
     }
 
     @Override
+    public RecyclerView.Adapter<RecyclerView.ViewHolder> getListAdapter() {
+        return mLinksAdapter;
+    }
+
+    @Override
     public void openWebViewForLink(RedditLink link) {
         ((MainActivity) getActivity()).openWebViewForURL(link.getUrl());
     }
@@ -251,11 +256,6 @@ public class LinksFragment extends Fragment implements LinksView {
 
     public void updateSubreddit(String subreddit) {
         mLinksPresenter.updateSubreddit(subreddit);
-    }
-
-    @Override
-    public void updateAdapter() {
-        mLinksAdapter.notifyDataSetChanged();
     }
 
     @Subscribe

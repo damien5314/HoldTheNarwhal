@@ -70,5 +70,6 @@
             Vestibulum molestie auctor maximus. Ut euismod ipsum velit, eu iaculis quam fermentum blandit.</string>
     <string name="action_reply">reply</string>
     <string name="implementation_tbd">Not yet implemented</string>
+    <string name="link_hidden">Link hidden</string>
 
 </resources>

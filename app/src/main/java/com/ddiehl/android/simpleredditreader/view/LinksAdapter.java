@@ -10,7 +10,7 @@ import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.reddit.listings.RedditLink;
 import com.ddiehl.android.simpleredditreader.presenter.LinksPresenter;
 
-public class LinksAdapter extends RecyclerView.Adapter<LinkViewHolder> {
+public class LinksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private LinksPresenter mLinksPresenter;
 
@@ -19,16 +19,16 @@ public class LinksAdapter extends RecyclerView.Adapter<LinkViewHolder> {
     }
 
     @Override
-    public LinkViewHolder onCreateViewHolder(ViewGroup parent, int i) {
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int i) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.link_item, parent, false);
         return new LinkViewHolder(view, mLinksPresenter);
     }
 
     @Override
-    public void onBindViewHolder(LinkViewHolder linkHolder, int i) {
+    public void onBindViewHolder(RecyclerView.ViewHolder linkHolder, int i) {
         RedditLink link = mLinksPresenter.getLink(i);
-        linkHolder.bind(link, false);
+        (((LinkViewHolder) linkHolder)).bind(link, false);
     }
 
     @Override

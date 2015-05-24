@@ -1,5 +1,6 @@
 package com.ddiehl.android.simpleredditreader.view;
 
+import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu;
 import android.view.View;
 
@@ -12,7 +13,7 @@ public interface LinksView {
     void dismissSpinner();
     void showToast(int resId);
     void showToast(String string);
-    void updateAdapter();
+    RecyclerView.Adapter<RecyclerView.ViewHolder> getListAdapter();
     void openWebViewForLink(RedditLink link);
     void showCommentsForLink(RedditLink link);
     void showLinkContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo);
@@ -20,4 +21,5 @@ public interface LinksView {
     void openShareView(RedditLink link);
     void openLinkInBrowser(RedditLink link);
     void openCommentsInBrowser(RedditLink link);
+
 }
