@@ -1,7 +1,6 @@
 package com.ddiehl.android.simpleredditreader.view;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -13,20 +12,13 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
 import com.ddiehl.android.simpleredditreader.events.requests.UserSignOutEvent;
-import com.ddiehl.android.simpleredditreader.io.RedditServiceAuth;
 import com.ddiehl.android.simpleredditreader.presenter.MainPresenter;
 import com.ddiehl.android.simpleredditreader.presenter.MainPresenterImpl;
 import com.ddiehl.reddit.identity.UserIdentity;
@@ -72,8 +64,6 @@ public class MainActivity extends ActionBarActivity implements MainView {
                 new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST));
         mLayoutManager = new LinearLayoutManager(this);
         mNavigationDrawerListView.setLayoutManager(mLayoutManager);
-        mLayoutAdapter = new NavDrawerItemAdapter();
-        mNavigationDrawerListView.setAdapter(mLayoutAdapter);
 
         // Set onClick to null to intercept click events from background
         mNavigationDrawer = findViewById(R.id.navigation_drawer);
@@ -89,10 +79,11 @@ public class MainActivity extends ActionBarActivity implements MainView {
             }
         });
 
+        mBus = BusProvider.getInstance();
         mMainPresenter = new MainPresenterImpl(this, this);
 
-        mBus = BusProvider.getInstance();
-        mBus.register(mMainPresenter);
+        mLayoutAdapter = new NavDrawerItemAdapter(mMainPresenter);
+        mNavigationDrawerListView.setAdapter(mLayoutAdapter);
     }
 
     @Override
@@ -112,7 +103,8 @@ public class MainActivity extends ActionBarActivity implements MainView {
         super.onStart();
         mBus.register(mMainPresenter);
 
-        Fragment currentFragment = getCurrentFragment();
+        FragmentManager fm = getSupportFragmentManager();
+        Fragment currentFragment = fm.findFragmentById(R.id.fragment_container);
         if (currentFragment == null) {
             showSubreddit(null);
         }
@@ -122,27 +114,6 @@ public class MainActivity extends ActionBarActivity implements MainView {
     protected void onStop() {
         super.onStop();
         mBus.unregister(mMainPresenter);
-    }
-
-    public Fragment getCurrentFragment() {
-        FragmentManager fm = getSupportFragmentManager();
-        return fm.findFragmentById(R.id.fragment_container);
-    }
-
-    public void showSubreddit(String subreddit) {
-        FragmentManager fm = getSupportFragmentManager();
-        Fragment currentFragment = fm.findFragmentById(R.id.fragment_container);
-        // If the current fragment is a LinksFragment, just update the subreddit
-        // Else, swap in a LinksFragment
-        if (currentFragment instanceof LinksFragment) {
-            ((LinksFragment) currentFragment).updateSubreddit(subreddit);
-        } else {
-            Fragment newFragment = LinksFragment.newInstance(subreddit);
-            fm.beginTransaction()
-                    .replace(R.id.fragment_container, newFragment)
-                    .addToBackStack(null)
-                    .commit();
-        }
     }
 
     public void openWebViewForURL(String url) {
@@ -164,10 +135,30 @@ public class MainActivity extends ActionBarActivity implements MainView {
         mProgressBar.show();
     }
 
+    @Override
+    public void showSpinner(int resId) {
+        showSpinner(getString(resId));
+    }
+
     public void dismissSpinner() {
         if (mProgressBar != null && mProgressBar.isShowing()) {
             mProgressBar.dismiss();
         }
+    }
+
+    @Override
+    public void showToast(int resId) {
+        showToast(getString(resId));
+    }
+
+    @Override
+    public void showToast(String s) {
+        Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void closeNavigationDrawer() {
+        mDrawerLayout.closeDrawer(GravityCompat.START);
     }
 
     @Override
@@ -182,168 +173,21 @@ public class MainActivity extends ActionBarActivity implements MainView {
         mBus.post(new UserSignOutEvent());
     }
 
-    private class NavDrawerItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-        private static final int TYPE_EDIT_TEXT = 0;
-        private static final int TYPE_TEXT_VIEW = 1;
-
-        @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            switch (viewType) {
-                case TYPE_EDIT_TEXT:
-                    View v = LayoutInflater.from(parent.getContext())
-                            .inflate(R.layout.navigation_drawer_edit_text_row, parent, false);
-                    return new NavEditTextViewHolder(v);
-                case TYPE_TEXT_VIEW:
-                    v = LayoutInflater.from(parent.getContext())
-                            .inflate(R.layout.navigation_drawer_text_view_row, parent, false);
-                    return new NavTextViewHolder(v);
-                default:
-                    throw new RuntimeException("Unexpected ViewHolder type: " + viewType);
-            }
-        }
-
-        @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-            if (holder instanceof NavEditTextViewHolder) {
-                ((NavEditTextViewHolder) holder).bind();
-            } else if (holder instanceof NavTextViewHolder) {
-                ((NavTextViewHolder) holder).bind(position - 1);
-            }
-        }
-
-        @Override
-        public int getItemCount() {
-            return 7;
-        }
-
-        @Override
-        public int getItemViewType(int position) {
-            if (position == 0)
-                return TYPE_EDIT_TEXT;
-            return TYPE_TEXT_VIEW;
-        }
-
-        private class NavEditTextViewHolder extends RecyclerView.ViewHolder {
-            private EditText mEditText;
-            private View mSubmitView;
-
-            public NavEditTextViewHolder(View itemView) {
-                super(itemView);
-                mEditText = (EditText) itemView.findViewById(R.id.drawer_navigate_to_subreddit_text);
-                mSubmitView = itemView.findViewById(R.id.drawer_navigate_to_subreddit_go);
-
-                mEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                    @Override
-                    public void onFocusChange(View v, boolean hasFocus) {
-                        if (!hasFocus) { // Hide keyboard
-                            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-                        }
-                    }
-                });
-                mEditText.setOnEditorActionListener(new EditText.OnEditorActionListener() {
-                    @Override
-                    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                        if (actionId == EditorInfo.IME_ACTION_DONE) {
-                            mSubmitView.performClick();
-                            return true;
-                        }
-                        return false;
-                    }
-                });
-            }
-
-            public void bind() {
-                mSubmitView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        mDrawerLayout.closeDrawer(GravityCompat.START);
-                        String inputSubreddit = mEditText.getText().toString();
-                        inputSubreddit = inputSubreddit.trim();
-                        if (!inputSubreddit.equals("")) {
-                            mEditText.setText("");
-                            showSubreddit(inputSubreddit);
-                        }
-                    }
-                });
-            }
-        }
-
-        private class NavTextViewHolder extends RecyclerView.ViewHolder {
-            private View mItemRow;
-            private ImageView mItemIcon;
-            private TextView mItemLabel;
-
-            public NavTextViewHolder(View itemView) {
-                super(itemView);
-                mItemRow = itemView.findViewById(R.id.navigation_drawer_item);
-                mItemIcon = (ImageView) itemView.findViewById(R.id.navigation_drawer_item_icon);
-                mItemLabel = (TextView) itemView.findViewById(R.id.navigation_drawer_item_text);
-            }
-
-            public void bind(int position) {
-                switch (position) {
-                    // Set label, icon, and onClick behavior for the row
-                    case 0:
-                        mItemLabel.setText(getString(R.string.drawer_log_in));
-                        mItemRow.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                mDrawerLayout.closeDrawer(GravityCompat.START);
-                                openWebViewForURL(RedditServiceAuth.AUTHORIZATION_URL);
-                            }
-                        });
-                        break;
-                    case 1:
-                        mItemLabel.setText(getString(R.string.drawer_user_profile));
-                        mItemRow.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                mDrawerLayout.closeDrawer(GravityCompat.START);
-                            }
-                        });
-                        break;
-                    case 2:
-                        mItemLabel.setText(getString(R.string.drawer_subreddits));
-                        mItemRow.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                mDrawerLayout.closeDrawer(GravityCompat.START);
-                            }
-                        });
-                        break;
-                    case 3:
-                        mItemLabel.setText(getString(R.string.drawer_front_page));
-                        mItemRow.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                mDrawerLayout.closeDrawer(GravityCompat.START);
-                                showSubreddit(null);
-                            }
-                        });
-                        break;
-                    case 4:
-                        mItemLabel.setText(getString(R.string.drawer_r_all));
-                        mItemRow.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                mDrawerLayout.closeDrawer(GravityCompat.START);
-                                showSubreddit("all");
-                            }
-                        });
-                        break;
-                    case 5:
-                        mItemLabel.setText(getString(R.string.drawer_random_subreddit));
-                        mItemRow.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                mDrawerLayout.closeDrawer(GravityCompat.START);
-                                showSubreddit("random");
-                            }
-                        });
-                        break;
-                }
-            }
+    @Override
+    public void showSubreddit(String subreddit) {
+        mDrawerLayout.closeDrawer(GravityCompat.START);
+        FragmentManager fm = getSupportFragmentManager();
+        Fragment currentFragment = fm.findFragmentById(R.id.fragment_container);
+        // If the current fragment is a LinksFragment, just update the subreddit
+        // Else, swap in a LinksFragment
+        if (currentFragment instanceof LinksFragment) {
+            ((LinksFragment) currentFragment).updateSubreddit(subreddit);
+        } else {
+            Fragment newFragment = LinksFragment.newInstance(subreddit);
+            fm.beginTransaction()
+                    .replace(R.id.fragment_container, newFragment)
+                    .addToBackStack(null)
+                    .commit();
         }
     }
 }

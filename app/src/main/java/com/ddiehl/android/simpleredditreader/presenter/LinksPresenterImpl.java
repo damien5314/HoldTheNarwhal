@@ -320,6 +320,6 @@ public class LinksPresenterImpl implements LinksPresenter {
     }
 
     private void reportLink(RedditLink link) {
-
+        mLinksView.showToast(R.string.implementation_tbd);
     }
 }

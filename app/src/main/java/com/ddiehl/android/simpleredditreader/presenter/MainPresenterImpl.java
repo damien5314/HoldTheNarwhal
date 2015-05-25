@@ -3,6 +3,7 @@ package com.ddiehl.android.simpleredditreader.presenter;
 import android.content.Context;
 
 import com.ddiehl.android.simpleredditreader.IdentityBroker;
+import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.RedditPreferences;
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
 import com.ddiehl.android.simpleredditreader.events.responses.SavedUserIdentityRetrievedEvent;
@@ -30,12 +31,6 @@ public class MainPresenterImpl implements MainPresenter {
         mMainView = view;
         mIdentityBroker = new IdentityBroker(mContext);
 
-        RedditPreferences prefs = RedditPreferences.getInstance(mContext);
-        mBus.register(prefs);
-
-        RedditService authProxy = RedditServiceAuth.getInstance(mContext);
-        mBus.register(authProxy);
-
         mMainView.setAccount(mIdentityBroker.getUserIdentity());
     }
 
@@ -54,5 +49,27 @@ public class MainPresenterImpl implements MainPresenter {
     @Subscribe
     public void onUserSignedOut(UserSignedOutEvent event) {
         mMainView.setAccount(null);
+    }
+
+    @Override
+    public void presentLoginView() {
+        mMainView.closeNavigationDrawer();
+        mMainView.openWebViewForURL(RedditServiceAuth.AUTHORIZATION_URL);
+    }
+
+    @Override
+    public void showSubreddit(String subreddit) {
+        mMainView.closeNavigationDrawer();
+        mMainView.showSubreddit(subreddit);
+    }
+
+    @Override
+    public void showUserProfile(String userId) {
+        mMainView.showToast(R.string.implementation_tbd);
+    }
+
+    @Override
+    public void showSubreddits() {
+        mMainView.showToast(R.string.implementation_tbd);
     }
 }

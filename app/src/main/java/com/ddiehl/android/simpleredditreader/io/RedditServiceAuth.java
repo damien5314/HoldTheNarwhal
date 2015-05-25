@@ -354,14 +354,12 @@ public class RedditServiceAuth implements RedditService {
         if (!mIdentityBroker.hasValidUserAccessToken()) {
             mQueuedEvent = event;
             AccessToken userAccessToken = mIdentityBroker.getUserAccessToken();
-            if (userAccessToken != null) {
-                String rt = userAccessToken.getRefreshToken();
-                if (rt != null) {
-                    mBus.post(new RefreshUserAccessTokenEvent(rt));
-                } else {
-                    mQueuedEvent = null;
-                    mBus.post(new UserRequiredException());
-                }
+            if (userAccessToken == null || userAccessToken.getRefreshToken() == null) {
+                mQueuedEvent = null;
+                mBus.post(new UserRequiredException());
+            } else {
+                String token = userAccessToken.getRefreshToken();
+                mBus.post(new RefreshUserAccessTokenEvent(token));
             }
         } else {
             mServiceAPI.onVote(event);

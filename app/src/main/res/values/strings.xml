@@ -63,14 +63,14 @@
     <string name="timespan_minutes">%s minutes ago</string>
     <string name="timespan_seconds">%s seconds ago</string>
     <string name="spinner_getting_submissions">Getting submissions&#8230;</string>
+    <string name="action_reply">reply</string>
+    <string name="implementation_tbd">coming soon</string>
+    <string name="link_hidden">Link hidden</string>
 
     <string name="lorem_ipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas at velit ex.
             Aliquam vitae tellus eget dolor rutrum bibendum bibendum ac mauris. Morbi dui sapien, efficitur eget
             dui et, blandit vulputate quam. Sed vehicula, mauris ac sollicitudin commodo, risus tortor imperdiet ipsum,
             id consequat eros velit eget leo. Aliquam at purus tincidunt ipsum blandit fermentum eget quis risus.
             Vestibulum molestie auctor maximus. Ut euismod ipsum velit, eu iaculis quam fermentum blandit.</string>
-    <string name="action_reply">reply</string>
-    <string name="implementation_tbd">Not yet implemented</string>
-    <string name="link_hidden">Link hidden</string>
 
 </resources>

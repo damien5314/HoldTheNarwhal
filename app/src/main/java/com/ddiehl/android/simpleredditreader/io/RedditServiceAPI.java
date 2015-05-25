@@ -294,30 +294,30 @@ public class RedditServiceAPI implements RedditService {
             mAPI.save(listing.getName(), event.getCategory(), new Callback<Response>() {
                 @Override
                 public void success(Response response, Response response2) {
-                    saveOpSuccess(response, listing, event.getCategory(), true);
+                    saveSuccess(response, listing, event.getCategory(), true);
                 }
 
                 @Override
                 public void failure(RetrofitError error) {
-                    saveOpFailure(error);
+                    saveFailure(error);
                 }
             });
         } else { // Unsave
             mAPI.unsave(listing.getName(), new Callback<Response>() {
                 @Override
                 public void success(Response response, Response response2) {
-                    saveOpSuccess(response, listing, event.getCategory(), false);
+                    saveSuccess(response, listing, event.getCategory(), false);
                 }
 
                 @Override
                 public void failure(RetrofitError error) {
-                    saveOpFailure(error);
+                    saveFailure(error);
                 }
             });
         }
     }
 
-    private void saveOpSuccess(Response response, Savable listing, String category, boolean toSave) {
+    private void saveSuccess(Response response, Savable listing, String category, boolean toSave) {
         BaseUtils.printResponseStatus(response);
 
         try {
@@ -333,7 +333,7 @@ public class RedditServiceAPI implements RedditService {
         }
     }
 
-    private void saveOpFailure(RetrofitError error) {
+    private void saveFailure(RetrofitError error) {
         BaseUtils.showError(mContext, error);
         BaseUtils.printResponse(error.getResponse());
         mBus.post(new SaveSubmittedEvent(error));
@@ -347,24 +347,24 @@ public class RedditServiceAPI implements RedditService {
             mAPI.hide(link.getName(), new Callback<Response>() {
                 @Override
                 public void success(Response response, Response response2) {
-                    hideOpSuccess(response, link, true);
+                    hideSuccess(response, link, true);
                 }
 
                 @Override
                 public void failure(RetrofitError error) {
-                    hideOpFailure(error);
+                    hideFailure(error);
                 }
             });
         } else { // Unhide
             mAPI.unhide(link.getName(), new Callback<Response>() {
                 @Override
                 public void success(Response response, Response response2) {
-                    hideOpSuccess(response, link, false);
+                    hideSuccess(response, link, false);
                 }
 
                 @Override
                 public void failure(RetrofitError error) {
-                    hideOpFailure(error);
+                    hideFailure(error);
                 }
             });
         }
@@ -375,7 +375,7 @@ public class RedditServiceAPI implements RedditService {
         // TODO
     }
 
-    private void hideOpSuccess(Response response, RedditLink link, boolean toHide) {
+    private void hideSuccess(Response response, RedditLink link, boolean toHide) {
         BaseUtils.printResponseStatus(response);
 
         try {
@@ -391,7 +391,7 @@ public class RedditServiceAPI implements RedditService {
         }
     }
 
-    private void hideOpFailure(RetrofitError error) {
+    private void hideFailure(RetrofitError error) {
         BaseUtils.showError(mContext, error);
         BaseUtils.printResponse(error.getResponse());
         mBus.post(new HideSubmittedEvent(error));
