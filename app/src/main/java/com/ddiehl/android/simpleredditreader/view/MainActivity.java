@@ -116,15 +116,7 @@ public class MainActivity extends ActionBarActivity implements MainView {
         mBus.unregister(mMainPresenter);
     }
 
-    public void openWebViewForURL(String url) {
-        FragmentManager fm = getSupportFragmentManager();
-        Fragment newFragment = WebViewFragment.newInstance(url);
-        fm.beginTransaction()
-                .replace(R.id.fragment_container, newFragment)
-                .addToBackStack(null)
-                .commit();
-    }
-
+    @Override
     public void showSpinner(String message) {
         if (mProgressBar == null) {
             mProgressBar = new ProgressDialog(this, R.style.ProgressDialog);
@@ -140,6 +132,7 @@ public class MainActivity extends ActionBarActivity implements MainView {
         showSpinner(getString(resId));
     }
 
+    @Override
     public void dismissSpinner() {
         if (mProgressBar != null && mProgressBar.isShowing()) {
             mProgressBar.dismiss();
@@ -189,5 +182,15 @@ public class MainActivity extends ActionBarActivity implements MainView {
                     .addToBackStack(null)
                     .commit();
         }
+    }
+
+    @Override
+    public void openWebViewForURL(String url) {
+        FragmentManager fm = getSupportFragmentManager();
+        Fragment newFragment = WebViewFragment.newInstance(url);
+        fm.beginTransaction()
+                .replace(R.id.fragment_container, newFragment)
+                .addToBackStack(null)
+                .commit();
     }
 }

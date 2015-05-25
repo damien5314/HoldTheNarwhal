@@ -67,6 +67,11 @@ public class IdentityBroker {
         return token != null && token.secondsUntilExpiration() > EXPIRATION_THRESHOLD;
     }
 
+    public boolean hasUserAccessRefreshToken() {
+        AccessToken token = getUserAccessToken();
+        return token != null && token.hasRefreshToken();
+    }
+
     public boolean hasValidApplicationAccessToken() {
         AccessToken token = getApplicationAccessToken();
         return token != null && token.secondsUntilExpiration() > EXPIRATION_THRESHOLD;

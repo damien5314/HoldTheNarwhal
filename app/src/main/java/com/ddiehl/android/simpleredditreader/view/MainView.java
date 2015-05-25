@@ -15,6 +15,5 @@ public interface MainView {
     void onUserSignOut();
 
     void showSubreddit(String subreddit);
-
     void openWebViewForURL(String authorizationUrl);
 }

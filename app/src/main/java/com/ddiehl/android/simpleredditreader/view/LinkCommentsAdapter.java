@@ -75,6 +75,6 @@ public class LinkCommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     @Override
     public int getItemCount() {
-        return mCommentsPresenter.getNumComments();
+        return mCommentsPresenter.getNumComments() + 1;
     }
 }
