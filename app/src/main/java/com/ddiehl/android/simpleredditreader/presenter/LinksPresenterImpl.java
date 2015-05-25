@@ -236,7 +236,7 @@ public class LinksPresenterImpl implements LinksPresenter {
                 downvote(mLinkSelected);
                 return true;
             case R.id.action_link_show_comments:
-                openCommentsForLink(mLinkSelected);
+                showCommentsForLink(mLinkSelected);
                 return true;
             case R.id.action_link_save:
                 saveLink(mLinkSelected);
@@ -277,7 +277,7 @@ public class LinksPresenterImpl implements LinksPresenter {
     }
 
     @Override
-    public void openCommentsForLink(RedditLink link) {
+    public void showCommentsForLink(RedditLink link) {
         mLinksView.showCommentsForLink(link);
     }
 

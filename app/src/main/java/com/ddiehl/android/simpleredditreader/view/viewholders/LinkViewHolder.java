@@ -129,7 +129,7 @@ public class LinkViewHolder extends RecyclerView.ViewHolder
                 mLinksPresenter.openLink(mRedditLink);
                 break;
             case R.id.link_comment_count:
-                mLinksPresenter.openCommentsForLink(mRedditLink);
+                mLinksPresenter.showCommentsForLink(mRedditLink);
                 break;
             default:
                 v.showContextMenu();

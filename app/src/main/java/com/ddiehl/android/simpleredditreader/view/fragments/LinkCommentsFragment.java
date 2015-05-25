@@ -94,7 +94,7 @@ public class LinkCommentsFragment extends Fragment implements LinksView, Comment
         mBus.register(mLinksPresenter);
         mBus.register(mCommentsPresenter);
 
-        if (mLinkCommentsAdapter.getItemCount() == 0) {
+        if (mLinkCommentsAdapter.getItemCount() < 2) { // Always returns at least 1
             mCommentsPresenter.getComments();
         }
     }

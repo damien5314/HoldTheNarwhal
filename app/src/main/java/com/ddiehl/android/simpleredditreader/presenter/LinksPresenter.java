@@ -24,6 +24,6 @@ public interface LinksPresenter {
     boolean onContextItemSelected(MenuItem item);
 
     void openLink(RedditLink link);
-    void openCommentsForLink(RedditLink link);
+    void showCommentsForLink(RedditLink link);
 
 }

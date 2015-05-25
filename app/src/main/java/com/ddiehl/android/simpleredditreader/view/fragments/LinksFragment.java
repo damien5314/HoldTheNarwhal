@@ -43,11 +43,8 @@ public class LinksFragment extends Fragment implements LinksView {
     private static final String DIALOG_CHOOSE_TIMESPAN = "dialog_choose_timespan";
 
     private Bus mBus;
-
     private LinksPresenter mLinksPresenter;
 
-    private RecyclerView mRecyclerView;
-    private LinearLayoutManager mLayoutManager;
     private LinksAdapter mLinksAdapter;
 
     private int mFirstVisibleItem, mVisibleItemCount, mTotalItemCount;
@@ -80,12 +77,12 @@ public class LinksFragment extends Fragment implements LinksView {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.links_fragment, container, false);
 
-        mLayoutManager = new LinearLayoutManager(getActivity());
-        mRecyclerView = (RecyclerView) v.findViewById(R.id.recycler_view);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setAdapter(mLinksAdapter);
+        final LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+        RecyclerView rv = (RecyclerView) v.findViewById(R.id.recycler_view);
+        rv.setLayoutManager(mLayoutManager);
+        rv.setAdapter(mLinksAdapter);
 
-        mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+        rv.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 mVisibleItemCount = mLayoutManager.getChildCount();
