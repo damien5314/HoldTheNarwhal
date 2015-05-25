@@ -5,7 +5,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
-import com.ddiehl.android.simpleredditreader.events.errors.ApiErrorEvent;
+import com.ddiehl.android.simpleredditreader.events.exceptions.ApiErrorEvent;
 import com.ddiehl.android.simpleredditreader.io.RedditService;
 import com.ddiehl.android.simpleredditreader.io.RedditServiceAuth;
 import com.squareup.otto.Bus;

@@ -24,7 +24,7 @@ import com.ddiehl.android.simpleredditreader.events.responses.UserAuthCodeReceiv
 import com.ddiehl.android.simpleredditreader.events.responses.UserAuthorizationRefreshedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.UserAuthorizedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.UserSignedOutEvent;
-import com.ddiehl.android.simpleredditreader.exceptions.UserRequiredException;
+import com.ddiehl.android.simpleredditreader.events.exceptions.UserRequiredException;
 import com.ddiehl.android.simpleredditreader.utils.AuthUtils;
 import com.ddiehl.android.simpleredditreader.utils.BaseUtils;
 import com.ddiehl.reddit.identity.AccessToken;

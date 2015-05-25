@@ -23,7 +23,7 @@ import com.ddiehl.android.simpleredditreader.events.responses.MoreChildrenLoaded
 import com.ddiehl.android.simpleredditreader.events.responses.SaveSubmittedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.UserIdentityRetrievedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.VoteSubmittedEvent;
-import com.ddiehl.android.simpleredditreader.exceptions.UserRequiredException;
+import com.ddiehl.android.simpleredditreader.events.exceptions.UserRequiredException;
 import com.ddiehl.android.simpleredditreader.utils.BaseUtils;
 import com.ddiehl.reddit.Savable;
 import com.ddiehl.reddit.Votable;
