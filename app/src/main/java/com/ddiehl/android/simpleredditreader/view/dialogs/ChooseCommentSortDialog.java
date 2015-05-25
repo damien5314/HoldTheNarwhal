@@ -1,4 +1,4 @@
-package com.ddiehl.android.simpleredditreader.view;
+package com.ddiehl.android.simpleredditreader.view.dialogs;
 
 import android.app.Activity;
 import android.app.AlertDialog;

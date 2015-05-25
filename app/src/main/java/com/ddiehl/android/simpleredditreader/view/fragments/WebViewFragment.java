@@ -1,4 +1,4 @@
-package com.ddiehl.android.simpleredditreader.view;
+package com.ddiehl.android.simpleredditreader.view.fragments;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;

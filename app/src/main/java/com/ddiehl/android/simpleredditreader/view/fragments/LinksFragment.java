@@ -1,4 +1,4 @@
-package com.ddiehl.android.simpleredditreader.view;
+package com.ddiehl.android.simpleredditreader.view.fragments;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -21,6 +21,11 @@ import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
 import com.ddiehl.android.simpleredditreader.presenter.LinksPresenter;
 import com.ddiehl.android.simpleredditreader.presenter.LinksPresenterImpl;
+import com.ddiehl.android.simpleredditreader.view.dialogs.ChooseLinkSortDialog;
+import com.ddiehl.android.simpleredditreader.view.dialogs.ChooseTimespanDialog;
+import com.ddiehl.android.simpleredditreader.view.adapters.LinksAdapter;
+import com.ddiehl.android.simpleredditreader.view.LinksView;
+import com.ddiehl.android.simpleredditreader.view.activities.MainActivity;
 import com.ddiehl.reddit.listings.RedditLink;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;

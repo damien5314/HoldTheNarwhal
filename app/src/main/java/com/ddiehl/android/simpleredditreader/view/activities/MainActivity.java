@@ -1,4 +1,4 @@
-package com.ddiehl.android.simpleredditreader.view;
+package com.ddiehl.android.simpleredditreader.view.activities;
 
 import android.app.ProgressDialog;
 import android.content.res.Configuration;
@@ -21,6 +21,12 @@ import com.ddiehl.android.simpleredditreader.events.BusProvider;
 import com.ddiehl.android.simpleredditreader.events.requests.UserSignOutEvent;
 import com.ddiehl.android.simpleredditreader.presenter.MainPresenter;
 import com.ddiehl.android.simpleredditreader.presenter.MainPresenterImpl;
+import com.ddiehl.android.simpleredditreader.view.misc.DividerItemDecoration;
+import com.ddiehl.android.simpleredditreader.view.MainView;
+import com.ddiehl.android.simpleredditreader.view.adapters.NavDrawerItemAdapter;
+import com.ddiehl.android.simpleredditreader.view.dialogs.ConfirmSignOutDialog;
+import com.ddiehl.android.simpleredditreader.view.fragments.LinksFragment;
+import com.ddiehl.android.simpleredditreader.view.fragments.WebViewFragment;
 import com.ddiehl.reddit.identity.UserIdentity;
 import com.squareup.otto.Bus;
 

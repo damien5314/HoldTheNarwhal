@@ -1,4 +1,4 @@
-package com.ddiehl.android.simpleredditreader.view;
+package com.ddiehl.android.simpleredditreader.view.misc;
 
 import android.content.Context;
 import android.content.res.TypedArray;

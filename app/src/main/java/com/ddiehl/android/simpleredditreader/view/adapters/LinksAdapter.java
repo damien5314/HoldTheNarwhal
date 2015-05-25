@@ -1,4 +1,4 @@
-package com.ddiehl.android.simpleredditreader.view;
+package com.ddiehl.android.simpleredditreader.view.adapters;
 
 
 import android.support.v7.widget.RecyclerView;
@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ddiehl.android.simpleredditreader.R;
+import com.ddiehl.android.simpleredditreader.view.viewholders.LinkViewHolder;
 import com.ddiehl.reddit.listings.RedditLink;
 import com.ddiehl.android.simpleredditreader.presenter.LinksPresenter;
 

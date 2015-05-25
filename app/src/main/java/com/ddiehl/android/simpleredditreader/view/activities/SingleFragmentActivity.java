@@ -1,4 +1,4 @@
-package com.ddiehl.android.simpleredditreader.view;
+package com.ddiehl.android.simpleredditreader.view.activities;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

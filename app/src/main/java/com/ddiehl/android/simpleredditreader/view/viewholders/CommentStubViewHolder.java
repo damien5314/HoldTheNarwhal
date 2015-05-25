@@ -1,4 +1,4 @@
-package com.ddiehl.android.simpleredditreader.view;
+package com.ddiehl.android.simpleredditreader.view.viewholders;
 
 
 import android.content.Context;
@@ -10,7 +10,7 @@ import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.presenter.CommentsPresenter;
 import com.ddiehl.reddit.listings.RedditMoreComments;
 
-class CommentStubViewHolder extends RecyclerView.ViewHolder {
+public class CommentStubViewHolder extends RecyclerView.ViewHolder {
     private View mView;
     private TextView mMoreCommentsView;
 

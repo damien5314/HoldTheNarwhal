@@ -1,4 +1,4 @@
-package com.ddiehl.android.simpleredditreader.view;
+package com.ddiehl.android.simpleredditreader.view.viewholders;
 
 
 import android.content.Context;
@@ -14,7 +14,7 @@ import com.ddiehl.android.simpleredditreader.utils.BaseUtils;
 import com.ddiehl.reddit.listings.RedditComment;
 import com.ddiehl.reddit.listings.RedditLink;
 
-class CommentViewHolder extends RecyclerView.ViewHolder
+public class CommentViewHolder extends RecyclerView.ViewHolder
         implements View.OnClickListener, View.OnCreateContextMenuListener {
     private static final String TAG = CommentViewHolder.class.getSimpleName();
 

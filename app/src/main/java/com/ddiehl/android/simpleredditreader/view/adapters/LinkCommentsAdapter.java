@@ -1,4 +1,4 @@
-package com.ddiehl.android.simpleredditreader.view;
+package com.ddiehl.android.simpleredditreader.view.adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -6,6 +6,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ddiehl.android.simpleredditreader.R;
+import com.ddiehl.android.simpleredditreader.view.viewholders.CommentStubViewHolder;
+import com.ddiehl.android.simpleredditreader.view.viewholders.CommentViewHolder;
+import com.ddiehl.android.simpleredditreader.view.viewholders.LinkViewHolder;
 import com.ddiehl.reddit.listings.AbsRedditComment;
 import com.ddiehl.reddit.listings.RedditComment;
 import com.ddiehl.reddit.listings.RedditLink;
