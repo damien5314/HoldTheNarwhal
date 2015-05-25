@@ -31,8 +31,12 @@ public class RedditComment extends AbsRedditComment implements Votable, Savable 
         return data.linkId;
     }
 
-    public Object getLikes() {
-        return data.likes;
+    public Boolean isLiked() {
+        return data.isLiked;
+    }
+
+    public void isLiked(Boolean b) {
+        data.isLiked = b;
     }
 
     public ListingResponse getReplies() {
@@ -156,7 +160,22 @@ public class RedditComment extends AbsRedditComment implements Votable, Savable 
 
     @Override
     public void applyVote(int direction) {
-        // TODO
+        int scoreDiff = direction - getLikedScore();
+        data.score += scoreDiff;
+        switch (direction) {
+            case 0: isLiked(null); break;
+            case 1: isLiked(true); break;
+            case -1: isLiked(false); break;
+        }
+    }
+
+    private int getLikedScore() {
+        if (isLiked() == null)
+            return 0;
+        else if (isLiked())
+            return 1;
+        else
+            return -1;
     }
 
     public static class RedditCommentData {
@@ -169,8 +188,8 @@ public class RedditComment extends AbsRedditComment implements Votable, Savable 
         private Object bannedBy;
         @Expose @SerializedName("link_id")
         private String linkId;
-        @Expose
-        private Object likes;
+        @Expose @SerializedName("likes")
+        private Boolean isLiked;
         @Expose @SerializedName("user_reports")
         private List<Object> userReports;
         @Expose

@@ -7,6 +7,7 @@ import android.view.View;
 
 import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
+import com.ddiehl.android.simpleredditreader.events.exceptions.UserRequiredException;
 import com.ddiehl.android.simpleredditreader.events.requests.HideEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.LoadLinksEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.SaveEvent;
@@ -16,7 +17,6 @@ import com.ddiehl.android.simpleredditreader.events.responses.HideSubmittedEvent
 import com.ddiehl.android.simpleredditreader.events.responses.LinksLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.SaveSubmittedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.VoteSubmittedEvent;
-import com.ddiehl.android.simpleredditreader.events.exceptions.UserRequiredException;
 import com.ddiehl.android.simpleredditreader.view.LinksView;
 import com.ddiehl.reddit.Savable;
 import com.ddiehl.reddit.Sort;

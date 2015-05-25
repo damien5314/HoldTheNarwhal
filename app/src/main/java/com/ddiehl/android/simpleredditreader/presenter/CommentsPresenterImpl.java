@@ -10,11 +10,13 @@ import com.ddiehl.android.simpleredditreader.RedditPreferences;
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
 import com.ddiehl.android.simpleredditreader.events.requests.LoadCommentsEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.LoadMoreChildrenEvent;
+import com.ddiehl.android.simpleredditreader.events.requests.VoteEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.CommentThreadLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.CommentsLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.MoreChildrenLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.VoteSubmittedEvent;
 import com.ddiehl.android.simpleredditreader.view.CommentsView;
+import com.ddiehl.reddit.Votable;
 import com.ddiehl.reddit.listings.AbsRedditComment;
 import com.ddiehl.reddit.listings.CommentBank;
 import com.ddiehl.reddit.listings.CommentBankList;
@@ -104,29 +106,39 @@ public class CommentsPresenterImpl implements CommentsPresenter {
     }
 
     @Override
-    public void createContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, RedditComment comment) {
+    public void showContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, RedditComment comment) {
         mCommentSelected = comment;
         mCommentsView.showCommentContextMenu(menu, v, menuInfo);
+        menu.findItem(R.id.action_comment_save).setVisible(!comment.isSaved());
+        menu.findItem(R.id.action_comment_unsave).setVisible(comment.isSaved());
     }
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_comment_upvote:
+                upvote(mCommentSelected);
                 return true;
             case R.id.action_comment_downvote:
+                downvote(mCommentSelected);
                 return true;
             case R.id.action_comment_save:
+                mCommentsView.showToast(R.string.implementation_tbd);
                 return true;
             case R.id.action_comment_unsave:
+                mCommentsView.showToast(R.string.implementation_tbd);
                 return true;
             case R.id.action_comment_share:
+                mCommentsView.showToast(R.string.implementation_tbd);
                 return true;
             case R.id.action_comment_open_in_browser:
+                mCommentsView.showToast(R.string.implementation_tbd);
                 return true;
             case R.id.action_comment_hide:
+                mCommentsView.showToast(R.string.implementation_tbd);
                 return true;
             case R.id.action_comment_report:
+                mCommentsView.showToast(R.string.implementation_tbd);
                 return true;
             default:
                 return false;
@@ -226,7 +238,20 @@ public class CommentsPresenterImpl implements CommentsPresenter {
             return;
         }
 
-        event.getListing().applyVote(event.getDirection());
-        mCommentsView.updateAdapter();
+        Votable listing = event.getListing();
+        if (listing instanceof RedditComment) {
+            listing.applyVote(event.getDirection());
+            mCommentsView.getListAdapter().notifyItemChanged(mCommentBank.indexOf(((RedditComment) listing)) + 1);
+        }
+    }
+
+    private void upvote(RedditComment comment) {
+        int dir = (comment.isLiked() == null || !comment.isLiked()) ? 1 : 0;
+        mBus.post(new VoteEvent(comment, "t1", dir));
+    }
+
+    private void downvote(RedditComment comment) {
+        int dir = (comment.isLiked() == null || comment.isLiked()) ? -1 : 0;
+        mBus.post(new VoteEvent(comment, "t1", dir));
     }
 }

@@ -48,7 +48,7 @@ public class RedditLink extends Listing implements Votable, Savable {
         return data.likes;
     }
 
-    public void setLiked(Boolean b) {
+    public void isLiked(Boolean b) {
         data.likes = b;
     }
 
@@ -102,13 +102,13 @@ public class RedditLink extends Listing implements Votable, Savable {
         int scoreDiff = direction - getLikedScore();
         data.score += scoreDiff;
         switch (direction) {
-            case 0: setLiked(null); break;
-            case 1: setLiked(true); break;
-            case -1: setLiked(false); break;
+            case 0: isLiked(null); break;
+            case 1: isLiked(true); break;
+            case -1: isLiked(false); break;
         }
     }
 
-    public int getLikedScore() {
+    private int getLikedScore() {
         if (isLiked() == null)
             return 0;
         else if (isLiked())

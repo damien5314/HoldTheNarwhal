@@ -86,6 +86,15 @@ public class CommentViewHolder extends RecyclerView.ViewHolder
             mBodyView.setVisibility(View.VISIBLE);
             mExpanderIcon.setImageResource(R.drawable.ic_thread_collapse);
         }
+
+        // Set background tint based on isLiked
+        if (comment.isLiked() == null) {
+            mExpanderIcon.setBackgroundResource(R.drawable.comment_expander_background);
+        } else if (comment.isLiked()) {
+            mExpanderIcon.setBackgroundResource(R.drawable.comment_expander_background_upvoted);
+        } else {
+            mExpanderIcon.setBackgroundResource(R.drawable.comment_expander_background_downvoted);
+        }
     }
 
     public void bind(final RedditComment comment) {
@@ -106,6 +115,6 @@ public class CommentViewHolder extends RecyclerView.ViewHolder
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        mCommentsPresenter.createContextMenu(menu, v, menuInfo, mRedditComment);
+        mCommentsPresenter.showContextMenu(menu, v, menuInfo, mRedditComment);
     }
 }

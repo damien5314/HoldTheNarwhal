@@ -19,7 +19,7 @@ public interface CommentsPresenter {
     AbsRedditComment getCommentAtPosition(int position);
     void toggleThreadVisible(AbsRedditComment comment);
     int getNumComments();
-    void createContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, RedditComment redditComment);
+    void showContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, RedditComment redditComment);
     boolean onContextItemSelected(MenuItem item);
     void navigateToCommentThread(RedditMoreComments comment);
 }
