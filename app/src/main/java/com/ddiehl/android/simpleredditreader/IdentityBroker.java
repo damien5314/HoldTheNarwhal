@@ -270,7 +270,7 @@ public class IdentityBroker {
         mUserIdentity = null;
         mContext.getSharedPreferences(PREFS_USER_IDENTITY, Context.MODE_PRIVATE)
                 .edit().clear().apply();
-        mBus.post(new UserIdentitySavedEvent(null));
+//        mBus.post(new UserIdentitySavedEvent(null));
     }
 
     public static IdentityBroker getInstance(Context context) {

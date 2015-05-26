@@ -16,6 +16,7 @@ import com.ddiehl.android.simpleredditreader.events.responses.CommentsLoadedEven
 import com.ddiehl.android.simpleredditreader.events.responses.HideSubmittedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.LinksLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.SaveSubmittedEvent;
+import com.ddiehl.android.simpleredditreader.events.responses.UserIdentitySavedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.VoteSubmittedEvent;
 import com.ddiehl.android.simpleredditreader.view.LinksView;
 import com.ddiehl.reddit.Savable;
@@ -134,6 +135,11 @@ public class LinksPresenterImpl implements LinksPresenter {
         }
 
         mTimeSpan = timespan;
+        getLinks();
+    }
+
+    @Subscribe
+    public void onUserIdentitySaved(UserIdentitySavedEvent event) {
         getLinks();
     }
 

@@ -24,6 +24,7 @@ import com.ddiehl.android.simpleredditreader.events.responses.ApplicationAuthori
 import com.ddiehl.android.simpleredditreader.events.responses.UserAuthCodeReceivedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.UserAuthorizationRefreshedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.UserAuthorizedEvent;
+import com.ddiehl.android.simpleredditreader.events.responses.UserIdentitySavedEvent;
 import com.ddiehl.android.simpleredditreader.utils.AuthUtils;
 import com.ddiehl.android.simpleredditreader.utils.BaseUtils;
 import com.ddiehl.reddit.identity.AccessToken;
@@ -225,6 +226,7 @@ public class RedditServiceAuth implements RedditService {
 
         mIdentityBroker.clearSavedUserAccessToken();
         mIdentityBroker.clearSavedUserIdentity();
+        mBus.post(new UserIdentitySavedEvent(null));
     }
 
     @Subscribe

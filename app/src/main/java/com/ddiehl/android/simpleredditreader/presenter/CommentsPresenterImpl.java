@@ -14,6 +14,7 @@ import com.ddiehl.android.simpleredditreader.events.requests.VoteEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.CommentThreadLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.CommentsLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.MoreChildrenLoadedEvent;
+import com.ddiehl.android.simpleredditreader.events.responses.UserIdentitySavedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.VoteSubmittedEvent;
 import com.ddiehl.android.simpleredditreader.view.CommentsView;
 import com.ddiehl.reddit.Votable;
@@ -60,6 +61,8 @@ public class CommentsPresenterImpl implements CommentsPresenter {
     @Override
     public void getComments() {
         mCommentsView.showSpinner(null);
+//        mRedditLink = null;
+//        mCommentBank.clear();
         mBus.post(new LoadCommentsEvent(mSubreddit, mArticleId, mSort));
     }
 
@@ -148,6 +151,11 @@ public class CommentsPresenterImpl implements CommentsPresenter {
     @Override
     public void navigateToCommentThread(RedditMoreComments comment) {
         mCommentsView.showToast(R.string.implementation_tbd);
+    }
+
+    @Subscribe
+    public void onUserIdentitySaved(UserIdentitySavedEvent event) {
+        getComments();
     }
 
     @Subscribe
