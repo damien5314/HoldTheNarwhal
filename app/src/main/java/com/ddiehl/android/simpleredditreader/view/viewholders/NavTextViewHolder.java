@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.presenter.MainPresenter;
+import com.ddiehl.reddit.identity.UserIdentity;
 
 public class NavTextViewHolder extends RecyclerView.ViewHolder
         implements View.OnClickListener {
@@ -20,6 +21,15 @@ public class NavTextViewHolder extends RecyclerView.ViewHolder
 
     private MainPresenter mMainPresenter;
 
+    private static final NavItem[] sItems = new NavItem[] {
+            new NavItem(R.id.drawer_log_in, R.string.drawer_log_in),
+            new NavItem(R.id.drawer_user_profile, R.string.drawer_user_profile),
+            new NavItem(R.id.drawer_subreddits, R.string.drawer_subreddits),
+            new NavItem(R.id.drawer_front_page, R.string.drawer_front_page),
+            new NavItem(R.id.drawer_r_all, R.string.drawer_r_all),
+            new NavItem(R.id.drawer_random_subreddit, R.string.drawer_random_subreddit),
+    };
+
     public NavTextViewHolder(View itemView, MainPresenter presenter) {
         super(itemView);
         mContext = itemView.getContext();
@@ -30,39 +40,31 @@ public class NavTextViewHolder extends RecyclerView.ViewHolder
     }
 
     public void bind(int position) {
-        switch (position) {
-            // Set label, icon, and onClick behavior for the row
-            case 0:
-                mItemLabel.setText(mContext.getString(R.string.drawer_log_in));
-                mItemRow.setId(R.id.drawer_log_in);
-                mItemRow.setOnClickListener(this);
-                break;
-            case 1:
-                mItemLabel.setText(mContext.getString(R.string.drawer_user_profile));
-                mItemRow.setId(R.id.drawer_user_profile);
-                mItemRow.setOnClickListener(this);
-                break;
-            case 2:
-                mItemLabel.setText(mContext.getString(R.string.drawer_subreddits));
-                mItemRow.setId(R.id.drawer_subreddits);
-                mItemRow.setOnClickListener(this);
-                break;
-            case 3:
-                mItemLabel.setText(mContext.getString(R.string.drawer_front_page));
-                mItemRow.setId(R.id.drawer_front_page);
-                mItemRow.setOnClickListener(this);
-                break;
-            case 4:
-                mItemLabel.setText(mContext.getString(R.string.drawer_r_all));
-                mItemRow.setId(R.id.drawer_r_all);
-                mItemRow.setOnClickListener(this);
-                break;
-            case 5:
-                mItemLabel.setText(mContext.getString(R.string.drawer_random_subreddit));
-                mItemRow.setId(R.id.drawer_random_subreddit);
-                mItemRow.setOnClickListener(this);
-                break;
+
+        UserIdentity user = mMainPresenter.getAuthenticatedUser();
+
+        if (user == null) {
+            switch (position) {
+                case 0: bind2(0); break;
+                case 1: bind2(3); break;
+                case 2: bind2(4); break;
+                case 3: bind2(5); break;
+            }
+        } else {
+            switch (position) {
+                case 0: bind2(1); break;
+                case 1: bind2(2); break;
+                case 2: bind2(3); break;
+                case 3: bind2(4); break;
+                case 4: bind2(5); break;
+            }
         }
+    }
+
+    private void bind2(int position) {
+        mItemRow.setId(sItems[position].id);
+        mItemLabel.setText(mContext.getString(sItems[position].labelId));
+        mItemRow.setOnClickListener(this);
     }
 
     @Override
@@ -75,7 +77,7 @@ public class NavTextViewHolder extends RecyclerView.ViewHolder
                 mMainPresenter.showUserProfile(null);
                 break;
             case R.id.drawer_subreddits:
-                mMainPresenter.showSubreddits();
+                mMainPresenter.showUserSubreddits();
                 break;
             case R.id.drawer_front_page:
                 mMainPresenter.showSubreddit(null);
@@ -86,6 +88,16 @@ public class NavTextViewHolder extends RecyclerView.ViewHolder
             case R.id.drawer_random_subreddit:
                 mMainPresenter.showSubreddit("random");
                 break;
+        }
+    }
+
+    private static class NavItem {
+        int id;
+        int labelId;
+
+        NavItem(int id, int labelId) {
+            this.id = id;
+            this.labelId = labelId;
         }
     }
 }

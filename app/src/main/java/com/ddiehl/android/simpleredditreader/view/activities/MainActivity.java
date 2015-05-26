@@ -18,19 +18,18 @@ import android.widget.Toast;
 
 import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
-import com.ddiehl.android.simpleredditreader.events.requests.UserSignOutEvent;
 import com.ddiehl.android.simpleredditreader.presenter.MainPresenter;
 import com.ddiehl.android.simpleredditreader.presenter.MainPresenterImpl;
-import com.ddiehl.android.simpleredditreader.view.misc.DividerItemDecoration;
 import com.ddiehl.android.simpleredditreader.view.MainView;
 import com.ddiehl.android.simpleredditreader.view.adapters.NavDrawerItemAdapter;
 import com.ddiehl.android.simpleredditreader.view.dialogs.ConfirmSignOutDialog;
 import com.ddiehl.android.simpleredditreader.view.fragments.LinksFragment;
 import com.ddiehl.android.simpleredditreader.view.fragments.WebViewFragment;
+import com.ddiehl.android.simpleredditreader.view.misc.DividerItemDecoration;
 import com.ddiehl.reddit.identity.UserIdentity;
 import com.squareup.otto.Bus;
 
-public class MainActivity extends ActionBarActivity implements MainView {
+public class MainActivity extends ActionBarActivity implements MainView, ConfirmSignOutDialog.Callbacks {
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private static final String DIALOG_CONFIRM_SIGN_OUT = "dialog_confirm_sign_out";
@@ -168,8 +167,8 @@ public class MainActivity extends ActionBarActivity implements MainView {
     }
 
     @Override
-    public void onUserSignOut() {
-        mBus.post(new UserSignOutEvent());
+    public void updateNavigationItems() {
+        mLayoutAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -198,5 +197,15 @@ public class MainActivity extends ActionBarActivity implements MainView {
                 .replace(R.id.fragment_container, newFragment)
                 .addToBackStack(null)
                 .commit();
+    }
+
+    @Override
+    public void onSignOutConfirm() {
+        mMainPresenter.signOutUser();
+    }
+
+    @Override
+    public void onSignOutCancel() {
+        // Do nothing
     }
 }

@@ -1,10 +1,14 @@
 package com.ddiehl.android.simpleredditreader.presenter;
 
+import com.ddiehl.reddit.identity.UserIdentity;
+
 public interface MainPresenter {
 
     void presentLoginView();
-    void showSubreddit(String subreddit);
     void showUserProfile(String userId);
-    void showSubreddits();
+    void showUserSubreddits();
+    void showSubreddit(String subreddit);
 
+    UserIdentity getAuthenticatedUser();
+    void signOutUser();
 }

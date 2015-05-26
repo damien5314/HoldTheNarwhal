@@ -8,10 +8,14 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 
 import com.ddiehl.android.simpleredditreader.R;
-import com.ddiehl.android.simpleredditreader.view.MainView;
 
 public class ConfirmSignOutDialog extends DialogFragment {
     private static final String TAG = ConfirmSignOutDialog.class.getSimpleName();
+
+    public interface Callbacks {
+        void onSignOutConfirm();
+        void onSignOutCancel();
+    }
 
     public ConfirmSignOutDialog() { }
 
@@ -22,7 +26,8 @@ public class ConfirmSignOutDialog extends DialogFragment {
         return dialog;
     }
 
-    @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
+    @NonNull @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(R.string.confirm_sign_out_dialog_title)
@@ -30,13 +35,17 @@ public class ConfirmSignOutDialog extends DialogFragment {
                 .setPositiveButton(R.string.confirm_sign_out_dialog_ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        ((MainView) getActivity()).onUserSignOut();
+                        if (getActivity() instanceof Callbacks) {
+                            ((Callbacks) getActivity()).onSignOutConfirm();
+                        }
                     }
                 })
                 .setNegativeButton(R.string.confirm_sign_out_dialog_cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        // Do nothing
+                        if (getActivity() instanceof Callbacks) {
+                            ((Callbacks) getActivity()).onSignOutCancel();
+                        }
                     }
                 })
         .setCancelable(true);

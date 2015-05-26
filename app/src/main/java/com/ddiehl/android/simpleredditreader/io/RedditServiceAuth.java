@@ -4,9 +4,10 @@ package com.ddiehl.android.simpleredditreader.io;
 import android.content.Context;
 import android.widget.Toast;
 
-import com.ddiehl.android.simpleredditreader.RedditPreferences;
 import com.ddiehl.android.simpleredditreader.IdentityBroker;
+import com.ddiehl.android.simpleredditreader.RedditPreferences;
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
+import com.ddiehl.android.simpleredditreader.events.exceptions.UserRequiredException;
 import com.ddiehl.android.simpleredditreader.events.requests.AuthorizeApplicationEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.GetUserIdentityEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.HideEvent;
@@ -23,8 +24,6 @@ import com.ddiehl.android.simpleredditreader.events.responses.ApplicationAuthori
 import com.ddiehl.android.simpleredditreader.events.responses.UserAuthCodeReceivedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.UserAuthorizationRefreshedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.UserAuthorizedEvent;
-import com.ddiehl.android.simpleredditreader.events.responses.UserSignedOutEvent;
-import com.ddiehl.android.simpleredditreader.events.exceptions.UserRequiredException;
 import com.ddiehl.android.simpleredditreader.utils.AuthUtils;
 import com.ddiehl.android.simpleredditreader.utils.BaseUtils;
 import com.ddiehl.reddit.identity.AccessToken;
@@ -74,10 +73,9 @@ public class RedditServiceAuth implements RedditService {
     private RedditServiceAuth(Context context) {
         mContext = context.getApplicationContext();
         mBus = BusProvider.getInstance();
-        mIdentityBroker = new IdentityBroker(mContext);
+        mIdentityBroker = IdentityBroker.getInstance(mContext);
         mAuthAPI = buildApi();
         mServiceAPI = new RedditServiceAPI(mContext, mIdentityBroker);
-//        mServiceAPI.setAuthToken(mAuthToken);
     }
 
     private RedditAuthAPI buildApi() {
@@ -198,7 +196,6 @@ public class RedditServiceAuth implements RedditService {
                 public void success(Response response, Response response2) {
                     Toast.makeText(mContext, "Revoked access token", Toast.LENGTH_SHORT).show();
                     BaseUtils.printResponseStatus(response);
-                    mBus.post(new UserSignedOutEvent(response));
                 }
 
                 @Override
@@ -206,7 +203,6 @@ public class RedditServiceAuth implements RedditService {
                     Toast.makeText(mContext, "Error revoking access token", Toast.LENGTH_SHORT).show();
                     BaseUtils.showError(mContext, error);
                     BaseUtils.printResponse(error.getResponse());
-                    mBus.post(new UserSignedOutEvent(error));
                 }
             });
 
@@ -216,7 +212,6 @@ public class RedditServiceAuth implements RedditService {
                         public void success(Response response, Response response2) {
                             Toast.makeText(mContext, "Revoked refresh token", Toast.LENGTH_SHORT).show();
                             BaseUtils.printResponseStatus(response);
-                            mBus.post(new UserSignedOutEvent(response));
                         }
 
                         @Override
@@ -224,7 +219,6 @@ public class RedditServiceAuth implements RedditService {
                             Toast.makeText(mContext, "Error revoking refresh token", Toast.LENGTH_SHORT).show();
                             BaseUtils.showError(mContext, error);
                             BaseUtils.printResponse(error.getResponse());
-                            mBus.post(new UserSignedOutEvent(error));
                         }
                     });
         }

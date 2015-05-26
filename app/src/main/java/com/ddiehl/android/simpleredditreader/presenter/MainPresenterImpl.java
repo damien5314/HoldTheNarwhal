@@ -4,12 +4,10 @@ import android.content.Context;
 
 import com.ddiehl.android.simpleredditreader.IdentityBroker;
 import com.ddiehl.android.simpleredditreader.R;
-import com.ddiehl.android.simpleredditreader.RedditPreferences;
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
+import com.ddiehl.android.simpleredditreader.events.requests.UserSignOutEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.SavedUserIdentityRetrievedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.UserIdentitySavedEvent;
-import com.ddiehl.android.simpleredditreader.events.responses.UserSignedOutEvent;
-import com.ddiehl.android.simpleredditreader.io.RedditService;
 import com.ddiehl.android.simpleredditreader.io.RedditServiceAuth;
 import com.ddiehl.android.simpleredditreader.view.MainView;
 import com.ddiehl.reddit.identity.UserIdentity;
@@ -29,7 +27,7 @@ public class MainPresenterImpl implements MainPresenter {
         mContext = context.getApplicationContext();
 
         mMainView = view;
-        mIdentityBroker = new IdentityBroker(mContext);
+        mIdentityBroker = IdentityBroker.getInstance(mContext);
 
         mMainView.setAccount(mIdentityBroker.getUserIdentity());
     }
@@ -44,11 +42,7 @@ public class MainPresenterImpl implements MainPresenter {
     public void onUserIdentitySaved(UserIdentitySavedEvent event) {
         UserIdentity identity = event.getUserIdentity();
         mMainView.setAccount(identity);
-    }
-
-    @Subscribe
-    public void onUserSignedOut(UserSignedOutEvent event) {
-        mMainView.setAccount(null);
+        mMainView.updateNavigationItems();
     }
 
     @Override
@@ -64,12 +58,22 @@ public class MainPresenterImpl implements MainPresenter {
     }
 
     @Override
+    public UserIdentity getAuthenticatedUser() {
+        return mIdentityBroker.getUserIdentity();
+    }
+
+    @Override
+    public void signOutUser() {
+        mBus.post(new UserSignOutEvent());
+    }
+
+    @Override
     public void showUserProfile(String userId) {
         mMainView.showToast(R.string.implementation_tbd);
     }
 
     @Override
-    public void showSubreddits() {
+    public void showUserSubreddits() {
         mMainView.showToast(R.string.implementation_tbd);
     }
 }

@@ -12,7 +12,7 @@ public interface MainView {
 
     void closeNavigationDrawer();
     void setAccount(UserIdentity identity);
-    void onUserSignOut();
+    void updateNavigationItems();
 
     void showSubreddit(String subreddit);
     void openWebViewForURL(String authorizationUrl);

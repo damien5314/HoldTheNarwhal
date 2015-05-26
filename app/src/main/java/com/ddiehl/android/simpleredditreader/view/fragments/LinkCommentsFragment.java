@@ -15,7 +15,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
@@ -25,6 +24,7 @@ import com.ddiehl.android.simpleredditreader.presenter.LinksPresenter;
 import com.ddiehl.android.simpleredditreader.presenter.LinksPresenterImpl;
 import com.ddiehl.android.simpleredditreader.view.CommentsView;
 import com.ddiehl.android.simpleredditreader.view.LinksView;
+import com.ddiehl.android.simpleredditreader.view.MainView;
 import com.ddiehl.android.simpleredditreader.view.activities.MainActivity;
 import com.ddiehl.android.simpleredditreader.view.adapters.LinkCommentsAdapter;
 import com.ddiehl.android.simpleredditreader.view.dialogs.ChooseCommentSortDialog;
@@ -191,27 +191,27 @@ public class LinkCommentsFragment extends Fragment implements LinksView, Comment
 
     @Override
     public void showSpinner(String msg) {
-        ((MainActivity) getActivity()).showSpinner(msg);
+        ((MainView) getActivity()).showSpinner(msg);
     }
 
     @Override
     public void showSpinner(int resId) {
-        showSpinner(getString(resId));
+        ((MainView) getActivity()).showSpinner(resId);
     }
 
     @Override
     public void dismissSpinner() {
-        ((MainActivity) getActivity()).dismissSpinner();
+        ((MainView) getActivity()).dismissSpinner();
+    }
+
+    @Override
+    public void showToast(String msg) {
+        ((MainView) getActivity()).showToast(msg);
     }
 
     @Override
     public void showToast(int resId) {
-        showToast(getString(resId));
-    }
-
-    @Override
-    public void showToast(String s) {
-        Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
+        ((MainView) getActivity()).showToast(resId);
     }
 
     @Override

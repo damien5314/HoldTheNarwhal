@@ -10,6 +10,7 @@ import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.presenter.MainPresenter;
 import com.ddiehl.android.simpleredditreader.view.viewholders.NavEditTextViewHolder;
 import com.ddiehl.android.simpleredditreader.view.viewholders.NavTextViewHolder;
+import com.ddiehl.reddit.identity.UserIdentity;
 
 public class NavDrawerItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int TYPE_EDIT_TEXT = 0;
@@ -48,7 +49,12 @@ public class NavDrawerItemAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     @Override
     public int getItemCount() {
-        return 7;
+        UserIdentity user = mMainPresenter.getAuthenticatedUser();
+        if (user == null) {
+            return 5;
+        } else {
+            return 6;
+        }
     }
 
     @Override
