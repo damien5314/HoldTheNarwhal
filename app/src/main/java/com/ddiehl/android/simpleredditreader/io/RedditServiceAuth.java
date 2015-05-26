@@ -253,6 +253,8 @@ public class RedditServiceAuth implements RedditService {
     @Subscribe
     public void onUserAuthorizationRefreshed(UserAuthorizationRefreshedEvent event) {
         if (event.isFailed()) {
+            mIdentityBroker.clearSavedUserAccessToken();
+            mIdentityBroker.clearSavedUserIdentity();
             return;
         }
 
