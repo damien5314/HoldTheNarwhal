@@ -47,6 +47,8 @@ public class IdentityBroker {
     // Seconds within expiration we should try to retrieve a new auth token
     private static final int EXPIRATION_THRESHOLD = 60;
 
+    private static IdentityBroker _instance;
+
     private Bus mBus;
     private Context mContext;
     
@@ -54,7 +56,7 @@ public class IdentityBroker {
     private AccessToken mApplicationAccessToken;
     private UserIdentity mUserIdentity;
 
-    public IdentityBroker(Context context) {
+    private IdentityBroker(Context context) {
         mBus = BusProvider.getInstance();
         mContext = context;
         mUserAccessToken = getSavedUserAccessToken();
@@ -269,5 +271,16 @@ public class IdentityBroker {
         mContext.getSharedPreferences(PREFS_USER_IDENTITY, Context.MODE_PRIVATE)
                 .edit().clear().apply();
         mBus.post(new UserIdentitySavedEvent(null));
+    }
+
+    public static IdentityBroker getInstance(Context context) {
+        if (_instance == null) {
+            synchronized (IdentityBroker.class) {
+                if (_instance == null) {
+                    _instance = new IdentityBroker(context);
+                }
+            }
+        }
+        return _instance;
     }
 }
