@@ -30,18 +30,6 @@ public class RedditReaderApplication extends Application {
         RedditService authProxy = RedditServiceAuth.getInstance(this);
         bus.register(authProxy);
 
-//        UserIdentityInteractor userIdentityInteractor = new UserIdentityInteractor(this);
-//        bus.register(userIdentityInteractor);
-
-        // Stetho debugging tool
-//        Stetho.initialize(Stetho.newInitializerBuilder(this)
-//                .enableDumpapp(Stetho.defaultDumperPluginsProvider(this))
-//                .enableWebKitInspector(Stetho.defaultInspectorModulesProvider(this))
-//                .build());
-//
-//        // Network inspection through Stetho
-//        new OkHttpClient().networkInterceptors().add(new StethoInterceptor());
-
         if (BuildConfig.DEBUG)
             Picasso.with(this).setIndicatorsEnabled(true);
     }
