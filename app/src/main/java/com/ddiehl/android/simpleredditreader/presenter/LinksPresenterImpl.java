@@ -5,7 +5,7 @@ import android.view.ContextMenu;
 import android.view.View;
 
 import com.ddiehl.android.simpleredditreader.R;
-import com.ddiehl.android.simpleredditreader.events.BusProvider;
+import com.ddiehl.android.simpleredditreader.BusProvider;
 import com.ddiehl.android.simpleredditreader.events.exceptions.UserRequiredException;
 import com.ddiehl.android.simpleredditreader.events.requests.HideEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.LoadLinksEvent;
@@ -47,9 +47,9 @@ public class LinksPresenterImpl implements LinksPresenter {
 
     public LinksPresenterImpl(Context context, LinksView view, String subreddit) {
         mContext = context.getApplicationContext();
+        mBus = BusProvider.getInstance();
         mLinksView = view;
         mLinks = new ArrayList<>();
-        mBus = BusProvider.getInstance();
 
         mSubreddit = subreddit;
         mSort = Sort.HOT;

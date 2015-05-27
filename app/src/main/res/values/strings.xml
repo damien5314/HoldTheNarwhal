@@ -40,11 +40,8 @@
     <string name="default_links_sort">hot</string>
     <string name="default_links_timespan">all</string>
     <string name="comments_fragment_default_title">Comments</string>
-    <string name="toast_authorized">Authorization granted</string>
-    <string name="toast_not_authorized">Not authorized</string>
     <string name="account_name_unauthorized">not signed in</string>
     <string name="subreddit_prefix">/r/%s</string>
-    <string name="link_saved_text">[saved]</string>
     <string name="save_failed">Failed to save, please try again</string>
     <string name="action_unsave">unsave</string>
     <string name="unauthenticated">Not signed in</string>

@@ -6,7 +6,7 @@ import android.widget.Toast;
 
 import com.ddiehl.android.simpleredditreader.RedditIdentityManager;
 import com.ddiehl.android.simpleredditreader.RedditPreferences;
-import com.ddiehl.android.simpleredditreader.events.BusProvider;
+import com.ddiehl.android.simpleredditreader.BusProvider;
 import com.ddiehl.android.simpleredditreader.events.exceptions.UserRequiredException;
 import com.ddiehl.android.simpleredditreader.events.requests.AuthorizeApplicationEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.GetUserIdentityEvent;

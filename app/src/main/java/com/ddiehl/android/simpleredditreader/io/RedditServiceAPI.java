@@ -5,7 +5,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.ddiehl.android.simpleredditreader.RedditIdentityManager;
-import com.ddiehl.android.simpleredditreader.events.BusProvider;
+import com.ddiehl.android.simpleredditreader.BusProvider;
 import com.ddiehl.android.simpleredditreader.events.requests.GetUserIdentityEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.HideEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.LoadCommentThreadEvent;

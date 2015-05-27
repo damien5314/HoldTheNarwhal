@@ -12,7 +12,7 @@
     <color name="divider">#B6B6B6</color>
 
     <color name="transparent">#00000000</color>
-    <color name="indentation">@color/primary_light</color>
+    <color name="indentation">@color/primary</color>
     <color name="reddit_orange">#60FF8B60</color>
     <color name="reddit_blue">#609494FF</color>
     <color name="op_background">#0055DF</color>

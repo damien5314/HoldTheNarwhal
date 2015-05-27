@@ -10,14 +10,15 @@ import com.ddiehl.reddit.listings.RedditMoreComments;
 
 public interface CommentsPresenter {
 
-    void getComments();
     RedditLink getLink();
     void setLink(RedditLink link);
+    void getComments();
     void showMoreChildren(RedditMoreComments comment);
-    void updateSort(String sort);
-    AbsRedditComment getCommentAtPosition(int position);
     void toggleThreadVisible(AbsRedditComment comment);
+    void updateSort(String sort);
     int getNumComments();
+    AbsRedditComment getCommentAtPosition(int position);
+
     void showContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, RedditComment redditComment);
     void navigateToCommentThread(RedditMoreComments comment);
     void openReplyView();
