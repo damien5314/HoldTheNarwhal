@@ -15,8 +15,8 @@ import com.squareup.otto.Bus;
 
 import java.util.Date;
 
-public class IdentityBroker {
-    private static final String TAG = IdentityBroker.class.getSimpleName();
+public class RedditIdentityManager {
+    private static final String TAG = RedditIdentityManager.class.getSimpleName();
 
     private static final String PREFS_USER_ACCESS_TOKEN = "prefs_user_access_token";
     private static final String PREFS_APPLICATION_ACCESS_TOKEN = "prefs_application_access_token";
@@ -47,7 +47,7 @@ public class IdentityBroker {
     // Seconds within expiration we should try to retrieve a new auth token
     private static final int EXPIRATION_THRESHOLD = 60;
 
-    private static IdentityBroker _instance;
+    private static RedditIdentityManager _instance;
 
     private Bus mBus;
     private Context mContext;
@@ -56,7 +56,7 @@ public class IdentityBroker {
     private AccessToken mApplicationAccessToken;
     private UserIdentity mUserIdentity;
 
-    private IdentityBroker(Context context) {
+    private RedditIdentityManager(Context context) {
         mBus = BusProvider.getInstance();
         mContext = context;
         mUserAccessToken = getSavedUserAccessToken();
@@ -273,11 +273,11 @@ public class IdentityBroker {
 //        mBus.post(new UserIdentitySavedEvent(null));
     }
 
-    public static IdentityBroker getInstance(Context context) {
+    public static RedditIdentityManager getInstance(Context context) {
         if (_instance == null) {
-            synchronized (IdentityBroker.class) {
+            synchronized (RedditIdentityManager.class) {
                 if (_instance == null) {
-                    _instance = new IdentityBroker(context);
+                    _instance = new RedditIdentityManager(context);
                 }
             }
         }

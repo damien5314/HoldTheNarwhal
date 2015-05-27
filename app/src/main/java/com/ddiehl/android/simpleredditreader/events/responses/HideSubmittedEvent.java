@@ -2,20 +2,17 @@ package com.ddiehl.android.simpleredditreader.events.responses;
 
 import com.ddiehl.reddit.Hideable;
 
-public class HideSubmittedEvent {
+public class HideSubmittedEvent extends FailableEvent {
     private Hideable mListing;
     private boolean mToHide;
-    private Exception mError;
-    private boolean mFailed = false;
 
     public HideSubmittedEvent(Hideable listing, boolean toHide) {
         mListing = listing;
         mToHide = toHide;
     }
 
-    public HideSubmittedEvent(Exception error) {
-        mError = error;
-        mFailed = true;
+    public HideSubmittedEvent(Exception e) {
+        super(e);
     }
 
     public Hideable getListing() {
@@ -24,13 +21,5 @@ public class HideSubmittedEvent {
 
     public boolean isToHide() {
         return mToHide;
-    }
-
-    public Exception getError() {
-        return mError;
-    }
-
-    public boolean isFailed() {
-        return mFailed;
     }
 }

@@ -2,11 +2,10 @@ package com.ddiehl.android.simpleredditreader.presenter;
 
 import android.content.Context;
 
-import com.ddiehl.android.simpleredditreader.IdentityBroker;
 import com.ddiehl.android.simpleredditreader.R;
+import com.ddiehl.android.simpleredditreader.RedditIdentityManager;
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
 import com.ddiehl.android.simpleredditreader.events.requests.UserSignOutEvent;
-import com.ddiehl.android.simpleredditreader.events.responses.SavedUserIdentityRetrievedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.UserIdentitySavedEvent;
 import com.ddiehl.android.simpleredditreader.io.RedditServiceAuth;
 import com.ddiehl.android.simpleredditreader.view.MainView;
@@ -20,22 +19,16 @@ public class MainPresenterImpl implements MainPresenter {
     private Context mContext;
 
     private MainView mMainView;
-    private IdentityBroker mIdentityBroker;
+    private RedditIdentityManager mIdentityManager;
 
     public MainPresenterImpl(Context context, MainView view) {
         mBus = BusProvider.getInstance();
         mContext = context.getApplicationContext();
 
         mMainView = view;
-        mIdentityBroker = IdentityBroker.getInstance(mContext);
+        mIdentityManager = RedditIdentityManager.getInstance(mContext);
 
-        mMainView.setAccount(mIdentityBroker.getUserIdentity());
-    }
-
-    @Subscribe
-    public void onSavedUserIdentityRetrieved(SavedUserIdentityRetrievedEvent event) {
-        UserIdentity identity = event.getUserIdentity();
-        mMainView.setAccount(identity);
+        mMainView.setAccount(mIdentityManager.getUserIdentity());
     }
 
     @Subscribe
@@ -59,7 +52,7 @@ public class MainPresenterImpl implements MainPresenter {
 
     @Override
     public UserIdentity getAuthenticatedUser() {
-        return mIdentityBroker.getUserIdentity();
+        return mIdentityManager.getUserIdentity();
     }
 
     @Override

@@ -8,20 +8,17 @@ import java.util.List;
 
 import retrofit.RetrofitError;
 
-public class MoreChildrenLoadedEvent {
+public class MoreChildrenLoadedEvent extends FailableEvent {
     private RedditMoreComments mParentStub;
     private List<AbsRedditComment> mComments;
-    private RetrofitError mError;
-    private boolean mFailed = false;
 
     public MoreChildrenLoadedEvent(RedditMoreComments parentStub, MoreChildrenResponse moreChildrenResponse) {
         mParentStub = parentStub;
         mComments = moreChildrenResponse.getChildComments();
     }
 
-    public MoreChildrenLoadedEvent(RetrofitError error) {
-        mError = error;
-        mFailed = true;
+    public MoreChildrenLoadedEvent(RetrofitError e) {
+        super(e);
     }
 
     public RedditMoreComments getParentStub() {
@@ -30,13 +27,5 @@ public class MoreChildrenLoadedEvent {
 
     public List<AbsRedditComment> getComments() {
         return mComments;
-    }
-
-    public RetrofitError getError() {
-        return mError;
-    }
-
-    public boolean isFailed() {
-        return mFailed;
     }
 }

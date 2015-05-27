@@ -2,12 +2,10 @@ package com.ddiehl.android.simpleredditreader.events.responses;
 
 import com.ddiehl.reddit.Savable;
 
-public class SaveSubmittedEvent {
+public class SaveSubmittedEvent extends FailableEvent {
     private Savable mListing;
     private String mCategory;
     private boolean mToSave;
-    private Exception mError;
-    private boolean mFailed = false;
 
     public SaveSubmittedEvent(Savable s, String category, boolean b) {
         mListing = s;
@@ -15,9 +13,8 @@ public class SaveSubmittedEvent {
         mToSave = b;
     }
 
-    public SaveSubmittedEvent(Exception error) {
-        mError = error;
-        mFailed = true;
+    public SaveSubmittedEvent(Exception e) {
+        super(e);
     }
 
     public Savable getListing() {
@@ -26,13 +23,5 @@ public class SaveSubmittedEvent {
 
     public boolean isToSave() {
         return mToSave;
-    }
-
-    public Exception getError() {
-        return mError;
-    }
-
-    public boolean isFailed() {
-        return mFailed;
     }
 }

@@ -4,7 +4,7 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.ddiehl.android.simpleredditreader.IdentityBroker;
+import com.ddiehl.android.simpleredditreader.RedditIdentityManager;
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
 import com.ddiehl.android.simpleredditreader.events.requests.GetUserIdentityEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.HideEvent;
@@ -60,14 +60,14 @@ public class RedditServiceAPI implements RedditService {
     private Context mContext;
     private Bus mBus;
     private RedditAPI mAPI;
-    private IdentityBroker mIdentityBroker;
+    private RedditIdentityManager mIdentityManager;
 
-    protected RedditServiceAPI(Context context, IdentityBroker identityBroker) {
+    protected RedditServiceAPI(Context context, RedditIdentityManager manager) {
         mContext = context.getApplicationContext();
         mBus = BusProvider.getInstance();
         mBus.register(this);
         mAPI = buildApi();
-        mIdentityBroker = identityBroker;
+        mIdentityManager = manager;
     }
 
     private RedditAPI buildApi() {
@@ -94,10 +94,10 @@ public class RedditServiceAPI implements RedditService {
     }
 
     private String getAccessToken() {
-        if (mIdentityBroker.hasValidUserAccessToken()) {
-            return mIdentityBroker.getUserAccessToken().getToken();
-        } else if (mIdentityBroker.hasValidApplicationAccessToken()) {
-            return mIdentityBroker.getApplicationAccessToken().getToken();
+        if (mIdentityManager.hasValidUserAccessToken()) {
+            return mIdentityManager.getUserAccessToken().getToken();
+        } else if (mIdentityManager.hasValidApplicationAccessToken()) {
+            return mIdentityManager.getApplicationAccessToken().getToken();
         }
         return null;
     }
@@ -128,7 +128,7 @@ public class RedditServiceAPI implements RedditService {
 
         Toast.makeText(mContext, "User identity retrieved", Toast.LENGTH_SHORT).show();
         UserIdentity id = event.getUserIdentity();
-        mIdentityBroker.saveUserIdentity(id);
+        mIdentityManager.saveUserIdentity(id);
     }
 
     /**

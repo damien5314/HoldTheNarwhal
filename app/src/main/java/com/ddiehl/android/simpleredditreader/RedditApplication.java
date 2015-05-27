@@ -13,13 +13,12 @@ import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
 
 
-public class RedditReaderApplication extends Application {
-    private static final String TAG = RedditReaderApplication.class.getSimpleName();
+public class RedditApplication extends Application {
+    private static final String TAG = RedditApplication.class.getSimpleName();
 
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.d(TAG, "Creating RedditReaderApplication");
 
         Bus bus = BusProvider.getInstance();
         bus.register(this); // Listen for global events

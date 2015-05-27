@@ -7,12 +7,10 @@ import com.ddiehl.reddit.listings.RedditLink;
 import java.util.List;
 
 
-public class CommentThreadLoadedEvent {
+public class CommentThreadLoadedEvent extends FailableEvent {
     private RedditLink mLink;
     private List<AbsRedditComment> mComments;
     private int mParentDepth;
-    private Exception mError;
-    private boolean mFailed = false;
 
     public CommentThreadLoadedEvent(List<ListingResponse> listingResponseList, int parentDepth) {
         // Link is responseList.get(0), comments are responseList.get(1)
@@ -24,9 +22,8 @@ public class CommentThreadLoadedEvent {
         mParentDepth = parentDepth;
     }
 
-    public CommentThreadLoadedEvent(Exception error) {
-        mError = error;
-        mFailed = true;
+    public CommentThreadLoadedEvent(Exception e) {
+        super(e);
     }
 
     public RedditLink getLink() {
@@ -39,13 +36,5 @@ public class CommentThreadLoadedEvent {
 
     public int getParentDepth() {
         return mParentDepth;
-    }
-
-    public Exception getError() {
-        return mError;
-    }
-
-    public boolean isFailed() {
-        return mFailed;
     }
 }

@@ -7,11 +7,9 @@ import com.ddiehl.reddit.listings.RedditLink;
 import java.util.List;
 
 
-public class CommentsLoadedEvent {
+public class CommentsLoadedEvent extends FailableEvent {
     private RedditLink mLink;
     private List<AbsRedditComment> mComments;
-    private Exception mError;
-    private boolean mFailed = false;
 
     public CommentsLoadedEvent(List<ListingResponse> listingResponseList) {
         // Link is responseList.get(0), comments are responseList.get(1)
@@ -22,9 +20,8 @@ public class CommentsLoadedEvent {
         mComments = commentsResponse.getData().getChildren();
     }
 
-    public CommentsLoadedEvent(Exception error) {
-        mError = error;
-        mFailed = true;
+    public CommentsLoadedEvent(Exception e) {
+        super(e);
     }
 
     public RedditLink getLink() {
@@ -33,13 +30,5 @@ public class CommentsLoadedEvent {
 
     public List<AbsRedditComment> getComments() {
         return mComments;
-    }
-
-    public Exception getError() {
-        return mError;
-    }
-
-    public boolean isFailed() {
-        return mFailed;
     }
 }
