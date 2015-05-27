@@ -111,6 +111,10 @@ public class RedditComment extends AbsRedditComment implements Votable, Savable,
         return data.edited;
     }
 
+    public void isEdited(String s) {
+        data.edited = s;
+    }
+
     public String getAuthorFlairCssClass() {
         return data.AuthorFlairCssClass;
     }

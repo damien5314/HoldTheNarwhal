@@ -71,13 +71,22 @@ public class LinkViewHolder extends RecyclerView.ViewHolder
             mSelfText.setVisibility(View.GONE);
         }
 
-        String createDateFormatted = BaseUtils.getFormattedDateStringFromUtc(link.getCreatedUtc().longValue(), mContext);
-
         // Set content for each TextView
         mLinkScore.setText(String.valueOf(String.format("%s points", link.getScore())));
         mLinkTitle.setText(link.getTitle());
         mLinkAuthor.setText(String.format("/u/%s", link.getAuthor()));
-        mLinkTimestamp.setText(createDateFormatted);
+        String timestamp = BaseUtils.getFormattedDateStringFromUtc(link.getCreatedUtc().longValue(), mContext);
+        if (link.isEdited() != null) {
+            switch (link.isEdited()) {
+                case "":
+                case "0":
+                case "false":
+                    break;
+                default:
+                    timestamp += "*";
+            }
+        }
+        mLinkTimestamp.setText(timestamp);
         mLinkSubreddit.setText(String.format("/r/%s", link.getSubreddit()));
         mLinkDomain.setText(String.format("(%s)", link.getDomain()));
         mLinkComments.setText(String.format("%s comments", link.getNumComments()));

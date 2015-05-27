@@ -45,6 +45,14 @@ public class RedditLink extends Listing implements Votable, Savable, Hideable {
         return data.selftext;
     }
 
+    public String isEdited() {
+        return data.edited;
+    }
+
+    public void isEdited(String s) {
+        data.edited = s;
+    }
+
     public Boolean isLiked() {
         return data.likes;
     }
@@ -235,9 +243,11 @@ public class RedditLink extends Listing implements Votable, Savable, Hideable {
         @Expose
         private String subreddit;
         @Expose @SerializedName("selftext_html")
-        private Object selftextHtml;
+        private String selftextHtml;
         @Expose
         private String selftext;
+        @Expose
+        private String edited;
         @Expose
         private Boolean likes;
         @Expose @SerializedName("user_reports")
