@@ -184,6 +184,7 @@ public class RedditLink extends Listing implements Votable, Savable, Hideable {
         return data.permalink;
     }
 
+    @Override
     public String getName() {
         return data.name;
     }

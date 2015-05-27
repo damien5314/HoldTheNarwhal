@@ -213,9 +213,9 @@ public class LinksPresenterImpl implements LinksPresenter {
         if (event.isToHide()) {
             mLinksView.showToast(R.string.link_hidden);
             mLinks.remove(pos);
-            mLinksView.getListAdapter().notifyItemRemoved(mLinks.indexOf(event.getListing()));
+            mLinksView.getListAdapter().notifyItemRemoved(pos);
         } else {
-            mLinksView.getListAdapter().notifyItemChanged(mLinks.indexOf(event.getListing()));
+            mLinksView.getListAdapter().notifyItemChanged(pos);
         }
     }
 

@@ -345,7 +345,7 @@ public class RedditServiceAPI implements RedditService {
         final Hideable listing = event.getListing();
 
         if (event.isToHide()) { // Hide
-            mAPI.hide(listing.getId(), new Callback<Response>() {
+            mAPI.hide(listing.getName(), new Callback<Response>() {
                 @Override
                 public void success(Response response, Response response2) {
                     hideSuccess(response, listing, true);
@@ -357,7 +357,7 @@ public class RedditServiceAPI implements RedditService {
                 }
             });
         } else { // Unhide
-            mAPI.unhide(listing.getId(), new Callback<Response>() {
+            mAPI.unhide(listing.getName(), new Callback<Response>() {
                 @Override
                 public void success(Response response, Response response2) {
                     hideSuccess(response, listing, false);

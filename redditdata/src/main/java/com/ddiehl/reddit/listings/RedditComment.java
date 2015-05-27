@@ -135,6 +135,7 @@ public class RedditComment extends AbsRedditComment implements Votable, Savable,
         return data.scoreHidden;
     }
 
+    @Override
     public String getName() {
         return data.name;
     }
