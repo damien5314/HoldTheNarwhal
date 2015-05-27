@@ -29,6 +29,7 @@ import com.ddiehl.android.simpleredditreader.view.activities.MainActivity;
 import com.ddiehl.android.simpleredditreader.view.adapters.LinkCommentsAdapter;
 import com.ddiehl.android.simpleredditreader.view.dialogs.ChooseCommentSortDialog;
 import com.ddiehl.android.simpleredditreader.view.dialogs.ChooseLinkSortDialog;
+import com.ddiehl.reddit.listings.RedditComment;
 import com.ddiehl.reddit.listings.RedditLink;
 import com.squareup.otto.Bus;
 
@@ -116,6 +117,23 @@ public class LinkCommentsFragment extends Fragment implements LinksView, Comment
     @Override
     public void showCommentContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         getActivity().getMenuInflater().inflate(R.menu.comment_context_menu, menu);
+    }
+
+    @Override
+    public void openShareView(RedditComment comment) {
+        Intent i = new Intent(Intent.ACTION_SEND);
+        i.setType("text/plain");
+        i.putExtra(Intent.EXTRA_TEXT, comment.getUrl());
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(i);
+    }
+
+    @Override
+    public void openCommentInBrowser(RedditComment comment) {
+        Uri uri = Uri.parse(comment.getUrl());
+        Intent i = new Intent(Intent.ACTION_VIEW, uri);
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(i);
     }
 
     @Override
@@ -222,11 +240,6 @@ public class LinkCommentsFragment extends Fragment implements LinksView, Comment
     @Override
     public void setTitle(String title) {
         getActivity().setTitle(title);
-    }
-
-    @Override
-    public void updateAdapter() {
-        mLinkCommentsAdapter.notifyDataSetChanged();
     }
 
     @Override

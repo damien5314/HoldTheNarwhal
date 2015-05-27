@@ -1,5 +1,6 @@
 package com.ddiehl.reddit.listings;
 
+import com.ddiehl.reddit.Hideable;
 import com.ddiehl.reddit.Savable;
 import com.ddiehl.reddit.Votable;
 import com.google.gson.annotations.Expose;
@@ -8,11 +9,15 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 @SuppressWarnings("unused")
-public class RedditComment extends AbsRedditComment implements Votable, Savable {
+public class RedditComment extends AbsRedditComment implements Votable, Savable, Hideable {
 
     @Expose
     private RedditCommentData data;
 
+    public String getUrl() {
+        return String.format("http://www.reddit.com/r/%s/comments/%s?comment=%s",
+                getSubreddit(), getLinkId(), getId());
+    }
 
     @Override
     public RedditCommentData getData() {

@@ -8,8 +8,10 @@ import android.view.View;
 import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.RedditPreferences;
 import com.ddiehl.android.simpleredditreader.events.BusProvider;
+import com.ddiehl.android.simpleredditreader.events.requests.HideEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.LoadCommentsEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.LoadMoreChildrenEvent;
+import com.ddiehl.android.simpleredditreader.events.requests.SaveEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.VoteEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.CommentThreadLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.CommentsLoadedEvent;
@@ -100,7 +102,7 @@ public class CommentsPresenterImpl implements CommentsPresenter {
     @Override
     public void toggleThreadVisible(AbsRedditComment comment) {
         mCommentBank.toggleThreadVisible(comment);
-        mCommentsView.updateAdapter();
+        mCommentsView.getListAdapter().notifyDataSetChanged();
     }
 
     @Override
@@ -119,6 +121,9 @@ public class CommentsPresenterImpl implements CommentsPresenter {
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.action_comment_reply:
+                mCommentsView.showToast(R.string.implementation_tbd);
+                return true;
             case R.id.action_comment_upvote:
                 upvote(mCommentSelected);
                 return true;
@@ -170,7 +175,7 @@ public class CommentsPresenterImpl implements CommentsPresenter {
         List<AbsRedditComment> comments = event.getComments();
         AbsRedditComment.flattenCommentList(comments);
         mCommentBank.setData(comments);
-        mCommentsView.updateAdapter();
+        mCommentsView.getListAdapter().notifyDataSetChanged();
     }
 
     @Subscribe
@@ -201,7 +206,7 @@ public class CommentsPresenterImpl implements CommentsPresenter {
             }
         }
 
-        mCommentsView.updateAdapter();
+        mCommentsView.getListAdapter().notifyDataSetChanged();
     }
 
     @Subscribe
@@ -236,7 +241,7 @@ public class CommentsPresenterImpl implements CommentsPresenter {
             }
         }
 
-        mCommentsView.updateAdapter();
+        mCommentsView.getListAdapter().notifyDataSetChanged();
     }
 
     @Subscribe
@@ -261,5 +266,33 @@ public class CommentsPresenterImpl implements CommentsPresenter {
     private void downvote(RedditComment comment) {
         int dir = (comment.isLiked() == null || comment.isLiked()) ? -1 : 0;
         mBus.post(new VoteEvent(comment, "t1", dir));
+    }
+
+    private void saveLink(RedditComment comment) {
+        mBus.post(new SaveEvent(comment, null, true));
+    }
+
+    private void unsaveLink(RedditComment comment) {
+        mBus.post(new SaveEvent(comment, null, false));
+    }
+
+    private void shareComment(RedditComment comment) {
+        mCommentsView.openShareView(comment);
+    }
+
+    private void openCommentInBrowser(RedditComment comment) {
+        mCommentsView.openCommentInBrowser(comment);
+    }
+
+    private void hideLink(RedditComment comment) {
+        mBus.post(new HideEvent(comment, true));
+    }
+
+    private void unhideLink(RedditComment comment) {
+        mBus.post(new HideEvent(comment, false));
+    }
+
+    private void reportLink(RedditComment comment) {
+        mCommentsView.showToast(R.string.implementation_tbd);
     }
 }

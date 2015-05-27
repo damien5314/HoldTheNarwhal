@@ -1,5 +1,6 @@
 package com.ddiehl.reddit.listings;
 
+import com.ddiehl.reddit.Hideable;
 import com.ddiehl.reddit.Savable;
 import com.ddiehl.reddit.Votable;
 import com.google.gson.annotations.Expose;
@@ -10,7 +11,7 @@ import java.util.List;
 
 
 @SuppressWarnings("unused")
-public class RedditLink extends Listing implements Votable, Savable {
+public class RedditLink extends Listing implements Votable, Savable, Hideable {
 
     @Expose
     private RedditLinkData data;

@@ -25,6 +25,7 @@ import com.ddiehl.android.simpleredditreader.events.responses.UserIdentityRetrie
 import com.ddiehl.android.simpleredditreader.events.responses.VoteSubmittedEvent;
 import com.ddiehl.android.simpleredditreader.events.exceptions.UserRequiredException;
 import com.ddiehl.android.simpleredditreader.utils.BaseUtils;
+import com.ddiehl.reddit.Hideable;
 import com.ddiehl.reddit.Savable;
 import com.ddiehl.reddit.Votable;
 import com.ddiehl.reddit.adapters.AbsRedditCommentDeserializer;
@@ -341,13 +342,13 @@ public class RedditServiceAPI implements RedditService {
 
     @Override
     public void onHide(final HideEvent event) {
-        final RedditLink link = event.getLink();
+        final Hideable listing = event.getListing();
 
         if (event.isToHide()) { // Hide
-            mAPI.hide(link.getName(), new Callback<Response>() {
+            mAPI.hide(listing.getId(), new Callback<Response>() {
                 @Override
                 public void success(Response response, Response response2) {
-                    hideSuccess(response, link, true);
+                    hideSuccess(response, listing, true);
                 }
 
                 @Override
@@ -356,10 +357,10 @@ public class RedditServiceAPI implements RedditService {
                 }
             });
         } else { // Unhide
-            mAPI.unhide(link.getName(), new Callback<Response>() {
+            mAPI.unhide(listing.getId(), new Callback<Response>() {
                 @Override
                 public void success(Response response, Response response2) {
-                    hideSuccess(response, link, false);
+                    hideSuccess(response, listing, false);
                 }
 
                 @Override
@@ -375,7 +376,7 @@ public class RedditServiceAPI implements RedditService {
         // TODO
     }
 
-    private void hideSuccess(Response response, RedditLink link, boolean toHide) {
+    private void hideSuccess(Response response, Hideable listing, boolean toHide) {
         BaseUtils.printResponseStatus(response);
 
         try {
@@ -383,7 +384,7 @@ public class RedditServiceAPI implements RedditService {
             if (BaseUtils.inputStreamToString(in).contains("USER_REQUIRED")) {
                 throw new UserRequiredException();
             } else {
-                mBus.post(new HideSubmittedEvent(link, toHide));
+                mBus.post(new HideSubmittedEvent(listing, toHide));
             }
         } catch (Exception e) {
             e.printStackTrace();

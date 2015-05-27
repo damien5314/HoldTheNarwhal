@@ -209,13 +209,13 @@ public class LinksPresenterImpl implements LinksPresenter {
             return;
         }
 
-        int pos = mLinks.indexOf(event.getLink());
+        int pos = mLinks.indexOf(event.getListing());
         if (event.isToHide()) {
             mLinksView.showToast(R.string.link_hidden);
             mLinks.remove(pos);
-            mLinksView.getListAdapter().notifyItemRemoved(mLinks.indexOf(event.getLink()));
+            mLinksView.getListAdapter().notifyItemRemoved(mLinks.indexOf(event.getListing()));
         } else {
-            mLinksView.getListAdapter().notifyItemChanged(mLinks.indexOf(event.getLink()));
+            mLinksView.getListAdapter().notifyItemChanged(mLinks.indexOf(event.getListing()));
         }
     }
 

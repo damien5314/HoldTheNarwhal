@@ -1,18 +1,18 @@
 package com.ddiehl.android.simpleredditreader.events.requests;
 
-import com.ddiehl.reddit.listings.RedditLink;
+import com.ddiehl.reddit.Hideable;
 
 public class HideEvent {
-    private RedditLink mRedditLink;
+    private Hideable mListing;
     private boolean mToHide;
 
-    public HideEvent(RedditLink link, boolean save) {
-        mRedditLink = link;
+    public HideEvent(Hideable listing, boolean save) {
+        mListing = listing;
         mToHide = save;
     }
 
-    public RedditLink getLink() {
-        return mRedditLink;
+    public Hideable getListing() {
+        return mListing;
     }
 
     public boolean isToHide() {

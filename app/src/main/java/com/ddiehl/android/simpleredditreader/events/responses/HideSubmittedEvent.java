@@ -1,15 +1,15 @@
 package com.ddiehl.android.simpleredditreader.events.responses;
 
-import com.ddiehl.reddit.listings.RedditLink;
+import com.ddiehl.reddit.Hideable;
 
 public class HideSubmittedEvent {
-    private RedditLink mRedditLink;
+    private Hideable mListing;
     private boolean mToHide;
     private Exception mError;
     private boolean mFailed = false;
 
-    public HideSubmittedEvent(RedditLink link, boolean toHide) {
-        mRedditLink = link;
+    public HideSubmittedEvent(Hideable listing, boolean toHide) {
+        mListing = listing;
         mToHide = toHide;
     }
 
@@ -18,8 +18,8 @@ public class HideSubmittedEvent {
         mFailed = true;
     }
 
-    public RedditLink getLink() {
-        return mRedditLink;
+    public Hideable getListing() {
+        return mListing;
     }
 
     public boolean isToHide() {
