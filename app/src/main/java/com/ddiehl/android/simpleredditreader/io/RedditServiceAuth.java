@@ -124,6 +124,7 @@ public class RedditServiceAuth implements RedditService {
     @Subscribe
     public void onApplicationAuthorized(ApplicationAuthorizedEvent event) {
         if (event.isFailed()) {
+            mQueuedEvent = null;
             return;
         }
 
@@ -232,6 +233,7 @@ public class RedditServiceAuth implements RedditService {
     @Subscribe
     public void onUserAuthorized(UserAuthorizedEvent event) {
         if (event.isFailed()) {
+            mQueuedEvent = null;
             return;
         }
 
@@ -249,6 +251,7 @@ public class RedditServiceAuth implements RedditService {
     @Subscribe
     public void onUserAuthorizationRefreshed(UserAuthorizationRefreshedEvent event) {
         if (event.isFailed()) {
+            mQueuedEvent = null;
             mIdentityBroker.clearSavedUserAccessToken();
             mIdentityBroker.clearSavedUserIdentity();
             return;
