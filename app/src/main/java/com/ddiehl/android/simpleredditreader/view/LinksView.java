@@ -11,7 +11,7 @@ public interface LinksView extends BaseView {
     RecyclerView.Adapter<RecyclerView.ViewHolder> getListAdapter();
     void openWebViewForLink(RedditLink link);
     void showCommentsForLink(RedditLink link);
-    void showLinkContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo);
+    void showLinkContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, RedditLink link);
 
     void openShareView(RedditLink link);
     void openLinkInBrowser(RedditLink link);

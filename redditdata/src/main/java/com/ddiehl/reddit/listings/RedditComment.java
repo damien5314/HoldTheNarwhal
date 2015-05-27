@@ -22,6 +22,16 @@ public class RedditComment extends AbsRedditComment implements Votable, Savable,
     }
 
     @Override
+    public Boolean isHidden() {
+        return data.hidden;
+    }
+
+    @Override
+    public void isHidden(Boolean b) {
+        data.hidden = b;
+    }
+
+    @Override
     public RedditCommentData getData() {
         return data;
     }
@@ -192,6 +202,7 @@ public class RedditComment extends AbsRedditComment implements Votable, Savable,
 
     public static class RedditCommentData {
 
+        private Boolean hidden;
         @Expose
         private ListingResponse replies;
         @Expose @SerializedName("subreddit_id")

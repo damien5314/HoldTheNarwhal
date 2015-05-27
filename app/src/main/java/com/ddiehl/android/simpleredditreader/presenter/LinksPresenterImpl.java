@@ -228,9 +228,9 @@ public class LinksPresenterImpl implements LinksPresenter {
     }
 
     @Override
-    public void showContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, RedditLink link) {
+    public void showLinkContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, RedditLink link) {
         mLinkSelected = link;
-        mLinksView.showLinkContextMenu(menu, v, menuInfo);
+        mLinksView.showLinkContextMenu(menu, v, menuInfo, link);
         menu.findItem(R.id.action_link_save).setVisible(!link.isSaved());
         menu.findItem(R.id.action_link_unsave).setVisible(link.isSaved());
     }

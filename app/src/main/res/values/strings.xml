@@ -47,7 +47,8 @@
     <string name="unauthenticated">Not signed in</string>
     <string name="sign_out_cs">Sign out</string>
     <string name="action_hide">hide</string>
-    <string name="hide_failed">Failed to hide link, please try again</string>
+    <string name="action_unhide">unhide</string>
+    <string name="hide_failed">Failed to (un)hide link, please try again</string>
     <string name="confirm_sign_out_dialog_title">Sign Out</string>
     <string name="confirm_sign_out_dialog_message">Sign out from user account?</string>
     <string name="confirm_sign_out_dialog_ok">OK</string>

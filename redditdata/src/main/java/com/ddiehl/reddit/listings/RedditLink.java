@@ -134,8 +134,14 @@ public class RedditLink extends Listing implements Votable, Savable, Hideable {
         return data.over18;
     }
 
-    public Boolean getHidden() {
+    @Override
+    public Boolean isHidden() {
         return data.hidden;
+    }
+
+    @Override
+    public void isHidden(Boolean b) {
+        data.hidden = b;
     }
 
     public String getThumbnail() {

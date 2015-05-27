@@ -126,6 +126,6 @@ public class CommentViewHolder extends RecyclerView.ViewHolder
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        mCommentsPresenter.showContextMenu(menu, v, menuInfo, mRedditComment);
+        mCommentsPresenter.showCommentContextMenu(menu, v, menuInfo, mRedditComment);
     }
 }

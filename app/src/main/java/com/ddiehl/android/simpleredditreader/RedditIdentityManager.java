@@ -57,7 +57,7 @@ public class RedditIdentityManager {
 
     private RedditIdentityManager(Context context) {
         mBus = BusProvider.getInstance();
-        mContext = context;
+        mContext = context.getApplicationContext();
         mUserAccessToken = getSavedUserAccessToken();
         mApplicationAccessToken = getSavedApplicationAccessToken();
         mUserIdentity = getSavedUserIdentity();

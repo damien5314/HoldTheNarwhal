@@ -19,7 +19,7 @@ public interface LinksPresenter {
     void updateSort(String sort);
     void updateTimeSpan(String timespan);
 
-    void showContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, RedditLink link);
+    void showLinkContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, RedditLink link);
 
     void openLink(RedditLink link);
     void showCommentsForLink(RedditLink link);

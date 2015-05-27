@@ -4,9 +4,10 @@ import android.content.Context;
 import android.view.ContextMenu;
 import android.view.View;
 
-import com.ddiehl.android.simpleredditreader.R;
-import com.ddiehl.android.simpleredditreader.RedditPreferences;
 import com.ddiehl.android.simpleredditreader.BusProvider;
+import com.ddiehl.android.simpleredditreader.R;
+import com.ddiehl.android.simpleredditreader.RedditIdentityManager;
+import com.ddiehl.android.simpleredditreader.RedditPreferences;
 import com.ddiehl.android.simpleredditreader.events.requests.HideEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.LoadCommentsEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.LoadMoreChildrenEvent;
@@ -112,11 +113,22 @@ public class CommentsPresenterImpl implements CommentsPresenter {
     }
 
     @Override
-    public void showContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, RedditComment comment) {
+    public void showCommentContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, RedditComment comment) {
         mCommentSelected = comment;
-        mCommentsView.showCommentContextMenu(menu, v, menuInfo);
+        mCommentsView.showCommentContextMenu(menu, v, menuInfo, comment);
+
         menu.findItem(R.id.action_comment_save).setVisible(!comment.isSaved());
         menu.findItem(R.id.action_comment_unsave).setVisible(comment.isSaved());
+
+        // If user is gold, show them option to hide or unhide
+        boolean isGold = RedditIdentityManager.getInstance(mContext).getUserIdentity().isGold();
+        if (isGold) {
+            menu.findItem(R.id.action_comment_hide).setVisible(!comment.isHidden());
+            menu.findItem(R.id.action_comment_unhide).setVisible(comment.isHidden());
+        } else {
+            menu.findItem(R.id.action_comment_hide).setVisible(false);
+            menu.findItem(R.id.action_comment_unhide).setVisible(false);
+        }
     }
 
     @Override
