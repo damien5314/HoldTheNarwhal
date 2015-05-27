@@ -22,9 +22,7 @@ import com.ddiehl.android.simpleredditreader.io.RedditServiceAuth;
 import com.ddiehl.android.simpleredditreader.utils.AuthUtils;
 import com.squareup.otto.Bus;
 
-/**
- * Created by Damien on 2/6/2015.
- */
+
 public class WebViewFragment extends Fragment {
     public static final String TAG = WebViewFragment.class.getSimpleName();
 

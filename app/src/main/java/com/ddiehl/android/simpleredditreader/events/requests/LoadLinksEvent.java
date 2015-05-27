@@ -1,8 +1,6 @@
 package com.ddiehl.android.simpleredditreader.events.requests;
 
-/**
- * Created by Damien on 1/19/2015.
- */
+
 public class LoadLinksEvent {
 
     private String mSubreddit;

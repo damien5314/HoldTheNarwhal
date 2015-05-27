@@ -18,9 +18,7 @@ import retrofit.client.Header;
 import retrofit.client.Response;
 import retrofit.mime.TypedInput;
 
-/**
- * Created by Damien on 1/19/2015.
- */
+
 public class BaseUtils {
     private static final String TAG = BaseUtils.class.getSimpleName();
 
