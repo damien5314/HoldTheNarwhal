@@ -300,7 +300,9 @@ public class RedditServiceAPI implements RedditService {
 
                 @Override
                 public void failure(RetrofitError error) {
-                    saveFailure(error);
+                    BaseUtils.showError(mContext, error);
+                    BaseUtils.printResponse(error.getResponse());
+                    mBus.post(new SaveSubmittedEvent(error));
                 }
             });
         } else { // Unsave
@@ -312,7 +314,9 @@ public class RedditServiceAPI implements RedditService {
 
                 @Override
                 public void failure(RetrofitError error) {
-                    saveFailure(error);
+                    BaseUtils.showError(mContext, error);
+                    BaseUtils.printResponse(error.getResponse());
+                    mBus.post(new SaveSubmittedEvent(error));
                 }
             });
         }
@@ -334,12 +338,6 @@ public class RedditServiceAPI implements RedditService {
         }
     }
 
-    private void saveFailure(RetrofitError error) {
-        BaseUtils.showError(mContext, error);
-        BaseUtils.printResponse(error.getResponse());
-        mBus.post(new SaveSubmittedEvent(error));
-    }
-
     @Override
     public void onHide(final HideEvent event) {
         final Hideable listing = event.getListing();
@@ -353,7 +351,9 @@ public class RedditServiceAPI implements RedditService {
 
                 @Override
                 public void failure(RetrofitError error) {
-                    hideFailure(error);
+                    BaseUtils.showError(mContext, error);
+                    BaseUtils.printResponse(error.getResponse());
+                    mBus.post(new HideSubmittedEvent(error));
                 }
             });
         } else { // Unhide
@@ -365,15 +365,12 @@ public class RedditServiceAPI implements RedditService {
 
                 @Override
                 public void failure(RetrofitError error) {
-                    hideFailure(error);
+                    BaseUtils.showError(mContext, error);
+                    BaseUtils.printResponse(error.getResponse());
+                    mBus.post(new HideSubmittedEvent(error));
                 }
             });
         }
-    }
-
-    @Override
-    public void onReport(final ReportEvent event) {
-        // TODO
     }
 
     private void hideSuccess(Response response, Hideable listing, boolean toHide) {
@@ -392,10 +389,8 @@ public class RedditServiceAPI implements RedditService {
         }
     }
 
-    private void hideFailure(RetrofitError error) {
-        BaseUtils.showError(mContext, error);
-        BaseUtils.printResponse(error.getResponse());
-        mBus.post(new HideSubmittedEvent(error));
+    @Override
+    public void onReport(final ReportEvent event) {
+        // TODO
     }
-
 }

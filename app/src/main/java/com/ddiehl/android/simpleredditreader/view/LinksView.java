@@ -6,14 +6,8 @@ import android.view.View;
 
 import com.ddiehl.reddit.listings.RedditLink;
 
-public interface LinksView {
+public interface LinksView extends BaseView {
 
-    void setTitle(String title);
-    void showSpinner(String msg);
-    void showSpinner(int resId);
-    void dismissSpinner();
-    void showToast(int resId);
-    void showToast(String string);
     RecyclerView.Adapter<RecyclerView.ViewHolder> getListAdapter();
     void openWebViewForLink(RedditLink link);
     void showCommentsForLink(RedditLink link);

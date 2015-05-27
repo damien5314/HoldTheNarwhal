@@ -242,7 +242,7 @@ public class LinksFragment extends Fragment implements LinksView {
     }
 
     @Override
-    public void setTitle(String title) {
+    public void setTitle(CharSequence title) {
         getActivity().setTitle(title);
     }
 

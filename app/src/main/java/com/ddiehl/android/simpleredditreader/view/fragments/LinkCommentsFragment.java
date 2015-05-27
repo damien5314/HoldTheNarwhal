@@ -298,7 +298,7 @@ public class LinkCommentsFragment extends Fragment implements LinksView, Comment
     }
 
     @Override
-    public void setTitle(String title) {
+    public void setTitle(CharSequence title) {
         getActivity().setTitle(title);
     }
 

@@ -6,14 +6,8 @@ import android.view.View;
 
 import com.ddiehl.reddit.listings.RedditComment;
 
-public interface CommentsView {
+public interface CommentsView extends BaseView {
 
-    void setTitle(String title);
-    void showSpinner(String msg);
-    void showSpinner(int resId);
-    void dismissSpinner();
-    void showToast(int resId);
-    void showToast(String string);
     RecyclerView.Adapter<RecyclerView.ViewHolder> getListAdapter();
     void showCommentContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo);
 

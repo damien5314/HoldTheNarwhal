@@ -1,7 +1,6 @@
 package com.ddiehl.android.simpleredditreader.utils;
 
 import android.content.Context;
-import android.text.format.DateUtils;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -74,8 +73,8 @@ public class BaseUtils {
             outputString = c.getString(R.string.timespan_seconds);
         }
 
-//        return String.format(outputString, output);
-        return DateUtils.getRelativeTimeSpanString(date.getTime(), new Date().getTime(), DateUtils.MINUTE_IN_MILLIS).toString();
+        return String.format(outputString, output);
+//        return DateUtils.getRelativeTimeSpanString(date.getTime(), new Date().getTime(), DateUtils.MINUTE_IN_MILLIS).toString();
     }
 
     public static void printResponse(Response response) {

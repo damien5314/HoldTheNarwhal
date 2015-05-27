@@ -122,6 +122,11 @@ public class MainActivity extends ActionBarActivity implements MainView, Confirm
     }
 
     @Override
+    public void setTitle(CharSequence title) {
+        super.setTitle(title);
+    }
+
+    @Override
     public void showSpinner(String message) {
         if (mProgressBar == null) {
             mProgressBar = new ProgressDialog(this, R.style.ProgressDialog);
