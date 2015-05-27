@@ -20,6 +20,7 @@ public interface CommentsPresenter {
     int getNumComments();
     void showContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, RedditComment redditComment);
     void navigateToCommentThread(RedditMoreComments comment);
+    void openReplyView();
     void upvote();
     void downvote();
     void saveComment();
@@ -29,4 +30,5 @@ public interface CommentsPresenter {
     void hideComment();
     void unhideComment();
     void reportComment();
+
 }

@@ -14,10 +14,14 @@ import com.ddiehl.android.simpleredditreader.events.requests.SaveEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.VoteEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.CommentThreadLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.CommentsLoadedEvent;
+import com.ddiehl.android.simpleredditreader.events.responses.HideSubmittedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.MoreChildrenLoadedEvent;
+import com.ddiehl.android.simpleredditreader.events.responses.SaveSubmittedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.UserIdentitySavedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.VoteSubmittedEvent;
 import com.ddiehl.android.simpleredditreader.view.CommentsView;
+import com.ddiehl.reddit.Hideable;
+import com.ddiehl.reddit.Savable;
 import com.ddiehl.reddit.Votable;
 import com.ddiehl.reddit.listings.AbsRedditComment;
 import com.ddiehl.reddit.listings.CommentBank;
@@ -117,7 +121,7 @@ public class CommentsPresenterImpl implements CommentsPresenter {
 
     @Override
     public void navigateToCommentThread(RedditMoreComments comment) {
-        mCommentsView.showToast(R.string.implementation_tbd);
+        mCommentsView.showToast(R.string.implementation_pending);
     }
 
     @Subscribe
@@ -220,6 +224,46 @@ public class CommentsPresenterImpl implements CommentsPresenter {
         }
     }
 
+    @Subscribe
+    public void onCommentSaved(SaveSubmittedEvent event) {
+        if (event.isFailed()) {
+            mCommentsView.showToast(R.string.save_failed);
+            return;
+        }
+
+        Savable listing = event.getListing();
+        if (listing instanceof RedditLink) {
+            listing.isSaved(event.isToSave());
+            mCommentsView.getListAdapter().notifyItemChanged(mCommentBank.indexOf(listing));
+        }
+    }
+
+    @Subscribe
+    public void onCommentHidden(HideSubmittedEvent event) {
+        if (event.isFailed()) {
+            mCommentsView.showToast(R.string.hide_failed);
+            return;
+        }
+
+        Hideable listing = event.getListing();
+        if (listing instanceof RedditLink) {
+            int pos = mCommentBank.indexOf(listing);
+            if (event.isToHide()) {
+                mCommentsView.showToast(R.string.link_hidden);
+                mCommentBank.remove(pos);
+                mCommentsView.getListAdapter().notifyItemRemoved(pos);
+            } else {
+                mCommentsView.getListAdapter().notifyItemChanged(pos);
+            }
+        }
+    }
+
+    @Override
+    public void openReplyView() {
+        RedditComment comment = mCommentSelected;
+        mCommentsView.openReplyView(comment);
+    }
+
     @Override
     public void upvote() {
         RedditComment comment = mCommentSelected;
@@ -273,6 +317,6 @@ public class CommentsPresenterImpl implements CommentsPresenter {
     @Override
     public void reportComment() {
         RedditComment comment = mCommentSelected;
-        mCommentsView.showToast(R.string.implementation_tbd);
+        mCommentsView.showToast(R.string.implementation_pending);
     }
 }

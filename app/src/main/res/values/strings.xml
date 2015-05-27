@@ -64,7 +64,7 @@
     <string name="timespan_seconds">%s seconds ago</string>
     <string name="spinner_getting_submissions">Getting submissions&#8230;</string>
     <string name="action_reply">reply</string>
-    <string name="implementation_tbd">coming soon</string>
+    <string name="implementation_pending">coming soon</string>
     <string name="link_hidden">Link hidden</string>
 
     <string name="lorem_ipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas at velit ex.

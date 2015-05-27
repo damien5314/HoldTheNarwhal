@@ -16,7 +16,9 @@ public class RedditComment extends AbsRedditComment implements Votable, Savable,
 
     public String getUrl() {
         return String.format("http://www.reddit.com/r/%s/comments/%s?comment=%s",
-                getSubreddit(), getLinkId(), getId());
+                getSubreddit(),
+                getLinkId().substring(3), // Remove the type prefix (t3_, etc)
+                getId());
     }
 
     @Override

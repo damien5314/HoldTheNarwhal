@@ -5,18 +5,18 @@ import java.util.List;
 
 public interface CommentBank {
 
-    public boolean addAll(Collection<? extends AbsRedditComment> collection);
-    public boolean addAll(int index, Collection<? extends AbsRedditComment> collection);
-    public int indexOf(AbsRedditComment comment);
-    public AbsRedditComment get(int position);
-    public int size();
-    public AbsRedditComment remove(int position);
-    public boolean remove(AbsRedditComment comment);
-    public void clear();
-    public void setData(List<AbsRedditComment> data);
-    public boolean isVisible(int position);
-    public int getNumVisible();
-    public AbsRedditComment getVisibleComment(int position);
-    public void toggleThreadVisible(AbsRedditComment comment);
+    boolean addAll(Collection<? extends AbsRedditComment> collection);
+    boolean addAll(int index, Collection<? extends AbsRedditComment> collection);
+    int indexOf(Object obj);
+    AbsRedditComment get(int position);
+    int size();
+    AbsRedditComment remove(int position);
+    boolean remove(AbsRedditComment comment);
+    void clear();
+    void setData(List<AbsRedditComment> data);
+    boolean isVisible(int position);
+    int getNumVisible();
+    AbsRedditComment getVisibleComment(int position);
+    void toggleThreadVisible(AbsRedditComment comment);
 
 }

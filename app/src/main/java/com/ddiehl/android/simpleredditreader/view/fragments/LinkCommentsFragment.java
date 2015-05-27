@@ -195,7 +195,7 @@ public class LinkCommentsFragment extends Fragment implements LinksView, Comment
                 mLinksPresenter.reportLink();
                 return true;
             case R.id.action_comment_reply:
-                showToast(R.string.implementation_tbd);
+                mCommentsPresenter.openReplyView();
                 return true;
             case R.id.action_comment_upvote:
                 mCommentsPresenter.upvote();
@@ -204,22 +204,22 @@ public class LinkCommentsFragment extends Fragment implements LinksView, Comment
                 mCommentsPresenter.downvote();
                 return true;
             case R.id.action_comment_save:
-                showToast(R.string.implementation_tbd);
+                mCommentsPresenter.saveComment();
                 return true;
             case R.id.action_comment_unsave:
-                showToast(R.string.implementation_tbd);
+                mCommentsPresenter.unsaveComment();
                 return true;
             case R.id.action_comment_share:
-                showToast(R.string.implementation_tbd);
+                mCommentsPresenter.shareComment();
                 return true;
             case R.id.action_comment_open_in_browser:
-                showToast(R.string.implementation_tbd);
+                mCommentsPresenter.openCommentInBrowser();
                 return true;
             case R.id.action_comment_hide:
-                showToast(R.string.implementation_tbd);
+                mCommentsPresenter.hideComment();
                 return true;
             case R.id.action_comment_report:
-                showToast(R.string.implementation_tbd);
+                mCommentsPresenter.reportComment();
                 return true;
             default:
                 return false;
@@ -310,5 +310,10 @@ public class LinkCommentsFragment extends Fragment implements LinksView, Comment
     @Override
     public void showCommentsForLink(RedditLink link) {
         // Intentionally empty
+    }
+
+    @Override
+    public void openReplyView(RedditComment comment) {
+        showToast(R.string.implementation_pending);
     }
 }

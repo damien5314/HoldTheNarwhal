@@ -18,6 +18,7 @@ import com.ddiehl.android.simpleredditreader.events.responses.SaveSubmittedEvent
 import com.ddiehl.android.simpleredditreader.events.responses.UserIdentitySavedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.VoteSubmittedEvent;
 import com.ddiehl.android.simpleredditreader.view.LinksView;
+import com.ddiehl.reddit.Hideable;
 import com.ddiehl.reddit.Savable;
 import com.ddiehl.reddit.Sort;
 import com.ddiehl.reddit.TimeSpan;
@@ -208,13 +209,16 @@ public class LinksPresenterImpl implements LinksPresenter {
             return;
         }
 
-        int pos = mLinks.indexOf(event.getListing());
-        if (event.isToHide()) {
-            mLinksView.showToast(R.string.link_hidden);
-            mLinks.remove(pos);
-            mLinksView.getListAdapter().notifyItemRemoved(pos);
-        } else {
-            mLinksView.getListAdapter().notifyItemChanged(pos);
+        Hideable listing = event.getListing();
+        if (listing instanceof RedditLink) {
+            int pos = mLinks.indexOf(listing);
+            if (event.isToHide()) {
+                mLinksView.showToast(R.string.link_hidden);
+                mLinks.remove(pos);
+                mLinksView.getListAdapter().notifyItemRemoved(pos);
+            } else {
+                mLinksView.getListAdapter().notifyItemChanged(pos);
+            }
         }
     }
 
@@ -313,6 +317,6 @@ public class LinksPresenterImpl implements LinksPresenter {
     @Override
     public void reportLink() {
         RedditLink link = mLinkSelected;
-        mLinksView.showToast(R.string.implementation_tbd);
+        mLinksView.showToast(R.string.implementation_pending);
     }
 }

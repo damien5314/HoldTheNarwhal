@@ -19,4 +19,5 @@ public interface CommentsView {
 
     void openShareView(RedditComment comment);
     void openCommentInBrowser(RedditComment comment);
+    void openReplyView(RedditComment comment);
 }

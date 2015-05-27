@@ -36,8 +36,8 @@ public class CommentBankList implements CommentBank {
     }
 
     @Override
-    public int indexOf(AbsRedditComment comment) {
-        return mData.indexOf(comment);
+    public int indexOf(Object o) {
+        return mData.indexOf(o);
     }
 
     @Override
