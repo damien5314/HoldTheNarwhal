@@ -77,7 +77,18 @@ public class CommentViewHolder extends RecyclerView.ViewHolder
         mBodyView.setVisibility(View.VISIBLE);
         mAuthorView.setText(comment.getAuthor());
         mScoreView.setText(String.format(mContext.getString(R.string.comment_score), comment.getScore()));
-        mTimestampView.setText(BaseUtils.getFormattedDateStringFromUtc(comment.getCreateUtc().longValue(), mContext));
+        String timestamp = BaseUtils.getFormattedDateStringFromUtc(comment.getCreateUtc().longValue(), mContext);
+        if (comment.isEdited() != null) {
+            switch (comment.isEdited()) {
+                case "":
+                case "0":
+                case "false":
+                    break;
+                default:
+                    timestamp += "*";
+            }
+        }
+        mTimestampView.setText(timestamp);
         mBodyView.setText(comment.getBody().trim());
         if (comment.isCollapsed()) {
             mBodyView.setVisibility(View.GONE);

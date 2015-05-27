@@ -268,11 +268,11 @@ public class CommentsPresenterImpl implements CommentsPresenter {
         mBus.post(new VoteEvent(comment, "t1", dir));
     }
 
-    private void saveLink(RedditComment comment) {
+    private void saveComment(RedditComment comment) {
         mBus.post(new SaveEvent(comment, null, true));
     }
 
-    private void unsaveLink(RedditComment comment) {
+    private void unsaveComment(RedditComment comment) {
         mBus.post(new SaveEvent(comment, null, false));
     }
 
@@ -284,15 +284,15 @@ public class CommentsPresenterImpl implements CommentsPresenter {
         mCommentsView.openCommentInBrowser(comment);
     }
 
-    private void hideLink(RedditComment comment) {
+    private void hideComment(RedditComment comment) {
         mBus.post(new HideEvent(comment, true));
     }
 
-    private void unhideLink(RedditComment comment) {
+    private void unhideComment(RedditComment comment) {
         mBus.post(new HideEvent(comment, false));
     }
 
-    private void reportLink(RedditComment comment) {
+    private void reportComment(RedditComment comment) {
         mCommentsView.showToast(R.string.implementation_tbd);
     }
 }
