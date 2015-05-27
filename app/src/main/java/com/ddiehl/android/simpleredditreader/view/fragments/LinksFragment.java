@@ -205,7 +205,40 @@ public class LinksFragment extends Fragment implements LinksView {
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        return mLinksPresenter.onContextItemSelected(item);
+        switch (item.getItemId()) {
+            case R.id.action_link_upvote:
+                mLinksPresenter.upvote();
+                return true;
+            case R.id.action_link_downvote:
+                mLinksPresenter.downvote();
+                return true;
+            case R.id.action_link_show_comments:
+                mLinksPresenter.showCommentsForLink();
+                return true;
+            case R.id.action_link_save:
+                mLinksPresenter.saveLink();
+                return true;
+            case R.id.action_link_unsave:
+                mLinksPresenter.unsaveLink();
+                return true;
+            case R.id.action_link_share:
+                mLinksPresenter.shareLink();
+                return true;
+            case R.id.action_link_open_in_browser:
+                mLinksPresenter.openLinkInBrowser();
+                return true;
+            case R.id.action_link_open_comments_in_browser:
+                mLinksPresenter.openCommentsInBrowser();
+                return true;
+            case R.id.action_link_hide:
+                mLinksPresenter.hideLink();
+                return true;
+            case R.id.action_link_report:
+                mLinksPresenter.reportLink();
+                return true;
+            default:
+                return false;
+        }
     }
 
     @Override

@@ -1,7 +1,6 @@
 package com.ddiehl.android.simpleredditreader.presenter;
 
 import android.view.ContextMenu;
-import android.view.MenuItem;
 import android.view.View;
 
 import com.ddiehl.reddit.listings.AbsRedditComment;
@@ -20,6 +19,14 @@ public interface CommentsPresenter {
     void toggleThreadVisible(AbsRedditComment comment);
     int getNumComments();
     void showContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, RedditComment redditComment);
-    boolean onContextItemSelected(MenuItem item);
     void navigateToCommentThread(RedditMoreComments comment);
+    void upvote();
+    void downvote();
+    void saveComment();
+    void unsaveComment();
+    void shareComment();
+    void openCommentInBrowser();
+    void hideComment();
+    void unhideComment();
+    void reportComment();
 }

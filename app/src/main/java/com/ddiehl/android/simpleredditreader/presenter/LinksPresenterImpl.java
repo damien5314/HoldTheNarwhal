@@ -2,7 +2,6 @@ package com.ddiehl.android.simpleredditreader.presenter;
 
 import android.content.Context;
 import android.view.ContextMenu;
-import android.view.MenuItem;
 import android.view.View;
 
 import com.ddiehl.android.simpleredditreader.R;
@@ -233,44 +232,6 @@ public class LinksPresenterImpl implements LinksPresenter {
     }
 
     @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_link_upvote:
-                upvote(mLinkSelected);
-                return true;
-            case R.id.action_link_downvote:
-                downvote(mLinkSelected);
-                return true;
-            case R.id.action_link_show_comments:
-                showCommentsForLink(mLinkSelected);
-                return true;
-            case R.id.action_link_save:
-                saveLink(mLinkSelected);
-                return true;
-            case R.id.action_link_unsave:
-                unsaveLink(mLinkSelected);
-                return true;
-            case R.id.action_link_share:
-                shareLink(mLinkSelected);
-                return true;
-            case R.id.action_link_open_in_browser:
-                openLinkInBrowser(mLinkSelected);
-                return true;
-            case R.id.action_link_open_comments_in_browser:
-                openCommentsInBrowser(mLinkSelected);
-                return true;
-            case R.id.action_link_hide:
-                hideLink(mLinkSelected);
-                return true;
-            case R.id.action_link_report:
-                reportLink(mLinkSelected);
-                return true;
-            default:
-                return false;
-        }
-    }
-
-    @Override
     public void openLink(RedditLink link) {
         if (link == null)
             return;
@@ -283,49 +244,75 @@ public class LinksPresenterImpl implements LinksPresenter {
     }
 
     @Override
+    public void showCommentsForLink() {
+        RedditLink link = mLinkSelected;
+        mLinksView.showCommentsForLink(link);
+    }
+
+    @Override
     public void showCommentsForLink(RedditLink link) {
         mLinksView.showCommentsForLink(link);
     }
 
-    private void upvote(RedditLink link) {
+    @Override
+    public void upvote() {
+        RedditLink link = mLinkSelected;
         int dir = (link.isLiked() == null || !link.isLiked()) ? 1 : 0;
         mBus.post(new VoteEvent(link, "t3", dir));
     }
 
-    private void downvote(RedditLink link) {
+    @Override
+    public void downvote() {
+        RedditLink link = mLinkSelected;
         int dir = (link.isLiked() == null || link.isLiked()) ? -1 : 0;
         mBus.post(new VoteEvent(link, "t3", dir));
     }
 
-    private void saveLink(RedditLink link) {
+    @Override
+    public void saveLink() {
+        RedditLink link = mLinkSelected;
         mBus.post(new SaveEvent(link, null, true));
     }
 
-    private void unsaveLink(RedditLink link) {
+    @Override
+    public void unsaveLink() {
+        RedditLink link = mLinkSelected;
         mBus.post(new SaveEvent(link, null, false));
     }
 
-    private void shareLink(RedditLink link) {
+    @Override
+    public void shareLink() {
+        RedditLink link = mLinkSelected;
         mLinksView.openShareView(link);
     }
 
-    private void openLinkInBrowser(RedditLink link) {
+    @Override
+    public void openLinkInBrowser() {
+        RedditLink link = mLinkSelected;
         mLinksView.openLinkInBrowser(link);
     }
 
-    private void openCommentsInBrowser(RedditLink link) {
+    @Override
+    public void openCommentsInBrowser() {
+        RedditLink link = mLinkSelected;
         mLinksView.openCommentsInBrowser(link);
     }
 
-    private void hideLink(RedditLink link) {
+    @Override
+    public void hideLink() {
+        RedditLink link = mLinkSelected;
         mBus.post(new HideEvent(link, true));
     }
 
-    private void unhideLink(RedditLink link) {
+    @Override
+    public void unhideLink() {
+        RedditLink link = mLinkSelected;
         mBus.post(new HideEvent(link, false));
     }
 
-    private void reportLink(RedditLink link) {
+    @Override
+    public void reportLink() {
+        RedditLink link = mLinkSelected;
         mLinksView.showToast(R.string.implementation_tbd);
     }
 }

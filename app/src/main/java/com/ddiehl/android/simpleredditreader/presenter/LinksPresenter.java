@@ -1,7 +1,6 @@
 package com.ddiehl.android.simpleredditreader.presenter;
 
 import android.view.ContextMenu;
-import android.view.MenuItem;
 import android.view.View;
 
 import com.ddiehl.reddit.listings.RedditLink;
@@ -21,9 +20,19 @@ public interface LinksPresenter {
     void updateTimeSpan(String timespan);
 
     void showContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, RedditLink link);
-    boolean onContextItemSelected(MenuItem item);
 
     void openLink(RedditLink link);
     void showCommentsForLink(RedditLink link);
+    void showCommentsForLink();
+    void upvote();
+    void downvote();
+    void saveLink();
+    void unsaveLink();
+    void shareLink();
+    void openLinkInBrowser();
+    void openCommentsInBrowser();
+    void hideLink();
+    void unhideLink();
+    void reportLink();
 
 }

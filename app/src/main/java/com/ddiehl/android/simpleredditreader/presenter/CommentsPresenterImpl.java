@@ -2,7 +2,6 @@ package com.ddiehl.android.simpleredditreader.presenter;
 
 import android.content.Context;
 import android.view.ContextMenu;
-import android.view.MenuItem;
 import android.view.View;
 
 import com.ddiehl.android.simpleredditreader.R;
@@ -63,8 +62,6 @@ public class CommentsPresenterImpl implements CommentsPresenter {
     @Override
     public void getComments() {
         mCommentsView.showSpinner(null);
-//        mRedditLink = null;
-//        mCommentBank.clear();
         mBus.post(new LoadCommentsEvent(mSubreddit, mArticleId, mSort));
     }
 
@@ -116,41 +113,6 @@ public class CommentsPresenterImpl implements CommentsPresenter {
         mCommentsView.showCommentContextMenu(menu, v, menuInfo);
         menu.findItem(R.id.action_comment_save).setVisible(!comment.isSaved());
         menu.findItem(R.id.action_comment_unsave).setVisible(comment.isSaved());
-    }
-
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_comment_reply:
-                mCommentsView.showToast(R.string.implementation_tbd);
-                return true;
-            case R.id.action_comment_upvote:
-                upvote(mCommentSelected);
-                return true;
-            case R.id.action_comment_downvote:
-                downvote(mCommentSelected);
-                return true;
-            case R.id.action_comment_save:
-                mCommentsView.showToast(R.string.implementation_tbd);
-                return true;
-            case R.id.action_comment_unsave:
-                mCommentsView.showToast(R.string.implementation_tbd);
-                return true;
-            case R.id.action_comment_share:
-                mCommentsView.showToast(R.string.implementation_tbd);
-                return true;
-            case R.id.action_comment_open_in_browser:
-                mCommentsView.showToast(R.string.implementation_tbd);
-                return true;
-            case R.id.action_comment_hide:
-                mCommentsView.showToast(R.string.implementation_tbd);
-                return true;
-            case R.id.action_comment_report:
-                mCommentsView.showToast(R.string.implementation_tbd);
-                return true;
-            default:
-                return false;
-        }
     }
 
     @Override
@@ -258,41 +220,59 @@ public class CommentsPresenterImpl implements CommentsPresenter {
         }
     }
 
-    private void upvote(RedditComment comment) {
+    @Override
+    public void upvote() {
+        RedditComment comment = mCommentSelected;
         int dir = (comment.isLiked() == null || !comment.isLiked()) ? 1 : 0;
         mBus.post(new VoteEvent(comment, "t1", dir));
     }
 
-    private void downvote(RedditComment comment) {
+    @Override
+    public void downvote() {
+        RedditComment comment = mCommentSelected;
         int dir = (comment.isLiked() == null || comment.isLiked()) ? -1 : 0;
         mBus.post(new VoteEvent(comment, "t1", dir));
     }
 
-    private void saveComment(RedditComment comment) {
+    @Override
+    public void saveComment() {
+        RedditComment comment = mCommentSelected;
         mBus.post(new SaveEvent(comment, null, true));
     }
 
-    private void unsaveComment(RedditComment comment) {
+    @Override
+    public void unsaveComment() {
+        RedditComment comment = mCommentSelected;
         mBus.post(new SaveEvent(comment, null, false));
     }
 
-    private void shareComment(RedditComment comment) {
+    @Override
+    public void shareComment() {
+        RedditComment comment = mCommentSelected;
         mCommentsView.openShareView(comment);
     }
 
-    private void openCommentInBrowser(RedditComment comment) {
+    @Override
+    public void openCommentInBrowser() {
+        RedditComment comment = mCommentSelected;
         mCommentsView.openCommentInBrowser(comment);
     }
 
-    private void hideComment(RedditComment comment) {
+    @Override
+    public void hideComment() {
+        RedditComment comment = mCommentSelected;
         mBus.post(new HideEvent(comment, true));
     }
 
-    private void unhideComment(RedditComment comment) {
+    @Override
+    public void unhideComment() {
+        RedditComment comment = mCommentSelected;
         mBus.post(new HideEvent(comment, false));
     }
 
-    private void reportComment(RedditComment comment) {
+    @Override
+    public void reportComment() {
+        RedditComment comment = mCommentSelected;
         mCommentsView.showToast(R.string.implementation_tbd);
     }
 }
