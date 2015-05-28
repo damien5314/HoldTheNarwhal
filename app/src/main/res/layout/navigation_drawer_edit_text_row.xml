@@ -3,7 +3,7 @@
     android:id="@+id/navigation_drawer_item"
     style="@style/NavigationDrawerItem">
 
-    <EditText
+    <com.ddiehl.android.simpleredditreader.view.widgets.RedditNavEditText
         android:id="@+id/drawer_navigate_to_subreddit_text"
         style="@style/NavigationDrawerEditText"
         android:hint="@string/drawer_navigate_to_subreddit_text"
