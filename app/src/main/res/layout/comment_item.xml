@@ -21,10 +21,10 @@
         android:paddingRight="@dimen/comment_data_margin_horizontal">
 
         <LinearLayout
-            android:id="@+id/comment_data_row"
+            android:id="@+id/comment_metadata"
             android:orientation="horizontal"
             android:layout_width="fill_parent"
-            android:layout_height="@dimen/comment_stub_row_height"
+            android:layout_height="@dimen/comment_data_height"
             android:gravity="center_vertical">
 
             <ImageView
@@ -50,53 +50,43 @@
                 android:ellipsize="end"
                 android:maxLines="1"/>
 
-            <LinearLayout
-                android:id="@+id/comment_secondary_data"
-                android:orientation="horizontal"
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="start">
+                android:layout_marginLeft="@dimen/comment_secondary_data_margin"
+                android:layout_marginRight="@dimen/comment_secondary_data_margin"
+                android:text="•"
+                android:textSize="@dimen/comment_secondary_data_text_size"/>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/comment_secondary_data_margin"
-                    android:layout_marginRight="@dimen/comment_secondary_data_margin"
-                    android:text="•"
-                    android:textSize="@dimen/comment_secondary_data_text_size"/>
+            <TextView
+                android:id="@+id/comment_score"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/comment_score_margin"
+                android:layout_marginEnd="@dimen/comment_score_margin"
+                android:text="@string/comment_score"
+                android:textColor="@color/secondary_text"
+                android:textSize="@dimen/comment_score_text_size"
+                android:maxLines="1"/>
 
-                <TextView
-                    android:id="@+id/comment_score"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="@dimen/comment_score_margin"
-                    android:layout_marginEnd="@dimen/comment_score_margin"
-                    android:text="@string/comment_score"
-                    android:textColor="@color/secondary_text"
-                    android:textSize="@dimen/comment_score_text_size"
-                    android:maxLines="1"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/comment_secondary_data_margin"
+                android:layout_marginRight="@dimen/comment_secondary_data_margin"
+                android:text="•"
+                android:textSize="@dimen/comment_secondary_data_text_size"/>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/comment_secondary_data_margin"
-                    android:layout_marginRight="@dimen/comment_secondary_data_margin"
-                    android:text="•"
-                    android:textSize="@dimen/comment_secondary_data_text_size"/>
-
-                <com.ddiehl.android.simpleredditreader.view.widgets.RedditDateTextView
-                    android:id="@+id/comment_timestamp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="2 days ago"
-                    android:textColor="@color/secondary_text"
-                    android:textSize="@dimen/comment_timestamp_text_size"
-                    android:maxLines="1"/>
+            <com.ddiehl.android.simpleredditreader.view.widgets.RedditDateTextView
+                android:id="@+id/comment_timestamp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2 days ago"
+                android:textColor="@color/secondary_text"
+                android:textSize="@dimen/comment_timestamp_text_size"
+                android:maxLines="1"/>
 
             </LinearLayout>
-
-        </LinearLayout>
 
         <TextView
             android:id="@+id/comment_body"

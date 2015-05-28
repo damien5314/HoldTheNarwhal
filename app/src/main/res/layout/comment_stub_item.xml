@@ -21,10 +21,10 @@
         android:layout_marginRight="@dimen/comment_data_margin_horizontal">
 
         <LinearLayout
-            android:id="@+id/comment_data_row"
+            android:id="@+id/comment_metadata"
             android:orientation="horizontal"
             android:layout_width="fill_parent"
-            android:layout_height="@dimen/comment_stub_row_height"
+            android:layout_height="@dimen/comment_data_height"
             android:gravity="center">
 
             <TextView

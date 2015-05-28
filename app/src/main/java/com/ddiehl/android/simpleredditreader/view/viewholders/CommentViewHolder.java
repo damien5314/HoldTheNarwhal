@@ -24,10 +24,8 @@ public class CommentViewHolder extends RecyclerView.ViewHolder
     private View mCommentDataRow;
     private ImageView mExpanderIcon;
     private TextView mAuthorView;
-    private View mSecondaryData;
     private TextView mScoreView;
     private RedditDateTextView mTimestampView;
-    private TextView mMoreCommentsView;
     private TextView mBodyView;
 
     private Context mContext;
@@ -36,10 +34,9 @@ public class CommentViewHolder extends RecyclerView.ViewHolder
     public CommentViewHolder(View view, CommentsPresenter presenter) {
         super(view);
         mView = view;
-        mCommentDataRow = view.findViewById(R.id.comment_data_row);
+        mCommentDataRow = view.findViewById(R.id.comment_metadata);
         mExpanderIcon = (ImageView) view.findViewById(R.id.comment_expander_icon);
         mAuthorView = (TextView) view.findViewById(R.id.comment_author);
-        mSecondaryData = view.findViewById(R.id.comment_secondary_data);
         mScoreView = (TextView) view.findViewById(R.id.comment_score);
         mTimestampView = (RedditDateTextView) view.findViewById(R.id.comment_timestamp);
         mBodyView = (TextView) view.findViewById(R.id.comment_body);
@@ -73,7 +70,6 @@ public class CommentViewHolder extends RecyclerView.ViewHolder
                 mAuthorView.setTextColor(mContext.getResources().getColor(R.color.secondary_text));
             }
         }
-        mSecondaryData.setVisibility(View.VISIBLE);
         mBodyView.setVisibility(View.VISIBLE);
         mAuthorView.setText(comment.getAuthor());
         mScoreView.setText(String.format(mContext.getString(R.string.comment_score), comment.getScore()));
@@ -115,7 +111,7 @@ public class CommentViewHolder extends RecyclerView.ViewHolder
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.comment_data_row:
+            case R.id.comment_metadata:
                 mCommentsPresenter.toggleThreadVisible(mRedditComment);
                 break;
             default:

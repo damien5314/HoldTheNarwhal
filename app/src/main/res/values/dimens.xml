@@ -48,7 +48,7 @@
     <dimen name="comment_secondary_data_margin">5dp</dimen>
     <dimen name="link_thumbnail_size">64dp</dimen>
     <dimen name="navigation_drawer_icon_size">24dp</dimen>
-    <dimen name="comment_stub_row_height">32dp</dimen>
+    <dimen name="comment_data_height">32dp</dimen>
     <dimen name="account_name_text_size">16sp</dimen>
 
 </resources>
