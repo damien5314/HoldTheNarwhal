@@ -28,14 +28,13 @@ public class MainPresenterImpl implements MainPresenter {
         mMainView = view;
         mIdentityManager = RedditIdentityManager.getInstance(mContext);
 
-        mMainView.setAccount(mIdentityManager.getUserIdentity(),
-                mIdentityManager.getUserIdentity().isGold());
+        mMainView.setAccount(mIdentityManager.getUserIdentity());
     }
 
     @Subscribe
     public void onUserIdentitySaved(UserIdentitySavedEvent event) {
         UserIdentity identity = event.getUserIdentity();
-        mMainView.setAccount(identity, identity.isGold());
+        mMainView.setAccount(identity);
         mMainView.updateNavigationItems();
     }
 

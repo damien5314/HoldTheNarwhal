@@ -168,12 +168,12 @@ public class MainActivity extends ActionBarActivity implements MainView, Confirm
     }
 
     @Override
-    public void setAccount(UserIdentity identity, boolean isGold) {
-        String name = identity == null ? getString(R.string.account_name_unauthorized) : identity.getName();
-        mAccountNameView.setText(name);
-        mAccountImageView.setImageResource(!isGold ?
-                R.drawable.ic_user_account_gold : R.drawable.ic_user_account);
+    public void setAccount(UserIdentity identity) {
+        mAccountNameView.setText(identity == null ?
+                getString(R.string.account_name_unauthorized) : identity.getName());
         mSignOutView.setVisibility(identity == null ? View.GONE : View.VISIBLE);
+        mAccountImageView.setImageResource(identity != null && identity.isGold() ?
+                R.drawable.ic_user_account_gold : R.drawable.ic_user_account);
     }
 
     @Override
