@@ -46,7 +46,7 @@ public class ChooseLinkSortDialog extends DialogFragment {
 
         // Build dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(R.string.choose_sort)
+        builder.setTitle(R.string.menu_sort_title)
                 .setSingleChoiceItems(R.array.link_sort_options, selectedItem, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         String selectedChoice = getResources().getStringArray(R.array.link_sort_options)[which];

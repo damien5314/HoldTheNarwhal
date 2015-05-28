@@ -41,7 +41,7 @@ public class NavTextViewHolder extends RecyclerView.ViewHolder
 
     public void bind(int position) {
 
-        UserIdentity user = mMainPresenter.getAuthenticatedUser();
+        UserIdentity user = mMainPresenter.getAuthorizedUser();
 
         if (user == null) {
             switch (position) {

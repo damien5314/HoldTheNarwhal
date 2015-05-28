@@ -19,7 +19,7 @@ public class RedditIdentityManager {
 
     private static final String PREFS_USER_ACCESS_TOKEN = "prefs_user_access_token";
     private static final String PREFS_APPLICATION_ACCESS_TOKEN = "prefs_application_access_token";
-    private static final String PREF_AUTH_TOKEN = "pref_auth_token";
+    private static final String PREF_ACCESS_TOKEN = "pref_access_token";
     private static final String PREF_TOKEN_TYPE = "pref_token_type";
     private static final String PREF_EXPIRATION = "pref_expiration";
     private static final String PREF_SCOPE = "pref_scope";
@@ -99,9 +99,9 @@ public class RedditIdentityManager {
     public AccessToken getSavedUserAccessToken() {
         SharedPreferences sp =  mContext.getSharedPreferences(PREFS_USER_ACCESS_TOKEN, Context.MODE_PRIVATE);
 
-        if (sp.contains(PREF_AUTH_TOKEN)) {
+        if (sp.contains(PREF_ACCESS_TOKEN)) {
             AccessToken token = new UserAccessToken();
-            token.setToken(sp.getString(PREF_AUTH_TOKEN, null));
+            token.setToken(sp.getString(PREF_ACCESS_TOKEN, null));
             token.setTokenType(sp.getString(PREF_TOKEN_TYPE, null));
             token.setExpiration(sp.getLong(PREF_EXPIRATION, 0));
             token.setScope(sp.getString(PREF_SCOPE, null));
@@ -115,9 +115,9 @@ public class RedditIdentityManager {
     public AccessToken getSavedApplicationAccessToken() {
         SharedPreferences sp =  mContext.getSharedPreferences(PREFS_APPLICATION_ACCESS_TOKEN, Context.MODE_PRIVATE);
 
-        if (sp.contains(PREF_AUTH_TOKEN)) {
+        if (sp.contains(PREF_ACCESS_TOKEN)) {
             AccessToken token = new ApplicationAccessToken();
-            token.setToken(sp.getString(PREF_AUTH_TOKEN, null));
+            token.setToken(sp.getString(PREF_ACCESS_TOKEN, null));
             token.setTokenType(sp.getString(PREF_TOKEN_TYPE, null));
             token.setExpiration(sp.getLong(PREF_EXPIRATION, 0));
             token.setScope(sp.getString(PREF_SCOPE, null));
@@ -149,13 +149,13 @@ public class RedditIdentityManager {
     }
 
     private void saveUserAccessToken() {
-        Log.d(TAG, "--AUTH TOKEN RESPONSE--");
+        Log.d(TAG, "--ACCESS TOKEN RESPONSE--");
         Log.d(TAG, "Access Token: " + mUserAccessToken.getToken());
         Log.d(TAG, "Refresh Token: " + mUserAccessToken.getRefreshToken());
 
         SharedPreferences sp = mContext.getSharedPreferences(PREFS_USER_ACCESS_TOKEN, Context.MODE_PRIVATE);
         sp.edit()
-                .putString(PREF_AUTH_TOKEN, mUserAccessToken.getToken())
+                .putString(PREF_ACCESS_TOKEN, mUserAccessToken.getToken())
                 .putString(PREF_TOKEN_TYPE, mUserAccessToken.getTokenType())
                 .putLong(PREF_EXPIRATION, mUserAccessToken.getExpiration())
                 .putString(PREF_SCOPE, mUserAccessToken.getScope())
@@ -164,13 +164,13 @@ public class RedditIdentityManager {
     }
 
     private void saveApplicationAccessToken() {
-        Log.d(TAG, "--AUTH TOKEN RESPONSE--");
+        Log.d(TAG, "--ACCESS TOKEN RESPONSE--");
         Log.d(TAG, "Access Token: " + mApplicationAccessToken.getToken());
         Log.d(TAG, "Refresh Token: " + mApplicationAccessToken.getRefreshToken());
 
         SharedPreferences sp = mContext.getSharedPreferences(PREFS_APPLICATION_ACCESS_TOKEN, Context.MODE_PRIVATE);
         sp.edit()
-                .putString(PREF_AUTH_TOKEN, mApplicationAccessToken.getToken())
+                .putString(PREF_ACCESS_TOKEN, mApplicationAccessToken.getToken())
                 .putString(PREF_TOKEN_TYPE, mApplicationAccessToken.getTokenType())
                 .putLong(PREF_EXPIRATION, mApplicationAccessToken.getExpiration())
                 .putString(PREF_SCOPE, mApplicationAccessToken.getScope())

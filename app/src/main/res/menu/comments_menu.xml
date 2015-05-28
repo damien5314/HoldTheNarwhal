@@ -10,7 +10,7 @@
 
     <item
         android:id="@+id/action_change_sort"
-        android:title="@string/action_change_sort"
+        android:title="@string/action_sort"
         android:icon="@drawable/ic_change_sort"
         app:showAsAction="ifRoom" />
 

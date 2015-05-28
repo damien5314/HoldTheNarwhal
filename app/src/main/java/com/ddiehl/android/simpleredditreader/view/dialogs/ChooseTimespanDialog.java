@@ -46,7 +46,7 @@ public class ChooseTimespanDialog extends DialogFragment {
 
         // Build dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(R.string.choose_timespan)
+        builder.setTitle(R.string.menu_timespan_title)
                 .setSingleChoiceItems(R.array.timespan_options, selectedItem, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         String selectedChoice = getResources().getStringArray(R.array.timespan_options)[which];

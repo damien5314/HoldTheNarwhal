@@ -51,7 +51,7 @@ public class MainPresenterImpl implements MainPresenter {
     }
 
     @Override
-    public UserIdentity getAuthenticatedUser() {
+    public UserIdentity getAuthorizedUser() {
         return mIdentityManager.getUserIdentity();
     }
 

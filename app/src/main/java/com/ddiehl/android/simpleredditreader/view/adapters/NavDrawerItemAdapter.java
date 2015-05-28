@@ -49,7 +49,7 @@ public class NavDrawerItemAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     @Override
     public int getItemCount() {
-        UserIdentity user = mMainPresenter.getAuthenticatedUser();
+        UserIdentity user = mMainPresenter.getAuthorizedUser();
         if (user == null) {
             return 5;
         } else {

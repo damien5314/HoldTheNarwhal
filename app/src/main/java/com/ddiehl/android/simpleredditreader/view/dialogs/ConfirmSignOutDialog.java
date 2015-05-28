@@ -30,9 +30,9 @@ public class ConfirmSignOutDialog extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(R.string.confirm_sign_out_dialog_title)
-                .setMessage(R.string.confirm_sign_out_dialog_message)
-                .setPositiveButton(R.string.confirm_sign_out_dialog_ok, new DialogInterface.OnClickListener() {
+        builder.setTitle(R.string.dialog_sign_out_title)
+                .setMessage(R.string.dialog_sign_out_message)
+                .setPositiveButton(R.string.dialog_sign_out_ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if (getActivity() instanceof Callbacks) {
@@ -40,7 +40,7 @@ public class ConfirmSignOutDialog extends DialogFragment {
                         }
                     }
                 })
-                .setNegativeButton(R.string.confirm_sign_out_dialog_cancel, new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.dialog_sign_out_cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if (getActivity() instanceof Callbacks) {

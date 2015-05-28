@@ -9,6 +9,6 @@ public interface MainPresenter {
     void showUserSubreddits();
     void showSubreddit(String subreddit);
 
-    UserIdentity getAuthenticatedUser();
+    UserIdentity getAuthorizedUser();
     void signOutUser();
 }

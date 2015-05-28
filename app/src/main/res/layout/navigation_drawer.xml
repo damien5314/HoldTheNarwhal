@@ -36,7 +36,7 @@
 
             <ImageView
                 android:id="@+id/sign_out_button"
-                android:contentDescription="@string/sign_out_cs"
+                android:contentDescription="@string/dialog_sign_out_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"

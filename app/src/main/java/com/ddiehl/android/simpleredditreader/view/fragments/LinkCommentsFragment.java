@@ -65,7 +65,7 @@ public class LinkCommentsFragment extends Fragment implements LinksView, Comment
         setRetainInstance(true);
         setHasOptionsMenu(true);
 
-        setTitle(getString(R.string.comments_fragment_default_title));
+        setTitle(getString(R.string.comments_fragment_title));
 
         Bundle args = getArguments();
         String subreddit = args.getString(ARG_SUBREDDIT);

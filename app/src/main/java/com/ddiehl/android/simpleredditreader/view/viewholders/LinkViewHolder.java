@@ -73,9 +73,9 @@ public class LinkViewHolder extends RecyclerView.ViewHolder
         }
 
         // Set content for each TextView
-        mLinkScore.setText(String.valueOf(String.format("%s points", link.getScore())));
+        mLinkScore.setText(String.format(mContext.getString(R.string.link_score), link.getScore()));
         mLinkTitle.setText(link.getTitle());
-        mLinkAuthor.setText(String.format("/u/%s", link.getAuthor()));
+        mLinkAuthor.setText(String.format(mContext.getString(R.string.link_author), link.getAuthor()));
         mLinkTimestamp.setDate(link.getCreatedUtc().longValue());
         if (link.isEdited() != null) {
             switch (link.isEdited()) {
@@ -124,7 +124,7 @@ public class LinkViewHolder extends RecyclerView.ViewHolder
         // Show gilding view if appropriate, else hide
         Integer gilded = link.getGilded();
         if (gilded != null && gilded > 0) {
-            mGildedText.setText(String.format(mContext.getString(R.string.gilded_text_view), gilded));
+            mGildedText.setText(String.format(mContext.getString(R.string.link_gilded_text), gilded));
             mGildedView.setVisibility(View.VISIBLE);
         } else {
             mGildedView.setVisibility(View.GONE);

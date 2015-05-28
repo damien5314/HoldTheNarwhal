@@ -105,7 +105,7 @@ public class LinksPresenterImpl implements LinksPresenter {
         if (mSubreddit == null) {
             mLinksView.setTitle(mContext.getString(R.string.front_page_title));
         } else {
-            mLinksView.setTitle(String.format(mContext.getString(R.string.subreddit_prefix), mSubreddit));
+            mLinksView.setTitle(String.format(mContext.getString(R.string.link_subreddit), mSubreddit));
         }
     }
 
