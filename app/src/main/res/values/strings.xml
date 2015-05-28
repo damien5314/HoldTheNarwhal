@@ -44,7 +44,6 @@
     <string name="subreddit_prefix">/r/%s</string>
     <string name="save_failed">Failed to save, please try again</string>
     <string name="action_unsave">unsave</string>
-    <string name="unauthenticated">Not signed in</string>
     <string name="sign_out_cs">Sign out</string>
     <string name="action_hide">hide</string>
     <string name="action_unhide">unhide</string>

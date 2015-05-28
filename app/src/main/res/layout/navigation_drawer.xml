@@ -18,34 +18,31 @@
 
             <ImageView
                 android:id="@+id/user_account_icon"
-                android:layout_width="@dimen/navigation_drawer_icon_size"
-                android:layout_height="@dimen/navigation_drawer_icon_size"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
+                android:layout_margin="6dp"
                 android:src="@drawable/ic_user_account"/>
 
             <TextView
                 android:id="@+id/account_name"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:layout_gravity="center_vertical"
                 android:textColor="#ffffff"
-                android:text="@string/unauthenticated"
+                android:text="@string/account_name_unauthorized"
                 android:textSize="14sp"
                 android:textStyle="bold" />
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
 
             <ImageView
                 android:id="@+id/sign_out_button"
                 android:contentDescription="@string/sign_out_cs"
-                android:layout_width="@dimen/navigation_drawer_icon_size"
-                android:layout_height="@dimen/navigation_drawer_icon_size"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
                 android:layout_marginEnd="?android:attr/listPreferredItemPaddingEnd"
                 android:layout_marginRight="?android:attr/listPreferredItemPaddingEnd"
-                android:layout_gravity="center_vertical"
                 android:src="@drawable/ic_navigation_close"/>
 
         </LinearLayout>
