@@ -13,11 +13,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.BusProvider;
+import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.presenter.MainPresenter;
 import com.ddiehl.android.simpleredditreader.presenter.MainPresenterImpl;
 import com.ddiehl.android.simpleredditreader.view.MainView;
@@ -46,6 +47,7 @@ public class MainActivity extends ActionBarActivity implements MainView, Confirm
     private RecyclerView mNavigationDrawerListView;
     private RecyclerView.LayoutManager mLayoutManager;
     private RecyclerView.Adapter mLayoutAdapter;
+    private ImageView mAccountImageView;
     private TextView mAccountNameView;
     private View mSignOutView;
 
@@ -74,6 +76,7 @@ public class MainActivity extends ActionBarActivity implements MainView, Confirm
         mNavigationDrawer = findViewById(R.id.navigation_drawer);
         mNavigationDrawer.setOnClickListener(null);
 
+        mAccountImageView = (ImageView) findViewById(R.id.user_account_icon);
         mAccountNameView = (TextView) findViewById(R.id.account_name);
         mSignOutView = findViewById(R.id.sign_out_button);
         mSignOutView.setOnClickListener(new View.OnClickListener() {
@@ -165,9 +168,11 @@ public class MainActivity extends ActionBarActivity implements MainView, Confirm
     }
 
     @Override
-    public void setAccount(UserIdentity identity) {
+    public void setAccount(UserIdentity identity, boolean isGold) {
         String name = identity == null ? getString(R.string.account_name_unauthorized) : identity.getName();
         mAccountNameView.setText(name);
+        mAccountImageView.setImageResource(!isGold ?
+                R.drawable.ic_user_account_gold : R.drawable.ic_user_account);
         mSignOutView.setVisibility(identity == null ? View.GONE : View.VISIBLE);
     }
 

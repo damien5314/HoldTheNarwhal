@@ -5,7 +5,7 @@ import com.ddiehl.reddit.identity.UserIdentity;
 public interface MainView extends BaseView {
 
     void closeNavigationDrawer();
-    void setAccount(UserIdentity identity);
+    void setAccount(UserIdentity identity, boolean isGold);
     void updateNavigationItems();
 
     void showSubreddit(String subreddit);

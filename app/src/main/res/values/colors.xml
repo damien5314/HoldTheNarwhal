@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- Icon height in navigation drawer is 20dp w/ 6dp padding -->
     <!-- http://www.materialpalette.com/blue-grey/red -->
+    <color name="primary_light">#CFD8DC</color>
     <color name="primary">#607D8B</color>
     <color name="primary_dark">#455A64</color>
-    <color name="primary_light">#CFD8DC</color>
     <color name="accent">#FF5252</color>
     <color name="primary_text">#212121</color>
     <color name="secondary_text">#727272</color>
@@ -15,6 +16,7 @@
     <color name="indentation">@color/primary</color>
     <color name="reddit_orange">#60FF8B60</color>
     <color name="reddit_blue">#609494FF</color>
+    <color name="reddit_gold">#f6e600</color>
     <color name="op_background">#0055DF</color>
     <color name="op_text">#ffffff</color>
     <color name="comment_background">#ffffff</color>
