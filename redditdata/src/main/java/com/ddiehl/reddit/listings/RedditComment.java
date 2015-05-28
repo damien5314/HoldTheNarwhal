@@ -87,8 +87,9 @@ public class RedditComment extends AbsRedditComment implements Votable, Savable,
         return data.gilded;
     }
 
-    public boolean isArchived() {
-        return data.archived;
+    @Override
+    public Boolean isArchived() {
+        return data.isArchived;
     }
 
     public Object getReportReasons() {
@@ -221,8 +222,8 @@ public class RedditComment extends AbsRedditComment implements Votable, Savable,
         private String id;
         @Expose
         private int gilded;
-        @Expose
-        private boolean archived;
+        @Expose @SerializedName("archived")
+        private Boolean isArchived;
         @Expose @SerializedName("report_reasons")
         private Object reportReasons;
         @Expose

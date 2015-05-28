@@ -4,8 +4,8 @@ import android.content.Context;
 import android.view.ContextMenu;
 import android.view.View;
 
-import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.BusProvider;
+import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.events.exceptions.UserRequiredException;
 import com.ddiehl.android.simpleredditreader.events.requests.HideEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.LoadLinksEvent;

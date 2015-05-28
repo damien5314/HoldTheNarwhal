@@ -82,8 +82,9 @@ public class RedditLink extends Listing implements Votable, Savable, Hideable {
         return data.gilded;
     }
 
-    public Boolean getArchived() {
-        return data.archived;
+    @Override
+    public Boolean isArchived() {
+        return data.isArchived;
     }
 
     public Boolean getClicked() {
@@ -267,8 +268,8 @@ public class RedditLink extends Listing implements Votable, Savable, Hideable {
         private String id;
         @Expose
         private Integer gilded;
-        @Expose
-        private Boolean archived;
+        @Expose @SerializedName("archived")
+        private Boolean isArchived;
         @Expose
         private Boolean clicked;
         @Expose @SerializedName("report_reasons")

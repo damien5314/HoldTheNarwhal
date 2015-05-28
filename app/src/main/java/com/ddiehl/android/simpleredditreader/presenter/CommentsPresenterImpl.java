@@ -236,7 +236,7 @@ public class CommentsPresenterImpl implements CommentsPresenter {
         Votable listing = event.getListing();
         if (listing instanceof RedditComment) {
             listing.applyVote(event.getDirection());
-            mCommentsView.getListAdapter().notifyItemChanged(mCommentBank.indexOf(((RedditComment) listing)) + 1);
+            mCommentsView.getListAdapter().notifyItemChanged(mCommentBank.indexOf(listing) + 1);
         }
     }
 
@@ -277,21 +277,33 @@ public class CommentsPresenterImpl implements CommentsPresenter {
     @Override
     public void openReplyView() {
         RedditComment comment = mCommentSelected;
-        mCommentsView.openReplyView(comment);
+        if (comment.isArchived()) {
+            mCommentsView.showToast(R.string.listing_archived);
+        } else {
+            mCommentsView.openReplyView(comment);
+        }
     }
 
     @Override
     public void upvote() {
         RedditComment comment = mCommentSelected;
-        int dir = (comment.isLiked() == null || !comment.isLiked()) ? 1 : 0;
-        mBus.post(new VoteEvent(comment, "t1", dir));
+        if (comment.isArchived()) {
+            mCommentsView.showToast(R.string.listing_archived);
+        } else {
+            int dir = (comment.isLiked() == null || !comment.isLiked()) ? 1 : 0;
+            mBus.post(new VoteEvent(comment, "t1", dir));
+        }
     }
 
     @Override
     public void downvote() {
         RedditComment comment = mCommentSelected;
-        int dir = (comment.isLiked() == null || comment.isLiked()) ? -1 : 0;
-        mBus.post(new VoteEvent(comment, "t1", dir));
+        if (comment.isArchived()) {
+            mCommentsView.showToast(R.string.listing_archived);
+        } else {
+            int dir = (comment.isLiked() == null || comment.isLiked()) ? -1 : 0;
+            mBus.post(new VoteEvent(comment, "t1", dir));
+        }
     }
 
     @Override

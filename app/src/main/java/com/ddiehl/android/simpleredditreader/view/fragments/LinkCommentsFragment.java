@@ -121,6 +121,9 @@ public class LinkCommentsFragment extends Fragment implements LinksView, Comment
     @Override
     public void showCommentContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, RedditComment comment) {
         getActivity().getMenuInflater().inflate(R.menu.comment_context_menu, menu);
+        if (comment.isArchived()) {
+            menu.findItem(R.id.action_comment_report).setVisible(false);
+        }
     }
 
     @Override
