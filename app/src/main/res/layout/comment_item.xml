@@ -85,7 +85,7 @@
                     android:text="•"
                     android:textSize="@dimen/comment_secondary_data_text_size"/>
 
-                <TextView
+                <com.ddiehl.android.simpleredditreader.view.widgets.RedditDateTextView
                     android:id="@+id/comment_timestamp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

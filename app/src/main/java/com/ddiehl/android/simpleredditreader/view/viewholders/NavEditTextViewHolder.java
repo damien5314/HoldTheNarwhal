@@ -30,12 +30,13 @@ public class NavEditTextViewHolder extends RecyclerView.ViewHolder {
             @Override
             public void onClick(View v) {
                 String inputSubreddit = mEditText.getText().toString();
+                if (inputSubreddit.equals(""))
+                    return;
+
                 inputSubreddit = inputSubreddit.substring(3);
                 inputSubreddit = inputSubreddit.trim();
-                if (!inputSubreddit.equals("")) {
-                    mEditText.setText("");
-                    mMainPresenter.showSubreddit(inputSubreddit);
-                }
+                mEditText.setText("");
+                mMainPresenter.showSubreddit(inputSubreddit);
             }
         });
     }

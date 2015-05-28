@@ -9,9 +9,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ddiehl.android.simpleredditreader.R;
-import com.ddiehl.reddit.listings.RedditLink;
 import com.ddiehl.android.simpleredditreader.presenter.LinksPresenter;
-import com.ddiehl.android.simpleredditreader.utils.BaseUtils;
+import com.ddiehl.android.simpleredditreader.view.widgets.RedditDateTextView;
+import com.ddiehl.reddit.listings.RedditLink;
 import com.squareup.picasso.Picasso;
 
 public class LinkViewHolder extends RecyclerView.ViewHolder
@@ -21,9 +21,10 @@ public class LinkViewHolder extends RecyclerView.ViewHolder
     private RedditLink mRedditLink;
 
     private View mLinkView, mGildedView, mSavedText;
-    private TextView mLinkTitle, mLinkDomain, mLinkScore, mLinkAuthor, mLinkTimestamp,
+    private TextView mLinkTitle, mLinkDomain, mLinkScore, mLinkAuthor,
             mLinkSubreddit, mLinkComments, mSelfText, mGildedText;
     private ImageView mLinkThumbnail;
+    private RedditDateTextView mLinkTimestamp;
 
     private Context mContext;
     private LinksPresenter mLinksPresenter;
@@ -36,7 +37,7 @@ public class LinkViewHolder extends RecyclerView.ViewHolder
         mLinkDomain = (TextView) v.findViewById(R.id.link_domain);
         mLinkScore = (TextView) v.findViewById(R.id.link_score);
         mLinkAuthor = (TextView) v.findViewById(R.id.link_author);
-        mLinkTimestamp = (TextView) v.findViewById(R.id.link_timestamp);
+        mLinkTimestamp = (RedditDateTextView) v.findViewById(R.id.link_timestamp);
         mLinkSubreddit = (TextView) v.findViewById(R.id.link_subreddit);
         mLinkComments = (TextView) v.findViewById(R.id.link_comment_count);
         mLinkThumbnail = (ImageView) v.findViewById(R.id.link_thumbnail);
@@ -75,18 +76,18 @@ public class LinkViewHolder extends RecyclerView.ViewHolder
         mLinkScore.setText(String.valueOf(String.format("%s points", link.getScore())));
         mLinkTitle.setText(link.getTitle());
         mLinkAuthor.setText(String.format("/u/%s", link.getAuthor()));
-        String timestamp = BaseUtils.getFormattedDateStringFromUtc(link.getCreatedUtc().longValue(), mContext);
+        mLinkTimestamp.setDate(link.getCreatedUtc().longValue());
         if (link.isEdited() != null) {
             switch (link.isEdited()) {
                 case "":
                 case "0":
                 case "false":
+                    mLinkTimestamp.setEdited(false);
                     break;
                 default:
-                    timestamp += "*";
+                    mLinkTimestamp.setEdited(true);
             }
         }
-        mLinkTimestamp.setText(timestamp);
         mLinkSubreddit.setText(String.format("/r/%s", link.getSubreddit()));
         mLinkDomain.setText(String.format("(%s)", link.getDomain()));
         mLinkComments.setText(String.format("%s comments", link.getNumComments()));

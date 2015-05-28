@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.presenter.CommentsPresenter;
-import com.ddiehl.android.simpleredditreader.utils.BaseUtils;
+import com.ddiehl.android.simpleredditreader.view.widgets.RedditDateTextView;
 import com.ddiehl.reddit.listings.RedditComment;
 import com.ddiehl.reddit.listings.RedditLink;
 
@@ -26,7 +26,7 @@ public class CommentViewHolder extends RecyclerView.ViewHolder
     private TextView mAuthorView;
     private View mSecondaryData;
     private TextView mScoreView;
-    private TextView mTimestampView;
+    private RedditDateTextView mTimestampView;
     private TextView mMoreCommentsView;
     private TextView mBodyView;
 
@@ -41,7 +41,7 @@ public class CommentViewHolder extends RecyclerView.ViewHolder
         mAuthorView = (TextView) view.findViewById(R.id.comment_author);
         mSecondaryData = view.findViewById(R.id.comment_secondary_data);
         mScoreView = (TextView) view.findViewById(R.id.comment_score);
-        mTimestampView = (TextView) view.findViewById(R.id.comment_timestamp);
+        mTimestampView = (RedditDateTextView) view.findViewById(R.id.comment_timestamp);
         mBodyView = (TextView) view.findViewById(R.id.comment_body);
 
         itemView.setOnClickListener(this);
@@ -77,18 +77,18 @@ public class CommentViewHolder extends RecyclerView.ViewHolder
         mBodyView.setVisibility(View.VISIBLE);
         mAuthorView.setText(comment.getAuthor());
         mScoreView.setText(String.format(mContext.getString(R.string.comment_score), comment.getScore()));
-        String timestamp = BaseUtils.getFormattedDateStringFromUtc(comment.getCreateUtc().longValue(), mContext);
+        mTimestampView.setDate(comment.getCreateUtc().longValue());
         if (comment.isEdited() != null) {
             switch (comment.isEdited()) {
                 case "":
                 case "0":
                 case "false":
+                    mTimestampView.setEdited(false);
                     break;
                 default:
-                    timestamp += "*";
+                    mTimestampView.setEdited(true);
             }
         }
-        mTimestampView.setText(timestamp);
         mBodyView.setText(comment.getBody().trim());
         if (comment.isCollapsed()) {
             mBodyView.setVisibility(View.GONE);

@@ -92,7 +92,7 @@
                         style="@style/LinkScoreTextView"
                         android:text="@string/link_score_default"/>
 
-                    <TextView
+                    <com.ddiehl.android.simpleredditreader.view.widgets.RedditDateTextView
                         android:id="@+id/link_timestamp"
                         style="@style/LinkTimestampTextView"
                         android:layout_alignParentRight="true"
