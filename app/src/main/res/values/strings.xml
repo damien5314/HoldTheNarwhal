@@ -12,11 +12,11 @@
     <string name="drawer_subreddits">subreddits</string>
     <string name="drawer_front_page">front page</string>
     <string name="drawer_r_all">/r/all</string>
-    <string name="drawer_random_subreddit">random subreddit</string>
+    <string name="drawer_random_subreddit">/r/random</string>
     <string name="front_page_title">front page</string>
     <string name="title_activity_listings">ListingsActivity</string>
     <string name="no_comments_found">No comments found</string>
-    <string name="fragment_comments_title">Comments</string>
+    <string name="fragment_comments_title">comments</string>
     <string name="action_change_sort">Sort</string>
     <string name="action_change_timespan">Timespan</string>
     <string name="choose_sort">Sort by</string>
@@ -59,6 +59,7 @@
     <string name="timespan_hours">%s hours ago</string>
     <string name="timespan_minutes">%s minutes ago</string>
     <string name="timespan_seconds">%s seconds ago</string>
+    <string name="timespan_now">just now</string>
     <string name="spinner_getting_submissions">Getting submissions&#8230;</string>
     <string name="action_reply">reply</string>
     <string name="implementation_pending">coming soon</string>

@@ -56,7 +56,8 @@ public class RedditDateTextView extends TextView {
             outputString = getContext().getString(R.string.timespan_minutes);
         } else {
             output = seconds;
-            outputString = getContext().getString(R.string.timespan_seconds);
+            outputString = getContext().getString(seconds < 10
+                    ? R.string.timespan_now : R.string.timespan_seconds);
         }
 
         return String.format(outputString, output);

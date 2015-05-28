@@ -31,7 +31,7 @@
                 android:layout_gravity="center_vertical"
                 android:textColor="#ffffff"
                 android:text="@string/account_name_unauthorized"
-                android:textSize="14sp"
+                android:textSize="@dimen/account_name_text_size"
                 android:textStyle="bold" />
 
             <ImageView
