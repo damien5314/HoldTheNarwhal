@@ -29,6 +29,7 @@ public interface RedditAPI {
     void getComments(@Path("subreddit") String subreddit,
                      @Path("articleId") String articleId,
                      @Query("sort") String sort,
+                     @Query("comment") String commentId,
                      Callback<List<ListingResponse>> callback);
 
     @GET("/r/{subreddit}/comments/{articleId}.json")

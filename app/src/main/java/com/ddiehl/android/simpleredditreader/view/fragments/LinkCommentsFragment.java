@@ -16,8 +16,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.BusProvider;
+import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.presenter.CommentsPresenter;
 import com.ddiehl.android.simpleredditreader.presenter.CommentsPresenterImpl;
 import com.ddiehl.android.simpleredditreader.presenter.LinksPresenter;
@@ -38,6 +38,7 @@ public class LinkCommentsFragment extends Fragment implements LinksView, Comment
 
     private static final String ARG_SUBREDDIT = "subreddit";
     private static final String ARG_ARTICLE = "article";
+    private static final String ARG_COMMENT_ID = "comment_id";
 
     private static final int REQUEST_CHOOSE_SORT = 0;
     private static final String DIALOG_CHOOSE_SORT = "dialog_choose_sort";
@@ -50,10 +51,11 @@ public class LinkCommentsFragment extends Fragment implements LinksView, Comment
 
     public LinkCommentsFragment() { /* Default constructor */ }
 
-    public static LinkCommentsFragment newInstance(String subreddit, String article) {
+    public static LinkCommentsFragment newInstance(String subreddit, String article, String commentId) {
         Bundle args = new Bundle();
         args.putString(ARG_SUBREDDIT, subreddit);
         args.putString(ARG_ARTICLE, article);
+        args.putString(ARG_COMMENT_ID, commentId);
         LinkCommentsFragment fragment = new LinkCommentsFragment();
         fragment.setArguments(args);
         return fragment;
@@ -70,10 +72,11 @@ public class LinkCommentsFragment extends Fragment implements LinksView, Comment
         Bundle args = getArguments();
         String subreddit = args.getString(ARG_SUBREDDIT);
         String articleId = args.getString(ARG_ARTICLE);
+        String commentId = args.getString(ARG_COMMENT_ID);
 
         mBus = BusProvider.getInstance();
         mLinksPresenter = new LinksPresenterImpl(getActivity(), this, subreddit);
-        mCommentsPresenter = new CommentsPresenterImpl(getActivity(), this, subreddit, articleId);
+        mCommentsPresenter = new CommentsPresenterImpl(getActivity(), this, subreddit, articleId, commentId);
 
         mLinkCommentsAdapter = new LinkCommentsAdapter(mLinksPresenter, mCommentsPresenter);
     }

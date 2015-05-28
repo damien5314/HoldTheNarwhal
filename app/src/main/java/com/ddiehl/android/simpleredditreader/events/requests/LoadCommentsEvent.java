@@ -5,11 +5,13 @@ public class LoadCommentsEvent {
     private String mSubreddit;
     private String mArticle;
     private String mSort;
+    private String mCommentId;
 
-    public LoadCommentsEvent(String subreddit, String article, String sort) {
+    public LoadCommentsEvent(String subreddit, String article, String sort, String commentId) {
         mSubreddit = subreddit;
         mArticle = article;
         mSort = sort;
+        mCommentId = commentId;
     }
 
     public String getSubreddit() {
@@ -22,5 +24,9 @@ public class LoadCommentsEvent {
 
     public String getSort() {
         return mSort;
+    }
+
+    public String getCommentId() {
+        return mCommentId;
     }
 }

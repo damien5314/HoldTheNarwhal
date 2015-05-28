@@ -47,11 +47,13 @@ public class CommentsPresenterImpl implements CommentsPresenter {
 
     private String mSubreddit;
     private String mArticleId;
+    private String mCommentId;
     private String mSort;
 
     private RedditComment mCommentSelected;
 
-    public CommentsPresenterImpl(Context context, CommentsView commentsView, String subreddit, String articleId) {
+    public CommentsPresenterImpl(Context context, CommentsView commentsView,
+                                 String subreddit, String articleId, String commentId) {
         mContext = context.getApplicationContext();
         mCommentsView = commentsView;
         mCommentBank = new CommentBankList();
@@ -61,13 +63,14 @@ public class CommentsPresenterImpl implements CommentsPresenter {
 
         mSubreddit = subreddit;
         mArticleId = articleId;
+        mCommentId = commentId;
         mSort = mPreferences.getCommentSort();
     }
 
     @Override
     public void getComments() {
         mCommentsView.showSpinner(null);
-        mBus.post(new LoadCommentsEvent(mSubreddit, mArticleId, mSort));
+        mBus.post(new LoadCommentsEvent(mSubreddit, mArticleId, mSort, mCommentId));
     }
 
     @Override
@@ -132,8 +135,9 @@ public class CommentsPresenterImpl implements CommentsPresenter {
     }
 
     @Override
-    public void navigateToCommentThread(RedditMoreComments comment) {
-        mCommentsView.showToast(R.string.implementation_pending);
+    public void navigateToCommentThread(String commentId) {
+        mCommentId = commentId.substring(3); // Remove type prefix
+        getComments();
     }
 
     @Subscribe

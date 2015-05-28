@@ -1,11 +1,11 @@
 package com.ddiehl.android.simpleredditreader.io;
 
 import android.content.Context;
-import android.util.Log;
 import android.widget.Toast;
 
-import com.ddiehl.android.simpleredditreader.RedditIdentityManager;
 import com.ddiehl.android.simpleredditreader.BusProvider;
+import com.ddiehl.android.simpleredditreader.RedditIdentityManager;
+import com.ddiehl.android.simpleredditreader.events.exceptions.UserRequiredException;
 import com.ddiehl.android.simpleredditreader.events.requests.GetUserIdentityEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.HideEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.LoadCommentThreadEvent;
@@ -23,7 +23,6 @@ import com.ddiehl.android.simpleredditreader.events.responses.MoreChildrenLoaded
 import com.ddiehl.android.simpleredditreader.events.responses.SaveSubmittedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.UserIdentityRetrievedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.VoteSubmittedEvent;
-import com.ddiehl.android.simpleredditreader.events.exceptions.UserRequiredException;
 import com.ddiehl.android.simpleredditreader.utils.BaseUtils;
 import com.ddiehl.reddit.Hideable;
 import com.ddiehl.reddit.Savable;
@@ -165,8 +164,9 @@ public class RedditServiceAPI implements RedditService {
         String subreddit = event.getSubreddit();
         String article = event.getArticle();
         String sort = event.getSort();
+        String commentId = event.getCommentId();
 
-        mAPI.getComments(subreddit, article, sort, new Callback<List<ListingResponse>>() {
+        mAPI.getComments(subreddit, article, sort, commentId, new Callback<List<ListingResponse>>() {
             @Override
             public void success(List<ListingResponse> listingsList, Response response) {
                 BaseUtils.printResponseStatus(response);
@@ -229,9 +229,6 @@ public class RedditServiceAPI implements RedditService {
         int context = 0;
 
         final int parentDepth = more.getDepth();
-
-        Log.d(TAG, "Loading more comments; commentId: " + commentId
-                + " - sort: " + sort + " - context: " + context);
 
         mAPI.getCommentThread(subreddit, article, commentId, sort, context, new Callback<List<ListingResponse>>() {
             @Override

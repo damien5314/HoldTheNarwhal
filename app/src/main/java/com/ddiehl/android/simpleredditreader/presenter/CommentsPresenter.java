@@ -20,7 +20,7 @@ public interface CommentsPresenter {
     AbsRedditComment getCommentAtPosition(int position);
 
     void showCommentContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, RedditComment redditComment);
-    void navigateToCommentThread(RedditMoreComments comment);
+    void navigateToCommentThread(String commentId);
     void openReplyView();
     void upvote();
     void downvote();

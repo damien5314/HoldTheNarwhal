@@ -39,10 +39,7 @@ public class CommentStubViewHolder extends RecyclerView.ViewHolder {
             mMoreCommentsView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mCommentsPresenter.navigateToCommentThread(comment);
-                    // TODO
-                    // Stubs like this are actually permalinks to the comment itself on reddit.com
-                    // Once the comments-only view is ready we can add the link here
+                    mCommentsPresenter.navigateToCommentThread(comment.getParentId());
                 }
             });
         } else { // more comments in current thread

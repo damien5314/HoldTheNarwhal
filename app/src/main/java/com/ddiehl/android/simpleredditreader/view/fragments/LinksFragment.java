@@ -291,7 +291,7 @@ public class LinksFragment extends Fragment implements LinksView {
         String subreddit = link.getSubreddit();
         String articleId = link.getId();
 
-        Fragment fragment = LinkCommentsFragment.newInstance(subreddit, articleId);
+        Fragment fragment = LinkCommentsFragment.newInstance(subreddit, articleId, null);
         FragmentManager fm = getActivity().getSupportFragmentManager();
         fm.beginTransaction()
                 .replace(R.id.fragment_container, fragment)
