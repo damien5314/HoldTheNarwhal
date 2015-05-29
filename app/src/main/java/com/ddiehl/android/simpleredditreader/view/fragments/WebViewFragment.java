@@ -19,9 +19,9 @@ import android.widget.ZoomButtonsController;
 
 import com.ddiehl.android.simpleredditreader.BusProvider;
 import com.ddiehl.android.simpleredditreader.R;
-import com.ddiehl.android.simpleredditreader.events.responses.UserAuthCodeReceivedEvent;
 import com.ddiehl.android.simpleredditreader.io.RedditServiceAuth;
 import com.ddiehl.android.simpleredditreader.utils.AuthUtils;
+import com.ddiehl.android.simpleredditreader.view.MainView;
 import com.squareup.otto.Bus;
 
 
@@ -75,10 +75,10 @@ public class WebViewFragment extends Fragment {
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 if (url.contains(RedditServiceAuth.REDIRECT_URI)
                         && !url.equals(RedditServiceAuth.AUTHORIZATION_URL)) {
+                    // Pass auth code back to the Activity, which will pop this fragment
                     String authCode = AuthUtils.getUserAuthCodeFromRedirectUri(url);
-                    mBus.post(new UserAuthCodeReceivedEvent(authCode));
-                    getFragmentManager().popBackStack();
-//                    return true; // Can we do this to prevent the page from loading at all?
+                    ((MainView) getActivity()).onUserAuthCodeReceived(authCode);
+                    return true; // Can we do this to prevent the page from loading at all?
                 }
                 return false;
             }

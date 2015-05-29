@@ -137,9 +137,12 @@ public class RedditIdentityManager {
         mUserAccessToken = new UserAccessToken();
         mUserAccessToken.setToken(response.getToken());
         mUserAccessToken.setTokenType(response.getTokenType());
-        mUserAccessToken.setExpiration(response.getExpiresIn()*1000 + new Date().getTime());
+        mUserAccessToken.setExpiration(response.getExpiresIn() * 1000 + new Date().getTime());
         mUserAccessToken.setScope(response.getScope());
-        mUserAccessToken.setRefreshToken(response.getRefreshToken());
+        // When refreshing, we do not receive the refresh token in the response; don't delete it
+        if (response.getRefreshToken() != null) {
+            mUserAccessToken.setRefreshToken(response.getRefreshToken());
+        }
 
         Log.d(TAG, "--ACCESS TOKEN RESPONSE--");
         Log.d(TAG, "Access Token: " + mUserAccessToken.getToken());

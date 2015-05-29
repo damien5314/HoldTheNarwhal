@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.ddiehl.android.simpleredditreader.BusProvider;
 import com.ddiehl.android.simpleredditreader.R;
+import com.ddiehl.android.simpleredditreader.events.responses.UserAuthCodeReceivedEvent;
 import com.ddiehl.android.simpleredditreader.presenter.MainPresenter;
 import com.ddiehl.android.simpleredditreader.presenter.MainPresenterImpl;
 import com.ddiehl.android.simpleredditreader.view.MainView;
@@ -37,6 +38,7 @@ public class MainActivity extends ActionBarActivity implements MainView, Confirm
 
     private Bus mBus;
     private MainPresenter mMainPresenter;
+    private String mLastAuthCode;
 
     private ProgressDialog mProgressBar;
 
@@ -199,14 +201,32 @@ public class MainActivity extends ActionBarActivity implements MainView, Confirm
         }
     }
 
+    private Fragment mPreviousFragment;
+
     @Override
     public void openWebViewForURL(String url) {
         FragmentManager fm = getSupportFragmentManager();
+        mPreviousFragment = fm.findFragmentById(R.id.fragment_container);
         Fragment newFragment = WebViewFragment.newInstance(url);
         fm.beginTransaction()
                 .replace(R.id.fragment_container, newFragment)
                 .addToBackStack(null)
                 .commit();
+    }
+
+    @Override
+    public void onUserAuthCodeReceived(String authCode) {
+
+        // Fix for API 10; authorization page was loading twice with same auth code
+        if (authCode.equals(mLastAuthCode))
+            return;
+        mLastAuthCode = authCode;
+
+        FragmentManager fm = getSupportFragmentManager();
+        fm.popBackStack();
+
+        // Notify auth API about the auth code retrieval
+        mBus.post(new UserAuthCodeReceivedEvent(authCode));
     }
 
     @Override
