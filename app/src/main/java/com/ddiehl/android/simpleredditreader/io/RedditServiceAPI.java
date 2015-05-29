@@ -83,6 +83,7 @@ public class RedditServiceAPI implements RedditService {
                     public void intercept(RequestFacade request) {
                         request.addHeader("User-Agent", RedditService.USER_AGENT);
                         request.addHeader("Authorization", "bearer " + getAccessToken());
+                        request.addHeader("Content-Length", "0");
                     }
                 })
                 .build();
