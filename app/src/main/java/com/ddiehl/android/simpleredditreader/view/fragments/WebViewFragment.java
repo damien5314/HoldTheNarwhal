@@ -1,6 +1,8 @@
 package com.ddiehl.android.simpleredditreader.view.fragments;
 
 import android.annotation.SuppressLint;
+import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -15,8 +17,8 @@ import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 import android.widget.ZoomButtonsController;
 
-import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.BusProvider;
+import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.events.responses.UserAuthCodeReceivedEvent;
 import com.ddiehl.android.simpleredditreader.io.RedditServiceAuth;
 import com.ddiehl.android.simpleredditreader.utils.AuthUtils;
@@ -71,12 +73,27 @@ public class WebViewFragment extends Fragment {
         mWebView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                if (url.contains(RedditServiceAuth.REDIRECT_URI)) {
+                if (url.contains(RedditServiceAuth.REDIRECT_URI)
+                        && !url.equals(RedditServiceAuth.AUTHORIZATION_URL)) {
                     String authCode = AuthUtils.getUserAuthCodeFromRedirectUri(url);
                     mBus.post(new UserAuthCodeReceivedEvent(authCode));
                     getFragmentManager().popBackStack();
+//                    return true; // Can we do this to prevent the page from loading at all?
                 }
                 return false;
+            }
+
+            @Override
+            public void onPageStarted(WebView view, String url, Bitmap favicon) {
+                super.onPageStarted(view, url, favicon);
+
+                // 11 = Build.VERSION_CODES.HONEYCOMB (Android 3.0)
+                // http://stackoverflow.com/questions/15518317/shouldoverrideurlloading-is-not-working
+                if (Build.VERSION.SDK_INT < 11) {
+                    if (shouldOverrideUrlLoading(view, url)) {
+                        view.stopLoading();
+                    }
+                }
             }
         });
 
