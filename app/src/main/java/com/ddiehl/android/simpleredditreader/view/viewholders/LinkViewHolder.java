@@ -88,9 +88,9 @@ public class LinkViewHolder extends RecyclerView.ViewHolder
                     mLinkTimestamp.setEdited(true);
             }
         }
-        mLinkSubreddit.setText(String.format("/r/%s", link.getSubreddit()));
-        mLinkDomain.setText(String.format("(%s)", link.getDomain()));
-        mLinkComments.setText(String.format("%s comments", link.getNumComments()));
+        mLinkSubreddit.setText(String.format(mContext.getString(R.string.link_subreddit), link.getSubreddit()));
+        mLinkDomain.setText(String.format(mContext.getString(R.string.link_domain), link.getDomain()));
+        mLinkComments.setText(String.format(mContext.getString(R.string.link_comment_count), link.getNumComments()));
         mSavedText.setVisibility(link.isSaved() ? View.VISIBLE : View.GONE);
 
         String thumbnailUrl = link.getThumbnail();
