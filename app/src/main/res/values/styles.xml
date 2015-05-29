@@ -150,6 +150,4 @@
         <item name="android:topDark">@color/transparent</item>
     </style>
 
-    <dimen name="navigation_drawer_item_margin">16dp</dimen>
-    <dimen name="navigation_drawer_item_text">18sp</dimen>
 </resources>

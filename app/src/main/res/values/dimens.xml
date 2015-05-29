@@ -13,8 +13,15 @@
     <dimen name="link_saved_text_size">14sp</dimen>
     <dimen name="link_row_height">48dp</dimen>
     <dimen name="navigation_drawer_width">240dp</dimen>
+    <dimen name="navigation_drawer_elevation">6dp</dimen>
+    <dimen name="navigation_drawer_header_height">160dp</dimen>
+    <dimen name="navigation_drawer_account_name_text">@dimen/navigation_drawer_item_text</dimen>
+    <dimen name="navigation_drawer_item_height">48dp</dimen>
+    <dimen name="navigation_drawer_item_margin">16dp</dimen>
+    <dimen name="navigation_drawer_item_text">18sp</dimen>
+    <dimen name="navigation_drawer_icon_margin">16dp</dimen>
+    <dimen name="navigation_drawer_icon_size">24dp</dimen>
     <dimen name="web_view_text_margin">5dp</dimen>
-    <!--<dimen name="comment_indentation_width">2dp</dimen>-->
     <dimen name="comment_indentation_margin">6dp</dimen>
     <dimen name="comment_expander_size">12dp</dimen> <!-- 12dp -->
     <dimen name="comment_author_text_size">16sp</dimen>
@@ -42,15 +49,9 @@
     <dimen name="link_data_margin">5dp</dimen>
     <dimen name="comment_data_divider_width">1dp</dimen>
     <dimen name="comment_data_divider_margin">3dp</dimen>
-    <dimen name="navigation_drawer_header_height">160dp</dimen>
-    <dimen name="navigation_drawer_item_height">48dp</dimen>
-    <dimen name="navigation_drawer_elevation">6dp</dimen>
     <dimen name="comment_secondary_data_margin">5dp</dimen>
     <dimen name="link_thumbnail_size">64dp</dimen>
-    <dimen name="navigation_drawer_icon_size">24dp</dimen>
     <dimen name="comment_data_height">32dp</dimen>
-    <dimen name="account_name_text_size">16sp</dimen>
     <dimen name="comment_saved_icon_margin">6dp</dimen>
-    <dimen name="navigation_drawer_icon_margin">16dp</dimen>
 
 </resources>

@@ -174,8 +174,7 @@ public class MainActivity extends ActionBarActivity implements MainView, Confirm
         mAccountNameView.setText(identity == null ?
                 getString(R.string.account_name_unauthorized) : identity.getName());
         mSignOutView.setVisibility(identity == null ? View.GONE : View.VISIBLE);
-        mAccountImageView.setImageResource(identity != null && identity.isGold() ?
-                R.drawable.ic_user_account_gold : R.drawable.ic_user_account);
+        mAccountImageView.setVisibility(identity != null && identity.isGold() ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -201,12 +200,9 @@ public class MainActivity extends ActionBarActivity implements MainView, Confirm
         }
     }
 
-    private Fragment mPreviousFragment;
-
     @Override
     public void openWebViewForURL(String url) {
         FragmentManager fm = getSupportFragmentManager();
-        mPreviousFragment = fm.findFragmentById(R.id.fragment_container);
         Fragment newFragment = WebViewFragment.newInstance(url);
         fm.beginTransaction()
                 .replace(R.id.fragment_container, newFragment)
