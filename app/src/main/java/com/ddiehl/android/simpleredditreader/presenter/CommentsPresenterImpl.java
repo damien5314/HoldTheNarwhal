@@ -13,7 +13,6 @@ import com.ddiehl.android.simpleredditreader.events.requests.LoadCommentsEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.LoadMoreChildrenEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.SaveEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.VoteEvent;
-import com.ddiehl.android.simpleredditreader.events.responses.CommentThreadLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.CommentsLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.HideSubmittedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.MoreChildrenLoadedEvent;
@@ -184,41 +183,6 @@ public class CommentsPresenterImpl implements CommentsPresenter {
                         mCommentBank.addAll(i, comments);
                         break;
                     }
-                }
-            }
-        }
-
-        mCommentsView.getListAdapter().notifyDataSetChanged();
-    }
-
-    @Subscribe
-    public void onCommentThreadLoaded(CommentThreadLoadedEvent event) {
-        mCommentsView.dismissSpinner();
-        if (event.isFailed()) {
-            return;
-        }
-
-        List<AbsRedditComment> comments = event.getComments();
-        AbsRedditComment.flattenCommentList(comments);
-
-        if (comments.size() == 0)
-            return;
-
-        // Increase each comment by the parent depth
-        for (AbsRedditComment comment : comments) {
-            comment.setDepth(comment.getDepth() + event.getParentDepth() - 1);
-        }
-
-        // Iterate through the existing data list to find where the base comment lies
-        RedditComment targetComment = (RedditComment) comments.get(0);
-        for (int i = 0; i < mCommentBank.size(); i++) {
-            AbsRedditComment comment = mCommentBank.get(i);
-            if (comment instanceof RedditMoreComments) {
-                String id = ((RedditMoreComments) comment).getId();
-                if (id.equals(targetComment.getId())) { // Found the base comment
-                    mCommentBank.remove(i);
-                    mCommentBank.addAll(i, comments);
-                    break;
                 }
             }
         }

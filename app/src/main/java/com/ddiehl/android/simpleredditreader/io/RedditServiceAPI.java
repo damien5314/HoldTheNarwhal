@@ -8,14 +8,12 @@ import com.ddiehl.android.simpleredditreader.RedditIdentityManager;
 import com.ddiehl.android.simpleredditreader.events.exceptions.UserRequiredException;
 import com.ddiehl.android.simpleredditreader.events.requests.GetUserIdentityEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.HideEvent;
-import com.ddiehl.android.simpleredditreader.events.requests.LoadCommentThreadEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.LoadCommentsEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.LoadLinksEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.LoadMoreChildrenEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.ReportEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.SaveEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.VoteEvent;
-import com.ddiehl.android.simpleredditreader.events.responses.CommentThreadLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.CommentsLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.HideSubmittedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.LinksLoadedEvent;
@@ -210,38 +208,6 @@ public class RedditServiceAPI implements RedditService {
                 BaseUtils.showError(mContext, error);
                 BaseUtils.printResponse(error.getResponse());
                 mBus.post(new MoreChildrenLoadedEvent(error));
-            }
-        });
-    }
-
-    /**
-     * Retrieves comments for link, focused on comment passed as a parameter
-     */
-    @Override
-    public void onLoadCommentThread(LoadCommentThreadEvent event) {
-        RedditLink link = event.getLink();
-        RedditMoreComments more = event.getMoreComments();
-
-        String subreddit = link.getSubreddit();
-        String article = link.getId();
-        String commentId = more.getId();
-        String sort = event.getSort();
-        int context = 0;
-
-        final int parentDepth = more.getDepth();
-
-        mAPI.getCommentThread(subreddit, article, commentId, sort, context, new Callback<List<ListingResponse>>() {
-            @Override
-            public void success(List<ListingResponse> listingsList, Response response) {
-                BaseUtils.printResponseStatus(response);
-                mBus.post(new CommentThreadLoadedEvent(listingsList, parentDepth));
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                BaseUtils.showError(mContext, error);
-                BaseUtils.printResponse(error.getResponse());
-                mBus.post(new CommentThreadLoadedEvent(error));
             }
         });
     }

@@ -4,14 +4,13 @@ package com.ddiehl.android.simpleredditreader.io;
 import android.content.Context;
 import android.widget.Toast;
 
+import com.ddiehl.android.simpleredditreader.BusProvider;
 import com.ddiehl.android.simpleredditreader.RedditIdentityManager;
 import com.ddiehl.android.simpleredditreader.RedditPreferences;
-import com.ddiehl.android.simpleredditreader.BusProvider;
 import com.ddiehl.android.simpleredditreader.events.exceptions.UserRequiredException;
 import com.ddiehl.android.simpleredditreader.events.requests.AuthorizeApplicationEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.GetUserIdentityEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.HideEvent;
-import com.ddiehl.android.simpleredditreader.events.requests.LoadCommentThreadEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.LoadCommentsEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.LoadLinksEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.LoadMoreChildrenEvent;
@@ -324,25 +323,6 @@ public class RedditServiceAuth implements RedditService {
             }
         } else {
             mServiceAPI.onLoadMoreChildren(event);
-        }
-    }
-
-    @Subscribe @Override
-    public void onLoadCommentThread(LoadCommentThreadEvent event) {
-        if (!mIdentityManager.hasValidAccessToken()) {
-            mQueuedEvent = event;
-            AccessToken userAccessToken = mIdentityManager.getUserAccessToken();
-            String refreshToken = null;
-            if (userAccessToken != null) {
-                refreshToken = userAccessToken.getRefreshToken();
-            }
-            if (refreshToken != null) {
-                mBus.post(new RefreshUserAccessTokenEvent(refreshToken));
-            } else {
-                mBus.post(new AuthorizeApplicationEvent());
-            }
-        } else {
-            mServiceAPI.onLoadCommentThread(event);
         }
     }
 
