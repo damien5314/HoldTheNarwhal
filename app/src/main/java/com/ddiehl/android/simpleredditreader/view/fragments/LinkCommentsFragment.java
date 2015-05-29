@@ -113,6 +113,9 @@ public class LinkCommentsFragment extends Fragment implements LinksView, Comment
     @Override
     public void showLinkContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, RedditLink link) {
         getActivity().getMenuInflater().inflate(R.menu.link_context_menu, menu);
+        String title = String.format(v.getContext().getString(R.string.menu_action_link),
+                link.getTitle(), link.getScore());
+        menu.setHeaderTitle(title);
         menu.findItem(R.id.action_link_show_comments).setVisible(false);
         menu.findItem(R.id.action_link_hide).setVisible(false);
         menu.findItem(R.id.action_link_unhide).setVisible(false);
@@ -121,6 +124,9 @@ public class LinkCommentsFragment extends Fragment implements LinksView, Comment
     @Override
     public void showCommentContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, RedditComment comment) {
         getActivity().getMenuInflater().inflate(R.menu.comment_context_menu, menu);
+        String title = String.format(v.getContext().getString(R.string.menu_action_comment),
+                comment.getAuthor(), comment.getScore());
+        menu.setHeaderTitle(title);
         if (comment.isArchived()) {
             menu.findItem(R.id.action_comment_report).setVisible(false);
         }

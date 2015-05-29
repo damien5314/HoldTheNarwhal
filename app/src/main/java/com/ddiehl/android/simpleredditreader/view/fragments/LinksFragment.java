@@ -176,6 +176,9 @@ public class LinksFragment extends Fragment implements LinksView {
     @Override
     public void showLinkContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, RedditLink link) {
         getActivity().getMenuInflater().inflate(R.menu.link_context_menu, menu);
+        String title = String.format(v.getContext().getString(R.string.menu_action_link),
+                link.getTitle(), link.getScore());
+        menu.setHeaderTitle(title);
         menu.findItem(R.id.action_link_hide).setVisible(!link.isHidden());
         menu.findItem(R.id.action_link_unhide).setVisible(link.isHidden());
     }
