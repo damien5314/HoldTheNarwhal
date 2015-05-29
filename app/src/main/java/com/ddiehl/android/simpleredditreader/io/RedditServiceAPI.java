@@ -189,6 +189,7 @@ public class RedditServiceAPI implements RedditService {
         RedditLink link = event.getRedditLink();
         final RedditMoreComments parentStub = event.getParentCommentStub();
         List<String> children = event.getChildren();
+//        children = children.subList(0, Math.min(children.size(), 20));
         String sort = event.getSort();
 
         StringBuilder b = new StringBuilder();
