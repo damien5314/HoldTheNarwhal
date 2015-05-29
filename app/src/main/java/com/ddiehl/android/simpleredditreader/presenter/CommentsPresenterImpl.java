@@ -24,6 +24,7 @@ import com.ddiehl.android.simpleredditreader.view.CommentsView;
 import com.ddiehl.reddit.Hideable;
 import com.ddiehl.reddit.Savable;
 import com.ddiehl.reddit.Votable;
+import com.ddiehl.reddit.identity.UserIdentity;
 import com.ddiehl.reddit.listings.AbsRedditComment;
 import com.ddiehl.reddit.listings.CommentBank;
 import com.ddiehl.reddit.listings.CommentBankList;
@@ -123,14 +124,13 @@ public class CommentsPresenterImpl implements CommentsPresenter {
         menu.findItem(R.id.action_comment_save).setVisible(!comment.isSaved());
         menu.findItem(R.id.action_comment_unsave).setVisible(comment.isSaved());
 
+        menu.findItem(R.id.action_comment_hide).setVisible(false);
+        menu.findItem(R.id.action_comment_unhide).setVisible(false);
         // If user is gold, show them option to hide or unhide
-        boolean isGold = RedditIdentityManager.getInstance(mContext).getUserIdentity().isGold();
-        if (isGold) {
+        UserIdentity user = RedditIdentityManager.getInstance(mContext).getUserIdentity();
+        if (user != null && user.isGold()) {
             menu.findItem(R.id.action_comment_hide).setVisible(!comment.isHidden());
             menu.findItem(R.id.action_comment_unhide).setVisible(comment.isHidden());
-        } else {
-            menu.findItem(R.id.action_comment_hide).setVisible(false);
-            menu.findItem(R.id.action_comment_unhide).setVisible(false);
         }
     }
 
