@@ -48,7 +48,7 @@ public class RedditServiceAuth implements RedditService {
     public static final String RESPONSE_TYPE = "code";
     public static final String DURATION = "permanent";
     public static final String STATE = BaseUtils.getRandomString();
-    public static final String REDIRECT_URI = "http://www.damiendiehl.net/";
+    public static final String REDIRECT_URI = "http://127.0.0.1/";
     public static final String SCOPE = "identity,mysubreddits,privatemessages,read,report,save,submit,vote";
     public static final String HTTP_AUTH_HEADER = AuthUtils.getHttpAuthHeader(CLIENT_ID, "");
 
