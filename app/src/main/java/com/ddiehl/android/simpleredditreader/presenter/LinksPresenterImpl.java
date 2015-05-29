@@ -176,49 +176,52 @@ public class LinksPresenterImpl implements LinksPresenter {
 
     @Subscribe
     public void onVoteSubmitted(VoteSubmittedEvent event) {
+        Votable listing = event.getListing();
+        if (!(listing instanceof RedditLink))
+            return;
+
         if (event.isFailed()) {
             mLinksView.showToast(R.string.vote_failed);
             return;
         }
 
-        Votable listing = event.getListing();
-        if (listing instanceof RedditLink) {
-            listing.applyVote(event.getDirection());
-            mLinksView.getListAdapter().notifyItemChanged(mLinks.indexOf(listing));
-        }
+        listing.applyVote(event.getDirection());
+        mLinksView.getListAdapter().notifyItemChanged(mLinks.indexOf(listing));
     }
 
     @Subscribe
     public void onLinkSaved(SaveSubmittedEvent event) {
+        Savable listing = event.getListing();
+        if (!(listing instanceof RedditLink))
+            return;
+
         if (event.isFailed()) {
             mLinksView.showToast(R.string.save_failed);
             return;
         }
 
-        Savable listing = event.getListing();
-        if (listing instanceof RedditLink) {
-            listing.isSaved(event.isToSave());
-            mLinksView.getListAdapter().notifyItemChanged(mLinks.indexOf(listing));
-        }
+        listing.isSaved(event.isToSave());
+        mLinksView.getListAdapter().notifyItemChanged(mLinks.indexOf(listing));
     }
 
     @Subscribe
     public void onLinkHidden(HideSubmittedEvent event) {
+        Hideable listing = event.getListing();
+        if (!(listing instanceof RedditLink))
+            return;
+
         if (event.isFailed()) {
             mLinksView.showToast(R.string.hide_failed);
             return;
         }
 
-        Hideable listing = event.getListing();
-        if (listing instanceof RedditLink) {
-            int pos = mLinks.indexOf(listing);
-            if (event.isToHide()) {
-                mLinksView.showToast(R.string.link_hidden);
-                mLinks.remove(pos);
-                mLinksView.getListAdapter().notifyItemRemoved(pos);
-            } else {
-                mLinksView.getListAdapter().notifyItemChanged(pos);
-            }
+        int pos = mLinks.indexOf(listing);
+        if (event.isToHide()) {
+            mLinksView.showToast(R.string.link_hidden);
+            mLinks.remove(pos);
+            mLinksView.getListAdapter().notifyItemRemoved(pos);
+        } else {
+            mLinksView.getListAdapter().notifyItemChanged(pos);
         }
     }
 
@@ -261,15 +264,23 @@ public class LinksPresenterImpl implements LinksPresenter {
     @Override
     public void upvote() {
         RedditLink link = mLinkSelected;
-        int dir = (link.isLiked() == null || !link.isLiked()) ? 1 : 0;
-        mBus.post(new VoteEvent(link, "t3", dir));
+        if (link.isArchived()) {
+            mLinksView.showToast(R.string.listing_archived);
+        } else {
+            int dir = (link.isLiked() == null || !link.isLiked()) ? 1 : 0;
+            mBus.post(new VoteEvent(link, "t3", dir));
+        }
     }
 
     @Override
     public void downvote() {
         RedditLink link = mLinkSelected;
-        int dir = (link.isLiked() == null || link.isLiked()) ? -1 : 0;
-        mBus.post(new VoteEvent(link, "t3", dir));
+        if (link.isArchived()) {
+            mLinksView.showToast(R.string.listing_archived);
+        } else {
+            int dir = (link.isLiked() == null || link.isLiked()) ? -1 : 0;
+            mBus.post(new VoteEvent(link, "t3", dir));
+        }
     }
 
     @Override

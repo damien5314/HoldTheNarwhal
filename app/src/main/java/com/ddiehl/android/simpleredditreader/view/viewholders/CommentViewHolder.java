@@ -26,6 +26,7 @@ public class CommentViewHolder extends RecyclerView.ViewHolder
     private TextView mAuthorView;
     private TextView mScoreView;
     private RedditDateTextView mTimestampView;
+    private View mSavedView;
     private TextView mBodyView;
 
     private Context mContext;
@@ -39,6 +40,7 @@ public class CommentViewHolder extends RecyclerView.ViewHolder
         mAuthorView = (TextView) view.findViewById(R.id.comment_author);
         mScoreView = (TextView) view.findViewById(R.id.comment_score);
         mTimestampView = (RedditDateTextView) view.findViewById(R.id.comment_timestamp);
+        mSavedView = view.findViewById(R.id.comment_saved_icon);
         mBodyView = (TextView) view.findViewById(R.id.comment_body);
 
         itemView.setOnClickListener(this);
@@ -102,6 +104,9 @@ public class CommentViewHolder extends RecyclerView.ViewHolder
         } else {
             mExpanderIcon.setBackgroundResource(R.drawable.comment_expander_background_downvoted);
         }
+
+        // Show/hide saved icon for saved comments
+        mSavedView.setVisibility(comment.isSaved() ? View.VISIBLE : View.GONE);
     }
 
     public void bind(final RedditComment comment) {

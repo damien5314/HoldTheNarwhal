@@ -20,73 +20,90 @@
         android:paddingLeft="@dimen/comment_data_margin_horizontal"
         android:paddingRight="@dimen/comment_data_margin_horizontal">
 
-        <LinearLayout
+        <FrameLayout
             android:id="@+id/comment_metadata"
-            android:orientation="horizontal"
             android:layout_width="fill_parent"
-            android:layout_height="@dimen/comment_data_height"
-            android:gravity="center_vertical">
+            android:layout_height="@dimen/comment_data_height">
 
-            <ImageView
-                android:id="@+id/comment_expander_icon"
-                android:layout_width="@dimen/comment_expander_size"
-                android:layout_height="@dimen/comment_expander_size"
-                android:layout_marginRight="@dimen/comment_expander_margin_horizontal"
-                android:layout_marginEnd="@dimen/comment_expander_margin_horizontal"
-                android:src="@drawable/ic_thread_collapse"
-                android:background="@drawable/comment_expander_background"/>
-
-            <TextView
-                android:id="@+id/comment_author"
+            <LinearLayout
+                android:orientation="horizontal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="0"
-                android:layout_marginRight="@dimen/comment_author_margin"
-                android:layout_marginEnd="@dimen/comment_author_margin"
-                android:text="andrewsmith1984"
-                android:textColor="@color/secondary_text"
-                android:textStyle="bold"
-                android:textSize="@dimen/comment_author_text_size"
-                android:ellipsize="end"
-                android:maxLines="1"/>
+                android:layout_gravity="start|center"
+                android:gravity="bottom">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/comment_secondary_data_margin"
-                android:layout_marginRight="@dimen/comment_secondary_data_margin"
-                android:text="•"
-                android:textSize="@dimen/comment_secondary_data_text_size"/>
+                <ImageView
+                    android:id="@+id/comment_expander_icon"
+                    android:layout_width="@dimen/comment_expander_size"
+                    android:layout_height="@dimen/comment_expander_size"
+                    android:layout_marginRight="@dimen/comment_expander_margin_horizontal"
+                    android:layout_marginEnd="@dimen/comment_expander_margin_horizontal"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/ic_thread_collapse"
+                    android:background="@drawable/comment_expander_background"/>
 
-            <TextView
-                android:id="@+id/comment_score"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="@dimen/comment_score_margin"
-                android:layout_marginEnd="@dimen/comment_score_margin"
-                android:text="@string/comment_score"
-                android:textColor="@color/secondary_text"
-                android:textSize="@dimen/comment_score_text_size"
-                android:maxLines="1"/>
+                <TextView
+                    android:id="@+id/comment_author"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/comment_author_margin"
+                    android:layout_marginEnd="@dimen/comment_author_margin"
+                    android:text="andrewsmith1984"
+                    android:textColor="@color/secondary_text"
+                    android:textStyle="bold"
+                    android:textSize="@dimen/comment_author_text_size"
+                    android:ellipsize="end"
+                    android:maxLines="1"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/comment_secondary_data_margin"
-                android:layout_marginRight="@dimen/comment_secondary_data_margin"
-                android:text="•"
-                android:textSize="@dimen/comment_secondary_data_text_size"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/comment_secondary_data_margin"
+                    android:layout_marginRight="@dimen/comment_secondary_data_margin"
+                    android:text="•"
+                    android:textSize="@dimen/comment_secondary_data_text_size"/>
 
-            <com.ddiehl.android.simpleredditreader.view.widgets.RedditDateTextView
-                android:id="@+id/comment_timestamp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="2 days ago"
-                android:textColor="@color/secondary_text"
-                android:textSize="@dimen/comment_timestamp_text_size"
-                android:maxLines="1"/>
+                <TextView
+                    android:id="@+id/comment_score"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/comment_score_margin"
+                    android:layout_marginEnd="@dimen/comment_score_margin"
+                    android:text="@string/comment_score"
+                    android:textColor="@color/secondary_text"
+                    android:textSize="@dimen/comment_score_text_size"
+                    android:maxLines="1"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/comment_secondary_data_margin"
+                    android:layout_marginRight="@dimen/comment_secondary_data_margin"
+                    android:text="•"
+                    android:textSize="@dimen/comment_secondary_data_text_size"/>
+
+                <com.ddiehl.android.simpleredditreader.view.widgets.RedditDateTextView
+                    android:id="@+id/comment_timestamp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2 days ago"
+                    android:textColor="@color/secondary_text"
+                    android:textSize="@dimen/comment_timestamp_text_size"
+                    android:maxLines="1"/>
 
             </LinearLayout>
+
+            <ImageView
+                android:id="@+id/comment_saved_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end|top"
+                android:layout_marginTop="@dimen/comment_saved_icon_margin"
+                android:layout_marginEnd="@dimen/comment_saved_icon_margin"
+                android:layout_marginRight="@dimen/comment_saved_icon_margin"
+                android:src="@drawable/ic_saved_dark"/>
+
+        </FrameLayout>
 
         <TextView
             android:id="@+id/comment_body"

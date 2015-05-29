@@ -228,30 +228,32 @@ public class CommentsPresenterImpl implements CommentsPresenter {
 
     @Subscribe
     public void onVoteSubmitted(VoteSubmittedEvent event) {
+        Votable listing = event.getListing();
+        if (!(listing instanceof RedditComment))
+            return;
+
         if (event.isFailed()) {
             mCommentsView.showToast(R.string.vote_failed);
             return;
         }
 
-        Votable listing = event.getListing();
-        if (listing instanceof RedditComment) {
-            listing.applyVote(event.getDirection());
-            mCommentsView.getListAdapter().notifyItemChanged(mCommentBank.indexOf(listing) + 1);
-        }
+        listing.applyVote(event.getDirection());
+        mCommentsView.getListAdapter().notifyItemChanged(mCommentBank.indexOf(listing) + 1);
     }
 
     @Subscribe
     public void onCommentSaved(SaveSubmittedEvent event) {
+        Savable listing = event.getListing();
+        if (!(listing instanceof RedditComment))
+            return;
+
         if (event.isFailed()) {
             mCommentsView.showToast(R.string.save_failed);
             return;
         }
 
-        Savable listing = event.getListing();
-        if (listing instanceof RedditLink) {
-            listing.isSaved(event.isToSave());
-            mCommentsView.getListAdapter().notifyItemChanged(mCommentBank.indexOf(listing));
-        }
+        listing.isSaved(event.isToSave());
+        mCommentsView.getListAdapter().notifyItemChanged(mCommentBank.indexOf(listing) + 1);
     }
 
     @Subscribe
