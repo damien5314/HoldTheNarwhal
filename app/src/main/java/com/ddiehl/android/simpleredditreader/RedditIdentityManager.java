@@ -63,6 +63,10 @@ public class RedditIdentityManager {
         mUserIdentity = getSavedUserIdentity();
     }
 
+    public boolean hasUserAccessToken() {
+        return getUserAccessToken() != null;
+    }
+
     public boolean hasValidUserAccessToken() {
         AccessToken token = getUserAccessToken();
         return token != null && token.secondsUntilExpiration() > EXPIRATION_THRESHOLD;
@@ -135,20 +139,7 @@ public class RedditIdentityManager {
         mUserAccessToken.setExpiration(response.getExpiresIn()*1000 + new Date().getTime());
         mUserAccessToken.setScope(response.getScope());
         mUserAccessToken.setRefreshToken(response.getRefreshToken());
-        saveUserAccessToken();
-    }
 
-    public void saveApplicationAccessTokenResponse(AuthorizationResponse response) {
-        mApplicationAccessToken = new ApplicationAccessToken();
-        mApplicationAccessToken.setToken(response.getToken());
-        mApplicationAccessToken.setTokenType(response.getTokenType());
-        mApplicationAccessToken.setExpiration(response.getExpiresIn()*1000 + new Date().getTime());
-        mApplicationAccessToken.setScope(response.getScope());
-        mApplicationAccessToken.setRefreshToken(response.getRefreshToken());
-        saveApplicationAccessToken();
-    }
-
-    private void saveUserAccessToken() {
         Log.d(TAG, "--ACCESS TOKEN RESPONSE--");
         Log.d(TAG, "Access Token: " + mUserAccessToken.getToken());
         Log.d(TAG, "Refresh Token: " + mUserAccessToken.getRefreshToken());
@@ -163,7 +154,14 @@ public class RedditIdentityManager {
                 .apply();
     }
 
-    private void saveApplicationAccessToken() {
+    public void saveApplicationAccessTokenResponse(AuthorizationResponse response) {
+        mApplicationAccessToken = new ApplicationAccessToken();
+        mApplicationAccessToken.setToken(response.getToken());
+        mApplicationAccessToken.setTokenType(response.getTokenType());
+        mApplicationAccessToken.setExpiration(response.getExpiresIn()*1000 + new Date().getTime());
+        mApplicationAccessToken.setScope(response.getScope());
+        mApplicationAccessToken.setRefreshToken(response.getRefreshToken());
+
         Log.d(TAG, "--ACCESS TOKEN RESPONSE--");
         Log.d(TAG, "Access Token: " + mApplicationAccessToken.getToken());
         Log.d(TAG, "Refresh Token: " + mApplicationAccessToken.getRefreshToken());
@@ -269,7 +267,6 @@ public class RedditIdentityManager {
         mUserIdentity = null;
         mContext.getSharedPreferences(PREFS_USER_IDENTITY, Context.MODE_PRIVATE)
                 .edit().clear().apply();
-//        mBus.post(new UserIdentitySavedEvent(null));
     }
 
     public static RedditIdentityManager getInstance(Context context) {
