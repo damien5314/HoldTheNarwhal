@@ -52,6 +52,9 @@ public abstract class AccessToken {
         return Math.max(0, (mExpiration - System.currentTimeMillis()) / 1000);
     }
 
-    public abstract boolean hasRefreshToken();
+    public boolean hasRefreshToken() {
+        return mRefreshToken != null;
+    }
+
     public abstract boolean isUserAccessToken();
 }

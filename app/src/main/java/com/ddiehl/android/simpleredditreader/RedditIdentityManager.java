@@ -25,7 +25,7 @@ public class RedditIdentityManager {
     private static final String PREF_SCOPE = "pref_scope";
     private static final String PREF_REFRESH_TOKEN = "pref_refresh_token";
 
-    private static final String PREFS_USER_IDENTITY = "user_identity";
+    private static final String PREFS_USER_IDENTITY = "prefs_user_identity";
     private static final String PREF_HAS_MAIL = "pref_has_mail";
     private static final String PREF_NAME = "pref_name";
     private static final String PREF_CREATED = "pref_created";
@@ -100,6 +100,7 @@ public class RedditIdentityManager {
         return mApplicationAccessToken;
     }
 
+    // /data/data/com.ddiehl.android.simpleredditreader.debug/shared_prefs/prefs_user_access_token.xml
     public AccessToken getSavedUserAccessToken() {
         SharedPreferences sp =  mContext.getSharedPreferences(PREFS_USER_ACCESS_TOKEN, Context.MODE_PRIVATE);
 
