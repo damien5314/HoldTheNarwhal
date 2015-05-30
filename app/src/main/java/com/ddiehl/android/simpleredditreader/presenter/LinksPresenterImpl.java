@@ -59,7 +59,7 @@ public class LinksPresenterImpl implements LinksPresenter {
     @Override
     public void getLinks() {
         mLinks.clear();
-        mLinksView.getListAdapter().notifyDataSetChanged();
+        mLinksView.linksUpdated();
         getMoreLinks();
     }
 
@@ -156,7 +156,7 @@ public class LinksPresenterImpl implements LinksPresenter {
         }
 
         mLinks.addAll(event.getLinks());
-        mLinksView.getListAdapter().notifyDataSetChanged();
+        mLinksView.linksUpdated();
         updateTitle();
         mLinksRequested = false;
     }
@@ -186,7 +186,7 @@ public class LinksPresenterImpl implements LinksPresenter {
         }
 
         listing.applyVote(event.getDirection());
-        mLinksView.getListAdapter().notifyItemChanged(mLinks.indexOf(listing));
+        mLinksView.linkUpdatedAt(mLinks.indexOf(listing));
     }
 
     @Subscribe
@@ -201,7 +201,7 @@ public class LinksPresenterImpl implements LinksPresenter {
         }
 
         listing.isSaved(event.isToSave());
-        mLinksView.getListAdapter().notifyItemChanged(mLinks.indexOf(listing));
+        mLinksView.linkUpdatedAt(mLinks.indexOf(listing));
     }
 
     @Subscribe
@@ -219,9 +219,9 @@ public class LinksPresenterImpl implements LinksPresenter {
         if (event.isToHide()) {
             mLinksView.showToast(R.string.link_hidden);
             mLinks.remove(pos);
-            mLinksView.getListAdapter().notifyItemRemoved(pos);
+            mLinksView.linkRemovedAt(pos);
         } else {
-            mLinksView.getListAdapter().notifyItemChanged(pos);
+            mLinksView.linkRemovedAt(pos);
         }
     }
 

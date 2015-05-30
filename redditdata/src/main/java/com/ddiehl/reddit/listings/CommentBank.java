@@ -8,6 +8,7 @@ public interface CommentBank {
     boolean addAll(Collection<? extends AbsRedditComment> collection);
     boolean addAll(int index, Collection<? extends AbsRedditComment> collection);
     int indexOf(Object obj);
+    int visibleIndexOf(Object obj);
     AbsRedditComment get(int position);
     int size();
     AbsRedditComment remove(int position);

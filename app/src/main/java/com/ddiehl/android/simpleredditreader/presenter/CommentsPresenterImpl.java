@@ -107,7 +107,7 @@ public class CommentsPresenterImpl implements CommentsPresenter {
     @Override
     public void toggleThreadVisible(AbsRedditComment comment) {
         mCommentBank.toggleThreadVisible(comment);
-        mCommentsView.getListAdapter().notifyDataSetChanged();
+        mCommentsView.commentsUpdated();
     }
 
     @Override
@@ -156,7 +156,7 @@ public class CommentsPresenterImpl implements CommentsPresenter {
         List<AbsRedditComment> comments = event.getComments();
         AbsRedditComment.flattenCommentList(comments);
         mCommentBank.setData(comments);
-        mCommentsView.getListAdapter().notifyDataSetChanged();
+        mCommentsView.commentsUpdated();
     }
 
     @Subscribe
@@ -187,7 +187,7 @@ public class CommentsPresenterImpl implements CommentsPresenter {
             }
         }
 
-        mCommentsView.getListAdapter().notifyDataSetChanged();
+        mCommentsView.commentsUpdated();
     }
 
     @Subscribe
@@ -202,7 +202,7 @@ public class CommentsPresenterImpl implements CommentsPresenter {
         }
 
         listing.applyVote(event.getDirection());
-        mCommentsView.getListAdapter().notifyItemChanged(mCommentBank.indexOf(listing) + 1);
+        mCommentsView.commentUpdatedAt(mCommentBank.visibleIndexOf(listing));
     }
 
     @Subscribe
@@ -217,7 +217,7 @@ public class CommentsPresenterImpl implements CommentsPresenter {
         }
 
         listing.isSaved(event.isToSave());
-        mCommentsView.getListAdapter().notifyItemChanged(mCommentBank.indexOf(listing) + 1);
+        mCommentsView.commentUpdatedAt(mCommentBank.visibleIndexOf(listing));
     }
 
     @Subscribe
@@ -229,13 +229,13 @@ public class CommentsPresenterImpl implements CommentsPresenter {
 
         Hideable listing = event.getListing();
         if (listing instanceof RedditLink) {
-            int pos = mCommentBank.indexOf(listing);
+            int pos = mCommentBank.visibleIndexOf(listing);
             if (event.isToHide()) {
                 mCommentsView.showToast(R.string.link_hidden);
                 mCommentBank.remove(pos);
-                mCommentsView.getListAdapter().notifyItemRemoved(pos);
+                mCommentsView.commentRemovedAt(pos);
             } else {
-                mCommentsView.getListAdapter().notifyItemChanged(pos);
+                mCommentsView.commentRemovedAt(pos);
             }
         }
     }

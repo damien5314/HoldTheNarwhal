@@ -41,6 +41,11 @@ public class CommentBankList implements CommentBank {
     }
 
     @Override
+    public int visibleIndexOf(Object obj) {
+        return mVisibleData.indexOf(obj);
+    }
+
+    @Override
     public AbsRedditComment get(int position) {
         return mData.get(position);
     }

@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -119,6 +120,21 @@ public class LinkCommentsFragment extends Fragment implements LinksView, Comment
         menu.findItem(R.id.action_link_show_comments).setVisible(false);
         menu.findItem(R.id.action_link_hide).setVisible(false);
         menu.findItem(R.id.action_link_unhide).setVisible(false);
+    }
+
+    @Override
+    public void commentsUpdated() {
+        mLinkCommentsAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void commentUpdatedAt(int position) {
+        mLinkCommentsAdapter.notifyItemChanged(position + 1);
+    }
+
+    @Override
+    public void commentRemovedAt(int position) {
+        mLinkCommentsAdapter.notifyItemRemoved(position + 1);
     }
 
     @Override
@@ -312,13 +328,25 @@ public class LinkCommentsFragment extends Fragment implements LinksView, Comment
     }
 
     @Override
-    public RecyclerView.Adapter<RecyclerView.ViewHolder> getListAdapter() {
-        return mLinkCommentsAdapter;
+    public void setTitle(CharSequence title) {
+        getActivity().setTitle(title);
     }
 
     @Override
-    public void setTitle(CharSequence title) {
-        getActivity().setTitle(title);
+    public void linksUpdated() {
+        mLinkCommentsAdapter.notifyItemChanged(0);
+    }
+
+    @Override
+    public void linkUpdatedAt(int position) {
+        Log.w(TAG, "Warning: Only 1 link in this LinksView, ensure you are calling linkUpdatedAt(0)");
+        mLinkCommentsAdapter.notifyItemChanged(position);
+    }
+
+    @Override
+    public void linkRemovedAt(int position) {
+        Log.w(TAG, "Warning: Only 1 link in this LinksView, ensure you are calling linkUpdatedAt(0)");
+        mLinkCommentsAdapter.notifyItemRemoved(position);
     }
 
     @Override

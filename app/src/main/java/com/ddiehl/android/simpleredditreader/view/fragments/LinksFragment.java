@@ -285,8 +285,18 @@ public class LinksFragment extends Fragment implements LinksView {
     }
 
     @Override
-    public RecyclerView.Adapter<RecyclerView.ViewHolder> getListAdapter() {
-        return mLinksAdapter;
+    public void linksUpdated() {
+        mLinksAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void linkUpdatedAt(int position) {
+        mLinksAdapter.notifyItemChanged(position);
+    }
+
+    @Override
+    public void linkRemovedAt(int position) {
+        mLinksAdapter.notifyItemRemoved(position);
     }
 
     @Override
