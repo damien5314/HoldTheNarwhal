@@ -28,27 +28,31 @@ public class CommentViewHolder extends RecyclerView.ViewHolder
     private RedditDateTextView mTimestampView;
     private View mSavedView;
     private TextView mBodyView;
+    private View mGildedView;
+    private TextView mGildedText;
 
     private Context mContext;
     private CommentsPresenter mCommentsPresenter;
 
-    public CommentViewHolder(View view, CommentsPresenter presenter) {
-        super(view);
-        mView = view;
-        mCommentDataRow = view.findViewById(R.id.comment_metadata);
-        mExpanderIcon = (ImageView) view.findViewById(R.id.comment_expander_icon);
-        mAuthorView = (TextView) view.findViewById(R.id.comment_author);
-        mScoreView = (TextView) view.findViewById(R.id.comment_score);
-        mTimestampView = (RedditDateTextView) view.findViewById(R.id.comment_timestamp);
-        mSavedView = view.findViewById(R.id.comment_saved_icon);
-        mBodyView = (TextView) view.findViewById(R.id.comment_body);
+    public CommentViewHolder(View v, CommentsPresenter presenter) {
+        super(v);
+        mView = v;
+        mCommentDataRow = v.findViewById(R.id.comment_metadata);
+        mExpanderIcon = (ImageView) v.findViewById(R.id.comment_expander_icon);
+        mAuthorView = (TextView) v.findViewById(R.id.comment_author);
+        mScoreView = (TextView) v.findViewById(R.id.comment_score);
+        mTimestampView = (RedditDateTextView) v.findViewById(R.id.comment_timestamp);
+        mSavedView = v.findViewById(R.id.comment_saved_icon);
+        mBodyView = (TextView) v.findViewById(R.id.comment_body);
+        mGildedView = v.findViewById(R.id.gilded_view);
+        mGildedText = (TextView) v.findViewById(R.id.comment_gilded_text_view);
 
         itemView.setOnClickListener(this);
         mCommentDataRow.setOnClickListener(this);
         mBodyView.setOnClickListener(this);
         itemView.setOnCreateContextMenuListener(this);
 
-        mContext = view.getContext().getApplicationContext();
+        mContext = v.getContext().getApplicationContext();
         mCommentsPresenter = presenter;
     }
 
@@ -107,6 +111,15 @@ public class CommentViewHolder extends RecyclerView.ViewHolder
 
         // Show/hide saved icon for saved comments
         mSavedView.setVisibility(comment.isSaved() ? View.VISIBLE : View.GONE);
+
+        // Show gilding view if appropriate, else hide
+        Integer gilded = comment.getGilded();
+        if (gilded != null && gilded > 0) {
+            mGildedText.setText(String.format(mContext.getString(R.string.link_gilded_text), gilded));
+            mGildedView.setVisibility(View.VISIBLE);
+        } else {
+            mGildedView.setVisibility(View.GONE);
+        }
     }
 
     public void bind(final RedditComment comment) {

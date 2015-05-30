@@ -20,11 +20,19 @@ public class LinkViewHolder extends RecyclerView.ViewHolder
 
     private RedditLink mRedditLink;
 
-    private View mLinkView, mGildedView, mSavedView;
-    private TextView mLinkTitle, mLinkDomain, mLinkScore, mLinkAuthor,
-            mLinkSubreddit, mLinkComments, mSelfText, mGildedText;
+    private View mLinkView;
+    private View mSavedView;
+    private TextView mLinkTitle;
+    private TextView mLinkDomain;
+    private TextView mLinkScore;
+    private TextView mLinkAuthor;
+    private TextView mLinkSubreddit;
+    private TextView mLinkComments;
+    private TextView mSelfText;
     private ImageView mLinkThumbnail;
     private RedditDateTextView mLinkTimestamp;
+    private View mGildedView;
+    private TextView mGildedText;
     private View mStickiedView;
 
     private Context mContext;
@@ -33,7 +41,6 @@ public class LinkViewHolder extends RecyclerView.ViewHolder
     public LinkViewHolder(View v, LinksPresenter presenter) {
         super(v);
         mLinkView = v.findViewById(R.id.link_view);
-        mGildedView = v.findViewById(R.id.gilded_view);
         mLinkTitle = (TextView) v.findViewById(R.id.link_title);
         mLinkDomain = (TextView) v.findViewById(R.id.link_domain);
         mLinkScore = (TextView) v.findViewById(R.id.link_score);
@@ -43,8 +50,9 @@ public class LinkViewHolder extends RecyclerView.ViewHolder
         mLinkComments = (TextView) v.findViewById(R.id.link_comment_count);
         mLinkThumbnail = (ImageView) v.findViewById(R.id.link_thumbnail);
         mSelfText = (TextView) v.findViewById(R.id.link_self_text);
-        mGildedText = (TextView) v.findViewById(R.id.link_gilded_text_view);
         mSavedView = v.findViewById(R.id.link_saved_view);
+        mGildedView = v.findViewById(R.id.gilded_view);
+        mGildedText = (TextView) v.findViewById(R.id.link_gilded_text_view);
         mStickiedView = v.findViewById(R.id.link_stickied_view);
 
         itemView.setOnClickListener(this);

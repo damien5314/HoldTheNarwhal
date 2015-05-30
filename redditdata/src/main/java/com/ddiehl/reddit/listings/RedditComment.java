@@ -83,7 +83,7 @@ public class RedditComment extends AbsRedditComment implements Votable, Savable,
         return data.id;
     }
 
-    public int getGilded() {
+    public Integer getGilded() {
         return data.gilded;
     }
 
@@ -221,7 +221,7 @@ public class RedditComment extends AbsRedditComment implements Votable, Savable,
         @Expose
         private String id;
         @Expose
-        private int gilded;
+        private Integer gilded;
         @Expose @SerializedName("archived")
         private Boolean isArchived;
         @Expose @SerializedName("report_reasons")

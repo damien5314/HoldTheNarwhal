@@ -27,7 +27,7 @@
 
             <LinearLayout
                 android:orientation="horizontal"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start|center"
                 android:gravity="bottom">
@@ -91,17 +91,38 @@
                     android:textSize="@dimen/comment_timestamp_text_size"
                     android:maxLines="1"/>
 
-            </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/gilded_view"
+                    android:orientation="horizontal"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="end">
 
-            <ImageView
-                android:id="@+id/comment_saved_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end|top"
-                android:layout_marginTop="@dimen/comment_saved_icon_margin"
-                android:layout_marginEnd="@dimen/comment_saved_icon_margin"
-                android:layout_marginRight="@dimen/comment_saved_icon_margin"
-                android:src="@drawable/ic_saved_dark"/>
+                    <ImageView
+                        android:id="@+id/gilded_image_view"
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/ic_gilded_filled_outlined"/>
+
+                    <TextView
+                        android:id="@+id/comment_gilded_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        style="@style/GildedTextView"
+                        android:text="@string/link_gilded_text"/>
+
+                    <ImageView
+                        android:id="@+id/comment_saved_icon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_saved_dark"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
 
         </FrameLayout>
 
