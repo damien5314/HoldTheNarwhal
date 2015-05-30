@@ -130,6 +130,7 @@
                     <TextView
                         android:id="@+id/link_comment_count"
                         android:layout_gravity="start"
+                        android:text="@string/link_author"
                         style="@style/LinkCommentCountTextView"/>
 
                     <ImageView
@@ -140,6 +141,14 @@
                         android:layout_alignParentRight="true"
                         android:layout_gravity="center_vertical"
                         android:src="@drawable/ic_saved"/>
+
+                    <ImageView
+                        android:id="@+id/link_stickied_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toStartOf="@id/link_saved_view"
+                        android:layout_toLeftOf="@id/link_saved_view"
+                        android:src="@drawable/ic_stickied"/>
 
                 </RelativeLayout>
 

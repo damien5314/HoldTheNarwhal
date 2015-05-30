@@ -20,11 +20,12 @@ public class LinkViewHolder extends RecyclerView.ViewHolder
 
     private RedditLink mRedditLink;
 
-    private View mLinkView, mGildedView, mSavedText;
+    private View mLinkView, mGildedView, mSavedView;
     private TextView mLinkTitle, mLinkDomain, mLinkScore, mLinkAuthor,
             mLinkSubreddit, mLinkComments, mSelfText, mGildedText;
     private ImageView mLinkThumbnail;
     private RedditDateTextView mLinkTimestamp;
+    private View mStickiedView;
 
     private Context mContext;
     private LinksPresenter mLinksPresenter;
@@ -43,7 +44,8 @@ public class LinkViewHolder extends RecyclerView.ViewHolder
         mLinkThumbnail = (ImageView) v.findViewById(R.id.link_thumbnail);
         mSelfText = (TextView) v.findViewById(R.id.link_self_text);
         mGildedText = (TextView) v.findViewById(R.id.link_gilded_text_view);
-        mSavedText = v.findViewById(R.id.link_saved_view);
+        mSavedView = v.findViewById(R.id.link_saved_view);
+        mStickiedView = v.findViewById(R.id.link_stickied_view);
 
         itemView.setOnClickListener(this);
         mLinkTitle.setOnClickListener(this);
@@ -91,7 +93,6 @@ public class LinkViewHolder extends RecyclerView.ViewHolder
         mLinkSubreddit.setText(String.format(mContext.getString(R.string.link_subreddit), link.getSubreddit()));
         mLinkDomain.setText(String.format(mContext.getString(R.string.link_domain), link.getDomain()));
         mLinkComments.setText(String.format(mContext.getString(R.string.link_comment_count), link.getNumComments()));
-        mSavedText.setVisibility(link.isSaved() ? View.VISIBLE : View.GONE);
 
         String thumbnailUrl = link.getThumbnail();
         switch (thumbnailUrl) {
@@ -129,6 +130,14 @@ public class LinkViewHolder extends RecyclerView.ViewHolder
         } else {
             mGildedView.setVisibility(View.GONE);
         }
+
+        // Show saved view if appropriate, else hide
+        Boolean saved = link.isSaved();
+        mSavedView.setVisibility(saved != null && saved ? View.VISIBLE : View.INVISIBLE);
+
+        // Show stickied view if appropriate, else hide
+        Boolean stickied = link.getStickied();
+        mStickiedView.setVisibility(stickied != null && stickied ? View.VISIBLE : View.INVISIBLE);
     }
 
     @Override
