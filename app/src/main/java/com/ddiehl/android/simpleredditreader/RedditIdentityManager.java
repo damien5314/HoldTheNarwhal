@@ -134,12 +134,14 @@ public class RedditIdentityManager {
     }
 
     public void saveUserAccessTokenResponse(AuthorizationResponse response) {
-        mUserAccessToken = new UserAccessToken();
+        if (mUserAccessToken == null) {
+            mUserAccessToken = new UserAccessToken();
+        }
         mUserAccessToken.setToken(response.getToken());
         mUserAccessToken.setTokenType(response.getTokenType());
         mUserAccessToken.setExpiration(response.getExpiresIn() * 1000 + new Date().getTime());
         mUserAccessToken.setScope(response.getScope());
-        // When refreshing, we do not receive the refresh token in the response; don't delete it
+        // When refreshing, we might not receive the refresh token in the response; don't delete it
         if (response.getRefreshToken() != null) {
             mUserAccessToken.setRefreshToken(response.getRefreshToken());
         }

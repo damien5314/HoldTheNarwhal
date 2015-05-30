@@ -150,4 +150,9 @@ public class UserIdentity {
     public void setInboxCount(Integer inboxCount) {
         this.inboxCount = inboxCount;
     }
+
+    @Override
+    public String toString() {
+        return getId() + " - " + getName() + " - Gold: " + isGold();
+    }
 }
