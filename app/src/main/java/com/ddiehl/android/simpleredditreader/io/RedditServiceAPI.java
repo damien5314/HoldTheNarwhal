@@ -84,6 +84,7 @@ public class RedditServiceAPI implements RedditService {
                         request.addHeader("User-Agent", RedditService.USER_AGENT);
                         request.addHeader("Authorization", "bearer " + getAccessToken());
                         request.addHeader("Content-Length", "0");
+                        request.addQueryParam("raw_json", "1");
                     }
                 })
                 .build();
