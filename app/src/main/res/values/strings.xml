@@ -80,13 +80,20 @@
     <string name="default_comment_sort">hot</string>
     <string name="default_links_sort">hot</string>
     <string name="default_links_timespan">all</string>
-    <string name="timespan_year">%s years ago</string>
+    <string name="timespan_year">%s years</string>
     <string name="timespan_weeks">%s weeks ago</string>
     <string name="timespan_days">%s days ago</string>
     <string name="timespan_hours">%s hours ago</string>
     <string name="timespan_minutes">%s minutes ago</string>
     <string name="timespan_seconds">%s seconds ago</string>
     <string name="timespan_now">just now</string>
+    <string name="timespan_year_abbr">%syr</string>
+    <string name="timespan_weeks_abbr">%swk</string>
+    <string name="timespan_days_abbr">%sd</string>
+    <string name="timespan_hours_abbr">%sh</string>
+    <string name="timespan_minutes_abbr">%sm</string>
+    <string name="timespan_seconds_abbr">%ss</string>
+    <string name="timespan_now_abbr">just now</string>
     <string name="lorem_ipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas at velit ex.
             Aliquam vitae tellus eget dolor rutrum bibendum bibendum ac mauris. Morbi dui sapien, efficitur eget
             dui et, blandit vulputate quam. Sed vehicula, mauris ac sollicitudin commodo, risus tortor imperdiet ipsum,

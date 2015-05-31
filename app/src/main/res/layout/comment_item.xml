@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/comment_item_row"
     android:orientation="horizontal"
     android:layout_width="match_parent"
@@ -83,6 +84,7 @@
                     android:textSize="@dimen/comment_secondary_data_text_size"/>
 
                 <com.ddiehl.android.simpleredditreader.view.widgets.RedditDateTextView
+                    app:abbreviated="true"
                     android:id="@+id/comment_timestamp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

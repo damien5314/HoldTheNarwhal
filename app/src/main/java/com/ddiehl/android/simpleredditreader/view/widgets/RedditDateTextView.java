@@ -10,12 +10,36 @@ import java.util.Date;
 
 public class RedditDateTextView extends TextView {
 
+    private static final int[] TIMESPAN_IDS = {
+            R.string.timespan_year,
+            R.string.timespan_weeks,
+            R.string.timespan_days,
+            R.string.timespan_hours,
+            R.string.timespan_minutes,
+            R.string.timespan_seconds,
+            R.string.timespan_now
+    };
+
+    private static final int[] TIMESPAN_IDS_ABBR = {
+            R.string.timespan_year_abbr,
+            R.string.timespan_weeks_abbr,
+            R.string.timespan_days_abbr,
+            R.string.timespan_hours_abbr,
+            R.string.timespan_minutes_abbr,
+            R.string.timespan_seconds_abbr,
+            R.string.timespan_now_abbr
+    };
+
+    private boolean mAbbreviated = false;
+
     public RedditDateTextView(Context context) {
         super(context);
     }
 
     public RedditDateTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        mAbbreviated = attrs.getAttributeBooleanValue("http://schemas.android.com/apk/res-auto",
+                "abbreviated", false);
     }
 
     public void setDate(Date date) {
@@ -37,27 +61,28 @@ public class RedditDateTextView extends TextView {
         long weeks = days / 7;
         long years = days / 365;
 
+        int[] timespanIds = mAbbreviated ? TIMESPAN_IDS_ABBR : TIMESPAN_IDS;
         long output;
         String outputString;
         if (years > 0) {
             output = years;
-            outputString = getContext().getString(R.string.timespan_year);
+            outputString = getContext().getString(timespanIds[0]);
         } else if (weeks > 0) {
             output = weeks;
-            outputString = getContext().getString(R.string.timespan_weeks);
+            outputString = getContext().getString(timespanIds[1]);
         } else if (days > 0) {
             output = days;
-            outputString = getContext().getString(R.string.timespan_days);
+            outputString = getContext().getString(timespanIds[2]);
         } else if (hours > 0) {
             output = hours;
-            outputString = getContext().getString(R.string.timespan_hours);
+            outputString = getContext().getString(timespanIds[3]);
         } else if (minutes > 0) {
             output = minutes;
-            outputString = getContext().getString(R.string.timespan_minutes);
+            outputString = getContext().getString(timespanIds[4]);
         } else {
             output = seconds;
             outputString = getContext().getString(seconds < 10
-                    ? R.string.timespan_now : R.string.timespan_seconds);
+                    ? timespanIds[6] : timespanIds[5]);
         }
 
         return String.format(outputString, output);
