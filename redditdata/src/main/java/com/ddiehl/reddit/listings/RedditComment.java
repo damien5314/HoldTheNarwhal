@@ -1,6 +1,5 @@
 package com.ddiehl.reddit.listings;
 
-import com.ddiehl.reddit.Hideable;
 import com.ddiehl.reddit.Savable;
 import com.ddiehl.reddit.Votable;
 import com.google.gson.annotations.Expose;
@@ -9,7 +8,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 @SuppressWarnings("unused")
-public class RedditComment extends AbsRedditComment implements Votable, Savable, Hideable {
+public class RedditComment extends AbsRedditComment implements Votable, Savable {
 
     @Expose
     private RedditCommentData data;
@@ -19,16 +18,6 @@ public class RedditComment extends AbsRedditComment implements Votable, Savable,
                 getSubreddit(),
                 getLinkId().substring(3), // Remove the type prefix (t3_, etc)
                 getId());
-    }
-
-    @Override
-    public Boolean isHidden() {
-        return data.hidden;
-    }
-
-    @Override
-    public void isHidden(Boolean b) {
-        data.hidden = b;
     }
 
     @Override
@@ -203,7 +192,6 @@ public class RedditComment extends AbsRedditComment implements Votable, Savable,
 
     public static class RedditCommentData {
 
-        private Boolean hidden;
         @Expose
         private ListingResponse replies;
         @Expose @SerializedName("subreddit_id")

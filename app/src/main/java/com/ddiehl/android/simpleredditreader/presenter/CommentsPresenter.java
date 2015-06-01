@@ -28,8 +28,6 @@ public interface CommentsPresenter {
     void unsaveComment();
     void shareComment();
     void openCommentInBrowser();
-    void hideComment();
-    void unhideComment();
     void reportComment();
 
 }

@@ -6,24 +6,19 @@ import android.view.View;
 
 import com.ddiehl.android.simpleredditreader.BusProvider;
 import com.ddiehl.android.simpleredditreader.R;
-import com.ddiehl.android.simpleredditreader.RedditIdentityManager;
 import com.ddiehl.android.simpleredditreader.RedditPreferences;
-import com.ddiehl.android.simpleredditreader.events.requests.HideEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.LoadCommentsEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.LoadMoreChildrenEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.SaveEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.VoteEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.CommentsLoadedEvent;
-import com.ddiehl.android.simpleredditreader.events.responses.HideSubmittedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.MoreChildrenLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.SaveSubmittedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.UserIdentitySavedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.VoteSubmittedEvent;
 import com.ddiehl.android.simpleredditreader.view.CommentsView;
-import com.ddiehl.reddit.Hideable;
 import com.ddiehl.reddit.Savable;
 import com.ddiehl.reddit.Votable;
-import com.ddiehl.reddit.identity.UserIdentity;
 import com.ddiehl.reddit.listings.AbsRedditComment;
 import com.ddiehl.reddit.listings.CommentBank;
 import com.ddiehl.reddit.listings.CommentBankList;
@@ -122,15 +117,6 @@ public class CommentsPresenterImpl implements CommentsPresenter {
 
         menu.findItem(R.id.action_comment_save).setVisible(!comment.isSaved());
         menu.findItem(R.id.action_comment_unsave).setVisible(comment.isSaved());
-
-        menu.findItem(R.id.action_comment_hide).setVisible(false);
-        menu.findItem(R.id.action_comment_unhide).setVisible(false);
-        // If user is gold, show them option to hide or unhide
-        UserIdentity user = RedditIdentityManager.getInstance(mContext).getUserIdentity();
-        if (user != null && user.isGold()) {
-            menu.findItem(R.id.action_comment_hide).setVisible(!comment.isHidden());
-            menu.findItem(R.id.action_comment_unhide).setVisible(comment.isHidden());
-        }
     }
 
     @Override
@@ -220,26 +206,6 @@ public class CommentsPresenterImpl implements CommentsPresenter {
         mCommentsView.commentUpdatedAt(mCommentBank.visibleIndexOf(listing));
     }
 
-    @Subscribe
-    public void onCommentHidden(HideSubmittedEvent event) {
-        if (event.isFailed()) {
-            mCommentsView.showToast(R.string.hide_failed);
-            return;
-        }
-
-        Hideable listing = event.getListing();
-        if (listing instanceof RedditLink) {
-            int pos = mCommentBank.visibleIndexOf(listing);
-            if (event.isToHide()) {
-                mCommentsView.showToast(R.string.link_hidden);
-                mCommentBank.remove(pos);
-                mCommentsView.commentRemovedAt(pos);
-            } else {
-                mCommentsView.commentRemovedAt(pos);
-            }
-        }
-    }
-
     @Override
     public void openReplyView() {
         RedditComment comment = mCommentSelected;
@@ -294,18 +260,6 @@ public class CommentsPresenterImpl implements CommentsPresenter {
     public void openCommentInBrowser() {
         RedditComment comment = mCommentSelected;
         mCommentsView.openCommentInBrowser(comment);
-    }
-
-    @Override
-    public void hideComment() {
-        RedditComment comment = mCommentSelected;
-        mBus.post(new HideEvent(comment, true));
-    }
-
-    @Override
-    public void unhideComment() {
-        RedditComment comment = mCommentSelected;
-        mBus.post(new HideEvent(comment, false));
     }
 
     @Override

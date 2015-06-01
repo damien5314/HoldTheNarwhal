@@ -37,18 +37,6 @@
         android:icon="@drawable/ic_action_open_in_browser"
         app:showAsAction="never"/>
 
-    <item
-        android:id="@+id/action_comment_hide"
-        android:title="@string/action_hide"
-        android:icon="@drawable/ic_navigation_close"
-        app:showAsAction="never" />
-
-    <item
-        android:id="@+id/action_comment_unhide"
-        android:title="@string/action_unhide"
-        android:icon="@null"
-        app:showAsAction="never" />
-
     <item android:id="@+id/action_comment_report"
         android:title="@string/action_report"
         android:icon="@drawable/ic_action_report"

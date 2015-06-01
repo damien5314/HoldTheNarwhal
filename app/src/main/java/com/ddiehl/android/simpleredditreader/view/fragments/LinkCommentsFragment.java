@@ -247,12 +247,6 @@ public class LinkCommentsFragment extends Fragment implements LinksView, Comment
             case R.id.action_comment_open_in_browser:
                 mCommentsPresenter.openCommentInBrowser();
                 return true;
-            case R.id.action_comment_hide:
-                mCommentsPresenter.hideComment();
-                return true;
-            case R.id.action_comment_unhide:
-                mCommentsPresenter.unhideComment();
-                return true;
             case R.id.action_comment_report:
                 mCommentsPresenter.reportComment();
                 return true;
