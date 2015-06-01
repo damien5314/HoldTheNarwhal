@@ -8,7 +8,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -104,9 +103,7 @@ public class LinksFragment extends Fragment implements LinksView {
     @Override
     public void onResume() {
         super.onResume();
-        Log.d(TAG, "REGISTERING LINKS PRESENTER");
         mBus.register(mLinksPresenter);
-        Log.d(TAG, "REGISTERED LINKS PRESENTER");
 
         if (mLinksAdapter.getItemCount() == 0) {
             mLinksPresenter.getLinks();
@@ -116,9 +113,7 @@ public class LinksFragment extends Fragment implements LinksView {
     @Override
     public void onPause() {
         super.onPause();
-        Log.d(TAG, "UNREGISTERING LINKS PRESENTER");
         mBus.unregister(mLinksPresenter);
-        Log.d(TAG, "UNREGISTERED LINKS PRESENTER");
     }
 
     @Override

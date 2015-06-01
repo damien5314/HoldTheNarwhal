@@ -3,6 +3,7 @@ package com.ddiehl.android.simpleredditreader.view.activities;
 import android.app.ProgressDialog;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
@@ -15,7 +16,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.ddiehl.android.simpleredditreader.BusProvider;
 import com.ddiehl.android.simpleredditreader.R;
@@ -161,7 +161,8 @@ public class MainActivity extends ActionBarActivity implements MainView, Confirm
 
     @Override
     public void showToast(String s) {
-        Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
+        Snackbar.make(mDrawerLayout, s, Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
