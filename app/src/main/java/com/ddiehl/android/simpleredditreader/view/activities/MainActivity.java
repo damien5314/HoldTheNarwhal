@@ -3,16 +3,17 @@ package com.ddiehl.android.simpleredditreader.view.activities;
 import android.app.ProgressDialog;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -23,11 +24,9 @@ import com.ddiehl.android.simpleredditreader.events.responses.UserAuthCodeReceiv
 import com.ddiehl.android.simpleredditreader.presenter.MainPresenter;
 import com.ddiehl.android.simpleredditreader.presenter.MainPresenterImpl;
 import com.ddiehl.android.simpleredditreader.view.MainView;
-import com.ddiehl.android.simpleredditreader.view.adapters.NavDrawerItemAdapter;
 import com.ddiehl.android.simpleredditreader.view.dialogs.ConfirmSignOutDialog;
 import com.ddiehl.android.simpleredditreader.view.fragments.LinksFragment;
 import com.ddiehl.android.simpleredditreader.view.fragments.WebViewFragment;
-import com.ddiehl.android.simpleredditreader.view.misc.DividerItemDecoration;
 import com.ddiehl.reddit.identity.UserIdentity;
 import com.squareup.otto.Bus;
 
@@ -44,12 +43,10 @@ public class MainActivity extends ActionBarActivity implements MainView, Confirm
 
     // Navigation drawer
     private View mNavigationDrawer;
-    private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
-    private RecyclerView mNavigationDrawerListView;
-    private RecyclerView.LayoutManager mLayoutManager;
-    private RecyclerView.Adapter mLayoutAdapter;
-    private ImageView mAccountImageView;
+    private DrawerLayout mDrawerLayout;
+    private NavigationView mNavigationView;
+    private ImageView mGoldIndicator;
     private TextView mAccountNameView;
     private View mSignOutView;
 
@@ -60,27 +57,49 @@ public class MainActivity extends ActionBarActivity implements MainView, Confirm
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+
+        if (actionBar != null) {
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_drawer);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar,
-                R.string.drawer_open, R.string.drawer_close);
-        mDrawerToggle.setDrawerIndicatorEnabled(true);
-        mDrawerToggle.setHomeAsUpIndicator(R.drawable.ic_drawer);
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
-
-        mNavigationDrawerListView = (RecyclerView) findViewById(R.id.navigation_drawer_list_view);
-        mNavigationDrawerListView.addItemDecoration(
-                new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST));
-        mLayoutManager = new LinearLayoutManager(this);
-        mNavigationDrawerListView.setLayoutManager(mLayoutManager);
-
-        // Set onClick to null to intercept click events from background
-        mNavigationDrawer = findViewById(R.id.navigation_drawer);
-        mNavigationDrawer.setOnClickListener(null);
-
-        mAccountImageView = (ImageView) findViewById(R.id.user_account_icon);
+        mNavigationView = (NavigationView) findViewById(R.id.navigation_view);
         mAccountNameView = (TextView) findViewById(R.id.account_name);
         mSignOutView = findViewById(R.id.sign_out_button);
+        mGoldIndicator = (ImageView) findViewById(R.id.user_account_icon);
+
+        mBus = BusProvider.getInstance();
+        mMainPresenter = new MainPresenterImpl(this, this);
+
+        mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(MenuItem menuItem) {
+                switch (menuItem.getItemId()) {
+                    case R.id.drawer_log_in:
+                        mMainPresenter.presentLoginView();
+                        return true;
+                    case R.id.drawer_user_profile:
+                        mMainPresenter.showUserProfile(null);
+                        return true;
+                    case R.id.drawer_subreddits:
+                        mMainPresenter.showUserSubreddits();
+                        return true;
+                    case R.id.drawer_front_page:
+                        mMainPresenter.showSubreddit(null);
+                        return true;
+                    case R.id.drawer_r_all:
+                        mMainPresenter.showSubreddit("all");
+                        return true;
+                    case R.id.drawer_random_subreddit:
+                        mMainPresenter.showSubreddit("random");
+                        return true;
+                }
+                return false;
+            }
+        });
+
         mSignOutView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -88,18 +107,12 @@ public class MainActivity extends ActionBarActivity implements MainView, Confirm
                 dialog.show(getSupportFragmentManager(), DIALOG_CONFIRM_SIGN_OUT);
             }
         });
-
-        mBus = BusProvider.getInstance();
-        mMainPresenter = new MainPresenterImpl(this, this);
-
-        mLayoutAdapter = new NavDrawerItemAdapter(mMainPresenter);
-        mNavigationDrawerListView.setAdapter(mLayoutAdapter);
     }
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        mDrawerToggle.syncState();
+//        mDrawerToggle.syncState();
     }
 
     @Override
@@ -124,6 +137,22 @@ public class MainActivity extends ActionBarActivity implements MainView, Confirm
     protected void onStop() {
         super.onStop();
         mBus.unregister(mMainPresenter);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                mDrawerLayout.openDrawer(GravityCompat.START);
+                return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void updateNavigationItems() {
+//        mLayoutAdapter.notifyDataSetChanged();
+        // TODO
     }
 
     @Override
@@ -175,12 +204,7 @@ public class MainActivity extends ActionBarActivity implements MainView, Confirm
         mAccountNameView.setText(identity == null ?
                 getString(R.string.account_name_unauthorized) : identity.getName());
         mSignOutView.setVisibility(identity == null ? View.GONE : View.VISIBLE);
-        mAccountImageView.setVisibility(identity != null && identity.isGold() ? View.VISIBLE : View.GONE);
-    }
-
-    @Override
-    public void updateNavigationItems() {
-        mLayoutAdapter.notifyDataSetChanged();
+        mGoldIndicator.setVisibility(identity != null && identity.isGold() ? View.VISIBLE : View.GONE);
     }
 
     @Override
