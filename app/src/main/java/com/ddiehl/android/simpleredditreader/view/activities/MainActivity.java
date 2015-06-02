@@ -56,7 +56,7 @@ public class MainActivity extends ActionBarActivity implements MainView, Confirm
         ActionBar actionBar = getSupportActionBar();
 
         if (actionBar != null) {
-            actionBar.setHomeAsUpIndicator(R.drawable.ic_drawer);
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_navigation_menu);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
