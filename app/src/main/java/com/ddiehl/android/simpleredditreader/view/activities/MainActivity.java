@@ -26,6 +26,7 @@ import com.ddiehl.android.simpleredditreader.view.MainView;
 import com.ddiehl.android.simpleredditreader.view.adapters.NavDrawerItemAdapter;
 import com.ddiehl.android.simpleredditreader.view.dialogs.ConfirmSignOutDialog;
 import com.ddiehl.android.simpleredditreader.view.fragments.LinksFragment;
+import com.ddiehl.android.simpleredditreader.view.fragments.UserOverviewFragment;
 import com.ddiehl.android.simpleredditreader.view.fragments.WebViewFragment;
 import com.ddiehl.android.simpleredditreader.view.misc.DividerItemDecoration;
 import com.ddiehl.reddit.identity.UserIdentity;
@@ -161,7 +162,6 @@ public class MainActivity extends ActionBarActivity implements MainView, Confirm
 
     @Override
     public void showToast(String s) {
-//        Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
         Snackbar.make(mDrawerLayout, s, Snackbar.LENGTH_SHORT).show();
     }
 
@@ -184,6 +184,16 @@ public class MainActivity extends ActionBarActivity implements MainView, Confirm
     }
 
     @Override
+    public void showUserProfile(String userId) {
+        mDrawerLayout.closeDrawer(GravityCompat.START);
+        FragmentManager fm = getSupportFragmentManager();
+        Fragment f = UserOverviewFragment.newInstance(userId);
+        fm.beginTransaction().replace(R.id.fragment_container, f)
+                .addToBackStack(null)
+                .commit();
+    }
+
+    @Override
     public void showSubreddit(String subreddit) {
         mDrawerLayout.closeDrawer(GravityCompat.START);
         FragmentManager fm = getSupportFragmentManager();
@@ -193,9 +203,8 @@ public class MainActivity extends ActionBarActivity implements MainView, Confirm
         if (currentFragment instanceof LinksFragment) {
             ((LinksFragment) currentFragment).updateSubreddit(subreddit);
         } else {
-            Fragment newFragment = LinksFragment.newInstance(subreddit);
-            fm.beginTransaction()
-                    .replace(R.id.fragment_container, newFragment)
+            Fragment f = LinksFragment.newInstance(subreddit);
+            fm.beginTransaction().replace(R.id.fragment_container, f)
                     .addToBackStack(null)
                     .commit();
         }
@@ -204,16 +213,14 @@ public class MainActivity extends ActionBarActivity implements MainView, Confirm
     @Override
     public void openWebViewForURL(String url) {
         FragmentManager fm = getSupportFragmentManager();
-        Fragment newFragment = WebViewFragment.newInstance(url);
-        fm.beginTransaction()
-                .replace(R.id.fragment_container, newFragment)
+        Fragment f = WebViewFragment.newInstance(url);
+        fm.beginTransaction().replace(R.id.fragment_container, f)
                 .addToBackStack(null)
                 .commit();
     }
 
     @Override
     public void onUserAuthCodeReceived(String authCode) {
-
         // Fix for API 10; authorization page was loading twice with same auth code
         if (authCode.equals(mLastAuthCode))
             return;
