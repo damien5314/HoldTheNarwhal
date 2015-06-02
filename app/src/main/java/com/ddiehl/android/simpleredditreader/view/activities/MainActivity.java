@@ -1,7 +1,6 @@
 package com.ddiehl.android.simpleredditreader.view.activities;
 
 import android.app.ProgressDialog;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -11,7 +10,6 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
@@ -42,8 +40,6 @@ public class MainActivity extends ActionBarActivity implements MainView, Confirm
     private ProgressDialog mProgressBar;
 
     // Navigation drawer
-    private View mNavigationDrawer;
-    private ActionBarDrawerToggle mDrawerToggle;
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
     private ImageView mGoldIndicator;
@@ -72,7 +68,6 @@ public class MainActivity extends ActionBarActivity implements MainView, Confirm
 
         mBus = BusProvider.getInstance();
         mMainPresenter = new MainPresenterImpl(this, this);
-
         mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
@@ -107,18 +102,6 @@ public class MainActivity extends ActionBarActivity implements MainView, Confirm
                 dialog.show(getSupportFragmentManager(), DIALOG_CONFIRM_SIGN_OUT);
             }
         });
-    }
-
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-//        mDrawerToggle.syncState();
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
     @Override
@@ -190,7 +173,6 @@ public class MainActivity extends ActionBarActivity implements MainView, Confirm
 
     @Override
     public void showToast(String s) {
-//        Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
         Snackbar.make(mDrawerLayout, s, Snackbar.LENGTH_SHORT).show();
     }
 
