@@ -12,6 +12,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -72,8 +73,8 @@ public class MainActivity extends ActionBarActivity implements MainView, Confirm
 
         mBus = BusProvider.getInstance();
         mMainPresenter = new MainPresenterImpl(this, this);
-//        mNavigationView.getMenu().findItem(R.id.drawer_navigate_to_subreddit)
-//                .setActionView(View.inflate(this, R.layout.navigation_drawer_edit_text_row, mNavigationView));
+        updateNavigationItems();
+
         mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
@@ -168,13 +169,12 @@ public class MainActivity extends ActionBarActivity implements MainView, Confirm
 
     @Override
     public void updateNavigationItems() {
-//        mLayoutAdapter.notifyDataSetChanged();
-        // TODO
-    }
-
-    @Override
-    public void setTitle(CharSequence title) {
-        super.setTitle(title);
+        Menu menu = mNavigationView.getMenu();
+        UserIdentity user = mMainPresenter.getAuthorizedUser();
+        boolean b = user != null && user.getName() != null;
+        menu.findItem(R.id.drawer_log_in).setVisible(!b);
+        menu.findItem(R.id.drawer_user_profile).setVisible(b);
+        menu.findItem(R.id.drawer_subreddits).setVisible(b);
     }
 
     @Override
