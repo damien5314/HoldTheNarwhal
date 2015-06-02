@@ -19,6 +19,11 @@
             android:icon="@null" />
 
         <item
+            android:id="@+id/drawer_navigate_to_subreddit"
+            android:title="@string/drawer_navigate_to_subreddit"
+            android:icon="@null" />
+
+        <item
             android:id="@+id/drawer_front_page"
             android:title="@string/drawer_front_page"
             android:icon="@null" />

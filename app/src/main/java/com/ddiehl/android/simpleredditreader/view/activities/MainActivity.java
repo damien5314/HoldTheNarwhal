@@ -1,5 +1,6 @@
 package com.ddiehl.android.simpleredditreader.view.activities;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -13,6 +14,8 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -45,6 +48,7 @@ public class MainActivity extends ActionBarActivity implements MainView, Confirm
     private ImageView mGoldIndicator;
     private TextView mAccountNameView;
     private View mSignOutView;
+    private Dialog mSubredditNavigationDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,10 +72,15 @@ public class MainActivity extends ActionBarActivity implements MainView, Confirm
 
         mBus = BusProvider.getInstance();
         mMainPresenter = new MainPresenterImpl(this, this);
+//        mNavigationView.getMenu().findItem(R.id.drawer_navigate_to_subreddit)
+//                .setActionView(View.inflate(this, R.layout.navigation_drawer_edit_text_row, mNavigationView));
         mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
                 switch (menuItem.getItemId()) {
+                    case R.id.drawer_navigate_to_subreddit:
+                        showSubredditNavigationDialog();
+                        return true;
                     case R.id.drawer_log_in:
                         mMainPresenter.presentLoginView();
                         return true;
@@ -102,6 +111,31 @@ public class MainActivity extends ActionBarActivity implements MainView, Confirm
                 dialog.show(getSupportFragmentManager(), DIALOG_CONFIRM_SIGN_OUT);
             }
         });
+    }
+
+    private void showSubredditNavigationDialog() {
+        if (mSubredditNavigationDialog == null) {
+            mSubredditNavigationDialog = new Dialog(this);
+            mSubredditNavigationDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            mSubredditNavigationDialog.setContentView(R.layout.navigation_drawer_edit_text_row);
+            final EditText vInput = (EditText) mSubredditNavigationDialog.findViewById(R.id.drawer_navigate_to_subreddit_text);
+            mSubredditNavigationDialog.findViewById(R.id.drawer_navigate_to_subreddit_go)
+                    .setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            String inputSubreddit = vInput.getText().toString();
+                            if (inputSubreddit.equals(""))
+                                return;
+
+                            inputSubreddit = inputSubreddit.substring(3);
+                            inputSubreddit = inputSubreddit.trim();
+                            vInput.setText("");
+                            mSubredditNavigationDialog.dismiss();
+                            mMainPresenter.showSubreddit(inputSubreddit);
+                        }
+                    });
+        }
+        mSubredditNavigationDialog.show();
     }
 
     @Override

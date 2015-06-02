@@ -7,7 +7,7 @@
     <!-- Navigation drawer -->
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
-    <string name="drawer_navigate_to_subreddit_text">go to subreddit</string>
+    <string name="drawer_navigate_to_subreddit">go to subreddit</string>
     <string name="drawer_log_in">log in</string>
     <string name="drawer_user_profile">user profile</string>
     <string name="drawer_subreddits">subreddits</string>
