@@ -136,6 +136,7 @@ public class MainActivity extends ActionBarActivity implements MainView, Confirm
                         }
                     });
         }
+        mDrawerLayout.closeDrawer(GravityCompat.START);
         mSubredditNavigationDialog.show();
     }
 
