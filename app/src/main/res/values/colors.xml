@@ -17,8 +17,12 @@
     <color name="reddit_orange">#60FF8B60</color>
     <color name="reddit_blue">#609494FF</color>
     <color name="reddit_gold">#f6e600</color>
-    <color name="op_background">#0055DF</color>
-    <color name="op_text">#ffffff</color>
+    <color name="author_op_background">#0055DF</color>
+    <color name="author_op_text">#ffffff</color>
+    <color name="author_moderator_background">#228822</color>
+    <color name="author_moderator_text">#ffffff</color>
+    <color name="author_admin_background">#FF0011</color>
+    <color name="author_admin_text">#ffffff</color>
     <color name="comment_background">#ffffff</color>
 
 </resources>

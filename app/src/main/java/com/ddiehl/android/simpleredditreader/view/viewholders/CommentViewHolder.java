@@ -66,15 +66,33 @@ public class CommentViewHolder extends RecyclerView.ViewHolder
         params.setMargins(viewMargin, 0, 0, 0);
 
         mAuthorView.setVisibility(View.VISIBLE);
-        if (link != null) {
-            // Set background to blue if author is OP
-            if (comment.getAuthor().equals(link.getAuthor())) {
-                mAuthorView.setBackgroundResource(R.drawable.original_poster_background);
-                mAuthorView.setTextColor(mContext.getResources().getColor(R.color.op_text));
-            } else { // Else, set it to transparent
-                mAuthorView.setBackgroundDrawable(null);
-                mAuthorView.setTextColor(mContext.getResources().getColor(R.color.secondary_text));
+        String authorType = null;
+        String distinguished = comment.getDistinguished();
+        if (distinguished != null && !distinguished.equals("")) {
+            authorType = distinguished;
+        }
+        if (link != null && comment.getAuthor().equals(link.getAuthor())) {
+            authorType = "op";
+        }
+        if (authorType != null) {
+            switch (authorType) {
+                case "op":
+                    mAuthorView.setBackgroundResource(R.drawable.author_op_background);
+                    mAuthorView.setTextColor(mContext.getResources().getColor(R.color.author_op_text));
+                    break;
+                case "moderator":
+                    mAuthorView.setBackgroundResource(R.drawable.author_moderator_background);
+                    mAuthorView.setTextColor(mContext.getResources().getColor(R.color.author_moderator_text));
+                    break;
+                case "admin":
+                    mAuthorView.setBackgroundResource(R.drawable.author_admin_background);
+                    mAuthorView.setTextColor(mContext.getResources().getColor(R.color.author_admin_text));
+                    break;
+                default:
             }
+        } else {
+            mAuthorView.setBackgroundResource(0);
+            mAuthorView.setTextColor(mContext.getResources().getColor(R.color.secondary_text));
         }
         mBodyView.setVisibility(View.VISIBLE);
         mAuthorView.setText(comment.getAuthor());

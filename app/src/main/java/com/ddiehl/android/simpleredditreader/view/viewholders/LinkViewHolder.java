@@ -86,6 +86,24 @@ public class LinkViewHolder extends RecyclerView.ViewHolder
         mLinkScore.setText(String.format(mContext.getString(R.string.link_score), link.getScore()));
         mLinkTitle.setText(link.getTitle());
         mLinkAuthor.setText(String.format(mContext.getString(R.string.link_author), link.getAuthor()));
+        String distinguished = link.getDistinguished();
+        if (distinguished == null || distinguished.equals("")) {
+            mLinkAuthor.setBackgroundResource(0);
+            mLinkAuthor.setTextColor(mContext.getResources().getColor(android.R.color.white));
+        } else {
+            switch (distinguished) {
+                case "moderator":
+                    mLinkAuthor.setBackgroundResource(R.drawable.author_moderator_background);
+                    mLinkAuthor.setTextColor(mContext.getResources().getColor(R.color.author_moderator_text));
+                    break;
+                case "admin":
+                    mLinkAuthor.setBackgroundResource(R.drawable.author_admin_background);
+                    mLinkAuthor.setTextColor(mContext.getResources().getColor(R.color.author_admin_text));
+                    break;
+                default:
+
+            }
+        }
         mLinkTimestamp.setDate(link.getCreatedUtc().longValue());
         if (link.isEdited() != null) {
             switch (link.isEdited()) {

@@ -216,7 +216,7 @@ public class RedditLink extends Listing implements Votable, Savable, Hideable {
         return data.createdUtc;
     }
 
-    public Object getDistinguished() {
+    public String getDistinguished() {
         return data.distinguished;
     }
 
@@ -319,7 +319,7 @@ public class RedditLink extends Listing implements Votable, Savable, Hideable {
         @Expose @SerializedName("created_utc")
         private Double createdUtc;
         @Expose
-        private Object distinguished;
+        private String distinguished;
         @Expose
         private Media media;
         @Expose @SerializedName("mod_reports")

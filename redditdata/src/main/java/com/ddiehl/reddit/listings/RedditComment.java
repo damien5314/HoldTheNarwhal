@@ -166,7 +166,7 @@ public class RedditComment extends AbsRedditComment implements Votable, Savable 
         return data.numReports;
     }
 
-    public Object getDistinguished() {
+    public String getDistinguished() {
         return data.distinguished;
     }
 
@@ -253,7 +253,7 @@ public class RedditComment extends AbsRedditComment implements Votable, Savable 
         @Expose @SerializedName("num_reports")
         private Object numReports;
         @Expose
-        private Object distinguished;
+        private String distinguished;
 
     }
 

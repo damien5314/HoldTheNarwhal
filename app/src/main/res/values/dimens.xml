@@ -53,5 +53,7 @@
     <dimen name="link_thumbnail_size">64dp</dimen>
     <dimen name="comment_data_height">32dp</dimen>
     <dimen name="comment_saved_icon_margin">6dp</dimen>
+    <dimen name="comment_author_background_corner">3dp</dimen>
+    <dimen name="comment_author_background_padding">3dp</dimen>
 
 </resources>
