@@ -167,6 +167,7 @@ public class LinksFragment extends Fragment implements LinksView {
                 mLinksPresenter.getLinks();
                 return true;
             case R.id.action_settings:
+                ((MainActivity) getActivity()).showSettings();
                 return true;
         }
 

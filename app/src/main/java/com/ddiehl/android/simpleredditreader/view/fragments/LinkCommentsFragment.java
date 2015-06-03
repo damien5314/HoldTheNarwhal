@@ -283,6 +283,7 @@ public class LinkCommentsFragment extends Fragment implements LinksView, Comment
                 mCommentsPresenter.getComments();
                 return true;
             case R.id.action_settings:
+                ((MainActivity) getActivity()).showSettings();
                 return true;
         }
 

@@ -2,6 +2,7 @@ package com.ddiehl.android.simpleredditreader.view.activities;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -283,5 +284,9 @@ public class MainActivity extends ActionBarActivity implements MainView, Confirm
     @Override
     public void onSignOutCancel() {
         // Do nothing
+    }
+
+    public void showSettings() {
+        startActivity(new Intent(this, SettingsActivity.class));
     }
 }

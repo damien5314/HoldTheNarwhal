@@ -29,6 +29,7 @@
                     android:scheme="http" />
             </intent-filter>
         </activity>
+        <activity android:name=".view.activities.SettingsActivity" />
     </application>
 
 </manifest>
