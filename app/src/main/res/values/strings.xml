@@ -77,9 +77,6 @@
     <!-- Miscellaneous -->
     <string name="user_required">Login required</string>
     <string name="implementation_pending">coming soon</string>
-    <string name="default_comment_sort">hot</string>
-    <string name="default_links_sort">hot</string>
-    <string name="default_links_timespan">all</string>
     <string name="timespan_year">%s years</string>
     <string name="timespan_weeks">%s weeks ago</string>
     <string name="timespan_days">%s days ago</string>

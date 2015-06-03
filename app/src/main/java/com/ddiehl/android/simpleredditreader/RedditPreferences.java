@@ -2,16 +2,15 @@ package com.ddiehl.android.simpleredditreader;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 
 import java.util.UUID;
 
 public class RedditPreferences {
     public static final String PREFS_DEVICE_ID = "prefs_device_id";
     public static final String PREF_DEVICE_ID = "pref_device_id";
-    public static final String COMMENT_SORT = "pref_comment_sort";
-    public static final String LINKS_SORT = "pref_links_sort";
-    public static final String LINKS_TIMESPAN = "pref_links_timespan";
+
+    public static final String PREFS_USER = "prefs_user";
+    public static final String PREF_COMMENT_SORT = "pref_comment_sort";
 
     private static RedditPreferences _instance;
     private Context mContext;
@@ -48,38 +47,14 @@ public class RedditPreferences {
     }
 
     public String getCommentSort() {
-        return PreferenceManager.getDefaultSharedPreferences(mContext)
-                .getString(COMMENT_SORT, mContext.getString(R.string.default_comment_sort));
+        return mContext.getSharedPreferences(PREFS_USER, Context.MODE_PRIVATE)
+                .getString(PREF_COMMENT_SORT, mContext.getString(R.string.default_comment_sort));
     }
 
     public void saveCommentSort(String pref) {
-        PreferenceManager.getDefaultSharedPreferences(mContext)
+        mContext.getSharedPreferences(PREFS_USER, Context.MODE_PRIVATE)
                 .edit()
-                .putString(COMMENT_SORT, pref)
-                .apply();
-    }
-
-    public String getLinksSort() {
-        return PreferenceManager.getDefaultSharedPreferences(mContext)
-                .getString(LINKS_SORT, mContext.getString(R.string.default_links_sort));
-    }
-
-    public void saveLinksSort(String pref) {
-        PreferenceManager.getDefaultSharedPreferences(mContext)
-                .edit()
-                .putString(LINKS_SORT, pref)
-                .apply();
-    }
-
-    public String getLinksTimespan() {
-        return PreferenceManager.getDefaultSharedPreferences(mContext)
-                .getString(LINKS_TIMESPAN, mContext.getString(R.string.default_links_timespan));
-    }
-
-    public void saveLinksTimespan(String pref) {
-        PreferenceManager.getDefaultSharedPreferences(mContext)
-                .edit()
-                .putString(LINKS_TIMESPAN, pref)
+                .putString(PREF_COMMENT_SORT, pref)
                 .apply();
     }
 }
