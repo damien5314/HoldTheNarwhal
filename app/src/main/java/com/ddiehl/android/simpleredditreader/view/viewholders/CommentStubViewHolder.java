@@ -10,46 +10,45 @@ import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.presenter.CommentsPresenter;
 import com.ddiehl.reddit.listings.RedditMoreComments;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+import butterknife.OnClick;
+
 public class CommentStubViewHolder extends RecyclerView.ViewHolder {
-    private View mView;
-    private TextView mMoreCommentsView;
 
     private Context mContext;
     private CommentsPresenter mCommentsPresenter;
+    private RedditMoreComments mRedditMoreComments;
 
-    public CommentStubViewHolder(View view, CommentsPresenter presenter) {
-        super(view);
-        mView = view;
-        mMoreCommentsView = (TextView) view.findViewById(R.id.comment_more);
+    @InjectView(R.id.comment_more) TextView mMoreCommentsView;
 
-        mContext = view.getContext().getApplicationContext();
+    public CommentStubViewHolder(View v, CommentsPresenter presenter) {
+        super(v);
+        mContext = v.getContext().getApplicationContext();
         mCommentsPresenter = presenter;
+        ButterKnife.inject(this, v);
     }
 
-    public void bind(final RedditMoreComments comment) {
+    public void bind(RedditMoreComments comment) {
+        mRedditMoreComments = comment;
+
         // Add padding views to indentation_wrapper based on depth of comment
         int viewMargin = (comment.getDepth() - 2) * (int) mContext.getResources().getDimension(R.dimen.comment_indentation_margin);
-        RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) mView.getLayoutParams();
+        RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) itemView.getLayoutParams();
         params.setMargins(viewMargin, 0, 0, 0);
 
         mMoreCommentsView.setVisibility(View.VISIBLE);
         int count = comment.getCount();
-        if (count == 0) { // continue thread
-            mMoreCommentsView.setText(mContext.getString(R.string.continue_thread));
-            mMoreCommentsView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mCommentsPresenter.navigateToCommentThread(comment.getParentId());
-                }
-            });
-        } else { // more comments in current thread
-            mMoreCommentsView.setText(String.format(mContext.getString(R.string.more_comments), count));
-            mMoreCommentsView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mCommentsPresenter.showMoreChildren(comment);
-                }
-            });
+        mMoreCommentsView.setText(count == 0 ? mContext.getString(R.string.continue_thread) :
+                String.format(mContext.getString(R.string.more_comments), count));
+    }
+
+    @OnClick(R.id.comment_more)
+    void onClick() {
+        if (mRedditMoreComments.getCount() == 0) {
+            mCommentsPresenter.navigateToCommentThread(mRedditMoreComments.getParentId());
+        } else {
+            mCommentsPresenter.showMoreChildren(mRedditMoreComments);
         }
     }
 }

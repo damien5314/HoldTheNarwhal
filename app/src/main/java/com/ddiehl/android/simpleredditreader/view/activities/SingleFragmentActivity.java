@@ -8,6 +8,8 @@ import android.support.v7.widget.Toolbar;
 
 import com.ddiehl.android.simpleredditreader.R;
 
+import butterknife.ButterKnife;
+
 
 public abstract class SingleFragmentActivity extends ActionBarActivity {
     protected abstract Fragment createFragment();
@@ -21,7 +23,7 @@ public abstract class SingleFragmentActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(getLayoutResourceId());
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = ButterKnife.findById(this, R.id.toolbar);
         setSupportActionBar(toolbar);
 
         FragmentManager fm = getSupportFragmentManager();

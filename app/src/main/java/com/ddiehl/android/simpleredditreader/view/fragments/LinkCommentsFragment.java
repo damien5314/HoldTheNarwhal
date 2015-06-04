@@ -34,6 +34,8 @@ import com.ddiehl.reddit.listings.RedditComment;
 import com.ddiehl.reddit.listings.RedditLink;
 import com.squareup.otto.Bus;
 
+import butterknife.ButterKnife;
+
 public class LinkCommentsFragment extends Fragment
         implements LinksView, CommentsView, SettingsChangedListener {
     private static final String TAG = LinkCommentsFragment.class.getSimpleName();
@@ -45,7 +47,7 @@ public class LinkCommentsFragment extends Fragment
     private static final int REQUEST_CHOOSE_SORT = 0;
     private static final String DIALOG_CHOOSE_SORT = "dialog_choose_sort";
 
-    private Bus mBus;
+    private Bus mBus = BusProvider.getInstance();
     private LinksPresenter mLinksPresenter;
     private CommentsPresenter mCommentsPresenter;
 
@@ -76,7 +78,6 @@ public class LinkCommentsFragment extends Fragment
         String articleId = args.getString(ARG_ARTICLE);
         String commentId = args.getString(ARG_COMMENT_ID);
 
-        mBus = BusProvider.getInstance();
         mLinksPresenter = new LinksPresenterImpl(getActivity(), this, subreddit);
         mCommentsPresenter = new CommentsPresenterImpl(getActivity(), this, subreddit, articleId, commentId);
 
@@ -87,7 +88,7 @@ public class LinkCommentsFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.comments_fragment, container, false);
 
-        RecyclerView recyclerView = (RecyclerView) v.findViewById(R.id.recycler_view);
+        RecyclerView recyclerView = ButterKnife.findById(v, R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(mLinkCommentsAdapter);
 

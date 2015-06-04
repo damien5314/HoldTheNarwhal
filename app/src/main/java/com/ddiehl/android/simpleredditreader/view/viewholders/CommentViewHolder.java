@@ -14,46 +14,43 @@ import com.ddiehl.android.simpleredditreader.view.widgets.RedditDateTextView;
 import com.ddiehl.reddit.listings.RedditComment;
 import com.ddiehl.reddit.listings.RedditLink;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+import butterknife.OnClick;
+
 public class CommentViewHolder extends RecyclerView.ViewHolder
-        implements View.OnClickListener, View.OnCreateContextMenuListener {
-    private static final String TAG = CommentViewHolder.class.getSimpleName();
-
-    private RedditComment mRedditComment;
-
-    private View mView;
-    private View mCommentDataRow;
-    private ImageView mExpanderIcon;
-    private TextView mAuthorView;
-    private TextView mScoreView;
-    private RedditDateTextView mTimestampView;
-    private View mSavedView;
-    private TextView mBodyView;
-    private View mGildedView;
-    private TextView mGildedText;
+        implements View.OnCreateContextMenuListener {
 
     private Context mContext;
     private CommentsPresenter mCommentsPresenter;
+    private RedditComment mRedditComment;
+
+    @InjectView(R.id.comment_metadata) View mCommentDataRow;
+    @InjectView(R.id.comment_expander_icon) ImageView mExpanderIcon;
+    @InjectView(R.id.comment_author) TextView mAuthorView;
+    @InjectView(R.id.comment_score) TextView mScoreView;
+    @InjectView(R.id.comment_timestamp) RedditDateTextView mTimestampView;
+    @InjectView(R.id.comment_saved_icon) View mSavedView;
+    @InjectView(R.id.comment_body) TextView mBodyView;
+    @InjectView(R.id.gilded_view) View mGildedView;
+    @InjectView(R.id.comment_gilded_text_view) TextView mGildedText;
 
     public CommentViewHolder(View v, CommentsPresenter presenter) {
         super(v);
-        mView = v;
-        mCommentDataRow = v.findViewById(R.id.comment_metadata);
-        mExpanderIcon = (ImageView) v.findViewById(R.id.comment_expander_icon);
-        mAuthorView = (TextView) v.findViewById(R.id.comment_author);
-        mScoreView = (TextView) v.findViewById(R.id.comment_score);
-        mTimestampView = (RedditDateTextView) v.findViewById(R.id.comment_timestamp);
-        mSavedView = v.findViewById(R.id.comment_saved_icon);
-        mBodyView = (TextView) v.findViewById(R.id.comment_body);
-        mGildedView = v.findViewById(R.id.gilded_view);
-        mGildedText = (TextView) v.findViewById(R.id.comment_gilded_text_view);
-
-        itemView.setOnClickListener(this);
-        mCommentDataRow.setOnClickListener(this);
-        mBodyView.setOnClickListener(this);
-        itemView.setOnCreateContextMenuListener(this);
-
         mContext = v.getContext().getApplicationContext();
         mCommentsPresenter = presenter;
+        ButterKnife.inject(this, v);
+        itemView.setOnCreateContextMenuListener(this);
+    }
+
+    @OnClick(R.id.comment_metadata)
+    void onClickMetadata() {
+        mCommentsPresenter.toggleThreadVisible(mRedditComment);
+    }
+
+    @OnClick(R.id.comment_body)
+    void onClickBody(View v) {
+        v.showContextMenu();
     }
 
     public void bind(final RedditLink link, final RedditComment comment) {
@@ -62,7 +59,7 @@ public class CommentViewHolder extends RecyclerView.ViewHolder
         // Add padding views to indentation_wrapper based on depth of comment
         int viewMargin = (comment.getDepth() - 2)
                 * (int) mContext.getResources().getDimension(R.dimen.comment_indentation_margin);
-        RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) mView.getLayoutParams();
+        RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) itemView.getLayoutParams();
         params.setMargins(viewMargin, 0, 0, 0);
 
         mAuthorView.setVisibility(View.VISIBLE);
@@ -142,18 +139,6 @@ public class CommentViewHolder extends RecyclerView.ViewHolder
 
     public void bind(final RedditComment comment) {
         bind(null, comment);
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.comment_metadata:
-                mCommentsPresenter.toggleThreadVisible(mRedditComment);
-                break;
-            default:
-                v.showContextMenu();
-                break;
-        }
     }
 
     @Override

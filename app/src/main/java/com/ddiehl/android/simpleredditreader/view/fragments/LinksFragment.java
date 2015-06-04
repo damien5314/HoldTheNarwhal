@@ -31,6 +31,7 @@ import com.ddiehl.reddit.listings.RedditLink;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
+import butterknife.ButterKnife;
 import retrofit.RetrofitError;
 
 public class LinksFragment extends Fragment
@@ -44,7 +45,7 @@ public class LinksFragment extends Fragment
     private static final String DIALOG_CHOOSE_SORT = "dialog_choose_sort";
     private static final String DIALOG_CHOOSE_TIMESPAN = "dialog_choose_timespan";
 
-    private Bus mBus;
+    private Bus mBus = BusProvider.getInstance();
     private LinksPresenter mLinksPresenter;
 
     private LinksAdapter mLinksAdapter;
@@ -80,7 +81,7 @@ public class LinksFragment extends Fragment
         View v = inflater.inflate(R.layout.links_fragment, container, false);
 
         final LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
-        RecyclerView rv = (RecyclerView) v.findViewById(R.id.recycler_view);
+        RecyclerView rv = ButterKnife.findById(v, R.id.recycler_view);
         rv.setLayoutManager(mLayoutManager);
         rv.setAdapter(mLinksAdapter);
 

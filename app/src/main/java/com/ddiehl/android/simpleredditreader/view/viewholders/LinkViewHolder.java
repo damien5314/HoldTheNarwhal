@@ -14,55 +14,54 @@ import com.ddiehl.android.simpleredditreader.view.widgets.RedditDateTextView;
 import com.ddiehl.reddit.listings.RedditLink;
 import com.squareup.picasso.Picasso;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+import butterknife.OnClick;
+
 public class LinkViewHolder extends RecyclerView.ViewHolder
-        implements View.OnClickListener, View.OnCreateContextMenuListener {
+        implements View.OnCreateContextMenuListener {
     private static final String TAG = LinkViewHolder.class.getSimpleName();
-
-    private RedditLink mRedditLink;
-
-    private View mLinkView;
-    private View mSavedView;
-    private TextView mLinkTitle;
-    private TextView mLinkDomain;
-    private TextView mLinkScore;
-    private TextView mLinkAuthor;
-    private TextView mLinkSubreddit;
-    private TextView mLinkComments;
-    private TextView mSelfText;
-    private ImageView mLinkThumbnail;
-    private RedditDateTextView mLinkTimestamp;
-    private View mGildedView;
-    private TextView mGildedText;
-    private View mStickiedView;
 
     private Context mContext;
     private LinksPresenter mLinksPresenter;
+    private RedditLink mRedditLink;
+
+    @InjectView(R.id.link_view) View mLinkView;
+    @InjectView(R.id.link_saved_view) View mSavedView;
+    @InjectView(R.id.link_title) TextView mLinkTitle;
+    @InjectView(R.id.link_domain) TextView mLinkDomain;
+    @InjectView(R.id.link_score) TextView mLinkScore;
+    @InjectView(R.id.link_author) TextView mLinkAuthor;
+    @InjectView(R.id.link_subreddit) TextView mLinkSubreddit;
+    @InjectView(R.id.link_comment_count) TextView mLinkComments;
+    @InjectView(R.id.link_self_text) TextView mSelfText;
+    @InjectView(R.id.link_thumbnail) ImageView mLinkThumbnail;
+    @InjectView(R.id.link_timestamp) RedditDateTextView mLinkTimestamp;
+    @InjectView(R.id.gilded_view) View mGildedView;
+    @InjectView(R.id.link_gilded_text_view) TextView mGildedText;
+    @InjectView(R.id.link_stickied_view) View mStickiedView;
 
     public LinkViewHolder(View v, LinksPresenter presenter) {
         super(v);
-        mLinkView = v.findViewById(R.id.link_view);
-        mLinkTitle = (TextView) v.findViewById(R.id.link_title);
-        mLinkDomain = (TextView) v.findViewById(R.id.link_domain);
-        mLinkScore = (TextView) v.findViewById(R.id.link_score);
-        mLinkAuthor = (TextView) v.findViewById(R.id.link_author);
-        mLinkTimestamp = (RedditDateTextView) v.findViewById(R.id.link_timestamp);
-        mLinkSubreddit = (TextView) v.findViewById(R.id.link_subreddit);
-        mLinkComments = (TextView) v.findViewById(R.id.link_comment_count);
-        mLinkThumbnail = (ImageView) v.findViewById(R.id.link_thumbnail);
-        mSelfText = (TextView) v.findViewById(R.id.link_self_text);
-        mSavedView = v.findViewById(R.id.link_saved_view);
-        mGildedView = v.findViewById(R.id.gilded_view);
-        mGildedText = (TextView) v.findViewById(R.id.link_gilded_text_view);
-        mStickiedView = v.findViewById(R.id.link_stickied_view);
-
-        itemView.setOnClickListener(this);
-        mLinkTitle.setOnClickListener(this);
-        mLinkThumbnail.setOnClickListener(this);
-        mLinkComments.setOnClickListener(this);
-        itemView.setOnCreateContextMenuListener(this);
-
-        mContext = v.getContext().getApplicationContext();
+        mContext = v.getContext();
         mLinksPresenter = presenter;
+        ButterKnife.inject(this, v);
+        itemView.setOnCreateContextMenuListener(this);
+    }
+
+    @OnClick({ R.id.link_title, R.id.link_thumbnail })
+    void openLink() {
+        mLinksPresenter.openLink(mRedditLink);
+    }
+
+    @OnClick(R.id.link_comment_count)
+    void showCommentsForLink() {
+        mLinksPresenter.showCommentsForLink(mRedditLink);
+    }
+
+    @OnClick(R.id.link_view)
+    void showContextMenu(View v) {
+        v.showContextMenu();
     }
 
     public void bind(RedditLink link, boolean showSelfText) {
@@ -164,22 +163,6 @@ public class LinkViewHolder extends RecyclerView.ViewHolder
         // Show stickied view if appropriate, else hide
         Boolean stickied = link.getStickied();
         mStickiedView.setVisibility(stickied != null && stickied ? View.VISIBLE : View.INVISIBLE);
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.link_title:
-            case R.id.link_thumbnail:
-                mLinksPresenter.openLink(mRedditLink);
-                break;
-            case R.id.link_comment_count:
-                mLinksPresenter.showCommentsForLink(mRedditLink);
-                break;
-            default:
-                v.showContextMenu();
-                break;
-        }
     }
 
     @Override

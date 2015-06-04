@@ -35,6 +35,10 @@ import com.ddiehl.android.simpleredditreader.view.fragments.WebViewFragment;
 import com.ddiehl.reddit.identity.UserIdentity;
 import com.squareup.otto.Bus;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+import butterknife.OnClick;
+
 public class MainActivity extends ActionBarActivity implements MainView, ConfirmSignOutDialog.Callbacks {
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -42,26 +46,26 @@ public class MainActivity extends ActionBarActivity implements MainView, Confirm
 
     private static final int REQUEST_CODE_SETTINGS = 1001;
 
-    private Bus mBus;
     private MainPresenter mMainPresenter;
+    private Bus mBus = BusProvider.getInstance();
     private String mLastAuthCode;
 
     private ProgressDialog mProgressBar;
+    private Dialog mSubredditNavigationDialog;
 
     // Navigation drawer
-    private DrawerLayout mDrawerLayout;
-    private NavigationView mNavigationView;
-    private ImageView mGoldIndicator;
-    private TextView mAccountNameView;
-    private View mSignOutView;
-    private Dialog mSubredditNavigationDialog;
+    @InjectView(R.id.drawer_layout) DrawerLayout mDrawerLayout;
+    @InjectView(R.id.navigation_view) NavigationView mNavigationView;
+    @InjectView(R.id.user_account_icon) ImageView mGoldIndicator;
+    @InjectView(R.id.account_name) TextView mAccountNameView;
+    @InjectView(R.id.sign_out_button) View mSignOutView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = ButterKnife.findById(this, R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
 
@@ -70,13 +74,8 @@ public class MainActivity extends ActionBarActivity implements MainView, Confirm
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
+        ButterKnife.inject(this);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mNavigationView = (NavigationView) findViewById(R.id.navigation_view);
-        mAccountNameView = (TextView) findViewById(R.id.account_name);
-        mSignOutView = findViewById(R.id.sign_out_button);
-        mGoldIndicator = (ImageView) findViewById(R.id.user_account_icon);
-
-        mBus = BusProvider.getInstance();
         mMainPresenter = new MainPresenterImpl(this, this);
         updateNavigationItems();
 
@@ -109,14 +108,12 @@ public class MainActivity extends ActionBarActivity implements MainView, Confirm
                 return false;
             }
         });
+    }
 
-        mSignOutView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ConfirmSignOutDialog dialog = ConfirmSignOutDialog.newInstance();
-                dialog.show(getSupportFragmentManager(), DIALOG_CONFIRM_SIGN_OUT);
-            }
-        });
+    @OnClick(R.id.sign_out_button)
+    void onSignOut() {
+        ConfirmSignOutDialog dialog = ConfirmSignOutDialog.newInstance();
+        dialog.show(getSupportFragmentManager(), DIALOG_CONFIRM_SIGN_OUT);
     }
 
     private void showSubredditNavigationDialog() {
@@ -124,14 +121,13 @@ public class MainActivity extends ActionBarActivity implements MainView, Confirm
             mSubredditNavigationDialog = new Dialog(this);
             mSubredditNavigationDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             mSubredditNavigationDialog.setContentView(R.layout.navigation_drawer_edit_text_row);
-            final EditText vInput = (EditText) mSubredditNavigationDialog.findViewById(R.id.drawer_navigate_to_subreddit_text);
-            mSubredditNavigationDialog.findViewById(R.id.drawer_navigate_to_subreddit_go)
+            ButterKnife.findById(mSubredditNavigationDialog, R.id.drawer_navigate_to_subreddit_go)
                     .setOnClickListener(new View.OnClickListener() {
                         @Override
-                        public void onClick(View view) {
+                        public void onClick(View v) {
+                            EditText vInput = ButterKnife.findById(mSubredditNavigationDialog, R.id.drawer_navigate_to_subreddit_text);
                             String inputSubreddit = vInput.getText().toString();
-                            if (inputSubreddit.equals(""))
-                                return;
+                            if (inputSubreddit.equals("")) return;
 
                             inputSubreddit = inputSubreddit.substring(3);
                             inputSubreddit = inputSubreddit.trim();

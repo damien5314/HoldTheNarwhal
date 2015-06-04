@@ -24,6 +24,9 @@ import com.ddiehl.android.simpleredditreader.utils.AuthUtils;
 import com.ddiehl.android.simpleredditreader.view.MainView;
 import com.squareup.otto.Bus;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+
 
 public class WebViewFragment extends Fragment {
     public static final String TAG = WebViewFragment.class.getSimpleName();
@@ -32,7 +35,7 @@ public class WebViewFragment extends Fragment {
 
     private Bus mBus = BusProvider.getInstance();
     private String mUrl;
-    private WebView mWebView;
+    @InjectView(R.id.web_view) WebView mWebView;
 
     public static Fragment newInstance(String url) {
         Bundle args = new Bundle();
@@ -58,10 +61,10 @@ public class WebViewFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.web_view_fragment, container, false);
 
-        final ProgressBar progressBar = (ProgressBar) v.findViewById(R.id.progress_bar);
+        final ProgressBar progressBar = ButterKnife.findById(v, R.id.progress_bar);
         progressBar.setMax(100);
 
-        mWebView = (WebView) v.findViewById(R.id.web_view);
+        mWebView = ButterKnife.findById(v, R.id.web_view);
 
         WebSettings settings = mWebView.getSettings();
         settings.setJavaScriptEnabled(true);
