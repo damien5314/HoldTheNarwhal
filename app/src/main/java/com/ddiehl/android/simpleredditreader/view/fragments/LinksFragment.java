@@ -118,22 +118,28 @@ public class LinksFragment extends Fragment
         mBus.unregister(mLinksPresenter);
     }
 
+    private String mSelectedSort, mSelectedTimespan;
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case REQUEST_CHOOSE_SORT:
                 if (resultCode == Activity.RESULT_OK) {
-                    String selectedSort = data.getStringExtra(ChooseLinkSortDialog.EXTRA_SORT);
-                    mLinksPresenter.updateSort(selectedSort);
+                    mSelectedSort = data.getStringExtra(ChooseLinkSortDialog.EXTRA_SORT);
+                    if (mSelectedSort.equals("top") || mSelectedSort.equals("controversial")) {
+                        showLinkTimespanOptionsMenu();
+                    } else {
+                        mLinksPresenter.updateSort(mSelectedSort, mSelectedTimespan);
+                        getActivity().supportInvalidateOptionsMenu();
+                    }
                 }
-                getActivity().supportInvalidateOptionsMenu();
                 break;
             case REQUEST_CHOOSE_TIMESPAN:
                 if (resultCode == Activity.RESULT_OK) {
-                    String selectedTimespan = data.getStringExtra(ChooseTimespanDialog.EXTRA_TIMESPAN);
-                    mLinksPresenter.updateTimeSpan(selectedTimespan);
+                    mSelectedTimespan = data.getStringExtra(ChooseTimespanDialog.EXTRA_TIMESPAN);
+                    mLinksPresenter.updateSort(mSelectedSort, mSelectedTimespan);
+                    getActivity().supportInvalidateOptionsMenu();
                 }
-                getActivity().supportInvalidateOptionsMenu();
                 break;
         }
     }
@@ -153,17 +159,12 @@ public class LinksFragment extends Fragment
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        FragmentManager fm = getActivity().getSupportFragmentManager();
         switch (item.getItemId()) {
             case R.id.action_change_sort:
-                ChooseLinkSortDialog chooseLinkSortDialog = ChooseLinkSortDialog.newInstance(null);
-                chooseLinkSortDialog.setTargetFragment(this, REQUEST_CHOOSE_SORT);
-                chooseLinkSortDialog.show(fm, DIALOG_CHOOSE_SORT);
+                showLinkSortOptionsMenu();
                 return true;
             case R.id.action_change_timespan:
-                ChooseTimespanDialog chooseTimespanDialog = ChooseTimespanDialog.newInstance(null);
-                chooseTimespanDialog.setTargetFragment(this, REQUEST_CHOOSE_TIMESPAN);
-                chooseTimespanDialog.show(fm, DIALOG_CHOOSE_TIMESPAN);
+                showLinkTimespanOptionsMenu();
                 return true;
             case R.id.action_refresh:
                 mLinksPresenter.getLinks();
@@ -174,6 +175,20 @@ public class LinksFragment extends Fragment
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showLinkSortOptionsMenu() {
+        FragmentManager fm = getActivity().getSupportFragmentManager();
+        ChooseLinkSortDialog chooseLinkSortDialog = ChooseLinkSortDialog.newInstance(null);
+        chooseLinkSortDialog.setTargetFragment(this, REQUEST_CHOOSE_SORT);
+        chooseLinkSortDialog.show(fm, DIALOG_CHOOSE_SORT);
+    }
+
+    private void showLinkTimespanOptionsMenu() {
+        FragmentManager fm = getActivity().getSupportFragmentManager();
+        ChooseTimespanDialog chooseTimespanDialog = ChooseTimespanDialog.newInstance(null);
+        chooseTimespanDialog.setTargetFragment(this, REQUEST_CHOOSE_TIMESPAN);
+        chooseTimespanDialog.show(fm, DIALOG_CHOOSE_TIMESPAN);
     }
 
     @Override

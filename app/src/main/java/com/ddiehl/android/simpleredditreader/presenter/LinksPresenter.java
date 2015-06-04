@@ -16,8 +16,7 @@ public interface LinksPresenter {
     String getTimeSpan();
     void updateTitle();
     void updateSubreddit(String subreddit);
-    void updateSort(String sort);
-    void updateTimeSpan(String timespan);
+    void updateSort(String sort, String timespan);
 
     void showLinkContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, RedditLink link);
 

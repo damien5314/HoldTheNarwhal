@@ -117,21 +117,12 @@ public class LinksPresenterImpl implements LinksPresenter {
     }
 
     @Override
-    public void updateSort(String sort) {
-        if (mSort.equals(sort)) {
+    public void updateSort(String sort, String timespan) {
+        if (mSort.equals(sort) && mTimeSpan.equals(timespan)) {
             return;
         }
 
         mSort = sort;
-        getLinks();
-    }
-
-    @Override
-    public void updateTimeSpan(String timespan) {
-        if (mTimeSpan.equals(timespan)) {
-            return;
-        }
-
         mTimeSpan = timespan;
         getLinks();
     }
