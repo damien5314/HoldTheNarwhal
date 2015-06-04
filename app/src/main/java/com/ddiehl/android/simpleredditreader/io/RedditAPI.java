@@ -1,6 +1,7 @@
 package com.ddiehl.android.simpleredditreader.io;
 
 import com.ddiehl.reddit.identity.UserIdentity;
+import com.ddiehl.reddit.listings.Listing;
 import com.ddiehl.reddit.listings.ListingResponse;
 import com.ddiehl.reddit.listings.MoreChildrenResponse;
 
@@ -38,6 +39,10 @@ public interface RedditAPI {
                          @Query("children") String children,
                          @Query("sort") String sort,
                          Callback<MoreChildrenResponse> callback);
+
+    @GET("/user/{username}/overview")
+    void getUserOverview(@Path("username") String username,
+                         Callback<Listing> callback);
 
     @POST("/api/vote")
     void vote(@Query("id") String id,

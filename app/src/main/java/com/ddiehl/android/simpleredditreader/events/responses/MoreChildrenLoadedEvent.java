@@ -6,8 +6,6 @@ import com.ddiehl.reddit.listings.RedditMoreComments;
 
 import java.util.List;
 
-import retrofit.RetrofitError;
-
 public class MoreChildrenLoadedEvent extends FailableEvent {
     private RedditMoreComments mParentStub;
     private List<AbsRedditComment> mComments;
@@ -17,7 +15,7 @@ public class MoreChildrenLoadedEvent extends FailableEvent {
         mComments = moreChildrenResponse.getChildComments();
     }
 
-    public MoreChildrenLoadedEvent(RetrofitError e) {
+    public MoreChildrenLoadedEvent(Exception e) {
         super(e);
     }
 

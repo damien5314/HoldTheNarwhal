@@ -11,6 +11,7 @@ import com.ddiehl.android.simpleredditreader.events.requests.HideEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.LoadCommentsEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.LoadLinksEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.LoadMoreChildrenEvent;
+import com.ddiehl.android.simpleredditreader.events.requests.LoadUserOverviewEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.ReportEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.SaveEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.VoteEvent;
@@ -20,6 +21,7 @@ import com.ddiehl.android.simpleredditreader.events.responses.LinksLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.MoreChildrenLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.SaveSubmittedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.UserIdentityRetrievedEvent;
+import com.ddiehl.android.simpleredditreader.events.responses.UserOverviewLoaded;
 import com.ddiehl.android.simpleredditreader.events.responses.VoteSubmittedEvent;
 import com.ddiehl.android.simpleredditreader.utils.BaseUtils;
 import com.ddiehl.reddit.Hideable;
@@ -211,6 +213,26 @@ public class RedditServiceAPI implements RedditService {
                 BaseUtils.showError(mContext, error);
                 BaseUtils.printResponse(error.getResponse());
                 mBus.post(new MoreChildrenLoadedEvent(error));
+            }
+        });
+    }
+
+    @Override
+    public void onLoadUserOverview(LoadUserOverviewEvent event) {
+        final String userId = event.getUsername();
+
+        mAPI.getUserOverview(userId, new Callback<Listing>() {
+            @Override
+            public void success(Listing listing, Response response) {
+                BaseUtils.printResponseStatus(response);
+                mBus.post(new UserOverviewLoaded(userId, listing));
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                BaseUtils.showError(mContext, error);
+                BaseUtils.printResponse(error.getResponse());
+                mBus.post(new UserOverviewLoaded(error));
             }
         });
     }
