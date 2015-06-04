@@ -20,9 +20,6 @@ public class SettingsActivity extends PreferenceActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // Can we add preferences from PREFS_USER manually?
-
         addPreferencesFromResource(R.xml.preferences);
         initSummary(getPreferenceScreen());
     }

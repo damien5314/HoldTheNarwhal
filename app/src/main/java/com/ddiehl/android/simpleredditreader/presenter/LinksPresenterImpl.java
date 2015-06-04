@@ -20,8 +20,6 @@ import com.ddiehl.android.simpleredditreader.events.responses.VoteSubmittedEvent
 import com.ddiehl.android.simpleredditreader.view.LinksView;
 import com.ddiehl.reddit.Hideable;
 import com.ddiehl.reddit.Savable;
-import com.ddiehl.reddit.Sort;
-import com.ddiehl.reddit.TimeSpan;
 import com.ddiehl.reddit.Votable;
 import com.ddiehl.reddit.listings.RedditLink;
 import com.squareup.otto.Bus;
@@ -52,8 +50,8 @@ public class LinksPresenterImpl implements LinksPresenter {
         mLinks = new ArrayList<>();
 
         mSubreddit = subreddit;
-        mSort = Sort.HOT;
-        mTimeSpan = TimeSpan.ALL;
+        mSort = "hot";
+        mTimeSpan = "all";
     }
 
     @Override
@@ -112,8 +110,8 @@ public class LinksPresenterImpl implements LinksPresenter {
     @Override
     public void updateSubreddit(String subreddit) {
         mSubreddit = subreddit;
-        mSort = Sort.HOT;
-        mTimeSpan = TimeSpan.ALL;
+        mSort = "hot";
+        mTimeSpan = "all";
         updateTitle();
         getLinks();
     }
