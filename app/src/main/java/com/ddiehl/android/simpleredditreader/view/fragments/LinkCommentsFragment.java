@@ -363,6 +363,6 @@ public class LinkCommentsFragment extends Fragment
 
     @Override
     public void onSettingsChanged() {
-        // TODO
+        mCommentsPresenter.updateSort();
     }
 }

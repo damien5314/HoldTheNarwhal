@@ -15,6 +15,7 @@ public interface CommentsPresenter {
     void getComments();
     void showMoreChildren(RedditMoreComments comment);
     void toggleThreadVisible(AbsRedditComment comment);
+    void updateSort();
     void updateSort(String sort);
     int getNumComments();
     AbsRedditComment getCommentAtPosition(int position);

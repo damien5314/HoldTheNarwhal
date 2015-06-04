@@ -326,6 +326,6 @@ public class LinksFragment extends Fragment
 
     @Override
     public void onSettingsChanged() {
-        // TODO
+        // No views dependent on settings
     }
 }

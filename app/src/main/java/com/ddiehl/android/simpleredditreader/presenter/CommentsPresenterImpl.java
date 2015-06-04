@@ -31,6 +31,7 @@ import com.squareup.otto.Subscribe;
 import java.util.List;
 
 public class CommentsPresenterImpl implements CommentsPresenter {
+    private static final String TAG = CommentsPresenterImpl.class.getSimpleName();
 
     private Context mContext;
 
@@ -83,6 +84,13 @@ public class CommentsPresenterImpl implements CommentsPresenter {
         mCommentsView.showSpinner(null);
         List<String> children = comment.getChildren();
         mBus.post(new LoadMoreChildrenEvent(mRedditLink, comment, children, mSort));
+    }
+
+    @Override
+    public void updateSort() {
+        String sort = mContext.getSharedPreferences(RedditPreferences.PREFS_USER, Context.MODE_PRIVATE)
+                .getString(RedditPreferences.PREF_COMMENT_SORT, null);
+        updateSort(sort);
     }
 
     @Override

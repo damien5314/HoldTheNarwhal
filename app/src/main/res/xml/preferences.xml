@@ -4,8 +4,8 @@
 
     <ListPreference
         android:key="pref_comment_sort"
-        android:title="@string/menu_sort_title"
-        android:dialogTitle="@string/menu_sort_title"
+        android:title="@string/dialog_settings_comment_sort"
+        android:dialogTitle="@string/dialog_settings_comment_sort"
         android:entries="@array/comment_sort_options"
         android:entryValues="@array/comment_sort_option_values"
         android:defaultValue="@string/default_comment_sort"
