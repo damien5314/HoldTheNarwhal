@@ -26,13 +26,15 @@ import android.widget.TextView;
 import com.ddiehl.android.simpleredditreader.BusProvider;
 import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.events.responses.UserAuthCodeReceivedEvent;
+import com.ddiehl.android.simpleredditreader.io.RedditServiceAuth;
 import com.ddiehl.android.simpleredditreader.presenter.MainPresenter;
 import com.ddiehl.android.simpleredditreader.presenter.MainPresenterImpl;
 import com.ddiehl.android.simpleredditreader.view.MainView;
 import com.ddiehl.android.simpleredditreader.view.SettingsChangedListener;
 import com.ddiehl.android.simpleredditreader.view.dialogs.ConfirmSignOutDialog;
 import com.ddiehl.android.simpleredditreader.view.fragments.LinksFragment;
-import com.ddiehl.android.simpleredditreader.view.fragments.UserOverviewFragment;
+import com.ddiehl.android.simpleredditreader.view.fragments.UserProfileCommentsFragment;
+import com.ddiehl.android.simpleredditreader.view.fragments.UserProfileOverviewFragment;
 import com.ddiehl.android.simpleredditreader.view.fragments.WebViewFragment;
 import com.ddiehl.reddit.identity.UserIdentity;
 import com.squareup.otto.Bus;
@@ -78,24 +80,36 @@ public class MainActivity extends ActionBarActivity implements MainView, Confirm
 
         ButterKnife.inject(this);
 
-
-
         // Set up navigation tabs
         mTabLayout.setVisibility(View.GONE);
-        mTabLayout.addTab(mTabLayout.newTab().setText("overview"));
-        mTabLayout.addTab(mTabLayout.newTab().setText("comments"));
-        mTabLayout.addTab(mTabLayout.newTab().setText("submitted"));
-        mTabLayout.addTab(mTabLayout.newTab().setText("gilded"));
-        mTabLayout.addTab(mTabLayout.newTab().setText("upvoted"));
-        mTabLayout.addTab(mTabLayout.newTab().setText("downvoted"));
-        mTabLayout.addTab(mTabLayout.newTab().setText("hidden"));
+        mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.navigation_tabs_overview)));
+        mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.navigation_tabs_comments)));
+        mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.navigation_tabs_submitted)));
+        mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.navigation_tabs_gilded)));
+        mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.navigation_tabs_upvoted)));
+        mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.navigation_tabs_downvoted)));
+        mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.navigation_tabs_hidden)));
         mTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override public void onTabUnselected(TabLayout.Tab tab) { }
             @Override public void onTabReselected(TabLayout.Tab tab) { }
 
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                Log.d(TAG, "Tab selected: " + tab.getPosition() + " " + tab.getText());
+                switch (tab.getPosition()) {
+                    case 0:
+                        showUserProfileOverview(null);
+                        break;
+                    case 1:
+                        showUserProfileComments(null);
+                        break;
+                    case 2:
+                    case 3:
+                    case 4:
+                    case 5:
+                    case 6:
+                    default:
+                        Log.w(TAG, "Unknown tab selected: " + tab.getPosition() + " " + tab.getText());
+                }
             }
         });
 
@@ -112,27 +126,95 @@ public class MainActivity extends ActionBarActivity implements MainView, Confirm
                         showSubredditNavigationDialog();
                         return true;
                     case R.id.drawer_log_in:
-                        mMainPresenter.presentLoginView();
+                        showLoginView();
                         return true;
                     case R.id.drawer_user_profile:
-                        mMainPresenter.showUserProfile(null);
+                        showUserProfile(null);
                         return true;
                     case R.id.drawer_subreddits:
-                        mMainPresenter.showUserSubreddits();
+                        showUserSubreddits();
                         return true;
                     case R.id.drawer_front_page:
-                        mMainPresenter.showSubreddit(null);
+                        showSubreddit(null);
                         return true;
                     case R.id.drawer_r_all:
-                        mMainPresenter.showSubreddit("all");
+                        showSubreddit("all");
                         return true;
                     case R.id.drawer_random_subreddit:
-                        mMainPresenter.showSubreddit("random");
+                        showSubreddit("random");
                         return true;
                 }
                 return false;
             }
         });
+    }
+
+    @Override
+    public void showLoginView() {
+        closeNavigationDrawer();
+        openWebViewForURL(RedditServiceAuth.AUTHORIZATION_URL);
+    }
+
+    @Override
+    public void showUserProfile(String userId) {
+        closeNavigationDrawer();
+        showUserProfileOverview(userId);
+    }
+
+    @Override
+    public void showUserProfileOverview(String userId) {
+        closeNavigationDrawer();
+        FragmentManager fm = getSupportFragmentManager();
+        Fragment f = UserProfileOverviewFragment.newInstance(userId);
+        fm.beginTransaction().replace(R.id.fragment_container, f)
+                .addToBackStack(null)
+                .commit();
+        mTabLayout.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void showUserProfileComments(String userId) {
+        closeNavigationDrawer();
+        FragmentManager fm = getSupportFragmentManager();
+        Fragment f = UserProfileCommentsFragment.newInstance(userId);
+        fm.beginTransaction().replace(R.id.fragment_container, f)
+                .addToBackStack(null)
+                .commit();
+        mTabLayout.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void showSubreddit(String subreddit) {
+        closeNavigationDrawer();
+        FragmentManager fm = getSupportFragmentManager();
+        Fragment currentFragment = fm.findFragmentById(R.id.fragment_container);
+        // If the current fragment is a LinksFragment, just update the subreddit
+        // Else, swap in a LinksFragment
+        if (currentFragment instanceof LinksFragment) {
+            ((LinksFragment) currentFragment).updateSubreddit(subreddit);
+        } else {
+            Fragment f = LinksFragment.newInstance(subreddit);
+            fm.beginTransaction().replace(R.id.fragment_container, f)
+                    .addToBackStack(null)
+                    .commit();
+            mTabLayout.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void openWebViewForURL(String url) {
+        closeNavigationDrawer();
+        FragmentManager fm = getSupportFragmentManager();
+        Fragment f = WebViewFragment.newInstance(url);
+        fm.beginTransaction().replace(R.id.fragment_container, f)
+                .addToBackStack(null)
+                .commit();
+        mTabLayout.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showUserSubreddits() {
+        showToast(R.string.implementation_pending);
     }
 
     @OnClick(R.id.sign_out_button)
@@ -158,7 +240,7 @@ public class MainActivity extends ActionBarActivity implements MainView, Confirm
                             inputSubreddit = inputSubreddit.trim();
                             vInput.setText("");
                             mSubredditNavigationDialog.dismiss();
-                            mMainPresenter.showSubreddit(inputSubreddit);
+                            showSubreddit(inputSubreddit);
                         }
                     });
         }
@@ -247,45 +329,6 @@ public class MainActivity extends ActionBarActivity implements MainView, Confirm
                 getString(R.string.account_name_unauthorized) : identity.getName());
         mSignOutView.setVisibility(identity == null ? View.GONE : View.VISIBLE);
         mGoldIndicator.setVisibility(identity != null && identity.isGold() ? View.VISIBLE : View.GONE);
-    }
-
-    @Override
-    public void showUserProfile(String userId) {
-        mDrawerLayout.closeDrawer(GravityCompat.START);
-        FragmentManager fm = getSupportFragmentManager();
-        Fragment f = UserOverviewFragment.newInstance(userId);
-        fm.beginTransaction().replace(R.id.fragment_container, f)
-                .addToBackStack(null)
-                .commit();
-        mTabLayout.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void showSubreddit(String subreddit) {
-        mDrawerLayout.closeDrawer(GravityCompat.START);
-        FragmentManager fm = getSupportFragmentManager();
-        Fragment currentFragment = fm.findFragmentById(R.id.fragment_container);
-        // If the current fragment is a LinksFragment, just update the subreddit
-        // Else, swap in a LinksFragment
-        if (currentFragment instanceof LinksFragment) {
-            ((LinksFragment) currentFragment).updateSubreddit(subreddit);
-        } else {
-            Fragment f = LinksFragment.newInstance(subreddit);
-            fm.beginTransaction().replace(R.id.fragment_container, f)
-                    .addToBackStack(null)
-                    .commit();
-            mTabLayout.setVisibility(View.GONE);
-        }
-    }
-
-    @Override
-    public void openWebViewForURL(String url) {
-        FragmentManager fm = getSupportFragmentManager();
-        Fragment f = WebViewFragment.newInstance(url);
-        fm.beginTransaction().replace(R.id.fragment_container, f)
-                .addToBackStack(null)
-                .commit();
-        mTabLayout.setVisibility(View.GONE);
     }
 
     @Override

@@ -2,12 +2,10 @@ package com.ddiehl.android.simpleredditreader.presenter;
 
 import android.content.Context;
 
-import com.ddiehl.android.simpleredditreader.R;
-import com.ddiehl.android.simpleredditreader.RedditIdentityManager;
 import com.ddiehl.android.simpleredditreader.BusProvider;
+import com.ddiehl.android.simpleredditreader.RedditIdentityManager;
 import com.ddiehl.android.simpleredditreader.events.requests.UserSignOutEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.UserIdentitySavedEvent;
-import com.ddiehl.android.simpleredditreader.io.RedditServiceAuth;
 import com.ddiehl.android.simpleredditreader.view.MainView;
 import com.ddiehl.reddit.identity.UserIdentity;
 import com.squareup.otto.Bus;
@@ -39,18 +37,6 @@ public class MainPresenterImpl implements MainPresenter {
     }
 
     @Override
-    public void presentLoginView() {
-        mMainView.closeNavigationDrawer();
-        mMainView.openWebViewForURL(RedditServiceAuth.AUTHORIZATION_URL);
-    }
-
-    @Override
-    public void showSubreddit(String subreddit) {
-        mMainView.closeNavigationDrawer();
-        mMainView.showSubreddit(subreddit);
-    }
-
-    @Override
     public UserIdentity getAuthorizedUser() {
         return mIdentityManager.getUserIdentity();
     }
@@ -59,15 +45,5 @@ public class MainPresenterImpl implements MainPresenter {
     public void signOutUser() {
         mMainView.closeNavigationDrawer();
         mBus.post(new UserSignOutEvent());
-    }
-
-    @Override
-    public void showUserProfile(String userId) {
-        mMainView.showUserProfile(userId);
-    }
-
-    @Override
-    public void showUserSubreddits() {
-        mMainView.showToast(R.string.implementation_pending);
     }
 }

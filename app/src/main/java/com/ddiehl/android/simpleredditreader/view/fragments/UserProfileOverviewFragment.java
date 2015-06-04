@@ -2,7 +2,6 @@ package com.ddiehl.android.simpleredditreader.view.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,19 +9,19 @@ import android.view.ViewGroup;
 import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.view.UserOverviewView;
 
-public class UserOverviewFragment extends Fragment implements UserOverviewView {
-    private static final String TAG = UserOverviewFragment.class.getSimpleName();
+public class UserProfileOverviewFragment extends UserProfileFragment implements UserOverviewView {
+    private static final String TAG = UserProfileOverviewFragment.class.getSimpleName();
 
-    private static final String ARG_ID = "arg_id";
+    private static final String ARG_USER_ID = "arg_user_id";
 
-    private String mId;
+    private String mUserId;
 
-    public UserOverviewFragment() { }
+    public UserProfileOverviewFragment() { }
 
-    public static UserOverviewFragment newInstance(String id) {
-        UserOverviewFragment f = new UserOverviewFragment();
+    public static UserProfileOverviewFragment newInstance(String userId) {
+        UserProfileOverviewFragment f = new UserProfileOverviewFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_ID, id);
+        args.putString(ARG_USER_ID, userId);
         f.setArguments(args);
         return f;
     }
@@ -31,11 +30,10 @@ public class UserOverviewFragment extends Fragment implements UserOverviewView {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
-        mId = args.getString(ARG_ID);
+        mUserId = args.getString(ARG_USER_ID);
     }
 
-    @Nullable
-    @Override
+    @Nullable @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v  = inflater.inflate(R.layout.user_profile_overview, container, false);
         return v;

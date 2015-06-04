@@ -34,6 +34,16 @@
     <string name="continue_thread">continue thread</string>
     <string name="more_comments">view %s more comments</string>
 
+    <!-- User Profile -->
+    <string name="user_profile_title">user profile</string>
+    <string name="navigation_tabs_overview">overview</string>
+    <string name="navigation_tabs_comments">comments</string>
+    <string name="navigation_tabs_submitted">submitted</string>
+    <string name="navigation_tabs_gilded">gilded</string>
+    <string name="navigation_tabs_upvoted">upvoted</string>
+    <string name="navigation_tabs_downvoted">downvoted</string>
+    <string name="navigation_tabs_hidden">hidden</string>
+
     <!-- Context menus -->
     <string name="menu_sort_title">Sort by</string>
     <string name="menu_timespan_title">Timespan</string>

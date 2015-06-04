@@ -5,7 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.ddiehl.android.simpleredditreader.view.fragments.UserOverviewFragment;
+import com.ddiehl.android.simpleredditreader.view.fragments.UserProfileOverviewFragment;
 
 public class UserProfilePagerAdapter extends FragmentPagerAdapter {
 
@@ -22,11 +22,11 @@ public class UserProfilePagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return UserOverviewFragment.newInstance("simpleredditreader");
+                return UserProfileOverviewFragment.newInstance("simpleredditreader");
             case 1:
-                return UserOverviewFragment.newInstance("damien5314");
+                return UserProfileOverviewFragment.newInstance("damien5314");
             case 2:
-                return UserOverviewFragment.newInstance("dadmachine");
+                return UserProfileOverviewFragment.newInstance("dadmachine");
             default:
                 return null;
         }
