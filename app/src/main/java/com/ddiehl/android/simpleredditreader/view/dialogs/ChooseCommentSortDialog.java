@@ -37,7 +37,7 @@ public class ChooseCommentSortDialog extends DialogFragment {
         Bundle args = getArguments();
         currentSetting = args.getString(ARG_SETTING);
         if (currentSetting != null) {
-            String[] settings = getResources().getStringArray(R.array.timespan_options);
+            String[] settings = getResources().getStringArray(R.array.comment_sort_option_values);
             for (int i = 0; i < settings.length; i++) {
                 if (settings[i].equals(currentSetting))
                     selectedItem = i;

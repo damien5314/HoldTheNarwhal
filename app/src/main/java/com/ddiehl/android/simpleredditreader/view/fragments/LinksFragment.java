@@ -179,14 +179,14 @@ public class LinksFragment extends Fragment
 
     private void showLinkSortOptionsMenu() {
         FragmentManager fm = getActivity().getSupportFragmentManager();
-        ChooseLinkSortDialog chooseLinkSortDialog = ChooseLinkSortDialog.newInstance(null);
+        ChooseLinkSortDialog chooseLinkSortDialog = ChooseLinkSortDialog.newInstance(mLinksPresenter.getSort());
         chooseLinkSortDialog.setTargetFragment(this, REQUEST_CHOOSE_SORT);
         chooseLinkSortDialog.show(fm, DIALOG_CHOOSE_SORT);
     }
 
     private void showLinkTimespanOptionsMenu() {
         FragmentManager fm = getActivity().getSupportFragmentManager();
-        ChooseTimespanDialog chooseTimespanDialog = ChooseTimespanDialog.newInstance(null);
+        ChooseTimespanDialog chooseTimespanDialog = ChooseTimespanDialog.newInstance(mLinksPresenter.getTimeSpan());
         chooseTimespanDialog.setTargetFragment(this, REQUEST_CHOOSE_TIMESPAN);
         chooseTimespanDialog.show(fm, DIALOG_CHOOSE_TIMESPAN);
     }

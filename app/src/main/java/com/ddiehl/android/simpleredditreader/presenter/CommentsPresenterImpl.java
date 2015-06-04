@@ -114,6 +114,11 @@ public class CommentsPresenterImpl implements CommentsPresenter {
     }
 
     @Override
+    public String getSort() {
+        return mSort;
+    }
+
+    @Override
     public int getNumComments() {
         return mCommentBank.getNumVisible();
     }

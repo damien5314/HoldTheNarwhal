@@ -30,7 +30,6 @@ import com.ddiehl.android.simpleredditreader.view.SettingsChangedListener;
 import com.ddiehl.android.simpleredditreader.view.activities.MainActivity;
 import com.ddiehl.android.simpleredditreader.view.adapters.LinkCommentsAdapter;
 import com.ddiehl.android.simpleredditreader.view.dialogs.ChooseCommentSortDialog;
-import com.ddiehl.android.simpleredditreader.view.dialogs.ChooseLinkSortDialog;
 import com.ddiehl.reddit.listings.RedditComment;
 import com.ddiehl.reddit.listings.RedditLink;
 import com.squareup.otto.Bus;
@@ -262,7 +261,7 @@ public class LinkCommentsFragment extends Fragment
         switch (requestCode) {
             case REQUEST_CHOOSE_SORT:
                 if (resultCode == Activity.RESULT_OK) {
-                    String sort = data.getStringExtra(ChooseLinkSortDialog.EXTRA_SORT);
+                    String sort = data.getStringExtra(ChooseCommentSortDialog.EXTRA_SORT);
                     mCommentsPresenter.updateSort(sort);
                 }
                 getActivity().supportInvalidateOptionsMenu();
@@ -294,7 +293,7 @@ public class LinkCommentsFragment extends Fragment
 
     private void showChooseCommentSortDialog() {
         FragmentManager fm = getActivity().getSupportFragmentManager();
-        ChooseCommentSortDialog chooseCommentSortDialog = ChooseCommentSortDialog.newInstance(null);
+        ChooseCommentSortDialog chooseCommentSortDialog = ChooseCommentSortDialog.newInstance(mCommentsPresenter.getSort());
         chooseCommentSortDialog.setTargetFragment(this, REQUEST_CHOOSE_SORT);
         chooseCommentSortDialog.show(fm, DIALOG_CHOOSE_SORT);
     }
