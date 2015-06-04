@@ -63,7 +63,8 @@ public class MainPresenterImpl implements MainPresenter {
 
     @Override
     public void showUserProfile(String userId) {
-        mMainView.showUserProfile(userId);
+//        mMainView.showUserProfile(userId);
+        mMainView.showToast(R.string.implementation_pending);
     }
 
     @Override
