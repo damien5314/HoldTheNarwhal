@@ -27,6 +27,7 @@ import com.ddiehl.android.simpleredditreader.events.responses.UserAuthCodeReceiv
 import com.ddiehl.android.simpleredditreader.presenter.MainPresenter;
 import com.ddiehl.android.simpleredditreader.presenter.MainPresenterImpl;
 import com.ddiehl.android.simpleredditreader.view.MainView;
+import com.ddiehl.android.simpleredditreader.view.SettingsChangedListener;
 import com.ddiehl.android.simpleredditreader.view.dialogs.ConfirmSignOutDialog;
 import com.ddiehl.android.simpleredditreader.view.fragments.LinksFragment;
 import com.ddiehl.android.simpleredditreader.view.fragments.UserOverviewFragment;
@@ -38,6 +39,8 @@ public class MainActivity extends ActionBarActivity implements MainView, Confirm
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private static final String DIALOG_CONFIRM_SIGN_OUT = "dialog_confirm_sign_out";
+
+    private static final int REQUEST_CODE_SETTINGS = 1001;
 
     private Bus mBus;
     private MainPresenter mMainPresenter;
@@ -147,8 +150,7 @@ public class MainActivity extends ActionBarActivity implements MainView, Confirm
         super.onStart();
         mBus.register(mMainPresenter);
 
-        FragmentManager fm = getSupportFragmentManager();
-        Fragment currentFragment = fm.findFragmentById(R.id.fragment_container);
+        Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
         if (currentFragment == null) {
             showSubreddit(null);
         }
@@ -287,6 +289,21 @@ public class MainActivity extends ActionBarActivity implements MainView, Confirm
     }
 
     public void showSettings() {
-        startActivity(new Intent(this, SettingsActivity.class));
+        startActivityForResult(new Intent(this, SettingsActivity.class), REQUEST_CODE_SETTINGS);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case REQUEST_CODE_SETTINGS:
+                Fragment f = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+                if (f instanceof SettingsChangedListener) {
+                    SettingsChangedListener l = (SettingsChangedListener) f;
+                    l.onSettingsChanged();
+                }
+                break;
+            default:
+        }
     }
 }

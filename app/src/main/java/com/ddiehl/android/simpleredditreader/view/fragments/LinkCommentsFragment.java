@@ -26,6 +26,7 @@ import com.ddiehl.android.simpleredditreader.presenter.LinksPresenterImpl;
 import com.ddiehl.android.simpleredditreader.view.CommentsView;
 import com.ddiehl.android.simpleredditreader.view.LinksView;
 import com.ddiehl.android.simpleredditreader.view.MainView;
+import com.ddiehl.android.simpleredditreader.view.SettingsChangedListener;
 import com.ddiehl.android.simpleredditreader.view.activities.MainActivity;
 import com.ddiehl.android.simpleredditreader.view.adapters.LinkCommentsAdapter;
 import com.ddiehl.android.simpleredditreader.view.dialogs.ChooseCommentSortDialog;
@@ -34,7 +35,8 @@ import com.ddiehl.reddit.listings.RedditComment;
 import com.ddiehl.reddit.listings.RedditLink;
 import com.squareup.otto.Bus;
 
-public class LinkCommentsFragment extends Fragment implements LinksView, CommentsView {
+public class LinkCommentsFragment extends Fragment
+        implements LinksView, CommentsView, SettingsChangedListener {
     private static final String TAG = LinkCommentsFragment.class.getSimpleName();
 
     private static final String ARG_SUBREDDIT = "subreddit";
@@ -357,5 +359,10 @@ public class LinkCommentsFragment extends Fragment implements LinksView, Comment
     @Override
     public void openReplyView(RedditComment comment) {
         showToast(R.string.implementation_pending);
+    }
+
+    @Override
+    public void onSettingsChanged() {
+        // TODO
     }
 }

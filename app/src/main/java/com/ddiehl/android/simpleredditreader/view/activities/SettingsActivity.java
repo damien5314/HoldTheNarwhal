@@ -55,12 +55,7 @@ public class SettingsActivity extends PreferenceActivity
         }
         if (p instanceof EditTextPreference) {
             EditTextPreference editTextPref = (EditTextPreference) p;
-            if (p.getTitle().toString().toLowerCase().contains("password"))
-            {
-                p.setSummary("******");
-            } else {
-                p.setSummary(editTextPref.getText());
-            }
+            p.setSummary(editTextPref.getText());
         }
         if (p instanceof MultiSelectListPreference) {
             EditTextPreference editTextPref = (EditTextPreference) p;

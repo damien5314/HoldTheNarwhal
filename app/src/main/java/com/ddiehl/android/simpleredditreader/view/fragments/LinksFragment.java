@@ -22,6 +22,7 @@ import com.ddiehl.android.simpleredditreader.presenter.LinksPresenter;
 import com.ddiehl.android.simpleredditreader.presenter.LinksPresenterImpl;
 import com.ddiehl.android.simpleredditreader.view.LinksView;
 import com.ddiehl.android.simpleredditreader.view.MainView;
+import com.ddiehl.android.simpleredditreader.view.SettingsChangedListener;
 import com.ddiehl.android.simpleredditreader.view.activities.MainActivity;
 import com.ddiehl.android.simpleredditreader.view.adapters.LinksAdapter;
 import com.ddiehl.android.simpleredditreader.view.dialogs.ChooseLinkSortDialog;
@@ -32,7 +33,8 @@ import com.squareup.otto.Subscribe;
 
 import retrofit.RetrofitError;
 
-public class LinksFragment extends Fragment implements LinksView {
+public class LinksFragment extends Fragment
+        implements LinksView, SettingsChangedListener {
     private static final String TAG = LinksFragment.class.getSimpleName();
 
     private static final String ARG_SUBREDDIT = "subreddit";
@@ -320,5 +322,10 @@ public class LinksFragment extends Fragment implements LinksView {
     @Subscribe
     public void onError(RetrofitError error) {
         dismissSpinner();
+    }
+
+    @Override
+    public void onSettingsChanged() {
+        // TODO
     }
 }
