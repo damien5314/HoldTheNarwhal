@@ -18,6 +18,12 @@
 
             <include layout="@layout/app_toolbar"/>
 
+            <android.support.design.widget.TabLayout
+                android:id="@+id/navigation_tabs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:tabMode="scrollable"/>
+
             <FrameLayout
                 android:id="@+id/fragment_container"
                 android:layout_width="match_parent"
