@@ -4,7 +4,7 @@
     <string-array name="link_sort_options">
         <item>hot</item>
         <item>new</item>
-        <item>rising</item>
+        <!--<item>rising</item>-->
         <item>top</item>
         <item>controversial</item>
     </string-array>

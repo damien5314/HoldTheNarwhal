@@ -294,7 +294,7 @@ public class LinkCommentsFragment extends Fragment
 
     private void showChooseCommentSortDialog() {
         FragmentManager fm = getActivity().getSupportFragmentManager();
-        ChooseCommentSortDialog chooseCommentSortDialog = ChooseCommentSortDialog.newInstance();
+        ChooseCommentSortDialog chooseCommentSortDialog = ChooseCommentSortDialog.newInstance(null);
         chooseCommentSortDialog.setTargetFragment(this, REQUEST_CHOOSE_SORT);
         chooseCommentSortDialog.show(fm, DIALOG_CHOOSE_SORT);
     }

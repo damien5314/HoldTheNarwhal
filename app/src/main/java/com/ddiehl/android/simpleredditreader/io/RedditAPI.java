@@ -32,14 +32,6 @@ public interface RedditAPI {
                      @Query("comment") String commentId,
                      Callback<List<ListingResponse>> callback);
 
-    @GET("/r/{subreddit}/comments/{articleId}.json")
-    void getCommentThread(@Path("subreddit") String subreddit,
-                     @Path("articleId") String articleId,
-                     @Query("comment") String commentId,
-                     @Query("sort") String sort,
-                     @Query("context") Integer context,
-                     Callback<List<ListingResponse>> callback);
-
     /** https://snap.apigee.com/1cqZR33 */
     @POST("/api/morechildren?api_type=json")
     void getMoreChildren(@Query("link_id") String linkId,

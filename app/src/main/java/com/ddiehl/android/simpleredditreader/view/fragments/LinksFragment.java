@@ -146,7 +146,7 @@ public class LinksFragment extends Fragment
         String sort = mLinksPresenter.getSort();
         if (sort.equals("hot") || sort.equals("new") || sort.equals("rising")) {
             menu.findItem(R.id.action_change_timespan).setVisible(false);
-        } else { // controversial, rising
+        } else { // controversial, top
             menu.findItem(R.id.action_change_timespan).setVisible(true);
         }
     }

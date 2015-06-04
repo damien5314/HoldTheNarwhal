@@ -56,7 +56,6 @@ public class ChooseLinkSortDialog extends DialogFragment {
                         ChooseLinkSortDialog.this.dismiss();
                     }
                 });
-
         return builder.create();
     }
 }

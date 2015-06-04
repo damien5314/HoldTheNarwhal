@@ -14,12 +14,19 @@ import com.ddiehl.android.simpleredditreader.R;
 public class ChooseCommentSortDialog extends DialogFragment {
     private static final String TAG = ChooseCommentSortDialog.class.getSimpleName();
 
+    private static final String ARG_SETTING = "setting";
     public static final String EXTRA_SORT = "com.ddiehl.android.simpleredditreader.extra_sort";
+
+    private String currentSetting;
 
     public ChooseCommentSortDialog() { }
 
-    public static ChooseCommentSortDialog newInstance() {
-        return new ChooseCommentSortDialog();
+    public static ChooseCommentSortDialog newInstance(String currentSetting) {
+        Bundle args = new Bundle();
+        args.putString(ARG_SETTING, currentSetting);
+        ChooseCommentSortDialog dialog = new ChooseCommentSortDialog();
+        dialog.setArguments(args);
+        return dialog;
     }
 
     @NonNull @Override
@@ -28,6 +35,14 @@ public class ChooseCommentSortDialog extends DialogFragment {
 
         // Get selected item if it was passed
         Bundle args = getArguments();
+        currentSetting = args.getString(ARG_SETTING);
+        if (currentSetting != null) {
+            String[] settings = getResources().getStringArray(R.array.timespan_options);
+            for (int i = 0; i < settings.length; i++) {
+                if (settings[i].equals(currentSetting))
+                    selectedItem = i;
+            }
+        }
 
         // Build dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -41,7 +56,6 @@ public class ChooseCommentSortDialog extends DialogFragment {
                         dismiss();
                     }
                 });
-
         return builder.create();
     }
 }
