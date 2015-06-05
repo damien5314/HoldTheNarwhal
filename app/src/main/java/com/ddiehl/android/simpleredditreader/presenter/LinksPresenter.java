@@ -13,7 +13,7 @@ public interface LinksPresenter {
     int getNumLinks();
     String getSubreddit();
     String getSort();
-    String getTimeSpan();
+    String getTimespan();
     void updateTitle();
     void updateSubreddit(String subreddit);
     void updateSort(String sort, String timespan);

@@ -43,7 +43,7 @@ public class LinksPresenterImpl implements LinksPresenter {
 
     private RedditLink mLinkSelected;
 
-    public LinksPresenterImpl(Context context, LinksView view, String subreddit) {
+    public LinksPresenterImpl(Context context, LinksView view, String subreddit, String username) {
         mContext = context.getApplicationContext();
         mBus = BusProvider.getInstance();
         mLinksView = view;
@@ -94,7 +94,7 @@ public class LinksPresenterImpl implements LinksPresenter {
     }
 
     @Override
-    public String getTimeSpan() {
+    public String getTimespan() {
         return mTimeSpan;
     }
 

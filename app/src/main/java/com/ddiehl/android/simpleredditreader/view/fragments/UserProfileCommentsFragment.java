@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.view.UserOverviewView;
 
-public class UserProfileCommentsFragment extends UserProfileFragment implements UserOverviewView {
+public class UserProfileCommentsFragment extends UserProfileFragment {
     private static final String TAG = UserProfileCommentsFragment.class.getSimpleName();
 
     private static final String ARG_USER_ID = "arg_user_id";

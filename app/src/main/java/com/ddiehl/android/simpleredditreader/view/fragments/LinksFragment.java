@@ -187,7 +187,7 @@ public class LinksFragment extends Fragment
 
     private void showLinkTimespanOptionsMenu() {
         FragmentManager fm = getActivity().getSupportFragmentManager();
-        ChooseTimespanDialog chooseTimespanDialog = ChooseTimespanDialog.newInstance(mLinksPresenter.getTimeSpan());
+        ChooseTimespanDialog chooseTimespanDialog = ChooseTimespanDialog.newInstance(mLinksPresenter.getTimespan());
         chooseTimespanDialog.setTargetFragment(this, REQUEST_CHOOSE_TIMESPAN);
         chooseTimespanDialog.show(fm, DIALOG_CHOOSE_TIMESPAN);
     }
