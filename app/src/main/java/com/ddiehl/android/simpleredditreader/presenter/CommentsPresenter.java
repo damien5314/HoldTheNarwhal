@@ -10,8 +10,8 @@ import com.ddiehl.reddit.listings.RedditMoreComments;
 
 public interface CommentsPresenter {
 
-    RedditLink getLink();
-    void setLink(RedditLink link);
+    RedditLink getLinkContext();
+    void setLinkContext(RedditLink link);
     void getComments();
     void showMoreChildren(RedditMoreComments comment);
     void toggleThreadVisible(AbsRedditComment comment);

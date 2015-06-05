@@ -37,10 +37,12 @@ public class RedditComment extends AbsRedditComment implements Votable, Savable 
         return data.linkId;
     }
 
+    @Override
     public Boolean isLiked() {
         return data.isLiked;
     }
 
+    @Override
     public void isLiked(Boolean b) {
         data.isLiked = b;
     }

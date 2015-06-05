@@ -53,10 +53,12 @@ public class RedditLink extends Listing implements Votable, Savable, Hideable {
         data.edited = s;
     }
 
+    @Override
     public Boolean isLiked() {
         return data.likes;
     }
 
+    @Override
     public void isLiked(Boolean b) {
         data.likes = b;
     }

@@ -4,32 +4,32 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class CommentBankList implements CommentBank {
-    private static final String TAG = CommentBankList.class.getSimpleName();
+public class ListingBankList implements ListingBank {
+    private static final String TAG = ListingBankList.class.getSimpleName();
 
-    private List<AbsRedditComment> mData;
-    private List<AbsRedditComment> mVisibleData;
+    private List<Listing> mData;
+    private List<Listing> mVisibleData;
 
-    public CommentBankList() {
+    public ListingBankList() {
         mData = new ArrayList<>();
         mVisibleData = new ArrayList<>();
     }
 
-    public CommentBankList(List<AbsRedditComment> data) {
+    public ListingBankList(List<Listing> data) {
         mData = new ArrayList<>(data);
         mVisibleData = new ArrayList<>();
         syncVisibleData();
     }
 
     @Override
-    public boolean addAll(Collection<? extends AbsRedditComment> collection) {
+    public boolean addAll(Collection<? extends Listing> collection) {
         boolean result = mData.addAll(collection);
         syncVisibleData();
         return result;
     }
 
     @Override
-    public boolean addAll(int index, Collection<? extends AbsRedditComment> collection) {
+    public boolean addAll(int index, Collection<? extends Listing> collection) {
         boolean result = mData.addAll(index, collection);
         syncVisibleData();
         return result;
@@ -46,7 +46,7 @@ public class CommentBankList implements CommentBank {
     }
 
     @Override
-    public AbsRedditComment get(int position) {
+    public Listing get(int position) {
         return mData.get(position);
     }
 
@@ -56,14 +56,14 @@ public class CommentBankList implements CommentBank {
     }
 
     @Override
-    public AbsRedditComment remove(int position) {
-        AbsRedditComment result = mData.remove(position);
+    public Listing remove(int position) {
+        Listing result = mData.remove(position);
         syncVisibleData();
         return result;
     }
 
     @Override
-    public boolean remove(AbsRedditComment comment) {
+    public boolean remove(Listing comment) {
         boolean removed = mData.remove(comment);
         syncVisibleData();
         return removed;
@@ -76,7 +76,7 @@ public class CommentBankList implements CommentBank {
     }
 
     @Override
-    public void setData(List<AbsRedditComment> data) {
+    public void setData(List<Listing> data) {
         clear();
         addAll(data);
         syncVisibleData();
@@ -84,7 +84,8 @@ public class CommentBankList implements CommentBank {
 
     @Override
     public boolean isVisible(int position) {
-        return mData.get(position).isVisible();
+        Listing listing = mData.get(position);
+        return !(listing instanceof AbsRedditComment) || ((AbsRedditComment) listing).isVisible();
     }
 
     @Override
@@ -93,15 +94,16 @@ public class CommentBankList implements CommentBank {
     }
 
     @Override
-    public AbsRedditComment getVisibleComment(int position) {
+    public Listing getVisibleComment(int position) {
         return mVisibleData.get(position);
     }
 
     private void syncVisibleData() {
         mVisibleData.clear();
-        for (AbsRedditComment comment : mData) {
-            if (comment.isVisible()) {
-                mVisibleData.add(comment);
+        for (int i = 0; i < mData.size(); i++) {
+            Listing listing = mData.get(i);
+            if (listing instanceof AbsRedditComment) {
+                mVisibleData.add(listing);
             }
         }
     }

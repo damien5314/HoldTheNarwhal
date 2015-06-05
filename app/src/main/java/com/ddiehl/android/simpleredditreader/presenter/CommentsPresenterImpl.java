@@ -20,8 +20,8 @@ import com.ddiehl.android.simpleredditreader.view.CommentsView;
 import com.ddiehl.reddit.Savable;
 import com.ddiehl.reddit.Votable;
 import com.ddiehl.reddit.listings.AbsRedditComment;
-import com.ddiehl.reddit.listings.CommentBank;
-import com.ddiehl.reddit.listings.CommentBankList;
+import com.ddiehl.reddit.listings.ListingBank;
+import com.ddiehl.reddit.listings.ListingBankList;
 import com.ddiehl.reddit.listings.RedditComment;
 import com.ddiehl.reddit.listings.RedditLink;
 import com.ddiehl.reddit.listings.RedditMoreComments;
@@ -37,7 +37,7 @@ public class CommentsPresenterImpl implements CommentsPresenter {
 
     private CommentsView mCommentsView;
     private RedditLink mRedditLink;
-    private CommentBank mCommentBank;
+    private ListingBank mListingBank;
     private Bus mBus;
     private RedditPreferences mPreferences;
 
@@ -52,7 +52,7 @@ public class CommentsPresenterImpl implements CommentsPresenter {
                                  String subreddit, String articleId, String commentId) {
         mContext = context.getApplicationContext();
         mCommentsView = commentsView;
-        mCommentBank = new CommentBankList();
+        mListingBank = new ListingBankList();
         mBus = BusProvider.getInstance();
 
         mPreferences = RedditPreferences.getInstance(mContext);
@@ -70,12 +70,12 @@ public class CommentsPresenterImpl implements CommentsPresenter {
     }
 
     @Override
-    public RedditLink getLink() {
+    public RedditLink getLinkContext() {
         return mRedditLink;
     }
 
     @Override
-    public void setLink(RedditLink link) {
+    public void setLinkContext(RedditLink link) {
         mRedditLink = link;
     }
 
@@ -104,12 +104,12 @@ public class CommentsPresenterImpl implements CommentsPresenter {
 
     @Override
     public AbsRedditComment getCommentAtPosition(int position) {
-        return mCommentBank.getVisibleComment(position);
+        return mListingBank.getVisibleComment(position);
     }
 
     @Override
     public void toggleThreadVisible(AbsRedditComment comment) {
-        mCommentBank.toggleThreadVisible(comment);
+        mListingBank.toggleThreadVisible(comment);
         mCommentsView.commentsUpdated();
     }
 
@@ -120,7 +120,7 @@ public class CommentsPresenterImpl implements CommentsPresenter {
 
     @Override
     public int getNumComments() {
-        return mCommentBank.getNumVisible();
+        return mListingBank.getNumVisible();
     }
 
     @Override
@@ -154,7 +154,7 @@ public class CommentsPresenterImpl implements CommentsPresenter {
 
         List<AbsRedditComment> comments = event.getComments();
         AbsRedditComment.flattenCommentList(comments);
-        mCommentBank.setData(comments);
+        mListingBank.setData(comments);
         mCommentsView.commentsUpdated();
     }
 
@@ -169,17 +169,17 @@ public class CommentsPresenterImpl implements CommentsPresenter {
         List<AbsRedditComment> comments = event.getComments();
 
         if (comments.size() == 0) {
-            mCommentBank.remove(parentStub);
+            mListingBank.remove(parentStub);
         } else {
             AbsRedditComment.setDepthForCommentsList(comments, parentStub.getDepth());
 
-            for (int i = 0; i < mCommentBank.size(); i++) {
-                AbsRedditComment comment = mCommentBank.get(i);
+            for (int i = 0; i < mListingBank.size(); i++) {
+                AbsRedditComment comment = mListingBank.get(i);
                 if (comment instanceof RedditMoreComments) {
                     String id = ((RedditMoreComments) comment).getId();
                     if (id.equals(parentStub.getId())) { // Found the base comment
-                        mCommentBank.remove(i);
-                        mCommentBank.addAll(i, comments);
+                        mListingBank.remove(i);
+                        mListingBank.addAll(i, comments);
                         break;
                     }
                 }
@@ -201,7 +201,7 @@ public class CommentsPresenterImpl implements CommentsPresenter {
         }
 
         listing.applyVote(event.getDirection());
-        mCommentsView.commentUpdatedAt(mCommentBank.visibleIndexOf(listing));
+        mCommentsView.commentUpdatedAt(mListingBank.visibleIndexOf(listing));
     }
 
     @Subscribe
@@ -216,7 +216,7 @@ public class CommentsPresenterImpl implements CommentsPresenter {
         }
 
         listing.isSaved(event.isToSave());
-        mCommentsView.commentUpdatedAt(mCommentBank.visibleIndexOf(listing));
+        mCommentsView.commentUpdatedAt(mListingBank.visibleIndexOf(listing));
     }
 
     @Override

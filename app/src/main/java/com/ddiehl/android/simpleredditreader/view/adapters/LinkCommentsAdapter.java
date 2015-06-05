@@ -65,10 +65,10 @@ public class LinkCommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof LinkViewHolder) {
-            RedditLink link = mCommentsPresenter.getLink();
+            RedditLink link = mCommentsPresenter.getLinkContext();
             ((LinkViewHolder) holder).bind(link, true);
         } else if (holder instanceof CommentViewHolder) {
-            RedditLink link = mCommentsPresenter.getLink();
+            RedditLink link = mCommentsPresenter.getLinkContext();
             RedditComment comment = (RedditComment) mCommentsPresenter.getCommentAtPosition(position - 1);
             ((CommentViewHolder) holder).bind(link, comment);
         } else if (holder instanceof CommentStubViewHolder) {
