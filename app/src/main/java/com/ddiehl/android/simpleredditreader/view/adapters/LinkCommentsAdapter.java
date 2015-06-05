@@ -13,20 +13,17 @@ import com.ddiehl.reddit.listings.AbsRedditComment;
 import com.ddiehl.reddit.listings.RedditComment;
 import com.ddiehl.reddit.listings.RedditLink;
 import com.ddiehl.reddit.listings.RedditMoreComments;
-import com.ddiehl.android.simpleredditreader.presenter.CommentsPresenter;
-import com.ddiehl.android.simpleredditreader.presenter.LinksPresenter;
+import com.ddiehl.android.simpleredditreader.presenter.LinkCommentsPresenter;
 
 public class LinkCommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int TYPE_LINK = 0;
     private static final int TYPE_COMMENT = 1;
     private static final int TYPE_COMMENT_STUB = 2;
 
-    private LinksPresenter mLinksPresenter;
-    private CommentsPresenter mCommentsPresenter;
+    private LinkCommentsPresenter mLinkCommentsPresenter;
 
-    public LinkCommentsAdapter(LinksPresenter presenter, CommentsPresenter presenter2) {
-        mLinksPresenter = presenter;
-        mCommentsPresenter = presenter2;
+    public LinkCommentsAdapter(LinkCommentsPresenter presenter) {
+        mLinkCommentsPresenter = presenter;
     }
 
     @Override
@@ -34,12 +31,12 @@ public class LinkCommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         if (position == 0)
             return TYPE_LINK;
 
-        AbsRedditComment comment = mCommentsPresenter.getCommentAtPosition(position - 1);
+        AbsRedditComment comment = mLinkCommentsPresenter.getCommentAtPosition(position - 1);
 
         if (comment instanceof RedditComment)
             return TYPE_COMMENT;
-
-        return TYPE_COMMENT_STUB;
+        else
+            return TYPE_COMMENT_STUB;
     }
 
     @Override
@@ -52,11 +49,11 @@ public class LinkCommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             case TYPE_COMMENT:
                 view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.comment_item, parent, false);
-                return new CommentViewHolder(view, mCommentsPresenter);
+                return new CommentViewHolder(view, mLinkCommentsPresenter);
             case TYPE_COMMENT_STUB:
                 view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.comment_stub_item, parent, false);
-                return new CommentStubViewHolder(view, mCommentsPresenter);
+                return new CommentStubViewHolder(view, mLinkCommentsPresenter);
             default:
                 throw new RuntimeException("Unexpected ViewHolder type: " + viewType);
         }
@@ -65,20 +62,20 @@ public class LinkCommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof LinkViewHolder) {
-            RedditLink link = mCommentsPresenter.getLinkContext();
+            RedditLink link = mLinkCommentsPresenter.getLinkContext();
             ((LinkViewHolder) holder).bind(link, true);
         } else if (holder instanceof CommentViewHolder) {
-            RedditLink link = mCommentsPresenter.getLinkContext();
-            RedditComment comment = (RedditComment) mCommentsPresenter.getCommentAtPosition(position - 1);
+            RedditLink link = mLinkCommentsPresenter.getLinkContext();
+            RedditComment comment = (RedditComment) mLinkCommentsPresenter.getCommentAtPosition(position - 1);
             ((CommentViewHolder) holder).bind(link, comment);
         } else if (holder instanceof CommentStubViewHolder) {
-            RedditMoreComments comment = (RedditMoreComments) mCommentsPresenter.getCommentAtPosition(position - 1);
+            RedditMoreComments comment = (RedditMoreComments) mLinkCommentsPresenter.getCommentAtPosition(position - 1);
             ((CommentStubViewHolder) holder).bind(comment);
         }
     }
 
     @Override
     public int getItemCount() {
-        return mCommentsPresenter.getNumComments() + 1;
+        return mLinkCommentsPresenter.getNumComments() + 1;
     }
 }

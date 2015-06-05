@@ -1,13 +1,13 @@
 package com.ddiehl.android.simpleredditreader.events.requests;
 
-public class LoadCommentsEvent {
+public class LoadLinkCommentsEvent {
 
     private String mSubreddit;
     private String mArticle;
     private String mSort;
     private String mCommentId;
 
-    public LoadCommentsEvent(String subreddit, String article, String sort, String commentId) {
+    public LoadLinkCommentsEvent(String subreddit, String article, String sort, String commentId) {
         mSubreddit = subreddit;
         mArticle = article;
         mSort = sort;

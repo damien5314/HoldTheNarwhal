@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ddiehl.android.simpleredditreader.R;
-import com.ddiehl.android.simpleredditreader.presenter.LinksPresenter;
+import com.ddiehl.android.simpleredditreader.presenter.LinkPresenter;
 import com.ddiehl.android.simpleredditreader.view.widgets.RedditDateTextView;
 import com.ddiehl.reddit.listings.RedditLink;
 import com.squareup.picasso.Picasso;
@@ -23,7 +23,7 @@ public class LinkViewHolder extends RecyclerView.ViewHolder
     private static final String TAG = LinkViewHolder.class.getSimpleName();
 
     private Context mContext;
-    private LinksPresenter mLinksPresenter;
+    private LinkPresenter mLinkPresenter;
     private RedditLink mRedditLink;
 
     @InjectView(R.id.link_view) View mLinkView;
@@ -41,22 +41,22 @@ public class LinkViewHolder extends RecyclerView.ViewHolder
     @InjectView(R.id.link_gilded_text_view) TextView mGildedText;
     @InjectView(R.id.link_stickied_view) View mStickiedView;
 
-    public LinkViewHolder(View v, LinksPresenter presenter) {
+    public LinkViewHolder(View v, LinkPresenter presenter) {
         super(v);
         mContext = v.getContext();
-        mLinksPresenter = presenter;
+        mLinkPresenter = presenter;
         ButterKnife.inject(this, v);
         itemView.setOnCreateContextMenuListener(this);
     }
 
     @OnClick({ R.id.link_title, R.id.link_thumbnail })
     void openLink() {
-        mLinksPresenter.openLink(mRedditLink);
+        mLinkPresenter.openLink(mRedditLink);
     }
 
     @OnClick(R.id.link_comment_count)
     void showCommentsForLink() {
-        mLinksPresenter.showCommentsForLink(mRedditLink);
+        mLinkPresenter.showCommentsForLink(mRedditLink);
     }
 
     @OnClick(R.id.link_view)
@@ -167,6 +167,6 @@ public class LinkViewHolder extends RecyclerView.ViewHolder
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        mLinksPresenter.showLinkContextMenu(menu, v, menuInfo, mRedditLink);
+        mLinkPresenter.showLinkContextMenu(menu, v, menuInfo, mRedditLink);
     }
 }

@@ -7,11 +7,11 @@ import android.view.View;
 import com.ddiehl.android.simpleredditreader.BusProvider;
 import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.RedditPreferences;
-import com.ddiehl.android.simpleredditreader.events.requests.LoadCommentsEvent;
+import com.ddiehl.android.simpleredditreader.events.requests.LoadLinkCommentsEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.LoadMoreChildrenEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.SaveEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.VoteEvent;
-import com.ddiehl.android.simpleredditreader.events.responses.CommentsLoadedEvent;
+import com.ddiehl.android.simpleredditreader.events.responses.LinkCommentsLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.MoreChildrenLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.SaveSubmittedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.UserIdentitySavedEvent;
@@ -30,8 +30,8 @@ import com.squareup.otto.Subscribe;
 
 import java.util.List;
 
-public class CommentsPresenterImpl implements CommentsPresenter {
-    private static final String TAG = CommentsPresenterImpl.class.getSimpleName();
+public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
+    private static final String TAG = LinkCommentsPresenterImpl.class.getSimpleName();
 
     private Context mContext;
 
@@ -48,8 +48,8 @@ public class CommentsPresenterImpl implements CommentsPresenter {
 
     private RedditComment mCommentSelected;
 
-    public CommentsPresenterImpl(Context context, CommentView commentView,
-                                 String subreddit, String articleId, String commentId) {
+    public LinkCommentsPresenterImpl(Context context, CommentView commentView,
+                                     String subreddit, String articleId, String commentId) {
         mContext = context.getApplicationContext();
         mCommentView = commentView;
         mListingBank = new ListingBankList();
@@ -66,7 +66,54 @@ public class CommentsPresenterImpl implements CommentsPresenter {
     @Override
     public void getComments() {
         mCommentView.showSpinner(null);
-        mBus.post(new LoadCommentsEvent(mSubreddit, mArticleId, mSort, mCommentId));
+        mBus.post(new LoadLinkCommentsEvent(mSubreddit, mArticleId, mSort, mCommentId));
+    }
+
+    @Subscribe
+    public void onCommentsLoaded(LinkCommentsLoadedEvent event) {
+        mCommentView.dismissSpinner();
+        if (event.isFailed()) {
+            return;
+        }
+
+        mListings.clear();
+
+        List<AbsRedditComment> comments = event.getComments();
+        AbsRedditComment.Utils.flattenCommentList(comments);
+        mListings.clear();
+        mListings.addAll(comments);
+        mCommentView.commentsUpdated();
+    }
+
+    @Subscribe
+    public void onMoreChildrenLoaded(MoreChildrenLoadedEvent event) {
+        mCommentsView.dismissSpinner();
+        if (event.isFailed()) {
+            return;
+        }
+
+        RedditMoreComments parentStub = event.getParentStub();
+        List<AbsRedditComment> comments = event.getComments();
+
+        if (comments.size() == 0) {
+            mListings.remove(parentStub);
+        } else {
+            AbsRedditComment.Utils.setDepthForCommentsList(comments, parentStub.getDepth());
+
+            for (int i = 0; i < mListings.size(); i++) {
+                AbsRedditComment comment = (AbsRedditComment) mListings.get(i);
+                if (comment instanceof RedditMoreComments) {
+                    String id = ((RedditMoreComments) comment).getId();
+                    if (id.equals(parentStub.getId())) { // Found the base comment
+                        mListings.remove(i);
+                        mListings.addAll(i, comments);
+                        break;
+                    }
+                }
+            }
+        }
+
+        mCommentsView.commentsUpdated();
     }
 
     @Override
@@ -144,7 +191,7 @@ public class CommentsPresenterImpl implements CommentsPresenter {
     }
 
     @Subscribe
-    public void onCommentsLoaded(CommentsLoadedEvent event) {
+    public void onCommentsLoaded(LinkCommentsLoadedEvent event) {
         mCommentView.dismissSpinner();
         if (event.isFailed()) {
             return;

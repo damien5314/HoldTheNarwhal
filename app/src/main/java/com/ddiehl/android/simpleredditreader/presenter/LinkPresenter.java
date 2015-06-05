@@ -5,21 +5,9 @@ import android.view.View;
 
 import com.ddiehl.reddit.listings.RedditLink;
 
-public interface LinksPresenter {
-
-    void getLinks();
-    void getMoreLinks();
-    RedditLink getLink(int position);
-    int getNumLinks();
-    String getSubreddit();
-    String getSort();
-    String getTimespan();
-    void updateTitle();
-    void updateSubreddit(String subreddit);
-    void updateSort(String sort, String timespan);
+public interface LinkPresenter {
 
     void showLinkContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, RedditLink link);
-
     void openLink(RedditLink link);
     void showCommentsForLink(RedditLink link);
     void showCommentsForLink();

@@ -1,0 +1,366 @@
+package com.ddiehl.android.simpleredditreader.presenter;
+
+import android.content.Context;
+import android.view.ContextMenu;
+import android.view.View;
+
+import com.ddiehl.android.simpleredditreader.BusProvider;
+import com.ddiehl.android.simpleredditreader.R;
+import com.ddiehl.android.simpleredditreader.RedditPreferences;
+import com.ddiehl.android.simpleredditreader.events.exceptions.UserRequiredException;
+import com.ddiehl.android.simpleredditreader.events.requests.HideEvent;
+import com.ddiehl.android.simpleredditreader.events.requests.SaveEvent;
+import com.ddiehl.android.simpleredditreader.events.requests.VoteEvent;
+import com.ddiehl.android.simpleredditreader.events.responses.HideSubmittedEvent;
+import com.ddiehl.android.simpleredditreader.events.responses.ListingsLoadedEvent;
+import com.ddiehl.android.simpleredditreader.events.responses.SaveSubmittedEvent;
+import com.ddiehl.android.simpleredditreader.events.responses.UserIdentitySavedEvent;
+import com.ddiehl.android.simpleredditreader.events.responses.VoteSubmittedEvent;
+import com.ddiehl.android.simpleredditreader.view.ListingsView;
+import com.ddiehl.reddit.Archivable;
+import com.ddiehl.reddit.Hideable;
+import com.ddiehl.reddit.Savable;
+import com.ddiehl.reddit.Votable;
+import com.ddiehl.reddit.listings.Listing;
+import com.ddiehl.reddit.listings.RedditComment;
+import com.ddiehl.reddit.listings.RedditLink;
+import com.ddiehl.reddit.listings.RedditMoreComments;
+import com.squareup.otto.Bus;
+import com.squareup.otto.Subscribe;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public abstract class AbsListingPresenter implements ListingPresenter {
+
+    protected Context mContext;
+    protected Bus mBus;
+    protected RedditPreferences mPreferences;
+    protected List<Listing> mListings;
+    protected ListingsView mListingsView;
+
+    protected String mUsername;
+    protected String mSubreddit;
+    protected String mArticleId;
+    protected String mCommentId;
+    protected String mSort;
+    protected String mTimespan;
+
+    protected Listing mListingSelected;
+
+    public AbsListingPresenter(Context context, ListingsView view,
+                               String username, String subreddit, String article, String comment,
+                               String sort, String timespan) {
+        mContext = context.getApplicationContext();
+        mBus = BusProvider.getInstance();
+        mPreferences = RedditPreferences.getInstance(mContext);
+        mListingsView = view;
+        mUsername = username;
+        mSubreddit = subreddit;
+        mArticleId = article;
+        mCommentId = comment;
+        mSort = sort;
+        mTimespan = timespan;
+
+        mListings = new ArrayList<>();
+    }
+
+    @Override public abstract void refreshData();
+
+    @Override public abstract void getMoreData();
+
+    @Override
+    public void setData(List<Listing> data) {
+        mListings.clear();
+        mListings.addAll(data);
+    }
+
+    @Override
+    public int getNumListings() {
+        return mListings.size();
+    }
+
+    @Override
+    public Listing getListing(int position) {
+        return mListings.get(position);
+    }
+
+    @Override
+    public String getSubreddit() {
+        return mSubreddit;
+    }
+
+    @Override
+    public String getSort() {
+        return mSort;
+    }
+
+    @Override
+    public String getTimespan() {
+        return mTimespan;
+    }
+
+    @Override
+    public void updateSubreddit(String subreddit) {
+        mSubreddit = subreddit;
+        mSort = "hot";
+        mTimespan = "all";
+        refreshData();
+    }
+
+    @Override
+    public void updateSort(String sort) {
+        if (!mSort.equals(sort)) {
+            mSort = sort;
+            mPreferences.saveCommentSort(mSort);
+            refreshData();
+        }
+    }
+
+    @Override
+    public void updateSort(String sort, String timespan) {
+        if (mSort.equals(sort) && mTimespan.equals(timespan)) {
+            return;
+        }
+
+        mSort = sort;
+        mTimespan = timespan;
+        refreshData();
+    }
+
+    @Subscribe
+    public void onUserIdentitySaved(UserIdentitySavedEvent event) {
+        refreshData();
+    }
+
+    @Subscribe
+    public void onListingsLoaded(ListingsLoadedEvent event) {
+        mListingsView.dismissSpinner();
+        if (event.isFailed()) {
+            return;
+        }
+
+        List<Listing> listings = event.getListings();
+        mListings.addAll(listings);
+        mListingsView.listingsUpdated();
+    }
+
+    @Subscribe
+    public void onVoteSubmitted(VoteSubmittedEvent event) {
+        Votable listing = event.getListing();
+        if (!(listing instanceof RedditLink))
+            return;
+
+        if (event.isFailed()) {
+            mListingsView.showToast(R.string.vote_failed);
+            return;
+        }
+
+        listing.applyVote(event.getDirection());
+        mListingsView.listingUpdatedAt(mListings.indexOf(listing));
+    }
+
+    @Subscribe
+    public void onListingSaved(SaveSubmittedEvent event) {
+        Savable listing = event.getListing();
+        if (!(listing instanceof RedditLink))
+            return;
+
+        if (event.isFailed()) {
+            mListingsView.showToast(R.string.save_failed);
+            return;
+        }
+
+        listing.isSaved(event.isToSave());
+        mListingsView.listingUpdatedAt(mListings.indexOf(listing));
+    }
+
+    @Subscribe
+    public void onListingHidden(HideSubmittedEvent event) {
+        Hideable listing = event.getListing();
+        if (!(listing instanceof RedditLink))
+            return;
+
+        if (event.isFailed()) {
+            mListingsView.showToast(R.string.hide_failed);
+            return;
+        }
+
+        int pos = mListings.indexOf(listing);
+        if (event.isToHide()) {
+            mListingsView.showToast(R.string.link_hidden);
+            mListings.remove(pos);
+            mListingsView.listingRemovedAt(pos);
+        } else {
+            mListingsView.listingRemovedAt(pos);
+        }
+    }
+
+    @Subscribe
+    public void onUserRequiredError(UserRequiredException e) {
+        mListingsView.showToast(R.string.user_required);
+    }
+
+    @Override
+    public void showLinkContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, RedditLink link) {
+        mListingSelected = link;
+        mListingsView.showLinkContextMenu(menu, v, menuInfo, link);
+        menu.findItem(R.id.action_link_save).setVisible(!link.isSaved());
+        menu.findItem(R.id.action_link_unsave).setVisible(link.isSaved());
+    }
+
+    @Override
+    public void openLink(RedditLink link) {
+        if (link == null)
+            return;
+
+        if (link.isSelf()) {
+            mListingsView.showCommentsForLink(link);
+        } else {
+            mListingsView.openWebViewForLink(link);
+        }
+    }
+
+    @Override
+    public void showCommentsForLink() {
+        RedditLink link = (RedditLink) mListingSelected;
+        mListingsView.showCommentsForLink(link);
+    }
+
+    @Override
+    public void showCommentsForLink(RedditLink link) {
+        mListingsView.showCommentsForLink(link);
+    }
+
+    @Override
+    public void upvote() {
+        Listing listing = mListingSelected;
+        if (((Archivable) listing).isArchived()) {
+            mListingsView.showToast(R.string.listing_archived);
+        } else {
+            Votable votable = (Votable) listing;
+            int dir = (votable.isLiked() == null || !votable.isLiked()) ? 1 : 0;
+            mBus.post(new VoteEvent(votable, listing.getKind(), dir));
+        }
+    }
+
+    @Override
+    public void downvote() {
+        Listing listing = mListingSelected;
+        if (((Archivable) listing).isArchived()) {
+            mListingsView.showToast(R.string.listing_archived);
+        } else {
+            Votable votable = (Votable) listing;
+            int dir = (votable.isLiked() == null || !votable.isLiked()) ? -1 : 0;
+            mBus.post(new VoteEvent(votable, listing.getKind(), dir));
+        }
+    }
+
+    @Override
+    public void saveLink() {
+        RedditLink link = (RedditLink) mListingSelected;
+        mBus.post(new SaveEvent(link, null, true));
+    }
+
+    @Override
+    public void unsaveLink() {
+        RedditLink link = (RedditLink) mListingSelected;
+        mBus.post(new SaveEvent(link, null, false));
+    }
+
+    @Override
+    public void shareLink() {
+        RedditLink link = (RedditLink) mListingSelected;
+        mListingsView.openShareView(link);
+    }
+
+    @Override
+    public void openLinkInBrowser() {
+        RedditLink link = (RedditLink) mListingSelected;
+        mListingsView.openLinkInBrowser(link);
+    }
+
+    @Override
+    public void openCommentsInBrowser() {
+        RedditLink link = (RedditLink) mListingSelected;
+        mListingsView.openCommentsInBrowser(link);
+    }
+
+    @Override
+    public void hideLink() {
+        RedditLink link = (RedditLink) mListingSelected;
+        mBus.post(new HideEvent(link, true));
+    }
+
+    @Override
+    public void unhideLink() {
+        RedditLink link = (RedditLink) mListingSelected;
+        mBus.post(new HideEvent(link, false));
+    }
+
+    @Override
+    public void reportLink() {
+        RedditLink link = (RedditLink) mListingSelected;
+        mListingsView.showToast(R.string.implementation_pending);
+    }
+
+    @Override
+    public void showCommentContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, RedditComment comment) {
+        mListingSelected = comment;
+        mListingsView.showCommentContextMenu(menu, v, menuInfo, comment);
+
+        menu.findItem(R.id.action_comment_save).setVisible(!comment.isSaved());
+        menu.findItem(R.id.action_comment_unsave).setVisible(comment.isSaved());
+    }
+
+    @Override
+    public void navigateToCommentThread(String commentId) {
+        mCommentId = commentId.substring(3); // Remove type prefix
+        refreshData();
+    }
+
+    @Override
+    public void showMoreChildren(RedditMoreComments comment) {
+        // Comment stubs cannot appear in a listing view
+    }
+
+    @Override
+    public void openReplyView() {
+        RedditComment comment = (RedditComment) mListingSelected;
+        if (comment.isArchived()) {
+            mListingsView.showToast(R.string.listing_archived);
+        } else {
+            mListingsView.openReplyView(comment);
+        }
+    }
+
+    @Override
+    public void saveComment() {
+        RedditComment comment = (RedditComment) mListingSelected;
+        mBus.post(new SaveEvent(comment, null, true));
+    }
+
+    @Override
+    public void unsaveComment() {
+        RedditComment comment = (RedditComment) mListingSelected;
+        mBus.post(new SaveEvent(comment, null, false));
+    }
+
+    @Override
+    public void shareComment() {
+        RedditComment comment = (RedditComment) mListingSelected;
+        mListingsView.openShareView(comment);
+    }
+
+    @Override
+    public void openCommentInBrowser() {
+        RedditComment comment = (RedditComment) mListingSelected;
+        mListingsView.openCommentInBrowser(comment);
+    }
+
+    @Override
+    public void reportComment() {
+        RedditComment comment = (RedditComment) mListingSelected;
+        mListingsView.showToast(R.string.implementation_pending);
+    }
+}

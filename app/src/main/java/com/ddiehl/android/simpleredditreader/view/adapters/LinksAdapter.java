@@ -9,31 +9,31 @@ import android.view.ViewGroup;
 import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.view.viewholders.LinkViewHolder;
 import com.ddiehl.reddit.listings.RedditLink;
-import com.ddiehl.android.simpleredditreader.presenter.LinksPresenter;
+import com.ddiehl.android.simpleredditreader.presenter.LinkPresenter;
 
 public class LinksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private LinksPresenter mLinksPresenter;
+    private LinkPresenter mLinkPresenter;
 
-    public LinksAdapter(LinksPresenter presenter) {
-        mLinksPresenter = presenter;
+    public LinksAdapter(LinkPresenter presenter) {
+        mLinkPresenter = presenter;
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int i) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.link_item, parent, false);
-        return new LinkViewHolder(view, mLinksPresenter);
+        return new LinkViewHolder(view, mLinkPresenter);
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder linkHolder, int i) {
-        RedditLink link = mLinksPresenter.getLink(i);
+        RedditLink link = mLinkPresenter.getLink(i);
         (((LinkViewHolder) linkHolder)).bind(link, false);
     }
 
     @Override
     public int getItemCount() {
-        return mLinksPresenter.getNumLinks();
+        return mLinkPresenter.getNumLinks();
     }
 }

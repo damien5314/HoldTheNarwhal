@@ -17,11 +17,12 @@ import android.view.ViewGroup;
 
 import com.ddiehl.android.simpleredditreader.BusProvider;
 import com.ddiehl.android.simpleredditreader.R;
-import com.ddiehl.android.simpleredditreader.presenter.ListingPresenter;
-import com.ddiehl.android.simpleredditreader.presenter.ListingPresenterImpl;
+import com.ddiehl.android.simpleredditreader.presenter.LinkCommentsPresenter;
+import com.ddiehl.android.simpleredditreader.presenter.AbsListingPresenter;
 import com.ddiehl.android.simpleredditreader.view.CommentThreadView;
 import com.ddiehl.android.simpleredditreader.view.SettingsChangedListener;
 import com.ddiehl.android.simpleredditreader.view.activities.MainActivity;
+import com.ddiehl.android.simpleredditreader.view.adapters.LinkCommentsAdapter;
 import com.ddiehl.android.simpleredditreader.view.adapters.ListingAdapter;
 import com.ddiehl.android.simpleredditreader.view.dialogs.ChooseCommentSortDialog;
 import com.ddiehl.reddit.listings.RedditComment;
@@ -42,12 +43,10 @@ public class LinkCommentsFragment extends AbsRedditFragment
     private static final String DIALOG_CHOOSE_SORT = "dialog_choose_sort";
 
     private Bus mBus = BusProvider.getInstance();
-    private ListingPresenter mListingPresenter;
-//    private LinksPresenter mLinksPresenter;
-//    private CommentsPresenter mCommentsPresenter;
+    private LinkCommentsPresenter mLinkCommentsPresenter;
 
-    private ListingAdapter mListingAdapter;
-//    private LinkCommentsAdapter mLinkCommentsAdapter;
+//    private ListingAdapter mListingAdapter;
+    private LinkCommentsAdapter mLinkCommentsAdapter;
 
     public LinkCommentsFragment() { /* Default constructor */ }
 
@@ -74,7 +73,7 @@ public class LinkCommentsFragment extends AbsRedditFragment
         String articleId = args.getString(ARG_ARTICLE);
         String commentId = args.getString(ARG_COMMENT_ID);
 
-        mListingPresenter = new ListingPresenterImpl(getActivity(), this, this, null, subreddit, articleId, commentId, null, null);
+        mListingPresenter = new AbsListingPresenter(getActivity(), this, this, null, subreddit, articleId, commentId, null, null);
 //        mLinksPresenter = new LinksPresenterImpl(getActivity(), this, subreddit);
 //        mCommentsPresenter = new CommentsPresenterImpl(getActivity(), this, subreddit, articleId, commentId);
 

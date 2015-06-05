@@ -11,7 +11,7 @@ import com.ddiehl.android.simpleredditreader.events.exceptions.UserRequiredExcep
 import com.ddiehl.android.simpleredditreader.events.requests.AuthorizeApplicationEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.GetUserIdentityEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.HideEvent;
-import com.ddiehl.android.simpleredditreader.events.requests.LoadCommentsEvent;
+import com.ddiehl.android.simpleredditreader.events.requests.LoadLinkCommentsEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.LoadLinksEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.LoadMoreChildrenEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.LoadUserOverviewEvent;
@@ -290,7 +290,7 @@ public class RedditServiceAuth implements RedditService {
     }
 
     @Subscribe @Override
-    public void onLoadComments(LoadCommentsEvent event) {
+    public void onLoadLinkComments(LoadLinkCommentsEvent event) {
         if (!mIdentityManager.hasValidAccessToken()) {
             mQueuedEvent = event;
             AccessToken userAccessToken = mIdentityManager.getUserAccessToken();
@@ -304,7 +304,7 @@ public class RedditServiceAuth implements RedditService {
                 mBus.post(new AuthorizeApplicationEvent());
             }
         } else {
-            mServiceAPI.onLoadComments(event);
+            mServiceAPI.onLoadLinkComments(event);
         }
     }
 

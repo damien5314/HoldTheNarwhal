@@ -5,7 +5,7 @@ import android.view.View;
 
 import com.ddiehl.reddit.listings.RedditLink;
 
-public interface LinkView {
+public interface LinkView extends BaseView {
 
     void showLinkContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, RedditLink link);
     void openWebViewForLink(RedditLink link);

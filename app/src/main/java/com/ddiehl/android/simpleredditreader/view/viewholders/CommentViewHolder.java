@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ddiehl.android.simpleredditreader.R;
-import com.ddiehl.android.simpleredditreader.presenter.CommentsPresenter;
+import com.ddiehl.android.simpleredditreader.presenter.LinkCommentsPresenter;
 import com.ddiehl.android.simpleredditreader.view.widgets.RedditDateTextView;
 import com.ddiehl.reddit.listings.RedditComment;
 import com.ddiehl.reddit.listings.RedditLink;
@@ -22,7 +22,7 @@ public class CommentViewHolder extends RecyclerView.ViewHolder
         implements View.OnCreateContextMenuListener {
 
     private Context mContext;
-    private CommentsPresenter mCommentsPresenter;
+    private LinkCommentsPresenter mLinkCommentsPresenter;
     private RedditComment mRedditComment;
 
     @InjectView(R.id.comment_metadata) View mCommentDataRow;
@@ -35,17 +35,17 @@ public class CommentViewHolder extends RecyclerView.ViewHolder
     @InjectView(R.id.gilded_view) View mGildedView;
     @InjectView(R.id.comment_gilded_text_view) TextView mGildedText;
 
-    public CommentViewHolder(View v, CommentsPresenter presenter) {
+    public CommentViewHolder(View v, LinkCommentsPresenter presenter) {
         super(v);
         mContext = v.getContext().getApplicationContext();
-        mCommentsPresenter = presenter;
+        mLinkCommentsPresenter = presenter;
         ButterKnife.inject(this, v);
         itemView.setOnCreateContextMenuListener(this);
     }
 
     @OnClick(R.id.comment_metadata)
     void onClickMetadata() {
-        mCommentsPresenter.toggleThreadVisible(mRedditComment);
+        mLinkCommentsPresenter.toggleThreadVisible(mRedditComment);
     }
 
     @OnClick(R.id.comment_body)
@@ -143,6 +143,6 @@ public class CommentViewHolder extends RecyclerView.ViewHolder
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        mCommentsPresenter.showCommentContextMenu(menu, v, menuInfo, mRedditComment);
+        mLinkCommentsPresenter.showCommentContextMenu(menu, v, menuInfo, mRedditComment);
     }
 }

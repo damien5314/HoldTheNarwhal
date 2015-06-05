@@ -18,7 +18,7 @@ import android.view.ViewGroup;
 import com.ddiehl.android.simpleredditreader.BusProvider;
 import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.presenter.ListingPresenter;
-import com.ddiehl.android.simpleredditreader.presenter.ListingPresenterImpl;
+import com.ddiehl.android.simpleredditreader.presenter.AbsListingPresenter;
 import com.ddiehl.android.simpleredditreader.view.CommentView;
 import com.ddiehl.android.simpleredditreader.view.LinkView;
 import com.ddiehl.android.simpleredditreader.view.MainView;
@@ -56,7 +56,7 @@ public class UserProfileOverviewFragment extends AbsUserProfileFragment
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
         String username = args.getString(ARG_USERNAME);
-        mListingPresenter = new ListingPresenterImpl(getActivity(), this, null, username, null, null, null, null, null);
+        mListingPresenter = new AbsListingPresenter(getActivity(), this, null, username, null, null, null, null, null);
     }
 
     @Nullable @Override

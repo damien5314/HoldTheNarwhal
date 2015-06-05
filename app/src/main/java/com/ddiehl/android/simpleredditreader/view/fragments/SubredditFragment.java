@@ -18,12 +18,13 @@ import android.view.ViewGroup;
 
 import com.ddiehl.android.simpleredditreader.BusProvider;
 import com.ddiehl.android.simpleredditreader.R;
-import com.ddiehl.android.simpleredditreader.presenter.LinksPresenter;
-import com.ddiehl.android.simpleredditreader.presenter.ListingPresenterImpl;
+import com.ddiehl.android.simpleredditreader.presenter.ListingPresenter;
+import com.ddiehl.android.simpleredditreader.presenter.AbsListingPresenter;
+import com.ddiehl.android.simpleredditreader.presenter.SubredditPresenter;
 import com.ddiehl.android.simpleredditreader.view.LinksView;
 import com.ddiehl.android.simpleredditreader.view.SettingsChangedListener;
 import com.ddiehl.android.simpleredditreader.view.activities.MainActivity;
-import com.ddiehl.android.simpleredditreader.view.adapters.LinksAdapter;
+import com.ddiehl.android.simpleredditreader.view.adapters.ListingAdapter;
 import com.ddiehl.android.simpleredditreader.view.dialogs.ChooseLinkSortDialog;
 import com.ddiehl.android.simpleredditreader.view.dialogs.ChooseTimespanDialog;
 import com.ddiehl.reddit.listings.RedditLink;
@@ -45,8 +46,8 @@ public class SubredditFragment extends AbsRedditFragment
     private static final String DIALOG_CHOOSE_TIMESPAN = "dialog_choose_timespan";
 
     private Bus mBus = BusProvider.getInstance();
-    private LinksPresenter mLinksPresenter;
-    private LinksAdapter mLinksAdapter;
+    private ListingPresenter mListingPresenter;
+    private ListingAdapter mListingAdapter;
 
     private int mFirstVisibleItem, mVisibleItemCount, mTotalItemCount;
 
@@ -70,9 +71,8 @@ public class SubredditFragment extends AbsRedditFragment
 
         Bundle args = getArguments();
         String subreddit = args.getString(ARG_SUBREDDIT);
-        mLinksPresenter = new ListingPresenterImpl(getActivity(), this, null, null, subreddit, null, null, null, null);
-//        mLinksPresenter = new LinksPresenterImpl(getActivity(), this, subreddit);
-        mLinksAdapter = new LinksAdapter(mLinksPresenter);
+        mListingPresenter = new SubredditPresenter(getActivity(), this, subreddit);
+        mListingAdapter = new ListingAdapter(mListingPresenter);
     }
 
     @Override
@@ -82,7 +82,7 @@ public class SubredditFragment extends AbsRedditFragment
         final LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         RecyclerView rv = ButterKnife.findById(v, R.id.recycler_view);
         rv.setLayoutManager(mLayoutManager);
-        rv.setAdapter(mLinksAdapter);
+        rv.setAdapter(mListingAdapter);
 
         rv.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -92,30 +92,37 @@ public class SubredditFragment extends AbsRedditFragment
                 mFirstVisibleItem = mLayoutManager.findFirstVisibleItemPosition();
 
                 if ((mVisibleItemCount + mFirstVisibleItem) >= mTotalItemCount) {
-                    mLinksPresenter.getMoreLinks();
+                    mListingPresenter.getMoreData();
                 }
             }
         });
 
-        mLinksPresenter.updateTitle();
+        updateTitle();
 
         return v;
+    }
+
+    private void updateTitle() {
+        String subreddit = mListingPresenter.getSubreddit();
+        getActivity().setTitle(subreddit == null ?
+                getString(R.string.front_page_title) :
+                String.format(getString(R.string.link_subreddit), subreddit));
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        mBus.register(mLinksPresenter);
+        mBus.register(mListingPresenter);
 
-        if (mLinksAdapter.getItemCount() == 0) {
-            mLinksPresenter.getLinks();
+        if (mListingAdapter.getItemCount() == 0) {
+            mListingPresenter.refreshData();
         }
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        mBus.unregister(mLinksPresenter);
+        mBus.unregister(mListingPresenter);
     }
 
     private String mSelectedSort, mSelectedTimespan;
@@ -129,7 +136,7 @@ public class SubredditFragment extends AbsRedditFragment
                     if (mSelectedSort.equals("top") || mSelectedSort.equals("controversial")) {
                         showLinkTimespanOptionsMenu();
                     } else {
-                        mLinksPresenter.updateSort(mSelectedSort, mSelectedTimespan);
+                        mListingPresenter.updateSort(mSelectedSort, mSelectedTimespan);
                         getActivity().supportInvalidateOptionsMenu();
                     }
                 }
@@ -137,7 +144,7 @@ public class SubredditFragment extends AbsRedditFragment
             case REQUEST_CHOOSE_TIMESPAN:
                 if (resultCode == Activity.RESULT_OK) {
                     mSelectedTimespan = data.getStringExtra(ChooseTimespanDialog.EXTRA_TIMESPAN);
-                    mLinksPresenter.updateSort(mSelectedSort, mSelectedTimespan);
+                    mListingPresenter.updateSort(mSelectedSort, mSelectedTimespan);
                     getActivity().supportInvalidateOptionsMenu();
                 }
                 break;
@@ -149,7 +156,7 @@ public class SubredditFragment extends AbsRedditFragment
         inflater.inflate(R.menu.links_menu, menu);
 
         // Disable timespan option if current sort does not support it
-        String sort = mLinksPresenter.getSort();
+        String sort = mListingPresenter.getSort();
         if (sort.equals("hot") || sort.equals("new") || sort.equals("rising")) {
             menu.findItem(R.id.action_change_timespan).setVisible(false);
         } else { // controversial, top
@@ -167,7 +174,7 @@ public class SubredditFragment extends AbsRedditFragment
                 showLinkTimespanOptionsMenu();
                 return true;
             case R.id.action_refresh:
-                mLinksPresenter.getLinks();
+                mListingPresenter.getLinks();
                 return true;
             case R.id.action_settings:
                 ((MainActivity) getActivity()).showSettings();
@@ -179,14 +186,14 @@ public class SubredditFragment extends AbsRedditFragment
 
     private void showLinkSortOptionsMenu() {
         FragmentManager fm = getActivity().getSupportFragmentManager();
-        ChooseLinkSortDialog chooseLinkSortDialog = ChooseLinkSortDialog.newInstance(mLinksPresenter.getSort());
+        ChooseLinkSortDialog chooseLinkSortDialog = ChooseLinkSortDialog.newInstance(mListingPresenter.getSort());
         chooseLinkSortDialog.setTargetFragment(this, REQUEST_CHOOSE_SORT);
         chooseLinkSortDialog.show(fm, DIALOG_CHOOSE_SORT);
     }
 
     private void showLinkTimespanOptionsMenu() {
         FragmentManager fm = getActivity().getSupportFragmentManager();
-        ChooseTimespanDialog chooseTimespanDialog = ChooseTimespanDialog.newInstance(mLinksPresenter.getTimespan());
+        ChooseTimespanDialog chooseTimespanDialog = ChooseTimespanDialog.newInstance(mListingPresenter.getTimespan());
         chooseTimespanDialog.setTargetFragment(this, REQUEST_CHOOSE_TIMESPAN);
         chooseTimespanDialog.show(fm, DIALOG_CHOOSE_TIMESPAN);
     }
@@ -230,37 +237,37 @@ public class SubredditFragment extends AbsRedditFragment
     public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_link_upvote:
-                mLinksPresenter.upvote();
+                mListingPresenter.upvote();
                 return true;
             case R.id.action_link_downvote:
-                mLinksPresenter.downvote();
+                mListingPresenter.downvote();
                 return true;
             case R.id.action_link_show_comments:
-                mLinksPresenter.showCommentsForLink();
+                mListingPresenter.showCommentsForLink();
                 return true;
             case R.id.action_link_save:
-                mLinksPresenter.saveLink();
+                mListingPresenter.saveLink();
                 return true;
             case R.id.action_link_unsave:
-                mLinksPresenter.unsaveLink();
+                mListingPresenter.unsaveLink();
                 return true;
             case R.id.action_link_share:
-                mLinksPresenter.shareLink();
+                mListingPresenter.shareLink();
                 return true;
             case R.id.action_link_open_in_browser:
-                mLinksPresenter.openLinkInBrowser();
+                mListingPresenter.openLinkInBrowser();
                 return true;
             case R.id.action_link_open_comments_in_browser:
-                mLinksPresenter.openCommentsInBrowser();
+                mListingPresenter.openCommentsInBrowser();
                 return true;
             case R.id.action_link_hide:
-                mLinksPresenter.hideLink();
+                mListingPresenter.hideLink();
                 return true;
             case R.id.action_link_unhide:
-                mLinksPresenter.unhideLink();
+                mListingPresenter.unhideLink();
                 return true;
             case R.id.action_link_report:
-                mLinksPresenter.reportLink();
+                mListingPresenter.reportLink();
                 return true;
             default:
                 return false;
@@ -269,17 +276,17 @@ public class SubredditFragment extends AbsRedditFragment
 
     @Override
     public void linksUpdated() {
-        mLinksAdapter.notifyDataSetChanged();
+        mListingAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void linkUpdatedAt(int position) {
-        mLinksAdapter.notifyItemChanged(position);
+        mListingAdapter.notifyItemChanged(position);
     }
 
     @Override
     public void linkRemovedAt(int position) {
-        mLinksAdapter.notifyItemRemoved(position);
+        mListingAdapter.notifyItemRemoved(position);
     }
 
     @Override
@@ -301,7 +308,7 @@ public class SubredditFragment extends AbsRedditFragment
     }
 
     public void updateSubreddit(String subreddit) {
-        mLinksPresenter.updateSubreddit(subreddit);
+        mListingPresenter.updateSubreddit(subreddit);
     }
 
     @Subscribe

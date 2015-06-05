@@ -8,16 +8,16 @@ import com.ddiehl.android.simpleredditreader.RedditIdentityManager;
 import com.ddiehl.android.simpleredditreader.events.exceptions.UserRequiredException;
 import com.ddiehl.android.simpleredditreader.events.requests.GetUserIdentityEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.HideEvent;
-import com.ddiehl.android.simpleredditreader.events.requests.LoadCommentsEvent;
+import com.ddiehl.android.simpleredditreader.events.requests.LoadLinkCommentsEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.LoadLinksEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.LoadMoreChildrenEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.LoadUserOverviewEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.ReportEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.SaveEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.VoteEvent;
-import com.ddiehl.android.simpleredditreader.events.responses.CommentsLoadedEvent;
+import com.ddiehl.android.simpleredditreader.events.responses.LinkCommentsLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.HideSubmittedEvent;
-import com.ddiehl.android.simpleredditreader.events.responses.LinksLoadedEvent;
+import com.ddiehl.android.simpleredditreader.events.responses.ListingsLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.MoreChildrenLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.SaveSubmittedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.UserIdentityRetrievedEvent;
@@ -146,14 +146,14 @@ public class RedditServiceAPI implements RedditService {
             @Override
             public void success(ListingResponse linksResponse, Response response) {
                 BaseUtils.printResponseStatus(response);
-                mBus.post(new LinksLoadedEvent(linksResponse));
+                mBus.post(new ListingsLoadedEvent(linksResponse));
             }
 
             @Override
             public void failure(RetrofitError error) {
                 BaseUtils.showError(mContext, error);
                 BaseUtils.printResponse(error.getResponse());
-                mBus.post(new LinksLoadedEvent(error));
+                mBus.post(new ListingsLoadedEvent(error));
             }
         });
     }
@@ -162,7 +162,7 @@ public class RedditServiceAPI implements RedditService {
      * Retrieves comment listings for link passed as parameter
      */
     @Override
-    public void onLoadComments(LoadCommentsEvent event) {
+    public void onLoadLinkComments(LoadLinkCommentsEvent event) {
         String subreddit = event.getSubreddit();
         String article = event.getArticle();
         String sort = event.getSort();
@@ -172,14 +172,14 @@ public class RedditServiceAPI implements RedditService {
             @Override
             public void success(List<ListingResponse> listingsList, Response response) {
                 BaseUtils.printResponseStatus(response);
-                mBus.post(new CommentsLoadedEvent(listingsList));
+                mBus.post(new LinkCommentsLoadedEvent(listingsList));
             }
 
             @Override
             public void failure(RetrofitError error) {
                 BaseUtils.showError(mContext, error);
                 BaseUtils.printResponse(error.getResponse());
-                mBus.post(new CommentsLoadedEvent(error));
+                mBus.post(new LinkCommentsLoadedEvent(error));
             }
         });
     }
@@ -221,11 +221,11 @@ public class RedditServiceAPI implements RedditService {
     public void onLoadUserOverview(LoadUserOverviewEvent event) {
         final String userId = event.getUsername();
 
-        mAPI.getUserOverview(userId, new Callback<Listing>() {
+        mAPI.getUserOverview(userId, new Callback<ListingResponse>() {
             @Override
-            public void success(Listing listing, Response response) {
+            public void success(ListingResponse listing, Response response) {
                 BaseUtils.printResponseStatus(response);
-                mBus.post(new UserOverviewLoaded(userId, listing));
+                mBus.post(new ListingsLoadedEvent(listing));
             }
 
             @Override
@@ -379,6 +379,6 @@ public class RedditServiceAPI implements RedditService {
 
     @Override
     public void onReport(final ReportEvent event) {
-        // TODO
+
     }
 }

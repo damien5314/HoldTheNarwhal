@@ -31,7 +31,7 @@ public class ListingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         if (position == 0)
             return TYPE_LINK;
 
-        AbsRedditComment comment = mListingPresenter.getCommentAtPosition(position - 1);
+        AbsRedditComment comment = mListingPresenter.getListing(position - 1);
 
         if (comment instanceof RedditComment)
             return TYPE_COMMENT;
@@ -66,16 +66,16 @@ public class ListingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             ((LinkViewHolder) holder).bind(link, true);
         } else if (holder instanceof CommentViewHolder) {
             RedditLink link = mListingPresenter.getLinkContext();
-            RedditComment comment = (RedditComment) mListingPresenter.getCommentAtPosition(position - 1);
+            RedditComment comment = (RedditComment) mListingPresenter.getListing(position - 1);
             ((CommentViewHolder) holder).bind(link, comment);
         } else if (holder instanceof CommentStubViewHolder) {
-            RedditMoreComments comment = (RedditMoreComments) mListingPresenter.getCommentAtPosition(position - 1);
+            RedditMoreComments comment = (RedditMoreComments) mListingPresenter.getListing(position - 1);
             ((CommentStubViewHolder) holder).bind(comment);
         }
     }
 
     @Override
     public int getItemCount() {
-        return mListingPresenter.getNumComments() + 1;
+        return mListingPresenter.getNumListings() + 1;
     }
 }

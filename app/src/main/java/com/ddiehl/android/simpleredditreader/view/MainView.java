@@ -2,14 +2,7 @@ package com.ddiehl.android.simpleredditreader.view;
 
 import com.ddiehl.reddit.identity.UserIdentity;
 
-public interface MainView {
-
-    void setTitle(CharSequence title);
-    void showSpinner(String msg);
-    void showSpinner(int resId);
-    void dismissSpinner();
-    void showToast(String msg);
-    void showToast(int resId);
+public interface MainView extends BaseView {
 
     void closeNavigationDrawer();
     void setAccount(UserIdentity identity);

@@ -7,11 +7,11 @@ import com.ddiehl.reddit.listings.RedditLink;
 import java.util.List;
 
 
-public class CommentsLoadedEvent extends FailableEvent {
+public class LinkCommentsLoadedEvent extends FailableEvent {
     private RedditLink mLink;
     private List<AbsRedditComment> mComments;
 
-    public CommentsLoadedEvent(List<ListingResponse> listingResponseList) {
+    public LinkCommentsLoadedEvent(List<ListingResponse> listingResponseList) {
         // Link is responseList.get(0), comments are responseList.get(1)
         ListingResponse linkResponse = listingResponseList.get(0);
         ListingResponse commentsResponse = listingResponseList.get(1);
@@ -20,7 +20,7 @@ public class CommentsLoadedEvent extends FailableEvent {
         mComments = commentsResponse.getData().getChildren();
     }
 
-    public CommentsLoadedEvent(Exception e) {
+    public LinkCommentsLoadedEvent(Exception e) {
         super(e);
     }
 

@@ -7,7 +7,8 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.ddiehl.android.simpleredditreader.R;
-import com.ddiehl.android.simpleredditreader.presenter.CommentsPresenter;
+import com.ddiehl.android.simpleredditreader.presenter.CommentPresenter;
+import com.ddiehl.android.simpleredditreader.presenter.LinkCommentsPresenter;
 import com.ddiehl.reddit.listings.RedditMoreComments;
 
 import butterknife.ButterKnife;
@@ -17,15 +18,15 @@ import butterknife.OnClick;
 public class CommentStubViewHolder extends RecyclerView.ViewHolder {
 
     private Context mContext;
-    private CommentsPresenter mCommentsPresenter;
+    private CommentPresenter mCommentPresenter;
     private RedditMoreComments mRedditMoreComments;
 
     @InjectView(R.id.comment_more) TextView mMoreCommentsView;
 
-    public CommentStubViewHolder(View v, CommentsPresenter presenter) {
+    public CommentStubViewHolder(View v, LinkCommentsPresenter presenter) {
         super(v);
         mContext = v.getContext().getApplicationContext();
-        mCommentsPresenter = presenter;
+        mCommentPresenter = presenter;
         ButterKnife.inject(this, v);
     }
 
@@ -46,9 +47,9 @@ public class CommentStubViewHolder extends RecyclerView.ViewHolder {
     @OnClick(R.id.comment_more)
     void onClick() {
         if (mRedditMoreComments.getCount() == 0) {
-            mCommentsPresenter.navigateToCommentThread(mRedditMoreComments.getParentId());
+            mCommentPresenter.navigateToCommentThread(mRedditMoreComments.getParentId());
         } else {
-            mCommentsPresenter.showMoreChildren(mRedditMoreComments);
+            mCommentPresenter.showMoreChildren(mRedditMoreComments);
         }
     }
 }
