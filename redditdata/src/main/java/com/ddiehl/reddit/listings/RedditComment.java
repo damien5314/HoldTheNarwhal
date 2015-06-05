@@ -8,10 +8,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 @SuppressWarnings("unused")
-public class RedditComment extends AbsRedditComment implements Votable, Savable {
-
-    @Expose
-    private RedditCommentData data;
+public class RedditComment extends AbsRedditComment<RedditComment.Data> implements Votable, Savable {
 
     public String getUrl() {
         return String.format("http://www.reddit.com/r/%s/comments/%s?comment=%s",
@@ -21,18 +18,16 @@ public class RedditComment extends AbsRedditComment implements Votable, Savable 
     }
 
     @Override
-    public RedditCommentData getData() {
-        return data;
-    }
-
     public String getSubredditId() {
         return data.subredditId;
     }
 
+    @Override
     public Object getBannedBy() {
         return data.bannedBy;
     }
 
+    @Override
     public String getLinkId() {
         return data.linkId;
     }
@@ -47,14 +42,17 @@ public class RedditComment extends AbsRedditComment implements Votable, Savable 
         data.isLiked = b;
     }
 
+    @Override
     public ListingResponse getReplies() {
         return data.replies;
     }
 
+    @Override
     public void setReplies(ListingResponse response) {
         data.replies = response;
     }
 
+    @Override
     public List<Object> getUserReports() {
         return data.userReports;
     }
@@ -70,10 +68,6 @@ public class RedditComment extends AbsRedditComment implements Votable, Savable 
     }
 
     @Override
-    public String getId() {
-        return data.id;
-    }
-
     public Integer getGilded() {
         return data.gilded;
     }
@@ -83,93 +77,114 @@ public class RedditComment extends AbsRedditComment implements Votable, Savable 
         return data.isArchived;
     }
 
+    @Override
     public Object getReportReasons() {
         return data.reportReasons;
     }
 
+    @Override
     public String getAuthor() {
         return data.author;
     }
 
-    public String getParentId() {
-        return data.parentId;
-    }
-
+    @Override
     public int getScore() {
         return data.score;
     }
 
+    @Override
     public Object getApprovedBy() {
         return data.approvedBy;
     }
 
+    @Override
     public int getControversiality() {
         return data.controversiality;
     }
 
+    @Override
     public String getBody() {
         return data.body;
     }
 
+    @Override
     public String isEdited() {
         return data.edited;
     }
 
+    @Override
     public void isEdited(String s) {
         data.edited = s;
     }
 
+    @Override
     public String getAuthorFlairCssClass() {
         return data.AuthorFlairCssClass;
     }
 
+    @Override
     public int getDowns() {
         return data.downs;
     }
 
+    @Override
     public String getBodyHtml() {
         return data.bodyHtml;
     }
 
+    @Override
     public String getSubreddit() {
         return data.subreddit;
     }
 
+    @Override
     public boolean isScoreHidden() {
         return data.scoreHidden;
     }
 
     @Override
-    public String getName() {
-        return data.name;
-    }
-
     public double getCreated() {
         return data.created;
     }
 
+    @Override
     public String getAuthorFlairText() {
         return data.authorFlairText;
     }
 
+    @Override
     public Double getCreateUtc() {
         return data.createUtc;
     }
 
+    @Override
     public int getUps() {
         return data.ups;
     }
 
+    @Override
     public List<Object> getModReports() {
         return data.modReports;
     }
 
+    @Override
     public Object getNumReports() {
         return data.numReports;
     }
 
+    @Override
     public String getDistinguished() {
         return data.distinguished;
+    }
+
+    @Override
+    public Integer getCount() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public List<String> getChildren() {
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -192,7 +207,7 @@ public class RedditComment extends AbsRedditComment implements Votable, Savable 
             return -1;
     }
 
-    public static class RedditCommentData {
+    public static class Data extends AbsRedditComment.Data {
 
         @Expose
         private ListingResponse replies;
@@ -209,8 +224,6 @@ public class RedditComment extends AbsRedditComment implements Votable, Savable 
         @Expose
         private Boolean saved;
         @Expose
-        private String id;
-        @Expose
         private Integer gilded;
         @Expose @SerializedName("archived")
         private Boolean isArchived;
@@ -218,8 +231,6 @@ public class RedditComment extends AbsRedditComment implements Votable, Savable 
         private Object reportReasons;
         @Expose
         private String author;
-        @Expose @SerializedName("parent_id")
-        private String parentId;
         @Expose
         private int score;
         @Expose @SerializedName("approved_by")
@@ -240,8 +251,6 @@ public class RedditComment extends AbsRedditComment implements Votable, Savable 
         private String subreddit;
         @Expose @SerializedName("score_hidden")
         private boolean scoreHidden;
-        @Expose
-        private String name;
         @Expose
         private double created;
         @Expose @SerializedName("author_flair_text")

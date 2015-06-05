@@ -19,7 +19,7 @@ import android.view.ViewGroup;
 import com.ddiehl.android.simpleredditreader.BusProvider;
 import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.presenter.LinksPresenter;
-import com.ddiehl.android.simpleredditreader.presenter.LinksPresenterImpl;
+import com.ddiehl.android.simpleredditreader.presenter.ListingPresenterImpl;
 import com.ddiehl.android.simpleredditreader.view.LinksView;
 import com.ddiehl.android.simpleredditreader.view.MainView;
 import com.ddiehl.android.simpleredditreader.view.SettingsChangedListener;
@@ -47,7 +47,6 @@ public class LinksFragment extends Fragment
 
     private Bus mBus = BusProvider.getInstance();
     private LinksPresenter mLinksPresenter;
-
     private LinksAdapter mLinksAdapter;
 
     private int mFirstVisibleItem, mVisibleItemCount, mTotalItemCount;
@@ -72,7 +71,8 @@ public class LinksFragment extends Fragment
 
         Bundle args = getArguments();
         String subreddit = args.getString(ARG_SUBREDDIT);
-        mLinksPresenter = new LinksPresenterImpl(getActivity(), this, subreddit);
+        mLinksPresenter = new ListingPresenterImpl(getActivity(), this, null, null, subreddit, null, null, null, null);
+//        mLinksPresenter = new LinksPresenterImpl(getActivity(), this, subreddit);
         mLinksAdapter = new LinksAdapter(mLinksPresenter);
     }
 

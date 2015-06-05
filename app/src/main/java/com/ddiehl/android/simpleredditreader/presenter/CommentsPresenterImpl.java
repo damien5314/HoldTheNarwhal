@@ -104,7 +104,7 @@ public class CommentsPresenterImpl implements CommentsPresenter {
 
     @Override
     public AbsRedditComment getCommentAtPosition(int position) {
-        return mListingBank.getVisibleComment(position);
+        return (AbsRedditComment) mListingBank.getVisibleComment(position);
     }
 
     @Override
@@ -153,8 +153,9 @@ public class CommentsPresenterImpl implements CommentsPresenter {
         mRedditLink = event.getLink();
 
         List<AbsRedditComment> comments = event.getComments();
-        AbsRedditComment.flattenCommentList(comments);
-        mListingBank.setData(comments);
+        AbsRedditComment.Utils.flattenCommentList(comments);
+        mListingBank.clear();
+//        mListingBank.addAll(comments);
         mCommentsView.commentsUpdated();
     }
 
@@ -171,10 +172,10 @@ public class CommentsPresenterImpl implements CommentsPresenter {
         if (comments.size() == 0) {
             mListingBank.remove(parentStub);
         } else {
-            AbsRedditComment.setDepthForCommentsList(comments, parentStub.getDepth());
+            AbsRedditComment.Utils.setDepthForCommentsList(comments, parentStub.getDepth());
 
             for (int i = 0; i < mListingBank.size(); i++) {
-                AbsRedditComment comment = mListingBank.get(i);
+                AbsRedditComment comment = (AbsRedditComment) mListingBank.get(i);
                 if (comment instanceof RedditMoreComments) {
                     String id = ((RedditMoreComments) comment).getId();
                     if (id.equals(parentStub.getId())) { // Found the base comment

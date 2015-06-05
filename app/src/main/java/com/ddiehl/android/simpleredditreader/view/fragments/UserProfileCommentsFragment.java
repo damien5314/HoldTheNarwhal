@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ddiehl.android.simpleredditreader.R;
-import com.ddiehl.android.simpleredditreader.view.UserOverviewView;
 
 public class UserProfileCommentsFragment extends UserProfileFragment {
     private static final String TAG = UserProfileCommentsFragment.class.getSimpleName();

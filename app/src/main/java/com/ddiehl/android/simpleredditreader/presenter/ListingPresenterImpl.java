@@ -37,7 +37,6 @@ import com.ddiehl.reddit.listings.RedditMoreComments;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ListingPresenterImpl implements ListingPresenter {
@@ -63,7 +62,8 @@ public class ListingPresenterImpl implements ListingPresenter {
 //    private RedditComment mCommentSelected;
 
     public ListingPresenterImpl(Context context, LinksView linksView, CommentsView commentsView,
-                                String username, String subreddit, String article, String comment, String sort, String timespan) {
+                                String username, String subreddit, String article, String comment,
+                                String sort, String timespan) {
         mContext = context.getApplicationContext();
         mBus = BusProvider.getInstance();
         mPreferences = RedditPreferences.getInstance(mContext);
@@ -178,7 +178,7 @@ public class ListingPresenterImpl implements ListingPresenter {
         mLinksView.setTitle(mLinkContext.getTitle());
 
         List<AbsRedditComment> comments = event.getComments();
-        AbsRedditComment.flattenCommentList(comments);
+        AbsRedditComment.Utils.flattenCommentList(comments);
         mListingBank.clear();
         mListingBank.addAll(comments);
 //        mListingBank.setData(comments);
@@ -228,7 +228,7 @@ public class ListingPresenterImpl implements ListingPresenter {
         if (comments.size() == 0) {
             mListingBank.remove(parentStub);
         } else {
-            AbsRedditComment.setDepthForCommentsList(comments, parentStub.getDepth());
+            AbsRedditComment.Utils.setDepthForCommentsList(comments, parentStub.getDepth());
 
             for (int i = 0; i < mListingBank.size(); i++) {
                 AbsRedditComment comment = (AbsRedditComment) mListingBank.get(i);

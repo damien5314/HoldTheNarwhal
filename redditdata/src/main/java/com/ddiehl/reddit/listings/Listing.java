@@ -2,19 +2,24 @@ package com.ddiehl.reddit.listings;
 
 import com.google.gson.annotations.Expose;
 
-public abstract class Listing {
+public abstract class Listing<T extends Listing.Data> {
 
-    @Expose
-    private String kind;
+    @Expose protected String kind;
+    @Expose protected T data;
 
+    public String getId() {
+        return data.id;
+    }
 
     public String getKind() {
         return kind;
     }
 
-    public void setKind(String kind) {
-        this.kind = kind;
+    public String getName() {
+        return kind + "_" + data.id;
     }
 
-    public abstract Object getData();
+    public static abstract class Data {
+        @Expose protected String id;
+    }
 }

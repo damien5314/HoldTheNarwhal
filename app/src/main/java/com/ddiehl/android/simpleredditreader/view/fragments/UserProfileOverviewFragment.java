@@ -17,10 +17,8 @@ import android.view.ViewGroup;
 
 import com.ddiehl.android.simpleredditreader.BusProvider;
 import com.ddiehl.android.simpleredditreader.R;
-import com.ddiehl.android.simpleredditreader.presenter.CommentsPresenter;
-import com.ddiehl.android.simpleredditreader.presenter.CommentsPresenterImpl;
-import com.ddiehl.android.simpleredditreader.presenter.LinksPresenter;
-import com.ddiehl.android.simpleredditreader.presenter.LinksPresenterImpl;
+import com.ddiehl.android.simpleredditreader.presenter.ListingPresenter;
+import com.ddiehl.android.simpleredditreader.presenter.ListingPresenterImpl;
 import com.ddiehl.android.simpleredditreader.view.CommentsView;
 import com.ddiehl.android.simpleredditreader.view.LinksView;
 import com.ddiehl.android.simpleredditreader.view.MainView;
@@ -35,11 +33,12 @@ public class UserProfileOverviewFragment extends UserProfileFragment
         implements LinksView, CommentsView {
     private static final String TAG = UserProfileOverviewFragment.class.getSimpleName();
 
+    private static final int REQUEST_CHOOSE_SORT = 0;
+    private static final String DIALOG_CHOOSE_SORT = "dialog_choose_sort";
     private static final String ARG_USERNAME = "arg_username";
 
     private Bus mBus = BusProvider.getInstance();
-    private LinksPresenter mLinksPresenter;
-    private CommentsPresenter mCommentsPresenter;
+    private ListingPresenter mListingPresenter;
     private LinkCommentsAdapter mLinkCommentsAdapter;
 
     public UserProfileOverviewFragment() { }
@@ -56,9 +55,8 @@ public class UserProfileOverviewFragment extends UserProfileFragment
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
-        String username = args.getString(ARG_USERNAME, null);
-        mLinksPresenter = new LinksPresenterImpl(getActivity(), this, null, username);
-        mCommentsPresenter = new CommentsPresenterImpl(getActivity(), this, null, null, null, username);
+        String username = args.getString(ARG_USERNAME);
+        mListingPresenter = new ListingPresenterImpl(getActivity(), this, null, username, null, null, null, null, null);
     }
 
     @Nullable @Override
@@ -70,19 +68,17 @@ public class UserProfileOverviewFragment extends UserProfileFragment
     @Override
     public void onResume() {
         super.onResume();
-        mBus.register(mLinksPresenter);
-        mBus.register(mCommentsPresenter);
+        mBus.register(mListingPresenter);
 
         if (mLinkCommentsAdapter.getItemCount() < 2) { // Always returns at least 1
-            mCommentsPresenter.getComments();
+            mListingPresenter.getComments();
         }
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        mBus.unregister(mLinksPresenter);
-        mBus.unregister(mCommentsPresenter);
+        mBus.unregister(mListingPresenter);
     }
 
     @Override
@@ -168,61 +164,61 @@ public class UserProfileOverviewFragment extends UserProfileFragment
     public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_link_upvote:
-                mLinksPresenter.upvote();
+                mListingPresenter.upvote();
                 return true;
             case R.id.action_link_downvote:
-                mLinksPresenter.downvote();
+                mListingPresenter.downvote();
                 return true;
             case R.id.action_link_show_comments:
-                mLinksPresenter.showCommentsForLink();
+                mListingPresenter.showCommentsForLink();
                 return true;
             case R.id.action_link_save:
-                mLinksPresenter.saveLink();
+                mListingPresenter.saveLink();
                 return true;
             case R.id.action_link_unsave:
-                mLinksPresenter.unsaveLink();
+                mListingPresenter.unsaveLink();
                 return true;
             case R.id.action_link_share:
-                mLinksPresenter.shareLink();
+                mListingPresenter.shareLink();
                 return true;
             case R.id.action_link_open_in_browser:
-                mLinksPresenter.openLinkInBrowser();
+                mListingPresenter.openLinkInBrowser();
                 return true;
             case R.id.action_link_open_comments_in_browser:
-                mLinksPresenter.openCommentsInBrowser();
+                mListingPresenter.openCommentsInBrowser();
                 return true;
             case R.id.action_link_hide:
-                mLinksPresenter.hideLink();
+                mListingPresenter.hideLink();
                 return true;
             case R.id.action_link_unhide:
-                mLinksPresenter.unhideLink();
+                mListingPresenter.unhideLink();
                 return true;
             case R.id.action_link_report:
-                mLinksPresenter.reportLink();
+                mListingPresenter.reportLink();
                 return true;
             case R.id.action_comment_reply:
-                mCommentsPresenter.openReplyView();
+                mListingPresenter.openReplyView();
                 return true;
             case R.id.action_comment_upvote:
-                mCommentsPresenter.upvote();
+                mListingPresenter.upvote();
                 return true;
             case R.id.action_comment_downvote:
-                mCommentsPresenter.downvote();
+                mListingPresenter.downvote();
                 return true;
             case R.id.action_comment_save:
-                mCommentsPresenter.saveComment();
+                mListingPresenter.saveComment();
                 return true;
             case R.id.action_comment_unsave:
-                mCommentsPresenter.unsaveComment();
+                mListingPresenter.unsaveComment();
                 return true;
             case R.id.action_comment_share:
-                mCommentsPresenter.shareComment();
+                mListingPresenter.shareComment();
                 return true;
             case R.id.action_comment_open_in_browser:
-                mCommentsPresenter.openCommentInBrowser();
+                mListingPresenter.openCommentInBrowser();
                 return true;
             case R.id.action_comment_report:
-                mCommentsPresenter.reportComment();
+                mListingPresenter.reportComment();
                 return true;
             default:
                 return false;
@@ -235,7 +231,7 @@ public class UserProfileOverviewFragment extends UserProfileFragment
             case REQUEST_CHOOSE_SORT:
                 if (resultCode == Activity.RESULT_OK) {
                     String sort = data.getStringExtra(ChooseCommentSortDialog.EXTRA_SORT);
-                    mCommentsPresenter.updateSort(sort);
+                    mListingPresenter.updateSort(sort);
                 }
                 getActivity().supportInvalidateOptionsMenu();
                 break;
@@ -254,7 +250,7 @@ public class UserProfileOverviewFragment extends UserProfileFragment
                 showChooseCommentSortDialog();
                 return true;
             case R.id.action_refresh:
-                mCommentsPresenter.getComments();
+                mListingPresenter.getComments();
                 return true;
             case R.id.action_settings:
                 ((MainActivity) getActivity()).showSettings();
@@ -266,7 +262,7 @@ public class UserProfileOverviewFragment extends UserProfileFragment
 
     private void showChooseCommentSortDialog() {
         FragmentManager fm = getActivity().getSupportFragmentManager();
-        ChooseCommentSortDialog chooseCommentSortDialog = ChooseCommentSortDialog.newInstance(mCommentsPresenter.getSort());
+        ChooseCommentSortDialog chooseCommentSortDialog = ChooseCommentSortDialog.newInstance(mListingPresenter.getSort());
         chooseCommentSortDialog.setTargetFragment(this, REQUEST_CHOOSE_SORT);
         chooseCommentSortDialog.show(fm, DIALOG_CHOOSE_SORT);
     }
@@ -331,10 +327,5 @@ public class UserProfileOverviewFragment extends UserProfileFragment
     @Override
     public void openReplyView(RedditComment comment) {
         showToast(R.string.implementation_pending);
-    }
-
-    @Override
-    public void onSettingsChanged() {
-        mCommentsPresenter.updateSort();
     }
 }

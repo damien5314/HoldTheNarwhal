@@ -19,16 +19,14 @@ import android.view.ViewGroup;
 
 import com.ddiehl.android.simpleredditreader.BusProvider;
 import com.ddiehl.android.simpleredditreader.R;
-import com.ddiehl.android.simpleredditreader.presenter.CommentsPresenter;
-import com.ddiehl.android.simpleredditreader.presenter.CommentsPresenterImpl;
-import com.ddiehl.android.simpleredditreader.presenter.LinksPresenter;
-import com.ddiehl.android.simpleredditreader.presenter.LinksPresenterImpl;
+import com.ddiehl.android.simpleredditreader.presenter.ListingPresenter;
+import com.ddiehl.android.simpleredditreader.presenter.ListingPresenterImpl;
 import com.ddiehl.android.simpleredditreader.view.CommentsView;
 import com.ddiehl.android.simpleredditreader.view.LinksView;
 import com.ddiehl.android.simpleredditreader.view.MainView;
 import com.ddiehl.android.simpleredditreader.view.SettingsChangedListener;
 import com.ddiehl.android.simpleredditreader.view.activities.MainActivity;
-import com.ddiehl.android.simpleredditreader.view.adapters.LinkCommentsAdapter;
+import com.ddiehl.android.simpleredditreader.view.adapters.ListingAdapter;
 import com.ddiehl.android.simpleredditreader.view.dialogs.ChooseCommentSortDialog;
 import com.ddiehl.reddit.listings.RedditComment;
 import com.ddiehl.reddit.listings.RedditLink;
@@ -48,10 +46,12 @@ public class LinkCommentsFragment extends Fragment
     private static final String DIALOG_CHOOSE_SORT = "dialog_choose_sort";
 
     private Bus mBus = BusProvider.getInstance();
-    private LinksPresenter mLinksPresenter;
-    private CommentsPresenter mCommentsPresenter;
+    private ListingPresenter mListingPresenter;
+//    private LinksPresenter mLinksPresenter;
+//    private CommentsPresenter mCommentsPresenter;
 
-    private LinkCommentsAdapter mLinkCommentsAdapter;
+    private ListingAdapter mListingAdapter;
+//    private LinkCommentsAdapter mLinkCommentsAdapter;
 
     public LinkCommentsFragment() { /* Default constructor */ }
 
@@ -78,10 +78,12 @@ public class LinkCommentsFragment extends Fragment
         String articleId = args.getString(ARG_ARTICLE);
         String commentId = args.getString(ARG_COMMENT_ID);
 
-        mLinksPresenter = new LinksPresenterImpl(getActivity(), this, subreddit);
-        mCommentsPresenter = new CommentsPresenterImpl(getActivity(), this, subreddit, articleId, commentId);
+        mListingPresenter = new ListingPresenterImpl(getActivity(), this, this, null, subreddit, articleId, commentId, null, null);
+//        mLinksPresenter = new LinksPresenterImpl(getActivity(), this, subreddit);
+//        mCommentsPresenter = new CommentsPresenterImpl(getActivity(), this, subreddit, articleId, commentId);
 
-        mLinkCommentsAdapter = new LinkCommentsAdapter(mLinksPresenter, mCommentsPresenter);
+        mListingAdapter = new ListingAdapter(mListingPresenter);
+//        mLinkCommentsAdapter = new LinkCommentsAdapter(mLinksPresenter, mCommentsPresenter);
     }
 
     @Override
@@ -90,7 +92,7 @@ public class LinkCommentsFragment extends Fragment
 
         RecyclerView recyclerView = ButterKnife.findById(v, R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerView.setAdapter(mLinkCommentsAdapter);
+        recyclerView.setAdapter(mListingAdapter);
 
         return v;
     }
@@ -98,19 +100,21 @@ public class LinkCommentsFragment extends Fragment
     @Override
     public void onResume() {
         super.onResume();
-        mBus.register(mLinksPresenter);
-        mBus.register(mCommentsPresenter);
+        mBus.register(mListingPresenter);
+//        mBus.register(mLinksPresenter);
+//        mBus.register(mCommentsPresenter);
 
-        if (mLinkCommentsAdapter.getItemCount() < 2) { // Always returns at least 1
-            mCommentsPresenter.getComments();
+        if (mListingAdapter.getItemCount() < 2) { // Always returns at least 1
+            mListingPresenter.getComments();
         }
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        mBus.unregister(mLinksPresenter);
-        mBus.unregister(mCommentsPresenter);
+        mBus.unregister(mListingPresenter);
+//        mBus.unregister(mLinksPresenter);
+//        mBus.unregister(mCommentsPresenter);
     }
 
     @Override
@@ -126,17 +130,17 @@ public class LinkCommentsFragment extends Fragment
 
     @Override
     public void commentsUpdated() {
-        mLinkCommentsAdapter.notifyDataSetChanged();
+        mListingAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void commentUpdatedAt(int position) {
-        mLinkCommentsAdapter.notifyItemChanged(position + 1);
+        mListingAdapter.notifyItemChanged(position + 1);
     }
 
     @Override
     public void commentRemovedAt(int position) {
-        mLinkCommentsAdapter.notifyItemRemoved(position + 1);
+        mListingAdapter.notifyItemRemoved(position + 1);
     }
 
     @Override
@@ -196,61 +200,61 @@ public class LinkCommentsFragment extends Fragment
     public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_link_upvote:
-                mLinksPresenter.upvote();
+                mListingPresenter.upvote();
                 return true;
             case R.id.action_link_downvote:
-                mLinksPresenter.downvote();
+                mListingPresenter.downvote();
                 return true;
             case R.id.action_link_show_comments:
-                mLinksPresenter.showCommentsForLink();
+                mListingPresenter.showCommentsForLink();
                 return true;
             case R.id.action_link_save:
-                mLinksPresenter.saveLink();
+                mListingPresenter.saveLink();
                 return true;
             case R.id.action_link_unsave:
-                mLinksPresenter.unsaveLink();
+                mListingPresenter.unsaveLink();
                 return true;
             case R.id.action_link_share:
-                mLinksPresenter.shareLink();
+                mListingPresenter.shareLink();
                 return true;
             case R.id.action_link_open_in_browser:
-                mLinksPresenter.openLinkInBrowser();
+                mListingPresenter.openLinkInBrowser();
                 return true;
             case R.id.action_link_open_comments_in_browser:
-                mLinksPresenter.openCommentsInBrowser();
+                mListingPresenter.openCommentsInBrowser();
                 return true;
             case R.id.action_link_hide:
-                mLinksPresenter.hideLink();
+                mListingPresenter.hideLink();
                 return true;
             case R.id.action_link_unhide:
-                mLinksPresenter.unhideLink();
+                mListingPresenter.unhideLink();
                 return true;
             case R.id.action_link_report:
-                mLinksPresenter.reportLink();
+                mListingPresenter.reportLink();
                 return true;
             case R.id.action_comment_reply:
-                mCommentsPresenter.openReplyView();
+                mListingPresenter.openReplyView();
                 return true;
             case R.id.action_comment_upvote:
-                mCommentsPresenter.upvote();
+                mListingPresenter.upvote();
                 return true;
             case R.id.action_comment_downvote:
-                mCommentsPresenter.downvote();
+                mListingPresenter.downvote();
                 return true;
             case R.id.action_comment_save:
-                mCommentsPresenter.saveComment();
+                mListingPresenter.saveComment();
                 return true;
             case R.id.action_comment_unsave:
-                mCommentsPresenter.unsaveComment();
+                mListingPresenter.unsaveComment();
                 return true;
             case R.id.action_comment_share:
-                mCommentsPresenter.shareComment();
+                mListingPresenter.shareComment();
                 return true;
             case R.id.action_comment_open_in_browser:
-                mCommentsPresenter.openCommentInBrowser();
+                mListingPresenter.openCommentInBrowser();
                 return true;
             case R.id.action_comment_report:
-                mCommentsPresenter.reportComment();
+                mListingPresenter.reportComment();
                 return true;
             default:
                 return false;
@@ -263,7 +267,7 @@ public class LinkCommentsFragment extends Fragment
             case REQUEST_CHOOSE_SORT:
                 if (resultCode == Activity.RESULT_OK) {
                     String sort = data.getStringExtra(ChooseCommentSortDialog.EXTRA_SORT);
-                    mCommentsPresenter.updateSort(sort);
+                    mListingPresenter.updateSort(sort);
                 }
                 getActivity().supportInvalidateOptionsMenu();
                 break;
@@ -282,7 +286,7 @@ public class LinkCommentsFragment extends Fragment
                 showChooseCommentSortDialog();
                 return true;
             case R.id.action_refresh:
-                mCommentsPresenter.getComments();
+                mListingPresenter.getComments();
                 return true;
             case R.id.action_settings:
                 ((MainActivity) getActivity()).showSettings();
@@ -294,7 +298,7 @@ public class LinkCommentsFragment extends Fragment
 
     private void showChooseCommentSortDialog() {
         FragmentManager fm = getActivity().getSupportFragmentManager();
-        ChooseCommentSortDialog chooseCommentSortDialog = ChooseCommentSortDialog.newInstance(mCommentsPresenter.getSort());
+        ChooseCommentSortDialog chooseCommentSortDialog = ChooseCommentSortDialog.newInstance(mListingPresenter.getSort());
         chooseCommentSortDialog.setTargetFragment(this, REQUEST_CHOOSE_SORT);
         chooseCommentSortDialog.show(fm, DIALOG_CHOOSE_SORT);
     }
@@ -331,19 +335,19 @@ public class LinkCommentsFragment extends Fragment
 
     @Override
     public void linksUpdated() {
-        mLinkCommentsAdapter.notifyItemChanged(0);
+        mListingAdapter.notifyItemChanged(0);
     }
 
     @Override
     public void linkUpdatedAt(int position) {
         Log.w(TAG, "Warning: Only 1 link in this LinksView, ensure you are calling linkUpdatedAt(0)");
-        mLinkCommentsAdapter.notifyItemChanged(position);
+        mListingAdapter.notifyItemChanged(position);
     }
 
     @Override
     public void linkRemovedAt(int position) {
         Log.w(TAG, "Warning: Only 1 link in this LinksView, ensure you are calling linkUpdatedAt(0)");
-        mLinkCommentsAdapter.notifyItemRemoved(position);
+        mListingAdapter.notifyItemRemoved(position);
     }
 
     @Override
@@ -363,6 +367,6 @@ public class LinkCommentsFragment extends Fragment
 
     @Override
     public void onSettingsChanged() {
-        mCommentsPresenter.updateSort();
+        mListingPresenter.updateSort();
     }
 }

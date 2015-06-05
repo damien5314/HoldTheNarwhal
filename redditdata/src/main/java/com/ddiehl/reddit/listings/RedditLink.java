@@ -11,15 +11,7 @@ import java.util.List;
 
 
 @SuppressWarnings("unused")
-public class RedditLink extends Listing implements Votable, Savable, Hideable {
-
-    @Expose
-    private RedditLinkData data;
-
-    @Override
-    public RedditLinkData getData() {
-        return data;
-    }
+public class RedditLink extends Listing<RedditLink.Data> implements Votable, Savable, Hideable {
 
     public String getDomain() {
         return data.domain;
@@ -29,7 +21,7 @@ public class RedditLink extends Listing implements Votable, Savable, Hideable {
         return data.bannedBy;
     }
 
-    public RedditLinkData.MediaEmbed getMediaEmbed() {
+    public Data.MediaEmbed getMediaEmbed() {
         return data.mediaEmbed;
     }
 
@@ -37,7 +29,7 @@ public class RedditLink extends Listing implements Votable, Savable, Hideable {
         return data.subreddit;
     }
 
-    public Object getSelftextHtml() {
+    public String getSelftextHtml() {
         return data.selftextHtml;
     }
 
@@ -73,11 +65,6 @@ public class RedditLink extends Listing implements Votable, Savable, Hideable {
 
     public Object getLinkFlairText() {
         return data.linkFlairText;
-    }
-
-    @Override
-    public String getId() {
-        return data.id;
     }
 
     public Integer getGilded() {
@@ -167,7 +154,7 @@ public class RedditLink extends Listing implements Votable, Savable, Hideable {
         return data.downs;
     }
 
-    public RedditLinkData.SecureMediaEmbed getSecureMediaEmbed() {
+    public Data.SecureMediaEmbed getSecureMediaEmbed() {
         return data.secureMediaEmbed;
     }
 
@@ -191,11 +178,6 @@ public class RedditLink extends Listing implements Votable, Savable, Hideable {
 
     public String getPermalink() {
         return data.permalink;
-    }
-
-    @Override
-    public String getName() {
-        return data.name;
     }
 
     public Double getCreated() {
@@ -222,7 +204,7 @@ public class RedditLink extends Listing implements Votable, Savable, Hideable {
         return data.distinguished;
     }
 
-    public RedditLinkData.Media getMedia() {
+    public Data.Media getMedia() {
         return data.media;
     }
 
@@ -242,7 +224,7 @@ public class RedditLink extends Listing implements Votable, Savable, Hideable {
         return data.ups;
     }
 
-    public static class RedditLinkData {
+    static class Data extends Listing.Data {
 
         @Expose
         private String domain;
@@ -333,11 +315,9 @@ public class RedditLink extends Listing implements Votable, Savable, Hideable {
         @Expose
         private Integer ups;
 
-        protected static class SecureMediaEmbed {
+        static class SecureMediaEmbed { }
 
-        }
-
-        protected static class MediaEmbed {
+        static class MediaEmbed {
 
             @Expose
             private String content;
@@ -347,7 +327,6 @@ public class RedditLink extends Listing implements Votable, Savable, Hideable {
             private Boolean scrolling;
             @Expose
             private Integer height;
-
 
             public String getContent() {
                 return content;
@@ -367,7 +346,7 @@ public class RedditLink extends Listing implements Votable, Savable, Hideable {
 
         }
 
-        protected static class Media {
+        static class Media {
 
             @Expose
             private Oembed oembed;
@@ -383,7 +362,7 @@ public class RedditLink extends Listing implements Votable, Savable, Hideable {
                 return type;
             }
 
-            private static class Oembed {
+            static class Oembed {
 
                 @Expose @SerializedName("provider_url")
                 private String providerUrl;
