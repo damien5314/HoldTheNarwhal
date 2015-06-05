@@ -32,7 +32,7 @@ import com.ddiehl.android.simpleredditreader.presenter.MainPresenterImpl;
 import com.ddiehl.android.simpleredditreader.view.MainView;
 import com.ddiehl.android.simpleredditreader.view.SettingsChangedListener;
 import com.ddiehl.android.simpleredditreader.view.dialogs.ConfirmSignOutDialog;
-import com.ddiehl.android.simpleredditreader.view.fragments.LinksFragment;
+import com.ddiehl.android.simpleredditreader.view.fragments.SubredditFragment;
 import com.ddiehl.android.simpleredditreader.view.fragments.UserProfileCommentsFragment;
 import com.ddiehl.android.simpleredditreader.view.fragments.UserProfileOverviewFragment;
 import com.ddiehl.android.simpleredditreader.view.fragments.WebViewFragment;
@@ -190,10 +190,10 @@ public class MainActivity extends ActionBarActivity implements MainView, Confirm
         Fragment currentFragment = fm.findFragmentById(R.id.fragment_container);
         // If the current fragment is a LinksFragment, just update the subreddit
         // Else, swap in a LinksFragment
-        if (currentFragment instanceof LinksFragment) {
-            ((LinksFragment) currentFragment).updateSubreddit(subreddit);
+        if (currentFragment instanceof SubredditFragment) {
+            ((SubredditFragment) currentFragment).updateSubreddit(subreddit);
         } else {
-            Fragment f = LinksFragment.newInstance(subreddit);
+            Fragment f = SubredditFragment.newInstance(subreddit);
             fm.beginTransaction().replace(R.id.fragment_container, f)
                     .addToBackStack(null)
                     .commit();

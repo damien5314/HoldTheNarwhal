@@ -16,7 +16,7 @@ import com.ddiehl.android.simpleredditreader.events.responses.MoreChildrenLoaded
 import com.ddiehl.android.simpleredditreader.events.responses.SaveSubmittedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.UserIdentitySavedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.VoteSubmittedEvent;
-import com.ddiehl.android.simpleredditreader.view.CommentsView;
+import com.ddiehl.android.simpleredditreader.view.CommentView;
 import com.ddiehl.reddit.Savable;
 import com.ddiehl.reddit.Votable;
 import com.ddiehl.reddit.listings.AbsRedditComment;
@@ -35,7 +35,7 @@ public class CommentsPresenterImpl implements CommentsPresenter {
 
     private Context mContext;
 
-    private CommentsView mCommentsView;
+    private CommentView mCommentView;
     private RedditLink mRedditLink;
     private ListingBank mListingBank;
     private Bus mBus;
@@ -48,10 +48,10 @@ public class CommentsPresenterImpl implements CommentsPresenter {
 
     private RedditComment mCommentSelected;
 
-    public CommentsPresenterImpl(Context context, CommentsView commentsView,
+    public CommentsPresenterImpl(Context context, CommentView commentView,
                                  String subreddit, String articleId, String commentId) {
         mContext = context.getApplicationContext();
-        mCommentsView = commentsView;
+        mCommentView = commentView;
         mListingBank = new ListingBankList();
         mBus = BusProvider.getInstance();
 
@@ -65,7 +65,7 @@ public class CommentsPresenterImpl implements CommentsPresenter {
 
     @Override
     public void getComments() {
-        mCommentsView.showSpinner(null);
+        mCommentView.showSpinner(null);
         mBus.post(new LoadCommentsEvent(mSubreddit, mArticleId, mSort, mCommentId));
     }
 
@@ -81,7 +81,7 @@ public class CommentsPresenterImpl implements CommentsPresenter {
 
     @Override
     public void showMoreChildren(RedditMoreComments comment) {
-        mCommentsView.showSpinner(null);
+        mCommentView.showSpinner(null);
         List<String> children = comment.getChildren();
         mBus.post(new LoadMoreChildrenEvent(mRedditLink, comment, children, mSort));
     }
@@ -110,7 +110,7 @@ public class CommentsPresenterImpl implements CommentsPresenter {
     @Override
     public void toggleThreadVisible(AbsRedditComment comment) {
         mListingBank.toggleThreadVisible(comment);
-        mCommentsView.commentsUpdated();
+        mCommentView.commentsUpdated();
     }
 
     @Override
@@ -126,7 +126,7 @@ public class CommentsPresenterImpl implements CommentsPresenter {
     @Override
     public void showCommentContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, RedditComment comment) {
         mCommentSelected = comment;
-        mCommentsView.showCommentContextMenu(menu, v, menuInfo, comment);
+        mCommentView.showCommentContextMenu(menu, v, menuInfo, comment);
 
         menu.findItem(R.id.action_comment_save).setVisible(!comment.isSaved());
         menu.findItem(R.id.action_comment_unsave).setVisible(comment.isSaved());
@@ -145,7 +145,7 @@ public class CommentsPresenterImpl implements CommentsPresenter {
 
     @Subscribe
     public void onCommentsLoaded(CommentsLoadedEvent event) {
-        mCommentsView.dismissSpinner();
+        mCommentView.dismissSpinner();
         if (event.isFailed()) {
             return;
         }
@@ -156,12 +156,12 @@ public class CommentsPresenterImpl implements CommentsPresenter {
         AbsRedditComment.Utils.flattenCommentList(comments);
         mListingBank.clear();
 //        mListingBank.addAll(comments);
-        mCommentsView.commentsUpdated();
+        mCommentView.commentsUpdated();
     }
 
     @Subscribe
     public void onMoreChildrenLoaded(MoreChildrenLoadedEvent event) {
-        mCommentsView.dismissSpinner();
+        mCommentView.dismissSpinner();
         if (event.isFailed()) {
             return;
         }
@@ -187,7 +187,7 @@ public class CommentsPresenterImpl implements CommentsPresenter {
             }
         }
 
-        mCommentsView.commentsUpdated();
+        mCommentView.commentsUpdated();
     }
 
     @Subscribe
@@ -197,12 +197,12 @@ public class CommentsPresenterImpl implements CommentsPresenter {
             return;
 
         if (event.isFailed()) {
-            mCommentsView.showToast(R.string.vote_failed);
+            mCommentView.showToast(R.string.vote_failed);
             return;
         }
 
         listing.applyVote(event.getDirection());
-        mCommentsView.commentUpdatedAt(mListingBank.visibleIndexOf(listing));
+        mCommentView.commentUpdatedAt(mListingBank.visibleIndexOf(listing));
     }
 
     @Subscribe
@@ -212,21 +212,21 @@ public class CommentsPresenterImpl implements CommentsPresenter {
             return;
 
         if (event.isFailed()) {
-            mCommentsView.showToast(R.string.save_failed);
+            mCommentView.showToast(R.string.save_failed);
             return;
         }
 
         listing.isSaved(event.isToSave());
-        mCommentsView.commentUpdatedAt(mListingBank.visibleIndexOf(listing));
+        mCommentView.commentUpdatedAt(mListingBank.visibleIndexOf(listing));
     }
 
     @Override
     public void openReplyView() {
         RedditComment comment = mCommentSelected;
         if (comment.isArchived()) {
-            mCommentsView.showToast(R.string.listing_archived);
+            mCommentView.showToast(R.string.listing_archived);
         } else {
-            mCommentsView.openReplyView(comment);
+            mCommentView.openReplyView(comment);
         }
     }
 
@@ -234,7 +234,7 @@ public class CommentsPresenterImpl implements CommentsPresenter {
     public void upvote() {
         RedditComment comment = mCommentSelected;
         if (comment.isArchived()) {
-            mCommentsView.showToast(R.string.listing_archived);
+            mCommentView.showToast(R.string.listing_archived);
         } else {
             int dir = (comment.isLiked() == null || !comment.isLiked()) ? 1 : 0;
             mBus.post(new VoteEvent(comment, "t1", dir));
@@ -245,7 +245,7 @@ public class CommentsPresenterImpl implements CommentsPresenter {
     public void downvote() {
         RedditComment comment = mCommentSelected;
         if (comment.isArchived()) {
-            mCommentsView.showToast(R.string.listing_archived);
+            mCommentView.showToast(R.string.listing_archived);
         } else {
             int dir = (comment.isLiked() == null || comment.isLiked()) ? -1 : 0;
             mBus.post(new VoteEvent(comment, "t1", dir));
@@ -267,18 +267,18 @@ public class CommentsPresenterImpl implements CommentsPresenter {
     @Override
     public void shareComment() {
         RedditComment comment = mCommentSelected;
-        mCommentsView.openShareView(comment);
+        mCommentView.openShareView(comment);
     }
 
     @Override
     public void openCommentInBrowser() {
         RedditComment comment = mCommentSelected;
-        mCommentsView.openCommentInBrowser(comment);
+        mCommentView.openCommentInBrowser(comment);
     }
 
     @Override
     public void reportComment() {
         RedditComment comment = mCommentSelected;
-        mCommentsView.showToast(R.string.implementation_pending);
+        mCommentView.showToast(R.string.implementation_pending);
     }
 }

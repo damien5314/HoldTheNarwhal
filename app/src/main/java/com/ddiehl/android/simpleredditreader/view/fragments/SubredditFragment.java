@@ -21,7 +21,6 @@ import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.presenter.LinksPresenter;
 import com.ddiehl.android.simpleredditreader.presenter.ListingPresenterImpl;
 import com.ddiehl.android.simpleredditreader.view.LinksView;
-import com.ddiehl.android.simpleredditreader.view.MainView;
 import com.ddiehl.android.simpleredditreader.view.SettingsChangedListener;
 import com.ddiehl.android.simpleredditreader.view.activities.MainActivity;
 import com.ddiehl.android.simpleredditreader.view.adapters.LinksAdapter;
@@ -34,9 +33,9 @@ import com.squareup.otto.Subscribe;
 import butterknife.ButterKnife;
 import retrofit.RetrofitError;
 
-public class LinksFragment extends Fragment
+public class SubredditFragment extends AbsRedditFragment
         implements LinksView, SettingsChangedListener {
-    private static final String TAG = LinksFragment.class.getSimpleName();
+    private static final String TAG = SubredditFragment.class.getSimpleName();
 
     private static final String ARG_SUBREDDIT = "subreddit";
 
@@ -51,12 +50,12 @@ public class LinksFragment extends Fragment
 
     private int mFirstVisibleItem, mVisibleItemCount, mTotalItemCount;
 
-    public LinksFragment() { /* Default constructor required */ }
+    public SubredditFragment() { }
 
-    public static LinksFragment newInstance(String subreddit) {
+    public static SubredditFragment newInstance(String subreddit) {
         Bundle args = new Bundle();
         args.putString(ARG_SUBREDDIT, subreddit);
-        LinksFragment fragment = new LinksFragment();
+        SubredditFragment fragment = new SubredditFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -266,36 +265,6 @@ public class LinksFragment extends Fragment
             default:
                 return false;
         }
-    }
-
-    @Override
-    public void setTitle(CharSequence title) {
-        getActivity().setTitle(title);
-    }
-
-    @Override
-    public void showSpinner(String msg) {
-        ((MainView) getActivity()).showSpinner(msg);
-    }
-
-    @Override
-    public void showSpinner(int resId) {
-        ((MainView) getActivity()).showSpinner(resId);
-    }
-
-    @Override
-    public void dismissSpinner() {
-        ((MainView) getActivity()).dismissSpinner();
-    }
-
-    @Override
-    public void showToast(String msg) {
-        ((MainView) getActivity()).showToast(msg);
-    }
-
-    @Override
-    public void showToast(int resId) {
-        ((MainView) getActivity()).showToast(resId);
     }
 
     @Override

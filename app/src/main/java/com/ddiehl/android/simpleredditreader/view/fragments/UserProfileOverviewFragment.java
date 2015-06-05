@@ -19,8 +19,8 @@ import com.ddiehl.android.simpleredditreader.BusProvider;
 import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.presenter.ListingPresenter;
 import com.ddiehl.android.simpleredditreader.presenter.ListingPresenterImpl;
-import com.ddiehl.android.simpleredditreader.view.CommentsView;
-import com.ddiehl.android.simpleredditreader.view.LinksView;
+import com.ddiehl.android.simpleredditreader.view.CommentView;
+import com.ddiehl.android.simpleredditreader.view.LinkView;
 import com.ddiehl.android.simpleredditreader.view.MainView;
 import com.ddiehl.android.simpleredditreader.view.activities.MainActivity;
 import com.ddiehl.android.simpleredditreader.view.adapters.LinkCommentsAdapter;
@@ -29,8 +29,8 @@ import com.ddiehl.reddit.listings.RedditComment;
 import com.ddiehl.reddit.listings.RedditLink;
 import com.squareup.otto.Bus;
 
-public class UserProfileOverviewFragment extends UserProfileFragment
-        implements LinksView, CommentsView {
+public class UserProfileOverviewFragment extends AbsUserProfileFragment
+        implements LinkView, CommentView {
     private static final String TAG = UserProfileOverviewFragment.class.getSimpleName();
 
     private static final int REQUEST_CHOOSE_SORT = 0;

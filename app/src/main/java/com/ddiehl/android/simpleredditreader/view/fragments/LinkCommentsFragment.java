@@ -4,11 +4,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -21,9 +19,7 @@ import com.ddiehl.android.simpleredditreader.BusProvider;
 import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.presenter.ListingPresenter;
 import com.ddiehl.android.simpleredditreader.presenter.ListingPresenterImpl;
-import com.ddiehl.android.simpleredditreader.view.CommentsView;
-import com.ddiehl.android.simpleredditreader.view.LinksView;
-import com.ddiehl.android.simpleredditreader.view.MainView;
+import com.ddiehl.android.simpleredditreader.view.CommentThreadView;
 import com.ddiehl.android.simpleredditreader.view.SettingsChangedListener;
 import com.ddiehl.android.simpleredditreader.view.activities.MainActivity;
 import com.ddiehl.android.simpleredditreader.view.adapters.ListingAdapter;
@@ -34,8 +30,8 @@ import com.squareup.otto.Bus;
 
 import butterknife.ButterKnife;
 
-public class LinkCommentsFragment extends Fragment
-        implements LinksView, CommentsView, SettingsChangedListener {
+public class LinkCommentsFragment extends AbsRedditFragment
+        implements CommentThreadView, SettingsChangedListener {
     private static final String TAG = LinkCommentsFragment.class.getSimpleName();
 
     private static final String ARG_SUBREDDIT = "subreddit";
@@ -301,53 +297,6 @@ public class LinkCommentsFragment extends Fragment
         ChooseCommentSortDialog chooseCommentSortDialog = ChooseCommentSortDialog.newInstance(mListingPresenter.getSort());
         chooseCommentSortDialog.setTargetFragment(this, REQUEST_CHOOSE_SORT);
         chooseCommentSortDialog.show(fm, DIALOG_CHOOSE_SORT);
-    }
-
-    @Override
-    public void showSpinner(String msg) {
-        ((MainView) getActivity()).showSpinner(msg);
-    }
-
-    @Override
-    public void showSpinner(int resId) {
-        ((MainView) getActivity()).showSpinner(resId);
-    }
-
-    @Override
-    public void dismissSpinner() {
-        ((MainView) getActivity()).dismissSpinner();
-    }
-
-    @Override
-    public void showToast(String msg) {
-        ((MainView) getActivity()).showToast(msg);
-    }
-
-    @Override
-    public void showToast(int resId) {
-        ((MainView) getActivity()).showToast(resId);
-    }
-
-    @Override
-    public void setTitle(CharSequence title) {
-        getActivity().setTitle(title);
-    }
-
-    @Override
-    public void linksUpdated() {
-        mListingAdapter.notifyItemChanged(0);
-    }
-
-    @Override
-    public void linkUpdatedAt(int position) {
-        Log.w(TAG, "Warning: Only 1 link in this LinksView, ensure you are calling linkUpdatedAt(0)");
-        mListingAdapter.notifyItemChanged(position);
-    }
-
-    @Override
-    public void linkRemovedAt(int position) {
-        Log.w(TAG, "Warning: Only 1 link in this LinksView, ensure you are calling linkUpdatedAt(0)");
-        mListingAdapter.notifyItemRemoved(position);
     }
 
     @Override

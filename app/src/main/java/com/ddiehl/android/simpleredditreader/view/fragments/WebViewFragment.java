@@ -28,7 +28,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 
-public class WebViewFragment extends Fragment {
+public class WebViewFragment extends AbsRedditFragment {
     public static final String TAG = WebViewFragment.class.getSimpleName();
 
     private static final String ARG_URL = "url";

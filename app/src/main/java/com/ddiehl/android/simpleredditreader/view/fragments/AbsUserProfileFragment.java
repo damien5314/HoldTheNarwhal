@@ -1,11 +1,10 @@
 package com.ddiehl.android.simpleredditreader.view.fragments;
 
 import android.app.Activity;
-import android.support.v4.app.Fragment;
 
 import com.ddiehl.android.simpleredditreader.R;
 
-public abstract class UserProfileFragment extends Fragment {
+public abstract class AbsUserProfileFragment extends AbsRedditFragment {
 
     @Override
     public void onAttach(Activity a) {

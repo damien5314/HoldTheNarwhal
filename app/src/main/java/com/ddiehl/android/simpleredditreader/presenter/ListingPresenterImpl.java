@@ -21,8 +21,8 @@ import com.ddiehl.android.simpleredditreader.events.responses.MoreChildrenLoaded
 import com.ddiehl.android.simpleredditreader.events.responses.SaveSubmittedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.UserIdentitySavedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.VoteSubmittedEvent;
-import com.ddiehl.android.simpleredditreader.view.CommentsView;
-import com.ddiehl.android.simpleredditreader.view.LinksView;
+import com.ddiehl.android.simpleredditreader.view.CommentView;
+import com.ddiehl.android.simpleredditreader.view.LinkView;
 import com.ddiehl.reddit.Archivable;
 import com.ddiehl.reddit.Hideable;
 import com.ddiehl.reddit.Savable;
@@ -47,8 +47,8 @@ public class ListingPresenterImpl implements ListingPresenter {
     private RedditLink mLinkContext;
     private ListingBank mListingBank;
 //    private List<Listing> mListings;
-    private LinksView mLinksView;
-    private CommentsView mCommentsView;
+    private LinkView mLinkView;
+    private CommentView mCommentView;
 
     private String mUsername;
     private String mSubreddit;
@@ -61,14 +61,14 @@ public class ListingPresenterImpl implements ListingPresenter {
 //    private RedditLink mLinkSelected;
 //    private RedditComment mCommentSelected;
 
-    public ListingPresenterImpl(Context context, LinksView linksView, CommentsView commentsView,
+    public ListingPresenterImpl(Context context, LinkView linkView, CommentView commentView,
                                 String username, String subreddit, String article, String comment,
                                 String sort, String timespan) {
         mContext = context.getApplicationContext();
         mBus = BusProvider.getInstance();
         mPreferences = RedditPreferences.getInstance(mContext);
-        mLinksView = linksView;
-        mCommentsView = commentsView;
+        mLinkView = linkView;
+        mCommentView = commentView;
         mUsername = username;
         mSubreddit = subreddit;
         mArticleId = article;
@@ -82,13 +82,13 @@ public class ListingPresenterImpl implements ListingPresenter {
     @Override
     public void getLinks() {
         mListingBank.clear();
-        mLinksView.linksUpdated();
+        mLinkView.linksUpdated();
         getMoreLinks();
     }
 
     @Override
     public void getMoreLinks() {
-        mLinksView.showSpinner(R.string.spinner_getting_submissions);
+        mLinkView.showSpinner(R.string.spinner_getting_submissions);
         String after = mListingBank == null || mListingBank.size() == 0
                 ? null : mListingBank.get(mListingBank.size() - 1).getName();
         mBus.post(new LoadLinksEvent(mSubreddit, mSort, mTimespan, after));
@@ -117,9 +117,9 @@ public class ListingPresenterImpl implements ListingPresenter {
     @Override
     public void updateTitle() {
         if (mSubreddit == null) {
-            mLinksView.setTitle(mContext.getString(R.string.front_page_title));
+            mLinkView.setTitle(mContext.getString(R.string.front_page_title));
         } else {
-            mLinksView.setTitle(String.format(mContext.getString(R.string.link_subreddit), mSubreddit));
+            mLinkView.setTitle(String.format(mContext.getString(R.string.link_subreddit), mSubreddit));
         }
     }
 
@@ -152,7 +152,7 @@ public class ListingPresenterImpl implements ListingPresenter {
 
     @Subscribe
     public void onLinksLoaded(LinksLoadedEvent event) {
-        mLinksView.dismissSpinner();
+        mLinkView.dismissSpinner();
         if (event.isFailed()) {
             return;
         }
@@ -162,27 +162,27 @@ public class ListingPresenterImpl implements ListingPresenter {
         }
 
         mListingBank.addAll(event.getLinks());
-        mLinksView.linksUpdated();
+        mLinkView.linksUpdated();
         updateTitle();
     }
 
     @Subscribe
     public void onCommentsLoaded(CommentsLoadedEvent event) {
-        mLinksView.dismissSpinner();
+        mLinkView.dismissSpinner();
         if (event.isFailed()) {
             return;
         }
 
         mListingBank.clear();
         mLinkContext = event.getLink();
-        mLinksView.setTitle(mLinkContext.getTitle());
+        mLinkView.setTitle(mLinkContext.getTitle());
 
         List<AbsRedditComment> comments = event.getComments();
         AbsRedditComment.Utils.flattenCommentList(comments);
         mListingBank.clear();
         mListingBank.addAll(comments);
 //        mListingBank.setData(comments);
-        mCommentsView.commentsUpdated();
+        mCommentView.commentsUpdated();
     }
 
     @Subscribe
@@ -192,12 +192,12 @@ public class ListingPresenterImpl implements ListingPresenter {
             return;
 
         if (event.isFailed()) {
-            mLinksView.showToast(R.string.vote_failed);
+            mLinkView.showToast(R.string.vote_failed);
             return;
         }
 
         listing.applyVote(event.getDirection());
-        mLinksView.linkUpdatedAt(mListingBank.indexOf(listing));
+        mLinkView.linkUpdatedAt(mListingBank.indexOf(listing));
     }
 
     @Subscribe
@@ -207,17 +207,17 @@ public class ListingPresenterImpl implements ListingPresenter {
             return;
 
         if (event.isFailed()) {
-            mLinksView.showToast(R.string.save_failed);
+            mLinkView.showToast(R.string.save_failed);
             return;
         }
 
         listing.isSaved(event.isToSave());
-        mLinksView.linkUpdatedAt(mListingBank.indexOf(listing));
+        mLinkView.linkUpdatedAt(mListingBank.indexOf(listing));
     }
 
     @Subscribe
     public void onMoreChildrenLoaded(MoreChildrenLoadedEvent event) {
-        mCommentsView.dismissSpinner();
+        mCommentView.dismissSpinner();
         if (event.isFailed()) {
             return;
         }
@@ -243,7 +243,7 @@ public class ListingPresenterImpl implements ListingPresenter {
             }
         }
 
-        mCommentsView.commentsUpdated();
+        mCommentView.commentsUpdated();
     }
 
     @Subscribe
@@ -253,12 +253,12 @@ public class ListingPresenterImpl implements ListingPresenter {
             return;
 
         if (event.isFailed()) {
-            mCommentsView.showToast(R.string.save_failed);
+            mCommentView.showToast(R.string.save_failed);
             return;
         }
 
         listing.isSaved(event.isToSave());
-        mCommentsView.commentUpdatedAt(mListingBank.visibleIndexOf(listing));
+        mCommentView.commentUpdatedAt(mListingBank.visibleIndexOf(listing));
     }
 
     @Subscribe
@@ -268,29 +268,29 @@ public class ListingPresenterImpl implements ListingPresenter {
             return;
 
         if (event.isFailed()) {
-            mLinksView.showToast(R.string.hide_failed);
+            mLinkView.showToast(R.string.hide_failed);
             return;
         }
 
         int pos = mListingBank.indexOf(listing);
         if (event.isToHide()) {
-            mLinksView.showToast(R.string.link_hidden);
+            mLinkView.showToast(R.string.link_hidden);
             mListingBank.remove(pos);
-            mLinksView.linkRemovedAt(pos);
+            mLinkView.linkRemovedAt(pos);
         } else {
-            mLinksView.linkRemovedAt(pos);
+            mLinkView.linkRemovedAt(pos);
         }
     }
 
     @Subscribe
     public void onUserRequiredError(UserRequiredException e) {
-        mLinksView.showToast(R.string.user_required);
+        mLinkView.showToast(R.string.user_required);
     }
 
     @Override
     public void showLinkContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, RedditLink link) {
         mListingSelected = link;
-        mLinksView.showLinkContextMenu(menu, v, menuInfo, link);
+        mLinkView.showLinkContextMenu(menu, v, menuInfo, link);
         menu.findItem(R.id.action_link_save).setVisible(!link.isSaved());
         menu.findItem(R.id.action_link_unsave).setVisible(link.isSaved());
     }
@@ -301,28 +301,28 @@ public class ListingPresenterImpl implements ListingPresenter {
             return;
 
         if (link.isSelf()) {
-            mLinksView.showCommentsForLink(link);
+            mLinkView.showCommentsForLink(link);
         } else {
-            mLinksView.openWebViewForLink(link);
+            mLinkView.openWebViewForLink(link);
         }
     }
 
     @Override
     public void showCommentsForLink() {
         RedditLink link = (RedditLink) mListingSelected;
-        mLinksView.showCommentsForLink(link);
+        mLinkView.showCommentsForLink(link);
     }
 
     @Override
     public void showCommentsForLink(RedditLink link) {
-        mLinksView.showCommentsForLink(link);
+        mLinkView.showCommentsForLink(link);
     }
 
     @Override
     public void upvote() {
         Listing listing = mListingSelected;
         if (((Archivable) listing).isArchived()) {
-            mLinksView.showToast(R.string.listing_archived);
+            mLinkView.showToast(R.string.listing_archived);
         } else {
             Votable votable = (Votable) listing;
             int dir = (votable.isLiked() == null || !votable.isLiked()) ? 1 : 0;
@@ -334,7 +334,7 @@ public class ListingPresenterImpl implements ListingPresenter {
     public void downvote() {
         Listing listing = mListingSelected;
         if (((Archivable) listing).isArchived()) {
-            mLinksView.showToast(R.string.listing_archived);
+            mLinkView.showToast(R.string.listing_archived);
         } else {
             Votable votable = (Votable) listing;
             int dir = (votable.isLiked() == null || !votable.isLiked()) ? -1 : 0;
@@ -357,19 +357,19 @@ public class ListingPresenterImpl implements ListingPresenter {
     @Override
     public void shareLink() {
         RedditLink link = (RedditLink) mListingSelected;
-        mLinksView.openShareView(link);
+        mLinkView.openShareView(link);
     }
 
     @Override
     public void openLinkInBrowser() {
         RedditLink link = (RedditLink) mListingSelected;
-        mLinksView.openLinkInBrowser(link);
+        mLinkView.openLinkInBrowser(link);
     }
 
     @Override
     public void openCommentsInBrowser() {
         RedditLink link = (RedditLink) mListingSelected;
-        mLinksView.openCommentsInBrowser(link);
+        mLinkView.openCommentsInBrowser(link);
     }
 
     @Override
@@ -387,12 +387,12 @@ public class ListingPresenterImpl implements ListingPresenter {
     @Override
     public void reportLink() {
         RedditLink link = (RedditLink) mListingSelected;
-        mLinksView.showToast(R.string.implementation_pending);
+        mLinkView.showToast(R.string.implementation_pending);
     }
 
     @Override
     public void getComments() {
-        mCommentsView.showSpinner(null);
+        mCommentView.showSpinner(null);
         mBus.post(new LoadCommentsEvent(mSubreddit, mArticleId, mSort, mCommentId));
     }
 
@@ -408,7 +408,7 @@ public class ListingPresenterImpl implements ListingPresenter {
 
     @Override
     public void showMoreChildren(RedditMoreComments comment) {
-        mCommentsView.showSpinner(null);
+        mCommentView.showSpinner(null);
         List<String> children = comment.getChildren();
         mBus.post(new LoadMoreChildrenEvent(mLinkContext, comment, children, mSort));
     }
@@ -437,7 +437,7 @@ public class ListingPresenterImpl implements ListingPresenter {
     @Override
     public void toggleThreadVisible(AbsRedditComment comment) {
         mListingBank.toggleThreadVisible(comment);
-        mCommentsView.commentsUpdated();
+        mCommentView.commentsUpdated();
     }
 
     @Override
@@ -453,7 +453,7 @@ public class ListingPresenterImpl implements ListingPresenter {
     @Override
     public void showCommentContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, RedditComment comment) {
         mListingSelected = comment;
-        mCommentsView.showCommentContextMenu(menu, v, menuInfo, comment);
+        mCommentView.showCommentContextMenu(menu, v, menuInfo, comment);
 
         menu.findItem(R.id.action_comment_save).setVisible(!comment.isSaved());
         menu.findItem(R.id.action_comment_unsave).setVisible(comment.isSaved());
@@ -469,9 +469,9 @@ public class ListingPresenterImpl implements ListingPresenter {
     public void openReplyView() {
         RedditComment comment = (RedditComment) mListingSelected;
         if (comment.isArchived()) {
-            mCommentsView.showToast(R.string.listing_archived);
+            mCommentView.showToast(R.string.listing_archived);
         } else {
-            mCommentsView.openReplyView(comment);
+            mCommentView.openReplyView(comment);
         }
     }
 
@@ -490,18 +490,18 @@ public class ListingPresenterImpl implements ListingPresenter {
     @Override
     public void shareComment() {
         RedditComment comment = (RedditComment) mListingSelected;
-        mCommentsView.openShareView(comment);
+        mCommentView.openShareView(comment);
     }
 
     @Override
     public void openCommentInBrowser() {
         RedditComment comment = (RedditComment) mListingSelected;
-        mCommentsView.openCommentInBrowser(comment);
+        mCommentView.openCommentInBrowser(comment);
     }
 
     @Override
     public void reportComment() {
         RedditComment comment = (RedditComment) mListingSelected;
-        mCommentsView.showToast(R.string.implementation_pending);
+        mCommentView.showToast(R.string.implementation_pending);
     }
 }
