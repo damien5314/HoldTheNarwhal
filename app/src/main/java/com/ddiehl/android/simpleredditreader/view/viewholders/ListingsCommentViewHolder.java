@@ -19,7 +19,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 
-public class CommentViewHolder extends RecyclerView.ViewHolder
+public class ListingsCommentViewHolder extends RecyclerView.ViewHolder
         implements View.OnCreateContextMenuListener {
 
     private Context mContext;
@@ -36,7 +36,7 @@ public class CommentViewHolder extends RecyclerView.ViewHolder
     @InjectView(R.id.gilded_view) View mGildedView;
     @InjectView(R.id.comment_gilded_text_view) TextView mGildedText;
 
-    public CommentViewHolder(View v, CommentPresenter presenter) {
+    public ListingsCommentViewHolder(View v, CommentPresenter presenter) {
         super(v);
         mContext = v.getContext().getApplicationContext();
         mCommentPresenter = presenter;
@@ -62,12 +62,6 @@ public class CommentViewHolder extends RecyclerView.ViewHolder
     public void bind(final RedditLink link, final RedditComment comment) {
         mRedditComment = comment;
 
-        // Add padding views to indentation_wrapper based on depth of comment
-        int viewMargin = (comment.getDepth() - 2)
-                * (int) mContext.getResources().getDimension(R.dimen.comment_indentation_margin);
-        RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) itemView.getLayoutParams();
-        params.setMargins(viewMargin, 0, 0, 0);
-
         mAuthorView.setVisibility(View.VISIBLE);
         String authorType = null;
         String distinguished = comment.getDistinguished();
@@ -80,15 +74,15 @@ public class CommentViewHolder extends RecyclerView.ViewHolder
         if (authorType != null) {
             switch (authorType) {
                 case "op":
-                    mAuthorView.setBackgroundResource(R.drawable.author_op_background);
+                    mAuthorView.setBackgroundResource(R.drawable.author_op_bg);
                     mAuthorView.setTextColor(mContext.getResources().getColor(R.color.author_op_text));
                     break;
                 case "moderator":
-                    mAuthorView.setBackgroundResource(R.drawable.author_moderator_background);
+                    mAuthorView.setBackgroundResource(R.drawable.author_moderator_bg);
                     mAuthorView.setTextColor(mContext.getResources().getColor(R.color.author_moderator_text));
                     break;
                 case "admin":
-                    mAuthorView.setBackgroundResource(R.drawable.author_admin_background);
+                    mAuthorView.setBackgroundResource(R.drawable.author_admin_bg);
                     mAuthorView.setTextColor(mContext.getResources().getColor(R.color.author_admin_text));
                     break;
                 default:
@@ -123,11 +117,11 @@ public class CommentViewHolder extends RecyclerView.ViewHolder
 
         // Set background tint based on isLiked
         if (comment.isLiked() == null) {
-            mExpanderIcon.setBackgroundResource(R.drawable.comment_expander_background);
+            mExpanderIcon.setBackgroundResource(R.drawable.comment_expander_bg);
         } else if (comment.isLiked()) {
-            mExpanderIcon.setBackgroundResource(R.drawable.comment_expander_background_upvoted);
+            mExpanderIcon.setBackgroundResource(R.drawable.comment_expander_upvoted_bg);
         } else {
-            mExpanderIcon.setBackgroundResource(R.drawable.comment_expander_background_downvoted);
+            mExpanderIcon.setBackgroundResource(R.drawable.comment_expander_downvoted_bg);
         }
 
         // Show/hide saved icon for saved comments

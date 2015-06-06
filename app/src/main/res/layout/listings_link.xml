@@ -14,7 +14,7 @@
         android:id="@+id/link_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/link_card_background"
+        android:background="@drawable/link_card_bg"
         android:orientation="vertical">
 
         <LinearLayout
@@ -158,7 +158,7 @@
             <ImageView
                 android:id="@+id/link_thumbnail"
                 style="@style/LinkThumbnail"
-                android:background="@drawable/thumbnail_background"
+                android:background="@drawable/thumbnail_bg"
                 android:src="@drawable/ic_thumbnail_placeholder"/>
 
         </LinearLayout>

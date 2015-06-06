@@ -18,9 +18,9 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 
-public class LinkViewHolder extends RecyclerView.ViewHolder
+public class ListingsLinkViewHolder extends RecyclerView.ViewHolder
         implements View.OnCreateContextMenuListener {
-    private static final String TAG = LinkViewHolder.class.getSimpleName();
+    private static final String TAG = ListingsLinkViewHolder.class.getSimpleName();
 
     private Context mContext;
     private LinkPresenter mLinkPresenter;
@@ -41,7 +41,7 @@ public class LinkViewHolder extends RecyclerView.ViewHolder
     @InjectView(R.id.link_gilded_text_view) TextView mGildedText;
     @InjectView(R.id.link_stickied_view) View mStickiedView;
 
-    public LinkViewHolder(View v, LinkPresenter presenter) {
+    public ListingsLinkViewHolder(View v, LinkPresenter presenter) {
         super(v);
         mContext = v.getContext();
         mLinkPresenter = presenter;
@@ -92,11 +92,11 @@ public class LinkViewHolder extends RecyclerView.ViewHolder
         } else {
             switch (distinguished) {
                 case "moderator":
-                    mLinkAuthor.setBackgroundResource(R.drawable.author_moderator_background);
+                    mLinkAuthor.setBackgroundResource(R.drawable.author_moderator_bg);
                     mLinkAuthor.setTextColor(mContext.getResources().getColor(R.color.author_moderator_text));
                     break;
                 case "admin":
-                    mLinkAuthor.setBackgroundResource(R.drawable.author_admin_background);
+                    mLinkAuthor.setBackgroundResource(R.drawable.author_admin_bg);
                     mLinkAuthor.setTextColor(mContext.getResources().getColor(R.color.author_admin_text));
                     break;
                 default:
@@ -140,11 +140,11 @@ public class LinkViewHolder extends RecyclerView.ViewHolder
 
         // Set background tint based on isLiked
         if (link.isLiked() == null) {
-            mLinkView.setBackgroundResource(R.drawable.link_card_background);
+            mLinkView.setBackgroundResource(R.drawable.link_card_bg);
         } else if (link.isLiked()) {
-            mLinkView.setBackgroundResource(R.drawable.link_card_background_upvoted);
+            mLinkView.setBackgroundResource(R.drawable.link_card_upvoted_bg);
         } else {
-            mLinkView.setBackgroundResource(R.drawable.link_card_background_downvoted);
+            mLinkView.setBackgroundResource(R.drawable.link_card_downvoted_bg);
         }
 
         // Show gilding view if appropriate, else hide

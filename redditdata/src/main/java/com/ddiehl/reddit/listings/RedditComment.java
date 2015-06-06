@@ -207,7 +207,37 @@ public class RedditComment extends AbsRedditComment<RedditComment.Data> implemen
             return -1;
     }
 
+    public String getLinkTitle() {
+        return data.linkTitle;
+    }
+
+    public String getRemovalReason() {
+        return data.removalReason;
+    }
+
+    public String getLinkAuthor() {
+        return data.linkAuthor;
+    }
+
+    public String getParentId() {
+        return data.parentId;
+    }
+
+    public String getLinkUrl() {
+        return data.linkUrl;
+    }
+
     public static class Data extends AbsRedditComment.Data {
+
+        // Attributes specific to listing views
+        @Expose @SerializedName("link_title")
+        private String linkTitle;
+        @Expose @SerializedName("removal_reason")
+        private String removalReason;
+        @Expose @SerializedName("link_author")
+        private String linkAuthor;
+        @Expose @SerializedName("link_url")
+        private String linkUrl;
 
         @Expose
         private ListingResponse replies;

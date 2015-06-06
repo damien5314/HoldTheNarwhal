@@ -7,8 +7,8 @@ import android.view.ViewGroup;
 
 import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.presenter.ListingsPresenter;
-import com.ddiehl.android.simpleredditreader.view.viewholders.CommentViewHolder;
-import com.ddiehl.android.simpleredditreader.view.viewholders.LinkViewHolder;
+import com.ddiehl.android.simpleredditreader.view.viewholders.ListingsCommentViewHolder;
+import com.ddiehl.android.simpleredditreader.view.viewholders.ListingsLinkViewHolder;
 import com.ddiehl.reddit.listings.Listing;
 import com.ddiehl.reddit.listings.RedditComment;
 import com.ddiehl.reddit.listings.RedditLink;
@@ -42,11 +42,11 @@ public class ListingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             case TYPE_LINK:
                 View view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.listings_link, parent, false);
-                return new LinkViewHolder(view, mListingsPresenter);
+                return new ListingsLinkViewHolder(view, mListingsPresenter);
             case TYPE_COMMENT:
                 view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.listings_comment, parent, false);
-                return new CommentViewHolder(view, mListingsPresenter);
+                return new ListingsCommentViewHolder(view, mListingsPresenter);
             default:
                 throw new RuntimeException("Unexpected ViewHolder type: " + viewType);
         }
@@ -54,12 +54,12 @@ public class ListingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        if (holder instanceof LinkViewHolder) {
+        if (holder instanceof ListingsLinkViewHolder) {
             RedditLink link = (RedditLink) mListingsPresenter.getListing(position);
-            ((LinkViewHolder) holder).bind(link, false);
-        } else if (holder instanceof CommentViewHolder) {
+            ((ListingsLinkViewHolder) holder).bind(link, false);
+        } else if (holder instanceof ListingsCommentViewHolder) {
             RedditComment comment = (RedditComment) mListingsPresenter.getListing(position);
-            ((CommentViewHolder) holder).bind(comment);
+            ((ListingsCommentViewHolder) holder).bind(comment);
         }
     }
 

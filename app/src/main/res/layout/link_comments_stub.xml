@@ -5,7 +5,7 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/comment_background">
+    android:background="@drawable/thread_comment_bg">
 
     <View
         android:id="@+id/indentation"

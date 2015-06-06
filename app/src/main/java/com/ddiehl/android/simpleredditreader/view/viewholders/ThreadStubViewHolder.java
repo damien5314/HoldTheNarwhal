@@ -14,7 +14,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 
-public class CommentStubViewHolder extends RecyclerView.ViewHolder {
+public class ThreadStubViewHolder extends RecyclerView.ViewHolder {
 
     private Context mContext;
     private CommentPresenter mCommentPresenter;
@@ -22,7 +22,7 @@ public class CommentStubViewHolder extends RecyclerView.ViewHolder {
 
     @InjectView(R.id.comment_more) TextView mMoreCommentsView;
 
-    public CommentStubViewHolder(View v, CommentPresenter presenter) {
+    public ThreadStubViewHolder(View v, CommentPresenter presenter) {
         super(v);
         mContext = v.getContext().getApplicationContext();
         mCommentPresenter = presenter;

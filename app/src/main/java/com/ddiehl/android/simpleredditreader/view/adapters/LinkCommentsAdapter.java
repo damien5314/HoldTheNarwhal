@@ -6,9 +6,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ddiehl.android.simpleredditreader.R;
-import com.ddiehl.android.simpleredditreader.view.viewholders.CommentStubViewHolder;
-import com.ddiehl.android.simpleredditreader.view.viewholders.CommentViewHolder;
-import com.ddiehl.android.simpleredditreader.view.viewholders.LinkViewHolder;
+import com.ddiehl.android.simpleredditreader.view.viewholders.ThreadStubViewHolder;
+import com.ddiehl.android.simpleredditreader.view.viewholders.ThreadCommentViewHolder;
+import com.ddiehl.android.simpleredditreader.view.viewholders.ListingsLinkViewHolder;
 import com.ddiehl.reddit.listings.AbsRedditComment;
 import com.ddiehl.reddit.listings.RedditComment;
 import com.ddiehl.reddit.listings.RedditLink;
@@ -45,15 +45,15 @@ public class LinkCommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             case TYPE_LINK:
                 View view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.listings_link, parent, false);
-                return new LinkViewHolder(view, mLinkCommentsPresenter);
+                return new ListingsLinkViewHolder(view, mLinkCommentsPresenter);
             case TYPE_COMMENT:
                 view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.link_comments_comment, parent, false);
-                return new CommentViewHolder(view, mLinkCommentsPresenter);
+                return new ThreadCommentViewHolder(view, mLinkCommentsPresenter);
             case TYPE_COMMENT_STUB:
                 view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.link_comments_stub, parent, false);
-                return new CommentStubViewHolder(view, mLinkCommentsPresenter);
+                return new ThreadStubViewHolder(view, mLinkCommentsPresenter);
             default:
                 throw new RuntimeException("Unexpected ViewHolder type: " + viewType);
         }
@@ -61,16 +61,16 @@ public class LinkCommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        if (holder instanceof LinkViewHolder) {
+        if (holder instanceof ListingsLinkViewHolder) {
             RedditLink link = mLinkCommentsPresenter.getLinkContext();
-            ((LinkViewHolder) holder).bind(link, true);
-        } else if (holder instanceof CommentViewHolder) {
+            ((ListingsLinkViewHolder) holder).bind(link, true);
+        } else if (holder instanceof ThreadCommentViewHolder) {
             RedditLink link = mLinkCommentsPresenter.getLinkContext();
             RedditComment comment = (RedditComment) mLinkCommentsPresenter.getComment(position - 1);
-            ((CommentViewHolder) holder).bind(link, comment);
-        } else if (holder instanceof CommentStubViewHolder) {
+            ((ThreadCommentViewHolder) holder).bind(link, comment);
+        } else if (holder instanceof ThreadStubViewHolder) {
             RedditMoreComments comment = (RedditMoreComments) mLinkCommentsPresenter.getComment(position - 1);
-            ((CommentStubViewHolder) holder).bind(comment);
+            ((ThreadStubViewHolder) holder).bind(comment);
         }
     }
 
