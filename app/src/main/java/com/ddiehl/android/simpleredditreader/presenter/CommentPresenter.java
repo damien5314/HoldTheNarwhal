@@ -10,10 +10,10 @@ public interface CommentPresenter {
 
     void showCommentContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, RedditComment comment);
     void navigateToCommentThread(String commentId);
-    void showMoreChildren(RedditMoreComments comment);
+    void getMoreChildren(RedditMoreComments comment);
     void openReplyView();
-    void upvote();
-    void downvote();
+    void upvoteComment();
+    void downvoteComment();
     void saveComment();
     void unsaveComment();
     void shareComment();

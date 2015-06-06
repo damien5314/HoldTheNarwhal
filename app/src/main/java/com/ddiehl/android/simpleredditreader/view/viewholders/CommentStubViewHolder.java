@@ -49,7 +49,7 @@ public class CommentStubViewHolder extends RecyclerView.ViewHolder {
         if (mRedditMoreComments.getCount() == 0) {
             mCommentPresenter.navigateToCommentThread(mRedditMoreComments.getParentId());
         } else {
-            mCommentPresenter.showMoreChildren(mRedditMoreComments);
+            mCommentPresenter.getMoreChildren(mRedditMoreComments);
         }
     }
 }

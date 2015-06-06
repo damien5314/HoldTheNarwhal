@@ -18,12 +18,11 @@ import android.view.ViewGroup;
 import com.ddiehl.android.simpleredditreader.BusProvider;
 import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.presenter.LinkCommentsPresenter;
-import com.ddiehl.android.simpleredditreader.presenter.AbsListingPresenter;
-import com.ddiehl.android.simpleredditreader.view.CommentThreadView;
+import com.ddiehl.android.simpleredditreader.presenter.LinkCommentsPresenterImpl;
+import com.ddiehl.android.simpleredditreader.view.LinkCommentsView;
 import com.ddiehl.android.simpleredditreader.view.SettingsChangedListener;
 import com.ddiehl.android.simpleredditreader.view.activities.MainActivity;
 import com.ddiehl.android.simpleredditreader.view.adapters.LinkCommentsAdapter;
-import com.ddiehl.android.simpleredditreader.view.adapters.ListingAdapter;
 import com.ddiehl.android.simpleredditreader.view.dialogs.ChooseCommentSortDialog;
 import com.ddiehl.reddit.listings.RedditComment;
 import com.ddiehl.reddit.listings.RedditLink;
@@ -32,7 +31,7 @@ import com.squareup.otto.Bus;
 import butterknife.ButterKnife;
 
 public class LinkCommentsFragment extends AbsRedditFragment
-        implements CommentThreadView, SettingsChangedListener {
+        implements LinkCommentsView, SettingsChangedListener {
     private static final String TAG = LinkCommentsFragment.class.getSimpleName();
 
     private static final String ARG_SUBREDDIT = "subreddit";
@@ -73,12 +72,8 @@ public class LinkCommentsFragment extends AbsRedditFragment
         String articleId = args.getString(ARG_ARTICLE);
         String commentId = args.getString(ARG_COMMENT_ID);
 
-        mListingPresenter = new AbsListingPresenter(getActivity(), this, this, null, subreddit, articleId, commentId, null, null);
-//        mLinksPresenter = new LinksPresenterImpl(getActivity(), this, subreddit);
-//        mCommentsPresenter = new CommentsPresenterImpl(getActivity(), this, subreddit, articleId, commentId);
-
-        mListingAdapter = new ListingAdapter(mListingPresenter);
-//        mLinkCommentsAdapter = new LinkCommentsAdapter(mLinksPresenter, mCommentsPresenter);
+        mLinkCommentsPresenter = new LinkCommentsPresenterImpl(getActivity(), this, subreddit, articleId, commentId);
+        mLinkCommentsAdapter = new LinkCommentsAdapter(mLinkCommentsPresenter);
     }
 
     @Override
@@ -87,7 +82,7 @@ public class LinkCommentsFragment extends AbsRedditFragment
 
         RecyclerView recyclerView = ButterKnife.findById(v, R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerView.setAdapter(mListingAdapter);
+        recyclerView.setAdapter(mLinkCommentsAdapter);
 
         return v;
     }
@@ -95,21 +90,17 @@ public class LinkCommentsFragment extends AbsRedditFragment
     @Override
     public void onResume() {
         super.onResume();
-        mBus.register(mListingPresenter);
-//        mBus.register(mLinksPresenter);
-//        mBus.register(mCommentsPresenter);
+        mBus.register(mLinkCommentsPresenter);
 
-        if (mListingAdapter.getItemCount() < 2) { // Always returns at least 1
-            mListingPresenter.getComments();
+        if (mLinkCommentsAdapter.getItemCount() < 2) { // Always returns at least 1
+            mLinkCommentsPresenter.getComments();
         }
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        mBus.unregister(mListingPresenter);
-//        mBus.unregister(mLinksPresenter);
-//        mBus.unregister(mCommentsPresenter);
+        mBus.unregister(mLinkCommentsPresenter);
     }
 
     @Override
@@ -125,17 +116,17 @@ public class LinkCommentsFragment extends AbsRedditFragment
 
     @Override
     public void commentsUpdated() {
-        mListingAdapter.notifyDataSetChanged();
+        mLinkCommentsAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void commentUpdatedAt(int position) {
-        mListingAdapter.notifyItemChanged(position + 1);
+        mLinkCommentsAdapter.notifyItemChanged(position + 1);
     }
 
     @Override
     public void commentRemovedAt(int position) {
-        mListingAdapter.notifyItemRemoved(position + 1);
+        mLinkCommentsAdapter.notifyItemRemoved(position + 1);
     }
 
     @Override
@@ -195,61 +186,61 @@ public class LinkCommentsFragment extends AbsRedditFragment
     public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_link_upvote:
-                mListingPresenter.upvote();
+                mLinkCommentsPresenter.upvoteComment();
                 return true;
             case R.id.action_link_downvote:
-                mListingPresenter.downvote();
+                mLinkCommentsPresenter.downvoteComment();
                 return true;
             case R.id.action_link_show_comments:
-                mListingPresenter.showCommentsForLink();
+                mLinkCommentsPresenter.showCommentsForLink();
                 return true;
             case R.id.action_link_save:
-                mListingPresenter.saveLink();
+                mLinkCommentsPresenter.saveLink();
                 return true;
             case R.id.action_link_unsave:
-                mListingPresenter.unsaveLink();
+                mLinkCommentsPresenter.unsaveLink();
                 return true;
             case R.id.action_link_share:
-                mListingPresenter.shareLink();
+                mLinkCommentsPresenter.shareLink();
                 return true;
             case R.id.action_link_open_in_browser:
-                mListingPresenter.openLinkInBrowser();
+                mLinkCommentsPresenter.openLinkInBrowser();
                 return true;
             case R.id.action_link_open_comments_in_browser:
-                mListingPresenter.openCommentsInBrowser();
+                mLinkCommentsPresenter.openCommentsInBrowser();
                 return true;
             case R.id.action_link_hide:
-                mListingPresenter.hideLink();
+                mLinkCommentsPresenter.hideLink();
                 return true;
             case R.id.action_link_unhide:
-                mListingPresenter.unhideLink();
+                mLinkCommentsPresenter.unhideLink();
                 return true;
             case R.id.action_link_report:
-                mListingPresenter.reportLink();
+                mLinkCommentsPresenter.reportLink();
                 return true;
             case R.id.action_comment_reply:
-                mListingPresenter.openReplyView();
+                mLinkCommentsPresenter.openReplyView();
                 return true;
             case R.id.action_comment_upvote:
-                mListingPresenter.upvote();
+                mLinkCommentsPresenter.upvoteComment();
                 return true;
             case R.id.action_comment_downvote:
-                mListingPresenter.downvote();
+                mLinkCommentsPresenter.downvoteComment();
                 return true;
             case R.id.action_comment_save:
-                mListingPresenter.saveComment();
+                mLinkCommentsPresenter.saveComment();
                 return true;
             case R.id.action_comment_unsave:
-                mListingPresenter.unsaveComment();
+                mLinkCommentsPresenter.unsaveComment();
                 return true;
             case R.id.action_comment_share:
-                mListingPresenter.shareComment();
+                mLinkCommentsPresenter.shareComment();
                 return true;
             case R.id.action_comment_open_in_browser:
-                mListingPresenter.openCommentInBrowser();
+                mLinkCommentsPresenter.openCommentInBrowser();
                 return true;
             case R.id.action_comment_report:
-                mListingPresenter.reportComment();
+                mLinkCommentsPresenter.reportComment();
                 return true;
             default:
                 return false;
@@ -262,7 +253,7 @@ public class LinkCommentsFragment extends AbsRedditFragment
             case REQUEST_CHOOSE_SORT:
                 if (resultCode == Activity.RESULT_OK) {
                     String sort = data.getStringExtra(ChooseCommentSortDialog.EXTRA_SORT);
-                    mListingPresenter.updateSort(sort);
+                    mLinkCommentsPresenter.updateSort(sort);
                 }
                 getActivity().supportInvalidateOptionsMenu();
                 break;
@@ -281,7 +272,7 @@ public class LinkCommentsFragment extends AbsRedditFragment
                 showChooseCommentSortDialog();
                 return true;
             case R.id.action_refresh:
-                mListingPresenter.getComments();
+                mLinkCommentsPresenter.getComments();
                 return true;
             case R.id.action_settings:
                 ((MainActivity) getActivity()).showSettings();

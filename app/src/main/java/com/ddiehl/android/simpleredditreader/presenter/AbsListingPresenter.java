@@ -109,6 +109,13 @@ public abstract class AbsListingPresenter implements ListingPresenter {
     }
 
     @Override
+    public void updateSort() {
+        String sort = "hot";
+        String timespan = "all";
+        updateSort(sort, timespan);
+    }
+
+    @Override
     public void updateSort(String sort) {
         if (!mSort.equals(sort)) {
             mSort = sort;
@@ -233,7 +240,7 @@ public abstract class AbsListingPresenter implements ListingPresenter {
     }
 
     @Override
-    public void upvote() {
+    public void upvoteLink() {
         Listing listing = mListingSelected;
         if (((Archivable) listing).isArchived()) {
             mListingsView.showToast(R.string.listing_archived);
@@ -245,7 +252,7 @@ public abstract class AbsListingPresenter implements ListingPresenter {
     }
 
     @Override
-    public void downvote() {
+    public void downvoteLink() {
         Listing listing = mListingSelected;
         if (((Archivable) listing).isArchived()) {
             mListingsView.showToast(R.string.listing_archived);
@@ -320,7 +327,7 @@ public abstract class AbsListingPresenter implements ListingPresenter {
     }
 
     @Override
-    public void showMoreChildren(RedditMoreComments comment) {
+    public void getMoreChildren(RedditMoreComments comment) {
         // Comment stubs cannot appear in a listing view
     }
 

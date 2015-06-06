@@ -19,14 +19,13 @@ import android.view.ViewGroup;
 import com.ddiehl.android.simpleredditreader.BusProvider;
 import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.presenter.ListingPresenter;
-import com.ddiehl.android.simpleredditreader.presenter.AbsListingPresenter;
 import com.ddiehl.android.simpleredditreader.presenter.SubredditPresenter;
-import com.ddiehl.android.simpleredditreader.view.LinksView;
-import com.ddiehl.android.simpleredditreader.view.SettingsChangedListener;
+import com.ddiehl.android.simpleredditreader.view.ListingsView;
 import com.ddiehl.android.simpleredditreader.view.activities.MainActivity;
 import com.ddiehl.android.simpleredditreader.view.adapters.ListingAdapter;
 import com.ddiehl.android.simpleredditreader.view.dialogs.ChooseLinkSortDialog;
 import com.ddiehl.android.simpleredditreader.view.dialogs.ChooseTimespanDialog;
+import com.ddiehl.reddit.listings.RedditComment;
 import com.ddiehl.reddit.listings.RedditLink;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
@@ -34,8 +33,7 @@ import com.squareup.otto.Subscribe;
 import butterknife.ButterKnife;
 import retrofit.RetrofitError;
 
-public class SubredditFragment extends AbsRedditFragment
-        implements LinksView, SettingsChangedListener {
+public class SubredditFragment extends AbsRedditFragment implements ListingsView {
     private static final String TAG = SubredditFragment.class.getSimpleName();
 
     private static final String ARG_SUBREDDIT = "subreddit";
@@ -71,7 +69,7 @@ public class SubredditFragment extends AbsRedditFragment
 
         Bundle args = getArguments();
         String subreddit = args.getString(ARG_SUBREDDIT);
-        mListingPresenter = new SubredditPresenter(getActivity(), this, subreddit);
+        mListingPresenter = new SubredditPresenter(getActivity(), this, subreddit, "hot", "all");
         mListingAdapter = new ListingAdapter(mListingPresenter);
     }
 
@@ -174,7 +172,7 @@ public class SubredditFragment extends AbsRedditFragment
                 showLinkTimespanOptionsMenu();
                 return true;
             case R.id.action_refresh:
-                mListingPresenter.getLinks();
+                mListingPresenter.refreshData();
                 return true;
             case R.id.action_settings:
                 ((MainActivity) getActivity()).showSettings();
@@ -237,10 +235,10 @@ public class SubredditFragment extends AbsRedditFragment
     public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_link_upvote:
-                mListingPresenter.upvote();
+                mListingPresenter.upvoteComment();
                 return true;
             case R.id.action_link_downvote:
-                mListingPresenter.downvote();
+                mListingPresenter.downvoteComment();
                 return true;
             case R.id.action_link_show_comments:
                 mListingPresenter.showCommentsForLink();
@@ -275,21 +273,6 @@ public class SubredditFragment extends AbsRedditFragment
     }
 
     @Override
-    public void linksUpdated() {
-        mListingAdapter.notifyDataSetChanged();
-    }
-
-    @Override
-    public void linkUpdatedAt(int position) {
-        mListingAdapter.notifyItemChanged(position);
-    }
-
-    @Override
-    public void linkRemovedAt(int position) {
-        mListingAdapter.notifyItemRemoved(position);
-    }
-
-    @Override
     public void openWebViewForLink(RedditLink link) {
         ((MainActivity) getActivity()).openWebViewForURL(link.getUrl());
     }
@@ -317,7 +300,33 @@ public class SubredditFragment extends AbsRedditFragment
     }
 
     @Override
-    public void onSettingsChanged() {
-        // No views dependent on settings
+    public void listingsUpdated() {
+        mListingAdapter.notifyDataSetChanged();
     }
+
+    @Override
+    public void listingUpdatedAt(int position) {
+        mListingAdapter.notifyItemChanged(position);
+    }
+
+    @Override
+    public void listingRemovedAt(int position) {
+        mListingAdapter.notifyItemRemoved(position);
+    }
+
+    @Override
+    public void showCommentContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo,
+            RedditComment comment) { /* Intentionally blank */ }
+
+    @Override
+    public void openShareView(RedditComment comment) { /* Intentionally blank */ }
+
+    @Override
+    public void openCommentInBrowser(RedditComment comment) { /* Intentionally blank */ }
+
+    @Override
+    public void openReplyView(RedditComment comment) { /* Intentionally blank */ }
+
+    @Override
+    public void navigateToCommentThread(String commentId) { /* Intentionally blank */ }
 }

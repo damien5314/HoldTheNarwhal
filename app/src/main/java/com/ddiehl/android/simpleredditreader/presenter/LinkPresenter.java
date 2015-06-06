@@ -11,8 +11,8 @@ public interface LinkPresenter {
     void openLink(RedditLink link);
     void showCommentsForLink(RedditLink link);
     void showCommentsForLink();
-    void upvote();
-    void downvote();
+    void upvoteLink();
+    void downvoteLink();
     void saveLink();
     void unsaveLink();
     void shareLink();

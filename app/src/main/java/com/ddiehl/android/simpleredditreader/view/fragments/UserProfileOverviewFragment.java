@@ -164,10 +164,10 @@ public class UserProfileOverviewFragment extends AbsUserProfileFragment
     public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_link_upvote:
-                mListingPresenter.upvote();
+                mListingPresenter.upvoteComment();
                 return true;
             case R.id.action_link_downvote:
-                mListingPresenter.downvote();
+                mListingPresenter.downvoteComment();
                 return true;
             case R.id.action_link_show_comments:
                 mListingPresenter.showCommentsForLink();
@@ -200,10 +200,10 @@ public class UserProfileOverviewFragment extends AbsUserProfileFragment
                 mListingPresenter.openReplyView();
                 return true;
             case R.id.action_comment_upvote:
-                mListingPresenter.upvote();
+                mListingPresenter.upvoteComment();
                 return true;
             case R.id.action_comment_downvote:
-                mListingPresenter.downvote();
+                mListingPresenter.downvoteComment();
                 return true;
             case R.id.action_comment_save:
                 mListingPresenter.saveComment();
