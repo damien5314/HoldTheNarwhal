@@ -33,7 +33,6 @@ import com.ddiehl.android.simpleredditreader.view.MainView;
 import com.ddiehl.android.simpleredditreader.view.SettingsChangedListener;
 import com.ddiehl.android.simpleredditreader.view.dialogs.ConfirmSignOutDialog;
 import com.ddiehl.android.simpleredditreader.view.fragments.SubredditFragment;
-import com.ddiehl.android.simpleredditreader.view.fragments.UserProfileCommentsFragment;
 import com.ddiehl.android.simpleredditreader.view.fragments.UserProfileOverviewFragment;
 import com.ddiehl.android.simpleredditreader.view.fragments.WebViewFragment;
 import com.ddiehl.reddit.identity.UserIdentity;
@@ -97,16 +96,17 @@ public class MainActivity extends ActionBarActivity implements MainView, Confirm
             public void onTabSelected(TabLayout.Tab tab) {
                 switch (tab.getPosition()) {
                     case 0:
-                        showUserProfileOverview(null);
+                        showUserProfileOverview();
                         break;
                     case 1:
-                        showUserProfileComments(null);
-                        break;
+//                        showUserProfileComments(null);
                     case 2:
                     case 3:
                     case 4:
                     case 5:
                     case 6:
+                        showToast(R.string.implementation_pending);
+                        break;
                     default:
                         Log.w(TAG, "Unknown tab selected: " + tab.getPosition() + " " + tab.getText());
                 }
@@ -129,8 +129,7 @@ public class MainActivity extends ActionBarActivity implements MainView, Confirm
                         showLoginView();
                         return true;
                     case R.id.drawer_user_profile:
-                        String username = mMainPresenter.getAuthorizedUser().getName();
-                        showUserProfile(username);
+                        showUserProfile();
                         return true;
                     case R.id.drawer_subreddits:
                         showUserSubreddits();
@@ -157,16 +156,18 @@ public class MainActivity extends ActionBarActivity implements MainView, Confirm
     }
 
     @Override
-    public void showUserProfile(String userId) {
+    public void showUserProfile() {
         closeNavigationDrawer();
-        showUserProfileOverview(userId);
+        mMainPresenter.setUsername(mMainPresenter.getAuthorizedUser().getName());
+        showUserProfileOverview();
     }
 
     @Override
-    public void showUserProfileOverview(String userId) {
+    public void showUserProfileOverview() {
         closeNavigationDrawer();
         FragmentManager fm = getSupportFragmentManager();
-        Fragment f = UserProfileOverviewFragment.newInstance(userId);
+        String username = mMainPresenter.getUsername();
+        Fragment f = UserProfileOverviewFragment.newInstance(username);
         fm.beginTransaction().replace(R.id.fragment_container, f)
                 .addToBackStack(null)
                 .commit();
@@ -174,10 +175,11 @@ public class MainActivity extends ActionBarActivity implements MainView, Confirm
     }
 
     @Override
-    public void showUserProfileComments(String userId) {
+    public void showUserProfileComments() {
         closeNavigationDrawer();
         FragmentManager fm = getSupportFragmentManager();
-        Fragment f = UserProfileCommentsFragment.newInstance(userId);
+        String username = mMainPresenter.getUsername();
+        Fragment f = UserProfileOverviewFragment.newInstance(username);
         fm.beginTransaction().replace(R.id.fragment_container, f)
                 .addToBackStack(null)
                 .commit();

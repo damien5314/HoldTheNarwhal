@@ -18,6 +18,7 @@ public class MainPresenterImpl implements MainPresenter {
 
     private MainView mMainView;
     private RedditIdentityManager mIdentityManager;
+    private String mUsername;
 
     public MainPresenterImpl(Context context, MainView view) {
         mBus = BusProvider.getInstance();
@@ -34,6 +35,16 @@ public class MainPresenterImpl implements MainPresenter {
         UserIdentity identity = event.getUserIdentity();
         mMainView.setAccount(identity);
         mMainView.updateNavigationItems();
+    }
+
+    @Override
+    public String getUsername() {
+        return mUsername;
+    }
+
+    @Override
+    public void setUsername(String username) {
+        mUsername = username;
     }
 
     @Override

@@ -9,9 +9,9 @@ public interface MainView extends BaseView {
     void updateNavigationItems();
 
     void showLoginView();
-    void showUserProfile(String userId);
-    void showUserProfileOverview(String userId);
-    void showUserProfileComments(String userId);
+    void showUserProfile();
+    void showUserProfileOverview();
+    void showUserProfileComments();
     void showUserSubreddits();
     void showSubreddit(String subreddit);
     void openWebViewForURL(String authorizationUrl);
