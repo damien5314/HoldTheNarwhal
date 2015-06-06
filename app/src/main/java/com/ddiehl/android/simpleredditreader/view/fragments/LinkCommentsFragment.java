@@ -77,7 +77,7 @@ public class LinkCommentsFragment extends AbsRedditFragment
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.comments_fragment, container, false);
+        View v = inflater.inflate(R.layout.link_comments_fragment, container, false);
 
         RecyclerView recyclerView = ButterKnife.findById(v, R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));

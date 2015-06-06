@@ -49,7 +49,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginRight="@dimen/comment_author_margin"
                     android:layout_marginEnd="@dimen/comment_author_margin"
-                    android:text="thisisaverylongusername"
+                    android:text="andrewsmith1984"
                     android:textColor="@color/secondary_text"
                     android:textStyle="bold"
                     android:textSize="@dimen/comment_author_text_size"

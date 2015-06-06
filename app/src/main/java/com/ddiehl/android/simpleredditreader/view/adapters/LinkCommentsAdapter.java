@@ -44,15 +44,15 @@ public class LinkCommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         switch (viewType) {
             case TYPE_LINK:
                 View view = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.link_item, parent, false);
+                        .inflate(R.layout.listings_link, parent, false);
                 return new LinkViewHolder(view, mLinkCommentsPresenter);
             case TYPE_COMMENT:
                 view = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.comment_item, parent, false);
+                        .inflate(R.layout.link_comments_comment, parent, false);
                 return new CommentViewHolder(view, mLinkCommentsPresenter);
             case TYPE_COMMENT_STUB:
                 view = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.comment_stub_item, parent, false);
+                        .inflate(R.layout.link_comments_stub, parent, false);
                 return new CommentStubViewHolder(view, mLinkCommentsPresenter);
             default:
                 throw new RuntimeException("Unexpected ViewHolder type: " + viewType);

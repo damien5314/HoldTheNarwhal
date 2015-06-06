@@ -41,11 +41,11 @@ public class ListingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         switch (viewType) {
             case TYPE_LINK:
                 View view = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.link_item, parent, false);
+                        .inflate(R.layout.listings_link, parent, false);
                 return new LinkViewHolder(view, mListingsPresenter);
             case TYPE_COMMENT:
                 view = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.comment_item, parent, false);
+                        .inflate(R.layout.listings_comment, parent, false);
                 return new CommentViewHolder(view, mListingsPresenter);
             default:
                 throw new RuntimeException("Unexpected ViewHolder type: " + viewType);

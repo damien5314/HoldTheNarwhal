@@ -43,8 +43,8 @@
     <dimen name="link_list_item_margin_vertical">8dp</dimen>
     <dimen name="link_list_item_margin_horizontal">8dp</dimen>
     <dimen name="link_thumbnail_margin">2dp</dimen>
-    <dimen name="link_card_margin">5dp</dimen>
-    <dimen name="link_card_elevation">6dp</dimen>
+    <dimen name="link_card_margin">0dp</dimen>
+    <dimen name="link_card_elevation">4dp</dimen> <!-- Should be 6dp? -->
     <dimen name="link_card_corner_radius">0dp</dimen>
     <dimen name="link_data_margin">5dp</dimen>
     <dimen name="comment_data_divider_width">1dp</dimen>
