@@ -9,7 +9,7 @@ import com.ddiehl.android.simpleredditreader.events.exceptions.UserRequiredExcep
 import com.ddiehl.android.simpleredditreader.events.requests.GetUserIdentityEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.HideEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.LoadLinkCommentsEvent;
-import com.ddiehl.android.simpleredditreader.events.requests.LoadLinksEvent;
+import com.ddiehl.android.simpleredditreader.events.requests.LoadSubredditEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.LoadMoreChildrenEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.LoadUserOverviewEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.ReportEvent;
@@ -136,7 +136,7 @@ public class RedditServiceAPI implements RedditService {
      * Retrieves link listings for subreddit
      */
     @Override
-    public void onLoadLinks(LoadLinksEvent event) {
+    public void onLoadLinks(LoadSubredditEvent event) {
         String subreddit = event.getSubreddit();
         String sort = event.getSort();
         String timespan = event.getTimeSpan();

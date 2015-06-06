@@ -2,7 +2,7 @@ package com.ddiehl.android.simpleredditreader.io;
 
 import com.ddiehl.android.simpleredditreader.events.requests.HideEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.LoadLinkCommentsEvent;
-import com.ddiehl.android.simpleredditreader.events.requests.LoadLinksEvent;
+import com.ddiehl.android.simpleredditreader.events.requests.LoadSubredditEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.LoadMoreChildrenEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.LoadUserOverviewEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.ReportEvent;
@@ -16,7 +16,7 @@ public interface RedditService {
     String ENDPOINT_NORMAL = "https://www.reddit.com";
     String ENDPOINT_AUTHORIZED = "https://oauth.reddit.com";
 
-    void onLoadLinks(LoadLinksEvent event);
+    void onLoadLinks(LoadSubredditEvent event);
     void onLoadLinkComments(LoadLinkCommentsEvent event);
     void onLoadMoreChildren(LoadMoreChildrenEvent event);
     void onLoadUserOverview(LoadUserOverviewEvent event);

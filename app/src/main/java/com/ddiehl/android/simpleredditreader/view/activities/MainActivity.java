@@ -129,7 +129,8 @@ public class MainActivity extends ActionBarActivity implements MainView, Confirm
                         showLoginView();
                         return true;
                     case R.id.drawer_user_profile:
-                        showUserProfile(null);
+                        String username = mMainPresenter.getAuthorizedUser().getName();
+                        showUserProfile(username);
                         return true;
                     case R.id.drawer_subreddits:
                         showUserSubreddits();

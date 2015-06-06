@@ -12,7 +12,7 @@ import com.ddiehl.android.simpleredditreader.events.requests.AuthorizeApplicatio
 import com.ddiehl.android.simpleredditreader.events.requests.GetUserIdentityEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.HideEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.LoadLinkCommentsEvent;
-import com.ddiehl.android.simpleredditreader.events.requests.LoadLinksEvent;
+import com.ddiehl.android.simpleredditreader.events.requests.LoadSubredditEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.LoadMoreChildrenEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.LoadUserOverviewEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.RefreshUserAccessTokenEvent;
@@ -271,7 +271,7 @@ public class RedditServiceAuth implements RedditService {
     /////////////////////////////////////
 
     @Subscribe @Override
-    public void onLoadLinks(LoadLinksEvent event) {
+    public void onLoadLinks(LoadSubredditEvent event) {
         if (!mIdentityManager.hasValidAccessToken()) {
             mQueuedEvent = event;
             AccessToken userAccessToken = mIdentityManager.getUserAccessToken();
@@ -327,7 +327,7 @@ public class RedditServiceAuth implements RedditService {
         }
     }
 
-    @Override
+    @Subscribe @Override
     public void onLoadUserOverview(LoadUserOverviewEvent event) {
         if (!mIdentityManager.hasValidAccessToken()) {
             mQueuedEvent = event;

@@ -3,7 +3,7 @@ package com.ddiehl.android.simpleredditreader.presenter;
 import android.content.Context;
 
 import com.ddiehl.android.simpleredditreader.R;
-import com.ddiehl.android.simpleredditreader.events.requests.LoadLinksEvent;
+import com.ddiehl.android.simpleredditreader.events.requests.LoadSubredditEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.HideSubmittedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.ListingsLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.SaveSubmittedEvent;
@@ -25,24 +25,16 @@ public class SubredditPresenter extends AbsListingsPresenter {
 
     @Override
     public void refreshData() {
-        getLinks();
-    }
-
-    @Override
-    public void getMoreData() {
-        getMoreLinks();
-    }
-
-    private void getLinks() {
         if (mListingsRequested)
             return;
 
         mListings.clear();
         mListingsView.listingsUpdated();
-        getMoreLinks();
+        getMoreData();
     }
 
-    private void getMoreLinks() {
+    @Override
+    public void getMoreData() {
         if (mListingsRequested)
             return;
 
@@ -50,7 +42,7 @@ public class SubredditPresenter extends AbsListingsPresenter {
         mListingsView.showSpinner(R.string.spinner_getting_submissions);
         String after = mListings == null || mListings.size() == 0
                 ? null : mListings.get(mListings.size() - 1).getName();
-        mBus.post(new LoadLinksEvent(mSubreddit, mSort, mTimespan, after));
+        mBus.post(new LoadSubredditEvent(mSubreddit, mSort, mTimespan, after));
     }
 
     @Subscribe @Override

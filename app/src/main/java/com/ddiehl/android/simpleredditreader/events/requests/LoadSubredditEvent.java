@@ -1,14 +1,14 @@
 package com.ddiehl.android.simpleredditreader.events.requests;
 
 
-public class LoadLinksEvent {
+public class LoadSubredditEvent {
 
     private String mSubreddit;
     private String mSort;
     private String mTimeSpan;
     private String mAfter;
 
-    public LoadLinksEvent(String subreddit, String sort, String timespan, String after) {
+    public LoadSubredditEvent(String subreddit, String sort, String timespan, String after) {
         mSubreddit = subreddit;
         mSort = sort;
         mTimeSpan = timespan;
