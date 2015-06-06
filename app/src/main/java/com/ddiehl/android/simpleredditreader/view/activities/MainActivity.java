@@ -228,7 +228,7 @@ public class MainActivity extends ActionBarActivity implements MainView, Confirm
         if (mSubredditNavigationDialog == null) {
             mSubredditNavigationDialog = new Dialog(this);
             mSubredditNavigationDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            mSubredditNavigationDialog.setContentView(R.layout.navigation_drawer_edit_text_row);
+            mSubredditNavigationDialog.setContentView(R.layout.navigate_to_subreddit_edit_text);
             ButterKnife.findById(mSubredditNavigationDialog, R.id.drawer_navigate_to_subreddit_go)
                     .setOnClickListener(new View.OnClickListener() {
                         @Override

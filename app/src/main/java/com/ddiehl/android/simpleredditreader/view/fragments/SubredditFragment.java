@@ -76,7 +76,7 @@ public class SubredditFragment extends AbsRedditFragment implements ListingsView
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.links_fragment, container, false);
+        View v = inflater.inflate(R.layout.listings_fragment, container, false);
 
         final LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         RecyclerView rv = ButterKnife.findById(v, R.id.recycler_view);

@@ -58,9 +58,8 @@ public class ListingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             RedditLink link = (RedditLink) mListingsPresenter.getListing(position);
             ((LinkViewHolder) holder).bind(link, false);
         } else if (holder instanceof CommentViewHolder) {
-            RedditLink link = (RedditLink) mListingsPresenter.getListing(position);
             RedditComment comment = (RedditComment) mListingsPresenter.getListing(position);
-            ((CommentViewHolder) holder).bind(link, comment);
+            ((CommentViewHolder) holder).bind(comment);
         }
     }
 

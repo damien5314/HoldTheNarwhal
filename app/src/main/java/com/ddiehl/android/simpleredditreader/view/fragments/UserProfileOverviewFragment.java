@@ -6,6 +6,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -27,6 +29,8 @@ import com.ddiehl.reddit.listings.RedditComment;
 import com.ddiehl.reddit.listings.RedditLink;
 import com.squareup.otto.Bus;
 
+import butterknife.ButterKnife;
+
 public class UserProfileOverviewFragment extends AbsUserProfileFragment implements ListingsView {
     private static final String TAG = UserProfileOverviewFragment.class.getSimpleName();
 
@@ -37,6 +41,9 @@ public class UserProfileOverviewFragment extends AbsUserProfileFragment implemen
     private Bus mBus = BusProvider.getInstance();
     private ListingsPresenter mListingsPresenter;
     private ListingsAdapter mListingsAdapter;
+
+    private int mFirstVisibleItem, mVisibleItemCount, mTotalItemCount;
+    private String mSelectedSort, mSelectedTimespan;
 
     public UserProfileOverviewFragment() { }
 
@@ -59,8 +66,33 @@ public class UserProfileOverviewFragment extends AbsUserProfileFragment implemen
 
     @Nullable @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v  = inflater.inflate(R.layout.user_profile_overview, container, false);
+        View v  = inflater.inflate(R.layout.listings_fragment, container, false);
+
+        final LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+        RecyclerView rv = ButterKnife.findById(v, R.id.recycler_view);
+        rv.setLayoutManager(mLayoutManager);
+        rv.setAdapter(mListingsAdapter);
+
+        rv.setOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                mVisibleItemCount = mLayoutManager.getChildCount();
+                mTotalItemCount = mLayoutManager.getItemCount();
+                mFirstVisibleItem = mLayoutManager.findFirstVisibleItemPosition();
+
+                if ((mVisibleItemCount + mFirstVisibleItem) >= mTotalItemCount) {
+                    mListingsPresenter.getMoreData();
+                }
+            }
+        });
+
+        updateTitle();
+
         return v;
+    }
+
+    private void updateTitle() {
+//        setTitle("");
     }
 
     @Override
@@ -68,7 +100,7 @@ public class UserProfileOverviewFragment extends AbsUserProfileFragment implemen
         super.onResume();
         mBus.register(mListingsPresenter);
 
-        if (mListingsAdapter.getItemCount() < 2) { // Always returns at least 1
+        if (mListingsAdapter.getItemCount() == 0) { // Always returns at least 1
             mListingsPresenter.refreshData();
         }
     }

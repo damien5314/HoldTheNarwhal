@@ -34,7 +34,7 @@ public class UserProfileCommentsFragment extends AbsUserProfileFragment {
 
     @Nullable @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v  = inflater.inflate(R.layout.user_profile_comments, container, false);
+        View v  = inflater.inflate(R.layout.listings_fragment, container, false);
         return v;
     }
 }
