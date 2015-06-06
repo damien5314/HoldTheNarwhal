@@ -31,7 +31,7 @@ import com.squareup.otto.Subscribe;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class AbsListingPresenter implements ListingPresenter {
+public abstract class AbsListingsPresenter implements ListingsPresenter {
 
     protected Context mContext;
     protected Bus mBus;
@@ -48,9 +48,9 @@ public abstract class AbsListingPresenter implements ListingPresenter {
 
     protected Listing mListingSelected;
 
-    public AbsListingPresenter(Context context, ListingsView view,
-                               String username, String subreddit, String article, String comment,
-                               String sort, String timespan) {
+    public AbsListingsPresenter(Context context, ListingsView view,
+                                String username, String subreddit, String article, String comment,
+                                String sort, String timespan) {
         mContext = context.getApplicationContext();
         mBus = BusProvider.getInstance();
         mPreferences = RedditPreferences.getInstance(mContext);
@@ -338,6 +338,28 @@ public abstract class AbsListingPresenter implements ListingPresenter {
             mListingsView.showToast(R.string.listing_archived);
         } else {
             mListingsView.openReplyView(comment);
+        }
+    }
+
+    @Override
+    public void upvoteComment() {
+        RedditComment comment = (RedditComment) mListingSelected;
+        if (comment.isArchived()) {
+            mListingsView.showToast(R.string.listing_archived);
+        } else {
+            int dir = (comment.isLiked() == null || !comment.isLiked()) ? 1 : 0;
+            mBus.post(new VoteEvent(comment, "t1", dir));
+        }
+    }
+
+    @Override
+    public void downvoteComment() {
+        RedditComment comment = (RedditComment) mListingSelected;
+        if (comment.isArchived()) {
+            mListingsView.showToast(R.string.listing_archived);
+        } else {
+            int dir = (comment.isLiked() == null || comment.isLiked()) ? -1 : 0;
+            mBus.post(new VoteEvent(comment, "t1", dir));
         }
     }
 

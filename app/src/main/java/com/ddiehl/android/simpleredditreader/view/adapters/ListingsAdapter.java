@@ -6,37 +6,34 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ddiehl.android.simpleredditreader.R;
-import com.ddiehl.android.simpleredditreader.presenter.ListingPresenter;
-import com.ddiehl.android.simpleredditreader.view.viewholders.CommentStubViewHolder;
+import com.ddiehl.android.simpleredditreader.presenter.ListingsPresenter;
 import com.ddiehl.android.simpleredditreader.view.viewholders.CommentViewHolder;
 import com.ddiehl.android.simpleredditreader.view.viewholders.LinkViewHolder;
-import com.ddiehl.reddit.listings.AbsRedditComment;
+import com.ddiehl.reddit.listings.Listing;
 import com.ddiehl.reddit.listings.RedditComment;
 import com.ddiehl.reddit.listings.RedditLink;
-import com.ddiehl.reddit.listings.RedditMoreComments;
 
-public class ListingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class ListingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int TYPE_LINK = 0;
     private static final int TYPE_COMMENT = 1;
-    private static final int TYPE_COMMENT_STUB = 2;
 
-    private ListingPresenter mListingPresenter;
+    private ListingsPresenter mListingsPresenter;
 
-    public ListingAdapter(ListingPresenter presenter) {
-        mListingPresenter = presenter;
+    public ListingsAdapter(ListingsPresenter presenter) {
+        mListingsPresenter = presenter;
     }
 
     @Override
     public int getItemViewType(int position) {
-        if (position == 0)
+        Listing listing = mListingsPresenter.getListing(position);
+
+        if (listing instanceof RedditLink)
             return TYPE_LINK;
 
-        AbsRedditComment comment = mListingPresenter.getListing(position - 1);
-
-        if (comment instanceof RedditComment)
+        if (listing instanceof RedditComment)
             return TYPE_COMMENT;
 
-        return TYPE_COMMENT_STUB;
+        throw new RuntimeException("Item view type not recognized: " + listing.getClass());
     }
 
     @Override
@@ -45,15 +42,11 @@ public class ListingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             case TYPE_LINK:
                 View view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.link_item, parent, false);
-                return new LinkViewHolder(view, mListingPresenter);
+                return new LinkViewHolder(view, mListingsPresenter);
             case TYPE_COMMENT:
                 view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.comment_item, parent, false);
-                return new CommentViewHolder(view, mListingPresenter);
-            case TYPE_COMMENT_STUB:
-                view = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.comment_stub_item, parent, false);
-                return new CommentStubViewHolder(view, mListingPresenter);
+                return new CommentViewHolder(view, mListingsPresenter);
             default:
                 throw new RuntimeException("Unexpected ViewHolder type: " + viewType);
         }
@@ -62,20 +55,17 @@ public class ListingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof LinkViewHolder) {
-            RedditLink link = mListingPresenter.getLinkContext();
+            RedditLink link = (RedditLink) mListingsPresenter.getListing(position);
             ((LinkViewHolder) holder).bind(link, true);
         } else if (holder instanceof CommentViewHolder) {
-            RedditLink link = mListingPresenter.getLinkContext();
-            RedditComment comment = (RedditComment) mListingPresenter.getListing(position - 1);
+            RedditLink link = (RedditLink) mListingsPresenter.getListing(position);
+            RedditComment comment = (RedditComment) mListingsPresenter.getListing(position);
             ((CommentViewHolder) holder).bind(link, comment);
-        } else if (holder instanceof CommentStubViewHolder) {
-            RedditMoreComments comment = (RedditMoreComments) mListingPresenter.getListing(position - 1);
-            ((CommentStubViewHolder) holder).bind(comment);
         }
     }
 
     @Override
     public int getItemCount() {
-        return mListingPresenter.getNumListings() + 1;
+        return mListingsPresenter.getNumListings();
     }
 }

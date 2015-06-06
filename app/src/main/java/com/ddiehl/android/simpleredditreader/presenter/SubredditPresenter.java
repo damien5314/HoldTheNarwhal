@@ -11,7 +11,7 @@ import com.ddiehl.reddit.listings.RedditLink;
 
 import java.util.List;
 
-public class SubredditPresenter extends AbsListingPresenter {
+public class SubredditPresenter extends AbsListingsPresenter {
 
     public SubredditPresenter(Context context, ListingsView view, String subreddit, String sort, String timespan) {
         super(context, view, null, subreddit, null, null, sort, timespan);

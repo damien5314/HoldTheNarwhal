@@ -31,7 +31,7 @@ public class LinkCommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         if (position == 0)
             return TYPE_LINK;
 
-        AbsRedditComment comment = mLinkCommentsPresenter.getCommentAtPosition(position - 1);
+        AbsRedditComment comment = mLinkCommentsPresenter.getComment(position - 1);
 
         if (comment instanceof RedditComment)
             return TYPE_COMMENT;
@@ -45,7 +45,7 @@ public class LinkCommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             case TYPE_LINK:
                 View view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.link_item, parent, false);
-                return new LinkViewHolder(view, mLinksPresenter);
+                return new LinkViewHolder(view, mLinkCommentsPresenter);
             case TYPE_COMMENT:
                 view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.comment_item, parent, false);
@@ -66,10 +66,10 @@ public class LinkCommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             ((LinkViewHolder) holder).bind(link, true);
         } else if (holder instanceof CommentViewHolder) {
             RedditLink link = mLinkCommentsPresenter.getLinkContext();
-            RedditComment comment = (RedditComment) mLinkCommentsPresenter.getCommentAtPosition(position - 1);
+            RedditComment comment = (RedditComment) mLinkCommentsPresenter.getComment(position - 1);
             ((CommentViewHolder) holder).bind(link, comment);
         } else if (holder instanceof CommentStubViewHolder) {
-            RedditMoreComments comment = (RedditMoreComments) mLinkCommentsPresenter.getCommentAtPosition(position - 1);
+            RedditMoreComments comment = (RedditMoreComments) mLinkCommentsPresenter.getComment(position - 1);
             ((CommentStubViewHolder) holder).bind(comment);
         }
     }

@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -17,20 +16,18 @@ import android.view.ViewGroup;
 
 import com.ddiehl.android.simpleredditreader.BusProvider;
 import com.ddiehl.android.simpleredditreader.R;
-import com.ddiehl.android.simpleredditreader.presenter.ListingPresenter;
-import com.ddiehl.android.simpleredditreader.presenter.AbsListingPresenter;
-import com.ddiehl.android.simpleredditreader.view.CommentView;
-import com.ddiehl.android.simpleredditreader.view.LinkView;
+import com.ddiehl.android.simpleredditreader.presenter.ListingsPresenter;
+import com.ddiehl.android.simpleredditreader.presenter.UserProfileOverviewPresenter;
+import com.ddiehl.android.simpleredditreader.view.ListingsView;
 import com.ddiehl.android.simpleredditreader.view.MainView;
 import com.ddiehl.android.simpleredditreader.view.activities.MainActivity;
-import com.ddiehl.android.simpleredditreader.view.adapters.LinkCommentsAdapter;
+import com.ddiehl.android.simpleredditreader.view.adapters.ListingsAdapter;
 import com.ddiehl.android.simpleredditreader.view.dialogs.ChooseCommentSortDialog;
 import com.ddiehl.reddit.listings.RedditComment;
 import com.ddiehl.reddit.listings.RedditLink;
 import com.squareup.otto.Bus;
 
-public class UserProfileOverviewFragment extends AbsUserProfileFragment
-        implements LinkView, CommentView {
+public class UserProfileOverviewFragment extends AbsUserProfileFragment implements ListingsView {
     private static final String TAG = UserProfileOverviewFragment.class.getSimpleName();
 
     private static final int REQUEST_CHOOSE_SORT = 0;
@@ -38,8 +35,8 @@ public class UserProfileOverviewFragment extends AbsUserProfileFragment
     private static final String ARG_USERNAME = "arg_username";
 
     private Bus mBus = BusProvider.getInstance();
-    private ListingPresenter mListingPresenter;
-    private LinkCommentsAdapter mLinkCommentsAdapter;
+    private ListingsPresenter mListingsPresenter;
+    private ListingsAdapter mListingsAdapter;
 
     public UserProfileOverviewFragment() { }
 
@@ -56,7 +53,8 @@ public class UserProfileOverviewFragment extends AbsUserProfileFragment
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
         String username = args.getString(ARG_USERNAME);
-        mListingPresenter = new AbsListingPresenter(getActivity(), this, null, username, null, null, null, null, null);
+        mListingsPresenter = new UserProfileOverviewPresenter(getActivity(), this, username);
+        mListingsAdapter = new ListingsAdapter(mListingsPresenter);
     }
 
     @Nullable @Override
@@ -68,17 +66,17 @@ public class UserProfileOverviewFragment extends AbsUserProfileFragment
     @Override
     public void onResume() {
         super.onResume();
-        mBus.register(mListingPresenter);
+        mBus.register(mListingsPresenter);
 
-        if (mLinkCommentsAdapter.getItemCount() < 2) { // Always returns at least 1
-            mListingPresenter.getComments();
+        if (mListingsAdapter.getItemCount() < 2) { // Always returns at least 1
+            mListingsPresenter.refreshData();
         }
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        mBus.unregister(mListingPresenter);
+        mBus.unregister(mListingsPresenter);
     }
 
     @Override
@@ -90,21 +88,6 @@ public class UserProfileOverviewFragment extends AbsUserProfileFragment
         menu.findItem(R.id.action_link_show_comments).setVisible(false);
         menu.findItem(R.id.action_link_hide).setVisible(false);
         menu.findItem(R.id.action_link_unhide).setVisible(false);
-    }
-
-    @Override
-    public void commentsUpdated() {
-        mLinkCommentsAdapter.notifyDataSetChanged();
-    }
-
-    @Override
-    public void commentUpdatedAt(int position) {
-        mLinkCommentsAdapter.notifyItemChanged(position + 1);
-    }
-
-    @Override
-    public void commentRemovedAt(int position) {
-        mLinkCommentsAdapter.notifyItemRemoved(position + 1);
     }
 
     @Override
@@ -164,61 +147,61 @@ public class UserProfileOverviewFragment extends AbsUserProfileFragment
     public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_link_upvote:
-                mListingPresenter.upvoteComment();
+                mListingsPresenter.upvoteComment();
                 return true;
             case R.id.action_link_downvote:
-                mListingPresenter.downvoteComment();
+                mListingsPresenter.downvoteComment();
                 return true;
             case R.id.action_link_show_comments:
-                mListingPresenter.showCommentsForLink();
+                mListingsPresenter.showCommentsForLink();
                 return true;
             case R.id.action_link_save:
-                mListingPresenter.saveLink();
+                mListingsPresenter.saveLink();
                 return true;
             case R.id.action_link_unsave:
-                mListingPresenter.unsaveLink();
+                mListingsPresenter.unsaveLink();
                 return true;
             case R.id.action_link_share:
-                mListingPresenter.shareLink();
+                mListingsPresenter.shareLink();
                 return true;
             case R.id.action_link_open_in_browser:
-                mListingPresenter.openLinkInBrowser();
+                mListingsPresenter.openLinkInBrowser();
                 return true;
             case R.id.action_link_open_comments_in_browser:
-                mListingPresenter.openCommentsInBrowser();
+                mListingsPresenter.openCommentsInBrowser();
                 return true;
             case R.id.action_link_hide:
-                mListingPresenter.hideLink();
+                mListingsPresenter.hideLink();
                 return true;
             case R.id.action_link_unhide:
-                mListingPresenter.unhideLink();
+                mListingsPresenter.unhideLink();
                 return true;
             case R.id.action_link_report:
-                mListingPresenter.reportLink();
+                mListingsPresenter.reportLink();
                 return true;
             case R.id.action_comment_reply:
-                mListingPresenter.openReplyView();
+                mListingsPresenter.openReplyView();
                 return true;
             case R.id.action_comment_upvote:
-                mListingPresenter.upvoteComment();
+                mListingsPresenter.upvoteComment();
                 return true;
             case R.id.action_comment_downvote:
-                mListingPresenter.downvoteComment();
+                mListingsPresenter.downvoteComment();
                 return true;
             case R.id.action_comment_save:
-                mListingPresenter.saveComment();
+                mListingsPresenter.saveComment();
                 return true;
             case R.id.action_comment_unsave:
-                mListingPresenter.unsaveComment();
+                mListingsPresenter.unsaveComment();
                 return true;
             case R.id.action_comment_share:
-                mListingPresenter.shareComment();
+                mListingsPresenter.shareComment();
                 return true;
             case R.id.action_comment_open_in_browser:
-                mListingPresenter.openCommentInBrowser();
+                mListingsPresenter.openCommentInBrowser();
                 return true;
             case R.id.action_comment_report:
-                mListingPresenter.reportComment();
+                mListingsPresenter.reportComment();
                 return true;
             default:
                 return false;
@@ -231,7 +214,7 @@ public class UserProfileOverviewFragment extends AbsUserProfileFragment
             case REQUEST_CHOOSE_SORT:
                 if (resultCode == Activity.RESULT_OK) {
                     String sort = data.getStringExtra(ChooseCommentSortDialog.EXTRA_SORT);
-                    mListingPresenter.updateSort(sort);
+                    mListingsPresenter.updateSort(sort);
                 }
                 getActivity().supportInvalidateOptionsMenu();
                 break;
@@ -250,7 +233,7 @@ public class UserProfileOverviewFragment extends AbsUserProfileFragment
                 showChooseCommentSortDialog();
                 return true;
             case R.id.action_refresh:
-                mListingPresenter.getComments();
+                mListingsPresenter.refreshData();
                 return true;
             case R.id.action_settings:
                 ((MainActivity) getActivity()).showSettings();
@@ -262,7 +245,7 @@ public class UserProfileOverviewFragment extends AbsUserProfileFragment
 
     private void showChooseCommentSortDialog() {
         FragmentManager fm = getActivity().getSupportFragmentManager();
-        ChooseCommentSortDialog chooseCommentSortDialog = ChooseCommentSortDialog.newInstance(mListingPresenter.getSort());
+        ChooseCommentSortDialog chooseCommentSortDialog = ChooseCommentSortDialog.newInstance(mListingsPresenter.getSort());
         chooseCommentSortDialog.setTargetFragment(this, REQUEST_CHOOSE_SORT);
         chooseCommentSortDialog.show(fm, DIALOG_CHOOSE_SORT);
     }
@@ -298,23 +281,6 @@ public class UserProfileOverviewFragment extends AbsUserProfileFragment
     }
 
     @Override
-    public void linksUpdated() {
-        mLinkCommentsAdapter.notifyItemChanged(0);
-    }
-
-    @Override
-    public void linkUpdatedAt(int position) {
-        Log.w(TAG, "Warning: Only 1 link in this LinksView, ensure you are calling linkUpdatedAt(0)");
-        mLinkCommentsAdapter.notifyItemChanged(position);
-    }
-
-    @Override
-    public void linkRemovedAt(int position) {
-        Log.w(TAG, "Warning: Only 1 link in this LinksView, ensure you are calling linkUpdatedAt(0)");
-        mLinkCommentsAdapter.notifyItemRemoved(position);
-    }
-
-    @Override
     public void openWebViewForLink(RedditLink link) {
         ((MainActivity) getActivity()).openWebViewForURL(link.getUrl());
     }
@@ -327,5 +293,20 @@ public class UserProfileOverviewFragment extends AbsUserProfileFragment
     @Override
     public void openReplyView(RedditComment comment) {
         showToast(R.string.implementation_pending);
+    }
+
+    @Override
+    public void listingsUpdated() {
+        mListingsAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void listingUpdatedAt(int position) {
+        mListingsAdapter.notifyItemChanged(position);
+    }
+
+    @Override
+    public void listingRemovedAt(int position) {
+        mListingsAdapter.notifyItemRemoved(position);
     }
 }

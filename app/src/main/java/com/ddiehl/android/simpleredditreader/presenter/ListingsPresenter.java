@@ -4,7 +4,7 @@ import com.ddiehl.reddit.listings.Listing;
 
 import java.util.List;
 
-public interface ListingPresenter extends LinkPresenter, CommentPresenter {
+public interface ListingsPresenter extends LinkPresenter, CommentPresenter {
 
     void refreshData();
     void setData(List<Listing> data);

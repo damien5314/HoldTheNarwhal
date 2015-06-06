@@ -8,7 +8,6 @@ import android.widget.TextView;
 
 import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.presenter.CommentPresenter;
-import com.ddiehl.android.simpleredditreader.presenter.LinkCommentsPresenter;
 import com.ddiehl.reddit.listings.RedditMoreComments;
 
 import butterknife.ButterKnife;
@@ -23,7 +22,7 @@ public class CommentStubViewHolder extends RecyclerView.ViewHolder {
 
     @InjectView(R.id.comment_more) TextView mMoreCommentsView;
 
-    public CommentStubViewHolder(View v, LinkCommentsPresenter presenter) {
+    public CommentStubViewHolder(View v, CommentPresenter presenter) {
         super(v);
         mContext = v.getContext().getApplicationContext();
         mCommentPresenter = presenter;

@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ddiehl.android.simpleredditreader.R;
+import com.ddiehl.android.simpleredditreader.presenter.CommentPresenter;
 import com.ddiehl.android.simpleredditreader.presenter.LinkCommentsPresenter;
 import com.ddiehl.android.simpleredditreader.view.widgets.RedditDateTextView;
 import com.ddiehl.reddit.listings.RedditComment;
@@ -22,7 +23,7 @@ public class CommentViewHolder extends RecyclerView.ViewHolder
         implements View.OnCreateContextMenuListener {
 
     private Context mContext;
-    private LinkCommentsPresenter mLinkCommentsPresenter;
+    private CommentPresenter mCommentPresenter;
     private RedditComment mRedditComment;
 
     @InjectView(R.id.comment_metadata) View mCommentDataRow;
@@ -35,17 +36,22 @@ public class CommentViewHolder extends RecyclerView.ViewHolder
     @InjectView(R.id.gilded_view) View mGildedView;
     @InjectView(R.id.comment_gilded_text_view) TextView mGildedText;
 
-    public CommentViewHolder(View v, LinkCommentsPresenter presenter) {
+    public CommentViewHolder(View v, CommentPresenter presenter) {
         super(v);
         mContext = v.getContext().getApplicationContext();
-        mLinkCommentsPresenter = presenter;
+        mCommentPresenter = presenter;
         ButterKnife.inject(this, v);
         itemView.setOnCreateContextMenuListener(this);
     }
 
     @OnClick(R.id.comment_metadata)
-    void onClickMetadata() {
-        mLinkCommentsPresenter.toggleThreadVisible(mRedditComment);
+    void onClickMetadata(View v) {
+        if (mCommentPresenter instanceof LinkCommentsPresenter) {
+            LinkCommentsPresenter p = (LinkCommentsPresenter) mCommentPresenter;
+            p.toggleThreadVisible(mRedditComment);
+        } else {
+            v.showContextMenu();
+        }
     }
 
     @OnClick(R.id.comment_body)
@@ -143,6 +149,6 @@ public class CommentViewHolder extends RecyclerView.ViewHolder
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        mLinkCommentsPresenter.showCommentContextMenu(menu, v, menuInfo, mRedditComment);
+        mCommentPresenter.showCommentContextMenu(menu, v, menuInfo, mRedditComment);
     }
 }

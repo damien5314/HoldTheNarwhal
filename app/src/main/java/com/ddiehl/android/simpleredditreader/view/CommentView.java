@@ -11,6 +11,5 @@ public interface CommentView extends BaseView {
     void openShareView(RedditComment comment);
     void openCommentInBrowser(RedditComment comment);
     void openReplyView(RedditComment comment);
-    void navigateToCommentThread(String commentId);
 
 }

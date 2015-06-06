@@ -44,7 +44,6 @@ public class LinkCommentsFragment extends AbsRedditFragment
     private Bus mBus = BusProvider.getInstance();
     private LinkCommentsPresenter mLinkCommentsPresenter;
 
-//    private ListingAdapter mListingAdapter;
     private LinkCommentsAdapter mLinkCommentsAdapter;
 
     public LinkCommentsFragment() { /* Default constructor */ }
@@ -284,7 +283,7 @@ public class LinkCommentsFragment extends AbsRedditFragment
 
     private void showChooseCommentSortDialog() {
         FragmentManager fm = getActivity().getSupportFragmentManager();
-        ChooseCommentSortDialog chooseCommentSortDialog = ChooseCommentSortDialog.newInstance(mListingPresenter.getSort());
+        ChooseCommentSortDialog chooseCommentSortDialog = ChooseCommentSortDialog.newInstance(mLinkCommentsPresenter.getSort());
         chooseCommentSortDialog.setTargetFragment(this, REQUEST_CHOOSE_SORT);
         chooseCommentSortDialog.show(fm, DIALOG_CHOOSE_SORT);
     }
@@ -306,6 +305,6 @@ public class LinkCommentsFragment extends AbsRedditFragment
 
     @Override
     public void onSettingsChanged() {
-        mListingPresenter.updateSort();
+        mLinkCommentsPresenter.updateSort();
     }
 }
