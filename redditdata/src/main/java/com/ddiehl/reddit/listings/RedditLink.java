@@ -249,8 +249,6 @@ public class RedditLink extends Listing<RedditLink.Data> implements Votable, Sav
         @Expose @SerializedName("link_flair_text")
         private Object linkFlairText;
         @Expose
-        private String id;
-        @Expose
         private Integer gilded;
         @Expose @SerializedName("archived")
         private Boolean isArchived;
@@ -290,8 +288,6 @@ public class RedditLink extends Listing<RedditLink.Data> implements Votable, Sav
         private Boolean isSelf;
         @Expose
         private String permalink;
-        @Expose
-        private String name;
         @Expose
         private Double created;
         @Expose

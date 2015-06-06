@@ -47,6 +47,7 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
     protected String mTimespan;
 
     protected Listing mListingSelected;
+    protected boolean mListingsRequested = false;
 
     public AbsListingsPresenter(Context context, ListingsView view,
                                 String username, String subreddit, String article, String comment,
@@ -144,19 +145,19 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
     public void onListingsLoaded(ListingsLoadedEvent event) {
         mListingsView.dismissSpinner();
         if (event.isFailed()) {
+            mListingsRequested = false;
             return;
         }
 
         List<Listing> listings = event.getListings();
         mListings.addAll(listings);
         mListingsView.listingsUpdated();
+        mListingsRequested = false;
     }
 
     @Subscribe
     public void onVoteSubmitted(VoteSubmittedEvent event) {
         Votable listing = event.getListing();
-        if (!(listing instanceof RedditLink))
-            return;
 
         if (event.isFailed()) {
             mListingsView.showToast(R.string.vote_failed);
@@ -170,8 +171,6 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
     @Subscribe
     public void onListingSaved(SaveSubmittedEvent event) {
         Savable listing = event.getListing();
-        if (!(listing instanceof RedditLink))
-            return;
 
         if (event.isFailed()) {
             mListingsView.showToast(R.string.save_failed);
@@ -185,8 +184,6 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
     @Subscribe
     public void onListingHidden(HideSubmittedEvent event) {
         Hideable listing = event.getListing();
-        if (!(listing instanceof RedditLink))
-            return;
 
         if (event.isFailed()) {
             mListingsView.showToast(R.string.hide_failed);
@@ -209,7 +206,8 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
     }
 
     @Override
-    public void showLinkContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, RedditLink link) {
+    public void showLinkContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo,
+                                    RedditLink link) {
         mListingSelected = link;
         mListingsView.showLinkContextMenu(menu, v, menuInfo, link);
         menu.findItem(R.id.action_link_save).setVisible(!link.isSaved());
@@ -258,7 +256,7 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
             mListingsView.showToast(R.string.listing_archived);
         } else {
             Votable votable = (Votable) listing;
-            int dir = (votable.isLiked() == null || !votable.isLiked()) ? -1 : 0;
+            int dir = (votable.isLiked() == null || votable.isLiked()) ? -1 : 0;
             mBus.post(new VoteEvent(votable, listing.getKind(), dir));
         }
     }
@@ -312,7 +310,8 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
     }
 
     @Override
-    public void showCommentContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, RedditComment comment) {
+    public void showCommentContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo,
+                                       RedditComment comment) {
         mListingSelected = comment;
         mListingsView.showCommentContextMenu(menu, v, menuInfo, comment);
 

@@ -77,6 +77,8 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
             return;
         }
 
+        mLinkContext = event.getLink();
+        mLinkCommentsView.setTitle(mLinkContext.getTitle());
         List<AbsRedditComment> comments = event.getComments();
         AbsRedditComment.Utils.flattenCommentList(comments);
         mCommentBank.clear();
@@ -213,7 +215,7 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
         if (mLinkContext.isArchived()) {
             mLinkCommentsView.showToast(R.string.listing_archived);
         } else {
-            int dir = (mLinkContext.isLiked() == null || !mLinkContext.isLiked()) ? -1 : 0;
+            int dir = (mLinkContext.isLiked() == null || mLinkContext.isLiked()) ? -1 : 0;
             mBus.post(new VoteEvent(mLinkContext, mLinkContext.getKind(), dir));
         }
     }
@@ -281,8 +283,6 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
     @Subscribe
     public void onVoteSubmitted(VoteSubmittedEvent event) {
         Votable listing = event.getListing();
-        if (!(listing instanceof RedditComment))
-            return;
 
         if (event.isFailed()) {
             mLinkCommentsView.showToast(R.string.vote_failed);
@@ -290,14 +290,16 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
         }
 
         listing.applyVote(event.getDirection());
-        mLinkCommentsView.commentUpdatedAt(mCommentBank.visibleIndexOf(listing));
+        if (listing instanceof RedditLink) {
+            mLinkCommentsView.linkUpdated();
+        } else {
+            mLinkCommentsView.commentUpdatedAt(mCommentBank.indexOf(listing));
+        }
     }
 
     @Subscribe
-    public void onCommentSaved(SaveSubmittedEvent event) {
+    public void onSaveSubmitted(SaveSubmittedEvent event) {
         Savable listing = event.getListing();
-        if (!(listing instanceof RedditComment))
-            return;
 
         if (event.isFailed()) {
             mLinkCommentsView.showToast(R.string.save_failed);
@@ -305,7 +307,11 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
         }
 
         listing.isSaved(event.isToSave());
-        mLinkCommentsView.commentUpdatedAt(mCommentBank.visibleIndexOf(listing));
+        if (listing instanceof RedditLink) {
+            mLinkCommentsView.linkUpdated();
+        } else {
+            mLinkCommentsView.commentUpdatedAt(mCommentBank.indexOf(listing));
+        }
     }
 
     @Override

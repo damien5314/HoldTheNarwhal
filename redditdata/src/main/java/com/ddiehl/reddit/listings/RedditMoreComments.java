@@ -7,40 +7,6 @@ import java.util.List;
 @SuppressWarnings("unused")
 public class RedditMoreComments extends AbsRedditComment<RedditMoreComments.Data> {
 
-    private int depth;
-    private boolean isVisible = true;
-    private boolean isCollapsed = false;
-
-    @Override
-    public int getDepth() {
-        return this.depth;
-    }
-
-    @Override
-    public void setDepth(int depth) {
-        this.depth = depth;
-    }
-
-    @Override
-    public boolean isVisible() {
-        return this.isVisible;
-    }
-
-    @Override
-    public void setVisible(boolean b) {
-        this.isVisible = b;
-    }
-
-    @Override
-    public boolean isCollapsed() {
-        return this.isCollapsed;
-    }
-
-    @Override
-    public void setCollapsed(boolean b) {
-        this.isCollapsed = b;
-    }
-
     @Override
     public Integer getCount() {
         return data.count;

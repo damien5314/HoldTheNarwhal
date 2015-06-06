@@ -6,10 +6,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.HashMap;
 import java.util.List;
 
-public abstract class AbsRedditComment<T extends AbsRedditComment.Data> extends Listing<AbsRedditComment.Data> {
-
-    // Overwrite data field from Listing
-    protected T data;
+public abstract class AbsRedditComment<T extends AbsRedditComment.Data> extends Listing<T> {
 
     private int depth;
     private boolean isVisible = true;

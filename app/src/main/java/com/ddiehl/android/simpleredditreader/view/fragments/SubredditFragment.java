@@ -48,6 +48,7 @@ public class SubredditFragment extends AbsRedditFragment implements ListingsView
     private ListingsAdapter mListingsAdapter;
 
     private int mFirstVisibleItem, mVisibleItemCount, mTotalItemCount;
+    private String mSelectedSort, mSelectedTimespan;
 
     public SubredditFragment() { }
 
@@ -102,7 +103,7 @@ public class SubredditFragment extends AbsRedditFragment implements ListingsView
 
     private void updateTitle() {
         String subreddit = mListingsPresenter.getSubreddit();
-        getActivity().setTitle(subreddit == null ?
+        setTitle(subreddit == null ?
                 getString(R.string.front_page_title) :
                 String.format(getString(R.string.link_subreddit), subreddit));
     }
@@ -122,8 +123,6 @@ public class SubredditFragment extends AbsRedditFragment implements ListingsView
         super.onPause();
         mBus.unregister(mListingsPresenter);
     }
-
-    private String mSelectedSort, mSelectedTimespan;
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -235,10 +234,10 @@ public class SubredditFragment extends AbsRedditFragment implements ListingsView
     public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_link_upvote:
-                mListingsPresenter.upvoteComment();
+                mListingsPresenter.upvoteLink();
                 return true;
             case R.id.action_link_downvote:
-                mListingsPresenter.downvoteComment();
+                mListingsPresenter.downvoteLink();
                 return true;
             case R.id.action_link_show_comments:
                 mListingsPresenter.showCommentsForLink();

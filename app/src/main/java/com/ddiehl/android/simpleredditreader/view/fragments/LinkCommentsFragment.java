@@ -114,6 +114,11 @@ public class LinkCommentsFragment extends AbsRedditFragment
     }
 
     @Override
+    public void linkUpdated() {
+        mLinkCommentsAdapter.notifyItemChanged(0);
+    }
+
+    @Override
     public void commentsUpdated() {
         mLinkCommentsAdapter.notifyDataSetChanged();
     }
@@ -185,10 +190,10 @@ public class LinkCommentsFragment extends AbsRedditFragment
     public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_link_upvote:
-                mLinkCommentsPresenter.upvoteComment();
+                mLinkCommentsPresenter.upvoteLink();
                 return true;
             case R.id.action_link_downvote:
-                mLinkCommentsPresenter.downvoteComment();
+                mLinkCommentsPresenter.downvoteLink();
                 return true;
             case R.id.action_link_show_comments:
                 mLinkCommentsPresenter.showCommentsForLink();
