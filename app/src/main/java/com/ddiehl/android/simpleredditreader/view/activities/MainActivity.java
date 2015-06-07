@@ -34,7 +34,12 @@ import com.ddiehl.android.simpleredditreader.view.SettingsChangedListener;
 import com.ddiehl.android.simpleredditreader.view.dialogs.ConfirmSignOutDialog;
 import com.ddiehl.android.simpleredditreader.view.fragments.SubredditFragment;
 import com.ddiehl.android.simpleredditreader.view.fragments.UserProfileCommentsFragment;
+import com.ddiehl.android.simpleredditreader.view.fragments.UserProfileDownvotedFragment;
+import com.ddiehl.android.simpleredditreader.view.fragments.UserProfileGildedFragment;
+import com.ddiehl.android.simpleredditreader.view.fragments.UserProfileHiddenFragment;
 import com.ddiehl.android.simpleredditreader.view.fragments.UserProfileOverviewFragment;
+import com.ddiehl.android.simpleredditreader.view.fragments.UserProfileSubmittedFragment;
+import com.ddiehl.android.simpleredditreader.view.fragments.UserProfileUpvotedFragment;
 import com.ddiehl.android.simpleredditreader.view.fragments.WebViewFragment;
 import com.ddiehl.reddit.identity.UserIdentity;
 import com.squareup.otto.Bus;
@@ -103,11 +108,19 @@ public class MainActivity extends ActionBarActivity implements MainView, Confirm
                         showUserProfileComments();
                         break;
                     case 2:
+                        showUserProfileSubmitted();
+                        break;
                     case 3:
+                        showUserProfileGilded();
+                        break;
                     case 4:
+                        showUserProfileUpvoted();
+                        break;
                     case 5:
+                        showUserProfileDownvoted();
+                        break;
                     case 6:
-                        showToast(R.string.implementation_pending);
+                        showUserProfileHidden();
                         break;
                     default:
                         Log.w(TAG, "Unknown tab selected: " + tab.getPosition() + " " + tab.getText());
@@ -185,6 +198,62 @@ public class MainActivity extends ActionBarActivity implements MainView, Confirm
                 .commit();
         mTabLayout.setVisibility(View.VISIBLE);
     }
+
+    @Override
+    public void showUserProfileSubmitted() {
+        FragmentManager fm = getSupportFragmentManager();
+        String username = mMainPresenter.getUsername();
+        Fragment f = UserProfileSubmittedFragment.newInstance(username);
+        fm.beginTransaction().replace(R.id.fragment_container, f)
+                .addToBackStack(null)
+                .commit();
+        mTabLayout.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void showUserProfileGilded() {
+        FragmentManager fm = getSupportFragmentManager();
+        String username = mMainPresenter.getUsername();
+        Fragment f = UserProfileGildedFragment.newInstance(username);
+        fm.beginTransaction().replace(R.id.fragment_container, f)
+                .addToBackStack(null)
+                .commit();
+        mTabLayout.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void showUserProfileUpvoted() {
+        FragmentManager fm = getSupportFragmentManager();
+        String username = mMainPresenter.getUsername();
+        Fragment f = UserProfileUpvotedFragment.newInstance(username);
+        fm.beginTransaction().replace(R.id.fragment_container, f)
+                .addToBackStack(null)
+                .commit();
+        mTabLayout.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void showUserProfileDownvoted() {
+        FragmentManager fm = getSupportFragmentManager();
+        String username = mMainPresenter.getUsername();
+        Fragment f = UserProfileDownvotedFragment.newInstance(username);
+        fm.beginTransaction().replace(R.id.fragment_container, f)
+                .addToBackStack(null)
+                .commit();
+        mTabLayout.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void showUserProfileHidden() {
+        FragmentManager fm = getSupportFragmentManager();
+        String username = mMainPresenter.getUsername();
+        Fragment f = UserProfileHiddenFragment.newInstance(username);
+        fm.beginTransaction().replace(R.id.fragment_container, f)
+                .addToBackStack(null)
+                .commit();
+        mTabLayout.setVisibility(View.VISIBLE);
+    }
+
 
     @Override
     public void showSubreddit(String subreddit) {
