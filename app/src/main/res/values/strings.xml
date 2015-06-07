@@ -33,6 +33,7 @@
     <string name="comment_score">%s</string>
     <string name="continue_thread">continue thread</string>
     <string name="more_comments">view %s more comments</string>
+    <string name="comment_link_title">Link title</string>
 
     <!-- User Profile -->
     <string name="user_profile_title">user profile</string>

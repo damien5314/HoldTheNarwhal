@@ -27,6 +27,7 @@ public class ListingsCommentViewHolder extends RecyclerView.ViewHolder
     private RedditComment mRedditComment;
 
     @InjectView(R.id.comment_metadata) View mCommentDataRow;
+    @InjectView(R.id.comment_link_title) TextView mCommentLinkTitleView;
     @InjectView(R.id.comment_expander_icon) ImageView mExpanderIcon;
     @InjectView(R.id.comment_author) TextView mAuthorView;
     @InjectView(R.id.comment_score) TextView mScoreView;
@@ -62,14 +63,13 @@ public class ListingsCommentViewHolder extends RecyclerView.ViewHolder
     public void bind(final RedditLink link, final RedditComment comment) {
         mRedditComment = comment;
 
+        mCommentLinkTitleView.setText(comment.getLinkTitle());
+
         mAuthorView.setVisibility(View.VISIBLE);
         String authorType = null;
         String distinguished = comment.getDistinguished();
         if (distinguished != null && !distinguished.equals("")) {
             authorType = distinguished;
-        }
-        if (link != null && comment.getAuthor().equals(link.getAuthor())) {
-            authorType = "op";
         }
         if (authorType != null) {
             switch (authorType) {
@@ -107,13 +107,7 @@ public class ListingsCommentViewHolder extends RecyclerView.ViewHolder
             }
         }
         mBodyView.setText(comment.getBody().trim());
-        if (comment.isCollapsed()) {
-            mBodyView.setVisibility(View.GONE);
-            mExpanderIcon.setImageResource(R.drawable.ic_thread_expand);
-        } else {
-            mBodyView.setVisibility(View.VISIBLE);
-            mExpanderIcon.setImageResource(R.drawable.ic_thread_collapse);
-        }
+        mExpanderIcon.setImageResource(0);
 
         // Set background tint based on isLiked
         if (comment.isLiked() == null) {
