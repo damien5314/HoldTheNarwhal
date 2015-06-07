@@ -17,6 +17,7 @@ public interface MainView extends BaseView {
     void showUserProfileUpvoted();
     void showUserProfileDownvoted();
     void showUserProfileHidden();
+    void showUserProfileSaved();
     void showUserSubreddits();
     void showSubreddit(String subreddit);
     void openWebViewForURL(String authorizationUrl);

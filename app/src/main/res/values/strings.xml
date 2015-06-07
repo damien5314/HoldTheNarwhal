@@ -43,6 +43,7 @@
     <string name="navigation_tabs_upvoted">upvoted</string>
     <string name="navigation_tabs_downvoted">downvoted</string>
     <string name="navigation_tabs_hidden">hidden</string>
+    <string name="navigation_tabs_saved">saved</string>
 
     <!-- Context menus -->
     <string name="menu_sort_title">Sort by</string>

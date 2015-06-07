@@ -38,6 +38,7 @@ import com.ddiehl.android.simpleredditreader.view.fragments.UserProfileDownvoted
 import com.ddiehl.android.simpleredditreader.view.fragments.UserProfileGildedFragment;
 import com.ddiehl.android.simpleredditreader.view.fragments.UserProfileHiddenFragment;
 import com.ddiehl.android.simpleredditreader.view.fragments.UserProfileOverviewFragment;
+import com.ddiehl.android.simpleredditreader.view.fragments.UserProfileSavedFragment;
 import com.ddiehl.android.simpleredditreader.view.fragments.UserProfileSubmittedFragment;
 import com.ddiehl.android.simpleredditreader.view.fragments.UserProfileUpvotedFragment;
 import com.ddiehl.android.simpleredditreader.view.fragments.WebViewFragment;
@@ -94,6 +95,7 @@ public class MainActivity extends ActionBarActivity implements MainView, Confirm
         mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.navigation_tabs_upvoted)));
         mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.navigation_tabs_downvoted)));
         mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.navigation_tabs_hidden)));
+        mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.navigation_tabs_saved)));
         mTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override public void onTabUnselected(TabLayout.Tab tab) { }
             @Override public void onTabReselected(TabLayout.Tab tab) { }
@@ -122,6 +124,8 @@ public class MainActivity extends ActionBarActivity implements MainView, Confirm
                     case 6:
                         showUserProfileHidden();
                         break;
+                    case 7:
+                        showUserProfileSaved();
                     default:
                         Log.w(TAG, "Unknown tab selected: " + tab.getPosition() + " " + tab.getText());
                 }
@@ -254,6 +258,16 @@ public class MainActivity extends ActionBarActivity implements MainView, Confirm
         mTabLayout.setVisibility(View.VISIBLE);
     }
 
+    @Override
+    public void showUserProfileSaved() {
+        FragmentManager fm = getSupportFragmentManager();
+        String username = mMainPresenter.getUsername();
+        Fragment f = UserProfileSavedFragment.newInstance(username);
+        fm.beginTransaction().replace(R.id.fragment_container, f)
+                .addToBackStack(null)
+                .commit();
+        mTabLayout.setVisibility(View.VISIBLE);
+    }
 
     @Override
     public void showSubreddit(String subreddit) {
