@@ -18,8 +18,7 @@ public class SubredditPresenter extends AbsListingsPresenter {
     }
 
     @Override
-    public void getMoreData() {
-        super.getMoreData();
+    public void requestData() {
         String after = mListings == null || mListings.size() == 0
                 ? null : mListings.get(mListings.size() - 1).getName();
         mBus.post(new LoadSubredditEvent(mSubreddit, mSort, mTimespan, after));

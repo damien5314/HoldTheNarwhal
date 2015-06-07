@@ -18,8 +18,7 @@ public class UserProfileOverviewPresenter extends AbsListingsPresenter {
     }
 
     @Override
-    public void getMoreData() {
-        super.getMoreData();
+    public void requestData() {
         String after = mListings == null || mListings.size() == 0 ?
                 null : mListings.get(mListings.size() - 1).getName();
         mBus.post(new LoadUserProfileEvent("overview", mUsername, mSort, mTimespan, after));
