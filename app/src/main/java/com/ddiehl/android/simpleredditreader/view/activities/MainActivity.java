@@ -33,14 +33,7 @@ import com.ddiehl.android.simpleredditreader.view.MainView;
 import com.ddiehl.android.simpleredditreader.view.SettingsChangedListener;
 import com.ddiehl.android.simpleredditreader.view.dialogs.ConfirmSignOutDialog;
 import com.ddiehl.android.simpleredditreader.view.fragments.SubredditFragment;
-import com.ddiehl.android.simpleredditreader.view.fragments.UserProfileCommentsFragment;
-import com.ddiehl.android.simpleredditreader.view.fragments.UserProfileDownvotedFragment;
-import com.ddiehl.android.simpleredditreader.view.fragments.UserProfileGildedFragment;
-import com.ddiehl.android.simpleredditreader.view.fragments.UserProfileHiddenFragment;
-import com.ddiehl.android.simpleredditreader.view.fragments.UserProfileOverviewFragment;
-import com.ddiehl.android.simpleredditreader.view.fragments.UserProfileSavedFragment;
-import com.ddiehl.android.simpleredditreader.view.fragments.UserProfileSubmittedFragment;
-import com.ddiehl.android.simpleredditreader.view.fragments.UserProfileUpvotedFragment;
+import com.ddiehl.android.simpleredditreader.view.fragments.UserProfileFragment;
 import com.ddiehl.android.simpleredditreader.view.fragments.WebViewFragment;
 import com.ddiehl.reddit.identity.UserIdentity;
 import com.squareup.otto.Bus;
@@ -104,28 +97,28 @@ public class MainActivity extends ActionBarActivity implements MainView, Confirm
             public void onTabSelected(TabLayout.Tab tab) {
                 switch (tab.getPosition()) {
                     case 0:
-                        showUserProfileOverview();
+                        showUserProfile("overview");
                         break;
                     case 1:
-                        showUserProfileComments();
+                        showUserProfile("comments");
                         break;
                     case 2:
-                        showUserProfileSubmitted();
+                        showUserProfile("submitted");
                         break;
                     case 3:
-                        showUserProfileGilded();
+                        showUserProfile("gilded");
                         break;
                     case 4:
-                        showUserProfileUpvoted();
+                        showUserProfile("upvoted");
                         break;
                     case 5:
-                        showUserProfileDownvoted();
+                        showUserProfile("downvoted");
                         break;
                     case 6:
-                        showUserProfileHidden();
+                        showUserProfile("hidden");
                         break;
                     case 7:
-                        showUserProfileSaved();
+                        showUserProfile("saved");
                     default:
                         Log.w(TAG, "Unknown tab selected: " + tab.getPosition() + " " + tab.getText());
                 }
@@ -178,91 +171,14 @@ public class MainActivity extends ActionBarActivity implements MainView, Confirm
     public void showUserProfile() {
         closeNavigationDrawer();
         mMainPresenter.setUsername(mMainPresenter.getAuthorizedUser().getName());
-        showUserProfileOverview();
+        showUserProfile("overview");
     }
 
     @Override
-    public void showUserProfileOverview() {
+    public void showUserProfile(String show) {
         FragmentManager fm = getSupportFragmentManager();
         String username = mMainPresenter.getUsername();
-        Fragment f = UserProfileOverviewFragment.newInstance(username);
-        fm.beginTransaction().replace(R.id.fragment_container, f)
-                .addToBackStack(null)
-                .commit();
-        mTabLayout.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void showUserProfileComments() {
-        FragmentManager fm = getSupportFragmentManager();
-        String username = mMainPresenter.getUsername();
-        Fragment f = UserProfileCommentsFragment.newInstance(username);
-        fm.beginTransaction().replace(R.id.fragment_container, f)
-                .addToBackStack(null)
-                .commit();
-        mTabLayout.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void showUserProfileSubmitted() {
-        FragmentManager fm = getSupportFragmentManager();
-        String username = mMainPresenter.getUsername();
-        Fragment f = UserProfileSubmittedFragment.newInstance(username);
-        fm.beginTransaction().replace(R.id.fragment_container, f)
-                .addToBackStack(null)
-                .commit();
-        mTabLayout.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void showUserProfileGilded() {
-        FragmentManager fm = getSupportFragmentManager();
-        String username = mMainPresenter.getUsername();
-        Fragment f = UserProfileGildedFragment.newInstance(username);
-        fm.beginTransaction().replace(R.id.fragment_container, f)
-                .addToBackStack(null)
-                .commit();
-        mTabLayout.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void showUserProfileUpvoted() {
-        FragmentManager fm = getSupportFragmentManager();
-        String username = mMainPresenter.getUsername();
-        Fragment f = UserProfileUpvotedFragment.newInstance(username);
-        fm.beginTransaction().replace(R.id.fragment_container, f)
-                .addToBackStack(null)
-                .commit();
-        mTabLayout.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void showUserProfileDownvoted() {
-        FragmentManager fm = getSupportFragmentManager();
-        String username = mMainPresenter.getUsername();
-        Fragment f = UserProfileDownvotedFragment.newInstance(username);
-        fm.beginTransaction().replace(R.id.fragment_container, f)
-                .addToBackStack(null)
-                .commit();
-        mTabLayout.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void showUserProfileHidden() {
-        FragmentManager fm = getSupportFragmentManager();
-        String username = mMainPresenter.getUsername();
-        Fragment f = UserProfileHiddenFragment.newInstance(username);
-        fm.beginTransaction().replace(R.id.fragment_container, f)
-                .addToBackStack(null)
-                .commit();
-        mTabLayout.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void showUserProfileSaved() {
-        FragmentManager fm = getSupportFragmentManager();
-        String username = mMainPresenter.getUsername();
-        Fragment f = UserProfileSavedFragment.newInstance(username);
+        Fragment f = UserProfileFragment.newInstance(show, username);
         fm.beginTransaction().replace(R.id.fragment_container, f)
                 .addToBackStack(null)
                 .commit();

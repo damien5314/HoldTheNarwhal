@@ -14,7 +14,7 @@ public class SubredditPresenter extends AbsListingsPresenter {
 
     public SubredditPresenter(Context context, ListingsView view, String subreddit,
                               String sort, String timespan) {
-        super(context, view, null, subreddit, null, null, sort, timespan);
+        super(context, view, null, null, subreddit, null, null, sort, timespan);
     }
 
     @Override

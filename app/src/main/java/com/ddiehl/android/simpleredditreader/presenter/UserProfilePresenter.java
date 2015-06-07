@@ -10,18 +10,18 @@ import com.ddiehl.android.simpleredditreader.events.responses.VoteSubmittedEvent
 import com.ddiehl.android.simpleredditreader.view.ListingsView;
 import com.squareup.otto.Subscribe;
 
-public class UserProfileSavedPresenter extends AbsListingsPresenter {
+public class UserProfilePresenter extends AbsListingsPresenter {
 
-    public UserProfileSavedPresenter(Context context, ListingsView view, String username,
-                                     String sort, String timespan) {
-        super(context, view, username, null, null, null, sort, timespan);
+    public UserProfilePresenter(Context context, ListingsView view, String show, String username,
+                                String sort, String timespan) {
+        super(context, view, show, username, null, null, null, sort, timespan);
     }
 
     @Override
     public void requestData() {
         String after = mListings == null || mListings.size() == 0 ?
                 null : mListings.get(mListings.size() - 1).getName();
-        mBus.post(new LoadUserProfileEvent("saved", mUsername, mSort, mTimespan, after));
+        mBus.post(new LoadUserProfileEvent(mShow, mUsername, mSort, mTimespan, after));
     }
 
     @Subscribe @Override

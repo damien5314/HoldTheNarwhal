@@ -39,6 +39,7 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
     protected List<Listing> mListings;
     protected ListingsView mListingsView;
 
+    protected String mShow;
     protected String mUsername;
     protected String mSubreddit;
     protected String mArticleId;
@@ -50,12 +51,13 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
     protected boolean mListingsRequested = false;
 
     public AbsListingsPresenter(Context context, ListingsView view,
-                                String username, String subreddit, String article, String comment,
-                                String sort, String timespan) {
+                                String show, String username, String subreddit, String article,
+                                String comment, String sort, String timespan) {
         mContext = context.getApplicationContext();
         mBus = BusProvider.getInstance();
         mPreferences = RedditPreferences.getInstance(mContext);
         mListingsView = view;
+        mShow = show;
         mUsername = username;
         mSubreddit = subreddit;
         mArticleId = article;
@@ -104,6 +106,10 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
         return mListings.get(position);
     }
 
+    public String getShow() {
+        return mShow;
+    }
+
     @Override
     public String getUsername() {
         return mUsername;
@@ -112,6 +118,14 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
     @Override
     public String getSubreddit() {
         return mSubreddit;
+    }
+
+    public String getArticleId() {
+        return mArticleId;
+    }
+
+    public String getCommentId() {
+        return mCommentId;
     }
 
     @Override
