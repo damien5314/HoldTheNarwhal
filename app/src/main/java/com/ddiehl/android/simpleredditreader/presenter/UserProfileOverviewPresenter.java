@@ -13,8 +13,9 @@ import com.squareup.otto.Subscribe;
 
 public class UserProfileOverviewPresenter extends AbsListingsPresenter {
 
-    public UserProfileOverviewPresenter(Context context, ListingsView view, String username) {
-        super(context, view, username, null, null, null, null, null);
+    public UserProfileOverviewPresenter(Context context, ListingsView view, String username,
+                                        String sort, String timespan) {
+        super(context, view, username, null, null, null, sort, timespan);
     }
 
     @Override
