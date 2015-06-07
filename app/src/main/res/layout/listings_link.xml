@@ -169,7 +169,8 @@
             android:layout_height="wrap_content"
             android:textColor="@color/primary_text"
             android:padding="@dimen/link_self_text_padding"
-            android:bufferType="spannable"/>
+            android:bufferType="spannable"
+            android:background="@android:color/white"/>
 
     </LinearLayout>
 
