@@ -2,7 +2,7 @@ package com.ddiehl.android.simpleredditreader.events.requests;
 
 public class LoadUserOverviewEvent {
 
-    String mUsername;
+    private String mUsername;
     private String mSort;
     private String mTimeSpan;
     private String mAfter;

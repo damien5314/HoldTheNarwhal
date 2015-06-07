@@ -41,6 +41,9 @@ public interface RedditAPI {
 
     @GET("/user/{username}/overview")
     void getUserOverview(@Path("username") String username,
+                         @Query("sort") String sort,
+                         @Query("t") String timespan,
+                         @Query("after") String after,
                          Callback<ListingResponse> callback);
 
     @POST("/api/vote")

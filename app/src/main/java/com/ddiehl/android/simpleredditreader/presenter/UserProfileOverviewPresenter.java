@@ -34,8 +34,8 @@ public class UserProfileOverviewPresenter extends AbsListingsPresenter {
 
         mListingsRequested = true;
         mListingsView.showSpinner(null);
-        String after = mListings == null || mListings.size() == 0
-                ? null : mListings.get(mListings.size() - 1).getName();
+        String after = mListings == null || mListings.size() == 0 ?
+                null : mListings.get(mListings.size() - 1).getName();
         mBus.post(new LoadUserOverviewEvent(mUsername, mSort, mTimespan, after));
     }
 

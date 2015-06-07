@@ -220,8 +220,11 @@ public class RedditServiceAPI implements RedditService {
     @Override
     public void onLoadUserOverview(LoadUserOverviewEvent event) {
         final String userId = event.getUsername();
+        final String sort = event.getSort();
+        final String timespan = event.getTimeSpan();
+        final String after = event.getAfter();
 
-        mAPI.getUserOverview(userId, new Callback<ListingResponse>() {
+        mAPI.getUserOverview(userId, sort, timespan, after, new Callback<ListingResponse>() {
             @Override
             public void success(ListingResponse listing, Response response) {
                 BaseUtils.printResponseStatus(response);
