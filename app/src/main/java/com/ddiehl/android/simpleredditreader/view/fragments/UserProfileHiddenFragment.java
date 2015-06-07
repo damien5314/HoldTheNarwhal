@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 
 import com.ddiehl.android.simpleredditreader.R;
-import com.ddiehl.android.simpleredditreader.presenter.UserProfileHiddenPresenter;
 import com.ddiehl.android.simpleredditreader.view.ListingsView;
 import com.ddiehl.android.simpleredditreader.view.adapters.ListingsAdapter;
 
