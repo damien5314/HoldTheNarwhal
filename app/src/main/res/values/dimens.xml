@@ -36,7 +36,7 @@
     <dimen name="comment_expander_margin_horizontal">@dimen/comment_data_margin_horizontal</dimen> <!-- 5dp -->
     <dimen name="comment_data_margin_vertical">0dp</dimen> <!-- 5dp -->
     <dimen name="comment_data_margin_horizontal">5dp</dimen> <!-- 5dp -->
-    <dimen name="toolbar_elevation">4dp</dimen>
+    <dimen name="toolbar_elevation">6dp</dimen> <!-- Should be 4dp? -->
     <dimen name="link_score_margin">4dp</dimen>
     <dimen name="link_self_text_padding">8dp</dimen>
     <dimen name="link_title_margin">5dp</dimen>
