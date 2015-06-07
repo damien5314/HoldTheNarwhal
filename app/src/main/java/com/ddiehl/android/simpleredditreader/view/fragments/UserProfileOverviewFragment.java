@@ -92,7 +92,7 @@ public class UserProfileOverviewFragment extends AbsUserProfileFragment implemen
     }
 
     private void updateTitle() {
-//        setTitle("");
+        setTitle(String.format(getString(R.string.username), mListingsPresenter.getUsername()));
     }
 
     @Override

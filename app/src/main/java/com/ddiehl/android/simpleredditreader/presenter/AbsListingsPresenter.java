@@ -87,6 +87,11 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
     }
 
     @Override
+    public String getUsername() {
+        return mUsername;
+    }
+
+    @Override
     public String getSubreddit() {
         return mSubreddit;
     }

@@ -13,6 +13,7 @@ public interface ListingsPresenter extends LinkPresenter, CommentPresenter {
     int getNumListings();
     Listing getListing(int position);
 
+    String getUsername();
     String getSubreddit();
     String getSort();
     String getTimespan();
