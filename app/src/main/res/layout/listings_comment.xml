@@ -21,10 +21,11 @@
             android:id="@+id/comment_link_metadata"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:minHeight="@dimen/comment_data_height"
+            android:paddingTop="@dimen/link_list_item_margin_vertical"
+            android:paddingBottom="@dimen/link_list_item_margin_vertical"
+            android:paddingLeft="@dimen/link_list_item_margin_horizontal"
+            android:paddingRight="@dimen/link_list_item_margin_horizontal"
             android:gravity="center_vertical"
-            android:paddingLeft="@dimen/comment_data_margin_horizontal"
-            android:paddingRight="@dimen/comment_data_margin_horizontal"
             android:orientation="vertical"
             android:background="@color/primary_dark">
 
@@ -32,9 +33,7 @@
                 android:id="@+id/comment_link_title"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/comment_link_title"
-                android:textSize="@dimen/comment_body_text_size"
-                android:textColor="@android:color/white"/>
+                style="@style/CommentLinkTitleTextView"/>
 
         </LinearLayout>
 
