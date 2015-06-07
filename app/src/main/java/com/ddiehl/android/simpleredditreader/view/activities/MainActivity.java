@@ -33,6 +33,7 @@ import com.ddiehl.android.simpleredditreader.view.MainView;
 import com.ddiehl.android.simpleredditreader.view.SettingsChangedListener;
 import com.ddiehl.android.simpleredditreader.view.dialogs.ConfirmSignOutDialog;
 import com.ddiehl.android.simpleredditreader.view.fragments.SubredditFragment;
+import com.ddiehl.android.simpleredditreader.view.fragments.UserProfileCommentsFragment;
 import com.ddiehl.android.simpleredditreader.view.fragments.UserProfileOverviewFragment;
 import com.ddiehl.android.simpleredditreader.view.fragments.WebViewFragment;
 import com.ddiehl.reddit.identity.UserIdentity;
@@ -99,7 +100,8 @@ public class MainActivity extends ActionBarActivity implements MainView, Confirm
                         showUserProfileOverview();
                         break;
                     case 1:
-//                        showUserProfileComments(null);
+                        showUserProfileComments();
+                        break;
                     case 2:
                     case 3:
                     case 4:
@@ -164,7 +166,6 @@ public class MainActivity extends ActionBarActivity implements MainView, Confirm
 
     @Override
     public void showUserProfileOverview() {
-        closeNavigationDrawer();
         FragmentManager fm = getSupportFragmentManager();
         String username = mMainPresenter.getUsername();
         Fragment f = UserProfileOverviewFragment.newInstance(username);
@@ -176,10 +177,9 @@ public class MainActivity extends ActionBarActivity implements MainView, Confirm
 
     @Override
     public void showUserProfileComments() {
-        closeNavigationDrawer();
         FragmentManager fm = getSupportFragmentManager();
         String username = mMainPresenter.getUsername();
-        Fragment f = UserProfileOverviewFragment.newInstance(username);
+        Fragment f = UserProfileCommentsFragment.newInstance(username);
         fm.beginTransaction().replace(R.id.fragment_container, f)
                 .addToBackStack(null)
                 .commit();
@@ -191,8 +191,7 @@ public class MainActivity extends ActionBarActivity implements MainView, Confirm
         closeNavigationDrawer();
         FragmentManager fm = getSupportFragmentManager();
         Fragment currentFragment = fm.findFragmentById(R.id.fragment_container);
-        // If the current fragment is a LinksFragment, just update the subreddit
-        // Else, swap in a LinksFragment
+        // If current fragment is subreddit, update. Otherwise, swap in a subreddit fragment.
         if (currentFragment instanceof SubredditFragment) {
             ((SubredditFragment) currentFragment).updateSubreddit(subreddit);
         } else {

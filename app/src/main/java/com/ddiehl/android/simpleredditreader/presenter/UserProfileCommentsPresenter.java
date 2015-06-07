@@ -10,9 +10,9 @@ import com.ddiehl.android.simpleredditreader.events.responses.VoteSubmittedEvent
 import com.ddiehl.android.simpleredditreader.view.ListingsView;
 import com.squareup.otto.Subscribe;
 
-public class UserProfileOverviewPresenter extends AbsListingsPresenter {
+public class UserProfileCommentsPresenter extends AbsListingsPresenter {
 
-    public UserProfileOverviewPresenter(Context context, ListingsView view, String username,
+    public UserProfileCommentsPresenter(Context context, ListingsView view, String username,
                                         String sort, String timespan) {
         super(context, view, username, null, null, null, sort, timespan);
     }
@@ -22,7 +22,7 @@ public class UserProfileOverviewPresenter extends AbsListingsPresenter {
         super.getMoreData();
         String after = mListings == null || mListings.size() == 0 ?
                 null : mListings.get(mListings.size() - 1).getName();
-        mBus.post(new LoadUserProfileEvent("overview", mUsername, mSort, mTimespan, after));
+        mBus.post(new LoadUserProfileEvent("comments", mUsername, mSort, mTimespan, after));
     }
 
     @Subscribe @Override

@@ -4,18 +4,18 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 
 import com.ddiehl.android.simpleredditreader.R;
-import com.ddiehl.android.simpleredditreader.presenter.UserProfileOverviewPresenter;
+import com.ddiehl.android.simpleredditreader.presenter.UserProfileCommentsPresenter;
 import com.ddiehl.android.simpleredditreader.view.ListingsView;
 import com.ddiehl.android.simpleredditreader.view.adapters.ListingsAdapter;
 
-public class UserProfileOverviewFragment extends AbsUserProfileFragment implements ListingsView {
+public class UserProfileCommentsFragment extends AbsUserProfileFragment implements ListingsView {
 
     private static final String ARG_USERNAME = "arg_username";
 
-    public UserProfileOverviewFragment() { }
+    public UserProfileCommentsFragment() { }
 
-    public static UserProfileOverviewFragment newInstance(String username) {
-        UserProfileOverviewFragment f = new UserProfileOverviewFragment();
+    public static UserProfileCommentsFragment newInstance(String username) {
+        UserProfileCommentsFragment f = new UserProfileCommentsFragment();
         Bundle args = new Bundle();
         args.putString(ARG_USERNAME, username);
         f.setArguments(args);
@@ -28,7 +28,7 @@ public class UserProfileOverviewFragment extends AbsUserProfileFragment implemen
 
         Bundle args = getArguments();
         String username = args.getString(ARG_USERNAME);
-        mListingsPresenter = new UserProfileOverviewPresenter(getActivity(), this, username, "new", "all");
+        mListingsPresenter = new UserProfileCommentsPresenter(getActivity(), this, username, "new", "all");
         mListingsAdapter = new ListingsAdapter(mListingsPresenter);
     }
 

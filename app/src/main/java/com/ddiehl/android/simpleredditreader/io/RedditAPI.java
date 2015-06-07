@@ -39,12 +39,13 @@ public interface RedditAPI {
                          @Query("sort") String sort,
                          Callback<MoreChildrenResponse> callback);
 
-    @GET("/user/{username}/overview")
-    void getUserOverview(@Path("username") String username,
-                         @Query("sort") String sort,
-                         @Query("t") String timespan,
-                         @Query("after") String after,
-                         Callback<ListingResponse> callback);
+    @GET("/user/{username}/{show}")
+    void getUserProfile(@Path("show") String show,
+                        @Path("username") String username,
+                        @Query("sort") String sort,
+                        @Query("t") String timespan,
+                        @Query("after") String after,
+                        Callback<ListingResponse> callback);
 
     @POST("/api/vote")
     void vote(@Query("id") String id,

@@ -4,7 +4,7 @@ import com.ddiehl.android.simpleredditreader.events.requests.HideEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.LoadLinkCommentsEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.LoadSubredditEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.LoadMoreChildrenEvent;
-import com.ddiehl.android.simpleredditreader.events.requests.LoadUserOverviewEvent;
+import com.ddiehl.android.simpleredditreader.events.requests.LoadUserProfileEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.ReportEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.SaveEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.VoteEvent;
@@ -19,7 +19,7 @@ public interface RedditService {
     void onLoadLinks(LoadSubredditEvent event);
     void onLoadLinkComments(LoadLinkCommentsEvent event);
     void onLoadMoreChildren(LoadMoreChildrenEvent event);
-    void onLoadUserOverview(LoadUserOverviewEvent event);
+    void onLoadUserProfile(LoadUserProfileEvent event);
 
     void onVote(VoteEvent event);
     void onSave(SaveEvent event);

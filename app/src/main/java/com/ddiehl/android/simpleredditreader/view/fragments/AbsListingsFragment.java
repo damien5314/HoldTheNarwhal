@@ -43,7 +43,7 @@ public abstract class AbsListingsFragment extends AbsRedditFragment implements L
     protected ListingsPresenter mListingsPresenter;
     protected ListingsAdapter mListingsAdapter;
 
-    protected int mFirstVisibleItem, mVisibleItemCount, mTotalItemCount;
+    private int mFirstVisibleItem, mVisibleItemCount, mTotalItemCount;
     protected String mSelectedSort, mSelectedTimespan;
 
     abstract void updateTitle();

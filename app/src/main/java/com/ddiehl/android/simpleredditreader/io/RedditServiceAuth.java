@@ -14,7 +14,7 @@ import com.ddiehl.android.simpleredditreader.events.requests.HideEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.LoadLinkCommentsEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.LoadSubredditEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.LoadMoreChildrenEvent;
-import com.ddiehl.android.simpleredditreader.events.requests.LoadUserOverviewEvent;
+import com.ddiehl.android.simpleredditreader.events.requests.LoadUserProfileEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.RefreshUserAccessTokenEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.ReportEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.SaveEvent;
@@ -328,7 +328,7 @@ public class RedditServiceAuth implements RedditService {
     }
 
     @Subscribe @Override
-    public void onLoadUserOverview(LoadUserOverviewEvent event) {
+    public void onLoadUserProfile(LoadUserProfileEvent event) {
         if (!mIdentityManager.hasValidAccessToken()) {
             mQueuedEvent = event;
             AccessToken userAccessToken = mIdentityManager.getUserAccessToken();
@@ -342,7 +342,7 @@ public class RedditServiceAuth implements RedditService {
                 mBus.post(new AuthorizeApplicationEvent());
             }
         } else {
-            mServiceAPI.onLoadUserOverview(event);
+            mServiceAPI.onLoadUserProfile(event);
         }
     }
 

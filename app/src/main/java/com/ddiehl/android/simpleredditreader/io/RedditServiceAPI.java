@@ -11,7 +11,7 @@ import com.ddiehl.android.simpleredditreader.events.requests.HideEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.LoadLinkCommentsEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.LoadSubredditEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.LoadMoreChildrenEvent;
-import com.ddiehl.android.simpleredditreader.events.requests.LoadUserOverviewEvent;
+import com.ddiehl.android.simpleredditreader.events.requests.LoadUserProfileEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.ReportEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.SaveEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.VoteEvent;
@@ -218,13 +218,14 @@ public class RedditServiceAPI implements RedditService {
     }
 
     @Override
-    public void onLoadUserOverview(LoadUserOverviewEvent event) {
+    public void onLoadUserProfile(LoadUserProfileEvent event) {
+        final String show = event.getShow();
         final String userId = event.getUsername();
         final String sort = event.getSort();
         final String timespan = event.getTimeSpan();
         final String after = event.getAfter();
 
-        mAPI.getUserOverview(userId, sort, timespan, after, new Callback<ListingResponse>() {
+        mAPI.getUserProfile(show, userId, sort, timespan, after, new Callback<ListingResponse>() {
             @Override
             public void success(ListingResponse listing, Response response) {
                 BaseUtils.printResponseStatus(response);
