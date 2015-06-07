@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 
 import com.ddiehl.android.simpleredditreader.R;
-import com.ddiehl.android.simpleredditreader.presenter.UserProfileHiddenPresenter;
+import com.ddiehl.android.simpleredditreader.presenter.UserProfileHidePresenter;
 import com.ddiehl.android.simpleredditreader.view.ListingsView;
 import com.ddiehl.android.simpleredditreader.view.adapters.ListingsAdapter;
 
@@ -28,7 +28,7 @@ public class UserProfileHiddenFragment extends AbsUserProfileFragment implements
 
         Bundle args = getArguments();
         String username = args.getString(ARG_USERNAME);
-        mListingsPresenter = new UserProfileHiddenPresenter(getActivity(), this, username, "new", "all");
+        mListingsPresenter = new UserProfileHidePresenter(getActivity(), this, username, "new", "all");
         mListingsAdapter = new ListingsAdapter(mListingsPresenter);
     }
 
