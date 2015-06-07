@@ -66,9 +66,26 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
         mListings = new ArrayList<>();
     }
 
-    @Override public abstract void refreshData();
+    @Override
+    public void refreshData() {
+        if (mListingsRequested)
+            return;
 
-    @Override public abstract void getMoreData();
+        mListings.clear();
+        mListingsView.listingsUpdated();
+        getMoreData();
+    }
+
+    @Override
+    public void getMoreData() {
+        if (mListingsRequested)
+            return;
+
+        mListingsRequested = true;
+        mListingsView.showSpinner(null);
+        String after = mListings == null || mListings.size() == 0 ?
+                null : mListings.get(mListings.size() - 1).getName();
+    }
 
     @Override
     public void setData(List<Listing> data) {

@@ -2,7 +2,6 @@ package com.ddiehl.android.simpleredditreader.presenter;
 
 import android.content.Context;
 
-import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.events.requests.LoadUserOverviewEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.HideSubmittedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.ListingsLoadedEvent;
@@ -19,35 +18,19 @@ public class UserProfileOverviewPresenter extends AbsListingsPresenter {
     }
 
     @Override
-    public void refreshData() {
-        if (mListingsRequested)
-            return;
-
-        mListings.clear();
-        mListingsView.listingsUpdated();
-        getMoreData();
-    }
-
-    @Override
     public void getMoreData() {
-        if (mListingsRequested)
-            return;
-
-        mListingsRequested = true;
-        mListingsView.showSpinner(null);
-        String after = mListings == null || mListings.size() == 0 ?
-                null : mListings.get(mListings.size() - 1).getName();
+        super.getMoreData();
+        String after = mListings == null || mListings.size() == 0
+                ? null : mListings.get(mListings.size() - 1).getName();
         mBus.post(new LoadUserOverviewEvent(mUsername, mSort, mTimespan, after));
     }
 
     @Subscribe @Override
     public void onListingsLoaded(ListingsLoadedEvent event) {
         super.onListingsLoaded(event);
-        mListingsView.setTitle(String.format(mContext.getString(R.string.username), mUsername));
     }
 
-    @Subscribe
-    @Override
+    @Subscribe @Override
     public void onVoteSubmitted(VoteSubmittedEvent event) {
         super.onVoteSubmitted(event);
     }

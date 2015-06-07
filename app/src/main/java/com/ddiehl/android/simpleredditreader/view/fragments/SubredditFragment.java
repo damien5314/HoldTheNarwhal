@@ -5,6 +5,7 @@ import android.os.Bundle;
 import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.presenter.SubredditPresenter;
 import com.ddiehl.android.simpleredditreader.view.adapters.ListingsAdapter;
+import com.ddiehl.reddit.listings.RedditLink;
 
 public class SubredditFragment extends AbsListingsFragment {
 
@@ -33,9 +34,14 @@ public class SubredditFragment extends AbsListingsFragment {
     @Override
     public void updateTitle() {
         String subreddit = mListingsPresenter.getSubreddit();
-        setTitle(subreddit == null ?
-                getString(R.string.front_page_title) :
-                String.format(getString(R.string.link_subreddit), subreddit));
+        if (subreddit != null) {
+            if (subreddit.equals("random")) {
+                subreddit = ((RedditLink) mListingsPresenter.getListing(0)).getSubreddit();
+            }
+            setTitle(String.format(getString(R.string.link_subreddit), subreddit));
+        } else {
+            setTitle(getString(R.string.front_page_title));
+        }
     }
 
     public void updateSubreddit(String subreddit) {

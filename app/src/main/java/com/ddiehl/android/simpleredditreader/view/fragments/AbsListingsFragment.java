@@ -324,6 +324,7 @@ public abstract class AbsListingsFragment extends AbsRedditFragment implements L
     @Override
     public void listingsUpdated() {
         mListingsAdapter.notifyDataSetChanged();
+        updateTitle();
     }
 
     @Override
