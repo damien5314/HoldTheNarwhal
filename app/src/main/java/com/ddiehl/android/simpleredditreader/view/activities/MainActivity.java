@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
@@ -14,7 +13,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -57,7 +55,6 @@ public class MainActivity extends ActionBarActivity
     private ProgressDialog mProgressBar;
     private Dialog mSubredditNavigationDialog;
 
-    @InjectView(R.id.navigation_tabs) TabLayout mTabLayout;
     @InjectView(R.id.drawer_layout) DrawerLayout mDrawerLayout;
     @InjectView(R.id.navigation_view) NavigationView mNavigationView;
     @InjectView(R.id.user_account_icon) ImageView mGoldIndicator;
@@ -79,52 +76,6 @@ public class MainActivity extends ActionBarActivity
         }
 
         ButterKnife.inject(this);
-
-        // Set up navigation tabs
-        mTabLayout.setVisibility(View.GONE);
-        mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.navigation_tabs_overview)));
-        mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.navigation_tabs_comments)));
-        mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.navigation_tabs_submitted)));
-        mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.navigation_tabs_gilded)));
-        mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.navigation_tabs_upvoted)));
-        mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.navigation_tabs_downvoted)));
-        mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.navigation_tabs_hidden)));
-        mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.navigation_tabs_saved)));
-        mTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override public void onTabUnselected(TabLayout.Tab tab) { }
-            @Override public void onTabReselected(TabLayout.Tab tab) { }
-
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                switch (tab.getPosition()) {
-                    case 0:
-                        showUserProfile("overview");
-                        break;
-                    case 1:
-                        showUserProfile("comments");
-                        break;
-                    case 2:
-                        showUserProfile("submitted");
-                        break;
-                    case 3:
-                        showUserProfile("gilded");
-                        break;
-                    case 4:
-                        showUserProfile("upvoted");
-                        break;
-                    case 5:
-                        showUserProfile("downvoted");
-                        break;
-                    case 6:
-                        showUserProfile("hidden");
-                        break;
-                    case 7:
-                        showUserProfile("saved");
-                    default:
-                        Log.w(TAG, "Unknown tab selected: " + tab.getPosition() + " " + tab.getText());
-                }
-            }
-        });
 
         // Set up navigation drawer
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -172,18 +123,11 @@ public class MainActivity extends ActionBarActivity
     public void showUserProfile() {
         closeNavigationDrawer();
         mMainPresenter.setUsername(mMainPresenter.getAuthorizedUser().getName());
-        showUserProfile("overview");
-    }
-
-    @Override
-    public void showUserProfile(String show) {
         FragmentManager fm = getSupportFragmentManager();
-        String username = mMainPresenter.getUsername();
-        Fragment f = UserProfileFragment.newInstance(show, username);
+        Fragment f = UserProfileFragment.newInstance("overview", mMainPresenter.getAuthorizedUser().getName());
         fm.beginTransaction().replace(R.id.fragment_container, f)
                 .addToBackStack(null)
                 .commit();
-        mTabLayout.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -199,7 +143,6 @@ public class MainActivity extends ActionBarActivity
             fm.beginTransaction().replace(R.id.fragment_container, f)
                     .addToBackStack(null)
                     .commit();
-            mTabLayout.setVisibility(View.GONE);
         }
     }
 
@@ -211,7 +154,6 @@ public class MainActivity extends ActionBarActivity
         fm.beginTransaction().replace(R.id.fragment_container, f)
                 .addToBackStack(null)
                 .commit();
-        mTabLayout.setVisibility(View.GONE);
     }
 
     @Override

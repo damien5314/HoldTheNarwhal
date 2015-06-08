@@ -4,18 +4,15 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 
 import com.ddiehl.android.simpleredditreader.BusProvider;
 import com.ddiehl.android.simpleredditreader.R;
@@ -32,6 +29,7 @@ import com.squareup.otto.Bus;
 import butterknife.ButterKnife;
 
 public abstract class AbsListingsFragment extends AbsRedditFragment implements ListingsView {
+    private static final String TAG = AbsListingsFragment.class.getSimpleName();
 
     private static final int REQUEST_CHOOSE_SORT = 0;
     private static final int REQUEST_CHOOSE_TIMESPAN = 1;
@@ -56,21 +54,18 @@ public abstract class AbsListingsFragment extends AbsRedditFragment implements L
         mBus = BusProvider.getInstance();
     }
 
-    @Nullable @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.listings_fragment, container, false);
-
-        final LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+    protected void instantiateListView(View v) {
         RecyclerView rv = ButterKnife.findById(v, R.id.recycler_view);
-        rv.setLayoutManager(mLayoutManager);
+        final LinearLayoutManager mgr = new LinearLayoutManager(getActivity());
+        rv.setLayoutManager(mgr);
         rv.setAdapter(mListingsAdapter);
 
         rv.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                mVisibleItemCount = mLayoutManager.getChildCount();
-                mTotalItemCount = mLayoutManager.getItemCount();
-                mFirstVisibleItem = mLayoutManager.findFirstVisibleItemPosition();
+                mVisibleItemCount = mgr.getChildCount();
+                mTotalItemCount = mgr.getItemCount();
+                mFirstVisibleItem = mgr.findFirstVisibleItemPosition();
 
                 if ((mVisibleItemCount + mFirstVisibleItem) >= mTotalItemCount) {
                     if (mListingsPresenter.getNextPageListingId() != null) {
@@ -79,10 +74,14 @@ public abstract class AbsListingsFragment extends AbsRedditFragment implements L
                 }
             }
         });
+    }
 
-        updateTitle();
-
-        return v;
+    public void showUserProfile(String show) {
+        FragmentManager fm = getActivity().getSupportFragmentManager();
+        Fragment f = UserProfileFragment.newInstance(show, mListingsPresenter.getUsername());
+        fm.beginTransaction().replace(R.id.fragment_container, f)
+                .addToBackStack(null)
+                .commit();
     }
 
     @Override
