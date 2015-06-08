@@ -72,6 +72,7 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
 
         mListings.clear();
         mListingsView.listingsUpdated();
+        mNextPageListingId = null;
         getMoreData();
     }
 
