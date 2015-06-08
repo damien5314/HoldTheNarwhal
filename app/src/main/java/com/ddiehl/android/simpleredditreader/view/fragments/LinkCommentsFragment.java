@@ -145,6 +145,11 @@ public class LinkCommentsFragment extends AbsRedditFragment
     }
 
     @Override
+    public void navigateToCommentThread(String commentId) {
+        mLinkCommentsPresenter.navigateToCommentThread(commentId);
+    }
+
+    @Override
     public void openShareView(RedditComment comment) {
         Intent i = new Intent(Intent.ACTION_SEND);
         i.setType("text/plain");

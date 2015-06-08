@@ -42,8 +42,6 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
     protected String mShow;
     protected String mUsername;
     protected String mSubreddit;
-    protected String mArticleId;
-    protected String mCommentId;
     protected String mSort;
     protected String mTimespan;
 
@@ -61,8 +59,6 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
         mShow = show;
         mUsername = username;
         mSubreddit = subreddit;
-        mArticleId = article;
-        mCommentId = comment;
         mSort = sort;
         mTimespan = timespan;
 
@@ -119,16 +115,6 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
     @Override
     public String getSubreddit() {
         return mSubreddit;
-    }
-
-    @Override
-    public String getArticleId() {
-        return mArticleId;
-    }
-
-    @Override
-    public String getCommentId() {
-        return mCommentId;
     }
 
     @Override
@@ -367,8 +353,7 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
 
     @Override
     public void navigateToCommentThread(String commentId) {
-        mCommentId = commentId.substring(3); // Remove type prefix
-        refreshData();
+        mListingsView.navigateToCommentThread(commentId);
     }
 
     @Override

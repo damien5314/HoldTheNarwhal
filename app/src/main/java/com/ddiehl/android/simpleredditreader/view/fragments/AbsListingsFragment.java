@@ -301,6 +301,11 @@ public abstract class AbsListingsFragment extends AbsRedditFragment implements L
     }
 
     @Override
+    public void navigateToCommentThread(String commentId) {
+        mListingsPresenter.navigateToCommentThread(commentId);
+    }
+
+    @Override
     public void openReplyView(RedditComment comment) {
         showToast(R.string.implementation_pending);
     }
