@@ -285,7 +285,7 @@ public abstract class AbsListingsFragment extends AbsRedditFragment implements L
 
     @Override
     public void openWebViewForLink(RedditLink link) {
-        ((MainActivity) getActivity()).openWebViewForURL(link.getUrl());
+        ((MainActivity) getActivity()).showWebViewForURL(link.getUrl());
     }
 
     @Override

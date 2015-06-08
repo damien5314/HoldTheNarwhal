@@ -13,7 +13,7 @@ public interface MainView extends BaseView {
     void showUserProfile(String show);
     void showUserSubreddits();
     void showSubreddit(String subreddit);
-    void openWebViewForURL(String authorizationUrl);
+    void showWebViewForURL(String authorizationUrl);
 
     void onUserAuthCodeReceived(String authCode);
 

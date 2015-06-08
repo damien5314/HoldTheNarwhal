@@ -42,7 +42,8 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 
-public class MainActivity extends ActionBarActivity implements MainView, ConfirmSignOutDialog.Callbacks {
+public class MainActivity extends ActionBarActivity
+        implements MainView, ConfirmSignOutDialog.Callbacks, NavigationView.OnNavigationItemSelectedListener {
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private static final String DIALOG_CONFIRM_SIGN_OUT = "dialog_confirm_sign_out";
@@ -130,41 +131,41 @@ public class MainActivity extends ActionBarActivity implements MainView, Confirm
         mMainPresenter = new MainPresenterImpl(this, this);
         updateNavigationItems();
 
-        mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(MenuItem menuItem) {
-                switch (menuItem.getItemId()) {
-                    case R.id.drawer_navigate_to_subreddit:
-                        showSubredditNavigationDialog();
-                        return true;
-                    case R.id.drawer_log_in:
-                        showLoginView();
-                        return true;
-                    case R.id.drawer_user_profile:
-                        showUserProfile();
-                        return true;
-                    case R.id.drawer_subreddits:
-                        showUserSubreddits();
-                        return true;
-                    case R.id.drawer_front_page:
-                        showSubreddit(null);
-                        return true;
-                    case R.id.drawer_r_all:
-                        showSubreddit("all");
-                        return true;
-                    case R.id.drawer_random_subreddit:
-                        showSubreddit("random");
-                        return true;
-                }
-                return false;
-            }
-        });
+        mNavigationView.setNavigationItemSelectedListener(this);
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(MenuItem menuItem) {
+        switch (menuItem.getItemId()) {
+            case R.id.drawer_navigate_to_subreddit:
+                showSubredditNavigationDialog();
+                return true;
+            case R.id.drawer_log_in:
+                showLoginView();
+                return true;
+            case R.id.drawer_user_profile:
+                showUserProfile();
+                return true;
+            case R.id.drawer_subreddits:
+                showUserSubreddits();
+                return true;
+            case R.id.drawer_front_page:
+                showSubreddit(null);
+                return true;
+            case R.id.drawer_r_all:
+                showSubreddit("all");
+                return true;
+            case R.id.drawer_random_subreddit:
+                showSubreddit("random");
+                return true;
+        }
+        return false;
     }
 
     @Override
     public void showLoginView() {
         closeNavigationDrawer();
-        openWebViewForURL(RedditServiceAuth.AUTHORIZATION_URL);
+        showWebViewForURL(RedditServiceAuth.AUTHORIZATION_URL);
     }
 
     @Override
@@ -203,7 +204,7 @@ public class MainActivity extends ActionBarActivity implements MainView, Confirm
     }
 
     @Override
-    public void openWebViewForURL(String url) {
+    public void showWebViewForURL(String url) {
         closeNavigationDrawer();
         FragmentManager fm = getSupportFragmentManager();
         Fragment f = WebViewFragment.newInstance(url);
