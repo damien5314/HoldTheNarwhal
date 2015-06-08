@@ -8,6 +8,7 @@ import com.ddiehl.android.simpleredditreader.events.responses.ListingsLoadedEven
 import com.ddiehl.android.simpleredditreader.events.responses.SaveSubmittedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.VoteSubmittedEvent;
 import com.ddiehl.android.simpleredditreader.view.ListingsView;
+import com.ddiehl.reddit.listings.RedditLink;
 import com.squareup.otto.Subscribe;
 
 public class SubredditPresenter extends AbsListingsPresenter {
@@ -25,6 +26,10 @@ public class SubredditPresenter extends AbsListingsPresenter {
     @Subscribe @Override
     public void onListingsLoaded(ListingsLoadedEvent event) {
         super.onListingsLoaded(event);
+
+        if (mSubreddit != null && mSubreddit.equals("random")) {
+            mSubreddit = ((RedditLink) mListings.get(0)).getSubreddit();
+        }
     }
 
     @Subscribe @Override

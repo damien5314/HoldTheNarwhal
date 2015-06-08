@@ -35,8 +35,7 @@ public class SubredditFragment extends AbsListingsFragment {
         mListingsAdapter = new ListingsAdapter(mListingsPresenter);
     }
 
-    @Nullable
-    @Override
+    @Nullable @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.listings_fragment, container, false);
         instantiateListView(v);
@@ -48,7 +47,9 @@ public class SubredditFragment extends AbsListingsFragment {
         String subreddit = mListingsPresenter.getSubreddit();
         if (subreddit != null) {
             if (subreddit.equals("random")) {
-                subreddit = ((RedditLink) mListingsPresenter.getListing(0)).getSubreddit();
+                if (mListingsPresenter.getNumListings() > 0) {
+                    subreddit = ((RedditLink) mListingsPresenter.getListing(0)).getSubreddit();
+                }
             }
             setTitle(String.format(getString(R.string.link_subreddit), subreddit));
         } else {
