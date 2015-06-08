@@ -76,6 +76,7 @@
     </style>
 
     <style name="CommentLinkTitleTextView" parent="LinkTitleTextView">
+        <item name="android:textSize">@dimen/comment_body_text_size</item>
         <item name="android:textColor">@android:color/white</item>
     </style>
 
