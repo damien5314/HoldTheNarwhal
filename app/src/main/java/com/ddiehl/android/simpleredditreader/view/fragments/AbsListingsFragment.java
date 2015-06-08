@@ -73,7 +73,9 @@ public abstract class AbsListingsFragment extends AbsRedditFragment implements L
                 mFirstVisibleItem = mLayoutManager.findFirstVisibleItemPosition();
 
                 if ((mVisibleItemCount + mFirstVisibleItem) >= mTotalItemCount) {
-                    mListingsPresenter.getMoreData();
+                    if (mListingsPresenter.getNextPageListingId() != null) {
+                        mListingsPresenter.getMoreData();
+                    }
                 }
             }
         });

@@ -15,6 +15,9 @@ public interface ListingsPresenter extends LinkPresenter, CommentPresenter {
 
     String getUsername();
     String getSubreddit();
+    String getArticleId();
+    String getCommentId();
+    String getNextPageListingId();
     String getSort();
     String getTimespan();
     void updateSubreddit(String subreddit);

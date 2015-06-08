@@ -49,6 +49,7 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
 
     protected Listing mListingSelected;
     protected boolean mListingsRequested = false;
+    protected String mNextPageListingId;
 
     public AbsListingsPresenter(Context context, ListingsView view,
                                 String show, String username, String subreddit, String article,
@@ -120,10 +121,12 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
         return mSubreddit;
     }
 
+    @Override
     public String getArticleId() {
         return mArticleId;
     }
 
+    @Override
     public String getCommentId() {
         return mCommentId;
     }
@@ -136,6 +139,11 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
     @Override
     public String getTimespan() {
         return mTimespan;
+    }
+
+    @Override
+    public String getNextPageListingId() {
+        return mNextPageListingId;
     }
 
     @Override
@@ -189,6 +197,7 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
         List<Listing> listings = event.getListings();
         mListings.addAll(listings);
         mListingsView.listingsUpdated();
+        mNextPageListingId = event.getResponse().getData().getAfter();
         mListingsRequested = false;
     }
 
