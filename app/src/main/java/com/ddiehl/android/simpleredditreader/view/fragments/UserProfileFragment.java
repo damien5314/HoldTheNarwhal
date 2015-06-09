@@ -3,7 +3,6 @@ package com.ddiehl.android.simpleredditreader.view.fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,47 +57,30 @@ public class UserProfileFragment extends AbsListingsFragment implements Listings
 
     public void instantiateNavigationTabs() {
         // Set up navigation tabs
-        mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.navigation_tabs_overview)));
-        mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.navigation_tabs_comments)));
-        mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.navigation_tabs_submitted)));
-        mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.navigation_tabs_gilded)));
-        mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.navigation_tabs_upvoted)));
-        mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.navigation_tabs_downvoted)));
-        mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.navigation_tabs_hidden)));
-        mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.navigation_tabs_saved)));
+        mTabLayout.addTab(mTabLayout.newTab()
+                .setText(getString(R.string.navigation_tabs_overview)).setTag("overview"));
+        mTabLayout.addTab(mTabLayout.newTab()
+                .setText(getString(R.string.navigation_tabs_comments)).setTag("comments"));
+        mTabLayout.addTab(mTabLayout.newTab()
+                .setText(getString(R.string.navigation_tabs_submitted)).setTag("submitted"));
+        mTabLayout.addTab(mTabLayout.newTab()
+                .setText(getString(R.string.navigation_tabs_gilded)).setTag("gilded"));
+        mTabLayout.addTab(mTabLayout.newTab()
+                .setText(getString(R.string.navigation_tabs_upvoted)).setTag("upvoted"));
+        mTabLayout.addTab(mTabLayout.newTab()
+                .setText(getString(R.string.navigation_tabs_downvoted)).setTag("downvoted"));
+        mTabLayout.addTab(mTabLayout.newTab()
+                .setText(getString(R.string.navigation_tabs_hidden)).setTag("hidden"));
+        mTabLayout.addTab(mTabLayout.newTab()
+                .setText(getString(R.string.navigation_tabs_saved)).setTag("saved"));
         mTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override public void onTabUnselected(TabLayout.Tab tab) { }
             @Override public void onTabReselected(TabLayout.Tab tab) { }
 
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                switch (tab.getPosition()) {
-                    case 0:
-                        showUserProfile("overview");
-                        break;
-                    case 1:
-                        showUserProfile("comments");
-                        break;
-                    case 2:
-                        showUserProfile("submitted");
-                        break;
-                    case 3:
-                        showUserProfile("gilded");
-                        break;
-                    case 4:
-                        showUserProfile("upvoted");
-                        break;
-                    case 5:
-                        showUserProfile("downvoted");
-                        break;
-                    case 6:
-                        showUserProfile("hidden");
-                        break;
-                    case 7:
-                        showUserProfile("saved");
-                    default:
-                        Log.w(TAG, "Unknown tab selected: " + tab.getPosition() + " " + tab.getText());
-                }
+//                showUserProfile((String) tab.getTag());
+                ((UserProfilePresenter) mListingsPresenter).requestData((String) tab.getTag());
             }
         });
     }

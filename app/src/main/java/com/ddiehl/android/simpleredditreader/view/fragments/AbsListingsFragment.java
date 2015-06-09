@@ -78,10 +78,14 @@ public abstract class AbsListingsFragment extends AbsRedditFragment implements L
 
     public void showUserProfile(String show) {
         FragmentManager fm = getActivity().getSupportFragmentManager();
-        Fragment f = UserProfileFragment.newInstance(show, mListingsPresenter.getUsername());
-        fm.beginTransaction().replace(R.id.fragment_container, f)
-                .addToBackStack(null)
-                .commit();
+        if (fm.findFragmentById(R.id.fragment_container) instanceof UserProfileFragment) {
+            
+        } else {
+            Fragment f = UserProfileFragment.newInstance(show, mListingsPresenter.getUsername());
+            fm.beginTransaction().replace(R.id.fragment_container, f)
+                    .addToBackStack(null)
+                    .commit();
+        }
     }
 
     @Override

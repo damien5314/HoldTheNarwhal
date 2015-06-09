@@ -22,6 +22,11 @@ public class UserProfilePresenter extends AbsListingsPresenter {
         mBus.post(new LoadUserProfileEvent(mShow, mUsername, mSort, mTimespan, mNextPageListingId));
     }
 
+    public void requestData(String show) {
+        mShow = show;
+        refreshData();
+    }
+
     @Subscribe @Override
     public void onListingsLoaded(ListingsLoadedEvent event) {
         super.onListingsLoaded(event);
