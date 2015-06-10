@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
@@ -60,6 +61,7 @@ public class MainActivity extends ActionBarActivity
     @InjectView(R.id.user_account_icon) ImageView mGoldIndicator;
     @InjectView(R.id.account_name) TextView mAccountNameView;
     @InjectView(R.id.sign_out_button) View mSignOutView;
+    @InjectView(R.id.navigation_tabs) TabLayout mTabLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,12 +79,45 @@ public class MainActivity extends ActionBarActivity
 
         ButterKnife.inject(this);
 
-        // Set up navigation drawer
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mMainPresenter = new MainPresenterImpl(this, this);
         updateNavigationItems();
-
+        updateNavigationTabs();
         mNavigationView.setNavigationItemSelectedListener(this);
+    }
+
+    public void updateNavigationTabs() {
+        // Set up navigation tabs
+        mTabLayout.addTab(mTabLayout.newTab()
+                .setText(getString(R.string.navigation_tabs_overview)).setTag("overview"));
+        mTabLayout.addTab(mTabLayout.newTab()
+                .setText(getString(R.string.navigation_tabs_comments)).setTag("comments"));
+        mTabLayout.addTab(mTabLayout.newTab()
+                .setText(getString(R.string.navigation_tabs_submitted)).setTag("submitted"));
+        mTabLayout.addTab(mTabLayout.newTab()
+                .setText(getString(R.string.navigation_tabs_gilded)).setTag("gilded"));
+        mTabLayout.addTab(mTabLayout.newTab()
+                .setText(getString(R.string.navigation_tabs_upvoted)).setTag("upvoted"));
+        mTabLayout.addTab(mTabLayout.newTab()
+                .setText(getString(R.string.navigation_tabs_downvoted)).setTag("downvoted"));
+        mTabLayout.addTab(mTabLayout.newTab()
+                .setText(getString(R.string.navigation_tabs_hidden)).setTag("hidden"));
+        mTabLayout.addTab(mTabLayout.newTab()
+                .setText(getString(R.string.navigation_tabs_saved)).setTag("saved"));
+        mTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+            }
+
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                showUserProfile((String) tab.getTag());
+//                ((UserProfilePresenter) mListingsPresenter).requestData((String) tab.getTag());
+            }
+        });
     }
 
     @Override
@@ -121,13 +156,22 @@ public class MainActivity extends ActionBarActivity
 
     @Override
     public void showUserProfile() {
+        showUserProfile("overview");
+    }
+
+    public void showUserProfile(String show) {
         closeNavigationDrawer();
         mMainPresenter.setUsername(mMainPresenter.getAuthorizedUser().getName());
         FragmentManager fm = getSupportFragmentManager();
-        Fragment f = UserProfileFragment.newInstance("overview", mMainPresenter.getAuthorizedUser().getName());
-        fm.beginTransaction().replace(R.id.fragment_container, f)
-                .addToBackStack(null)
-                .commit();
+        Fragment currentFragment = fm.findFragmentById(R.id.fragment_container);
+        if (currentFragment instanceof UserProfileFragment) {
+            ((UserProfileFragment) currentFragment).showUserProfile(show);
+        } else {
+            Fragment f = UserProfileFragment.newInstance(show, mMainPresenter.getAuthorizedUser().getName());
+            fm.beginTransaction().replace(R.id.fragment_container, f)
+                    .addToBackStack(null)
+                    .commit();
+        }
     }
 
     @Override

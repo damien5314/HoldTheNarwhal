@@ -1,11 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.Toolbar
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/toolbar"
+    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/primary"
-    android:elevation="@dimen/toolbar_elevation"
-    app:theme="@style/ToolbarThemeLightText"
-    app:popupTheme="@style/Theme.AppCompat.Light"/>
+    android:layout_height="wrap_content">
+
+    <android.support.v7.widget.Toolbar
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/primary"
+        android:elevation="@dimen/toolbar_elevation"
+        app:theme="@style/ToolbarThemeLightText"
+        app:popupTheme="@style/Theme.AppCompat.Light"/>
+
+    <android.support.design.widget.TabLayout
+        android:id="@+id/navigation_tabs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/primary"
+        android:elevation="@dimen/toolbar_elevation"
+        app:tabTextColor="@color/primary_light"
+        app:tabSelectedTextColor="@android:color/white"
+        app:tabMode="scrollable" />
+
+</LinearLayout>
