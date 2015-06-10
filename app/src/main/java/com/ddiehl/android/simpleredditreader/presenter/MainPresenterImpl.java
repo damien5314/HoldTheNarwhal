@@ -43,7 +43,7 @@ public class MainPresenterImpl implements MainPresenter {
     }
 
     @Override
-    public void setUsername(String username) {
+    public void setUsernameContext(String username) {
         mUsername = username;
     }
 

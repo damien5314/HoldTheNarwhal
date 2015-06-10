@@ -5,7 +5,7 @@ import com.ddiehl.reddit.identity.UserIdentity;
 public interface MainPresenter {
 
     String getUsername();
-    void setUsername(String username);
+    void setUsernameContext(String username);
     UserIdentity getAuthorizedUser();
     void signOutUser();
 

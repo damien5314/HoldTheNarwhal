@@ -61,7 +61,7 @@ public class MainActivity extends ActionBarActivity
     @InjectView(R.id.user_account_icon) ImageView mGoldIndicator;
     @InjectView(R.id.account_name) TextView mAccountNameView;
     @InjectView(R.id.sign_out_button) View mSignOutView;
-    @InjectView(R.id.navigation_tabs) TabLayout mTabLayout;
+    @InjectView(R.id.navigation_tabs) TabLayout mUserProfileTabs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,30 +87,17 @@ public class MainActivity extends ActionBarActivity
 
     public void updateNavigationTabs() {
         // Set up navigation tabs
-        mTabLayout.addTab(mTabLayout.newTab()
-                .setText(getString(R.string.navigation_tabs_overview)).setTag("overview"));
-        mTabLayout.addTab(mTabLayout.newTab()
-                .setText(getString(R.string.navigation_tabs_comments)).setTag("comments"));
-        mTabLayout.addTab(mTabLayout.newTab()
-                .setText(getString(R.string.navigation_tabs_submitted)).setTag("submitted"));
-        mTabLayout.addTab(mTabLayout.newTab()
-                .setText(getString(R.string.navigation_tabs_gilded)).setTag("gilded"));
-        mTabLayout.addTab(mTabLayout.newTab()
-                .setText(getString(R.string.navigation_tabs_upvoted)).setTag("upvoted"));
-        mTabLayout.addTab(mTabLayout.newTab()
-                .setText(getString(R.string.navigation_tabs_downvoted)).setTag("downvoted"));
-        mTabLayout.addTab(mTabLayout.newTab()
-                .setText(getString(R.string.navigation_tabs_hidden)).setTag("hidden"));
-        mTabLayout.addTab(mTabLayout.newTab()
-                .setText(getString(R.string.navigation_tabs_saved)).setTag("saved"));
-        mTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-            }
+        mUserProfileTabs.addTab(mUserProfileTabs.newTab().setText(getString(R.string.navigation_tabs_overview)).setTag("overview"));
+        mUserProfileTabs.addTab(mUserProfileTabs.newTab().setText(getString(R.string.navigation_tabs_comments)).setTag("comments"));
+        mUserProfileTabs.addTab(mUserProfileTabs.newTab().setText(getString(R.string.navigation_tabs_submitted)).setTag("submitted"));
+        mUserProfileTabs.addTab(mUserProfileTabs.newTab().setText(getString(R.string.navigation_tabs_gilded)).setTag("gilded"));
+        mUserProfileTabs.addTab(mUserProfileTabs.newTab().setText(getString(R.string.navigation_tabs_upvoted)).setTag("upvoted"));
+        mUserProfileTabs.addTab(mUserProfileTabs.newTab().setText(getString(R.string.navigation_tabs_downvoted)).setTag("downvoted"));
+        mUserProfileTabs.addTab(mUserProfileTabs.newTab().setText(getString(R.string.navigation_tabs_hidden)).setTag("hidden"));
+        mUserProfileTabs.addTab(mUserProfileTabs.newTab().setText(getString(R.string.navigation_tabs_saved)).setTag("saved"));
+        mUserProfileTabs.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override public void onTabUnselected(TabLayout.Tab tab) { }
+            @Override public void onTabReselected(TabLayout.Tab tab) { }
 
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -161,7 +148,8 @@ public class MainActivity extends ActionBarActivity
 
     public void showUserProfile(String show) {
         closeNavigationDrawer();
-        mMainPresenter.setUsername(mMainPresenter.getAuthorizedUser().getName());
+        mUserProfileTabs.setVisibility(View.VISIBLE);
+        mMainPresenter.setUsernameContext(mMainPresenter.getAuthorizedUser().getName());
         FragmentManager fm = getSupportFragmentManager();
         Fragment currentFragment = fm.findFragmentById(R.id.fragment_container);
         if (currentFragment instanceof UserProfileFragment) {
@@ -177,6 +165,7 @@ public class MainActivity extends ActionBarActivity
     @Override
     public void showSubreddit(String subreddit) {
         closeNavigationDrawer();
+        mUserProfileTabs.setVisibility(View.GONE);
         FragmentManager fm = getSupportFragmentManager();
         Fragment currentFragment = fm.findFragmentById(R.id.fragment_container);
         // If current fragment is subreddit, update. Otherwise, swap in a subreddit fragment.
@@ -193,6 +182,7 @@ public class MainActivity extends ActionBarActivity
     @Override
     public void showWebViewForURL(String url) {
         closeNavigationDrawer();
+        mUserProfileTabs.setVisibility(View.GONE);
         FragmentManager fm = getSupportFragmentManager();
         Fragment f = WebViewFragment.newInstance(url);
         fm.beginTransaction().replace(R.id.fragment_container, f)
