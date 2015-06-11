@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu;
@@ -342,5 +343,10 @@ public abstract class AbsListingsFragment extends AbsRedditFragment implements L
     @Override
     public void listingRemovedAt(int position) {
         mListingsAdapter.notifyItemRemoved(position);
+    }
+
+    @Override
+    public void selectUserProfileTab(String show) {
+        ((MainView) getActivity()).selectUserProfileTab(show);
     }
 }

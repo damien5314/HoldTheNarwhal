@@ -6,4 +6,5 @@ public interface ListingsView extends LinkView, CommentView {
     void listingUpdatedAt(int position);
     void listingRemovedAt(int position);
 
+    void selectUserProfileTab(String show);
 }

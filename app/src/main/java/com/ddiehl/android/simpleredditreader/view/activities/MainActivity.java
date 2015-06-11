@@ -194,12 +194,23 @@ public class MainActivity extends ActionBarActivity
         FragmentManager fm = getSupportFragmentManager();
         Fragment currentFragment = fm.findFragmentById(R.id.fragment_container);
         if (currentFragment instanceof UserProfileFragment) {
-            ((UserProfileFragment) currentFragment).showUserProfile(show);
+            ((UserProfileFragment) currentFragment).showUserProfile(show, username);
         } else {
             Fragment f = UserProfileFragment.newInstance(show, username);
             fm.beginTransaction().replace(R.id.fragment_container, f)
                     .addToBackStack(null)
                     .commit();
+        }
+    }
+
+    @Override
+    public void selectUserProfileTab(String show) {
+        for (int i = 0; i < mUserProfileTabs.getTabCount(); i++) {
+            TabLayout.Tab tab = mUserProfileTabs.getTabAt(i);
+            if (tab.getTag().equals(show)) {
+                tab.select();
+                break;
+            }
         }
     }
 

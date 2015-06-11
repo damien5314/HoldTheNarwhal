@@ -2,19 +2,16 @@ package com.ddiehl.android.simpleredditreader.view.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.TabLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.ddiehl.android.simpleredditreader.R;
-import com.ddiehl.android.simpleredditreader.presenter.AbsListingsPresenter;
 import com.ddiehl.android.simpleredditreader.presenter.UserProfilePresenter;
 import com.ddiehl.android.simpleredditreader.view.ListingsView;
 import com.ddiehl.android.simpleredditreader.view.adapters.ListingsAdapter;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 
 public class UserProfileFragment extends AbsListingsFragment implements ListingsView {
     private static final String TAG = UserProfileFragment.class.getSimpleName();
@@ -54,8 +51,8 @@ public class UserProfileFragment extends AbsListingsFragment implements Listings
         return v;
     }
 
-    public void showUserProfile(String show) {
-        ((UserProfilePresenter) mListingsPresenter).requestData(show);
+    public void showUserProfile(String show, String username) {
+        ((UserProfilePresenter) mListingsPresenter).requestData(show, username);
     }
 
     @Override
