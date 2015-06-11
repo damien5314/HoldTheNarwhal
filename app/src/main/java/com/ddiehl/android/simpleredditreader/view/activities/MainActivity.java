@@ -80,24 +80,37 @@ public class MainActivity extends ActionBarActivity
         ButterKnife.inject(this);
 
         mMainPresenter = new MainPresenterImpl(this, this);
-        updateNavigationItems();
-        updateNavigationTabs();
+        setIdentity(mMainPresenter.getAuthorizedUser());
+//        updateNavigationItems();
+        initializeUserProfileTabs();
         mNavigationView.setNavigationItemSelectedListener(this);
     }
 
-    public void updateNavigationTabs() {
-        // Set up navigation tabs
-        mUserProfileTabs.addTab(mUserProfileTabs.newTab().setText(getString(R.string.navigation_tabs_overview)).setTag("overview"));
-        mUserProfileTabs.addTab(mUserProfileTabs.newTab().setText(getString(R.string.navigation_tabs_comments)).setTag("comments"));
-        mUserProfileTabs.addTab(mUserProfileTabs.newTab().setText(getString(R.string.navigation_tabs_submitted)).setTag("submitted"));
-        mUserProfileTabs.addTab(mUserProfileTabs.newTab().setText(getString(R.string.navigation_tabs_gilded)).setTag("gilded"));
-        mUserProfileTabs.addTab(mUserProfileTabs.newTab().setText(getString(R.string.navigation_tabs_upvoted)).setTag("upvoted"));
-        mUserProfileTabs.addTab(mUserProfileTabs.newTab().setText(getString(R.string.navigation_tabs_downvoted)).setTag("downvoted"));
-        mUserProfileTabs.addTab(mUserProfileTabs.newTab().setText(getString(R.string.navigation_tabs_hidden)).setTag("hidden"));
-        mUserProfileTabs.addTab(mUserProfileTabs.newTab().setText(getString(R.string.navigation_tabs_saved)).setTag("saved"));
+    private void initializeUserProfileTabs() {
+        mUserProfileTabs.addTab(mUserProfileTabs.newTab()
+                .setText(getString(R.string.navigation_tabs_overview)).setTag("overview"));
+        mUserProfileTabs.addTab(mUserProfileTabs.newTab()
+                .setText(getString(R.string.navigation_tabs_comments)).setTag("comments"));
+        mUserProfileTabs.addTab(mUserProfileTabs.newTab()
+                .setText(getString(R.string.navigation_tabs_submitted)).setTag("submitted"));
+        mUserProfileTabs.addTab(mUserProfileTabs.newTab()
+                .setText(getString(R.string.navigation_tabs_gilded)).setTag("gilded"));
+        mUserProfileTabs.addTab(mUserProfileTabs.newTab()
+                .setText(getString(R.string.navigation_tabs_upvoted)).setTag("upvoted"));
+        mUserProfileTabs.addTab(mUserProfileTabs.newTab()
+                .setText(getString(R.string.navigation_tabs_downvoted)).setTag("downvoted"));
+        mUserProfileTabs.addTab(mUserProfileTabs.newTab()
+                .setText(getString(R.string.navigation_tabs_hidden)).setTag("hidden"));
+        mUserProfileTabs.addTab(mUserProfileTabs.newTab()
+                .setText(getString(R.string.navigation_tabs_saved)).setTag("saved"));
         mUserProfileTabs.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override public void onTabUnselected(TabLayout.Tab tab) { }
-            @Override public void onTabReselected(TabLayout.Tab tab) { }
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+            }
 
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -105,6 +118,29 @@ public class MainActivity extends ActionBarActivity
 //                ((UserProfilePresenter) mListingsPresenter).requestData((String) tab.getTag());
             }
         });
+    }
+
+    @Override
+    public void closeNavigationDrawer() {
+        mDrawerLayout.closeDrawer(GravityCompat.START);
+    }
+
+    @Override
+    public void setIdentity(UserIdentity identity) {
+        mAccountNameView.setText(identity == null ?
+                getString(R.string.account_name_unauthorized) : identity.getName());
+        mSignOutView.setVisibility(identity == null ? View.GONE : View.VISIBLE);
+        mGoldIndicator.setVisibility(identity != null && identity.isGold() ? View.VISIBLE : View.GONE);
+        updateNavigationItems();
+    }
+
+    private void updateNavigationItems() {
+        Menu menu = mNavigationView.getMenu();
+        UserIdentity user = mMainPresenter.getAuthorizedUser();
+        boolean b = user != null && user.getName() != null;
+        menu.findItem(R.id.drawer_log_in).setVisible(!b);
+        menu.findItem(R.id.drawer_user_profile).setVisible(b);
+        menu.findItem(R.id.drawer_subreddits).setVisible(b);
     }
 
     @Override
@@ -146,16 +182,21 @@ public class MainActivity extends ActionBarActivity
         showUserProfile("overview");
     }
 
-    public void showUserProfile(String show) {
+    private void showUserProfile(String show) {
+        String username = mMainPresenter.getAuthorizedUser().getName();
+        showUserProfile(show, username);
+    }
+
+    @Override
+    public void showUserProfile(String show, String username) {
         closeNavigationDrawer();
         mUserProfileTabs.setVisibility(View.VISIBLE);
-        mMainPresenter.setUsernameContext(mMainPresenter.getAuthorizedUser().getName());
         FragmentManager fm = getSupportFragmentManager();
         Fragment currentFragment = fm.findFragmentById(R.id.fragment_container);
         if (currentFragment instanceof UserProfileFragment) {
             ((UserProfileFragment) currentFragment).showUserProfile(show);
         } else {
-            Fragment f = UserProfileFragment.newInstance(show, mMainPresenter.getAuthorizedUser().getName());
+            Fragment f = UserProfileFragment.newInstance(show, username);
             fm.beginTransaction().replace(R.id.fragment_container, f)
                     .addToBackStack(null)
                     .commit();
@@ -254,16 +295,6 @@ public class MainActivity extends ActionBarActivity
     }
 
     @Override
-    public void updateNavigationItems() {
-        Menu menu = mNavigationView.getMenu();
-        UserIdentity user = mMainPresenter.getAuthorizedUser();
-        boolean b = user != null && user.getName() != null;
-        menu.findItem(R.id.drawer_log_in).setVisible(!b);
-        menu.findItem(R.id.drawer_user_profile).setVisible(b);
-        menu.findItem(R.id.drawer_subreddits).setVisible(b);
-    }
-
-    @Override
     public void showSpinner(String message) {
         if (mProgressBar == null) {
             mProgressBar = new ProgressDialog(this, R.style.ProgressDialog);
@@ -294,19 +325,6 @@ public class MainActivity extends ActionBarActivity
     @Override
     public void showToast(String s) {
         Snackbar.make(mDrawerLayout, s, Snackbar.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void closeNavigationDrawer() {
-        mDrawerLayout.closeDrawer(GravityCompat.START);
-    }
-
-    @Override
-    public void setAccount(UserIdentity identity) {
-        mAccountNameView.setText(identity == null ?
-                getString(R.string.account_name_unauthorized) : identity.getName());
-        mSignOutView.setVisibility(identity == null ? View.GONE : View.VISIBLE);
-        mGoldIndicator.setVisibility(identity != null && identity.isGold() ? View.VISIBLE : View.GONE);
     }
 
     @Override

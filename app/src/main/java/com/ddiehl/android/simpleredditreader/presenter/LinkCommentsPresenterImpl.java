@@ -123,11 +123,6 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
     }
 
     @Override
-    public void setLinkContext(RedditLink link) {
-        mLinkContext = link;
-    }
-
-    @Override
     public void getMoreChildren(RedditMoreComments comment) {
         mLinkCommentsView.showSpinner(null);
         List<String> children = comment.getChildren();
@@ -233,6 +228,12 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
     @Override
     public void shareLink() {
         mLinkCommentsView.openShareView(mLinkContext);
+    }
+
+    @Override
+    public void openLinkUserProfile(RedditLink link) {
+        String author = mLinkContext.getAuthor();
+        mLinkCommentsView.openUserProfileView("overview", author);
     }
 
     @Override

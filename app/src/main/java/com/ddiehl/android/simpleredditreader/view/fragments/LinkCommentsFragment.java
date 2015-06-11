@@ -20,6 +20,7 @@ import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.presenter.LinkCommentsPresenter;
 import com.ddiehl.android.simpleredditreader.presenter.LinkCommentsPresenterImpl;
 import com.ddiehl.android.simpleredditreader.view.LinkCommentsView;
+import com.ddiehl.android.simpleredditreader.view.MainView;
 import com.ddiehl.android.simpleredditreader.view.SettingsChangedListener;
 import com.ddiehl.android.simpleredditreader.view.activities.MainActivity;
 import com.ddiehl.android.simpleredditreader.view.adapters.LinkCommentsAdapter;
@@ -176,6 +177,11 @@ public class LinkCommentsFragment extends AbsRedditFragment
     }
 
     @Override
+    public void openUserProfileView(String show, String username) {
+        ((MainView) getActivity()).showUserProfile(show, username);
+    }
+
+    @Override
     public void openLinkInBrowser(RedditLink link) {
         Uri uri = Uri.parse(link.getUrl());
         Intent i = new Intent(Intent.ACTION_VIEW, uri);
@@ -211,6 +217,10 @@ public class LinkCommentsFragment extends AbsRedditFragment
                 return true;
             case R.id.action_link_share:
                 mLinkCommentsPresenter.shareLink();
+                return true;
+            case R.id.action_link_view_user_profile:
+                RedditLink link = mLinkCommentsPresenter.getLinkContext();
+                mLinkCommentsPresenter.openLinkUserProfile(link);
                 return true;
             case R.id.action_link_open_in_browser:
                 mLinkCommentsPresenter.openLinkInBrowser();

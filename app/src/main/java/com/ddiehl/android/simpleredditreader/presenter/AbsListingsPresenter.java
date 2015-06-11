@@ -313,6 +313,12 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
     }
 
     @Override
+    public void openLinkUserProfile(RedditLink link) {
+        String username = link.getAuthor();
+        mListingsView.openUserProfileView("overview", username);
+    }
+
+    @Override
     public void openLinkInBrowser() {
         RedditLink link = (RedditLink) mListingSelected;
         mListingsView.openLinkInBrowser(link);

@@ -7,7 +7,6 @@ import com.ddiehl.reddit.listings.RedditMoreComments;
 public interface LinkCommentsPresenter extends LinkPresenter, CommentPresenter {
 
     RedditLink getLinkContext();
-    void setLinkContext(RedditLink link);
     void getComments();
     void getMoreChildren(RedditMoreComments comment);
     void toggleThreadVisible(AbsRedditComment comment);

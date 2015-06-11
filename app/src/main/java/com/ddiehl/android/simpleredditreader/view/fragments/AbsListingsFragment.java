@@ -18,6 +18,7 @@ import com.ddiehl.android.simpleredditreader.BusProvider;
 import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.presenter.ListingsPresenter;
 import com.ddiehl.android.simpleredditreader.view.ListingsView;
+import com.ddiehl.android.simpleredditreader.view.MainView;
 import com.ddiehl.android.simpleredditreader.view.activities.MainActivity;
 import com.ddiehl.android.simpleredditreader.view.adapters.ListingsAdapter;
 import com.ddiehl.android.simpleredditreader.view.dialogs.ChooseLinkSortDialog;
@@ -309,6 +310,11 @@ public abstract class AbsListingsFragment extends AbsRedditFragment implements L
         i.putExtra(Intent.EXTRA_TEXT, comment.getUrl());
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(i);
+    }
+
+    @Override
+    public void openUserProfileView(String show, String username) {
+        ((MainView) getActivity()).showUserProfile(show, username);
     }
 
     @Override
