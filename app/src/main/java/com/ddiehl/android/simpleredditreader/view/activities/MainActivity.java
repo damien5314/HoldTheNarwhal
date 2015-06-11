@@ -189,6 +189,7 @@ public class MainActivity extends ActionBarActivity
         mUserProfileTabs.setVisibility(View.VISIBLE);
 
         mMainPresenter.setUsernameContext(username);
+        selectUserProfileTab(show); // In case we are showing the wrong tab
         FragmentManager fm = getSupportFragmentManager();
         Fragment f = UserProfileFragment.newInstance(show, username);
         fm.beginTransaction().replace(R.id.fragment_container, f)
