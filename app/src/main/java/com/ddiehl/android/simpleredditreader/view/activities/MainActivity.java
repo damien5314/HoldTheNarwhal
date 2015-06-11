@@ -186,26 +186,14 @@ public class MainActivity extends ActionBarActivity
     @Override
     public void showUserProfile(String show, String username) {
         closeNavigationDrawer();
-        mUserProfileTabs.setVisibility(View.VISIBLE);
-
         mMainPresenter.setUsernameContext(username);
+        mUserProfileTabs.setVisibility(View.VISIBLE);
         selectUserProfileTab(show); // In case we are showing the wrong tab
         FragmentManager fm = getSupportFragmentManager();
         Fragment f = UserProfileFragment.newInstance(show, username);
         fm.beginTransaction().replace(R.id.fragment_container, f)
                 .addToBackStack(null)
                 .commit();
-
-//        FragmentManager fm = getSupportFragmentManager();
-//        Fragment currentFragment = fm.findFragmentById(R.id.fragment_container);
-//        if (currentFragment instanceof UserProfileFragment) {
-//            ((UserProfileFragment) currentFragment).showUserProfile(show, username);
-//        } else {
-//            Fragment f = UserProfileFragment.newInstance(show, username);
-//            fm.beginTransaction().replace(R.id.fragment_container, f)
-//                    .addToBackStack(null)
-//                    .commit();
-//        }
     }
 
     @Override

@@ -172,17 +172,23 @@ public abstract class AbsListingsFragment extends AbsRedditFragment implements L
         menu.setHeaderTitle(title);
         menu.findItem(R.id.action_link_hide).setVisible(!link.isHidden());
         menu.findItem(R.id.action_link_unhide).setVisible(link.isHidden());
+        // Set username for listing in the user profile menu item
+        String username = String.format(getString(R.string.action_view_user_profile), link.getAuthor());
+        menu.findItem(R.id.action_link_view_user_profile).setTitle(username);
     }
 
     @Override
     public void showCommentContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, RedditComment comment) {
         getActivity().getMenuInflater().inflate(R.menu.comment_context_menu, menu);
-        String title = String.format(v.getContext().getString(R.string.menu_action_comment),
+        String title = String.format(getString(R.string.menu_action_comment),
                 comment.getAuthor(), comment.getScore());
         menu.setHeaderTitle(title);
         if (comment.isArchived()) {
             menu.findItem(R.id.action_comment_report).setVisible(false);
         }
+        // Set username for listing in the user profile menu item
+        String username = String.format(getString(R.string.action_view_user_profile), comment.getAuthor());
+        menu.findItem(R.id.action_comment_view_user_profile).setTitle(username);
     }
 
     @Override

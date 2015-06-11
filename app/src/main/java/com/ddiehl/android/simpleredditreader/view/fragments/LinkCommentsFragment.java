@@ -112,6 +112,9 @@ public class LinkCommentsFragment extends AbsRedditFragment
         menu.findItem(R.id.action_link_show_comments).setVisible(false);
         menu.findItem(R.id.action_link_hide).setVisible(false);
         menu.findItem(R.id.action_link_unhide).setVisible(false);
+        // Set username for listing in the user profile menu item
+        String username = String.format(getString(R.string.action_view_user_profile), link.getAuthor());
+        menu.findItem(R.id.action_link_view_user_profile).setTitle(username);
     }
 
     @Override
@@ -143,6 +146,9 @@ public class LinkCommentsFragment extends AbsRedditFragment
         if (comment.isArchived()) {
             menu.findItem(R.id.action_comment_report).setVisible(false);
         }
+        // Set username for listing in the user profile menu item
+        String username = String.format(getString(R.string.action_view_user_profile), comment.getAuthor());
+        menu.findItem(R.id.action_comment_view_user_profile).setTitle(username);
     }
 
     @Override
