@@ -82,11 +82,15 @@ public class MainActivity extends ActionBarActivity
         mMainPresenter = new MainPresenterImpl(this, this);
         setIdentity(mMainPresenter.getAuthorizedUser());
 //        updateNavigationItems();
-        initializeUserProfileTabs();
+        updateUserProfileTabs();
         mNavigationView.setNavigationItemSelectedListener(this);
     }
 
-    private void initializeUserProfileTabs() {
+    private void updateUserProfileTabs() {
+        mUserProfileTabs.removeAllTabs();
+        mUserProfileTabs.setOnTabSelectedListener(null);
+
+        // Normal tabs
         mUserProfileTabs.addTab(mUserProfileTabs.newTab()
                 .setText(getString(R.string.navigation_tabs_overview)).setTag("overview"));
         mUserProfileTabs.addTab(mUserProfileTabs.newTab()
@@ -95,14 +99,21 @@ public class MainActivity extends ActionBarActivity
                 .setText(getString(R.string.navigation_tabs_submitted)).setTag("submitted"));
         mUserProfileTabs.addTab(mUserProfileTabs.newTab()
                 .setText(getString(R.string.navigation_tabs_gilded)).setTag("gilded"));
-        mUserProfileTabs.addTab(mUserProfileTabs.newTab()
-                .setText(getString(R.string.navigation_tabs_upvoted)).setTag("upvoted"));
-        mUserProfileTabs.addTab(mUserProfileTabs.newTab()
-                .setText(getString(R.string.navigation_tabs_downvoted)).setTag("downvoted"));
-        mUserProfileTabs.addTab(mUserProfileTabs.newTab()
-                .setText(getString(R.string.navigation_tabs_hidden)).setTag("hidden"));
-        mUserProfileTabs.addTab(mUserProfileTabs.newTab()
-                .setText(getString(R.string.navigation_tabs_saved)).setTag("saved"));
+
+        // Authorized tabs
+        boolean showAuthorizedTabs = mMainPresenter.getAuthorizedUser().getName()
+                .equals(mMainPresenter.getUsernameContext());
+        if (showAuthorizedTabs) {
+            mUserProfileTabs.addTab(mUserProfileTabs.newTab()
+                    .setText(getString(R.string.navigation_tabs_upvoted)).setTag("upvoted"));
+            mUserProfileTabs.addTab(mUserProfileTabs.newTab()
+                    .setText(getString(R.string.navigation_tabs_downvoted)).setTag("downvoted"));
+            mUserProfileTabs.addTab(mUserProfileTabs.newTab()
+                    .setText(getString(R.string.navigation_tabs_hidden)).setTag("hidden"));
+            mUserProfileTabs.addTab(mUserProfileTabs.newTab()
+                    .setText(getString(R.string.navigation_tabs_saved)).setTag("saved"));
+        }
+
         mUserProfileTabs.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
@@ -189,6 +200,7 @@ public class MainActivity extends ActionBarActivity
         mMainPresenter.setUsernameContext(username);
         mUserProfileTabs.setVisibility(View.VISIBLE);
         selectUserProfileTab(show); // In case we are showing the wrong tab
+        updateUserProfileTabs(); // In case username context changes
         FragmentManager fm = getSupportFragmentManager();
         Fragment f = UserProfileFragment.newInstance(show, username);
         fm.beginTransaction().replace(R.id.fragment_container, f)
