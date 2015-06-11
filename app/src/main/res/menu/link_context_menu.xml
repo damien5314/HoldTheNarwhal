@@ -27,14 +27,14 @@
           android:icon="@drawable/ic_action_save"
           app:showAsAction="never"/>
 
-    <item android:id="@+id/action_link_view_user_profile"
-        android:title="@string/action_view_user_profile"
-        android:icon="@drawable/ic_action_view_user_profile"
-        app:showAsAction="never"/>
-
     <item android:id="@+id/action_link_share"
         android:title="@string/action_share"
         android:icon="@drawable/ic_action_share"
+        app:showAsAction="never"/>
+
+    <item android:id="@+id/action_link_view_user_profile"
+        android:title="@string/action_view_user_profile"
+        android:icon="@drawable/ic_action_view_user_profile"
         app:showAsAction="never"/>
 
     <item android:id="@+id/action_link_open_in_browser"
