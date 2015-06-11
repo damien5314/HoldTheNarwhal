@@ -11,7 +11,7 @@ public interface LinkView extends BaseView {
     void openWebViewForLink(RedditLink link);
     void showCommentsForLink(RedditLink link);
     void openShareView(RedditLink link);
-    void openUserProfileView(String show, String username);
+    void openUserProfileView(RedditLink link);
     void openLinkInBrowser(RedditLink link);
     void openCommentsInBrowser(RedditLink link);
 

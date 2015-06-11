@@ -6,5 +6,6 @@ public interface MainPresenter {
 
     UserIdentity getAuthorizedUser();
     void signOutUser();
-
+    String getUsernameContext();
+    void setUsernameContext(String username);
 }

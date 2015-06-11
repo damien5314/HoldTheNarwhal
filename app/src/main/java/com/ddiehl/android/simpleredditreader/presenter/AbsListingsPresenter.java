@@ -315,13 +315,13 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
     @Override
     public void openLinkUserProfile() {
         RedditLink link = (RedditLink) mListingSelected;
-        mListingsView.openUserProfileView("overview", link.getAuthor());
+        mListingsView.openUserProfileView(link);
     }
 
     @Override
     public void openLinkUserProfile(RedditLink link) {
-        String username = link.getAuthor();
-        mListingsView.openUserProfileView("overview", username);
+//        String username = link.getAuthor();
+        mListingsView.openUserProfileView(link);
     }
 
     @Override
@@ -427,12 +427,12 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
     @Override
     public void openCommentUserProfile() {
         RedditComment comment = (RedditComment) mListingSelected;
-        mListingsView.openUserProfileView("overview", comment.getAuthor());
+        mListingsView.openUserProfileView(comment);
     }
 
     @Override
     public void openCommentUserProfile(RedditComment comment) {
-        mListingsView.openUserProfileView("overview", comment.getAuthor());
+        mListingsView.openUserProfileView(comment);
     }
 
     @Override

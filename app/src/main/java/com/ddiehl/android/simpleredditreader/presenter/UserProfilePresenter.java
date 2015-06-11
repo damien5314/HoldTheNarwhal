@@ -23,11 +23,9 @@ public class UserProfilePresenter extends AbsListingsPresenter {
     }
 
     public void requestData(String show, String username) {
-//        mShow = show;
+        mShow = show;
         mUsername = username;
-        // We can't mark a tab selected with TabLayout, must use select() to trigger the switch
-//        refreshData();
-        mListingsView.selectUserProfileTab(show);
+        refreshData();
     }
 
     @Subscribe @Override

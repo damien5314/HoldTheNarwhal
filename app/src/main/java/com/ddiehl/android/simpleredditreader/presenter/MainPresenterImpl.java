@@ -18,7 +18,7 @@ public class MainPresenterImpl implements MainPresenter {
 
     private MainView mMainView;
     private RedditIdentityManager mIdentityManager;
-    private String mUsername;
+    private String mUsernameContext;
 
     public MainPresenterImpl(Context context, MainView view) {
         mBus = BusProvider.getInstance();
@@ -45,5 +45,15 @@ public class MainPresenterImpl implements MainPresenter {
     public void signOutUser() {
         mMainView.closeNavigationDrawer();
         mBus.post(new UserSignOutEvent());
+    }
+
+    @Override
+    public String getUsernameContext() {
+        return mUsernameContext;
+    }
+
+    @Override
+    public void setUsernameContext(String username) {
+        mUsernameContext = username;
     }
 }

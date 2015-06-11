@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu;
@@ -317,8 +316,13 @@ public abstract class AbsListingsFragment extends AbsRedditFragment implements L
     }
 
     @Override
-    public void openUserProfileView(String show, String username) {
-        ((MainView) getActivity()).showUserProfile(show, username);
+    public void openUserProfileView(RedditLink link) {
+        ((MainView) getActivity()).showUserProfile("overview", link.getAuthor());
+    }
+
+    @Override
+    public void openUserProfileView(RedditComment comment) {
+        ((MainView) getActivity()).showUserProfile("overview", comment.getAuthor());
     }
 
     @Override

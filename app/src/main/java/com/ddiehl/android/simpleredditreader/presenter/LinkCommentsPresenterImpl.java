@@ -232,13 +232,12 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
 
     @Override
     public void openLinkUserProfile() {
-        mLinkCommentsView.openUserProfileView("overview", mLinkContext.getAuthor());
+        mLinkCommentsView.openUserProfileView(mLinkContext);
     }
 
     @Override
     public void openLinkUserProfile(RedditLink link) {
-        String author = mLinkContext.getAuthor();
-        mLinkCommentsView.openUserProfileView("overview", author);
+        mLinkCommentsView.openUserProfileView(link);
     }
 
     @Override
@@ -373,12 +372,12 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
     @Override
     public void openCommentUserProfile() {
         RedditComment comment = mCommentSelected;
-        mLinkCommentsView.openUserProfileView("overview", comment.getAuthor());
+        mLinkCommentsView.openUserProfileView(comment);
     }
 
     @Override
     public void openCommentUserProfile(RedditComment comment) {
-        mLinkCommentsView.openUserProfileView("overview", comment.getAuthor());
+        mLinkCommentsView.openUserProfileView(comment);
     }
 
     @Override

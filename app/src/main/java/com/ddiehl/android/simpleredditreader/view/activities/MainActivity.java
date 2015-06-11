@@ -114,7 +114,7 @@ public class MainActivity extends ActionBarActivity
 
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                showUserProfile((String) tab.getTag());
+                showUserProfile((String) tab.getTag(), mMainPresenter.getUsernameContext());
 //                ((UserProfilePresenter) mListingsPresenter).requestData((String) tab.getTag());
             }
         });
@@ -179,28 +179,32 @@ public class MainActivity extends ActionBarActivity
 
     @Override
     public void showUserProfile() {
-        showUserProfile("overview");
-    }
-
-    private void showUserProfile(String show) {
         String username = mMainPresenter.getAuthorizedUser().getName();
-        showUserProfile(show, username);
+        showUserProfile("overview", username);
     }
 
     @Override
     public void showUserProfile(String show, String username) {
         closeNavigationDrawer();
         mUserProfileTabs.setVisibility(View.VISIBLE);
+
+        mMainPresenter.setUsernameContext(username);
         FragmentManager fm = getSupportFragmentManager();
-        Fragment currentFragment = fm.findFragmentById(R.id.fragment_container);
-        if (currentFragment instanceof UserProfileFragment) {
-            ((UserProfileFragment) currentFragment).showUserProfile(show, username);
-        } else {
-            Fragment f = UserProfileFragment.newInstance(show, username);
-            fm.beginTransaction().replace(R.id.fragment_container, f)
-                    .addToBackStack(null)
-                    .commit();
-        }
+        Fragment f = UserProfileFragment.newInstance(show, username);
+        fm.beginTransaction().replace(R.id.fragment_container, f)
+                .addToBackStack(null)
+                .commit();
+
+//        FragmentManager fm = getSupportFragmentManager();
+//        Fragment currentFragment = fm.findFragmentById(R.id.fragment_container);
+//        if (currentFragment instanceof UserProfileFragment) {
+//            ((UserProfileFragment) currentFragment).showUserProfile(show, username);
+//        } else {
+//            Fragment f = UserProfileFragment.newInstance(show, username);
+//            fm.beginTransaction().replace(R.id.fragment_container, f)
+//                    .addToBackStack(null)
+//                    .commit();
+//        }
     }
 
     @Override

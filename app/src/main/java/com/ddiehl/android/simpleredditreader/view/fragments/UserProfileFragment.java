@@ -51,9 +51,10 @@ public class UserProfileFragment extends AbsListingsFragment implements Listings
         return v;
     }
 
-    public void showUserProfile(String show, String username) {
-        ((UserProfilePresenter) mListingsPresenter).requestData(show, username);
-    }
+//    public void showUserProfile(String show, String username) {
+//        ((UserProfilePresenter) mListingsPresenter).requestData(show, username);
+//        selectUserProfileTab(show);
+//    }
 
     @Override
     public void updateTitle() {
