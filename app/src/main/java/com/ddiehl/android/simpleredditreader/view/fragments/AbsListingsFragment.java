@@ -206,6 +206,9 @@ public abstract class AbsListingsFragment extends AbsRedditFragment implements L
             case R.id.action_link_share:
                 mListingsPresenter.shareLink();
                 return true;
+            case R.id.action_link_view_user_profile:
+                mListingsPresenter.openLinkUserProfile();
+                return true;
             case R.id.action_link_open_in_browser:
                 mListingsPresenter.openLinkInBrowser();
                 return true;

@@ -32,6 +32,11 @@
         android:icon="@drawable/ic_action_share"
         app:showAsAction="never"/>
 
+    <item android:id="@+id/action_comment_view_user_profile"
+        android:title="@string/action_view_user_profile"
+        android:icon="@drawable/ic_action_view_user_profile"
+        app:showAsAction="never"/>
+
     <item android:id="@+id/action_comment_open_in_browser"
         android:title="@string/action_open_in_browser"
         android:icon="@drawable/ic_action_open_in_browser"

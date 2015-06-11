@@ -255,6 +255,9 @@ public class LinkCommentsFragment extends AbsRedditFragment
             case R.id.action_comment_share:
                 mLinkCommentsPresenter.shareComment();
                 return true;
+            case R.id.action_comment_view_user_profile:
+                mLinkCommentsPresenter.openCommentUserProfile();
+                return true;
             case R.id.action_comment_open_in_browser:
                 mLinkCommentsPresenter.openCommentInBrowser();
                 return true;

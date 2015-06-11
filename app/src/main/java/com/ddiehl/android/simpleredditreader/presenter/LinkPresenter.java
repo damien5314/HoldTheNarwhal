@@ -16,6 +16,7 @@ public interface LinkPresenter {
     void saveLink();
     void unsaveLink();
     void shareLink();
+    void openLinkUserProfile();
     void openLinkUserProfile(RedditLink link);
     void openLinkInBrowser();
     void openCommentsInBrowser();

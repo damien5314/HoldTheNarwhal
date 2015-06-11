@@ -17,6 +17,8 @@ public interface CommentPresenter {
     void saveComment();
     void unsaveComment();
     void shareComment();
+    void openCommentUserProfile();
+    void openCommentUserProfile(RedditComment comment);
     void openCommentInBrowser();
     void reportComment();
 
