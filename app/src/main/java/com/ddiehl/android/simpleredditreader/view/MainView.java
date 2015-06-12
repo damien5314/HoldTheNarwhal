@@ -4,7 +4,7 @@ import com.ddiehl.reddit.identity.UserIdentity;
 
 public interface MainView extends BaseView {
 
-    void setIdentity(UserIdentity identity);
+    void setUserIdentity(UserIdentity identity);
 
     void closeNavigationDrawer();
     void showLoginView();
@@ -13,7 +13,7 @@ public interface MainView extends BaseView {
     void selectUserProfileTab(String show);
     void showUserSubreddits();
     void showSubreddit(String subreddit);
-    void showWebViewForURL(String authorizationUrl);
+    void showWebViewForURL(String url);
 
     void onUserAuthCodeReceived(String authCode);
 

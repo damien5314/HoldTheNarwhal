@@ -80,7 +80,7 @@ public class MainActivity extends ActionBarActivity
         ButterKnife.inject(this);
 
         mMainPresenter = new MainPresenterImpl(this, this);
-        setIdentity(mMainPresenter.getAuthorizedUser());
+        setUserIdentity(mMainPresenter.getAuthorizedUser());
 //        updateNavigationItems();
         updateUserProfileTabs();
         mNavigationView.setNavigationItemSelectedListener(this);
@@ -138,7 +138,7 @@ public class MainActivity extends ActionBarActivity
     }
 
     @Override
-    public void setIdentity(UserIdentity identity) {
+    public void setUserIdentity(UserIdentity identity) {
         mAccountNameView.setText(identity == null ?
                 getString(R.string.account_name_unauthorized) : identity.getName());
         mSignOutView.setVisibility(identity == null ? View.GONE : View.VISIBLE);

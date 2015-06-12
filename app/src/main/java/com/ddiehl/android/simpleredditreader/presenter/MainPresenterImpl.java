@@ -27,13 +27,13 @@ public class MainPresenterImpl implements MainPresenter {
         mMainView = view;
         mIdentityManager = RedditIdentityManager.getInstance(mContext);
 
-//        mMainView.setIdentity(mIdentityManager.getUserIdentity());
+//        mMainView.setUserIdentity(mIdentityManager.getUserIdentity());
     }
 
     @Subscribe
     public void onUserIdentitySaved(UserIdentitySavedEvent event) {
         UserIdentity identity = event.getUserIdentity();
-        mMainView.setIdentity(identity);
+        mMainView.setUserIdentity(identity);
     }
 
     @Override

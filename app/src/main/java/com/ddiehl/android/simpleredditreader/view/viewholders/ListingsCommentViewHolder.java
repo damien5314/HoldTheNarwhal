@@ -12,7 +12,6 @@ import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.presenter.CommentPresenter;
 import com.ddiehl.android.simpleredditreader.view.widgets.RedditDateTextView;
 import com.ddiehl.reddit.listings.RedditComment;
-import com.ddiehl.reddit.listings.RedditLink;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -59,7 +58,7 @@ public class ListingsCommentViewHolder extends RecyclerView.ViewHolder
         mCommentPresenter.openCommentLink(mRedditComment);
     }
 
-    public void bind(final RedditLink link, final RedditComment comment) {
+    public void bind(final RedditComment comment) {
         mRedditComment = comment;
 
         mCommentLinkTitleView.setText(comment.getLinkTitle());
@@ -128,10 +127,6 @@ public class ListingsCommentViewHolder extends RecyclerView.ViewHolder
         } else {
             mGildedView.setVisibility(View.GONE);
         }
-    }
-
-    public void bind(final RedditComment comment) {
-        bind(null, comment);
     }
 
     @Override
