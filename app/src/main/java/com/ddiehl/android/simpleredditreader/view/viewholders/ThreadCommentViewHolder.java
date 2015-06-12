@@ -46,12 +46,8 @@ public class ThreadCommentViewHolder extends RecyclerView.ViewHolder
 
     @OnClick(R.id.comment_metadata)
     void onClickMetadata(View v) {
-        if (mCommentPresenter instanceof LinkCommentsPresenter) {
-            LinkCommentsPresenter p = (LinkCommentsPresenter) mCommentPresenter;
-            p.toggleThreadVisible(mRedditComment);
-        } else {
-            v.showContextMenu();
-        }
+        LinkCommentsPresenter p = (LinkCommentsPresenter) mCommentPresenter;
+        p.toggleThreadVisible(mRedditComment);
     }
 
     @OnClick(R.id.comment_body)

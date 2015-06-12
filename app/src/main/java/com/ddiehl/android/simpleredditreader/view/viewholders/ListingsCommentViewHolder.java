@@ -10,7 +10,6 @@ import android.widget.TextView;
 
 import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.presenter.CommentPresenter;
-import com.ddiehl.android.simpleredditreader.presenter.LinkCommentsPresenter;
 import com.ddiehl.android.simpleredditreader.view.widgets.RedditDateTextView;
 import com.ddiehl.reddit.listings.RedditComment;
 import com.ddiehl.reddit.listings.RedditLink;
@@ -47,12 +46,7 @@ public class ListingsCommentViewHolder extends RecyclerView.ViewHolder
 
     @OnClick(R.id.comment_metadata)
     void onClickMetadata(View v) {
-        if (mCommentPresenter instanceof LinkCommentsPresenter) {
-            LinkCommentsPresenter p = (LinkCommentsPresenter) mCommentPresenter;
-            p.toggleThreadVisible(mRedditComment);
-        } else {
-            v.showContextMenu();
-        }
+        v.showContextMenu();
     }
 
     @OnClick(R.id.comment_body)
