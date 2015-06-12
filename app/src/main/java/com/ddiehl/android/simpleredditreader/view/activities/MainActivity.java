@@ -101,8 +101,9 @@ public class MainActivity extends ActionBarActivity
                 .setText(getString(R.string.navigation_tabs_gilded)).setTag("gilded"));
 
         // Authorized tabs
-        boolean showAuthorizedTabs = mMainPresenter.getAuthorizedUser().getName()
-                .equals(mMainPresenter.getUsernameContext());
+        UserIdentity id = mMainPresenter.getAuthorizedUser();
+        boolean showAuthorizedTabs = id != null &&
+                id.getName().equals(mMainPresenter.getUsernameContext());
         if (showAuthorizedTabs) {
             mUserProfileTabs.addTab(mUserProfileTabs.newTab()
                     .setText(getString(R.string.navigation_tabs_upvoted)).setTag("upvoted"));
