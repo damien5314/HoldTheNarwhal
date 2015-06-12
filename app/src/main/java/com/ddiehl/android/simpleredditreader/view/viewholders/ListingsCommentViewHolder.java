@@ -60,6 +60,11 @@ public class ListingsCommentViewHolder extends RecyclerView.ViewHolder
         v.showContextMenu();
     }
 
+    @OnClick(R.id.comment_link_title)
+    void onClickTitle() {
+        mCommentPresenter.openCommentLink(mRedditComment);
+    }
+
     public void bind(final RedditLink link, final RedditComment comment) {
         mRedditComment = comment;
 

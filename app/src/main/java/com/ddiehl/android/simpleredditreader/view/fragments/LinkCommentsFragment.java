@@ -328,8 +328,8 @@ public class LinkCommentsFragment extends AbsRedditFragment
     }
 
     @Override
-    public void showCommentsForLink(RedditLink link) {
-        // Intentionally empty
+    public void showCommentsForLink(String subreddit, String id) {
+        // Comments for link are already displayed in this view
     }
 
     @Override

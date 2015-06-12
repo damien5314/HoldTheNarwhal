@@ -21,5 +21,6 @@ public interface CommentPresenter {
     void openCommentUserProfile(RedditComment comment);
     void openCommentInBrowser();
     void reportComment();
+    void openCommentLink(RedditComment comment);
 
 }

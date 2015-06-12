@@ -253,7 +253,7 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
             return;
 
         if (link.isSelf()) {
-            mListingsView.showCommentsForLink(link);
+            mListingsView.showCommentsForLink(link.getSubreddit(), link.getId());
         } else {
             mListingsView.openWebViewForLink(link);
         }
@@ -262,12 +262,12 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
     @Override
     public void showCommentsForLink() {
         RedditLink link = (RedditLink) mListingSelected;
-        mListingsView.showCommentsForLink(link);
+        mListingsView.showCommentsForLink(link.getSubreddit(), link.getId());
     }
 
     @Override
     public void showCommentsForLink(RedditLink link) {
-        mListingsView.showCommentsForLink(link);
+        mListingsView.showCommentsForLink(link.getSubreddit(), link.getId());
     }
 
     @Override
@@ -445,5 +445,11 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
     public void reportComment() {
         RedditComment comment = (RedditComment) mListingSelected;
         mListingsView.showToast(R.string.implementation_pending);
+    }
+
+    @Override
+    public void openCommentLink(RedditComment comment) {
+//        RedditComment comment = (RedditComment) mListingSelected;
+        mListingsView.showCommentsForLink(comment.getSubreddit(), comment.getLinkId().substring(3));
     }
 }

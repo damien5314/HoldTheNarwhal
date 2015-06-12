@@ -179,7 +179,7 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
             return;
 
         if (link.isSelf()) {
-            mLinkCommentsView.showCommentsForLink(link);
+            mLinkCommentsView.showCommentsForLink(link.getSubreddit(), link.getId());
         } else {
             mLinkCommentsView.openWebViewForLink(link);
         }
@@ -187,12 +187,12 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
 
     @Override
     public void showCommentsForLink() {
-        mLinkCommentsView.showCommentsForLink(mLinkContext);
+        mLinkCommentsView.showCommentsForLink(mLinkContext.getSubreddit(), mLinkContext.getId());
     }
 
     @Override
     public void showCommentsForLink(RedditLink link) {
-        mLinkCommentsView.showCommentsForLink(link);
+        mLinkCommentsView.showCommentsForLink(link.getSubreddit(), link.getId());
     }
 
     @Override
@@ -390,5 +390,10 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
     public void reportComment() {
         RedditComment comment = mCommentSelected;
         mLinkCommentsView.showToast(R.string.implementation_pending);
+    }
+
+    @Override
+    public void openCommentLink(RedditComment comment) {
+        // Link is already being displayed with this presenter
     }
 }

@@ -290,11 +290,8 @@ public abstract class AbsListingsFragment extends AbsRedditFragment implements L
     }
 
     @Override
-    public void showCommentsForLink(RedditLink link) {
-        String subreddit = link.getSubreddit();
-        String articleId = link.getId();
-
-        Fragment fragment = LinkCommentsFragment.newInstance(subreddit, articleId, null);
+    public void showCommentsForLink(String subreddit, String id) {
+        Fragment fragment = LinkCommentsFragment.newInstance(subreddit, id, null);
         FragmentManager fm = getActivity().getSupportFragmentManager();
         fm.beginTransaction()
                 .replace(R.id.fragment_container, fragment)

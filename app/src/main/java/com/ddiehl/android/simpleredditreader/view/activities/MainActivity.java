@@ -268,7 +268,8 @@ public class MainActivity extends ActionBarActivity
                     .setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            EditText vInput = ButterKnife.findById(mSubredditNavigationDialog, R.id.drawer_navigate_to_subreddit_text);
+                            EditText vInput = ButterKnife.findById(mSubredditNavigationDialog,
+                                    R.id.drawer_navigate_to_subreddit_text);
                             String inputSubreddit = vInput.getText().toString();
                             if (inputSubreddit.equals("")) return;
 
