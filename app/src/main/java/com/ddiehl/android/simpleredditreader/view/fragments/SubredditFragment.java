@@ -43,6 +43,12 @@ public class SubredditFragment extends AbsListingsFragment {
     }
 
     @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        updateTitle();
+    }
+
+    @Override
     public void updateTitle() {
         String subreddit = mListingsPresenter.getSubreddit();
         if (subreddit != null) {

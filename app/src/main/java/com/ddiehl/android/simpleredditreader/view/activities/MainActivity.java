@@ -1,6 +1,7 @@
 package com.ddiehl.android.simpleredditreader.view.activities;
 
 import android.app.Dialog;
+import android.support.v4.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -61,7 +62,6 @@ public class MainActivity extends ActionBarActivity
     @InjectView(R.id.user_account_icon) ImageView mGoldIndicator;
     @InjectView(R.id.account_name) TextView mAccountNameView;
     @InjectView(R.id.sign_out_button) View mSignOutView;
-    @InjectView(R.id.navigation_tabs) TabLayout mUserProfileTabs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,52 +84,6 @@ public class MainActivity extends ActionBarActivity
 //        updateNavigationItems();
         updateUserProfileTabs();
         mNavigationView.setNavigationItemSelectedListener(this);
-    }
-
-    private void updateUserProfileTabs() {
-        mUserProfileTabs.removeAllTabs();
-        mUserProfileTabs.setOnTabSelectedListener(null);
-
-        // Normal tabs
-        mUserProfileTabs.addTab(mUserProfileTabs.newTab()
-                .setText(getString(R.string.navigation_tabs_overview)).setTag("overview"));
-        mUserProfileTabs.addTab(mUserProfileTabs.newTab()
-                .setText(getString(R.string.navigation_tabs_comments)).setTag("comments"));
-        mUserProfileTabs.addTab(mUserProfileTabs.newTab()
-                .setText(getString(R.string.navigation_tabs_submitted)).setTag("submitted"));
-        mUserProfileTabs.addTab(mUserProfileTabs.newTab()
-                .setText(getString(R.string.navigation_tabs_gilded)).setTag("gilded"));
-
-        // Authorized tabs
-        UserIdentity id = mMainPresenter.getAuthorizedUser();
-        boolean showAuthorizedTabs = id != null &&
-                id.getName().equals(mMainPresenter.getUsernameContext());
-        if (showAuthorizedTabs) {
-            mUserProfileTabs.addTab(mUserProfileTabs.newTab()
-                    .setText(getString(R.string.navigation_tabs_upvoted)).setTag("upvoted"));
-            mUserProfileTabs.addTab(mUserProfileTabs.newTab()
-                    .setText(getString(R.string.navigation_tabs_downvoted)).setTag("downvoted"));
-            mUserProfileTabs.addTab(mUserProfileTabs.newTab()
-                    .setText(getString(R.string.navigation_tabs_hidden)).setTag("hidden"));
-            mUserProfileTabs.addTab(mUserProfileTabs.newTab()
-                    .setText(getString(R.string.navigation_tabs_saved)).setTag("saved"));
-        }
-
-        mUserProfileTabs.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-            }
-
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                showUserProfile((String) tab.getTag(), mMainPresenter.getUsernameContext());
-//                ((UserProfilePresenter) mListingsPresenter).requestData((String) tab.getTag());
-            }
-        });
     }
 
     @Override
@@ -225,16 +179,15 @@ public class MainActivity extends ActionBarActivity
         closeNavigationDrawer();
         mUserProfileTabs.setVisibility(View.GONE);
         FragmentManager fm = getSupportFragmentManager();
-        Fragment currentFragment = fm.findFragmentById(R.id.fragment_container);
-        // If current fragment is subreddit, update. Otherwise, swap in a subreddit fragment.
-        if (currentFragment instanceof SubredditFragment) {
-            ((SubredditFragment) currentFragment).updateSubreddit(subreddit);
-        } else {
-            Fragment f = SubredditFragment.newInstance(subreddit);
-            fm.beginTransaction().replace(R.id.fragment_container, f)
-                    .addToBackStack(null)
-                    .commit();
+        Fragment f = SubredditFragment.newInstance(subreddit);
+        FragmentTransaction ft = fm.beginTransaction().replace(R.id.fragment_container, f);
+
+        Fragment cf = fm.findFragmentById(R.id.fragment_container);
+        if (cf != null) {
+            ft.addToBackStack(null);
         }
+
+        ft.commit();
     }
 
     @Override

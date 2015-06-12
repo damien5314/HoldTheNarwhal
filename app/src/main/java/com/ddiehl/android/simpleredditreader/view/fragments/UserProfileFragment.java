@@ -2,6 +2,7 @@ package com.ddiehl.android.simpleredditreader.view.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,14 +11,18 @@ import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.presenter.UserProfilePresenter;
 import com.ddiehl.android.simpleredditreader.view.ListingsView;
 import com.ddiehl.android.simpleredditreader.view.adapters.ListingsAdapter;
+import com.ddiehl.reddit.identity.UserIdentity;
 
 import butterknife.ButterKnife;
+import butterknife.InjectView;
 
 public class UserProfileFragment extends AbsListingsFragment implements ListingsView {
     private static final String TAG = UserProfileFragment.class.getSimpleName();
 
     private static final String ARG_SHOW = "arg_show";
     private static final String ARG_USERNAME = "arg_username";
+
+    @InjectView(R.id.user_profile_tabs) TabLayout mUserProfileTabs;
 
     public UserProfileFragment() { }
 
@@ -41,20 +46,67 @@ public class UserProfileFragment extends AbsListingsFragment implements Listings
         mListingsAdapter = new ListingsAdapter(mListingsPresenter);
     }
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        updateTitle();
+    }
+
     @Nullable @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-//        View v = inflater.inflate(R.layout.listings_user_profile_fragment, container, false);
-        View v = inflater.inflate(R.layout.listings_fragment, container, false);
+//        View v = inflater.inflate(R.layout.listings_fragment, container, false);
+        View v = inflater.inflate(R.layout.listings_user_profile_fragment, container, false);
         ButterKnife.inject(this, v);
         instantiateListView(v);
         updateTitle();
         return v;
     }
 
-//    public void showUserProfile(String show, String username) {
-//        ((UserProfilePresenter) mListingsPresenter).requestData(show, username);
-//        selectUserProfileTab(show);
-//    }
+    private void updateUserProfileTabs() {
+        mUserProfileTabs.removeAllTabs();
+        mUserProfileTabs.setOnTabSelectedListener(null);
+
+        // Normal tabs
+        mUserProfileTabs.addTab(mUserProfileTabs.newTab()
+                .setText(getString(R.string.navigation_tabs_overview)).setTag("overview"));
+        mUserProfileTabs.addTab(mUserProfileTabs.newTab()
+                .setText(getString(R.string.navigation_tabs_comments)).setTag("comments"));
+        mUserProfileTabs.addTab(mUserProfileTabs.newTab()
+                .setText(getString(R.string.navigation_tabs_submitted)).setTag("submitted"));
+        mUserProfileTabs.addTab(mUserProfileTabs.newTab()
+                .setText(getString(R.string.navigation_tabs_gilded)).setTag("gilded"));
+
+        // Authorized tabs
+        UserIdentity id = mMainPresenter.getAuthorizedUser();
+        boolean showAuthorizedTabs = id != null &&
+                id.getName().equals(mMainPresenter.getUsernameContext());
+        if (showAuthorizedTabs) {
+            mUserProfileTabs.addTab(mUserProfileTabs.newTab()
+                    .setText(getString(R.string.navigation_tabs_upvoted)).setTag("upvoted"));
+            mUserProfileTabs.addTab(mUserProfileTabs.newTab()
+                    .setText(getString(R.string.navigation_tabs_downvoted)).setTag("downvoted"));
+            mUserProfileTabs.addTab(mUserProfileTabs.newTab()
+                    .setText(getString(R.string.navigation_tabs_hidden)).setTag("hidden"));
+            mUserProfileTabs.addTab(mUserProfileTabs.newTab()
+                    .setText(getString(R.string.navigation_tabs_saved)).setTag("saved"));
+        }
+
+        mUserProfileTabs.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+            }
+
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                showUserProfile((String) tab.getTag(), mMainPresenter.getUsernameContext());
+//                ((UserProfilePresenter) mListingsPresenter).requestData((String) tab.getTag());
+            }
+        });
+    }
 
     @Override
     public void updateTitle() {

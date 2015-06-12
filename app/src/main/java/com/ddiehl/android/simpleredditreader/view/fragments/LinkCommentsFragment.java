@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -65,8 +66,6 @@ public class LinkCommentsFragment extends AbsRedditFragment
         setRetainInstance(true);
         setHasOptionsMenu(true);
 
-        setTitle(getString(R.string.comments_fragment_title));
-
         Bundle args = getArguments();
         String subreddit = args.getString(ARG_SUBREDDIT);
         String articleId = args.getString(ARG_ARTICLE);
@@ -74,6 +73,8 @@ public class LinkCommentsFragment extends AbsRedditFragment
 
         mLinkCommentsPresenter = new LinkCommentsPresenterImpl(getActivity(), this, subreddit, articleId, commentId);
         mLinkCommentsAdapter = new LinkCommentsAdapter(mLinkCommentsPresenter);
+
+        updateTitle();
     }
 
     @Override
@@ -85,6 +86,21 @@ public class LinkCommentsFragment extends AbsRedditFragment
         recyclerView.setAdapter(mLinkCommentsAdapter);
 
         return v;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        updateTitle();
+    }
+
+    private void updateTitle() {
+        RedditLink link = mLinkCommentsPresenter.getLinkContext();
+        if (link != null) {
+            setTitle(link.getTitle());
+        } else {
+            setTitle(getString(R.string.comments_fragment_title));
+        }
     }
 
     @Override
