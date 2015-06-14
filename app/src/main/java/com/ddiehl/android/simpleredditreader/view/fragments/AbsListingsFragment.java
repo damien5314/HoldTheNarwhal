@@ -61,7 +61,8 @@ public abstract class AbsListingsFragment extends AbsRedditFragment implements L
         rv.setLayoutManager(mgr);
         rv.setAdapter(mListingsAdapter);
 
-        rv.setOnScrollListener(new RecyclerView.OnScrollListener() {
+        rv.clearOnScrollListeners();
+        rv.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 mVisibleItemCount = mgr.getChildCount();
