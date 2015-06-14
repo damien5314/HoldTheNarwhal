@@ -1,15 +1,14 @@
 package com.ddiehl.android.simpleredditreader.view.activities;
 
 import android.app.Dialog;
-import android.support.v4.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -82,7 +81,7 @@ public class MainActivity extends ActionBarActivity
         mMainPresenter = new MainPresenterImpl(this, this);
         setUserIdentity(mMainPresenter.getAuthorizedUser());
 //        updateNavigationItems();
-        updateUserProfileTabs();
+//        updateUserProfileTabs();
         mNavigationView.setNavigationItemSelectedListener(this);
     }
 
@@ -153,9 +152,6 @@ public class MainActivity extends ActionBarActivity
     public void showUserProfile(String show, String username) {
         closeNavigationDrawer();
         mMainPresenter.setUsernameContext(username);
-        mUserProfileTabs.setVisibility(View.VISIBLE);
-        selectUserProfileTab(show); // In case we are showing the wrong tab
-        updateUserProfileTabs(); // In case username context changes
         FragmentManager fm = getSupportFragmentManager();
         Fragment f = UserProfileFragment.newInstance(show, username);
         fm.beginTransaction().replace(R.id.fragment_container, f)
@@ -164,20 +160,8 @@ public class MainActivity extends ActionBarActivity
     }
 
     @Override
-    public void selectUserProfileTab(String show) {
-        for (int i = 0; i < mUserProfileTabs.getTabCount(); i++) {
-            TabLayout.Tab tab = mUserProfileTabs.getTabAt(i);
-            if (tab.getTag().equals(show)) {
-                tab.select();
-                break;
-            }
-        }
-    }
-
-    @Override
     public void showSubreddit(String subreddit) {
         closeNavigationDrawer();
-        mUserProfileTabs.setVisibility(View.GONE);
         FragmentManager fm = getSupportFragmentManager();
         Fragment f = SubredditFragment.newInstance(subreddit);
         FragmentTransaction ft = fm.beginTransaction().replace(R.id.fragment_container, f);
@@ -193,7 +177,6 @@ public class MainActivity extends ActionBarActivity
     @Override
     public void showWebViewForURL(String url) {
         closeNavigationDrawer();
-        mUserProfileTabs.setVisibility(View.GONE);
         FragmentManager fm = getSupportFragmentManager();
         Fragment f = WebViewFragment.newInstance(url);
         fm.beginTransaction().replace(R.id.fragment_container, f)

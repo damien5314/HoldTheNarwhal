@@ -19,12 +19,11 @@ public class UserProfilePresenter extends AbsListingsPresenter {
 
     @Override
     public void requestData() {
-        mBus.post(new LoadUserProfileEvent(mShow, mUsername, mSort, mTimespan, mNextPageListingId));
+        mBus.post(new LoadUserProfileEvent(mShow, mUsernameContext, mSort, mTimespan, mNextPageListingId));
     }
 
-    public void requestData(String show, String username) {
+    public void requestData(String show) {
         mShow = show;
-        mUsername = username;
         refreshData();
     }
 

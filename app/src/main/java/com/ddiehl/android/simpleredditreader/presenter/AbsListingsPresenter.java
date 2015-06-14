@@ -6,6 +6,7 @@ import android.view.View;
 
 import com.ddiehl.android.simpleredditreader.BusProvider;
 import com.ddiehl.android.simpleredditreader.R;
+import com.ddiehl.android.simpleredditreader.RedditIdentityManager;
 import com.ddiehl.android.simpleredditreader.RedditPreferences;
 import com.ddiehl.android.simpleredditreader.events.exceptions.UserRequiredException;
 import com.ddiehl.android.simpleredditreader.events.requests.HideEvent;
@@ -21,6 +22,7 @@ import com.ddiehl.reddit.Archivable;
 import com.ddiehl.reddit.Hideable;
 import com.ddiehl.reddit.Savable;
 import com.ddiehl.reddit.Votable;
+import com.ddiehl.reddit.identity.UserIdentity;
 import com.ddiehl.reddit.listings.Listing;
 import com.ddiehl.reddit.listings.RedditComment;
 import com.ddiehl.reddit.listings.RedditLink;
@@ -39,8 +41,10 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
     protected List<Listing> mListings;
     protected ListingsView mListingsView;
 
+    private RedditIdentityManager mIdentityManager;
+
     protected String mShow;
-    protected String mUsername;
+    protected String mUsernameContext;
     protected String mSubreddit;
     protected String mSort;
     protected String mTimespan;
@@ -56,8 +60,9 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
         mBus = BusProvider.getInstance();
         mPreferences = RedditPreferences.getInstance(mContext);
         mListingsView = view;
+        mIdentityManager = RedditIdentityManager.getInstance(context);
         mShow = show;
-        mUsername = username;
+        mUsernameContext = username;
         mSubreddit = subreddit;
         mSort = sort;
         mTimespan = timespan;
@@ -109,8 +114,8 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
     }
 
     @Override
-    public String getUsername() {
-        return mUsername;
+    public String getUsernameContext() {
+        return mUsernameContext;
     }
 
     @Override
@@ -451,5 +456,10 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
     public void openCommentLink(RedditComment comment) {
 //        RedditComment comment = (RedditComment) mListingSelected;
         mListingsView.showCommentsForLink(comment.getSubreddit(), comment.getLinkId().substring(3));
+    }
+
+    @Override
+    public UserIdentity getAuthorizedUser() {
+        return mIdentityManager.getUserIdentity();
     }
 }

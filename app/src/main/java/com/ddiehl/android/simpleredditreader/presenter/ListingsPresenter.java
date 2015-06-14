@@ -1,5 +1,6 @@
 package com.ddiehl.android.simpleredditreader.presenter;
 
+import com.ddiehl.reddit.identity.UserIdentity;
 import com.ddiehl.reddit.listings.Listing;
 
 import java.util.List;
@@ -13,7 +14,7 @@ public interface ListingsPresenter extends LinkPresenter, CommentPresenter {
     int getNumListings();
     Listing getListing(int position);
 
-    String getUsername();
+    String getUsernameContext();
     String getSubreddit();
     String getNextPageListingId();
     String getSort();
@@ -23,4 +24,5 @@ public interface ListingsPresenter extends LinkPresenter, CommentPresenter {
     void updateSort(String sort);
     void updateSort(String sort, String timespan);
 
+    UserIdentity getAuthorizedUser();
 }

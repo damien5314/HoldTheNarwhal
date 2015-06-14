@@ -351,9 +351,4 @@ public abstract class AbsListingsFragment extends AbsRedditFragment implements L
     public void listingRemovedAt(int position) {
         mListingsAdapter.notifyItemRemoved(position);
     }
-
-    @Override
-    public void selectUserProfileTab(String show) {
-        ((MainView) getActivity()).selectUserProfileTab(show);
-    }
 }

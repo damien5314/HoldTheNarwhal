@@ -58,7 +58,8 @@ public class UserProfileFragment extends AbsListingsFragment implements Listings
         View v = inflater.inflate(R.layout.listings_user_profile_fragment, container, false);
         ButterKnife.inject(this, v);
         instantiateListView(v);
-        updateTitle();
+        updateUserProfileTabs();
+//        updateTitle();
         return v;
     }
 
@@ -77,9 +78,9 @@ public class UserProfileFragment extends AbsListingsFragment implements Listings
                 .setText(getString(R.string.navigation_tabs_gilded)).setTag("gilded"));
 
         // Authorized tabs
-        UserIdentity id = mMainPresenter.getAuthorizedUser();
+        UserIdentity id = mListingsPresenter.getAuthorizedUser();
         boolean showAuthorizedTabs = id != null &&
-                id.getName().equals(mMainPresenter.getUsernameContext());
+                id.getName().equals(mListingsPresenter.getUsernameContext());
         if (showAuthorizedTabs) {
             mUserProfileTabs.addTab(mUserProfileTabs.newTab()
                     .setText(getString(R.string.navigation_tabs_upvoted)).setTag("upvoted"));
@@ -102,14 +103,14 @@ public class UserProfileFragment extends AbsListingsFragment implements Listings
 
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                showUserProfile((String) tab.getTag(), mMainPresenter.getUsernameContext());
-//                ((UserProfilePresenter) mListingsPresenter).requestData((String) tab.getTag());
+//                showUserProfile((String) tab.getTag(), mMainPresenter.getUsernameContext());
+                ((UserProfilePresenter) mListingsPresenter).requestData((String) tab.getTag());
             }
         });
     }
 
     @Override
     public void updateTitle() {
-        setTitle(String.format(getString(R.string.username), mListingsPresenter.getUsername()));
+        setTitle(String.format(getString(R.string.username), mListingsPresenter.getUsernameContext()));
     }
 }
