@@ -15,6 +15,8 @@ import com.ddiehl.reddit.listings.RedditComment;
 import com.ddiehl.reddit.listings.RedditLink;
 
 public class ListingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private static final String TAG = ListingsAdapter.class.getSimpleName();
+
     private static final int TYPE_LINK = 0;
     private static final int TYPE_COMMENT = 1;
     private static final int TYPE_AD = 9;
@@ -29,17 +31,20 @@ public class ListingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public int getItemViewType(int position) {
-        if (position % AD_FREQUENCY == 0) {
+        if (position % AD_FREQUENCY == AD_FREQUENCY - 1) {
             return TYPE_AD;
         }
 
-        Listing listing = mListingsPresenter.getListing(position - (position / AD_FREQUENCY));
+        int n = position - (position / AD_FREQUENCY);
+        Listing listing = mListingsPresenter.getListing(n);
 
-        if (listing instanceof RedditLink)
+        if (listing instanceof RedditLink) {
             return TYPE_LINK;
+        }
 
-        if (listing instanceof RedditComment)
+        if (listing instanceof RedditComment) {
             return TYPE_COMMENT;
+        }
 
         throw new RuntimeException("Item view type not recognized: " + listing.getClass());
     }
@@ -66,14 +71,15 @@ public class ListingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        int n = position - (position / AD_FREQUENCY);
         if (holder instanceof ListingsLinkViewHolder) {
-            RedditLink link = (RedditLink) mListingsPresenter.getListing(position);
+            RedditLink link = (RedditLink) mListingsPresenter.getListing(n);
             ((ListingsLinkViewHolder) holder).bind(link, false);
         } else if (holder instanceof ListingsCommentViewHolder) {
-            RedditComment comment = (RedditComment) mListingsPresenter.getListing(position);
+            RedditComment comment = (RedditComment) mListingsPresenter.getListing(n);
             ((ListingsCommentViewHolder) holder).bind(comment);
         } else if (holder instanceof AdViewHolder) {
-            ((AdViewHolder) holder).loadAd();
+            ((AdViewHolder) holder).showAd();
         }
     }
 

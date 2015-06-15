@@ -23,10 +23,11 @@ public class AdViewHolder extends RecyclerView.ViewHolder {
         ButterKnife.inject(this, v);
     }
 
-    public void loadAd() {
+    public void showAd() {
         AdRequest req = new AdRequest.Builder()
                 .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-                .addTestDevice("3F86D6D7140CD05AF144D7983696327F")
+                .addTestDevice("3F86D6D7140CD05AF144D7983696327F") // Nexus 5 physical
+                .addTestDevice("6F5873E9AD39AE3A3A20C2E7E5DD2B76") // Nexus 4 emulator - MacBook
                 .build();
         mAdView.loadAd(req);
     }
