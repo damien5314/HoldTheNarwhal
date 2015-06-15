@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.gms.ads.AdView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/listings_banner_ad"
+    android:orientation="vertical"
+    android:layout_width="@dimen/ads_banner_width"
+    android:layout_height="@dimen/ads_banner_height"
+    android:layout_gravity="center"
+    ads:adSize="BANNER"
+    ads:adUnitId="@string/ads_listings_banner_id"/>

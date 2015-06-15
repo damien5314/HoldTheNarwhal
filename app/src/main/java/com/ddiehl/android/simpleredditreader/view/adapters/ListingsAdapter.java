@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.presenter.ListingsPresenter;
+import com.ddiehl.android.simpleredditreader.view.viewholders.AdViewHolder;
 import com.ddiehl.android.simpleredditreader.view.viewholders.ListingsCommentViewHolder;
 import com.ddiehl.android.simpleredditreader.view.viewholders.ListingsLinkViewHolder;
 import com.ddiehl.reddit.listings.Listing;
@@ -16,6 +17,9 @@ import com.ddiehl.reddit.listings.RedditLink;
 public class ListingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int TYPE_LINK = 0;
     private static final int TYPE_COMMENT = 1;
+    private static final int TYPE_AD = 9;
+
+    private static final int AD_FREQUENCY = 15; // Place an ad in every n position
 
     private ListingsPresenter mListingsPresenter;
 
@@ -25,7 +29,11 @@ public class ListingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public int getItemViewType(int position) {
-        Listing listing = mListingsPresenter.getListing(position);
+        if (position % AD_FREQUENCY == 0) {
+            return TYPE_AD;
+        }
+
+        Listing listing = mListingsPresenter.getListing(position - (position / AD_FREQUENCY));
 
         if (listing instanceof RedditLink)
             return TYPE_LINK;
@@ -47,6 +55,10 @@ public class ListingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.listings_comment, parent, false);
                 return new ListingsCommentViewHolder(view, mListingsPresenter);
+            case TYPE_AD:
+                view = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.listings_banner_ad, parent, false);
+                return new AdViewHolder(view);
             default:
                 throw new RuntimeException("Unexpected ViewHolder type: " + viewType);
         }
@@ -60,6 +72,8 @@ public class ListingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         } else if (holder instanceof ListingsCommentViewHolder) {
             RedditComment comment = (RedditComment) mListingsPresenter.getListing(position);
             ((ListingsCommentViewHolder) holder).bind(comment);
+        } else if (holder instanceof AdViewHolder) {
+            ((AdViewHolder) holder).loadAd();
         }
     }
 
