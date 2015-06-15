@@ -1,6 +1,8 @@
 package com.ddiehl.android.simpleredditreader.presenter;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.view.ContextMenu;
 import android.view.View;
 
@@ -461,5 +463,11 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
     @Override
     public UserIdentity getAuthorizedUser() {
         return mIdentityManager.getUserIdentity();
+    }
+
+    @Override
+    public boolean getAdsEnabled() {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mContext);
+        return sp.getBoolean("pref_enable_ads", false);
     }
 }

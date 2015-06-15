@@ -25,4 +25,5 @@ public interface ListingsPresenter extends LinkPresenter, CommentPresenter {
     void updateSort(String sort, String timespan);
 
     UserIdentity getAuthorizedUser();
+    boolean getAdsEnabled();
 }

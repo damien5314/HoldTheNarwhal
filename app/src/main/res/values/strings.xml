@@ -94,10 +94,6 @@
     <string name="hide_failed">Hide failed, please try again</string>
     <string name="link_hidden">Link hidden</string>
 
-    <!-- AdMob -->
-    <string name="ads_test_unit_id">ca-app-pub-3940256099942544/6300978111</string>
-    <string name="ads_listings_banner_id">ca-app-pub-8702732471277092/5149537966</string>
-
     <!-- Miscellaneous -->
     <string name="username">/u/%s</string>
     <string name="user_required">Login required</string>

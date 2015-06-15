@@ -24,18 +24,20 @@ public class ListingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private static final int AD_FREQUENCY = 15; // Place an ad in every n position
 
     private ListingsPresenter mListingsPresenter;
+    private boolean mShowAds = false;
 
     public ListingsAdapter(ListingsPresenter presenter) {
         mListingsPresenter = presenter;
+        mShowAds = presenter.getAdsEnabled();
     }
 
     @Override
     public int getItemViewType(int position) {
-        if (position % AD_FREQUENCY == AD_FREQUENCY - 1) {
+        if (mShowAds && position % AD_FREQUENCY == AD_FREQUENCY - 1) {
             return TYPE_AD;
         }
 
-        int n = position - (position / AD_FREQUENCY);
+        int n = mShowAds ? position - (position / AD_FREQUENCY) : position;
         Listing listing = mListingsPresenter.getListing(n);
 
         if (listing instanceof RedditLink) {
@@ -71,7 +73,7 @@ public class ListingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        int n = position - (position / AD_FREQUENCY);
+        int n = mShowAds ? position - (position / AD_FREQUENCY) : position;
         if (holder instanceof ListingsLinkViewHolder) {
             RedditLink link = (RedditLink) mListingsPresenter.getListing(n);
             ((ListingsLinkViewHolder) holder).bind(link, false);
@@ -86,5 +88,10 @@ public class ListingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     @Override
     public int getItemCount() {
         return mListingsPresenter.getNumListings();
+    }
+
+    public void setShowAds(boolean b) {
+        mShowAds = b;
+        notifyDataSetChanged();
     }
 }
