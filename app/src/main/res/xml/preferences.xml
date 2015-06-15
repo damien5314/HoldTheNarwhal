@@ -2,13 +2,32 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:key="prefs_user">
 
-    <ListPreference
-        android:key="pref_comment_sort"
-        android:title="@string/dialog_settings_comment_sort"
-        android:dialogTitle="@string/dialog_settings_comment_sort"
-        android:entries="@array/comment_sort_options"
-        android:entryValues="@array/comment_sort_option_values"
-        android:defaultValue="@string/default_comment_sort"
-        android:summary="%s" />
+    <!-- If user is not signed in, we do not show these -->
+    <PreferenceCategory
+        android:key="prefs_reddit"
+        android:title="@string/preferences_reddit">
+
+        <ListPreference
+            android:key="pref_comment_sort"
+            android:title="@string/dialog_settings_comment_sort"
+            android:dialogTitle="@string/dialog_settings_comment_sort"
+            android:entries="@array/comment_sort_options"
+            android:entryValues="@array/comment_sort_option_values"
+            android:defaultValue="@string/default_comment_sort"
+            android:summary="%s" />
+
+    </PreferenceCategory>
+
+    <!-- Show these to all users -->
+    <PreferenceCategory
+        android:key="prefs_app"
+        android:title="@string/preferences_app">
+
+        <CheckBoxPreference
+            android:key="pref_enable_ads"
+            android:title="@string/pref_enable_ads"
+            android:summary="@string/pref_enable_ads_summary"/>
+
+    </PreferenceCategory>
 
 </PreferenceScreen>
