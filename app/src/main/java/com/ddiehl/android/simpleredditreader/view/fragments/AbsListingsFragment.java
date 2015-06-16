@@ -89,7 +89,7 @@ public abstract class AbsListingsFragment extends AbsRedditFragment implements L
                 .iconImageId(R.id.ad_icon)
                 .titleId(R.id.ad_title)
                 .textId(R.id.ad_text)
-                .callToActionId(R.id.ad_cta)
+//                .callToActionId(R.id.ad_cta)
                 .build();
         MoPubNativeAdRenderer renderer = new MoPubNativeAdRenderer(vb);
         mAdAdapter = new MoPubAdRecycleAdapter(getActivity(), mListingsAdapter);
@@ -100,8 +100,8 @@ public abstract class AbsListingsFragment extends AbsRedditFragment implements L
         final EnumSet<RequestParameters.NativeAdAsset> desiredAssets = EnumSet.of(
                 RequestParameters.NativeAdAsset.ICON_IMAGE,
                 RequestParameters.NativeAdAsset.TITLE,
-                RequestParameters.NativeAdAsset.TEXT,
-                RequestParameters.NativeAdAsset.CALL_TO_ACTION_TEXT
+                RequestParameters.NativeAdAsset.TEXT
+//                RequestParameters.NativeAdAsset.CALL_TO_ACTION_TEXT
         );
 
         mAdRequestParameters = new RequestParameters.Builder()

@@ -9,10 +9,6 @@
     <item type="id" name="drawer_subreddits" />
     <item type="id" name="drawer_random_subreddit" />
 
-    <!-- AdMob -->
-    <string name="ads_test_unit_id">ca-app-pub-3940256099942544/6300978111</string>
-    <string name="ads_listings_banner_id">ca-app-pub-8702732471277092/5149537966</string>
-
     <!-- MoPub -->
     <string name="ads_listings_banner_id_mopub">***REMOVED***</string>
 
