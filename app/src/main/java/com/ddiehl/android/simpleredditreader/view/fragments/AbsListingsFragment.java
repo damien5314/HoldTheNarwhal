@@ -25,7 +25,13 @@ import com.ddiehl.android.simpleredditreader.view.dialogs.ChooseLinkSortDialog;
 import com.ddiehl.android.simpleredditreader.view.dialogs.ChooseTimespanDialog;
 import com.ddiehl.reddit.listings.RedditComment;
 import com.ddiehl.reddit.listings.RedditLink;
+import com.mopub.nativeads.MoPubAdRecycleAdapter;
+import com.mopub.nativeads.MoPubNativeAdRenderer;
+import com.mopub.nativeads.RequestParameters;
+import com.mopub.nativeads.ViewBinder;
 import com.squareup.otto.Bus;
+
+import java.util.EnumSet;
 
 import butterknife.ButterKnife;
 
@@ -45,6 +51,9 @@ public abstract class AbsListingsFragment extends AbsRedditFragment implements L
     private int mFirstVisibleItem, mVisibleItemCount, mTotalItemCount;
     protected String mSelectedSort, mSelectedTimespan;
 
+    protected MoPubAdRecycleAdapter mAdAdapter;
+    protected RequestParameters mAdRequestParameters;
+
     abstract void updateTitle();
 
     @Override
@@ -59,8 +68,6 @@ public abstract class AbsListingsFragment extends AbsRedditFragment implements L
         RecyclerView rv = ButterKnife.findById(v, R.id.recycler_view);
         final LinearLayoutManager mgr = new LinearLayoutManager(getActivity());
         rv.setLayoutManager(mgr);
-        rv.setAdapter(mListingsAdapter);
-
         rv.clearOnScrollListeners();
         rv.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -76,6 +83,31 @@ public abstract class AbsListingsFragment extends AbsRedditFragment implements L
                 }
             }
         });
+
+        // Set up ViewBinder and MoPubAdRecycleAdapter for MoPub ads
+        ViewBinder vb = new ViewBinder.Builder(R.layout.listings_banner_ad)
+                .iconImageId(R.id.ad_icon)
+                .titleId(R.id.ad_title)
+                .textId(R.id.ad_text)
+                .callToActionId(R.id.ad_cta)
+                .build();
+        MoPubNativeAdRenderer renderer = new MoPubNativeAdRenderer(vb);
+        mAdAdapter = new MoPubAdRecycleAdapter(getActivity(), mListingsAdapter);
+        mAdAdapter.registerAdRenderer(renderer);
+        rv.setAdapter(mAdAdapter);
+
+        // Set configuration for MoPub ads
+        final EnumSet<RequestParameters.NativeAdAsset> desiredAssets = EnumSet.of(
+                RequestParameters.NativeAdAsset.ICON_IMAGE,
+                RequestParameters.NativeAdAsset.TITLE,
+                RequestParameters.NativeAdAsset.TEXT,
+                RequestParameters.NativeAdAsset.CALL_TO_ACTION_TEXT
+        );
+
+        mAdRequestParameters = new RequestParameters.Builder()
+                .desiredAssets(desiredAssets)
+                .location(null)
+                .build();
     }
 
     @Override
@@ -86,12 +118,20 @@ public abstract class AbsListingsFragment extends AbsRedditFragment implements L
         if (mListingsAdapter.getItemCount() == 0) {
             mListingsPresenter.refreshData();
         }
+
+        mAdAdapter.loadAds(getString(R.string.ads_listings_banner_id_mopub), mAdRequestParameters);
     }
 
     @Override
     public void onPause() {
         super.onPause();
         mBus.unregister(mListingsPresenter);
+    }
+
+    @Override
+    public void onDestroy() {
+        mAdAdapter.destroy();
+        super.onDestroy();
     }
 
     @Override
