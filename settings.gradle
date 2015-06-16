@@ -1,1 +1,1 @@
-include ':app', ':redditdata'
+include ':app', ':redditdata', ':mopub-sdk'
