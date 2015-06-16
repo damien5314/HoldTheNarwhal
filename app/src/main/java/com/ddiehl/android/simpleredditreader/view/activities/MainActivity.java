@@ -35,6 +35,8 @@ import com.ddiehl.android.simpleredditreader.view.fragments.SubredditFragment;
 import com.ddiehl.android.simpleredditreader.view.fragments.UserProfileFragment;
 import com.ddiehl.android.simpleredditreader.view.fragments.WebViewFragment;
 import com.ddiehl.reddit.identity.UserIdentity;
+import com.mopub.common.MoPub;
+import com.mopub.mobileads.MoPubConversionTracker;
 import com.squareup.otto.Bus;
 
 import butterknife.ButterKnife;
@@ -83,6 +85,10 @@ public class MainActivity extends ActionBarActivity
 //        updateNavigationItems();
 //        updateUserProfileTabs();
         mNavigationView.setNavigationItemSelectedListener(this);
+
+        // MoPub configuration
+        new MoPubConversionTracker().reportAppOpen(this);
+        MoPub.setLocationAwareness(MoPub.LocationAwareness.DISABLED);
     }
 
     @Override
