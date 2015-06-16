@@ -427,6 +427,14 @@ public class MoPubStreamAdPlacer {
         return view;
     }
 
+    //////////
+    // https://github.com/shem8/mopub-android-sdk/commit/cfa6b6436b3abd0ca3051eb0e445d368a02c3b3e
+    //////////
+    public View getAdView(@Nullable final ViewGroup parent) {
+        return mAdRenderer.createAdView(mContext, parent);
+    }
+    //////////
+
     /**
      * Removes ads in the given range from [originalStartPosition, originalEndPosition).
      *
