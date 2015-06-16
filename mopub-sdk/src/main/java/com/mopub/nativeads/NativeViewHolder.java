@@ -73,7 +73,7 @@ class NativeViewHolder {
 
     private void addTextView(@Nullable final TextView textView, @Nullable final String contents) {
         if (textView == null) {
-            MoPubLog.d("Attempted to add text (" + contents + ") to null TextView.");
+//            MoPubLog.d("Attempted to add text (" + contents + ") to null TextView.");
             return;
         }
 

@@ -89,7 +89,6 @@ public abstract class AbsListingsFragment extends AbsRedditFragment implements L
                 .iconImageId(R.id.ad_icon)
                 .titleId(R.id.ad_title)
                 .textId(R.id.ad_text)
-//                .callToActionId(R.id.ad_cta)
                 .build();
         MoPubNativeAdRenderer renderer = new MoPubNativeAdRenderer(vb);
         mAdAdapter = new MoPubAdRecycleAdapter(getActivity(), mListingsAdapter);
@@ -101,12 +100,10 @@ public abstract class AbsListingsFragment extends AbsRedditFragment implements L
                 RequestParameters.NativeAdAsset.ICON_IMAGE,
                 RequestParameters.NativeAdAsset.TITLE,
                 RequestParameters.NativeAdAsset.TEXT
-//                RequestParameters.NativeAdAsset.CALL_TO_ACTION_TEXT
         );
 
         mAdRequestParameters = new RequestParameters.Builder()
                 .desiredAssets(desiredAssets)
-                .location(null)
                 .build();
     }
 
@@ -119,7 +116,13 @@ public abstract class AbsListingsFragment extends AbsRedditFragment implements L
             mListingsPresenter.refreshData();
         }
 
-        mAdAdapter.loadAds(getString(R.string.ads_listings_banner_id_mopub), mAdRequestParameters);
+        loadAdsIfEnabled();
+    }
+
+    private void loadAdsIfEnabled() {
+        if (mListingsPresenter.getAdsEnabled()) {
+            mAdAdapter.loadAds(getString(R.string.ads_listings_banner_id_mopub), mAdRequestParameters);
+        }
     }
 
     @Override
