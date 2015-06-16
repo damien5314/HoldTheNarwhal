@@ -9,7 +9,4 @@
     <item type="id" name="drawer_subreddits" />
     <item type="id" name="drawer_random_subreddit" />
 
-    <!-- MoPub -->
-    <string name="ads_listings_banner_id_mopub">***REMOVED***</string>
-
 </resources>

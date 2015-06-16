@@ -14,7 +14,7 @@
         android:id="@+id/link_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/link_card_bg"
+        android:background="@drawable/listings_card_bg"
         android:orientation="vertical">
 
         <LinearLayout

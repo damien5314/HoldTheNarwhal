@@ -140,11 +140,11 @@ public class ListingsLinkViewHolder extends RecyclerView.ViewHolder
 
         // Set background tint based on isLiked
         if (link.isLiked() == null) {
-            mLinkView.setBackgroundResource(R.drawable.link_card_bg);
+            mLinkView.setBackgroundResource(R.drawable.listings_card_bg);
         } else if (link.isLiked()) {
-            mLinkView.setBackgroundResource(R.drawable.link_card_upvoted_bg);
+            mLinkView.setBackgroundResource(R.drawable.listings_card_upvoted_bg);
         } else {
-            mLinkView.setBackgroundResource(R.drawable.link_card_downvoted_bg);
+            mLinkView.setBackgroundResource(R.drawable.listings_card_downvoted_bg);
         }
 
         // Show gilding view if appropriate, else hide

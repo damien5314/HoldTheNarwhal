@@ -46,6 +46,9 @@
     <string name="navigation_tabs_hidden">hidden</string>
     <string name="navigation_tabs_saved">saved</string>
 
+    <!-- Ads -->
+    <string name="advertisement">advertisement</string>
+
     <!-- Settings -->
     <string name="preferences_reddit">reddit</string>
     <string name="preferences_app">HTN</string>
