@@ -14,6 +14,7 @@ import com.ddiehl.android.simpleredditreader.events.requests.VoteEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.UserIdentityRetrievedEvent;
 import com.ddiehl.android.simpleredditreader.utils.BaseUtils;
 import com.ddiehl.reddit.identity.UserIdentity;
+import com.ddiehl.reddit.listings.Listing;
 import com.flurry.android.FlurryAgent;
 import com.squareup.otto.Subscribe;
 
@@ -24,6 +25,7 @@ public class HTNAnalytics {
 
     private static final String FLURRY_API_KEY = "***REMOVED***";
     private static final String FLURRY_API_KEY_DEBUG = "***REMOVED***";
+    private static final int FLURRY_SESSION_TIMEOUT_SECONDS = 30;
 
     private static HTNAnalytics _instance;
 
@@ -32,7 +34,8 @@ public class HTNAnalytics {
     public void init(Context context) {
         FlurryAgent.setLogEnabled(BuildConfig.DEBUG); // Disable Flurry logging for release builds
         FlurryAgent.init(context, BuildConfig.DEBUG ? FLURRY_API_KEY_DEBUG : FLURRY_API_KEY);
-        FlurryAgent.setContinueSessionMillis(30 * 1000); // Set Flurry session timeout to 30 seconds
+        FlurryAgent.setContinueSessionMillis(FLURRY_SESSION_TIMEOUT_SECONDS * 1000);
+        FlurryAgent.setCaptureUncaughtExceptions(true);
     }
 
     @Subscribe
@@ -73,32 +76,54 @@ public class HTNAnalytics {
 
     @Subscribe
     public void onLoadLinkComments(LoadLinkCommentsEvent event) {
-        // TODO
+        Map<String, String> params = new HashMap<>();
+        params.put("subreddit", event.getSubreddit());
+        params.put("article", event.getArticle());
+        params.put("sort", event.getSort());
+        params.put("comment", event.getCommentId());
+        FlurryAgent.logEvent("load link comments", params);
     }
 
     @Subscribe
     public void onLoadMoreChildren(LoadMoreChildrenEvent event) {
-        // TODO
+        Map<String, String> params = new HashMap<>();
+        params.put("subreddit", event.getParentCommentStub().getSubreddit());
+        params.put("article", event.getRedditLink().getId());
+        params.put("sort", event.getSort());
+        FlurryAgent.logEvent("load more comment children", params);
     }
 
     @Subscribe
     public void onVote(VoteEvent event) {
-        // TODO
+        Map<String, String> params = new HashMap<>();
+        params.put("type", event.getType());
+        params.put("id", event.getListing().getId());
+        params.put("direction", String.valueOf(event.getDirection()));
+        FlurryAgent.logEvent("vote", params);
     }
 
     @Subscribe
     public void onSave(SaveEvent event) {
-        // TODO
+        Map<String, String> params = new HashMap<>();
+        params.put("type", ((Listing) event.getListing()).getKind());
+        params.put("id", ((Listing) event.getListing()).getId());
+        params.put("category", event.getCategory());
+        params.put("b", String.valueOf(event.isToSave()));
+        FlurryAgent.logEvent("save", params);
     }
 
     @Subscribe
     public void onHide(HideEvent event) {
-        // TODO
+        Map<String, String> params = new HashMap<>();
+        params.put("type", ((Listing) event.getListing()).getKind());
+        params.put("id", ((Listing) event.getListing()).getId());
+        params.put("b", String.valueOf(event.isToHide()));
+        FlurryAgent.logEvent("hide", params);
     }
 
     @Subscribe
     public void onReport(ReportEvent event) {
-        // TODO
+        // TODO Implement analytics event once feature is implemented
     }
 
     public static HTNAnalytics getInstance() {
