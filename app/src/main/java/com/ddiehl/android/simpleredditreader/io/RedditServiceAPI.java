@@ -9,19 +9,18 @@ import com.ddiehl.android.simpleredditreader.events.exceptions.UserRequiredExcep
 import com.ddiehl.android.simpleredditreader.events.requests.GetUserIdentityEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.HideEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.LoadLinkCommentsEvent;
-import com.ddiehl.android.simpleredditreader.events.requests.LoadSubredditEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.LoadMoreChildrenEvent;
+import com.ddiehl.android.simpleredditreader.events.requests.LoadSubredditEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.LoadUserProfileEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.ReportEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.SaveEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.VoteEvent;
-import com.ddiehl.android.simpleredditreader.events.responses.LinkCommentsLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.HideSubmittedEvent;
+import com.ddiehl.android.simpleredditreader.events.responses.LinkCommentsLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.ListingsLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.MoreChildrenLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.SaveSubmittedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.UserIdentityRetrievedEvent;
-import com.ddiehl.android.simpleredditreader.events.responses.UserOverviewLoaded;
 import com.ddiehl.android.simpleredditreader.events.responses.VoteSubmittedEvent;
 import com.ddiehl.android.simpleredditreader.utils.BaseUtils;
 import com.ddiehl.reddit.Hideable;
@@ -236,7 +235,7 @@ public class RedditServiceAPI implements RedditService {
             public void failure(RetrofitError error) {
                 BaseUtils.showError(mContext, error);
                 BaseUtils.printResponse(error.getResponse());
-                mBus.post(new UserOverviewLoaded(error));
+                mBus.post(new ListingsLoadedEvent(error));
             }
         });
     }

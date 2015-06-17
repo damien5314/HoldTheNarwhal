@@ -6,10 +6,8 @@ import com.ddiehl.android.simpleredditreader.BusProvider;
 import com.ddiehl.android.simpleredditreader.RedditIdentityManager;
 import com.ddiehl.android.simpleredditreader.events.requests.UserSignOutEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.UserIdentitySavedEvent;
-import com.ddiehl.android.simpleredditreader.utils.BaseUtils;
 import com.ddiehl.android.simpleredditreader.view.MainView;
 import com.ddiehl.reddit.identity.UserIdentity;
-import com.flurry.android.FlurryAgent;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -28,15 +26,12 @@ public class MainPresenterImpl implements MainPresenter {
 
         mMainView = view;
         mIdentityManager = RedditIdentityManager.getInstance(mContext);
-
-//        mMainView.setUserIdentity(mIdentityManager.getUserIdentity());
     }
 
     @Subscribe
     public void onUserIdentitySaved(UserIdentitySavedEvent event) {
         UserIdentity identity = event.getUserIdentity();
         mMainView.setUserIdentity(identity);
-        FlurryAgent.setUserId(BaseUtils.getMd5HexString(identity.getName()));
     }
 
     @Override
@@ -48,9 +43,6 @@ public class MainPresenterImpl implements MainPresenter {
     public void signOutUser() {
         mMainView.closeNavigationDrawer();
         mBus.post(new UserSignOutEvent());
-
-        FlurryAgent.logEvent("user signed out");
-        FlurryAgent.setUserId(null);
     }
 
     @Override

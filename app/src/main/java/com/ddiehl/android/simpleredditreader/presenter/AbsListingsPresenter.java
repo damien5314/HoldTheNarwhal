@@ -301,8 +301,6 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
             Votable votable = (Votable) listing;
             int dir = (votable.isLiked() == null || votable.isLiked()) ? -1 : 0;
             mBus.post(new VoteEvent(votable, listing.getKind(), dir));
-
-            // Log analytics event
         }
     }
 
