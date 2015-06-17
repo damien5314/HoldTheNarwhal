@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.ddiehl.android.simpleredditreader.io.RedditService;
 import com.ddiehl.android.simpleredditreader.io.RedditServiceAuth;
+import com.flurry.android.FlurryAgent;
 import com.squareup.otto.Bus;
 import com.squareup.picasso.Picasso;
 
@@ -26,5 +27,10 @@ public class RedditApplication extends Application {
 
         if (BuildConfig.DEBUG)
             Picasso.with(this).setIndicatorsEnabled(true);
+
+        String flurryApiKey = getString(BuildConfig.DEBUG ?
+                R.string.flurry_api_key_debug : R.string.flurry_api_key);
+        FlurryAgent.init(this, flurryApiKey);
+        FlurryAgent.setContinueSessionMillis(30 * 1000); // Set Flurry session timeout to 30 seconds
     }
 }

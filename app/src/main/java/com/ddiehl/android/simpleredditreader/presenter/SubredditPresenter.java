@@ -9,7 +9,11 @@ import com.ddiehl.android.simpleredditreader.events.responses.SaveSubmittedEvent
 import com.ddiehl.android.simpleredditreader.events.responses.VoteSubmittedEvent;
 import com.ddiehl.android.simpleredditreader.view.ListingsView;
 import com.ddiehl.reddit.listings.RedditLink;
+import com.flurry.android.FlurryAgent;
 import com.squareup.otto.Subscribe;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class SubredditPresenter extends AbsListingsPresenter {
 
@@ -20,6 +24,13 @@ public class SubredditPresenter extends AbsListingsPresenter {
 
     @Override
     public void requestData() {
+        // Log analytics event
+        Map<String, String> params = new HashMap<>();
+        params.put("subreddit", mSubreddit);
+        params.put("sort", mSort);
+        params.put("timespan", mTimespan);
+        FlurryAgent.logEvent("view subreddit", params);
+
         mBus.post(new LoadSubredditEvent(mSubreddit, mSort, mTimespan, mNextPageListingId));
     }
 
