@@ -28,6 +28,7 @@ public class RedditApplication extends Application {
         if (BuildConfig.DEBUG)
             Picasso.with(this).setIndicatorsEnabled(true);
 
+        FlurryAgent.setLogEnabled(BuildConfig.DEBUG); // Enable Flurry logging for debug builds
         String flurryApiKey = BuildConfig.DEBUG ?
                 getString(R.string.flurry_api_key_debug) : getString(R.string.flurry_api_key);
         FlurryAgent.init(this, flurryApiKey);

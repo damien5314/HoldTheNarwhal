@@ -7,6 +7,7 @@ import com.ddiehl.android.simpleredditreader.events.responses.HideSubmittedEvent
 import com.ddiehl.android.simpleredditreader.events.responses.ListingsLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.SaveSubmittedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.VoteSubmittedEvent;
+import com.ddiehl.android.simpleredditreader.utils.BaseUtils;
 import com.ddiehl.android.simpleredditreader.view.ListingsView;
 import com.flurry.android.FlurryAgent;
 import com.squareup.otto.Subscribe;
@@ -23,14 +24,15 @@ public class UserProfilePresenter extends AbsListingsPresenter {
 
     @Override
     public void requestData() {
+        mBus.post(new LoadUserProfileEvent(mShow, mUsernameContext, mSort, mTimespan, mNextPageListingId));
+
         // Log analytics event
         Map<String, String> params = new HashMap<>();
         params.put("show", mSubreddit);
+        params.put("user", BaseUtils.getMd5HexString(mUsernameContext));
         params.put("sort", mSort);
         params.put("timespan", mTimespan);
-        FlurryAgent.logEvent("view subreddit", params);
-
-        mBus.post(new LoadUserProfileEvent(mShow, mUsernameContext, mSort, mTimespan, mNextPageListingId));
+        FlurryAgent.logEvent("view user profile", params);
     }
 
     public void requestData(String show) {

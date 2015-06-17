@@ -24,14 +24,14 @@ public class SubredditPresenter extends AbsListingsPresenter {
 
     @Override
     public void requestData() {
+        mBus.post(new LoadSubredditEvent(mSubreddit, mSort, mTimespan, mNextPageListingId));
+
         // Log analytics event
         Map<String, String> params = new HashMap<>();
         params.put("subreddit", mSubreddit);
         params.put("sort", mSort);
         params.put("timespan", mTimespan);
         FlurryAgent.logEvent("view subreddit", params);
-
-        mBus.post(new LoadSubredditEvent(mSubreddit, mSort, mTimespan, mNextPageListingId));
     }
 
     @Subscribe @Override

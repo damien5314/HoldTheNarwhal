@@ -5,6 +5,8 @@ import android.util.Log;
 import android.widget.Toast;
 
 import java.io.InputStream;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Scanner;
 import java.util.UUID;
@@ -76,5 +78,27 @@ public class BaseUtils {
 
     public static String getRandomString() {
         return UUID.randomUUID().toString();
+    }
+
+    // http://www.mkyong.com/java/java-md5-hashing-example/
+    public static String getMd5HexString(String s) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            md.update(s.getBytes());
+            byte byteData[] = md.digest();
+
+            // Convert bytes to hex format
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < byteData.length; i++) {
+                sb.append(Integer.toString((byteData[i] & 0xff) + 0x100, 16).substring(1));
+            }
+
+            return sb.toString();
+        } catch (NoSuchAlgorithmException e) {
+            Log.w(TAG, "Unable to obtain MD5 hash");
+            e.printStackTrace();
+        }
+
+        return null;
     }
 }
