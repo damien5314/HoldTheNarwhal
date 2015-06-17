@@ -35,6 +35,7 @@ import com.ddiehl.android.simpleredditreader.view.fragments.SubredditFragment;
 import com.ddiehl.android.simpleredditreader.view.fragments.UserProfileFragment;
 import com.ddiehl.android.simpleredditreader.view.fragments.WebViewFragment;
 import com.ddiehl.reddit.identity.UserIdentity;
+import com.flurry.android.FlurryAgent;
 import com.mopub.common.MoPub;
 import com.mopub.mobileads.MoPubConversionTracker;
 import com.squareup.otto.Bus;
@@ -230,6 +231,7 @@ public class MainActivity extends ActionBarActivity
     @Override
     protected void onStart() {
         super.onStart();
+        FlurryAgent.onStartSession(this);
         mBus.register(mMainPresenter);
 
         Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
@@ -241,6 +243,7 @@ public class MainActivity extends ActionBarActivity
     @Override
     protected void onStop() {
         super.onStop();
+        FlurryAgent.onEndSession(this);
         mBus.unregister(mMainPresenter);
     }
 

@@ -28,8 +28,8 @@ public class RedditApplication extends Application {
         if (BuildConfig.DEBUG)
             Picasso.with(this).setIndicatorsEnabled(true);
 
-        String flurryApiKey = getString(BuildConfig.DEBUG ?
-                R.string.flurry_api_key_debug : R.string.flurry_api_key);
+        String flurryApiKey = BuildConfig.DEBUG ?
+                getString(R.string.flurry_api_key_debug) : getString(R.string.flurry_api_key);
         FlurryAgent.init(this, flurryApiKey);
         FlurryAgent.setContinueSessionMillis(30 * 1000); // Set Flurry session timeout to 30 seconds
     }
