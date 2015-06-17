@@ -20,11 +20,9 @@ public class ListingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private static final int TYPE_COMMENT = 1;
 
     private ListingsPresenter mListingsPresenter;
-    private boolean mShowAds = false;
 
     public ListingsAdapter(ListingsPresenter presenter) {
         mListingsPresenter = presenter;
-        mShowAds = presenter.getAdsEnabled();
     }
 
     @Override

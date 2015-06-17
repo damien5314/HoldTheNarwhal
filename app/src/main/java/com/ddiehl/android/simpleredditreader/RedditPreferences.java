@@ -10,10 +10,8 @@ public class RedditPreferences {
     public static final String PREF_DEVICE_ID = "pref_device_id";
 
     public static final String PREFS_USER = "prefs_user";
-//    public static final String PREFS_USER = BuildConfig.DEBUG ?
-//        "com.ddiehl.android.htn.debug_preferences" :
-//        "com.ddiehl.android.htn_preferences";
     public static final String PREF_COMMENT_SORT = "pref_comment_sort";
+    public static final String PREF_ENABLE_ADS = "pref_enable_ads";
 
     private static RedditPreferences _instance;
     private Context mContext;
@@ -58,6 +56,18 @@ public class RedditPreferences {
         mContext.getSharedPreferences(PREFS_USER, Context.MODE_PRIVATE)
                 .edit()
                 .putString(PREF_COMMENT_SORT, pref)
+                .apply();
+    }
+
+    public boolean getAdsEnabled() {
+        SharedPreferences sp = mContext.getSharedPreferences(RedditPreferences.PREFS_USER, Context.MODE_PRIVATE);
+        return sp.getBoolean(PREF_ENABLE_ADS, false);
+    }
+
+    public void setAdsEnabled(boolean b) {
+        SharedPreferences sp = mContext.getSharedPreferences(RedditPreferences.PREFS_USER, Context.MODE_PRIVATE);
+        sp.edit()
+                .putBoolean(PREF_ENABLE_ADS, b)
                 .apply();
     }
 }

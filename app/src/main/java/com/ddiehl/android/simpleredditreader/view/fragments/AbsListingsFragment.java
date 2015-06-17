@@ -16,6 +16,7 @@ import android.view.View;
 
 import com.ddiehl.android.simpleredditreader.BusProvider;
 import com.ddiehl.android.simpleredditreader.R;
+import com.ddiehl.android.simpleredditreader.RedditPreferences;
 import com.ddiehl.android.simpleredditreader.presenter.ListingsPresenter;
 import com.ddiehl.android.simpleredditreader.view.ListingsView;
 import com.ddiehl.android.simpleredditreader.view.MainView;
@@ -25,6 +26,7 @@ import com.ddiehl.android.simpleredditreader.view.dialogs.ChooseLinkSortDialog;
 import com.ddiehl.android.simpleredditreader.view.dialogs.ChooseTimespanDialog;
 import com.ddiehl.reddit.listings.RedditComment;
 import com.ddiehl.reddit.listings.RedditLink;
+import com.flurry.android.FlurryAgent;
 import com.mopub.nativeads.MoPubAdRecycleAdapter;
 import com.mopub.nativeads.MoPubNativeAdRenderer;
 import com.mopub.nativeads.RequestParameters;
@@ -120,7 +122,10 @@ public abstract class AbsListingsFragment extends AbsRedditFragment implements L
     }
 
     private void loadAdsIfEnabled() {
-        if (mListingsPresenter.getAdsEnabled()) {
+        boolean adsEnabled = RedditPreferences.getInstance(getActivity()).getAdsEnabled();
+        FlurryAgent.logEvent("ads enabled", adsEnabled);
+
+        if (adsEnabled) {
             mAdAdapter.loadAds(getString(R.string.ads_listings_banner_id_mopub), mAdRequestParameters);
         }
     }
