@@ -41,10 +41,6 @@ import com.mopub.common.MoPub;
 import com.mopub.mobileads.MoPubConversionTracker;
 import com.squareup.otto.Bus;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
@@ -124,21 +120,7 @@ public class MainActivity extends ActionBarActivity
         mSignOutView.setVisibility(identity == null ? View.GONE : View.VISIBLE);
         mGoldIndicator.setVisibility(identity != null && identity.isGold() ? View.VISIBLE : View.GONE);
         updateNavigationItems();
-
-        if (identity != null) {
-            // Log analytics event
-            String hashedUser = BaseUtils.getMd5HexString(identity.getName());
-            FlurryAgent.setUserId(hashedUser);
-            Map<String, String> params = new HashMap<>();
-            params.put("user", hashedUser);
-            params.put("created", new Date(identity.getCreatedUTC()).toString());
-            params.put("gold", String.valueOf(identity.isGold()));
-            params.put("link karma", String.valueOf(identity.getLinkKarma()));
-            params.put("comment karma", String.valueOf(identity.getCommentKarma()));
-            params.put("over 18", String.valueOf(identity.isOver18()));
-            params.put("mod", String.valueOf(identity.isMod()));
-            FlurryAgent.logEvent("user identity set", params);
-        }
+        FlurryAgent.setUserId(identity == null ? null : BaseUtils.getMd5HexString(identity.getName()));
     }
 
     @Override

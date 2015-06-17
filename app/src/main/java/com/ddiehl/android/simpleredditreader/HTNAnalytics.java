@@ -11,11 +11,14 @@ import com.ddiehl.android.simpleredditreader.events.requests.ReportEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.SaveEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.UserSignOutEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.VoteEvent;
+import com.ddiehl.android.simpleredditreader.events.responses.UserIdentityRetrievedEvent;
 import com.ddiehl.android.simpleredditreader.utils.BaseUtils;
+import com.ddiehl.reddit.identity.UserIdentity;
 import com.ddiehl.reddit.listings.Listing;
 import com.flurry.android.FlurryAgent;
 import com.squareup.otto.Subscribe;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,6 +42,20 @@ public class HTNAnalytics {
     @Subscribe
     public void onError(Exception e) {
         FlurryAgent.onError("error", e.toString(), e);
+    }
+
+    @Subscribe
+    public void onSignIn(UserIdentityRetrievedEvent event) {
+        UserIdentity identity = event.getUserIdentity();
+        Map<String, String> params = new HashMap<>();
+        params.put("user", BaseUtils.getMd5HexString(identity.getName()));
+        params.put("created", new Date(identity.getCreatedUTC()).toString());
+        params.put("gold", String.valueOf(identity.isGold()));
+        params.put("link karma", String.valueOf(identity.getLinkKarma()));
+        params.put("comment karma", String.valueOf(identity.getCommentKarma()));
+        params.put("over 18", String.valueOf(identity.isOver18()));
+        params.put("mod", String.valueOf(identity.isMod()));
+        FlurryAgent.logEvent("user identity set", params);
     }
 
     @Subscribe
