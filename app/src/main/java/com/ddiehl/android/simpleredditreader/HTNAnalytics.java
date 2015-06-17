@@ -55,7 +55,7 @@ public class HTNAnalytics {
         params.put("comment karma", String.valueOf(identity.getCommentKarma()));
         params.put("over 18", String.valueOf(identity.isOver18()));
         params.put("mod", String.valueOf(identity.isMod()));
-        FlurryAgent.logEvent("user identity set", params);
+        FlurryAgent.logEvent("user signed in", params);
     }
 
     @Subscribe
