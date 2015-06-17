@@ -96,7 +96,7 @@ public class HTNAnalytics {
     @Subscribe
     public void onLoadMoreChildren(LoadMoreChildrenEvent event) {
         Map<String, String> params = new HashMap<>();
-        params.put("subreddit", event.getParentCommentStub().getSubreddit());
+        params.put("subreddit", event.getRedditLink().getSubreddit());
         params.put("article", event.getRedditLink().getId());
         params.put("sort", event.getSort());
         FlurryAgent.logEvent("load more comment children", params);

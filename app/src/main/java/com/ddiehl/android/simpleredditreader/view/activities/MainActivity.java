@@ -142,24 +142,31 @@ public class MainActivity extends ActionBarActivity
         switch (menuItem.getItemId()) {
             case R.id.drawer_navigate_to_subreddit:
                 showSubredditNavigationDialog();
+                FlurryAgent.logEvent("nav drawer - navigate to subreddit");
                 return true;
             case R.id.drawer_log_in:
                 showLoginView();
+                FlurryAgent.logEvent("nav drawer - log in");
                 return true;
             case R.id.drawer_user_profile:
                 showUserProfile();
+                FlurryAgent.logEvent("nav drawer - user profile");
                 return true;
             case R.id.drawer_subreddits:
                 showUserSubreddits();
+                FlurryAgent.logEvent("nav drawer - user subreddits");
                 return true;
             case R.id.drawer_front_page:
                 showSubreddit(null);
+                FlurryAgent.logEvent("nav drawer - navigate to front page");
                 return true;
             case R.id.drawer_r_all:
                 showSubreddit("all");
+                FlurryAgent.logEvent("nav drawer - navigate to /r/all");
                 return true;
             case R.id.drawer_random_subreddit:
                 showSubreddit("random");
+                FlurryAgent.logEvent("nav drawer - navigate to random subreddit");
                 return true;
         }
         return false;
@@ -222,6 +229,7 @@ public class MainActivity extends ActionBarActivity
     void onSignOut() {
         ConfirmSignOutDialog dialog = ConfirmSignOutDialog.newInstance();
         dialog.show(getSupportFragmentManager(), DIALOG_CONFIRM_SIGN_OUT);
+        FlurryAgent.logEvent("clicked sign out");
     }
 
     private void showSubredditNavigationDialog() {

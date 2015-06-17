@@ -28,6 +28,7 @@ import com.ddiehl.android.simpleredditreader.view.adapters.LinkCommentsAdapter;
 import com.ddiehl.android.simpleredditreader.view.dialogs.ChooseCommentSortDialog;
 import com.ddiehl.reddit.listings.RedditComment;
 import com.ddiehl.reddit.listings.RedditLink;
+import com.flurry.android.FlurryAgent;
 import com.squareup.otto.Bus;
 
 import butterknife.ButterKnife;
@@ -302,6 +303,7 @@ public class LinkCommentsFragment extends AbsRedditFragment
             case REQUEST_CHOOSE_SORT:
                 if (resultCode == Activity.RESULT_OK) {
                     String sort = data.getStringExtra(ChooseCommentSortDialog.EXTRA_SORT);
+                    FlurryAgent.logEvent("option - change sort - " + sort);
                     mLinkCommentsPresenter.updateSort(sort);
                 }
                 getActivity().supportInvalidateOptionsMenu();
@@ -319,12 +321,15 @@ public class LinkCommentsFragment extends AbsRedditFragment
         switch (item.getItemId()) {
             case R.id.action_change_sort:
                 showChooseCommentSortDialog();
+                FlurryAgent.logEvent("option - change sort");
                 return true;
             case R.id.action_refresh:
                 mLinkCommentsPresenter.getComments();
+                FlurryAgent.logEvent("option - refresh");
                 return true;
             case R.id.action_settings:
                 ((MainActivity) getActivity()).showSettings();
+                FlurryAgent.logEvent("option - settings");
                 return true;
         }
 

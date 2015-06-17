@@ -148,6 +148,7 @@ public abstract class AbsListingsFragment extends AbsRedditFragment implements L
             case REQUEST_CHOOSE_SORT:
                 if (resultCode == Activity.RESULT_OK) {
                     mSelectedSort = data.getStringExtra(ChooseLinkSortDialog.EXTRA_SORT);
+                    FlurryAgent.logEvent("option - change sort - " + mSelectedSort);
                     if (mSelectedSort.equals("top") || mSelectedSort.equals("controversial")) {
                         showTimespanOptionsMenu();
                     } else {
@@ -159,6 +160,7 @@ public abstract class AbsListingsFragment extends AbsRedditFragment implements L
             case REQUEST_CHOOSE_TIMESPAN:
                 if (resultCode == Activity.RESULT_OK) {
                     mSelectedTimespan = data.getStringExtra(ChooseTimespanDialog.EXTRA_TIMESPAN);
+                    FlurryAgent.logEvent("option - change timespan - " + mSelectedTimespan);
                     mListingsPresenter.updateSort(mSelectedSort, mSelectedTimespan);
                     getActivity().supportInvalidateOptionsMenu();
                 }
@@ -184,15 +186,19 @@ public abstract class AbsListingsFragment extends AbsRedditFragment implements L
         switch (item.getItemId()) {
             case R.id.action_change_sort:
                 showSortOptionsMenu();
+                FlurryAgent.logEvent("option - change sort");
                 return true;
             case R.id.action_change_timespan:
                 showTimespanOptionsMenu();
+                FlurryAgent.logEvent("option - change timespan");
                 return true;
             case R.id.action_refresh:
                 mListingsPresenter.refreshData();
+                FlurryAgent.logEvent("option - refresh");
                 return true;
             case R.id.action_settings:
                 ((MainActivity) getActivity()).showSettings();
+                FlurryAgent.logEvent("option - settings");
                 return true;
         }
 
