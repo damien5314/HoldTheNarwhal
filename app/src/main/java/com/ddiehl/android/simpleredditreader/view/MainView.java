@@ -1,10 +1,8 @@
 package com.ddiehl.android.simpleredditreader.view;
 
-import com.ddiehl.reddit.identity.UserIdentity;
-
 public interface MainView extends BaseView {
 
-    void setUserIdentity(UserIdentity identity);
+    void updateUserIdentity();
 
     void closeNavigationDrawer();
     void showLoginView();

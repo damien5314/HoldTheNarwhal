@@ -28,6 +28,7 @@ import com.ddiehl.android.simpleredditreader.events.responses.UserAuthCodeReceiv
 import com.ddiehl.android.simpleredditreader.io.RedditServiceAuth;
 import com.ddiehl.android.simpleredditreader.presenter.MainPresenter;
 import com.ddiehl.android.simpleredditreader.presenter.MainPresenterImpl;
+import com.ddiehl.android.simpleredditreader.utils.BaseUtils;
 import com.ddiehl.android.simpleredditreader.view.MainView;
 import com.ddiehl.android.simpleredditreader.view.SettingsChangedListener;
 import com.ddiehl.android.simpleredditreader.view.dialogs.ConfirmSignOutDialog;
@@ -39,6 +40,10 @@ import com.flurry.android.FlurryAgent;
 import com.mopub.common.MoPub;
 import com.mopub.mobileads.MoPubConversionTracker;
 import com.squareup.otto.Bus;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -82,7 +87,7 @@ public class MainActivity extends ActionBarActivity
         ButterKnife.inject(this);
 
         mMainPresenter = new MainPresenterImpl(this, this);
-        setUserIdentity(mMainPresenter.getAuthorizedUser());
+        updateUserIdentity();
 //        updateNavigationItems();
 //        updateUserProfileTabs();
         mNavigationView.setNavigationItemSelectedListener(this);
@@ -93,17 +98,52 @@ public class MainActivity extends ActionBarActivity
     }
 
     @Override
-    public void closeNavigationDrawer() {
-        mDrawerLayout.closeDrawer(GravityCompat.START);
+    protected void onStart() {
+        super.onStart();
+        FlurryAgent.onStartSession(this);
+        mBus.register(mMainPresenter);
+
+        Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+        if (currentFragment == null) {
+            showSubreddit(null);
+        }
     }
 
     @Override
-    public void setUserIdentity(UserIdentity identity) {
+    protected void onStop() {
+        super.onStop();
+        FlurryAgent.onEndSession(this);
+        mBus.unregister(mMainPresenter);
+    }
+
+    @Override
+    public void updateUserIdentity() {
+        UserIdentity identity = mMainPresenter.getAuthorizedUser();
         mAccountNameView.setText(identity == null ?
                 getString(R.string.account_name_unauthorized) : identity.getName());
         mSignOutView.setVisibility(identity == null ? View.GONE : View.VISIBLE);
         mGoldIndicator.setVisibility(identity != null && identity.isGold() ? View.VISIBLE : View.GONE);
         updateNavigationItems();
+
+        if (identity != null) {
+            // Log analytics event
+            String hashedUser = BaseUtils.getMd5HexString(identity.getName());
+            FlurryAgent.setUserId(hashedUser);
+            Map<String, String> params = new HashMap<>();
+            params.put("user", hashedUser);
+            params.put("created", new Date(identity.getCreatedUTC()).toString());
+            params.put("gold", String.valueOf(identity.isGold()));
+            params.put("link karma", String.valueOf(identity.getLinkKarma()));
+            params.put("comment karma", String.valueOf(identity.getCommentKarma()));
+            params.put("over 18", String.valueOf(identity.isOver18()));
+            params.put("mod", String.valueOf(identity.isMod()));
+            FlurryAgent.logEvent("user identity set", params);
+        }
+    }
+
+    @Override
+    public void closeNavigationDrawer() {
+        mDrawerLayout.closeDrawer(GravityCompat.START);
     }
 
     private void updateNavigationItems() {
@@ -226,25 +266,6 @@ public class MainActivity extends ActionBarActivity
         }
         mDrawerLayout.closeDrawer(GravityCompat.START);
         mSubredditNavigationDialog.show();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        FlurryAgent.onStartSession(this);
-        mBus.register(mMainPresenter);
-
-        Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-        if (currentFragment == null) {
-            showSubreddit(null);
-        }
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        FlurryAgent.onEndSession(this);
-        mBus.unregister(mMainPresenter);
     }
 
     @Override

@@ -11,9 +11,7 @@ import com.ddiehl.android.simpleredditreader.events.requests.ReportEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.SaveEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.UserSignOutEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.VoteEvent;
-import com.ddiehl.android.simpleredditreader.events.responses.UserIdentityRetrievedEvent;
 import com.ddiehl.android.simpleredditreader.utils.BaseUtils;
-import com.ddiehl.reddit.identity.UserIdentity;
 import com.ddiehl.reddit.listings.Listing;
 import com.flurry.android.FlurryAgent;
 import com.squareup.otto.Subscribe;
@@ -32,21 +30,15 @@ public class HTNAnalytics {
     private HTNAnalytics() { }
 
     public void init(Context context) {
-        FlurryAgent.setLogEnabled(BuildConfig.DEBUG); // Disable Flurry logging for release builds
         FlurryAgent.init(context, BuildConfig.DEBUG ? FLURRY_API_KEY_DEBUG : FLURRY_API_KEY);
         FlurryAgent.setContinueSessionMillis(FLURRY_SESSION_TIMEOUT_SECONDS * 1000);
         FlurryAgent.setCaptureUncaughtExceptions(true);
+        FlurryAgent.setLogEnabled(BuildConfig.DEBUG); // Disable Flurry logging for release builds
     }
 
     @Subscribe
     public void onError(Exception e) {
         FlurryAgent.onError("error", e.toString(), e);
-    }
-
-    @Subscribe
-    public void onUserIdentityRetrieved(UserIdentityRetrievedEvent event) {
-        UserIdentity identity = event.getUserIdentity();
-        FlurryAgent.setUserId(BaseUtils.getMd5HexString(identity.getName()));
     }
 
     @Subscribe

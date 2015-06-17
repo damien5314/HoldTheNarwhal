@@ -29,14 +29,11 @@ import com.ddiehl.reddit.listings.Listing;
 import com.ddiehl.reddit.listings.RedditComment;
 import com.ddiehl.reddit.listings.RedditLink;
 import com.ddiehl.reddit.listings.RedditMoreComments;
-import com.flurry.android.FlurryAgent;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public abstract class AbsListingsPresenter implements ListingsPresenter {
 
@@ -308,12 +305,6 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
     public void saveLink() {
         RedditLink link = (RedditLink) mListingSelected;
         mBus.post(new SaveEvent(link, null, true));
-
-        // Log analytics event
-        Map<String, String> params = new HashMap<>();
-        params.put("type", "link");
-        params.put("subreddit", link.getSubreddit());
-        FlurryAgent.logEvent("save", params);
     }
 
     @Override

@@ -201,7 +201,7 @@ public class RedditIdentityManager {
         return mUserIdentity;
     }
 
-    public UserIdentity getSavedUserIdentity() {
+    private UserIdentity getSavedUserIdentity() {
         SharedPreferences prefs = mContext.getSharedPreferences(PREFS_USER_IDENTITY, Context.MODE_PRIVATE);
 
         if (prefs.contains(PREF_ID)) {
