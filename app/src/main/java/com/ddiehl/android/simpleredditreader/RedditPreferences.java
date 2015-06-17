@@ -9,10 +9,10 @@ public class RedditPreferences {
     public static final String PREFS_DEVICE_ID = "prefs_device_id";
     public static final String PREF_DEVICE_ID = "pref_device_id";
 
-//    public static final String PREFS_USER = "prefs_user";
-    public static final String PREFS_USER = BuildConfig.DEBUG ?
-        "com.ddiehl.android.simpleredditreader.debug_preferences" :
-        "com.ddiehl.android.simpleredditreader_preferences";
+    public static final String PREFS_USER = "prefs_user";
+//    public static final String PREFS_USER = BuildConfig.DEBUG ?
+//        "com.ddiehl.android.htn.debug_preferences" :
+//        "com.ddiehl.android.htn_preferences";
     public static final String PREF_COMMENT_SORT = "pref_comment_sort";
 
     private static RedditPreferences _instance;

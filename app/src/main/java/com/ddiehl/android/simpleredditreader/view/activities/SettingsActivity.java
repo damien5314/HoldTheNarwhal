@@ -9,6 +9,7 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceGroup;
 
 import com.ddiehl.android.simpleredditreader.R;
+import com.ddiehl.android.simpleredditreader.RedditPreferences;
 
 /**
  * PreferenceFragment is preferred, but not supported until API 11.
@@ -20,6 +21,7 @@ public class SettingsActivity extends PreferenceActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getPreferenceManager().setSharedPreferencesName(RedditPreferences.PREFS_USER);
         addPreferencesFromResource(R.xml.preferences);
         initSummary(getPreferenceScreen());
     }
