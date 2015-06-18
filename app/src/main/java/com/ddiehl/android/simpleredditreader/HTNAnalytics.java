@@ -16,6 +16,7 @@ import com.ddiehl.android.simpleredditreader.utils.BaseUtils;
 import com.ddiehl.reddit.identity.UserIdentity;
 import com.ddiehl.reddit.listings.Listing;
 import com.flurry.android.FlurryAgent;
+import com.flurry.android.FlurryAgentListener;
 import com.squareup.otto.Subscribe;
 
 import java.util.Date;
@@ -32,11 +33,30 @@ public class HTNAnalytics {
 
     private HTNAnalytics() { }
 
-    public void init(Context context) {
+    public void init(final Context context) {
         FlurryAgent.init(context, BuildConfig.DEBUG ? FLURRY_API_KEY_DEBUG : FLURRY_API_KEY);
         FlurryAgent.setContinueSessionMillis(FLURRY_SESSION_TIMEOUT_SECONDS * 1000);
         FlurryAgent.setCaptureUncaughtExceptions(true);
         FlurryAgent.setLogEnabled(BuildConfig.DEBUG); // Disable Flurry logging for release builds
+
+        FlurryAgent.setFlurryAgentListener(new FlurryAgentListener() {
+            @Override
+            public void onSessionStarted() {
+                // Log initial Flurry event
+                Map<String, String> params = new HashMap<>();
+
+                UserIdentity identity = RedditIdentityManager.getInstance(context).getUserIdentity();
+                String userId = identity == null ?
+                        "unauthorized" : BaseUtils.getMd5HexString(identity.getName());
+                params.put("user", userId);
+                FlurryAgent.setUserId(userId);
+
+                boolean adsEnabled = RedditPreferences.getInstance(context).getAdsEnabled();
+                params.put("ads enabled", String.valueOf(adsEnabled));
+
+                FlurryAgent.logEvent("session started", params);
+            }
+        });
     }
 
     @Subscribe
