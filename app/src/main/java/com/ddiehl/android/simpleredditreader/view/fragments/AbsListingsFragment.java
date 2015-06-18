@@ -103,7 +103,6 @@ public abstract class AbsListingsFragment extends AbsRedditFragment implements L
                 RequestParameters.NativeAdAsset.TITLE,
                 RequestParameters.NativeAdAsset.TEXT
         );
-
         mAdRequestParameters = new RequestParameters.Builder()
                 .desiredAssets(desiredAssets)
                 .build();
@@ -123,8 +122,6 @@ public abstract class AbsListingsFragment extends AbsRedditFragment implements L
 
     private void loadAdsIfEnabled() {
         boolean adsEnabled = RedditPreferences.getInstance(getActivity()).getAdsEnabled();
-        FlurryAgent.logEvent("ads enabled", adsEnabled);
-
         if (adsEnabled) {
             mAdAdapter.loadAds(getString(R.string.ads_listings_banner_id_mopub), mAdRequestParameters);
         }
