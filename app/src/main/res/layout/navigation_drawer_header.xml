@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/navigation_drawer_header"
-    android:layout_width="fill_parent"
-    android:layout_height="@dimen/navigation_drawer_header_height"
-    android:background="@color/primary_dark">
+             xmlns:tools="http://schemas.android.com/tools"
+             android:id="@+id/navigation_drawer_header"
+             android:layout_width="fill_parent"
+             android:layout_height="@dimen/navigation_drawer_header_height"
+             android:background="@color/primary_dark">
 
     <ImageView
         android:layout_width="wrap_content"
@@ -39,9 +40,9 @@
             android:layout_weight="1"
             android:layout_gravity="center_vertical"
             android:textColor="#ffffff"
-            android:text="@string/account_name_unauthorized"
             android:textSize="@dimen/navigation_drawer_account_name_text"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            tools:text="andrewsmith1984" />
 
         <ImageView
             android:id="@+id/sign_out_button"

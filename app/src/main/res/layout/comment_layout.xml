@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:paddingLeft="@dimen/comment_data_margin_horizontal"
-    android:paddingRight="@dimen/comment_data_margin_horizontal">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:orientation="vertical"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:paddingLeft="@dimen/comment_data_margin_horizontal"
+              android:paddingRight="@dimen/comment_data_margin_horizontal">
 
     <FrameLayout
         android:id="@+id/comment_metadata"
@@ -35,20 +36,20 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="@dimen/comment_author_margin"
                 android:layout_marginEnd="@dimen/comment_author_margin"
-                android:text="andrewsmith1984"
                 android:textColor="@color/secondary_text"
                 android:textStyle="bold"
                 android:textSize="@dimen/comment_author_text_size"
                 android:ellipsize="end"
-                android:maxLines="1"/>
+                android:maxLines="1"
+                tools:text="andrewsmith1984"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/comment_secondary_data_margin"
                 android:layout_marginRight="@dimen/comment_secondary_data_margin"
-                android:text="•"
-                android:textSize="@dimen/comment_secondary_data_text_size"/>
+                android:textSize="@dimen/comment_secondary_data_text_size"
+                tools:text="•"/>
 
             <TextView
                 android:id="@+id/comment_score"
@@ -56,28 +57,28 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="@dimen/comment_score_margin"
                 android:layout_marginEnd="@dimen/comment_score_margin"
-                android:text="@string/comment_score"
                 android:textColor="@color/secondary_text"
                 android:textSize="@dimen/comment_score_text_size"
-                android:maxLines="1"/>
+                android:maxLines="1"
+                tools:text="573"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/comment_secondary_data_margin"
                 android:layout_marginRight="@dimen/comment_secondary_data_margin"
-                android:text="•"
-                android:textSize="@dimen/comment_secondary_data_text_size"/>
+                android:textSize="@dimen/comment_secondary_data_text_size"
+                tools:text="•"/>
 
             <com.ddiehl.android.simpleredditreader.view.widgets.RedditDateTextView
                 android:id="@+id/comment_timestamp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="2 days ago"
                 android:textColor="@color/secondary_text"
                 android:textSize="@dimen/comment_timestamp_text_size"
                 android:maxLines="1"
-                app:abbreviated="true"/>
+                app:abbreviated="true"
+                tools:text="2 days ago"/>
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -104,8 +105,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        style="@style/GildedTextView"
-                        android:text="@string/link_gilded_text"/>
+                        tools:text="× 2"
+                        style="@style/GildedTextView"/>
 
                 </LinearLayout>
 
@@ -126,9 +127,9 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="5dp"
-        android:text="Lorem ipsum dolor sit amet"
         android:textSize="@dimen/comment_body_text_size"
         android:textColor="@color/primary_text"
-        android:bufferType="spannable"/>
+        android:bufferType="spannable"
+        tools:text="Lorem ipsum dolor sit amet"/>
 
 </LinearLayout>

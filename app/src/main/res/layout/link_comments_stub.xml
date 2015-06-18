@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/comment_item_row"
     android:orientation="horizontal"
     android:layout_width="match_parent"
@@ -32,10 +33,10 @@
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:gravity="center_vertical"
-                android:text="@string/more_comments"
                 android:textColor="@color/secondary_text"
                 android:textSize="@dimen/comment_more_text_size"
-                android:maxLines="1"/>
+                android:maxLines="1"
+                tools:text="view 10 more comments"/>
 
         </LinearLayout>
 

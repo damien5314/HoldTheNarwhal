@@ -4,6 +4,7 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_marginTop="@dimen/link_card_margin"
     android:layout_marginBottom="@dimen/link_card_margin"
     card_view:cardElevation="@dimen/link_card_elevation"
@@ -28,6 +29,7 @@
 
             <TextView
                 android:id="@+id/link_title"
+                tools:text="The brown fox jumped over the white fence"
                 style="@style/LinkTitleTextView"/>
 
             <RelativeLayout
@@ -53,6 +55,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
+                        tools:text="× 2"
                         style="@style/GildedTextView"/>
 
                 </LinearLayout>
@@ -61,6 +64,7 @@
                     android:id="@+id/link_domain"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
+                    tools:text="imgur.com"
                     style="@style/LinkDomainTextView"/>
 
             </RelativeLayout>
@@ -91,13 +95,14 @@
                     <TextView
                         android:id="@+id/link_score"
                         style="@style/LinkScoreTextView"
-                        android:text="@string/link_score_default"/>
+                        tools:text="573 points"/>
 
                     <com.ddiehl.android.simpleredditreader.view.widgets.RedditDateTextView
                         android:id="@+id/link_timestamp"
-                        style="@style/LinkTimestampTextView"
                         android:layout_alignParentRight="true"
-                        android:layout_alignParentEnd="true"/>
+                        android:layout_alignParentEnd="true"
+                        tools:text="2 days ago"
+                        style="@style/LinkTimestampTextView"/>
 
                 </RelativeLayout>
 
@@ -107,10 +112,12 @@
 
                     <TextView
                         android:id="@+id/link_author"
+                        tools:text="/u/andrewsmith1984"
                         style="@style/LinkAuthorTextView"/>
 
                     <TextView
                         android:id="@+id/link_subreddit"
+                        tools:text="/r/AskReddit"
                         style="@style/LinkSubredditTextView"
                         android:layout_alignParentEnd="true"
                         android:layout_alignParentRight="true"/>
@@ -131,7 +138,7 @@
                     <TextView
                         android:id="@+id/link_comment_count"
                         android:layout_gravity="start"
-                        android:text="@string/link_author"
+                        tools:text="1993 comments"
                         style="@style/LinkCommentCountTextView"/>
 
                     <ImageView
@@ -170,7 +177,8 @@
             android:textColor="@color/primary_text"
             android:padding="@dimen/link_self_text_padding"
             android:bufferType="spannable"
-            android:background="@android:color/white"/>
+            android:background="@android:color/white"
+            tools:text="Lorem ipsum dolor sit amet"/>
 
     </LinearLayout>
 
