@@ -10,6 +10,10 @@ import android.preference.PreferenceGroup;
 
 import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.RedditPreferences;
+import com.flurry.android.FlurryAgent;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * PreferenceFragment is preferred, but not supported until API 11.
@@ -27,6 +31,12 @@ public class SettingsActivity extends PreferenceActivity
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        FlurryAgent.onStartSession(this);
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
@@ -36,6 +46,12 @@ public class SettingsActivity extends PreferenceActivity
     protected void onPause() {
         super.onPause();
         getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    protected void onStop() {
+        FlurryAgent.onEndSession(this);
+        super.onStop();
     }
 
     private void initSummary(Preference p) {
@@ -63,5 +79,10 @@ public class SettingsActivity extends PreferenceActivity
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         updatePrefSummary(findPreference(key));
+        Map<String, String> params = new HashMap<>();
+        params.put("key", key);
+        Map prefs = sharedPreferences.getAll();
+        params.put("value", String.valueOf(prefs.get(key)));
+        FlurryAgent.logEvent("setting changed", params);
     }
 }
