@@ -15,6 +15,16 @@ public class RedditMoreComments extends AbsRedditComment<RedditMoreComments.Data
         return data.children;
     }
 
+    @Override
+    public boolean isCollapsed() {
+        return false;
+    }
+
+    @Override
+    public void setCollapsed(boolean b) {
+        throw new UnsupportedOperationException("Cannot collapse a comment stub");
+    }
+
     public static class Data extends AbsRedditComment.Data {
         @Expose private Integer count;
         @Expose private List<String> children;

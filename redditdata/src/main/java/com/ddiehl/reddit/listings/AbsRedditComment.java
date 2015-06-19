@@ -10,7 +10,6 @@ public abstract class AbsRedditComment<T extends AbsRedditComment.Data> extends 
 
     private int depth;
     private boolean isVisible = true;
-    private boolean isCollapsed = false;
 
     public int getDepth() {
         return this.depth;
@@ -28,13 +27,8 @@ public abstract class AbsRedditComment<T extends AbsRedditComment.Data> extends 
         this.isVisible = b;
     }
 
-    public boolean isCollapsed() {
-        return this.isCollapsed;
-    }
-
-    public void setCollapsed(boolean b) {
-        this.isCollapsed = b;
-    }
+    public abstract boolean isCollapsed();
+    public abstract void setCollapsed(boolean b);
 
     public String getParentId() {
         return data.parentId;

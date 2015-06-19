@@ -10,11 +10,23 @@ import java.util.List;
 @SuppressWarnings("unused")
 public class RedditComment extends AbsRedditComment<RedditComment.Data> implements Votable, Savable {
 
+    private boolean isCollapsed = false;
+
     public String getUrl() {
         return String.format("http://www.reddit.com/r/%s/comments/%s?comment=%s",
                 getSubreddit(),
                 getLinkId().substring(3), // Remove the type prefix (t3_, etc)
                 getId());
+    }
+
+    @Override
+    public boolean isCollapsed() {
+        return this.isCollapsed;
+    }
+
+    @Override
+    public void setCollapsed(boolean b) {
+        this.isCollapsed = b;
     }
 
     public String getSubredditId() {
