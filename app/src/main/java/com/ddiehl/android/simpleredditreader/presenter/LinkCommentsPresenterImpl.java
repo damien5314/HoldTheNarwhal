@@ -298,7 +298,7 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
         if (listing instanceof RedditLink) {
             mLinkCommentsView.linkUpdated();
         } else {
-            mLinkCommentsView.commentUpdatedAt(mCommentBank.visibleIndexOf(listing));
+            mLinkCommentsView.commentUpdatedAt(mCommentBank.visibleIndexOf(((AbsRedditComment) listing)));
         }
     }
 
@@ -315,7 +315,7 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
         if (listing instanceof RedditLink) {
             mLinkCommentsView.linkUpdated();
         } else {
-            mLinkCommentsView.commentUpdatedAt(mCommentBank.visibleIndexOf(listing));
+            mLinkCommentsView.commentUpdatedAt(mCommentBank.visibleIndexOf(((AbsRedditComment) listing)));
         }
     }
 

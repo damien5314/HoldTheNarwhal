@@ -15,12 +15,6 @@ public class CommentBankList implements CommentBank {
         mVisibleData = new ArrayList<>();
     }
 
-    public CommentBankList(List<AbsRedditComment> data) {
-        mData = new ArrayList<>(data);
-        mVisibleData = new ArrayList<>();
-        syncVisibleData();
-    }
-
     @Override
     public boolean addAll(Collection<? extends AbsRedditComment> collection) {
         boolean result = mData.addAll(collection);
@@ -36,12 +30,12 @@ public class CommentBankList implements CommentBank {
     }
 
     @Override
-    public int indexOf(Object o) {
+    public int indexOf(AbsRedditComment o) {
         return mData.indexOf(o);
     }
 
     @Override
-    public int visibleIndexOf(Object obj) {
+    public int visibleIndexOf(AbsRedditComment obj) {
         return mVisibleData.indexOf(obj);
     }
 
@@ -125,7 +119,7 @@ public class CommentBankList implements CommentBank {
         if (position + 1 < totalItemCount) {
             // Retrieve first child comment
             int currentChildCommentPosition = position + 1;
-            AbsRedditComment currentChildComment = (AbsRedditComment) mData.get(currentChildCommentPosition);
+            AbsRedditComment currentChildComment = mData.get(currentChildCommentPosition);
             int currentChildCommentDepth = currentChildComment.getDepth();
             // Loop through remaining comments until we reach another comment at same depth
             // as the parent, or we reach the end of the comment list
@@ -159,7 +153,7 @@ public class CommentBankList implements CommentBank {
                 currentChildCommentPosition++;
                 // Retrieve comment at current position
                 if (currentChildCommentPosition < totalItemCount) {
-                    currentChildComment = (AbsRedditComment) mData.get(currentChildCommentPosition);
+                    currentChildComment = mData.get(currentChildCommentPosition);
                     currentChildCommentDepth = currentChildComment.getDepth();
                 }
             }
