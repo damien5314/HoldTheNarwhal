@@ -113,11 +113,6 @@ public class RedditMoreComments extends AbsRedditComment<RedditMoreComments.Data
     }
 
     @Override
-    public void isEdited(String s) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     public String getAuthorFlairCssClass() {
         throw new UnsupportedOperationException();
     }

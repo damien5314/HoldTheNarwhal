@@ -10,15 +10,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-@SuppressWarnings("unused")
 public class RedditLink extends Listing<RedditLink.Data> implements Votable, Savable, Hideable {
 
     public String getDomain() {
         return data.domain;
-    }
-
-    public Object getBannedBy() {
-        return data.bannedBy;
     }
 
     public Data.MediaEmbed getMediaEmbed() {
@@ -39,10 +34,6 @@ public class RedditLink extends Listing<RedditLink.Data> implements Votable, Sav
 
     public String isEdited() {
         return data.edited;
-    }
-
-    public void isEdited(String s) {
-        data.edited = s;
     }
 
     @Override
@@ -224,17 +215,18 @@ public class RedditLink extends Listing<RedditLink.Data> implements Votable, Sav
         return data.ups;
     }
 
+    @SuppressWarnings("unassigned")
     static class Data extends Listing.Data {
 
         @Expose
         private String domain;
-        @Expose @SerializedName("banned_by")
+        @SerializedName("banned_by")
         private Object bannedBy;
-        @Expose @SerializedName("media_embed")
+        @SerializedName("media_embed")
         private MediaEmbed mediaEmbed;
         @Expose
         private String subreddit;
-        @Expose @SerializedName("selftext_html")
+        @SerializedName("selftext_html")
         private String selftextHtml;
         @Expose
         private String selftext;
@@ -242,19 +234,18 @@ public class RedditLink extends Listing<RedditLink.Data> implements Votable, Sav
         private String edited;
         @Expose
         private Boolean likes;
-        @Expose @SerializedName("user_reports")
+        @SerializedName("user_reports")
         private List<Object> userReports = new ArrayList<>();
-        @Expose @SerializedName("secure_media")
+        @SerializedName("secure_media")
         private Object secureMedia;
-        @Expose @SerializedName("link_flair_text")
+        @SerializedName("link_flair_text")
         private Object linkFlairText;
         @Expose
         private Integer gilded;
         @Expose @SerializedName("archived")
         private Boolean isArchived;
-        @Expose
         private Boolean clicked;
-        @Expose @SerializedName("report_reasons")
+        @SerializedName("report_reasons")
         private Object reportReasons;
         @Expose
         private String author;
@@ -262,7 +253,7 @@ public class RedditLink extends Listing<RedditLink.Data> implements Votable, Sav
         private Integer numComments;
         @Expose
         private Integer score;
-        @Expose @SerializedName("approved_by")
+        @SerializedName("approved_by")
         private Object approvedBy;
         @Expose @SerializedName("over_18")
         private Boolean over18;
@@ -270,15 +261,14 @@ public class RedditLink extends Listing<RedditLink.Data> implements Votable, Sav
         private Boolean hidden;
         @Expose
         private String thumbnail;
-        @Expose @SerializedName("subreddit_id")
+        @SerializedName("subreddit_id")
         private String subredditId;
-        @Expose @SerializedName("link_flair_css_class")
+        @SerializedName("link_flair_css_class")
         private Object linkFlairCssClass;
-        @Expose @SerializedName("author_flair_css_class")
+        @SerializedName("author_flair_css_class")
         private Object authorFlairCssClass;
-        @Expose
         private Integer downs;
-        @Expose @SerializedName("secure_media_embed")
+        @SerializedName("secure_media_embed")
         private SecureMediaEmbed secureMediaEmbed;
         @Expose
         private Boolean saved;
@@ -288,11 +278,10 @@ public class RedditLink extends Listing<RedditLink.Data> implements Votable, Sav
         private Boolean isSelf;
         @Expose
         private String permalink;
-        @Expose
         private Double created;
         @Expose
         private String url;
-        @Expose @SerializedName("author_flair_text")
+        @SerializedName("author_flair_text")
         private Object authorFlairText;
         @Expose
         private String title;
@@ -300,15 +289,12 @@ public class RedditLink extends Listing<RedditLink.Data> implements Votable, Sav
         private Double createdUtc;
         @Expose
         private String distinguished;
-        @Expose
         private Media media;
-        @Expose @SerializedName("mod_reports")
+        @SerializedName("mod_reports")
         private List<Object> modReports = new ArrayList<>();
-        @Expose
         private Boolean visited;
-        @Expose @SerializedName("num_reports")
+        @SerializedName("num_reports")
         private Object numReports;
-        @Expose
         private Integer ups;
 
         static class SecureMediaEmbed { }

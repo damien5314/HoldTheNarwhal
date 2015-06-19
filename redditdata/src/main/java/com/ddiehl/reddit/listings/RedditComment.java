@@ -113,11 +113,6 @@ public class RedditComment extends AbsRedditComment<RedditComment.Data> implemen
     }
 
     @Override
-    public void isEdited(String s) {
-        data.edited = s;
-    }
-
-    @Override
     public String getAuthorFlairCssClass() {
         return data.AuthorFlairCssClass;
     }
@@ -232,7 +227,7 @@ public class RedditComment extends AbsRedditComment<RedditComment.Data> implemen
         // Attributes specific to listing views
         @Expose @SerializedName("link_title")
         private String linkTitle;
-        @Expose @SerializedName("removal_reason")
+        @SerializedName("removal_reason")
         private String removalReason;
         @Expose @SerializedName("link_author")
         private String linkAuthor;
@@ -241,15 +236,15 @@ public class RedditComment extends AbsRedditComment<RedditComment.Data> implemen
 
         @Expose
         private ListingResponse replies;
-        @Expose @SerializedName("subreddit_id")
+        @SerializedName("subreddit_id")
         private String subredditId;
-        @Expose @SerializedName("banned_by")
+        @SerializedName("banned_by")
         private Object bannedBy;
         @Expose @SerializedName("link_id")
         private String linkId;
         @Expose @SerializedName("likes")
         private Boolean isLiked;
-        @Expose @SerializedName("user_reports")
+        @SerializedName("user_reports")
         private List<Object> userReports;
         @Expose
         private Boolean saved;
@@ -257,41 +252,37 @@ public class RedditComment extends AbsRedditComment<RedditComment.Data> implemen
         private Integer gilded;
         @Expose @SerializedName("archived")
         private Boolean isArchived;
-        @Expose @SerializedName("report_reasons")
+        @SerializedName("report_reasons")
         private Object reportReasons;
         @Expose
         private String author;
         @Expose
         private int score;
-        @Expose @SerializedName("approved_by")
+        @SerializedName("approved_by")
         private Object approvedBy;
-        @Expose
         private int controversiality;
         @Expose
         private String body;
         @Expose
         private String edited;
-        @Expose @SerializedName("author_flair_css_class")
+        @SerializedName("author_flair_css_class")
         private String AuthorFlairCssClass;
-        @Expose
         private int downs;
-        @Expose @SerializedName("body_html")
+        @SerializedName("body_html")
         private String bodyHtml;
         @Expose
         private String subreddit;
-        @Expose @SerializedName("score_hidden")
+        @SerializedName("score_hidden")
         private boolean scoreHidden;
-        @Expose
         private double created;
-        @Expose @SerializedName("author_flair_text")
+        @SerializedName("author_flair_text")
         private String authorFlairText;
         @Expose @SerializedName("created_utc")
         private double createUtc;
-        @Expose
         private int ups;
-        @Expose @SerializedName("mod_reports")
+        @SerializedName("mod_reports")
         private List<Object> modReports;
-        @Expose @SerializedName("num_reports")
+        @SerializedName("num_reports")
         private Object numReports;
         @Expose
         private String distinguished;

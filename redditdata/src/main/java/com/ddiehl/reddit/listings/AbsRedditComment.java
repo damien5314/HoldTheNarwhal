@@ -63,7 +63,6 @@ public abstract class AbsRedditComment<T extends AbsRedditComment.Data> extends 
     public abstract int getControversiality();
     public abstract String getBody();
     public abstract String isEdited();
-    public abstract void isEdited(String s);
     public abstract String getAuthorFlairCssClass();
     public abstract int getDowns();
     public abstract String getBodyHtml();
