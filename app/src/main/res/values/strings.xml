@@ -51,9 +51,9 @@
 
     <!-- Settings -->
     <string name="preferences_reddit">reddit</string>
-    <string name="preferences_app">HTN</string>
+    <string name="preferences_app">app</string>
     <string name="pref_enable_ads">Enable ads</string>
-    <string name="pref_enable_ads_summary">All proceeds are donated to charity</string>
+    <string name="pref_enable_ads_summary">Thanks for your support!</string>
 
     <!-- Context menus -->
     <string name="menu_sort_title">Sort by</string>
@@ -62,10 +62,10 @@
     <string name="menu_action_comment">&#091;%2$s&#093; /u/%1$s</string>
     <!--<string name="menu_action_link">%s</string>-->
     <!--<string name="menu_action_comment">%s</string>-->
-    <string name="action_settings">Settings</string>
-    <string name="action_refresh">Refresh</string>
-    <string name="action_sort">Sort</string>
-    <string name="action_timespan">Timespan</string>
+    <string name="action_settings">settings</string>
+    <string name="action_refresh">refresh</string>
+    <string name="action_sort">sort</string>
+    <string name="action_timespan">timespan</string>
     <string name="action_upvote">upvote</string>
     <string name="action_downvote">downvote</string>
     <string name="action_show_comments">show comments</string>
@@ -91,15 +91,15 @@
     <string name="dialog_settings_comment_sort">comment sort</string>
 
     <!-- Events -->
-    <string name="listing_archived">Sorry, this is archived</string>
-    <string name="vote_failed">Vote failed, please try again</string>
-    <string name="save_failed">Save failed, please try again</string>
-    <string name="hide_failed">Hide failed, please try again</string>
-    <string name="link_hidden">Link hidden</string>
+    <string name="listing_archived">sorry, this is archived</string>
+    <string name="vote_failed">vote failed, please try again</string>
+    <string name="save_failed">save failed, please try again</string>
+    <string name="hide_failed">hide failed, please try again</string>
+    <string name="link_hidden">link hidden</string>
 
     <!-- Miscellaneous -->
     <string name="username">/u/%s</string>
-    <string name="user_required">Login required</string>
+    <string name="user_required">you must sign in to do that</string>
     <string name="implementation_pending">coming soon</string>
     <string name="timespan_year">%s years</string>
     <string name="timespan_weeks">%s weeks ago</string>
@@ -115,10 +115,5 @@
     <string name="timespan_minutes_abbr">%sm</string>
     <string name="timespan_seconds_abbr">%ss</string>
     <string name="timespan_now_abbr">just now</string>
-    <string name="lorem_ipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas at velit ex.
-            Aliquam vitae tellus eget dolor rutrum bibendum bibendum ac mauris. Morbi dui sapien, efficitur eget
-            dui et, blandit vulputate quam. Sed vehicula, mauris ac sollicitudin commodo, risus tortor imperdiet ipsum,
-            id consequat eros velit eget leo. Aliquam at purus tincidunt ipsum blandit fermentum eget quis risus.
-            Vestibulum molestie auctor maximus. Ut euismod ipsum velit, eu iaculis quam fermentum blandit.</string>
 
 </resources>
