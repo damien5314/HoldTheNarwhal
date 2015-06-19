@@ -17,17 +17,14 @@ public class RedditComment extends AbsRedditComment<RedditComment.Data> implemen
                 getId());
     }
 
-    @Override
     public String getSubredditId() {
         return data.subredditId;
     }
 
-    @Override
     public Object getBannedBy() {
         return data.bannedBy;
     }
 
-    @Override
     public String getLinkId() {
         return data.linkId;
     }
@@ -42,17 +39,14 @@ public class RedditComment extends AbsRedditComment<RedditComment.Data> implemen
         data.isLiked = b;
     }
 
-    @Override
     public ListingResponse getReplies() {
         return data.replies;
     }
 
-    @Override
     public void setReplies(ListingResponse response) {
         data.replies = response;
     }
 
-    @Override
     public List<Object> getUserReports() {
         return data.userReports;
     }
@@ -67,7 +61,6 @@ public class RedditComment extends AbsRedditComment<RedditComment.Data> implemen
         data.saved = b;
     }
 
-    @Override
     public Integer getGilded() {
         return data.gilded;
     }
@@ -77,109 +70,80 @@ public class RedditComment extends AbsRedditComment<RedditComment.Data> implemen
         return data.isArchived;
     }
 
-    @Override
     public Object getReportReasons() {
         return data.reportReasons;
     }
 
-    @Override
     public String getAuthor() {
         return data.author;
     }
 
-    @Override
     public int getScore() {
         return data.score;
     }
 
-    @Override
     public Object getApprovedBy() {
         return data.approvedBy;
     }
 
-    @Override
     public int getControversiality() {
         return data.controversiality;
     }
 
-    @Override
     public String getBody() {
         return data.body;
     }
 
-    @Override
     public String isEdited() {
         return data.edited;
     }
 
-    @Override
     public String getAuthorFlairCssClass() {
         return data.AuthorFlairCssClass;
     }
 
-    @Override
     public int getDowns() {
         return data.downs;
     }
 
-    @Override
     public String getBodyHtml() {
         return data.bodyHtml;
     }
 
-    @Override
     public String getSubreddit() {
         return data.subreddit;
     }
 
-    @Override
     public boolean isScoreHidden() {
         return data.scoreHidden;
     }
 
-    @Override
     public double getCreated() {
         return data.created;
     }
 
-    @Override
     public String getAuthorFlairText() {
         return data.authorFlairText;
     }
 
-    @Override
     public Double getCreateUtc() {
         return data.createUtc;
     }
 
-    @Override
     public int getUps() {
         return data.ups;
     }
 
-    @Override
     public List<Object> getModReports() {
         return data.modReports;
     }
 
-    @Override
     public Object getNumReports() {
         return data.numReports;
     }
 
-    @Override
     public String getDistinguished() {
         return data.distinguished;
-    }
-
-    @Override
-    public Integer getCount() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public List<String> getChildren() {
-        throw new UnsupportedOperationException();
     }
 
     @Override

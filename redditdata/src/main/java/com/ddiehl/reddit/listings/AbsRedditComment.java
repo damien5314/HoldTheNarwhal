@@ -44,40 +44,6 @@ public abstract class AbsRedditComment<T extends AbsRedditComment.Data> extends 
         @Expose @SerializedName("parent_id") String parentId;
     }
 
-    public abstract String getSubredditId();
-    public abstract Object getBannedBy();
-    public abstract String getLinkId();
-    public abstract Boolean isLiked();
-    public abstract void isLiked(Boolean b);
-    public abstract ListingResponse getReplies();
-    public abstract void setReplies(ListingResponse response);
-    public abstract List<Object> getUserReports();
-    public abstract Boolean isSaved();
-    public abstract void isSaved(boolean b);
-    public abstract Integer getGilded();
-    public abstract Boolean isArchived();
-    public abstract Object getReportReasons();
-    public abstract String getAuthor();
-    public abstract int getScore();
-    public abstract Object getApprovedBy();
-    public abstract int getControversiality();
-    public abstract String getBody();
-    public abstract String isEdited();
-    public abstract String getAuthorFlairCssClass();
-    public abstract int getDowns();
-    public abstract String getBodyHtml();
-    public abstract String getSubreddit();
-    public abstract boolean isScoreHidden();
-    public abstract double getCreated();
-    public abstract String getAuthorFlairText();
-    public abstract Double getCreateUtc();
-    public abstract int getUps();
-    public abstract List<Object> getModReports();
-    public abstract Object getNumReports();
-    public abstract String getDistinguished();
-    public abstract Integer getCount();
-    public abstract List<String> getChildren();
-
     public static class Utils {
         /**
          * Flattens list of comments, marking each comment with depth
