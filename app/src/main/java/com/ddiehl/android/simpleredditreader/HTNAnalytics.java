@@ -69,7 +69,7 @@ public class HTNAnalytics {
         UserIdentity identity = event.getUserIdentity();
         Map<String, String> params = new HashMap<>();
         params.put("user", BaseUtils.getMd5HexString(identity.getName()));
-        params.put("created", new Date(identity.getCreatedUTC()).toString());
+        params.put("created", new Date(Double.valueOf(identity.getCreatedUTC() * 1000).longValue()).toString());
         params.put("gold", String.valueOf(identity.isGold()));
         params.put("link karma", String.valueOf(identity.getLinkKarma()));
         params.put("comment karma", String.valueOf(identity.getCommentKarma()));
