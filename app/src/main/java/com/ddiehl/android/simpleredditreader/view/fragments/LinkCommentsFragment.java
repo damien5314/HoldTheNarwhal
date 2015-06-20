@@ -344,7 +344,7 @@ public class LinkCommentsFragment extends AbsRedditFragment
     }
 
     @Override
-    public void openWebViewForLink(RedditLink link) {
+    public void openLinkInWebView(RedditLink link) {
         ((MainActivity) getActivity()).showWebViewForURL(link.getUrl());
     }
 

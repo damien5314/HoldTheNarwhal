@@ -181,7 +181,7 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
         if (link.isSelf()) {
             mLinkCommentsView.showCommentsForLink(link.getSubreddit(), link.getId());
         } else {
-            mLinkCommentsView.openWebViewForLink(link);
+            mLinkCommentsView.openLinkInWebView(link);
         }
     }
 

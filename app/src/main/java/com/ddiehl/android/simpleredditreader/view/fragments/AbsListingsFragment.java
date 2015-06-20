@@ -33,7 +33,10 @@ import com.mopub.nativeads.RequestParameters;
 import com.mopub.nativeads.ViewBinder;
 import com.squareup.otto.Bus;
 
+import java.util.Date;
 import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.ButterKnife;
 
@@ -337,7 +340,15 @@ public abstract class AbsListingsFragment extends AbsRedditFragment implements L
     }
 
     @Override
-    public void openWebViewForLink(RedditLink link) {
+    public void openLinkInWebView(RedditLink link) {
+        Map<String, String> params = new HashMap<>();
+        params.put("subreddit", link.getSubreddit());
+        params.put("id", link.getId());
+        params.put("domain", link.getDomain());
+        params.put("created", new Date(Double.valueOf(link.getCreatedUtc() * 1000).longValue()).toString());
+        params.put("nsfw", String.valueOf(link.getOver18()));
+        params.put("score", String.valueOf(link.getScore()));
+        FlurryAgent.logEvent("open link", params);
         ((MainActivity) getActivity()).showWebViewForURL(link.getUrl());
     }
 

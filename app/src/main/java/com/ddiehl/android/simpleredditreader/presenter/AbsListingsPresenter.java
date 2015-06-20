@@ -260,7 +260,7 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
         if (link.isSelf()) {
             mListingsView.showCommentsForLink(link.getSubreddit(), link.getId());
         } else {
-            mListingsView.openWebViewForLink(link);
+            mListingsView.openLinkInWebView(link);
         }
     }
 
