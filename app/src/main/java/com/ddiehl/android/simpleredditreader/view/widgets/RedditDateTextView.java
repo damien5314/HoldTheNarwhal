@@ -11,7 +11,8 @@ import java.util.Date;
 public class RedditDateTextView extends TextView {
 
     private static final int[] TIMESPAN_IDS = {
-            R.string.timespan_year,
+            R.string.timespan_years,
+            R.string.timespan_months,
             R.string.timespan_weeks,
             R.string.timespan_days,
             R.string.timespan_hours,
@@ -20,14 +21,26 @@ public class RedditDateTextView extends TextView {
             R.string.timespan_now
     };
 
+    private static final int[] TIMESPAN_IDS_PLURAL = {
+            R.string.timespan_years_plural,
+            R.string.timespan_months_plural,
+            R.string.timespan_weeks_plural,
+            R.string.timespan_days_plural,
+            R.string.timespan_hours_plural,
+            R.string.timespan_minutes_plural,
+            R.string.timespan_seconds_plural,
+            R.string.timespan_now
+    };
+
     private static final int[] TIMESPAN_IDS_ABBR = {
             R.string.timespan_year_abbr,
+            R.string.timespan_months_abbr,
             R.string.timespan_weeks_abbr,
             R.string.timespan_days_abbr,
             R.string.timespan_hours_abbr,
             R.string.timespan_minutes_abbr,
             R.string.timespan_seconds_abbr,
-            R.string.timespan_now_abbr
+            R.string.timespan_now
     };
 
     private boolean mAbbreviated = false;
@@ -59,33 +72,33 @@ public class RedditDateTextView extends TextView {
         long hours = minutes / 60;
         long days = hours / 24;
         long weeks = days / 7;
+        long months = days / 30;
         long years = days / 365;
 
-        int[] timespanIds = mAbbreviated ? TIMESPAN_IDS_ABBR : TIMESPAN_IDS;
-        long output;
-        String outputString;
-        if (years > 0) {
-            output = years;
-            outputString = getContext().getString(timespanIds[0]);
-        } else if (weeks > 0) {
-            output = weeks;
-            outputString = getContext().getString(timespanIds[1]);
-        } else if (days > 0) {
-            output = days;
-            outputString = getContext().getString(timespanIds[2]);
-        } else if (hours > 0) {
-            output = hours;
-            outputString = getContext().getString(timespanIds[3]);
-        } else if (minutes > 0) {
-            output = minutes;
-            outputString = getContext().getString(timespanIds[4]);
-        } else {
-            output = seconds;
-            outputString = getContext().getString(seconds < 10
-                    ? timespanIds[6] : timespanIds[5]);
+        long[] units = new long[] { years, months, weeks, days, hours, minutes, seconds };
+
+        String output = "";
+        long unit = 0;
+        for (int i = 0; i < units.length; i++) {
+            unit = units[i];
+            if (unit > 0) {
+                if (mAbbreviated) {
+                    output = getContext().getString(TIMESPAN_IDS_ABBR[i]);
+                } else if (unit == 1) {
+                    output = getContext().getString(TIMESPAN_IDS[i]);
+                } else {
+                    output = getContext().getString(TIMESPAN_IDS_PLURAL[i]);
+                }
+                break;
+            }
         }
 
-        return String.format(outputString, output);
+        // If < 10 seconds ago, use "now"
+        if (unit == seconds && seconds <= 10) {
+            output = getContext().getString(TIMESPAN_IDS[TIMESPAN_IDS.length - 1]);
+        }
+
+        return String.format(output, unit);
 //        return DateUtils.getRelativeTimeSpanString(date.getTime(), new Date().getTime(), DateUtils.MINUTE_IN_MILLIS).toString();
     }
 
