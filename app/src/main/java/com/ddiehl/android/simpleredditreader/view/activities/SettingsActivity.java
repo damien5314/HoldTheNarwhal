@@ -7,6 +7,7 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceGroup;
+import android.support.design.widget.Snackbar;
 
 import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.RedditPreferences;
@@ -79,6 +80,15 @@ public class SettingsActivity extends PreferenceActivity
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         updatePrefSummary(findPreference(key));
+
+        // Show appreciation for users enabling ads
+        if (key.equals("pref_enable_ads")) {
+            if (sharedPreferences.getBoolean("pref_enable_ads", false)) {
+                Snackbar.make(this.getListView(), R.string.pref_enable_ads_thanks, Snackbar.LENGTH_SHORT).show();
+            }
+        }
+
+        // Send Flurry event
         Map<String, String> params = new HashMap<>();
         params.put("key", key);
         Map prefs = sharedPreferences.getAll();

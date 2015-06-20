@@ -53,7 +53,8 @@
     <string name="preferences_reddit">reddit</string>
     <string name="preferences_app">app</string>
     <string name="pref_enable_ads">Enable ads</string>
-    <string name="pref_enable_ads_summary">Thanks for your support!</string>
+    <string name="pref_enable_ads_summary">Ads support development of HTN</string>
+    <string name="pref_enable_ads_thanks">Thank you for your support!</string>
 
     <!-- Context menus -->
     <string name="menu_sort_title">Sort by</string>
