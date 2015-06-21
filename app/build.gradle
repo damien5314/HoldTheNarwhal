@@ -29,9 +29,9 @@ android {
 }
 
 dependencies {
-    compile project(':redditdata')
-    compile project(':mopub-sdk')
-    compile project(':FlurryAnalytics-5.5.0')
+    compile project(':reddit')
+    compile project(':mopub')
+    compile project(':flurry')
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:22.2.0'
     compile 'com.android.support:support-v4:22.2.0'

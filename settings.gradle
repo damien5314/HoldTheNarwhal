@@ -1,1 +1,1 @@
-include ':app', ':redditdata', ':mopub-sdk', ':FlurryAnalytics-5.5.0'
+include ':app', ':reddit', ':mopub', ':flurry'
