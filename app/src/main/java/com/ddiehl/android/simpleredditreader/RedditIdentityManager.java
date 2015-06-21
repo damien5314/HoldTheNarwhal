@@ -4,12 +4,16 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+import com.ddiehl.android.simpleredditreader.events.requests.VoteEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.UserIdentitySavedEvent;
+import com.ddiehl.reddit.Archivable;
+import com.ddiehl.reddit.Votable;
 import com.ddiehl.reddit.identity.AccessToken;
 import com.ddiehl.reddit.identity.ApplicationAccessToken;
 import com.ddiehl.reddit.identity.AuthorizationResponse;
 import com.ddiehl.reddit.identity.UserAccessToken;
 import com.ddiehl.reddit.identity.UserIdentity;
+import com.ddiehl.reddit.listings.Listing;
 import com.squareup.otto.Bus;
 
 import java.util.Date;
@@ -61,6 +65,10 @@ public class RedditIdentityManager {
         mUserAccessToken = getSavedUserAccessToken();
         mApplicationAccessToken = getSavedApplicationAccessToken();
         mUserIdentity = getSavedUserIdentity();
+    }
+
+    public boolean isUserAuthorized() {
+        return hasUserAccessToken();
     }
 
     public boolean hasUserAccessToken() {

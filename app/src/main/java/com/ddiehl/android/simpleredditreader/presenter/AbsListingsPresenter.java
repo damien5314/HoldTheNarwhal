@@ -277,26 +277,16 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
 
     @Override
     public void upvoteLink() {
-        Listing listing = mListingSelected;
-        if (((Archivable) listing).isArchived()) {
-            mListingsView.showToast(R.string.listing_archived);
-        } else {
-            Votable votable = (Votable) listing;
-            int dir = (votable.isLiked() == null || !votable.isLiked()) ? 1 : 0;
-            mBus.post(new VoteEvent(votable, listing.getKind(), dir));
-        }
+        Votable votable = (Votable) mListingSelected;
+        int dir = (votable.isLiked() == null || !votable.isLiked()) ? 1 : 0;
+        vote(dir);
     }
 
     @Override
     public void downvoteLink() {
-        Listing listing = mListingSelected;
-        if (((Archivable) listing).isArchived()) {
-            mListingsView.showToast(R.string.listing_archived);
-        } else {
-            Votable votable = (Votable) listing;
-            int dir = (votable.isLiked() == null || votable.isLiked()) ? -1 : 0;
-            mBus.post(new VoteEvent(votable, listing.getKind(), dir));
-        }
+        Votable votable = (Votable) mListingSelected;
+        int dir = (votable.isLiked() == null || votable.isLiked()) ? -1 : 0;
+        vote(dir);
     }
 
     @Override
@@ -391,24 +381,16 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
 
     @Override
     public void upvoteComment() {
-        RedditComment comment = (RedditComment) mListingSelected;
-        if (comment.isArchived()) {
-            mListingsView.showToast(R.string.listing_archived);
-        } else {
-            int dir = (comment.isLiked() == null || !comment.isLiked()) ? 1 : 0;
-            mBus.post(new VoteEvent(comment, "t1", dir));
-        }
+        Votable votable = (Votable) mListingSelected;
+        int dir = (votable.isLiked() == null || !votable.isLiked()) ? 1 : 0;
+        vote(dir);
     }
 
     @Override
     public void downvoteComment() {
-        RedditComment comment = (RedditComment) mListingSelected;
-        if (comment.isArchived()) {
-            mListingsView.showToast(R.string.listing_archived);
-        } else {
-            int dir = (comment.isLiked() == null || comment.isLiked()) ? -1 : 0;
-            mBus.post(new VoteEvent(comment, "t1", dir));
-        }
+        Votable votable = (Votable) mListingSelected;
+        int dir = (votable.isLiked() == null || votable.isLiked()) ? -1 : 0;
+        vote(dir);
     }
 
     @Override
@@ -461,5 +443,17 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
     @Override
     public UserIdentity getAuthorizedUser() {
         return mIdentityManager.getUserIdentity();
+    }
+
+    private void vote(int dir) {
+        Listing listing = mListingSelected;
+        if (((Archivable) listing).isArchived()) {
+            mListingsView.showToast(R.string.listing_archived);
+        } else if (!mIdentityManager.isUserAuthorized()) {
+            mListingsView.showToast(R.string.user_required);
+        } else {
+            Votable votable = (Votable) listing;
+            mBus.post(new VoteEvent(votable, listing.getKind(), dir));
+        }
     }
 }

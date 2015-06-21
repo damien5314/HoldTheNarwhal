@@ -6,6 +6,7 @@ import android.view.View;
 
 import com.ddiehl.android.simpleredditreader.BusProvider;
 import com.ddiehl.android.simpleredditreader.R;
+import com.ddiehl.android.simpleredditreader.RedditIdentityManager;
 import com.ddiehl.android.simpleredditreader.RedditPreferences;
 import com.ddiehl.android.simpleredditreader.events.requests.HideEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.LoadLinkCommentsEvent;
@@ -18,11 +19,13 @@ import com.ddiehl.android.simpleredditreader.events.responses.SaveSubmittedEvent
 import com.ddiehl.android.simpleredditreader.events.responses.UserIdentitySavedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.VoteSubmittedEvent;
 import com.ddiehl.android.simpleredditreader.view.LinkCommentsView;
+import com.ddiehl.reddit.Archivable;
 import com.ddiehl.reddit.Savable;
 import com.ddiehl.reddit.Votable;
 import com.ddiehl.reddit.listings.AbsRedditComment;
 import com.ddiehl.reddit.listings.CommentBank;
 import com.ddiehl.reddit.listings.CommentBankList;
+import com.ddiehl.reddit.listings.Listing;
 import com.ddiehl.reddit.listings.RedditComment;
 import com.ddiehl.reddit.listings.RedditLink;
 import com.ddiehl.reddit.listings.RedditMoreComments;
@@ -42,12 +45,14 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
     private Bus mBus;
     private RedditPreferences mPreferences;
 
+    private RedditIdentityManager mIdentityManager;
+
     private String mSubreddit;
     private String mArticleId;
     private String mCommentId;
     private String mSort; // Remove this and read from preferences when needed
 
-    private RedditComment mCommentSelected;
+    private Listing mListingSelected;
 
     public LinkCommentsPresenterImpl(Context context, LinkCommentsView view,
                                      String subreddit, String articleId, String commentId) {
@@ -55,9 +60,8 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
         mLinkCommentsView = view;
         mCommentBank = new CommentBankList();
         mBus = BusProvider.getInstance();
-
+        mIdentityManager = RedditIdentityManager.getInstance(context);
         mPreferences = RedditPreferences.getInstance(mContext);
-
         mSubreddit = subreddit;
         mArticleId = articleId;
         mCommentId = commentId;
@@ -168,6 +172,7 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
 
     @Override
     public void showLinkContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, RedditLink link) {
+        mListingSelected = link;
         mLinkCommentsView.showLinkContextMenu(menu, v, menuInfo, link);
         menu.findItem(R.id.action_link_save).setVisible(!link.isSaved());
         menu.findItem(R.id.action_link_unsave).setVisible(link.isSaved());
@@ -197,22 +202,14 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
 
     @Override
     public void upvoteLink() {
-        if (mLinkContext.isArchived()) {
-            mLinkCommentsView.showToast(R.string.listing_archived);
-        } else {
-            int dir = (mLinkContext.isLiked() == null || !mLinkContext.isLiked()) ? 1 : 0;
-            mBus.post(new VoteEvent(mLinkContext, mLinkContext.getKind(), dir));
-        }
+        int dir = (mLinkContext.isLiked() == null || !mLinkContext.isLiked()) ? 1 : 0;
+        vote(dir);
     }
 
     @Override
     public void downvoteLink() {
-        if (mLinkContext.isArchived()) {
-            mLinkCommentsView.showToast(R.string.listing_archived);
-        } else {
-            int dir = (mLinkContext.isLiked() == null || mLinkContext.isLiked()) ? -1 : 0;
-            mBus.post(new VoteEvent(mLinkContext, mLinkContext.getKind(), dir));
-        }
+        int dir = (mLinkContext.isLiked() == null || mLinkContext.isLiked()) ? -1 : 0;
+        vote(dir);
     }
 
     @Override
@@ -267,9 +264,8 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
 
     @Override
     public void showCommentContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, RedditComment comment) {
-        mCommentSelected = comment;
+        mListingSelected = comment;
         mLinkCommentsView.showCommentContextMenu(menu, v, menuInfo, comment);
-
         menu.findItem(R.id.action_comment_save).setVisible(!comment.isSaved());
         menu.findItem(R.id.action_comment_unsave).setVisible(comment.isSaved());
     }
@@ -321,7 +317,7 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
 
     @Override
     public void openReplyView() {
-        RedditComment comment = mCommentSelected;
+        RedditComment comment = (RedditComment) mListingSelected;
         if (comment.isArchived()) {
             mLinkCommentsView.showToast(R.string.listing_archived);
         } else {
@@ -331,47 +327,39 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
 
     @Override
     public void upvoteComment() {
-        RedditComment comment = mCommentSelected;
-        if (comment.isArchived()) {
-            mLinkCommentsView.showToast(R.string.listing_archived);
-        } else {
-            int dir = (comment.isLiked() == null || !comment.isLiked()) ? 1 : 0;
-            mBus.post(new VoteEvent(comment, "t1", dir));
-        }
+        Votable votable = (Votable) mListingSelected;
+        int dir = (votable.isLiked() == null || !votable.isLiked()) ? 1 : 0;
+        vote(dir);
     }
 
     @Override
     public void downvoteComment() {
-        RedditComment comment = mCommentSelected;
-        if (comment.isArchived()) {
-            mLinkCommentsView.showToast(R.string.listing_archived);
-        } else {
-            int dir = (comment.isLiked() == null || comment.isLiked()) ? -1 : 0;
-            mBus.post(new VoteEvent(comment, "t1", dir));
-        }
+        Votable votable = (Votable) mListingSelected;
+        int dir = (votable.isLiked() == null || votable.isLiked()) ? -1 : 0;
+        vote(dir);
     }
 
     @Override
     public void saveComment() {
-        RedditComment comment = mCommentSelected;
+        RedditComment comment = (RedditComment) mListingSelected;
         mBus.post(new SaveEvent(comment, null, true));
     }
 
     @Override
     public void unsaveComment() {
-        RedditComment comment = mCommentSelected;
+        RedditComment comment = (RedditComment) mListingSelected;
         mBus.post(new SaveEvent(comment, null, false));
     }
 
     @Override
     public void shareComment() {
-        RedditComment comment = mCommentSelected;
+        RedditComment comment = (RedditComment) mListingSelected;
         mLinkCommentsView.openShareView(comment);
     }
 
     @Override
     public void openCommentUserProfile() {
-        RedditComment comment = mCommentSelected;
+        RedditComment comment = (RedditComment) mListingSelected;
         mLinkCommentsView.openUserProfileView(comment);
     }
 
@@ -382,18 +370,30 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
 
     @Override
     public void openCommentInBrowser() {
-        RedditComment comment = mCommentSelected;
+        RedditComment comment = (RedditComment) mListingSelected;
         mLinkCommentsView.openCommentInBrowser(comment);
     }
 
     @Override
     public void reportComment() {
-        RedditComment comment = mCommentSelected;
+        RedditComment comment = (RedditComment) mListingSelected;
         mLinkCommentsView.showToast(R.string.implementation_pending);
     }
 
     @Override
     public void openCommentLink(RedditComment comment) {
         // Link is already being displayed with this presenter
+    }
+
+    private void vote(int dir) {
+        Listing listing = mListingSelected;
+        if (((Archivable) listing).isArchived()) {
+            mLinkCommentsView.showToast(R.string.listing_archived);
+        } else if (!mIdentityManager.isUserAuthorized()) {
+            mLinkCommentsView.showToast(R.string.user_required);
+        } else {
+            Votable votable = (Votable) listing;
+            mBus.post(new VoteEvent(votable, listing.getKind(), dir));
+        }
     }
 }
