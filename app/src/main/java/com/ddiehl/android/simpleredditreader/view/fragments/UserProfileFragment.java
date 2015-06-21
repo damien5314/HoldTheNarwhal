@@ -63,7 +63,7 @@ public class UserProfileFragment extends AbsListingsFragment implements Listings
         return v;
     }
 
-    private void updateUserProfileTabs() {
+    public void updateUserProfileTabs() {
         mUserProfileTabs.removeAllTabs();
         mUserProfileTabs.setOnTabSelectedListener(null);
 

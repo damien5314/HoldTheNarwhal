@@ -6,8 +6,10 @@ import com.ddiehl.android.simpleredditreader.events.requests.LoadUserProfileEven
 import com.ddiehl.android.simpleredditreader.events.responses.HideSubmittedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.ListingsLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.SaveSubmittedEvent;
+import com.ddiehl.android.simpleredditreader.events.responses.UserIdentitySavedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.VoteSubmittedEvent;
 import com.ddiehl.android.simpleredditreader.view.ListingsView;
+import com.ddiehl.android.simpleredditreader.view.fragments.UserProfileFragment;
 import com.squareup.otto.Subscribe;
 
 public class UserProfilePresenter extends AbsListingsPresenter {
@@ -25,6 +27,12 @@ public class UserProfilePresenter extends AbsListingsPresenter {
     public void requestData(String show) {
         mShow = show;
         refreshData();
+    }
+
+    @Subscribe @Override
+    public void onUserIdentitySaved(UserIdentitySavedEvent event) {
+        super.onUserIdentitySaved(event);
+        ((UserProfileFragment) mListingsView).updateUserProfileTabs();
     }
 
     @Subscribe @Override

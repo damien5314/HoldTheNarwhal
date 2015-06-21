@@ -8,7 +8,6 @@ import com.ddiehl.android.simpleredditreader.BusProvider;
 import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.RedditIdentityManager;
 import com.ddiehl.android.simpleredditreader.RedditPreferences;
-import com.ddiehl.android.simpleredditreader.events.exceptions.UserRequiredException;
 import com.ddiehl.android.simpleredditreader.events.requests.HideEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.SaveEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.VoteEvent;
@@ -236,11 +235,6 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
         } else {
             mListingsView.listingRemovedAt(pos);
         }
-    }
-
-    @Subscribe
-    public void onUserRequiredError(UserRequiredException e) {
-        mListingsView.showToast(R.string.user_required);
     }
 
     @Override
