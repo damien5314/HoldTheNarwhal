@@ -20,6 +20,7 @@ import com.ddiehl.android.simpleredditreader.RedditPreferences;
 import com.ddiehl.android.simpleredditreader.presenter.ListingsPresenter;
 import com.ddiehl.android.simpleredditreader.view.ListingsView;
 import com.ddiehl.android.simpleredditreader.view.MainView;
+import com.ddiehl.android.simpleredditreader.view.SettingsChangedListener;
 import com.ddiehl.android.simpleredditreader.view.activities.MainActivity;
 import com.ddiehl.android.simpleredditreader.view.adapters.ListingsAdapter;
 import com.ddiehl.android.simpleredditreader.view.dialogs.ChooseLinkSortDialog;
@@ -40,7 +41,8 @@ import java.util.Map;
 
 import butterknife.ButterKnife;
 
-public abstract class AbsListingsFragment extends AbsRedditFragment implements ListingsView {
+public abstract class AbsListingsFragment extends AbsRedditFragment
+        implements ListingsView, SettingsChangedListener {
     private static final String TAG = AbsListingsFragment.class.getSimpleName();
 
     private static final int REQUEST_CHOOSE_SORT = 0;
@@ -101,13 +103,12 @@ public abstract class AbsListingsFragment extends AbsRedditFragment implements L
         rv.setAdapter(mAdAdapter);
 
         // Set configuration for MoPub ads
-        final EnumSet<RequestParameters.NativeAdAsset> desiredAssets = EnumSet.of(
-                RequestParameters.NativeAdAsset.ICON_IMAGE,
-                RequestParameters.NativeAdAsset.TITLE,
-                RequestParameters.NativeAdAsset.TEXT
-        );
         mAdRequestParameters = new RequestParameters.Builder()
-                .desiredAssets(desiredAssets)
+                .desiredAssets(EnumSet.of(
+                        RequestParameters.NativeAdAsset.ICON_IMAGE,
+                        RequestParameters.NativeAdAsset.TITLE,
+                        RequestParameters.NativeAdAsset.TEXT
+                ))
                 .build();
     }
 
@@ -127,6 +128,8 @@ public abstract class AbsListingsFragment extends AbsRedditFragment implements L
         boolean adsEnabled = RedditPreferences.getInstance(getActivity()).getAdsEnabled();
         if (adsEnabled) {
             mAdAdapter.loadAds(getString(R.string.ads_listings_banner_id_mopub), mAdRequestParameters);
+        } else {
+            mAdAdapter.clearAds();
         }
     }
 
@@ -413,5 +416,10 @@ public abstract class AbsListingsFragment extends AbsRedditFragment implements L
     @Override
     public void listingRemovedAt(int position) {
         mListingsAdapter.notifyItemRemoved(position);
+    }
+
+    @Override
+    public void onSettingsChanged() {
+//        mListingsPresenter.refreshData();
     }
 }
