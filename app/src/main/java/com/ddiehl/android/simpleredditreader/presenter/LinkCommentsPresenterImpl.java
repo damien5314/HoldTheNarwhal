@@ -214,11 +214,21 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
 
     @Override
     public void saveLink() {
+        if (!mIdentityManager.isUserAuthorized()) {
+            mLinkCommentsView.showToast(R.string.user_required);
+            return;
+        }
+
         mBus.post(new SaveEvent(mLinkContext, null, true));
     }
 
     @Override
     public void unsaveLink() {
+        if (!mIdentityManager.isUserAuthorized()) {
+            mLinkCommentsView.showToast(R.string.user_required);
+            return;
+        }
+
         mBus.post(new SaveEvent(mLinkContext, null, false));
     }
 
@@ -249,16 +259,31 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
 
     @Override
     public void hideLink() {
+        if (!mIdentityManager.isUserAuthorized()) {
+            mLinkCommentsView.showToast(R.string.user_required);
+            return;
+        }
+
         mBus.post(new HideEvent(mLinkContext, true));
     }
 
     @Override
     public void unhideLink() {
+        if (!mIdentityManager.isUserAuthorized()) {
+            mLinkCommentsView.showToast(R.string.user_required);
+            return;
+        }
+
         mBus.post(new HideEvent(mLinkContext, false));
     }
 
     @Override
     public void reportLink() {
+        if (!mIdentityManager.isUserAuthorized()) {
+            mLinkCommentsView.showToast(R.string.user_required);
+            return;
+        }
+
         mLinkCommentsView.showToast(R.string.implementation_pending);
     }
 
@@ -341,12 +366,22 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
 
     @Override
     public void saveComment() {
+        if (!mIdentityManager.isUserAuthorized()) {
+            mLinkCommentsView.showToast(R.string.user_required);
+            return;
+        }
+
         RedditComment comment = (RedditComment) mListingSelected;
         mBus.post(new SaveEvent(comment, null, true));
     }
 
     @Override
     public void unsaveComment() {
+        if (!mIdentityManager.isUserAuthorized()) {
+            mLinkCommentsView.showToast(R.string.user_required);
+            return;
+        }
+
         RedditComment comment = (RedditComment) mListingSelected;
         mBus.post(new SaveEvent(comment, null, false));
     }
@@ -376,6 +411,11 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
 
     @Override
     public void reportComment() {
+        if (!mIdentityManager.isUserAuthorized()) {
+            mLinkCommentsView.showToast(R.string.user_required);
+            return;
+        }
+
         RedditComment comment = (RedditComment) mListingSelected;
         mLinkCommentsView.showToast(R.string.implementation_pending);
     }

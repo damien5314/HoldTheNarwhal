@@ -291,12 +291,22 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
 
     @Override
     public void saveLink() {
+        if (!mIdentityManager.isUserAuthorized()) {
+            mListingsView.showToast(R.string.user_required);
+            return;
+        }
+
         RedditLink link = (RedditLink) mListingSelected;
         mBus.post(new SaveEvent(link, null, true));
     }
 
     @Override
     public void unsaveLink() {
+        if (!mIdentityManager.isUserAuthorized()) {
+            mListingsView.showToast(R.string.user_required);
+            return;
+        }
+
         RedditLink link = (RedditLink) mListingSelected;
         mBus.post(new SaveEvent(link, null, false));
     }
@@ -333,18 +343,33 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
 
     @Override
     public void hideLink() {
+        if (!mIdentityManager.isUserAuthorized()) {
+            mListingsView.showToast(R.string.user_required);
+            return;
+        }
+
         RedditLink link = (RedditLink) mListingSelected;
         mBus.post(new HideEvent(link, true));
     }
 
     @Override
     public void unhideLink() {
+        if (!mIdentityManager.isUserAuthorized()) {
+            mListingsView.showToast(R.string.user_required);
+            return;
+        }
+
         RedditLink link = (RedditLink) mListingSelected;
         mBus.post(new HideEvent(link, false));
     }
 
     @Override
     public void reportLink() {
+        if (!mIdentityManager.isUserAuthorized()) {
+            mListingsView.showToast(R.string.user_required);
+            return;
+        }
+
         RedditLink link = (RedditLink) mListingSelected;
         mListingsView.showToast(R.string.implementation_pending);
     }
@@ -395,12 +420,22 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
 
     @Override
     public void saveComment() {
+        if (!mIdentityManager.isUserAuthorized()) {
+            mListingsView.showToast(R.string.user_required);
+            return;
+        }
+
         RedditComment comment = (RedditComment) mListingSelected;
         mBus.post(new SaveEvent(comment, null, true));
     }
 
     @Override
     public void unsaveComment() {
+        if (!mIdentityManager.isUserAuthorized()) {
+            mListingsView.showToast(R.string.user_required);
+            return;
+        }
+
         RedditComment comment = (RedditComment) mListingSelected;
         mBus.post(new SaveEvent(comment, null, false));
     }
@@ -430,6 +465,11 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
 
     @Override
     public void reportComment() {
+        if (!mIdentityManager.isUserAuthorized()) {
+            mListingsView.showToast(R.string.user_required);
+            return;
+        }
+
         RedditComment comment = (RedditComment) mListingSelected;
         mListingsView.showToast(R.string.implementation_pending);
     }
