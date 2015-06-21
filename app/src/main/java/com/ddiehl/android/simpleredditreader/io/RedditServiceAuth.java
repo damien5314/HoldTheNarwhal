@@ -2,7 +2,6 @@ package com.ddiehl.android.simpleredditreader.io;
 
 
 import android.content.Context;
-import android.widget.Toast;
 
 import com.ddiehl.android.simpleredditreader.BusProvider;
 import com.ddiehl.android.simpleredditreader.RedditIdentityManager;
@@ -12,8 +11,8 @@ import com.ddiehl.android.simpleredditreader.events.requests.AuthorizeApplicatio
 import com.ddiehl.android.simpleredditreader.events.requests.GetUserIdentityEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.HideEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.LoadLinkCommentsEvent;
-import com.ddiehl.android.simpleredditreader.events.requests.LoadSubredditEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.LoadMoreChildrenEvent;
+import com.ddiehl.android.simpleredditreader.events.requests.LoadSubredditEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.LoadUserProfileEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.RefreshUserAccessTokenEvent;
 import com.ddiehl.android.simpleredditreader.events.requests.ReportEvent;
@@ -128,7 +127,7 @@ public class RedditServiceAuth implements RedditService {
             return;
         }
 
-        Toast.makeText(mContext, "Application authorized", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(mContext, R.string.application_authorized, Toast.LENGTH_SHORT).show();
         mIdentityManager.saveApplicationAccessTokenResponse(event.getResponse());
         if (mQueuedEvent != null) {
             Object e = mQueuedEvent;
@@ -196,13 +195,13 @@ public class RedditServiceAuth implements RedditService {
                     "access_token", new Callback<Response>() {
                 @Override
                 public void success(Response response, Response response2) {
-                    Toast.makeText(mContext, "Revoked access token", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(mContext, R.string.access_token_revoked, Toast.LENGTH_SHORT).show();
                     BaseUtils.printResponseStatus(response);
                 }
 
                 @Override
                 public void failure(RetrofitError error) {
-                    Toast.makeText(mContext, "Error revoking access token", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(mContext, R.string.error_revoking_access_token, Toast.LENGTH_SHORT).show();
                     BaseUtils.showError(mContext, error);
                     BaseUtils.printResponse(error.getResponse());
                 }
@@ -212,13 +211,13 @@ public class RedditServiceAuth implements RedditService {
                     "refresh_token", new Callback<Response>() {
                         @Override
                         public void success(Response response, Response response2) {
-                            Toast.makeText(mContext, "Revoked refresh token", Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(mContext, R.string.refresh_token_revoked, Toast.LENGTH_SHORT).show();
                             BaseUtils.printResponseStatus(response);
                         }
 
                         @Override
                         public void failure(RetrofitError error) {
-                            Toast.makeText(mContext, "Error revoking refresh token", Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(mContext, R.string.error_revoking_refresh_token, Toast.LENGTH_SHORT).show();
                             BaseUtils.showError(mContext, error);
                             BaseUtils.printResponse(error.getResponse());
                         }
@@ -237,7 +236,7 @@ public class RedditServiceAuth implements RedditService {
             return;
         }
 
-        Toast.makeText(mContext, "User authorized", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(mContext, R.string.user_authorized, Toast.LENGTH_SHORT).show();
         mIdentityManager.saveUserAccessTokenResponse(event.getResponse());
         mIdentityManager.clearSavedUserIdentity();
         mBus.post(new GetUserIdentityEvent());
@@ -257,7 +256,7 @@ public class RedditServiceAuth implements RedditService {
             return;
         }
 
-        Toast.makeText(mContext, "User authorization refreshed", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(mContext, R.string.user_authorization_refreshed, Toast.LENGTH_SHORT).show();
         mIdentityManager.saveUserAccessTokenResponse(event.getResponse());
         if (mQueuedEvent != null) {
             Object e = mQueuedEvent;

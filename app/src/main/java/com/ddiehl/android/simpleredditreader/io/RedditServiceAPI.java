@@ -1,7 +1,6 @@
 package com.ddiehl.android.simpleredditreader.io;
 
 import android.content.Context;
-import android.widget.Toast;
 
 import com.ddiehl.android.simpleredditreader.BusProvider;
 import com.ddiehl.android.simpleredditreader.RedditIdentityManager;
@@ -126,7 +125,7 @@ public class RedditServiceAPI implements RedditService {
             return;
         }
 
-        Toast.makeText(mContext, "User identity retrieved", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(mContext, R.string.user_identity_retrieved, Toast.LENGTH_SHORT).show();
         UserIdentity id = event.getUserIdentity();
         mIdentityManager.saveUserIdentity(id);
     }

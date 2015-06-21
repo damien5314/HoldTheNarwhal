@@ -124,5 +124,15 @@
     <string name="timespan_minutes_abbr">%sm</string>
     <string name="timespan_seconds_abbr">%ss</string>
     <string name="timespan_now">just now</string>
+    <string name="application_authorized">application authorized</string>
+    <string name="access_token_revoked">access token revoked</string>
+    <string name="error_revoking_access_token">error revoking access token</string>
+    <string name="refresh_token_revoked">refresh token revoked</string>
+    <string name="error_revoking_refresh_token">error revoking refresh token</string>
+    <string name="user_authorized">user authorized</string>
+    <string name="user_authorization_refreshed">user authorization refreshed</string>
+    <string name="welcome_user">welcome, %s</string>
+    <string name="user_identity_retrieved">user identity retrieved</string>
+    <string name="user_signed_out">signed out</string>
 
 </resources>
