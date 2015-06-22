@@ -184,7 +184,7 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
             return;
 
         if (link.isSelf()) {
-            mLinkCommentsView.showCommentsForLink(link.getSubreddit(), link.getId());
+            mLinkCommentsView.showCommentsForLink(link.getSubreddit(), link.getId(), null);
         } else {
             mLinkCommentsView.openLinkInWebView(link);
         }
@@ -192,12 +192,12 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
 
     @Override
     public void showCommentsForLink() {
-        mLinkCommentsView.showCommentsForLink(mLinkContext.getSubreddit(), mLinkContext.getId());
+        mLinkCommentsView.showCommentsForLink(mLinkContext.getSubreddit(), mLinkContext.getId(), null);
     }
 
     @Override
     public void showCommentsForLink(RedditLink link) {
-        mLinkCommentsView.showCommentsForLink(link.getSubreddit(), link.getId());
+        mLinkCommentsView.showCommentsForLink(link.getSubreddit(), link.getId(), null);
     }
 
     @Override
@@ -296,8 +296,11 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
     }
 
     @Override
-    public void navigateToCommentThread(String commentId) {
-        mCommentId = commentId.substring(3); // Remove type prefix
+    public void showCommentThread(String subreddit, String linkId, String commentId) {
+        // Calls from a ThreadStubViewHolder will not have subreddit or linkId
+        // so only set if it's not null
+        mSubreddit = subreddit == null ? mSubreddit : subreddit;
+        mCommentId = commentId.contains("_") ? commentId.substring(3) : commentId; // Remove type prefix
         getComments();
     }
 
@@ -338,6 +341,12 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
         } else {
             mLinkCommentsView.commentUpdatedAt(mCommentBank.visibleIndexOf(((AbsRedditComment) listing)));
         }
+    }
+
+    @Override
+    public void openCommentPermalink() {
+        RedditComment comment = (RedditComment) mListingSelected;
+        showCommentThread(comment.getSubreddit(), comment.getLinkId(), comment.getId());
     }
 
     @Override

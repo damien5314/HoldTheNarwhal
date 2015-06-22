@@ -80,6 +80,7 @@
     <string name="action_open_comments_in_browser">view comments in browser</string>
     <string name="action_report">report</string>
     <string name="action_reply">reply</string>
+    <string name="action_comment_permalink">permalink</string>
 
     <!-- Spinner -->
     <string name="spinner_getting_submissions">Getting submissions&#8230;</string>

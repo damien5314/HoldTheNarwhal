@@ -9,8 +9,9 @@ import com.ddiehl.reddit.listings.RedditMoreComments;
 public interface CommentPresenter {
 
     void showCommentContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, RedditComment comment);
-    void navigateToCommentThread(String commentId);
+    void showCommentThread(String subreddit, String linkId, String commentId);
     void getMoreChildren(RedditMoreComments comment);
+    void openCommentPermalink();
     void openReplyView();
     void upvoteComment();
     void downvoteComment();

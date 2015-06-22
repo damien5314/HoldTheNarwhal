@@ -46,7 +46,7 @@ public class ThreadStubViewHolder extends RecyclerView.ViewHolder {
     @OnClick(R.id.comment_more)
     void onClick() {
         if (mRedditMoreComments.getCount() == 0) {
-            mCommentPresenter.navigateToCommentThread(mRedditMoreComments.getParentId());
+            mCommentPresenter.showCommentThread(null, null, mRedditMoreComments.getParentId());
         } else {
             mCommentPresenter.getMoreChildren(mRedditMoreComments);
         }

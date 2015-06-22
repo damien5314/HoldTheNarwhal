@@ -169,8 +169,8 @@ public class LinkCommentsFragment extends AbsRedditFragment
     }
 
     @Override
-    public void navigateToCommentThread(String commentId) {
-        mLinkCommentsPresenter.navigateToCommentThread(commentId);
+    public void showCommentThread(String subreddit, String linkId, String commentId) {
+        mLinkCommentsPresenter.showCommentThread(subreddit, linkId, commentId);
     }
 
     @Override
@@ -265,6 +265,9 @@ public class LinkCommentsFragment extends AbsRedditFragment
             case R.id.action_link_report:
                 mLinkCommentsPresenter.reportLink();
                 return true;
+            case R.id.action_comment_permalink:
+                mLinkCommentsPresenter.openCommentPermalink();
+                return true;
             case R.id.action_comment_reply:
                 mLinkCommentsPresenter.openReplyView();
                 return true;
@@ -349,7 +352,7 @@ public class LinkCommentsFragment extends AbsRedditFragment
     }
 
     @Override
-    public void showCommentsForLink(String subreddit, String id) {
+    public void showCommentsForLink(String subreddit, String linkId, String commentId) {
         // Comments for link are already displayed in this view
     }
 

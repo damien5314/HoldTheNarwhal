@@ -252,7 +252,7 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
             return;
 
         if (link.isSelf()) {
-            mListingsView.showCommentsForLink(link.getSubreddit(), link.getId());
+            mListingsView.showCommentsForLink(link.getSubreddit(), link.getId(), null);
         } else {
             mListingsView.openLinkInWebView(link);
         }
@@ -261,12 +261,12 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
     @Override
     public void showCommentsForLink() {
         RedditLink link = (RedditLink) mListingSelected;
-        mListingsView.showCommentsForLink(link.getSubreddit(), link.getId());
+        mListingsView.showCommentsForLink(link.getSubreddit(), link.getId(), null);
     }
 
     @Override
     public void showCommentsForLink(RedditLink link) {
-        mListingsView.showCommentsForLink(link.getSubreddit(), link.getId());
+        mListingsView.showCommentsForLink(link.getSubreddit(), link.getId(), null);
     }
 
     @Override
@@ -379,13 +379,20 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
     }
 
     @Override
-    public void navigateToCommentThread(String commentId) {
-        mListingsView.navigateToCommentThread(commentId);
+    public void showCommentThread(String subreddit, String linkId, String commentId) {
+        linkId = linkId.substring(3); // Trim type prefix
+        mListingsView.showCommentThread(subreddit, linkId, commentId);
     }
 
     @Override
     public void getMoreChildren(RedditMoreComments comment) {
         // Comment stubs cannot appear in a listing view
+    }
+
+    @Override
+    public void openCommentPermalink() {
+        RedditComment comment = (RedditComment) mListingSelected;
+        showCommentThread(comment.getSubreddit(), comment.getLinkId(), comment.getId());
     }
 
     @Override
@@ -471,7 +478,7 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
     @Override
     public void openCommentLink(RedditComment comment) {
 //        RedditComment comment = (RedditComment) mListingSelected;
-        mListingsView.showCommentsForLink(comment.getSubreddit(), comment.getLinkId().substring(3));
+        mListingsView.showCommentsForLink(comment.getSubreddit(), comment.getLinkId().substring(3), null);
     }
 
     @Override

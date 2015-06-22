@@ -288,6 +288,9 @@ public abstract class AbsListingsFragment extends AbsRedditFragment
             case R.id.action_link_report:
                 mListingsPresenter.reportLink();
                 return true;
+            case R.id.action_comment_permalink:
+                mListingsPresenter.openCommentPermalink();
+                return true;
             case R.id.action_comment_reply:
                 mListingsPresenter.openReplyView();
                 return true;
@@ -344,6 +347,7 @@ public abstract class AbsListingsFragment extends AbsRedditFragment
 
     @Override
     public void openLinkInWebView(RedditLink link) {
+        // Log analytics event
         Map<String, String> params = new HashMap<>();
         params.put("subreddit", link.getSubreddit());
         params.put("id", link.getId());
@@ -352,12 +356,13 @@ public abstract class AbsListingsFragment extends AbsRedditFragment
         params.put("nsfw", String.valueOf(link.getOver18()));
         params.put("score", String.valueOf(link.getScore()));
         FlurryAgent.logEvent("open link", params);
+
         ((MainActivity) getActivity()).showWebViewForURL(link.getUrl());
     }
 
     @Override
-    public void showCommentsForLink(String subreddit, String id) {
-        Fragment fragment = LinkCommentsFragment.newInstance(subreddit, id, null);
+    public void showCommentsForLink(String subreddit, String linkId, String commentId) {
+        Fragment fragment = LinkCommentsFragment.newInstance(subreddit, linkId, commentId);
         FragmentManager fm = getActivity().getSupportFragmentManager();
         fm.beginTransaction()
                 .replace(R.id.fragment_container, fragment)
@@ -366,8 +371,8 @@ public abstract class AbsListingsFragment extends AbsRedditFragment
     }
 
     @Override
-    public void navigateToCommentThread(String commentId) {
-        mListingsPresenter.navigateToCommentThread(commentId);
+    public void showCommentThread(String subreddit, String linkId, String commentId) {
+        showCommentsForLink(subreddit, linkId, commentId);
     }
 
     @Override
