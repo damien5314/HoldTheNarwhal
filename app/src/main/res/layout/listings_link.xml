@@ -97,7 +97,7 @@
                         style="@style/LinkScoreTextView"
                         tools:text="573 points"/>
 
-                    <com.ddiehl.android.simpleredditreader.view.widgets.RedditDateTextView
+                    <com.ddiehl.android.htn.view.widgets.RedditDateTextView
                         android:id="@+id/link_timestamp"
                         android:layout_alignParentRight="true"
                         android:layout_alignParentEnd="true"
