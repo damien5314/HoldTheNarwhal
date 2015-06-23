@@ -5,10 +5,10 @@ apply plugin: 'com.getkeepsafe.dexcount'
 android {
     signingConfigs {
         release {
-            keyAlias 'reddit reader'
-            keyPassword '***REMOVED***'
-            storeFile file('/Users/damien.diehl/Dropbox/Dev/Android/keystore/android.jks')
-            storePassword '***REMOVED***'
+            storeFile file(ANDROID_KEYSTORE_PATH)
+            storePassword ANDROID_KEYSTORE_PWD
+            keyAlias HTN_KEYSTORE_ALIAS
+            keyPassword HTN_KEYSTORE_PWD
         }
     }
     compileSdkVersion 22
