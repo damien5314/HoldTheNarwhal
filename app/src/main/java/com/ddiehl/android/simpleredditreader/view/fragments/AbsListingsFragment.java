@@ -14,6 +14,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.ddiehl.android.simpleredditreader.BuildConfig;
 import com.ddiehl.android.simpleredditreader.BusProvider;
 import com.ddiehl.android.simpleredditreader.R;
 import com.ddiehl.android.simpleredditreader.RedditPreferences;
@@ -127,7 +128,7 @@ public abstract class AbsListingsFragment extends AbsRedditFragment
     private void loadAdsIfEnabled() {
         boolean adsEnabled = RedditPreferences.getInstance(getActivity()).getAdsEnabled();
         if (adsEnabled) {
-            mAdAdapter.loadAds(getString(R.string.ads_listings_banner_id_mopub), mAdRequestParameters);
+            mAdAdapter.loadAds(BuildConfig.MOPUB_LISTING_AD_ID, mAdRequestParameters);
         } else {
             mAdAdapter.clearAds();
         }

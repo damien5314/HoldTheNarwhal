@@ -19,6 +19,7 @@ android {
             applicationIdSuffix ".debug"
             minifyEnabled false
             buildConfigField "String", "FLURRY_API_KEY", "\"***REMOVED***\""
+            buildConfigField "String", "MOPUB_LISTING_AD_ID", "\"***REMOVED***\""
         }
 
         release {
@@ -26,6 +27,7 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             buildConfigField "String", "FLURRY_API_KEY", "\"***REMOVED***\""
+            buildConfigField "String", "MOPUB_LISTING_AD_ID", "\"***REMOVED***\""
         }
     }
 }
