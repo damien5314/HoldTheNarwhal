@@ -18,12 +18,14 @@ android {
         debug {
             applicationIdSuffix ".debug"
             minifyEnabled false
+            buildConfigField "String", "FLURRY_API_KEY", "\"***REMOVED***\""
         }
 
         release {
             debuggable false
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            buildConfigField "String", "FLURRY_API_KEY", "\"***REMOVED***\""
         }
     }
 }

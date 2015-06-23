@@ -25,8 +25,6 @@ import java.util.Map;
 
 public class HTNAnalytics {
 
-    private static final String FLURRY_API_KEY = "***REMOVED***";
-    private static final String FLURRY_API_KEY_DEBUG = "***REMOVED***";
     private static final int FLURRY_SESSION_TIMEOUT_SECONDS = 30;
 
     private static HTNAnalytics _instance;
@@ -34,7 +32,7 @@ public class HTNAnalytics {
     private HTNAnalytics() { }
 
     public void init(final Context context) {
-        FlurryAgent.init(context, BuildConfig.DEBUG ? FLURRY_API_KEY_DEBUG : FLURRY_API_KEY);
+        FlurryAgent.init(context, BuildConfig.FLURRY_API_KEY);
         FlurryAgent.setContinueSessionMillis(FLURRY_SESSION_TIMEOUT_SECONDS * 1000);
         FlurryAgent.setCaptureUncaughtExceptions(true);
         FlurryAgent.setLogEnabled(BuildConfig.DEBUG); // Disable Flurry logging for release builds
