@@ -16,6 +16,13 @@
 #   public *;
 #}
 
+### Otto ###
+-keepattributes *Annotation*
+-keepclassmembers class ** {
+    @com.squareup.otto.Subscribe public *;
+    @com.squareup.otto.Produce public *;
+}
+
 ### Okio, OkHttp, Retrofit ###
 -dontwarn okio.**
 -keep class com.squareup.okhttp.** { *; }
@@ -37,8 +44,8 @@
 #-dontwarn rx.**
 
 ### Debugging ###
--renamesourcefileattribute SourceFile
--keepattributes SourceFile, LineNumberTable
+#-renamesourcefileattribute SourceFile
+#-keepattributes SourceFile, LineNumberTable
 
 ### ??? ###
 -keepattributes Signature
