@@ -6,6 +6,7 @@ import com.ddiehl.android.simpleredditreader.events.requests.LoadSubredditEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.HideSubmittedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.ListingsLoadedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.SaveSubmittedEvent;
+import com.ddiehl.android.simpleredditreader.events.responses.UserIdentitySavedEvent;
 import com.ddiehl.android.simpleredditreader.events.responses.VoteSubmittedEvent;
 import com.ddiehl.android.simpleredditreader.view.ListingsView;
 import com.ddiehl.reddit.listings.RedditLink;
@@ -21,6 +22,11 @@ public class SubredditPresenter extends AbsListingsPresenter {
     @Override
     public void requestData() {
         mBus.post(new LoadSubredditEvent(mSubreddit, mSort, mTimespan, mNextPageListingId));
+    }
+
+    @Subscribe @Override
+    public void onUserIdentitySaved(UserIdentitySavedEvent event) {
+        super.onUserIdentitySaved(event);
     }
 
     @Subscribe @Override
