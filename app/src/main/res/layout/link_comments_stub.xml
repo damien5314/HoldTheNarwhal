@@ -14,32 +14,14 @@
         android:layout_width="@dimen/comment_indentation_margin"
         android:layout_height="match_parent" />
 
-    <LinearLayout
-        android:orientation="vertical"
+    <TextView
+        android:id="@+id/comment_more"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/comment_data_margin_horizontal"
-        android:layout_marginRight="@dimen/comment_data_margin_horizontal">
-
-        <LinearLayout
-            android:id="@+id/comment_metadata"
-            android:orientation="horizontal"
-            android:layout_width="fill_parent"
-            android:layout_height="@dimen/comment_data_height"
-            android:gravity="center">
-
-            <TextView
-                android:id="@+id/comment_more"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:gravity="center_vertical"
-                android:textColor="@color/secondary_text"
-                android:textSize="@dimen/comment_more_text_size"
-                android:maxLines="1"
-                tools:text="view 10 more comments"/>
-
-        </LinearLayout>
-
-    </LinearLayout>
+        android:layout_height="@dimen/comment_data_height"
+        android:gravity="center|center"
+        android:textColor="@color/secondary_text"
+        android:textSize="@dimen/comment_more_text_size"
+        android:maxLines="1"
+        tools:text="view 10 more comments"/>
 
 </LinearLayout>

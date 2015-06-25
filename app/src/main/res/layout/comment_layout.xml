@@ -87,28 +87,15 @@
                 android:orientation="horizontal"
                 android:gravity="end">
 
-                <LinearLayout
-                    android:id="@+id/gilded_view"
-                    android:orientation="horizontal"
+                <TextView
+                    android:id="@+id/comment_gilded_text_view"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-
-                    <ImageView
-                        android:id="@+id/gilded_image_view"
-                        android:layout_width="16dp"
-                        android:layout_height="16dp"
-                        android:layout_gravity="center_vertical"
-                        android:src="@drawable/ic_gilded_filled_outlined"/>
-
-                    <TextView
-                        android:id="@+id/comment_gilded_text_view"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        tools:text="× 2"
-                        style="@style/GildedTextView"/>
-
-                </LinearLayout>
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:drawableStart="@drawable/ic_gilded_filled_outlined"
+                    android:drawableLeft="@drawable/ic_gilded_filled_outlined"
+                    tools:text="× 2"
+                    style="@style/GildedTextView"/>
 
                 <ImageView
                     android:id="@+id/comment_saved_icon"

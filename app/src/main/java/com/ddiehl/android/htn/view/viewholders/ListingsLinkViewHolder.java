@@ -37,7 +37,6 @@ public class ListingsLinkViewHolder extends RecyclerView.ViewHolder
     @InjectView(R.id.link_self_text) TextView mSelfText;
     @InjectView(R.id.link_thumbnail) ImageView mLinkThumbnail;
     @InjectView(R.id.link_timestamp) RedditDateTextView mLinkTimestamp;
-    @InjectView(R.id.gilded_view) View mGildedView;
     @InjectView(R.id.link_gilded_text_view) TextView mGildedText;
     @InjectView(R.id.link_stickied_view) View mStickiedView;
 
@@ -151,9 +150,9 @@ public class ListingsLinkViewHolder extends RecyclerView.ViewHolder
         Integer gilded = link.getGilded();
         if (gilded != null && gilded > 0) {
             mGildedText.setText(String.format(mContext.getString(R.string.link_gilded_text), gilded));
-            mGildedView.setVisibility(View.VISIBLE);
+            mGildedText.setVisibility(View.VISIBLE);
         } else {
-            mGildedView.setVisibility(View.GONE);
+            mGildedText.setVisibility(View.GONE);
         }
 
         // Show saved view if appropriate, else hide

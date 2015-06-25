@@ -5,8 +5,6 @@
     <string name="app_name">Hold the Narwhal</string>
 
     <!-- Navigation drawer -->
-    <string name="drawer_open">Open navigation drawer</string>
-    <string name="drawer_close">Close navigation drawer</string>
     <string name="drawer_navigate_to_subreddit">go to subreddit</string>
     <string name="drawer_log_in">log in</string>
     <string name="drawer_user_profile">user profile</string>
@@ -18,7 +16,6 @@
 
     <!-- Links -->
     <string name="front_page_title">front page</string>
-    <string name="link_score_default">•</string>
     <string name="link_score">%s points</string>
     <string name="link_gilded_text">&#160;× %s</string>
     <string name="link_subreddit">/r/%s</string>
@@ -28,15 +25,12 @@
 
     <!-- Comments -->
     <string name="comments_fragment_title">comments</string>
-    <string name="fragment_comments_title">comments</string>
     <string name="no_comments_found">no comments found</string>
     <string name="comment_score">%s</string>
     <string name="continue_thread">continue thread</string>
     <string name="more_comments">view %s more comments</string>
-    <string name="comment_link_title">Link title</string>
 
     <!-- User Profile -->
-    <string name="user_profile_title">user profile</string>
     <string name="navigation_tabs_overview">overview</string>
     <string name="navigation_tabs_comments">comments</string>
     <string name="navigation_tabs_submitted">submitted</string>
@@ -82,9 +76,6 @@
     <string name="action_reply">reply</string>
     <string name="action_comment_permalink">permalink</string>
 
-    <!-- Spinner -->
-    <string name="spinner_getting_submissions">Getting submissions&#8230;</string>
-
     <!-- Dialogs -->
     <string name="dialog_sign_out_title">Sign out</string>
     <string name="dialog_sign_out_message">Sign out from user account?</string>
@@ -125,15 +116,7 @@
     <string name="timespan_minutes_abbr">%sm</string>
     <string name="timespan_seconds_abbr">%ss</string>
     <string name="timespan_now">just now</string>
-    <string name="application_authorized">application authorized</string>
-    <string name="access_token_revoked">access token revoked</string>
-    <string name="error_revoking_access_token">error revoking access token</string>
-    <string name="refresh_token_revoked">refresh token revoked</string>
-    <string name="error_revoking_refresh_token">error revoking refresh token</string>
-    <string name="user_authorized">user authorized</string>
-    <string name="user_authorization_refreshed">user authorization refreshed</string>
     <string name="welcome_user">welcome, %s</string>
-    <string name="user_identity_retrieved">user identity retrieved</string>
     <string name="user_signed_out">signed out</string>
 
 </resources>

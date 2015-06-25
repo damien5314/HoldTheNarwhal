@@ -32,7 +32,6 @@ public class ListingsCommentViewHolder extends RecyclerView.ViewHolder
     @InjectView(R.id.comment_timestamp) RedditDateTextView mTimestampView;
     @InjectView(R.id.comment_saved_icon) View mSavedView;
     @InjectView(R.id.comment_body) TextView mBodyView;
-    @InjectView(R.id.gilded_view) View mGildedView;
     @InjectView(R.id.comment_gilded_text_view) TextView mGildedText;
 
     public ListingsCommentViewHolder(View v, CommentPresenter presenter) {
@@ -123,9 +122,9 @@ public class ListingsCommentViewHolder extends RecyclerView.ViewHolder
         Integer gilded = comment.getGilded();
         if (gilded != null && gilded > 0) {
             mGildedText.setText(String.format(mContext.getString(R.string.link_gilded_text), gilded));
-            mGildedView.setVisibility(View.VISIBLE);
+            mGildedText.setVisibility(View.VISIBLE);
         } else {
-            mGildedView.setVisibility(View.GONE);
+            mGildedText.setVisibility(View.GONE);
         }
     }
 

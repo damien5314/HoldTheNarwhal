@@ -10,8 +10,6 @@
     <dimen name="link_timestamp_text_size">14sp</dimen>
     <dimen name="link_subreddit_text_size">14sp</dimen>
     <dimen name="link_comments_text_size">14sp</dimen>
-    <dimen name="link_saved_text_size">14sp</dimen>
-    <dimen name="link_row_height">48dp</dimen>
     <dimen name="navigation_drawer_width">240dp</dimen>
     <dimen name="navigation_drawer_elevation">6dp</dimen>
     <dimen name="navigation_drawer_header_height">160dp</dimen>
@@ -20,8 +18,6 @@
     <dimen name="navigation_drawer_item_margin">16dp</dimen>
     <dimen name="navigation_drawer_item_text">18sp</dimen>
     <dimen name="navigation_drawer_icon_margin">16dp</dimen>
-    <dimen name="navigation_drawer_icon_size">24dp</dimen>
-    <dimen name="web_view_text_margin">5dp</dimen>
     <dimen name="comment_indentation_margin">6dp</dimen>
     <dimen name="comment_expander_size">12dp</dimen> <!-- 12dp -->
     <dimen name="comment_author_text_size">16sp</dimen>
@@ -32,17 +28,12 @@
     <dimen name="comment_more_text_size">12sp</dimen>
     <dimen name="comment_author_margin">0dp</dimen> <!-- 5dp -->
     <dimen name="comment_score_margin">0dp</dimen> <!-- 5dp -->
-    <dimen name="comment_body_margin">0dp</dimen> <!-- 3dp -->
     <dimen name="comment_expander_margin_horizontal">@dimen/comment_data_margin_horizontal</dimen> <!-- 5dp -->
-    <dimen name="comment_data_margin_vertical">0dp</dimen> <!-- 5dp -->
     <dimen name="comment_data_margin_horizontal">5dp</dimen> <!-- 5dp -->
     <dimen name="toolbar_elevation">6dp</dimen> <!-- Should be 4dp? -->
-    <dimen name="link_score_margin">4dp</dimen>
     <dimen name="link_self_text_padding">8dp</dimen>
-    <dimen name="link_title_margin">5dp</dimen>
     <dimen name="link_list_item_margin_vertical">8dp</dimen>
     <dimen name="link_list_item_margin_horizontal">8dp</dimen>
-    <dimen name="link_thumbnail_margin">2dp</dimen>
     <dimen name="link_card_margin">0dp</dimen>
     <dimen name="link_card_elevation">4dp</dimen> <!-- Should be 6dp? -->
     <dimen name="link_card_corner_radius">0dp</dimen>
@@ -52,11 +43,8 @@
     <dimen name="comment_secondary_data_margin">5dp</dimen>
     <dimen name="link_thumbnail_size">64dp</dimen>
     <dimen name="comment_data_height">32dp</dimen>
-    <dimen name="comment_saved_icon_margin">6dp</dimen>
     <dimen name="comment_author_background_corner">3dp</dimen>
     <dimen name="comment_author_background_padding">3dp</dimen>
-    <dimen name="ads_banner_width">320dp</dimen>
-    <dimen name="ads_banner_height">50dp</dimen>
     <dimen name="banner_ad_margin">4dp</dimen>
     <dimen name="banner_ad_text_size">14sp</dimen>
     <dimen name="banner_ad_header_text_size">10sp</dimen>
