@@ -8,5 +8,6 @@ public class NUtils {
 
     public static native String getFlurryApiKey(boolean debugMode);
     public static native String getMoPubApiKey(boolean debugMode);
+    public static native String getRedditClientId();
 
 }

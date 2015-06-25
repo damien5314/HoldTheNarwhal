@@ -26,6 +26,7 @@ import com.ddiehl.android.htn.events.responses.UserAuthorizedEvent;
 import com.ddiehl.android.htn.events.responses.UserIdentitySavedEvent;
 import com.ddiehl.android.htn.utils.AuthUtils;
 import com.ddiehl.android.htn.utils.BaseUtils;
+import com.ddiehl.android.htn.utils.NUtils;
 import com.ddiehl.reddit.identity.AccessToken;
 import com.ddiehl.reddit.identity.AuthorizationResponse;
 import com.google.gson.FieldNamingPolicy;
@@ -43,7 +44,7 @@ import retrofit.converter.GsonConverter;
 
 public class RedditServiceAuth implements RedditService {
 
-    public static final String CLIENT_ID = "***REMOVED***";
+    public static final String CLIENT_ID = NUtils.getRedditClientId();
     public static final String RESPONSE_TYPE = "code";
     public static final String DURATION = "permanent";
     public static final String STATE = BaseUtils.getRandomString();
