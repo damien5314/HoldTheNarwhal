@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -19,6 +20,7 @@ import com.ddiehl.android.htn.BusProvider;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.RedditPreferences;
 import com.ddiehl.android.htn.presenter.ListingsPresenter;
+import com.ddiehl.android.htn.utils.NUtils;
 import com.ddiehl.android.htn.view.ListingsView;
 import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.android.htn.view.SettingsChangedListener;
@@ -128,7 +130,9 @@ public abstract class AbsListingsFragment extends AbsRedditFragment
     private void loadAdsIfEnabled() {
         boolean adsEnabled = RedditPreferences.getInstance(getActivity()).getAdsEnabled();
         if (adsEnabled) {
-            mAdAdapter.loadAds(BuildConfig.MOPUB_LISTING_AD_ID, mAdRequestParameters);
+            String key = NUtils.getMoPubApiKey(BuildConfig.DEBUG);
+            Log.d(TAG, "MoPub API key: " + key);
+            mAdAdapter.loadAds(key, mAdRequestParameters);
         } else {
             mAdAdapter.clearAds();
         }

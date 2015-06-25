@@ -19,13 +19,14 @@ android {
         targetSdkVersion 22
         versionCode 1
         versionName "0.1"
+        ndk {
+            moduleName "app"
+        }
     }
     buildTypes {
         debug {
             applicationIdSuffix ".debug"
             minifyEnabled false
-            buildConfigField "String", "FLURRY_API_KEY", "\"***REMOVED***\""
-            buildConfigField "String", "MOPUB_LISTING_AD_ID", "\"***REMOVED***\""
         }
 
         release {
@@ -33,8 +34,6 @@ android {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
-            buildConfigField "String", "FLURRY_API_KEY", "\"***REMOVED***\""
-            buildConfigField "String", "MOPUB_LISTING_AD_ID", "\"***REMOVED***\""
         }
     }
 }

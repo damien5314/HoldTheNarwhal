@@ -13,6 +13,7 @@ import com.ddiehl.android.htn.events.requests.UserSignOutEvent;
 import com.ddiehl.android.htn.events.requests.VoteEvent;
 import com.ddiehl.android.htn.events.responses.UserIdentityRetrievedEvent;
 import com.ddiehl.android.htn.utils.BaseUtils;
+import com.ddiehl.android.htn.utils.NUtils;
 import com.ddiehl.reddit.identity.UserIdentity;
 import com.ddiehl.reddit.listings.Listing;
 import com.flurry.android.FlurryAgent;
@@ -32,7 +33,7 @@ public class HTNAnalytics {
     private HTNAnalytics() { }
 
     public void init(final Context context) {
-        FlurryAgent.init(context, BuildConfig.FLURRY_API_KEY);
+        FlurryAgent.init(context, NUtils.getFlurryApiKey(BuildConfig.DEBUG));
         FlurryAgent.setContinueSessionMillis(FLURRY_SESSION_TIMEOUT_SECONDS * 1000);
         FlurryAgent.setCaptureUncaughtExceptions(true);
         FlurryAgent.setLogEnabled(BuildConfig.DEBUG); // Disable Flurry logging for release builds
