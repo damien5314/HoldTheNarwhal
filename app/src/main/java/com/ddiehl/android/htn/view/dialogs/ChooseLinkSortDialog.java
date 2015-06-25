@@ -14,7 +14,7 @@ import com.ddiehl.android.htn.R;
 public class ChooseLinkSortDialog extends DialogFragment {
 
     private static final String ARG_SETTING = "setting";
-    public static final String EXTRA_SORT = "com.ddiehl.android.simpleredditreader.extra_sort";
+    public static final String EXTRA_SORT = "com.ddiehl.android.htn.extra_sort";
 
     public ChooseLinkSortDialog() { }
 

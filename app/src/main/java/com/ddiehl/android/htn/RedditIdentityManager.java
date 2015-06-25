@@ -104,7 +104,7 @@ public class RedditIdentityManager {
         return mApplicationAccessToken;
     }
 
-    // /data/data/com.ddiehl.android.simpleredditreader.debug/shared_prefs/prefs_user_access_token.xml
+    // /data/data/com.ddiehl.android.htn.debug/shared_prefs/prefs_user_access_token.xml
     private AccessToken getSavedUserAccessToken() {
         SharedPreferences sp =  mContext.getSharedPreferences(PREFS_USER_ACCESS_TOKEN, Context.MODE_PRIVATE);
 

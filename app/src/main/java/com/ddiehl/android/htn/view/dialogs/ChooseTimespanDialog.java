@@ -14,7 +14,7 @@ import com.ddiehl.android.htn.R;
 public class ChooseTimespanDialog extends DialogFragment {
 
     private static final String ARG_SETTING = "setting";
-    public static final String EXTRA_TIMESPAN = "com.ddiehl.android.simpleredditreader.extra_timespan";
+    public static final String EXTRA_TIMESPAN = "com.ddiehl.android.htn.extra_timespan";
 
     public ChooseTimespanDialog() { }
 

@@ -12,7 +12,7 @@ import com.ddiehl.android.htn.events.requests.VoteEvent;
 
 public interface RedditService {
 
-    String USER_AGENT = "android:com.ddiehl.android.simpleredditreader:v0.1 (by /u/damien5314)";
+    String USER_AGENT = "android:com.ddiehl.android.htn:v0.1 (by /u/damien5314)";
     String ENDPOINT_NORMAL = "https://www.reddit.com";
     String ENDPOINT_AUTHORIZED = "https://oauth.reddit.com";
 
