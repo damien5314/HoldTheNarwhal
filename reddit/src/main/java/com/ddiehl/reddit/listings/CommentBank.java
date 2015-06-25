@@ -5,8 +5,8 @@ import java.util.List;
 
 public interface CommentBank {
 
-    boolean addAll(Collection<? extends AbsRedditComment> collection);
-    boolean addAll(int index, Collection<? extends AbsRedditComment> collection);
+    boolean addAll(Collection<Listing> collection);
+    boolean addAll(int index, Collection<Listing> collection);
     int indexOf(AbsRedditComment obj);
     int visibleIndexOf(AbsRedditComment obj);
     AbsRedditComment get(int position);
@@ -14,7 +14,7 @@ public interface CommentBank {
     AbsRedditComment remove(int position);
     boolean remove(AbsRedditComment comment);
     void clear();
-    void setData(List<AbsRedditComment> data);
+    void setData(List<Listing> data);
     boolean isVisible(int position);
     int getNumVisible();
     AbsRedditComment getVisibleComment(int position);

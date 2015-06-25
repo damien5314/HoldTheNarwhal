@@ -1,6 +1,6 @@
 package com.ddiehl.android.htn.events.responses;
 
-import com.ddiehl.reddit.listings.AbsRedditComment;
+import com.ddiehl.reddit.listings.Listing;
 import com.ddiehl.reddit.listings.ListingResponse;
 import com.ddiehl.reddit.listings.RedditLink;
 
@@ -9,7 +9,7 @@ import java.util.List;
 
 public class LinkCommentsLoadedEvent extends FailableEvent {
     private RedditLink mLink;
-    private List<AbsRedditComment> mComments;
+    private List<Listing> mComments;
 
     public LinkCommentsLoadedEvent(List<ListingResponse> listingResponseList) {
         // Link is responseList.get(0), comments are responseList.get(1)
@@ -28,7 +28,7 @@ public class LinkCommentsLoadedEvent extends FailableEvent {
         return mLink;
     }
 
-    public List<AbsRedditComment> getComments() {
+    public List<Listing> getComments() {
         return mComments;
     }
 }

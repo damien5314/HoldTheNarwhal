@@ -24,7 +24,6 @@ public class ListingsCommentViewHolder extends RecyclerView.ViewHolder
     private CommentPresenter mCommentPresenter;
     private RedditComment mRedditComment;
 
-    @InjectView(R.id.comment_metadata) View mCommentDataRow;
     @InjectView(R.id.comment_link_title) TextView mCommentLinkTitleView;
     @InjectView(R.id.comment_expander_icon) ImageView mExpanderIcon;
     @InjectView(R.id.comment_author) TextView mAuthorView;

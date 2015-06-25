@@ -42,7 +42,6 @@ import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
 
 public class RedditServiceAuth implements RedditService {
-    public static final String TAG = RedditServiceAuth.class.getSimpleName();
 
     public static final String CLIENT_ID = "***REMOVED***";
     public static final String RESPONSE_TYPE = "code";

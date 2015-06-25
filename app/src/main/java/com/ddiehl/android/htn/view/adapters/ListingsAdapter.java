@@ -14,7 +14,6 @@ import com.ddiehl.reddit.listings.RedditComment;
 import com.ddiehl.reddit.listings.RedditLink;
 
 public class ListingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private static final String TAG = ListingsAdapter.class.getSimpleName();
 
     private static final int TYPE_LINK = 0;
     private static final int TYPE_COMMENT = 1;

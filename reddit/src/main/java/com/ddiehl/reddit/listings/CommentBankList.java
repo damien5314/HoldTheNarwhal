@@ -7,8 +7,8 @@ import java.util.List;
 public class CommentBankList implements CommentBank {
     private static final String TAG = CommentBankList.class.getSimpleName();
 
-    private List<AbsRedditComment> mData;
-    private List<AbsRedditComment> mVisibleData;
+    private List<Listing> mData;
+    private List<Listing> mVisibleData;
 
     public CommentBankList() {
         mData = new ArrayList<>();
@@ -16,14 +16,14 @@ public class CommentBankList implements CommentBank {
     }
 
     @Override
-    public boolean addAll(Collection<? extends AbsRedditComment> collection) {
+    public boolean addAll(Collection<Listing> collection) {
         boolean result = mData.addAll(collection);
         syncVisibleData();
         return result;
     }
 
     @Override
-    public boolean addAll(int index, Collection<? extends AbsRedditComment> collection) {
+    public boolean addAll(int index, Collection<Listing> collection) {
         boolean result = mData.addAll(index, collection);
         syncVisibleData();
         return result;
@@ -41,7 +41,7 @@ public class CommentBankList implements CommentBank {
 
     @Override
     public AbsRedditComment get(int position) {
-        return mData.get(position);
+        return (AbsRedditComment) mData.get(position);
     }
 
     @Override
@@ -51,7 +51,7 @@ public class CommentBankList implements CommentBank {
 
     @Override
     public AbsRedditComment remove(int position) {
-        AbsRedditComment result = mData.remove(position);
+        AbsRedditComment result = (AbsRedditComment) mData.remove(position);
         syncVisibleData();
         return result;
     }
@@ -70,7 +70,7 @@ public class CommentBankList implements CommentBank {
     }
 
     @Override
-    public void setData(List<AbsRedditComment> data) {
+    public void setData(List<Listing> data) {
         clear();
         addAll(data);
         syncVisibleData();
@@ -78,7 +78,7 @@ public class CommentBankList implements CommentBank {
 
     @Override
     public boolean isVisible(int position) {
-        return mData.get(position).isVisible();
+        return ((AbsRedditComment) mData.get(position)).isVisible();
     }
 
     @Override
@@ -88,13 +88,13 @@ public class CommentBankList implements CommentBank {
 
     @Override
     public AbsRedditComment getVisibleComment(int position) {
-        return mVisibleData.get(position);
+        return (AbsRedditComment) mVisibleData.get(position);
     }
 
     private void syncVisibleData() {
         mVisibleData.clear();
-        for (AbsRedditComment comment : mData) {
-            if (comment.isVisible()) {
+        for (Listing comment : mData) {
+            if (((AbsRedditComment) comment).isVisible()) {
                 mVisibleData.add(comment);
             }
         }
@@ -119,7 +119,7 @@ public class CommentBankList implements CommentBank {
         if (position + 1 < totalItemCount) {
             // Retrieve first child comment
             int currentChildCommentPosition = position + 1;
-            AbsRedditComment currentChildComment = mData.get(currentChildCommentPosition);
+            AbsRedditComment currentChildComment = (AbsRedditComment) mData.get(currentChildCommentPosition);
             int currentChildCommentDepth = currentChildComment.getDepth();
             // Loop through remaining comments until we reach another comment at same depth
             // as the parent, or we reach the end of the comment list
@@ -153,7 +153,7 @@ public class CommentBankList implements CommentBank {
                 currentChildCommentPosition++;
                 // Retrieve comment at current position
                 if (currentChildCommentPosition < totalItemCount) {
-                    currentChildComment = mData.get(currentChildCommentPosition);
+                    currentChildComment = (AbsRedditComment) mData.get(currentChildCommentPosition);
                     currentChildCommentDepth = currentChildComment.getDepth();
                 }
             }

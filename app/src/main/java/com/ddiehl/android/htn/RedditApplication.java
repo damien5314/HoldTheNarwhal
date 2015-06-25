@@ -9,7 +9,6 @@ import com.squareup.picasso.Picasso;
 
 
 public class RedditApplication extends Application {
-    private static final String TAG = RedditApplication.class.getSimpleName();
 
     @Override
     public void onCreate() {
@@ -31,4 +30,5 @@ public class RedditApplication extends Application {
         analytics.init(this);
         bus.register(analytics);
     }
+
 }

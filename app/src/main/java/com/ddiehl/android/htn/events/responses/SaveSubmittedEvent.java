@@ -21,6 +21,10 @@ public class SaveSubmittedEvent extends FailableEvent {
         return mListing;
     }
 
+    public String getCategory() {
+        return mCategory;
+    }
+
     public boolean isToSave() {
         return mToSave;
     }

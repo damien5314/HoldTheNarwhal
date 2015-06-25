@@ -26,7 +26,7 @@ public class RedditNavEditText extends EditText {
         ButterKnife.inject(this);
     }
 
-    CharSequence before;
+    private CharSequence before;
 
     @OnTextChanged(callback = OnTextChanged.Callback.BEFORE_TEXT_CHANGED)
     void beforeTextChanged(CharSequence s, int start, int count, int after) {

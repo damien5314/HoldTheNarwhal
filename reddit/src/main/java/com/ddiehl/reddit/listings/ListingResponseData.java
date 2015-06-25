@@ -15,7 +15,7 @@ public class ListingResponseData {
         return modhash;
     }
 
-    public List getChildren() {
+    public List<Listing> getChildren() {
         return children;
     }
 

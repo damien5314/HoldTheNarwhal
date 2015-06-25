@@ -35,7 +35,6 @@ import com.squareup.otto.Subscribe;
 import java.util.List;
 
 public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
-    private static final String TAG = LinkCommentsPresenterImpl.class.getSimpleName();
 
     private Context mContext;
 
@@ -83,7 +82,7 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
 
         mLinkContext = event.getLink();
         mLinkCommentsView.setTitle(mLinkContext.getTitle());
-        List<AbsRedditComment> comments = event.getComments();
+        List<Listing> comments = event.getComments();
         AbsRedditComment.Utils.flattenCommentList(comments);
         mCommentBank.clear();
         mCommentBank.addAll(comments);
@@ -98,7 +97,7 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
         }
 
         RedditMoreComments parentStub = event.getParentStub();
-        List<AbsRedditComment> comments = event.getComments();
+        List<Listing> comments = event.getComments();
 
         if (comments.size() == 0) {
             mCommentBank.remove(parentStub);
@@ -106,9 +105,9 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
             AbsRedditComment.Utils.setDepthForCommentsList(comments, parentStub.getDepth());
 
             for (int i = 0; i < mCommentBank.size(); i++) {
-                AbsRedditComment comment = (AbsRedditComment) mCommentBank.get(i);
+                AbsRedditComment comment = mCommentBank.get(i);
                 if (comment instanceof RedditMoreComments) {
-                    String id = ((RedditMoreComments) comment).getId();
+                    String id = comment.getId();
                     if (id.equals(parentStub.getId())) { // Found the base comment
                         mCommentBank.remove(i);
                         mCommentBank.addAll(i, comments);
@@ -135,8 +134,7 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
 
     @Override
     public void updateSort() {
-        String sort = mContext.getSharedPreferences(RedditPreferences.PREFS_USER, Context.MODE_PRIVATE)
-                .getString(RedditPreferences.PREF_COMMENT_SORT, mContext.getString(R.string.default_comment_sort));
+        String sort = mPreferences.getCommentSort();
         updateSort(sort);
     }
 
@@ -173,7 +171,7 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
     @Override
     public void showLinkContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, RedditLink link) {
         mListingSelected = link;
-        mLinkCommentsView.showLinkContextMenu(menu, v, menuInfo, link);
+        mLinkCommentsView.showLinkContextMenu(menu, v, link);
         menu.findItem(R.id.action_link_save).setVisible(!link.isSaved());
         menu.findItem(R.id.action_link_unsave).setVisible(link.isSaved());
     }
@@ -290,7 +288,7 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
     @Override
     public void showCommentContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, RedditComment comment) {
         mListingSelected = comment;
-        mLinkCommentsView.showCommentContextMenu(menu, v, menuInfo, comment);
+        mLinkCommentsView.showCommentContextMenu(menu, v, comment);
         menu.findItem(R.id.action_comment_save).setVisible(!comment.isSaved());
         menu.findItem(R.id.action_comment_unsave).setVisible(comment.isSaved());
     }

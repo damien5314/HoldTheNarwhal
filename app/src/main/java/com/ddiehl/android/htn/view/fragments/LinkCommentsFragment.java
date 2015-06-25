@@ -35,7 +35,6 @@ import butterknife.ButterKnife;
 
 public class LinkCommentsFragment extends AbsRedditFragment
         implements LinkCommentsView, SettingsChangedListener {
-    private static final String TAG = LinkCommentsFragment.class.getSimpleName();
 
     private static final String ARG_SUBREDDIT = "subreddit";
     private static final String ARG_ARTICLE = "article";
@@ -121,7 +120,7 @@ public class LinkCommentsFragment extends AbsRedditFragment
     }
 
     @Override
-    public void showLinkContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, RedditLink link) {
+    public void showLinkContextMenu(ContextMenu menu, View v, RedditLink link) {
         getActivity().getMenuInflater().inflate(R.menu.link_context_menu, menu);
         String title = String.format(v.getContext().getString(R.string.menu_action_link),
                 link.getTitle(), link.getScore());
@@ -155,7 +154,7 @@ public class LinkCommentsFragment extends AbsRedditFragment
     }
 
     @Override
-    public void showCommentContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, RedditComment comment) {
+    public void showCommentContextMenu(ContextMenu menu, View v, RedditComment comment) {
         getActivity().getMenuInflater().inflate(R.menu.comment_context_menu, menu);
         String title = String.format(v.getContext().getString(R.string.menu_action_comment),
                 comment.getAuthor(), comment.getScore());

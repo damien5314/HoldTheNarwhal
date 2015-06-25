@@ -16,7 +16,7 @@ public class UserProfilePresenter extends AbsListingsPresenter {
 
     public UserProfilePresenter(Context context, ListingsView view, String show, String username,
                                 String sort, String timespan) {
-        super(context, view, show, username, null, null, null, sort, timespan);
+        super(context, view, show, username, null, sort, timespan);
     }
 
     @Override

@@ -53,16 +53,16 @@ public abstract class AbsListingsFragment extends AbsRedditFragment
     private static final String DIALOG_CHOOSE_SORT = "dialog_choose_sort";
     private static final String DIALOG_CHOOSE_TIMESPAN = "dialog_choose_timespan";
 
-    protected Bus mBus = BusProvider.getInstance();
+    Bus mBus = BusProvider.getInstance();
 
-    protected ListingsPresenter mListingsPresenter;
-    protected ListingsAdapter mListingsAdapter;
+    ListingsPresenter mListingsPresenter;
+    ListingsAdapter mListingsAdapter;
 
     private int mFirstVisibleItem, mVisibleItemCount, mTotalItemCount;
-    protected String mSelectedSort, mSelectedTimespan;
+    String mSelectedSort, mSelectedTimespan;
 
-    protected MoPubAdRecycleAdapter mAdAdapter;
-    protected RequestParameters mAdRequestParameters;
+    MoPubAdRecycleAdapter mAdAdapter;
+    RequestParameters mAdRequestParameters;
 
     abstract void updateTitle();
 
@@ -74,7 +74,7 @@ public abstract class AbsListingsFragment extends AbsRedditFragment
         mBus = BusProvider.getInstance();
     }
 
-    protected void instantiateListView(View v) {
+    void instantiateListView(View v) {
         RecyclerView rv = ButterKnife.findById(v, R.id.recycler_view);
         final LinearLayoutManager mgr = new LinearLayoutManager(getActivity());
         rv.setLayoutManager(mgr);
@@ -213,14 +213,14 @@ public abstract class AbsListingsFragment extends AbsRedditFragment
         return super.onOptionsItemSelected(item);
     }
 
-    protected void showSortOptionsMenu() {
+    void showSortOptionsMenu() {
         FragmentManager fm = getActivity().getSupportFragmentManager();
         ChooseLinkSortDialog chooseLinkSortDialog = ChooseLinkSortDialog.newInstance(mListingsPresenter.getSort());
         chooseLinkSortDialog.setTargetFragment(this, REQUEST_CHOOSE_SORT);
         chooseLinkSortDialog.show(fm, DIALOG_CHOOSE_SORT);
     }
 
-    protected void showTimespanOptionsMenu() {
+    void showTimespanOptionsMenu() {
         FragmentManager fm = getActivity().getSupportFragmentManager();
         ChooseTimespanDialog chooseTimespanDialog = ChooseTimespanDialog.newInstance(mListingsPresenter.getTimespan());
         chooseTimespanDialog.setTargetFragment(this, REQUEST_CHOOSE_TIMESPAN);
@@ -228,7 +228,7 @@ public abstract class AbsListingsFragment extends AbsRedditFragment
     }
 
     @Override
-    public void showLinkContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, RedditLink link) {
+    public void showLinkContextMenu(ContextMenu menu, View v, RedditLink link) {
         getActivity().getMenuInflater().inflate(R.menu.link_context_menu, menu);
         String title = String.format(v.getContext().getString(R.string.menu_action_link),
                 link.getTitle(), link.getScore());
@@ -241,7 +241,7 @@ public abstract class AbsListingsFragment extends AbsRedditFragment
     }
 
     @Override
-    public void showCommentContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, RedditComment comment) {
+    public void showCommentContextMenu(ContextMenu menu, View v, RedditComment comment) {
         getActivity().getMenuInflater().inflate(R.menu.comment_context_menu, menu);
         String title = String.format(getString(R.string.menu_action_comment),
                 comment.getAuthor(), comment.getScore());

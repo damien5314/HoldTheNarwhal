@@ -1,6 +1,7 @@
 package com.ddiehl.android.htn.events.responses;
 
 import com.ddiehl.reddit.listings.AbsRedditComment;
+import com.ddiehl.reddit.listings.Listing;
 import com.ddiehl.reddit.listings.MoreChildrenResponse;
 import com.ddiehl.reddit.listings.RedditMoreComments;
 
@@ -8,7 +9,7 @@ import java.util.List;
 
 public class MoreChildrenLoadedEvent extends FailableEvent {
     private RedditMoreComments mParentStub;
-    private List<AbsRedditComment> mComments;
+    private List<Listing> mComments;
 
     public MoreChildrenLoadedEvent(RedditMoreComments parentStub, MoreChildrenResponse moreChildrenResponse) {
         mParentStub = parentStub;
@@ -23,7 +24,7 @@ public class MoreChildrenLoadedEvent extends FailableEvent {
         return mParentStub;
     }
 
-    public List<AbsRedditComment> getComments() {
+    public List<Listing> getComments() {
         return mComments;
     }
 }

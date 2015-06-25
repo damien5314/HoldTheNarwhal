@@ -7,7 +7,7 @@ import com.ddiehl.reddit.listings.RedditLink;
 
 public interface LinkView extends BaseView {
 
-    void showLinkContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, RedditLink link);
+    void showLinkContextMenu(ContextMenu menu, View v, RedditLink link);
     void openLinkInWebView(RedditLink link);
     void showCommentsForLink(String subreddit, String linkId, String commentId);
     void openShareView(RedditLink link);

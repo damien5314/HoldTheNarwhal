@@ -67,7 +67,7 @@ public class RedditIdentityManager {
         return hasUserAccessToken();
     }
 
-    public boolean hasUserAccessToken() {
+    private boolean hasUserAccessToken() {
         return getUserAccessToken() != null;
     }
 
@@ -105,7 +105,7 @@ public class RedditIdentityManager {
     }
 
     // /data/data/com.ddiehl.android.simpleredditreader.debug/shared_prefs/prefs_user_access_token.xml
-    public AccessToken getSavedUserAccessToken() {
+    private AccessToken getSavedUserAccessToken() {
         SharedPreferences sp =  mContext.getSharedPreferences(PREFS_USER_ACCESS_TOKEN, Context.MODE_PRIVATE);
 
         if (sp.contains(PREF_ACCESS_TOKEN)) {
@@ -121,7 +121,7 @@ public class RedditIdentityManager {
         return null;
     }
 
-    public AccessToken getSavedApplicationAccessToken() {
+    private AccessToken getSavedApplicationAccessToken() {
         SharedPreferences sp =  mContext.getSharedPreferences(PREFS_APPLICATION_ACCESS_TOKEN, Context.MODE_PRIVATE);
 
         if (sp.contains(PREF_ACCESS_TOKEN)) {

@@ -58,7 +58,6 @@ import android.widget.TextView;
  * Special characters should be decoded (e.g. &#3232; ಠ_ಠ)
  */
 public class RedditTextView extends TextView {
-    private static final String TAG = RedditTextView.class.getSimpleName();
 
     public RedditTextView(Context context, AttributeSet attrs) {
         super(context, attrs);

@@ -12,12 +12,9 @@ import android.support.v4.app.DialogFragment;
 import com.ddiehl.android.htn.R;
 
 public class ChooseTimespanDialog extends DialogFragment {
-    private static final String TAG = ChooseTimespanDialog.class.getSimpleName();
 
     private static final String ARG_SETTING = "setting";
     public static final String EXTRA_TIMESPAN = "com.ddiehl.android.simpleredditreader.extra_timespan";
-
-    private String currentSetting;
 
     public ChooseTimespanDialog() { }
 
@@ -35,7 +32,7 @@ public class ChooseTimespanDialog extends DialogFragment {
 
         // Get selected item if it was passed
         Bundle args = getArguments();
-        currentSetting = args.getString(ARG_SETTING);
+        String currentSetting = args.getString(ARG_SETTING);
         if (currentSetting != null) {
             String[] settings = getResources().getStringArray(R.array.timespan_options);
             for (int i = 0; i < settings.length; i++) {

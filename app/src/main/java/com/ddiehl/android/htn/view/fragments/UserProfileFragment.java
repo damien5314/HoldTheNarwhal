@@ -17,7 +17,6 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 public class UserProfileFragment extends AbsListingsFragment implements ListingsView {
-    private static final String TAG = UserProfileFragment.class.getSimpleName();
 
     private static final String ARG_SHOW = "arg_show";
     private static final String ARG_USERNAME = "arg_username";

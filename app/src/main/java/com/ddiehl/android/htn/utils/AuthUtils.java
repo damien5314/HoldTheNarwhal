@@ -37,11 +37,11 @@ public class AuthUtils {
         }
     }
 
-    public static String getNameFromQuery(String query) {
+    private static String getNameFromQuery(String query) {
         return query.substring(0, query.indexOf("="));
     }
 
-    public static String getValueFromQuery(String query) {
+    private static String getValueFromQuery(String query) {
         return query.substring(query.indexOf("=") + 1);
     }
 }

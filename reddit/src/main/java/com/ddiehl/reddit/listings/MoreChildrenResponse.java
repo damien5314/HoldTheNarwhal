@@ -13,11 +13,11 @@ public class MoreChildrenResponse {
 
         private static class MoreChildrenResponseData {
 
-            @Expose private List<AbsRedditComment> things;
+            @Expose private List<Listing> things;
         }
     }
 
-    public List<AbsRedditComment> getChildComments() {
+    public List<Listing> getChildComments() {
         return json.data.things;
     }
 }

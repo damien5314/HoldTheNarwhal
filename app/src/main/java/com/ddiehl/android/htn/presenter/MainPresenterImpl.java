@@ -32,7 +32,6 @@ public class MainPresenterImpl implements MainPresenter {
 
     @Subscribe
     public void onUserIdentitySaved(UserIdentitySavedEvent event) {
-        UserIdentity identity = event.getUserIdentity();
         mMainView.updateUserIdentity();
     }
 

@@ -52,14 +52,13 @@ import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
 
 public class RedditServiceAPI implements RedditService {
-    private static final String TAG = RedditServiceAPI.class.getSimpleName();
 
     private Context mContext;
     private Bus mBus;
     private RedditAPI mAPI;
     private RedditIdentityManager mIdentityManager;
 
-    protected RedditServiceAPI(Context context, RedditIdentityManager manager) {
+    RedditServiceAPI(Context context, RedditIdentityManager manager) {
         mContext = context.getApplicationContext();
         mBus = BusProvider.getInstance();
         mBus.register(this);

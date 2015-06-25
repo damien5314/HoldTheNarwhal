@@ -17,23 +17,19 @@ import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 import android.widget.ZoomButtonsController;
 
-import com.ddiehl.android.htn.BusProvider;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.io.RedditServiceAuth;
 import com.ddiehl.android.htn.utils.AuthUtils;
 import com.ddiehl.android.htn.view.MainView;
-import com.squareup.otto.Bus;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 
 public class WebViewFragment extends AbsRedditFragment {
-    public static final String TAG = WebViewFragment.class.getSimpleName();
 
     private static final String ARG_URL = "url";
 
-    private Bus mBus = BusProvider.getInstance();
     private String mUrl;
     @InjectView(R.id.web_view) WebView mWebView;
 
@@ -110,13 +106,6 @@ public class WebViewFragment extends AbsRedditFragment {
                     progressBar.setProgress(progress);
                 }
             }
-
-            @Override
-            public void onReceivedTitle(WebView view, String title) {
-                if (title != null) {
-//                    getActivity().setTitle(title);
-                }
-            }
         });
 
         mWebView.loadUrl(mUrl);
@@ -146,7 +135,7 @@ public class WebViewFragment extends AbsRedditFragment {
      * Disable zoom buttons for WebView.
      * http://twigstechtips.blogspot.com/2013/09/android-disable-webview-zoom-controls.html
      */
-    public void disableWebViewZoomControls(final WebView webView) {
+    private void disableWebViewZoomControls(final WebView webView) {
         webView.getSettings().setSupportZoom(true);
         webView.getSettings().setBuiltInZoomControls(true);
 

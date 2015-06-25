@@ -26,7 +26,6 @@ public class ThreadCommentViewHolder extends RecyclerView.ViewHolder
     private CommentPresenter mCommentPresenter;
     private RedditComment mRedditComment;
 
-    @InjectView(R.id.comment_metadata) View mCommentDataRow;
     @InjectView(R.id.comment_expander_icon) ImageView mExpanderIcon;
     @InjectView(R.id.comment_author) TextView mAuthorView;
     @InjectView(R.id.comment_score) TextView mScoreView;

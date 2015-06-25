@@ -20,7 +20,6 @@ import butterknife.OnClick;
 
 public class ListingsLinkViewHolder extends RecyclerView.ViewHolder
         implements View.OnCreateContextMenuListener {
-    private static final String TAG = ListingsLinkViewHolder.class.getSimpleName();
 
     private Context mContext;
     private LinkPresenter mLinkPresenter;

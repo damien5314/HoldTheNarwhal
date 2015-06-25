@@ -12,12 +12,9 @@ import android.support.v4.app.DialogFragment;
 import com.ddiehl.android.htn.R;
 
 public class ChooseLinkSortDialog extends DialogFragment {
-    private static final String TAG = ChooseLinkSortDialog.class.getSimpleName();
 
     private static final String ARG_SETTING = "setting";
     public static final String EXTRA_SORT = "com.ddiehl.android.simpleredditreader.extra_sort";
-
-    private String currentSetting;
 
     public ChooseLinkSortDialog() { }
 
@@ -35,7 +32,7 @@ public class ChooseLinkSortDialog extends DialogFragment {
 
         // Get selected item if it was passed
         Bundle args = getArguments();
-        currentSetting = args.getString(ARG_SETTING);
+        String currentSetting = args.getString(ARG_SETTING);
         if (currentSetting != null) {
             String[] settings = getResources().getStringArray(R.array.link_sort_options);
             for (int i = 0; i < settings.length; i++) {

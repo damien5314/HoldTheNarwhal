@@ -12,7 +12,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -45,9 +45,8 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 
-public class MainActivity extends ActionBarActivity
+public class MainActivity extends AppCompatActivity
         implements MainView, ConfirmSignOutDialog.Callbacks, NavigationView.OnNavigationItemSelectedListener {
-    private static final String TAG = MainActivity.class.getSimpleName();
 
     private static final String DIALOG_CONFIRM_SIGN_OUT = "dialog_confirm_sign_out";
 
@@ -84,8 +83,6 @@ public class MainActivity extends ActionBarActivity
 
         mMainPresenter = new MainPresenterImpl(this, this);
         updateUserIdentity();
-//        updateNavigationItems();
-//        updateUserProfileTabs();
         mNavigationView.setNavigationItemSelectedListener(this);
 
         // MoPub configuration

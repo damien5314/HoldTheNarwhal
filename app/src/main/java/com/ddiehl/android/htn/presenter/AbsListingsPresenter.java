@@ -34,27 +34,26 @@ import java.util.List;
 
 public abstract class AbsListingsPresenter implements ListingsPresenter {
 
-    protected Context mContext;
-    protected Bus mBus;
-    protected RedditPreferences mPreferences;
-    protected List<Listing> mListings;
-    protected ListingsView mListingsView;
+    Context mContext;
+    Bus mBus;
+    RedditPreferences mPreferences;
+    List<Listing> mListings;
+    ListingsView mListingsView;
 
     private RedditIdentityManager mIdentityManager;
 
-    protected String mShow;
-    protected String mUsernameContext;
-    protected String mSubreddit;
-    protected String mSort;
-    protected String mTimespan;
+    String mShow;
+    String mUsernameContext;
+    String mSubreddit;
+    String mSort;
+    String mTimespan;
 
-    protected Listing mListingSelected;
-    protected boolean mListingsRequested = false;
-    protected String mNextPageListingId;
+    Listing mListingSelected;
+    boolean mListingsRequested = false;
+    String mNextPageListingId;
 
     public AbsListingsPresenter(Context context, ListingsView view,
-                                String show, String username, String subreddit, String article,
-                                String comment, String sort, String timespan) {
+                                String show, String username, String subreddit, String sort, String timespan) {
         mContext = context.getApplicationContext();
         mBus = BusProvider.getInstance();
         mPreferences = RedditPreferences.getInstance(mContext);
@@ -241,7 +240,7 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
     public void showLinkContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo,
                                     RedditLink link) {
         mListingSelected = link;
-        mListingsView.showLinkContextMenu(menu, v, menuInfo, link);
+        mListingsView.showLinkContextMenu(menu, v, link);
         menu.findItem(R.id.action_link_save).setVisible(!link.isSaved());
         menu.findItem(R.id.action_link_unsave).setVisible(link.isSaved());
     }
@@ -372,7 +371,7 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
     public void showCommentContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo,
                                        RedditComment comment) {
         mListingSelected = comment;
-        mListingsView.showCommentContextMenu(menu, v, menuInfo, comment);
+        mListingsView.showCommentContextMenu(menu, v, comment);
 
         menu.findItem(R.id.action_comment_save).setVisible(!comment.isSaved());
         menu.findItem(R.id.action_comment_unsave).setVisible(comment.isSaved());

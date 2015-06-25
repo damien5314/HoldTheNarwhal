@@ -42,20 +42,20 @@ public abstract class AbsRedditComment<T extends AbsRedditComment.Data> extends 
         /**
          * Flattens list of comments, marking each comment with depth
          */
-        public static void flattenCommentList(List<? extends AbsRedditComment> commentList) {
+        public static void flattenCommentList(List<Listing> commentList) {
             int i = 0;
             while (i < commentList.size()) {
-                AbsRedditComment listing = commentList.get(i);
+                Listing listing = commentList.get(i);
                 if (listing instanceof RedditComment) {
                     RedditComment comment = (RedditComment) listing;
                     ListingResponse repliesListing = comment.getReplies();
                     if (repliesListing != null) {
-                        List<AbsRedditComment> replies = repliesListing.getData().getChildren();
+                        List<Listing> replies = repliesListing.getData().getChildren();
                         flattenCommentList(replies);
                     }
                     comment.setDepth(comment.getDepth() + 1); // Increase depth by 1
                     if (comment.getReplies() != null) {
-                        commentList.addAll(i+1, comment.getReplies().getData().getChildren()); // Add all of the replies to commentList
+                        commentList.addAll(i + 1, comment.getReplies().getData().getChildren()); // Add all of the replies to commentList
                         comment.setReplies(null); // Remove replies for comment
                     }
                 } else { // Listing is a RedditMoreComments
@@ -69,10 +69,11 @@ public abstract class AbsRedditComment<T extends AbsRedditComment.Data> extends 
         /**
          * Sets depth for comments in a flat comments list
          */
-        public static void setDepthForCommentsList(List<AbsRedditComment> comments, int parentDepth) {
+        public static void setDepthForCommentsList(List<Listing> comments, int parentDepth) {
             HashMap<String, Integer> depthMap = new HashMap<>();
 
-            for (AbsRedditComment comment : comments) {
+            for (Listing listing : comments) {
+                AbsRedditComment comment = (AbsRedditComment) listing;
                 String name = comment.getName();
                 String parentId = comment.getParentId();
                 if (depthMap.containsKey(parentId)) {
