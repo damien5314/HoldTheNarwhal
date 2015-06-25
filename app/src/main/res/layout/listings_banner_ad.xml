@@ -19,6 +19,8 @@
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:textAlignment="viewStart"
+            android:gravity="start"
             android:padding="@dimen/banner_ad_margin"
             android:background="@color/primary_dark"
             android:text="@string/advertisement"

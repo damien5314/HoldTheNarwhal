@@ -34,6 +34,8 @@
                 android:id="@+id/comment_link_title"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:textAlignment="viewStart"
+                android:gravity="start"
                 tools:text="The brown fox jumped over the white fence"
                 style="@style/CommentLinkTitleTextView"/>
 

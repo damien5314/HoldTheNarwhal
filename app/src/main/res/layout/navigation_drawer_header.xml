@@ -39,6 +39,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_gravity="center_vertical"
+            android:textAlignment="viewStart"
+            android:gravity="start"
             android:textColor="#ffffff"
             android:textSize="@dimen/navigation_drawer_account_name_text"
             android:textStyle="bold"
@@ -52,7 +54,7 @@
             android:layout_gravity="center_vertical"
             android:layout_marginEnd="@dimen/navigation_drawer_icon_margin"
             android:layout_marginRight="@dimen/navigation_drawer_icon_margin"
-            android:src="@drawable/ic_sign_out"/>
+            android:src="@drawable/sign_out"/>
 
     </LinearLayout>
 

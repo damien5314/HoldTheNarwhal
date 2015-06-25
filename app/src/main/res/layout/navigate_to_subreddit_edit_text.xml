@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/navigation_drawer_item"
-    android:layout_width="match_parent"
-    android:layout_height="@dimen/navigation_drawer_item_height"
-    android:orientation="horizontal"
-    android:paddingLeft="@dimen/navigation_drawer_item_margin"
-    android:paddingRight="@dimen/navigation_drawer_item_margin" >
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:id="@+id/navigation_drawer_item"
+              android:layout_width="match_parent"
+              android:layout_height="@dimen/navigation_drawer_item_height"
+              android:orientation="horizontal"
+              android:paddingLeft="@dimen/navigation_drawer_item_margin"
+              android:paddingRight="@dimen/navigation_drawer_item_margin">
 
     <com.ddiehl.android.htn.view.widgets.RedditNavEditText
         android:id="@+id/drawer_navigate_to_subreddit_text"
         android:layout_width="@dimen/navigation_drawer_width"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
+        android:textAlignment="viewStart"
+        android:gravity="start"
         android:textColor="@color/primary_text"
         android:textSize="@dimen/navigation_drawer_item_text"
         android:textColorHint="@color/secondary_text"
@@ -27,6 +30,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:color="@color/accent"
-        android:src="@drawable/ic_navigation_go"/>
+        android:src="@drawable/ic_navigation_go"
+        android:autoMirrored="true" />
 
 </LinearLayout>
