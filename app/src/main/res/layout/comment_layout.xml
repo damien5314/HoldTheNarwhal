@@ -49,7 +49,7 @@
                 android:layout_marginLeft="@dimen/comment_secondary_data_margin"
                 android:layout_marginRight="@dimen/comment_secondary_data_margin"
                 android:textSize="@dimen/comment_secondary_data_text_size"
-                tools:text="•"/>
+                android:text="•"/>
 
             <TextView
                 android:id="@+id/comment_score"
@@ -68,7 +68,7 @@
                 android:layout_marginLeft="@dimen/comment_secondary_data_margin"
                 android:layout_marginRight="@dimen/comment_secondary_data_margin"
                 android:textSize="@dimen/comment_secondary_data_text_size"
-                tools:text="•"/>
+                android:text="•"/>
 
             <com.ddiehl.android.htn.view.widgets.RedditDateTextView
                 android:id="@+id/comment_timestamp"
