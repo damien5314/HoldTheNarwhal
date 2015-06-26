@@ -121,7 +121,7 @@ public class ListingsLinkViewHolder extends RecyclerView.ViewHolder
         switch (thumbnailUrl) {
             case "nsfw":
                 Picasso.with(mContext)
-                        .load(R.drawable.ic_nsfw)
+                        .load(R.drawable.ic_nsfw2)
                         .into(mLinkThumbnail);
                 break;
             case "": case "default": case "self":

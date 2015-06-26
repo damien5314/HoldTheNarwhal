@@ -54,7 +54,7 @@
             android:layout_gravity="center_vertical"
             android:layout_marginEnd="@dimen/navigation_drawer_icon_margin"
             android:layout_marginRight="@dimen/navigation_drawer_icon_margin"
-            android:src="@drawable/sign_out"/>
+            android:src="@drawable/ic_sign_out"/>
 
     </LinearLayout>
 
