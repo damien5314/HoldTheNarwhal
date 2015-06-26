@@ -2,6 +2,7 @@ package com.ddiehl.android.htn.view.viewholders;
 
 
 import android.content.Context;
+import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu;
 import android.view.View;
@@ -60,7 +61,12 @@ public class ThreadCommentViewHolder extends RecyclerView.ViewHolder
         int viewMargin = (comment.getDepth() - 2)
                 * (int) mContext.getResources().getDimension(R.dimen.comment_indentation_margin);
         RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) itemView.getLayoutParams();
-        params.setMargins(viewMargin, 0, 0, 0);
+        if (Build.VERSION.SDK_INT >= 17
+                && mContext.getResources().getConfiguration().getLayoutDirection() == View.LAYOUT_DIRECTION_RTL) {
+            params.setMargins(0, 0, viewMargin, 0);
+        } else {
+            params.setMargins(viewMargin, 0, 0, 0);
+        }
 
         mAuthorView.setVisibility(View.VISIBLE);
         String authorType = null;

@@ -36,7 +36,7 @@ public class RedditApplication extends Application {
     }
 
     private void setMirroredIcons() {
-        if (Build.VERSION.SDK_INT > 19) {
+        if (Build.VERSION.SDK_INT >= 19) {
             int[] ids = new int[] {
                     R.drawable.ic_action_refresh,
                     R.drawable.ic_sign_out,
