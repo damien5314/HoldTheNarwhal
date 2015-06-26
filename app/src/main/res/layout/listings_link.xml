@@ -86,15 +86,19 @@
 
                     <TextView
                         android:id="@+id/link_score"
-                        style="@style/LinkScoreTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/LinkMetadataTextView"
                         tools:text="573 points"/>
 
                     <com.ddiehl.android.htn.view.widgets.RedditDateTextView
                         android:id="@+id/link_timestamp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:layout_alignParentEnd="true"
                         tools:text="2 days ago"
-                        style="@style/LinkTimestampTextView"/>
+                        style="@style/LinkMetadataTextView"/>
 
                 </RelativeLayout>
 
@@ -104,15 +108,19 @@
 
                     <TextView
                         android:id="@+id/link_author"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         tools:text="/u/andrewsmith1984"
-                        style="@style/LinkAuthorTextView"/>
+                        style="@style/LinkMetadataTextView"/>
 
                     <TextView
+                        style="@style/LinkMetadataTextView"
                         android:id="@+id/link_subreddit"
-                        tools:text="/r/AskReddit"
-                        style="@style/LinkSubredditTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
-                        android:layout_alignParentRight="true"/>
+                        android:layout_alignParentRight="true"
+                        tools:text="/r/AskReddit"/>
 
                 </RelativeLayout>
 
@@ -129,9 +137,11 @@
 
                     <TextView
                         android:id="@+id/link_comment_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_gravity="start"
                         tools:text="1993 comments"
-                        style="@style/LinkCommentCountTextView"/>
+                        style="@style/LinkMetadataTextView"/>
 
                     <ImageView
                         android:id="@+id/link_saved_view"
@@ -154,9 +164,10 @@
 
             </LinearLayout>
 
-            <ImageView
+            <ImageView style="@style/LinkThumbnail"
                 android:id="@+id/link_thumbnail"
-                style="@style/LinkThumbnail"
+                android:layout_width="@dimen/link_thumbnail_size"
+                android:layout_height="@dimen/link_thumbnail_size"
                 android:background="@drawable/thumbnail_bg"
                 android:src="@drawable/ic_thumbnail_placeholder"/>
 
