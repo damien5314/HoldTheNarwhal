@@ -14,22 +14,22 @@
 
     <item android:id="@+id/action_link_show_comments"
         android:title="@string/action_show_comments"
-        android:icon="@drawable/ic_action_show_comments"
+        android:icon="@drawable/action_show_comments"
         app:showAsAction="never"/>
 
     <item android:id="@+id/action_link_save"
           android:title="@string/action_save"
-          android:icon="@drawable/ic_action_save"
+          android:icon="@drawable/action_save"
           app:showAsAction="never"/>
 
     <item android:id="@+id/action_link_unsave"
           android:title="@string/action_unsave"
-          android:icon="@drawable/ic_action_save"
+          android:icon="@drawable/action_save"
           app:showAsAction="never"/>
 
     <item android:id="@+id/action_link_share"
         android:title="@string/action_share"
-        android:icon="@drawable/ic_action_share"
+        android:icon="@drawable/action_share"
         app:showAsAction="never"/>
 
     <item android:id="@+id/action_link_view_user_profile"

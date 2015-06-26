@@ -52,6 +52,8 @@
                     android:id="@+id/ad_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textAlignment="viewStart"
+                    android:gravity="start"
                     android:textStyle="bold"
                     android:textSize="@dimen/banner_ad_text_size"/>
 
@@ -59,6 +61,8 @@
                     android:id="@+id/ad_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textAlignment="viewStart"
+                    android:gravity="start"
                     android:textSize="@dimen/banner_ad_text_size"/>
 
             </LinearLayout>

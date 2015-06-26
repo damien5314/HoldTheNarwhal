@@ -139,7 +139,7 @@
                         android:layout_alignParentEnd="true"
                         android:layout_alignParentRight="true"
                         android:layout_gravity="center_vertical"
-                        android:src="@drawable/ic_saved"/>
+                        android:src="@drawable/saved"/>
 
                     <ImageView
                         android:id="@+id/link_stickied_view"
@@ -165,6 +165,8 @@
             android:id="@+id/link_self_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textAlignment="viewStart"
+            android:gravity="start"
             android:textColor="@color/primary_text"
             android:padding="@dimen/link_self_text_padding"
             android:bufferType="spannable"

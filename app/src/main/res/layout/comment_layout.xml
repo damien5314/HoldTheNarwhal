@@ -101,7 +101,7 @@
                     android:id="@+id/comment_saved_icon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_saved_dark"/>
+                    android:src="@drawable/saved_dark"/>
 
             </LinearLayout>
 

@@ -30,7 +30,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:color="@color/accent"
-        android:src="@drawable/ic_navigation_go"
+        android:src="@drawable/navigation_go"
         android:autoMirrored="true" />
 
 </LinearLayout>
