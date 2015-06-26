@@ -45,8 +45,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:drawableStart="@drawable/ic_gilded_filled_outlined"
-                    android:drawableLeft="@drawable/ic_gilded_filled_outlined"
+                    android:gravity="center_vertical"
+                    android:drawableStart="@drawable/ic_gilded_2"
+                    android:drawableLeft="@drawable/ic_gilded_2"
                     tools:text="× 2"
                     style="@style/GildedTextView"/>
 
