@@ -29,6 +29,7 @@
     <string name="comment_score">%s</string>
     <string name="continue_thread">continue thread</string>
     <string name="more_comments">view %s more comments</string>
+    <string name="listing_comment_title_format">%s by /u/%s in /r/%s</string>
 
     <!-- User Profile -->
     <string name="navigation_tabs_overview">overview</string>

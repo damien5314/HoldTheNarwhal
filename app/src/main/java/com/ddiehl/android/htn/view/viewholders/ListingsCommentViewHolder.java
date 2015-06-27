@@ -2,7 +2,11 @@ package com.ddiehl.android.htn.view.viewholders;
 
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.StyleSpan;
 import android.view.ContextMenu;
 import android.view.View;
 import android.widget.ImageView;
@@ -58,6 +62,14 @@ public class ListingsCommentViewHolder extends RecyclerView.ViewHolder
 
     public void bind(final RedditComment comment) {
         mRedditComment = comment;
+
+        // Add author and subreddit to link title text
+        SpannableString author = new SpannableString(" by /u/" + comment.getLinkAuthor());
+        author.setSpan(new StyleSpan(Typeface.BOLD), author.length(), author.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        mCommentLinkTitleView.append(author);
+        SpannableString subreddit = new SpannableString(" in /r/" + comment.getSubreddit());
+        subreddit.setSpan(new StyleSpan(Typeface.ITALIC), 0, subreddit.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        mCommentLinkTitleView.append(subreddit);
 
         mCommentLinkTitleView.setText(comment.getLinkTitle());
 
