@@ -2,11 +2,10 @@ package com.ddiehl.android.htn.view.viewholders;
 
 
 import android.content.Context;
-import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableString;
-import android.text.style.StyleSpan;
+import android.text.style.RelativeSizeSpan;
 import android.view.ContextMenu;
 import android.view.View;
 import android.widget.ImageView;
@@ -64,14 +63,14 @@ public class ListingsCommentViewHolder extends RecyclerView.ViewHolder
         mRedditComment = comment;
 
         // Add author and subreddit to link title text
-        SpannableString author = new SpannableString(" by /u/" + comment.getLinkAuthor());
-        author.setSpan(new StyleSpan(Typeface.BOLD), author.length(), author.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        mCommentLinkTitleView.append(author);
-        SpannableString subreddit = new SpannableString(" in /r/" + comment.getSubreddit());
-        subreddit.setSpan(new StyleSpan(Typeface.ITALIC), 0, subreddit.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        mCommentLinkTitleView.append(subreddit);
-
-        mCommentLinkTitleView.setText(comment.getLinkTitle());
+        String linkTitle = comment.getLinkTitle();
+        String linkAuthor = comment.getLinkAuthor();
+        String subreddit = comment.getSubreddit();
+        SpannableString str = new SpannableString(String.format(mContext.getString(R.string.listing_comment_title_format),
+                linkTitle, linkAuthor, subreddit));
+        str.setSpan(new RelativeSizeSpan(0.7f), linkTitle.length(), str.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+//        str.setSpan(new StyleSpan(Typeface.BOLD), linkAuthor.length(), author.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        mCommentLinkTitleView.setText(str);
 
         mAuthorView.setVisibility(View.VISIBLE);
         String authorType = null;
