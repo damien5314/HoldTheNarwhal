@@ -87,6 +87,12 @@
                 android:orientation="horizontal"
                 android:gravity="end">
 
+                <ImageView
+                    android:id="@+id/comment_saved_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_saved_dark"/>
+
                 <TextView
                     android:id="@+id/comment_gilded_text_view"
                     android:layout_width="wrap_content"
@@ -96,12 +102,6 @@
                     android:drawableLeft="@drawable/ic_gilded_2"
                     tools:text="× 2"
                     style="@style/GildedTextView"/>
-
-                <ImageView
-                    android:id="@+id/comment_saved_icon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_saved_dark"/>
 
             </LinearLayout>
 
