@@ -23,7 +23,7 @@ public class RedditNavEditText extends EditText {
 
     public RedditNavEditText(Context context, AttributeSet attrs) {
         super(context, attrs);
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
     }
 
     private CharSequence before;

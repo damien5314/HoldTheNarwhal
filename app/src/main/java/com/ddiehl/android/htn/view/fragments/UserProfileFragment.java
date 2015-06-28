@@ -13,15 +13,15 @@ import com.ddiehl.android.htn.view.ListingsView;
 import com.ddiehl.android.htn.view.adapters.ListingsAdapter;
 import com.ddiehl.reddit.identity.UserIdentity;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 
 public class UserProfileFragment extends AbsListingsFragment implements ListingsView {
 
     private static final String ARG_SHOW = "arg_show";
     private static final String ARG_USERNAME = "arg_username";
 
-    @InjectView(R.id.user_profile_tabs) TabLayout mUserProfileTabs;
+    @Bind(R.id.user_profile_tabs) TabLayout mUserProfileTabs;
 
     public UserProfileFragment() { }
 
@@ -55,7 +55,7 @@ public class UserProfileFragment extends AbsListingsFragment implements Listings
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 //        View v = inflater.inflate(R.layout.listings_fragment, container, false);
         View v = inflater.inflate(R.layout.listings_user_profile_fragment, container, false);
-        ButterKnife.inject(this, v);
+        ButterKnife.bind(this, v);
         instantiateListView(v);
         updateUserProfileTabs();
 //        updateTitle();

@@ -41,8 +41,8 @@ import com.mopub.common.MoPub;
 import com.mopub.mobileads.MoPubConversionTracker;
 import com.squareup.otto.Bus;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import butterknife.OnClick;
 
 public class MainActivity extends AppCompatActivity
@@ -59,11 +59,11 @@ public class MainActivity extends AppCompatActivity
     private ProgressDialog mProgressBar;
     private Dialog mSubredditNavigationDialog;
 
-    @InjectView(R.id.drawer_layout) DrawerLayout mDrawerLayout;
-    @InjectView(R.id.navigation_view) NavigationView mNavigationView;
-    @InjectView(R.id.user_account_icon) ImageView mGoldIndicator;
-    @InjectView(R.id.account_name) TextView mAccountNameView;
-    @InjectView(R.id.sign_out_button) View mSignOutView;
+    @Bind(R.id.drawer_layout) DrawerLayout mDrawerLayout;
+    @Bind(R.id.navigation_view) NavigationView mNavigationView;
+    @Bind(R.id.user_account_icon) ImageView mGoldIndicator;
+    @Bind(R.id.account_name) TextView mAccountNameView;
+    @Bind(R.id.sign_out_button) View mSignOutView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
 
         mMainPresenter = new MainPresenterImpl(this, this);
         updateUserIdentity();

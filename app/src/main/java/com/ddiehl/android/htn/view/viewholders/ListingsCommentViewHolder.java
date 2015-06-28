@@ -16,8 +16,8 @@ import com.ddiehl.android.htn.presenter.CommentPresenter;
 import com.ddiehl.android.htn.view.widgets.RedditDateTextView;
 import com.ddiehl.reddit.listings.RedditComment;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import butterknife.OnClick;
 
 public class ListingsCommentViewHolder extends RecyclerView.ViewHolder
@@ -27,20 +27,20 @@ public class ListingsCommentViewHolder extends RecyclerView.ViewHolder
     private CommentPresenter mCommentPresenter;
     private RedditComment mRedditComment;
 
-    @InjectView(R.id.comment_link_title) TextView mCommentLinkTitleView;
-    @InjectView(R.id.comment_expander_icon) ImageView mExpanderIcon;
-    @InjectView(R.id.comment_author) TextView mAuthorView;
-    @InjectView(R.id.comment_score) TextView mScoreView;
-    @InjectView(R.id.comment_timestamp) RedditDateTextView mTimestampView;
-    @InjectView(R.id.comment_saved_icon) View mSavedView;
-    @InjectView(R.id.comment_body) TextView mBodyView;
-    @InjectView(R.id.comment_gilded_text_view) TextView mGildedText;
+    @Bind(R.id.comment_link_title) TextView mCommentLinkTitleView;
+    @Bind(R.id.comment_expander_icon) ImageView mExpanderIcon;
+    @Bind(R.id.comment_author) TextView mAuthorView;
+    @Bind(R.id.comment_score) TextView mScoreView;
+    @Bind(R.id.comment_timestamp) RedditDateTextView mTimestampView;
+    @Bind(R.id.comment_saved_icon) View mSavedView;
+    @Bind(R.id.comment_body) TextView mBodyView;
+    @Bind(R.id.comment_gilded_text_view) TextView mGildedText;
 
     public ListingsCommentViewHolder(View v, CommentPresenter presenter) {
         super(v);
         mContext = v.getContext().getApplicationContext();
         mCommentPresenter = presenter;
-        ButterKnife.inject(this, v);
+        ButterKnife.bind(this, v);
         itemView.setOnCreateContextMenuListener(this);
     }
 

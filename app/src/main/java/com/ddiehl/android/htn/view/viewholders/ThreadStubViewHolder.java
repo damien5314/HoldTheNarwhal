@@ -11,8 +11,8 @@ import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.presenter.CommentPresenter;
 import com.ddiehl.reddit.listings.RedditMoreComments;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import butterknife.OnClick;
 
 public class ThreadStubViewHolder extends RecyclerView.ViewHolder {
@@ -21,13 +21,13 @@ public class ThreadStubViewHolder extends RecyclerView.ViewHolder {
     private CommentPresenter mCommentPresenter;
     private RedditMoreComments mRedditMoreComments;
 
-    @InjectView(R.id.comment_more) TextView mMoreCommentsView;
+    @Bind(R.id.comment_more) TextView mMoreCommentsView;
 
     public ThreadStubViewHolder(View v, CommentPresenter presenter) {
         super(v);
         mContext = v.getContext().getApplicationContext();
         mCommentPresenter = presenter;
-        ButterKnife.inject(this, v);
+        ButterKnife.bind(this, v);
     }
 
     public void bind(RedditMoreComments comment) {

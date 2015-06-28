@@ -22,8 +22,8 @@ import com.ddiehl.android.htn.io.RedditServiceAuth;
 import com.ddiehl.android.htn.utils.AuthUtils;
 import com.ddiehl.android.htn.view.MainView;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 
 
 public class WebViewFragment extends AbsRedditFragment {
@@ -31,7 +31,7 @@ public class WebViewFragment extends AbsRedditFragment {
     private static final String ARG_URL = "url";
 
     private String mUrl;
-    @InjectView(R.id.web_view) WebView mWebView;
+    @Bind(R.id.web_view) WebView mWebView;
 
     public static Fragment newInstance(String url) {
         Bundle args = new Bundle();
@@ -60,7 +60,7 @@ public class WebViewFragment extends AbsRedditFragment {
         final ProgressBar progressBar = ButterKnife.findById(v, R.id.progress_bar);
         progressBar.setMax(100);
 
-        mWebView = ButterKnife.findById(v, R.id.web_view);
+        ButterKnife.bind(v);
 
         WebSettings settings = mWebView.getSettings();
         settings.setJavaScriptEnabled(true);

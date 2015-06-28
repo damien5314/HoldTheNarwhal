@@ -14,8 +14,8 @@ import com.ddiehl.android.htn.view.widgets.RedditDateTextView;
 import com.ddiehl.reddit.listings.RedditLink;
 import com.squareup.picasso.Picasso;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import butterknife.OnClick;
 
 public class ListingsLinkViewHolder extends RecyclerView.ViewHolder
@@ -25,25 +25,25 @@ public class ListingsLinkViewHolder extends RecyclerView.ViewHolder
     private LinkPresenter mLinkPresenter;
     private RedditLink mRedditLink;
 
-    @InjectView(R.id.link_view) View mLinkView;
-    @InjectView(R.id.link_saved_view) View mSavedView;
-    @InjectView(R.id.link_title) TextView mLinkTitle;
-    @InjectView(R.id.link_domain) TextView mLinkDomain;
-    @InjectView(R.id.link_score) TextView mLinkScore;
-    @InjectView(R.id.link_author) TextView mLinkAuthor;
-    @InjectView(R.id.link_subreddit) TextView mLinkSubreddit;
-    @InjectView(R.id.link_comment_count) TextView mLinkComments;
-    @InjectView(R.id.link_self_text) TextView mSelfText;
-    @InjectView(R.id.link_thumbnail) ImageView mLinkThumbnail;
-    @InjectView(R.id.link_timestamp) RedditDateTextView mLinkTimestamp;
-    @InjectView(R.id.link_gilded_text_view) TextView mGildedText;
-    @InjectView(R.id.link_stickied_view) View mStickiedView;
+    @Bind(R.id.link_view) View mLinkView;
+    @Bind(R.id.link_saved_view) View mSavedView;
+    @Bind(R.id.link_title) TextView mLinkTitle;
+    @Bind(R.id.link_domain) TextView mLinkDomain;
+    @Bind(R.id.link_score) TextView mLinkScore;
+    @Bind(R.id.link_author) TextView mLinkAuthor;
+    @Bind(R.id.link_subreddit) TextView mLinkSubreddit;
+    @Bind(R.id.link_comment_count) TextView mLinkComments;
+    @Bind(R.id.link_self_text) TextView mSelfText;
+    @Bind(R.id.link_thumbnail) ImageView mLinkThumbnail;
+    @Bind(R.id.link_timestamp) RedditDateTextView mLinkTimestamp;
+    @Bind(R.id.link_gilded_text_view) TextView mGildedText;
+    @Bind(R.id.link_stickied_view) View mStickiedView;
 
     public ListingsLinkViewHolder(View v, LinkPresenter presenter) {
         super(v);
         mContext = v.getContext();
         mLinkPresenter = presenter;
-        ButterKnife.inject(this, v);
+        ButterKnife.bind(this, v);
         itemView.setOnCreateContextMenuListener(this);
     }
 
