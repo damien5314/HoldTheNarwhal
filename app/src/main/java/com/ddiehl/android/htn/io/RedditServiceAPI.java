@@ -196,7 +196,7 @@ public class RedditServiceAPI implements RedditService {
         for (String child : children)
             b.append(child).append(",");
         String childrenString = b.toString();
-        childrenString = childrenString.substring(0, childrenString.length() - 1);
+        childrenString = childrenString.substring(0, Math.max(childrenString.length() - 1, 0));
 
         mAPI.getMoreChildren(link.getName(), childrenString, sort, new Callback<MoreChildrenResponse>() {
             @Override

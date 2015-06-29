@@ -36,6 +36,8 @@ import java.util.List;
 
 public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
 
+    private static final int MAX_CHILDREN_PER_REQUEST = 20;
+
     private Context mContext;
 
     private LinkCommentsView mLinkCommentsView;
@@ -89,6 +91,15 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
         mLinkCommentsView.commentsUpdated();
     }
 
+    @Override
+    public void getMoreChildren(RedditMoreComments comment) {
+        mLinkCommentsView.showSpinner(null);
+        List<String> children = comment.getChildren();
+        // Truncate list of children to 20
+        children = children.subList(0, Math.min(MAX_CHILDREN_PER_REQUEST, children.size()));
+        mBus.post(new LoadMoreChildrenEvent(mLinkContext, comment, children, mSort));
+    }
+
     @Subscribe
     public void onMoreChildrenLoaded(MoreChildrenLoadedEvent event) {
         mLinkCommentsView.dismissSpinner();
@@ -99,17 +110,20 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
         RedditMoreComments parentStub = event.getParentStub();
         List<Listing> comments = event.getComments();
 
-        if (comments.size() == 0) {
+        if (comments == null || comments.size() == 0) {
             mCommentBank.remove(parentStub);
         } else {
             AbsRedditComment.Utils.setDepthForCommentsList(comments, parentStub.getDepth());
 
+            // TODO: Pass RedditMoreComments along with event so we don't have to search for it
             for (int i = 0; i < mCommentBank.size(); i++) {
                 AbsRedditComment comment = mCommentBank.get(i);
                 if (comment instanceof RedditMoreComments) {
                     String id = comment.getId();
                     if (id.equals(parentStub.getId())) { // Found the base comment
-                        mCommentBank.remove(i);
+                        ((RedditMoreComments) comment).removeChildren(comments);
+                        if (((RedditMoreComments) comment).getCount() == 0)
+                            mCommentBank.remove(i);
                         mCommentBank.addAll(i, comments);
                         break;
                     }
@@ -123,13 +137,6 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
     @Override
     public RedditLink getLinkContext() {
         return mLinkContext;
-    }
-
-    @Override
-    public void getMoreChildren(RedditMoreComments comment) {
-        mLinkCommentsView.showSpinner(null);
-        List<String> children = comment.getChildren();
-        mBus.post(new LoadMoreChildrenEvent(mLinkContext, comment, children, mSort));
     }
 
     @Override

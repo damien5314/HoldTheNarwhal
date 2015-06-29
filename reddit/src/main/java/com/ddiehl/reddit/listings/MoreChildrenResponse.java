@@ -18,6 +18,8 @@ public class MoreChildrenResponse {
     }
 
     public List<Listing> getChildComments() {
+        if (json.data == null)
+            return null;
         return json.data.things;
     }
 }

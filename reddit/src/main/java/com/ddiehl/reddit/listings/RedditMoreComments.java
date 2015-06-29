@@ -15,6 +15,18 @@ public class RedditMoreComments extends AbsRedditComment<RedditMoreComments.Data
         return data.children;
     }
 
+    public void removeChildren(int num) {
+        data.children = data.children.subList(num, data.children.size());
+    }
+
+    public void removeChildren(List<Listing> comments) {
+        for (Listing comment : comments) {
+            data.children.remove(comment.getId());
+            data.count -= comment instanceof RedditComment ?
+                    1 : ((RedditMoreComments) comment).getCount();
+        }
+    }
+
     @Override
     public boolean isCollapsed() {
         return false;
