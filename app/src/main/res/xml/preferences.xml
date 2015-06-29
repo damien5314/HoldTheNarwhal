@@ -23,10 +23,12 @@
         android:key="prefs_app"
         android:title="@string/preferences_app">
 
+<!--
         <CheckBoxPreference
             android:key="pref_enable_ads"
             android:title="@string/pref_enable_ads"
             android:summary="@string/pref_enable_ads_summary"/>
+-->
 
     </PreferenceCategory>
 
