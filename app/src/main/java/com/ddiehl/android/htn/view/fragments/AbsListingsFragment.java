@@ -8,7 +8,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -124,14 +123,13 @@ public abstract class AbsListingsFragment extends AbsRedditFragment
             mListingsPresenter.refreshData();
         }
 
-        loadAdsIfEnabled();
+//        loadAdsIfEnabled();
     }
 
     private void loadAdsIfEnabled() {
         boolean adsEnabled = RedditPreferences.getInstance(getActivity()).getAdsEnabled();
         if (adsEnabled) {
             String key = NUtils.getMoPubApiKey(BuildConfig.DEBUG);
-            Log.d(TAG, "MoPub API key: " + key);
             mAdAdapter.loadAds(key, mAdRequestParameters);
         } else {
             mAdAdapter.clearAds();
