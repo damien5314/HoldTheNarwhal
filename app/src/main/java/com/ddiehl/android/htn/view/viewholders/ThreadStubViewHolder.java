@@ -45,8 +45,16 @@ public class ThreadStubViewHolder extends RecyclerView.ViewHolder {
 
         mMoreCommentsView.setVisibility(View.VISIBLE);
         int count = comment.getCount();
-        mMoreCommentsView.setText(count == 0 ? mContext.getString(R.string.continue_thread) :
-                String.format(mContext.getString(R.string.more_comments), count));
+        switch (count) {
+            case 0:
+                mMoreCommentsView.setText(mContext.getString(R.string.continue_thread));
+                break;
+            case 1:
+                mMoreCommentsView.setText(mContext.getString(R.string.more_comments_s));
+                break;
+            default:
+                mMoreCommentsView.setText(String.format(mContext.getString(R.string.more_comments), count));
+        }
     }
 
     @OnClick(R.id.comment_more)
