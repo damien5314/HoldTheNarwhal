@@ -60,7 +60,7 @@ public class WebViewFragment extends AbsRedditFragment {
         final ProgressBar progressBar = ButterKnife.findById(v, R.id.progress_bar);
         progressBar.setMax(100);
 
-        ButterKnife.bind(v);
+        ButterKnife.bind(this, v);
 
         WebSettings settings = mWebView.getSettings();
         settings.setJavaScriptEnabled(true);

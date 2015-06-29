@@ -6,7 +6,6 @@ import android.content.Context;
 import com.ddiehl.android.htn.BusProvider;
 import com.ddiehl.android.htn.RedditIdentityManager;
 import com.ddiehl.android.htn.RedditPreferences;
-import com.ddiehl.android.htn.events.exceptions.UserRequiredException;
 import com.ddiehl.android.htn.events.requests.AuthorizeApplicationEvent;
 import com.ddiehl.android.htn.events.requests.GetUserIdentityEvent;
 import com.ddiehl.android.htn.events.requests.HideEvent;
@@ -362,7 +361,7 @@ public class RedditServiceAuth implements RedditService {
             mBus.post(new RefreshUserAccessTokenEvent(token.getRefreshToken()));
         } else {
             mQueuedEvent = null;
-            mBus.post(new UserRequiredException());
+//            mBus.post(new UserRequiredException());
         }
     }
 
@@ -379,7 +378,7 @@ public class RedditServiceAuth implements RedditService {
             mBus.post(new RefreshUserAccessTokenEvent(token.getRefreshToken()));
         } else {
             mQueuedEvent = null;
-            mBus.post(new UserRequiredException());
+//            mBus.post(new UserRequiredException());
         }
     }
 
@@ -396,7 +395,7 @@ public class RedditServiceAuth implements RedditService {
             mBus.post(new RefreshUserAccessTokenEvent(token.getRefreshToken()));
         } else {
             mQueuedEvent = null;
-            mBus.post(new UserRequiredException());
+//            mBus.post(new UserRequiredException());
         }
     }
 
@@ -413,7 +412,7 @@ public class RedditServiceAuth implements RedditService {
             mBus.post(new RefreshUserAccessTokenEvent(token.getRefreshToken()));
         } else {
             mQueuedEvent = null;
-            mBus.post(new UserRequiredException());
+//            mBus.post(new UserRequiredException());
         }
     }
 

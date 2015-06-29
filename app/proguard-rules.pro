@@ -16,6 +16,16 @@
 #   public *;
 #}
 
+### Remove logging ###
+#-assumenosideeffects class android.util.Log {
+#    public static boolean isLoggable(java.lang.String, int);
+#    public static int v(...);
+#    public static int i(...);
+#    public static int w(...);
+#    public static int d(...);
+#    public static int e(...);
+#}
+
 ### Otto ###
 -keepattributes *Annotation*
 -keepclassmembers class ** {
@@ -53,9 +63,11 @@
 -keep class sun.misc.Unsafe { *; }
 
 ### Butter Knife ###
+-keep class butterknife.** { *; }
 -dontwarn butterknife.internal.**
--keep class **$$ViewInjector { *; }
--keepnames class * { @butterknife.InjectView *;}
+-keep class **$$ViewBinder { *; }
+-keepclasseswithmembernames class * { @butterknife.* <fields>; }
+-keepclasseswithmembernames class * { @butterknife.* <methods>; }
 -dontwarn butterknife.Views$InjectViewProcessor
 -dontwarn com.gc.materialdesign.views.**
 

@@ -4,7 +4,6 @@ import android.content.Context;
 
 import com.ddiehl.android.htn.BusProvider;
 import com.ddiehl.android.htn.RedditIdentityManager;
-import com.ddiehl.android.htn.events.exceptions.UserRequiredException;
 import com.ddiehl.android.htn.events.requests.GetUserIdentityEvent;
 import com.ddiehl.android.htn.events.requests.HideEvent;
 import com.ddiehl.android.htn.events.requests.LoadLinkCommentsEvent;
@@ -254,7 +253,7 @@ public class RedditServiceAPI implements RedditService {
                 try {
                     InputStream in = response.getBody().in();
                     if (BaseUtils.inputStreamToString(in).contains("USER_REQUIRED")) {
-                        throw new UserRequiredException();
+//                        throw new UserRequiredException();
                     } else {
                         mBus.post(new VoteSubmittedEvent(listing, event.getDirection()));
                     }
@@ -317,7 +316,7 @@ public class RedditServiceAPI implements RedditService {
         try {
             InputStream in = response.getBody().in();
             if (BaseUtils.inputStreamToString(in).contains("USER_REQUIRED")) {
-                throw new UserRequiredException();
+//                throw new UserRequiredException();
             } else {
                 mBus.post(new SaveSubmittedEvent(listing, category, toSave));
             }
@@ -368,7 +367,7 @@ public class RedditServiceAPI implements RedditService {
         try {
             InputStream in = response.getBody().in();
             if (BaseUtils.inputStreamToString(in).contains("USER_REQUIRED")) {
-                throw new UserRequiredException();
+//                throw new UserRequiredException();
             } else {
                 mBus.post(new HideSubmittedEvent(listing, toHide));
             }
