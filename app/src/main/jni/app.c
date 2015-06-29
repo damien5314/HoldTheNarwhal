@@ -11,8 +11,8 @@ jstring Java_com_ddiehl_android_htn_utils_NUtils_getFlurryApiKey(JNIEnv* env, jo
     if (debugMode) {
         return (*env)->NewStringUTF(env, "***REMOVED***");
     } else {
-        return (*env)->NewStringUTF(env, "***REMOVED***");
 //        return (*env)->NewStringUTF(env, "***REMOVED***");
+        return (*env)->NewStringUTF(env, "***REMOVED***");
     }
 }
 
@@ -20,7 +20,7 @@ jstring Java_com_ddiehl_android_htn_utils_NUtils_getMoPubApiKey(JNIEnv* env, job
     if (debugMode) {
         return (*env)->NewStringUTF(env, "***REMOVED***");
     } else {
-        return (*env)->NewStringUTF(env, "***REMOVED***");
 //        return (*env)->NewStringUTF(env, "***REMOVED***");
+        return (*env)->NewStringUTF(env, "***REMOVED***");
     }
 }
