@@ -11,19 +11,17 @@ public class RedditMoreComments extends AbsRedditComment<RedditMoreComments.Data
         return data.count;
     }
 
-    public List<String> getChildren() {
-        return data.children;
+    public void setCount(int num) {
+        data.count = num;
     }
 
-    public void removeChildren(int num) {
-        data.children = data.children.subList(num, data.children.size());
+    public List<String> getChildren() {
+        return data.children;
     }
 
     public void removeChildren(List<Listing> comments) {
         for (Listing comment : comments) {
             data.children.remove(comment.getId());
-            data.count -= comment instanceof RedditComment ?
-                    1 : ((RedditMoreComments) comment).getCount();
         }
     }
 

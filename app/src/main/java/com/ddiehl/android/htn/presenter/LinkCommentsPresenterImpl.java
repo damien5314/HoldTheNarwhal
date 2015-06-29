@@ -122,6 +122,7 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
                     String id = comment.getId();
                     if (id.equals(parentStub.getId())) { // Found the base comment
                         ((RedditMoreComments) comment).removeChildren(comments);
+                        ((RedditMoreComments) comment).setCount(((RedditMoreComments) comment).getChildren().size());
                         if (((RedditMoreComments) comment).getCount() == 0)
                             mCommentBank.remove(i);
                         mCommentBank.addAll(i, comments);
