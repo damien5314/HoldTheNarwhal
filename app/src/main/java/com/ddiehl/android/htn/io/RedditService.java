@@ -1,5 +1,6 @@
 package com.ddiehl.android.htn.io;
 
+import com.ddiehl.android.htn.BuildConfig;
 import com.ddiehl.android.htn.events.requests.HideEvent;
 import com.ddiehl.android.htn.events.requests.LoadLinkCommentsEvent;
 import com.ddiehl.android.htn.events.requests.LoadSubredditEvent;
@@ -12,7 +13,7 @@ import com.ddiehl.android.htn.events.requests.VoteEvent;
 
 public interface RedditService {
 
-    String USER_AGENT = "android:com.ddiehl.android.htn:v0.1 (by /u/damien5314)";
+    String USER_AGENT = String.format("android:com.ddiehl.android.htn:v%s (by /u/damien5314)", BuildConfig.VERSION_NAME);
     String ENDPOINT_NORMAL = "https://www.reddit.com";
     String ENDPOINT_AUTHORIZED = "https://oauth.reddit.com";
 
