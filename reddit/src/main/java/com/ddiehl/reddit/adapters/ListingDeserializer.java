@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2015 Damien Diehl. All rights reserved.
+ */
+
 package com.ddiehl.reddit.adapters;
 
 import com.ddiehl.reddit.listings.Listing;

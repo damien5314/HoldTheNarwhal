@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2015 Damien Diehl. All rights reserved.
+ */
+
 package com.ddiehl.android.htn.view.adapters;
 
 import android.support.v7.widget.RecyclerView;

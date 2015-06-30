@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2015 Damien Diehl. All rights reserved.
+ */
+
 package com.ddiehl.android.htn.io;
 
 import com.ddiehl.reddit.identity.UserIdentity;
