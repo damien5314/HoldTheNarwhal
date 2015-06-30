@@ -4,7 +4,7 @@
 
 package com.ddiehl.android.htn.view.fragments;
 
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 
 import com.ddiehl.android.htn.view.MainView;
 

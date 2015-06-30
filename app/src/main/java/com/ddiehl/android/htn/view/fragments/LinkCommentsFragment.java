@@ -5,11 +5,11 @@
 package com.ddiehl.android.htn.view.fragments;
 
 import android.app.Activity;
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu;
@@ -312,7 +312,7 @@ public class LinkCommentsFragment extends AbsRedditFragment
                     FlurryAgent.logEvent("option - change sort - " + sort);
                     mLinkCommentsPresenter.updateSort(sort);
                 }
-                getActivity().supportInvalidateOptionsMenu();
+                getActivity().invalidateOptionsMenu();
                 break;
         }
     }
@@ -343,7 +343,7 @@ public class LinkCommentsFragment extends AbsRedditFragment
     }
 
     private void showChooseCommentSortDialog() {
-        FragmentManager fm = getActivity().getSupportFragmentManager();
+        FragmentManager fm = getActivity().getFragmentManager();
         ChooseCommentSortDialog chooseCommentSortDialog = ChooseCommentSortDialog.newInstance(mLinkCommentsPresenter.getSort());
         chooseCommentSortDialog.setTargetFragment(this, REQUEST_CHOOSE_SORT);
         chooseCommentSortDialog.show(fm, DIALOG_CHOOSE_SORT);

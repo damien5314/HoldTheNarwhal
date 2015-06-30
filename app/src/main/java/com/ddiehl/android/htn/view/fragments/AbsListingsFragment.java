@@ -5,11 +5,11 @@
 package com.ddiehl.android.htn.view.fragments;
 
 import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu;
@@ -163,7 +163,7 @@ public abstract class AbsListingsFragment extends AbsRedditFragment
                         showTimespanOptionsMenu();
                     } else {
                         mListingsPresenter.updateSort(mSelectedSort, mSelectedTimespan);
-                        getActivity().supportInvalidateOptionsMenu();
+                        getActivity().invalidateOptionsMenu();
                     }
                 }
                 break;
@@ -172,7 +172,7 @@ public abstract class AbsListingsFragment extends AbsRedditFragment
                     mSelectedTimespan = data.getStringExtra(ChooseTimespanDialog.EXTRA_TIMESPAN);
                     FlurryAgent.logEvent("option - change timespan - " + mSelectedTimespan);
                     mListingsPresenter.updateSort(mSelectedSort, mSelectedTimespan);
-                    getActivity().supportInvalidateOptionsMenu();
+                    getActivity().invalidateOptionsMenu();
                 }
                 break;
         }
@@ -216,14 +216,14 @@ public abstract class AbsListingsFragment extends AbsRedditFragment
     }
 
     void showSortOptionsMenu() {
-        FragmentManager fm = getActivity().getSupportFragmentManager();
+        FragmentManager fm = getActivity().getFragmentManager();
         ChooseLinkSortDialog chooseLinkSortDialog = ChooseLinkSortDialog.newInstance(mListingsPresenter.getSort());
         chooseLinkSortDialog.setTargetFragment(this, REQUEST_CHOOSE_SORT);
         chooseLinkSortDialog.show(fm, DIALOG_CHOOSE_SORT);
     }
 
     void showTimespanOptionsMenu() {
-        FragmentManager fm = getActivity().getSupportFragmentManager();
+        FragmentManager fm = getActivity().getFragmentManager();
         ChooseTimespanDialog chooseTimespanDialog = ChooseTimespanDialog.newInstance(mListingsPresenter.getTimespan());
         chooseTimespanDialog.setTargetFragment(this, REQUEST_CHOOSE_TIMESPAN);
         chooseTimespanDialog.show(fm, DIALOG_CHOOSE_TIMESPAN);
@@ -370,7 +370,7 @@ public abstract class AbsListingsFragment extends AbsRedditFragment
     @Override
     public void showCommentsForLink(String subreddit, String linkId, String commentId) {
         Fragment fragment = LinkCommentsFragment.newInstance(subreddit, linkId, commentId);
-        FragmentManager fm = getActivity().getSupportFragmentManager();
+        FragmentManager fm = getActivity().getFragmentManager();
         fm.beginTransaction()
                 .replace(R.id.fragment_container, fragment)
                 .addToBackStack(null)

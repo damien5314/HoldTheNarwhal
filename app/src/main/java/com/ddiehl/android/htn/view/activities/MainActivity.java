@@ -5,14 +5,13 @@
 package com.ddiehl.android.htn.view.activities;
 
 import android.app.Dialog;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -36,6 +35,7 @@ import com.ddiehl.android.htn.utils.BaseUtils;
 import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.android.htn.view.SettingsChangedListener;
 import com.ddiehl.android.htn.view.dialogs.ConfirmSignOutDialog;
+import com.ddiehl.android.htn.view.fragments.SettingsFragment;
 import com.ddiehl.android.htn.view.fragments.SubredditFragment;
 import com.ddiehl.android.htn.view.fragments.UserProfileFragment;
 import com.ddiehl.android.htn.view.fragments.WebViewFragment;
@@ -100,7 +100,7 @@ public class MainActivity extends AppCompatActivity
         FlurryAgent.onStartSession(this);
         mBus.register(mMainPresenter);
 
-        Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+        Fragment currentFragment = getFragmentManager().findFragmentById(R.id.fragment_container);
         if (currentFragment == null) {
             showSubreddit(null);
         }
@@ -189,7 +189,7 @@ public class MainActivity extends AppCompatActivity
     public void showUserProfile(String show, String username) {
         closeNavigationDrawer();
         mMainPresenter.setUsernameContext(username);
-        FragmentManager fm = getSupportFragmentManager();
+        FragmentManager fm = getFragmentManager();
         Fragment f = UserProfileFragment.newInstance(show, username);
         fm.beginTransaction().replace(R.id.fragment_container, f)
                 .addToBackStack(null)
@@ -199,13 +199,13 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void showSubreddit(String subreddit) {
         closeNavigationDrawer();
-        FragmentManager fm = getSupportFragmentManager();
+        FragmentManager fm = getFragmentManager();
         Fragment f = SubredditFragment.newInstance(subreddit);
         FragmentTransaction ft = fm.beginTransaction().replace(R.id.fragment_container, f);
 
         Fragment cf = fm.findFragmentById(R.id.fragment_container);
         if (cf != null) {
-            ft.addToBackStack(null);
+//            ft.addToBackStack(null);
         }
 
         ft.commit();
@@ -214,9 +214,8 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void showWebViewForURL(String url) {
         closeNavigationDrawer();
-        FragmentManager fm = getSupportFragmentManager();
         Fragment f = WebViewFragment.newInstance(url);
-        fm.beginTransaction().replace(R.id.fragment_container, f)
+        getFragmentManager().beginTransaction().replace(R.id.fragment_container, f)
                 .addToBackStack(null)
                 .commit();
     }
@@ -309,7 +308,7 @@ public class MainActivity extends AppCompatActivity
             return;
         mLastAuthCode = authCode;
 
-        FragmentManager fm = getSupportFragmentManager();
+        FragmentManager fm = getFragmentManager();
         fm.popBackStack();
 
         // Notify auth API about the auth code retrieval
@@ -327,21 +326,17 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void showSettings() {
-        startActivityForResult(new Intent(this, SettingsActivity.class), REQUEST_CODE_SETTINGS);
+        getFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, new SettingsFragment())
+                .addToBackStack(null)
+                .commit();
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            case REQUEST_CODE_SETTINGS:
-                Fragment f = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-                if (f instanceof SettingsChangedListener) {
-                    SettingsChangedListener l = (SettingsChangedListener) f;
-                    l.onSettingsChanged();
-                }
-                break;
-            default:
+    private void updateSettingsListener() {
+        Fragment f = getFragmentManager().findFragmentById(R.id.fragment_container);
+        if (f instanceof SettingsChangedListener) {
+            SettingsChangedListener l = (SettingsChangedListener) f;
+            l.onSettingsChanged();
         }
     }
 }
