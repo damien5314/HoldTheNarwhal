@@ -205,7 +205,7 @@ public class MainActivity extends AppCompatActivity
 
         Fragment cf = fm.findFragmentById(R.id.fragment_container);
         if (cf != null) {
-//            ft.addToBackStack(null);
+            ft.addToBackStack(null);
         }
 
         ft.commit();
@@ -228,7 +228,7 @@ public class MainActivity extends AppCompatActivity
     @OnClick(R.id.sign_out_button)
     void onSignOut() {
         ConfirmSignOutDialog dialog = ConfirmSignOutDialog.newInstance();
-        dialog.show(getSupportFragmentManager(), DIALOG_CONFIRM_SIGN_OUT);
+        dialog.show(getFragmentManager(), DIALOG_CONFIRM_SIGN_OUT);
         FlurryAgent.logEvent("clicked sign out");
     }
 
