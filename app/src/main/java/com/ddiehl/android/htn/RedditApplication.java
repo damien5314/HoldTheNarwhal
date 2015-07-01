@@ -56,7 +56,7 @@ public class RedditApplication extends Application {
             };
 
             for (int id : ids) {
-                Drawable res = getResources().getDrawable(id);
+                Drawable res = getResources().getDrawable(id, getTheme());
                 if (res != null) {
                     res.setAutoMirrored(true);
                 }
