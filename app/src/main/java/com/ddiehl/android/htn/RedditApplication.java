@@ -7,6 +7,7 @@ package com.ddiehl.android.htn;
 import android.app.Application;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.v4.content.ContextCompat;
 
 import com.ddiehl.android.htn.io.RedditService;
 import com.ddiehl.android.htn.io.RedditServiceAuth;
@@ -56,7 +57,7 @@ public class RedditApplication extends Application {
             };
 
             for (int id : ids) {
-                Drawable res = getResources().getDrawable(id, getTheme());
+                Drawable res = ContextCompat.getDrawable(this, id);
                 if (res != null) {
                     res.setAutoMirrored(true);
                 }
