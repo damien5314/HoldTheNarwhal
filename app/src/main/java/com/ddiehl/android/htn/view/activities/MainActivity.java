@@ -332,6 +332,15 @@ public class MainActivity extends AppCompatActivity
                 .commit();
     }
 
+    @Override
+     public void onBackPressed() {
+        if (getFragmentManager().getBackStackEntryCount() > 0) {
+            getFragmentManager().popBackStack();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
     private void updateSettingsListener() {
         Fragment f = getFragmentManager().findFragmentById(R.id.fragment_container);
         if (f instanceof SettingsChangedListener) {
