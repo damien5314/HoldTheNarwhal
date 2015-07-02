@@ -8,16 +8,20 @@ import android.content.Context;
 import android.util.Log;
 
 import com.ddiehl.android.htn.BusProvider;
-import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.IdentityManager;
+import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.events.requests.UserSignOutEvent;
 import com.ddiehl.android.htn.events.responses.UserIdentityRetrievedEvent;
 import com.ddiehl.android.htn.events.responses.UserIdentitySavedEvent;
 import com.ddiehl.android.htn.utils.BaseUtils;
 import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.reddit.identity.UserIdentity;
+import com.flurry.android.FlurryAgent;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import retrofit.RetrofitError;
 
@@ -43,6 +47,12 @@ public class MainPresenterImpl implements MainPresenter {
         Log.e("HTN", "RetrofitError: " + error.getKind().toString());
         Log.e("HTN", Log.getStackTraceString(error));
         mMainView.showToast(BaseUtils.getFriendlyError(mContext, error));
+
+        // Log Flurry event
+        Map<String, String> params = new HashMap<>();
+        params.put("url", error.getUrl());
+        params.put("kind", error.getKind().toString());
+        FlurryAgent.logEvent("api error", params);
     }
 
     @Subscribe

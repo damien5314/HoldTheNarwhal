@@ -63,11 +63,6 @@ public class HTNAnalytics {
     }
 
     @Subscribe
-    public void onError(Exception e) {
-        FlurryAgent.onError("error", e.toString(), e);
-    }
-
-    @Subscribe
     public void onSignIn(UserIdentityRetrievedEvent event) {
         UserIdentity identity = event.getUserIdentity();
         Map<String, String> params = new HashMap<>();
