@@ -116,8 +116,8 @@ public class RedditServiceAuth implements RedditService {
 
             @Override
             public void failure(RetrofitError error) {
-                BaseUtils.showFriendlyError(mContext, error);
                 BaseUtils.printResponse(error.getResponse());
+                mBus.post(error);
                 mBus.post(new ApplicationAuthorizedEvent(error));
             }
         });
@@ -157,8 +157,8 @@ public class RedditServiceAuth implements RedditService {
 
                     @Override
                     public void failure(RetrofitError error) {
-                        BaseUtils.showFriendlyError(mContext, error);
                         BaseUtils.printResponse(error.getResponse());
+                        mBus.post(error);
                         mBus.post(new UserAuthorizedEvent(error));
                     }
                 });
@@ -181,8 +181,8 @@ public class RedditServiceAuth implements RedditService {
 
             @Override
             public void failure(RetrofitError error) {
-                BaseUtils.showFriendlyError(mContext, error);
                 BaseUtils.printResponse(error.getResponse());
+                mBus.post(error);
                 mBus.post(new UserAuthorizationRefreshedEvent(error));
             }
         });
@@ -204,8 +204,7 @@ public class RedditServiceAuth implements RedditService {
 
                 @Override
                 public void failure(RetrofitError error) {
-//                    Toast.makeText(mContext, R.string.error_revoking_access_token, Toast.LENGTH_SHORT).show();
-                    BaseUtils.showFriendlyError(mContext, error);
+                    mBus.post(error);
                     BaseUtils.printResponse(error.getResponse());
                 }
             });
@@ -214,14 +213,12 @@ public class RedditServiceAuth implements RedditService {
                     "refresh_token", new Callback<Response>() {
                         @Override
                         public void success(Response response, Response response2) {
-//                            Toast.makeText(mContext, R.string.refresh_token_revoked, Toast.LENGTH_SHORT).show();
                             BaseUtils.printResponseStatus(response);
                         }
 
                         @Override
                         public void failure(RetrofitError error) {
-//                            Toast.makeText(mContext, R.string.error_revoking_refresh_token, Toast.LENGTH_SHORT).show();
-                            BaseUtils.showFriendlyError(mContext, error);
+                            mBus.post(error);
                             BaseUtils.printResponse(error.getResponse());
                         }
                     });

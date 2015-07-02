@@ -41,22 +41,21 @@ public class BaseUtils {
         }
     }
 
-    public static void showFriendlyError(Context context, RetrofitError error) {
-        Log.e(TAG, "RetrofitError: " + error.getKind().toString());
-        Log.d(TAG, Log.getStackTraceString(error));
+    public static String getFriendlyError(Context c, RetrofitError error) {
         Response response = error.getResponse();
         if (response == null) {
-            Toast.makeText(context, R.string.error_network_unavailable, Toast.LENGTH_SHORT).show();
+            return c.getString(R.string.error_network_unavailable);
         } else {
             switch (response.getStatus()) {
                 case 404:
-                    Toast.makeText(context, R.string.error_404, Toast.LENGTH_SHORT).show();
+                    return c.getString(R.string.error_404);
+                case 500:
+                    return c.getString(R.string.error_500);
                 case 503:
-                    Toast.makeText(context, R.string.error_503, Toast.LENGTH_SHORT).show();
+                    return c.getString(R.string.error_503);
                 default:
-                    Toast.makeText(context, String.format(context.getString(R.string.error_xxx),
-                            response.getStatus()), Toast.LENGTH_SHORT).show();
-                    break;
+                    String errorMsg = c.getString(R.string.error_xxx);
+                    return String.format(errorMsg, response.getStatus());
             }
         }
     }

@@ -5,6 +5,7 @@
 package com.ddiehl.android.htn.presenter;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.ddiehl.android.htn.BusProvider;
 import com.ddiehl.android.htn.R;
@@ -12,10 +13,13 @@ import com.ddiehl.android.htn.RedditIdentityManager;
 import com.ddiehl.android.htn.events.requests.UserSignOutEvent;
 import com.ddiehl.android.htn.events.responses.UserIdentityRetrievedEvent;
 import com.ddiehl.android.htn.events.responses.UserIdentitySavedEvent;
+import com.ddiehl.android.htn.utils.BaseUtils;
 import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.reddit.identity.UserIdentity;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
+
+import retrofit.RetrofitError;
 
 public class MainPresenterImpl implements MainPresenter {
 
@@ -32,6 +36,13 @@ public class MainPresenterImpl implements MainPresenter {
 
         mMainView = view;
         mIdentityManager = RedditIdentityManager.getInstance(mContext);
+    }
+
+    @Subscribe
+    public void onNetworkError(RetrofitError error) {
+        Log.e("HTN", "RetrofitError: " + error.getKind().toString());
+        Log.e("HTN", Log.getStackTraceString(error));
+        mMainView.showToast(BaseUtils.getFriendlyError(mContext, error));
     }
 
     @Subscribe
