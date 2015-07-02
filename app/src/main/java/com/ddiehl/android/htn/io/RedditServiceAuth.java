@@ -116,7 +116,7 @@ public class RedditServiceAuth implements RedditService {
 
             @Override
             public void failure(RetrofitError error) {
-                BaseUtils.showError(mContext, error);
+                BaseUtils.showFriendlyError(mContext, error);
                 BaseUtils.printResponse(error.getResponse());
                 mBus.post(new ApplicationAuthorizedEvent(error));
             }
@@ -157,7 +157,7 @@ public class RedditServiceAuth implements RedditService {
 
                     @Override
                     public void failure(RetrofitError error) {
-                        BaseUtils.showError(mContext, error);
+                        BaseUtils.showFriendlyError(mContext, error);
                         BaseUtils.printResponse(error.getResponse());
                         mBus.post(new UserAuthorizedEvent(error));
                     }
@@ -181,7 +181,7 @@ public class RedditServiceAuth implements RedditService {
 
             @Override
             public void failure(RetrofitError error) {
-                BaseUtils.showError(mContext, error);
+                BaseUtils.showFriendlyError(mContext, error);
                 BaseUtils.printResponse(error.getResponse());
                 mBus.post(new UserAuthorizationRefreshedEvent(error));
             }
@@ -205,7 +205,7 @@ public class RedditServiceAuth implements RedditService {
                 @Override
                 public void failure(RetrofitError error) {
 //                    Toast.makeText(mContext, R.string.error_revoking_access_token, Toast.LENGTH_SHORT).show();
-                    BaseUtils.showError(mContext, error);
+                    BaseUtils.showFriendlyError(mContext, error);
                     BaseUtils.printResponse(error.getResponse());
                 }
             });
@@ -221,7 +221,7 @@ public class RedditServiceAuth implements RedditService {
                         @Override
                         public void failure(RetrofitError error) {
 //                            Toast.makeText(mContext, R.string.error_revoking_refresh_token, Toast.LENGTH_SHORT).show();
-                            BaseUtils.showError(mContext, error);
+                            BaseUtils.showFriendlyError(mContext, error);
                             BaseUtils.printResponse(error.getResponse());
                         }
                     });

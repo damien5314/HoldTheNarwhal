@@ -45,7 +45,9 @@ public class BaseUtils {
         Log.e(TAG, "RetrofitError: " + error.getKind().toString());
         Log.d(TAG, Log.getStackTraceString(error));
         Response response = error.getResponse();
-        if (response != null) {
+        if (response == null) {
+            Toast.makeText(context, R.string.error_network_unavailable, Toast.LENGTH_SHORT).show();
+        } else {
             switch (response.getStatus()) {
                 case 404:
                     Toast.makeText(context, R.string.error_404, Toast.LENGTH_SHORT).show();

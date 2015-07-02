@@ -96,6 +96,7 @@
     <string name="hide_failed">hide failed, please try again</string>
     <string name="link_hidden">link hidden</string>
     <string name="error_xxx">an error has occurred</string>
+    <string name="error_network_unavailable">network is unavailable</string>
     <string name="error_404">page not found</string>
     <string name="error_500">reddit is experiencing issues, try again later</string>
     <string name="error_503">reddit is unavailable, try again soon</string>

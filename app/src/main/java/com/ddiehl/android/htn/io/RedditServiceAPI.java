@@ -114,7 +114,7 @@ public class RedditServiceAPI implements RedditService {
 
             @Override
             public void failure(RetrofitError error) {
-                BaseUtils.showError(mContext, error);
+                BaseUtils.showFriendlyError(mContext, error);
                 BaseUtils.printResponse(error.getResponse());
                 mBus.post(new UserIdentityRetrievedEvent(error));
             }
@@ -151,7 +151,7 @@ public class RedditServiceAPI implements RedditService {
 
             @Override
             public void failure(RetrofitError error) {
-                BaseUtils.showError(mContext, error);
+                BaseUtils.showFriendlyError(mContext, error);
                 BaseUtils.printResponse(error.getResponse());
                 mBus.post(new ListingsLoadedEvent(error));
             }
@@ -177,7 +177,7 @@ public class RedditServiceAPI implements RedditService {
 
             @Override
             public void failure(RetrofitError error) {
-                BaseUtils.showError(mContext, error);
+                BaseUtils.showFriendlyError(mContext, error);
                 BaseUtils.printResponse(error.getResponse());
                 mBus.post(new LinkCommentsLoadedEvent(error));
             }
@@ -210,7 +210,7 @@ public class RedditServiceAPI implements RedditService {
 
             @Override
             public void failure(RetrofitError error) {
-                BaseUtils.showError(mContext, error);
+                BaseUtils.showFriendlyError(mContext, error);
                 BaseUtils.printResponse(error.getResponse());
                 mBus.post(new MoreChildrenLoadedEvent(error));
             }
@@ -234,7 +234,7 @@ public class RedditServiceAPI implements RedditService {
 
             @Override
             public void failure(RetrofitError error) {
-                BaseUtils.showError(mContext, error);
+                BaseUtils.showFriendlyError(mContext, error);
                 BaseUtils.printResponse(error.getResponse());
                 mBus.post(new ListingsLoadedEvent(error));
             }
@@ -269,7 +269,7 @@ public class RedditServiceAPI implements RedditService {
 
             @Override
             public void failure(RetrofitError error) {
-                BaseUtils.showError(mContext, error);
+                BaseUtils.showFriendlyError(mContext, error);
                 BaseUtils.printResponse(error.getResponse());
                 mBus.post(new VoteSubmittedEvent(error));
             }
@@ -292,7 +292,7 @@ public class RedditServiceAPI implements RedditService {
 
                 @Override
                 public void failure(RetrofitError error) {
-                    BaseUtils.showError(mContext, error);
+                    BaseUtils.showFriendlyError(mContext, error);
                     BaseUtils.printResponse(error.getResponse());
                     mBus.post(new SaveSubmittedEvent(error));
                 }
@@ -306,7 +306,7 @@ public class RedditServiceAPI implements RedditService {
 
                 @Override
                 public void failure(RetrofitError error) {
-                    BaseUtils.showError(mContext, error);
+                    BaseUtils.showFriendlyError(mContext, error);
                     BaseUtils.printResponse(error.getResponse());
                     mBus.post(new SaveSubmittedEvent(error));
                 }
@@ -343,7 +343,7 @@ public class RedditServiceAPI implements RedditService {
 
                 @Override
                 public void failure(RetrofitError error) {
-                    BaseUtils.showError(mContext, error);
+                    BaseUtils.showFriendlyError(mContext, error);
                     BaseUtils.printResponse(error.getResponse());
                     mBus.post(new HideSubmittedEvent(error));
                 }
@@ -357,7 +357,7 @@ public class RedditServiceAPI implements RedditService {
 
                 @Override
                 public void failure(RetrofitError error) {
-                    BaseUtils.showError(mContext, error);
+                    BaseUtils.showFriendlyError(mContext, error);
                     BaseUtils.printResponse(error.getResponse());
                     mBus.post(new HideSubmittedEvent(error));
                 }
