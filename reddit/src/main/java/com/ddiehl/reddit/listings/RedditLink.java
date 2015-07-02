@@ -219,9 +219,17 @@ public class RedditLink extends Listing<RedditLink.Data> implements Votable, Sav
         return data.ups;
     }
 
+    public List<LinkPreview.Image> getPreviewImages() {
+        if (data.preview == null)
+            return null;
+        return data.preview.images;
+    }
+
     @SuppressWarnings("unassigned")
     static class Data extends Listing.Data {
 
+        @Expose
+        private LinkPreview preview; // New field for preview images
         @Expose
         private String domain;
         @SerializedName("banned_by")
