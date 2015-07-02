@@ -8,6 +8,8 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.ddiehl.android.htn.R;
+
 import java.io.InputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -35,6 +37,24 @@ public class BaseUtils {
                             Toast.LENGTH_LONG).show();
                     break;
 
+            }
+        }
+    }
+
+    public static void showFriendlyError(Context context, RetrofitError error) {
+        Log.e(TAG, "RetrofitError: " + error.getKind().toString());
+        Log.d(TAG, Log.getStackTraceString(error));
+        Response response = error.getResponse();
+        if (response != null) {
+            switch (response.getStatus()) {
+                case 404:
+                    Toast.makeText(context, R.string.error_404, Toast.LENGTH_SHORT).show();
+                case 503:
+                    Toast.makeText(context, R.string.error_503, Toast.LENGTH_SHORT).show();
+                default:
+                    Toast.makeText(context, String.format(context.getString(R.string.error_xxx),
+                            response.getStatus()), Toast.LENGTH_SHORT).show();
+                    break;
             }
         }
     }
