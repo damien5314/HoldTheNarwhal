@@ -4,9 +4,9 @@
 
 package com.ddiehl.reddit.adapters;
 
+import com.ddiehl.reddit.listings.CommentStub;
 import com.ddiehl.reddit.listings.Listing;
-import com.ddiehl.reddit.listings.RedditComment;
-import com.ddiehl.reddit.listings.RedditMoreComments;
+import com.ddiehl.reddit.listings.Comment;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
@@ -15,8 +15,8 @@ import com.google.gson.JsonParseException;
 
 import java.lang.reflect.Type;
 
-public class AbsRedditCommentDeserializer implements JsonDeserializer<Listing> {
-    private static final String TAG = AbsRedditCommentDeserializer.class.getSimpleName();
+public class AbsCommentDeserializer implements JsonDeserializer<Listing> {
+    private static final String TAG = AbsCommentDeserializer.class.getSimpleName();
 
     @Override
     public Listing deserialize(
@@ -26,10 +26,10 @@ public class AbsRedditCommentDeserializer implements JsonDeserializer<Listing> {
         Listing listing;
         switch (kind) {
             case "t1":
-                listing = context.deserialize(json, RedditComment.class);
+                listing = context.deserialize(json, Comment.class);
                 return listing;
             case "more":
-                listing = context.deserialize(json, RedditMoreComments.class);
+                listing = context.deserialize(json, CommentStub.class);
                 return listing;
             default:
                 System.out.println("No deserialization class set for listing type: " + kind);

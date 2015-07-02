@@ -10,8 +10,8 @@ import android.view.View;
 
 import com.ddiehl.android.htn.BusProvider;
 import com.ddiehl.android.htn.R;
-import com.ddiehl.android.htn.RedditIdentityManager;
-import com.ddiehl.android.htn.RedditPreferences;
+import com.ddiehl.android.htn.IdentityManager;
+import com.ddiehl.android.htn.RedditPrefs;
 import com.ddiehl.android.htn.events.requests.HideEvent;
 import com.ddiehl.android.htn.events.requests.SaveEvent;
 import com.ddiehl.android.htn.events.requests.VoteEvent;
@@ -26,10 +26,10 @@ import com.ddiehl.reddit.Hideable;
 import com.ddiehl.reddit.Savable;
 import com.ddiehl.reddit.Votable;
 import com.ddiehl.reddit.identity.UserIdentity;
+import com.ddiehl.reddit.listings.Comment;
+import com.ddiehl.reddit.listings.CommentStub;
 import com.ddiehl.reddit.listings.Listing;
-import com.ddiehl.reddit.listings.RedditComment;
-import com.ddiehl.reddit.listings.RedditLink;
-import com.ddiehl.reddit.listings.RedditMoreComments;
+import com.ddiehl.reddit.listings.Link;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -40,11 +40,11 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
 
     Context mContext;
     Bus mBus;
-    RedditPreferences mPreferences;
+    RedditPrefs mPreferences;
     List<Listing> mListings;
     ListingsView mListingsView;
 
-    private RedditIdentityManager mIdentityManager;
+    private IdentityManager mIdentityManager;
 
     String mShow;
     String mUsernameContext;
@@ -60,9 +60,9 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
                                 String show, String username, String subreddit, String sort, String timespan) {
         mContext = context.getApplicationContext();
         mBus = BusProvider.getInstance();
-        mPreferences = RedditPreferences.getInstance(mContext);
+        mPreferences = RedditPrefs.getInstance(mContext);
         mListingsView = view;
-        mIdentityManager = RedditIdentityManager.getInstance(context);
+        mIdentityManager = IdentityManager.getInstance(context);
         mShow = show;
         mUsernameContext = username;
         mSubreddit = subreddit;
@@ -242,7 +242,7 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
 
     @Override
     public void showLinkContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo,
-                                    RedditLink link) {
+                                    Link link) {
         mListingSelected = link;
         mListingsView.showLinkContextMenu(menu, v, link);
         menu.findItem(R.id.action_link_save).setVisible(!link.isSaved());
@@ -250,7 +250,7 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
     }
 
     @Override
-    public void openLink(RedditLink link) {
+    public void openLink(Link link) {
         if (link == null)
             return;
 
@@ -263,12 +263,12 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
 
     @Override
     public void showCommentsForLink() {
-        RedditLink link = (RedditLink) mListingSelected;
+        Link link = (Link) mListingSelected;
         mListingsView.showCommentsForLink(link.getSubreddit(), link.getId(), null);
     }
 
     @Override
-    public void showCommentsForLink(RedditLink link) {
+    public void showCommentsForLink(Link link) {
         mListingsView.showCommentsForLink(link.getSubreddit(), link.getId(), null);
     }
 
@@ -293,7 +293,7 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
             return;
         }
 
-        RedditLink link = (RedditLink) mListingSelected;
+        Link link = (Link) mListingSelected;
         mBus.post(new SaveEvent(link, null, true));
     }
 
@@ -304,37 +304,37 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
             return;
         }
 
-        RedditLink link = (RedditLink) mListingSelected;
+        Link link = (Link) mListingSelected;
         mBus.post(new SaveEvent(link, null, false));
     }
 
     @Override
     public void shareLink() {
-        RedditLink link = (RedditLink) mListingSelected;
+        Link link = (Link) mListingSelected;
         mListingsView.openShareView(link);
     }
 
     @Override
     public void openLinkUserProfile() {
-        RedditLink link = (RedditLink) mListingSelected;
+        Link link = (Link) mListingSelected;
         mListingsView.openUserProfileView(link);
     }
 
     @Override
-    public void openLinkUserProfile(RedditLink link) {
+    public void openLinkUserProfile(Link link) {
 //        String username = link.getAuthor();
         mListingsView.openUserProfileView(link);
     }
 
     @Override
     public void openLinkInBrowser() {
-        RedditLink link = (RedditLink) mListingSelected;
+        Link link = (Link) mListingSelected;
         mListingsView.openLinkInBrowser(link);
     }
 
     @Override
     public void openCommentsInBrowser() {
-        RedditLink link = (RedditLink) mListingSelected;
+        Link link = (Link) mListingSelected;
         mListingsView.openCommentsInBrowser(link);
     }
 
@@ -345,7 +345,7 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
             return;
         }
 
-        RedditLink link = (RedditLink) mListingSelected;
+        Link link = (Link) mListingSelected;
         mBus.post(new HideEvent(link, true));
     }
 
@@ -356,7 +356,7 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
             return;
         }
 
-        RedditLink link = (RedditLink) mListingSelected;
+        Link link = (Link) mListingSelected;
         mBus.post(new HideEvent(link, false));
     }
 
@@ -367,13 +367,13 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
             return;
         }
 
-        RedditLink link = (RedditLink) mListingSelected;
+        Link link = (Link) mListingSelected;
         mListingsView.showToast(R.string.implementation_pending);
     }
 
     @Override
     public void showCommentContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo,
-                                       RedditComment comment) {
+                                       Comment comment) {
         mListingSelected = comment;
         mListingsView.showCommentContextMenu(menu, v, comment);
 
@@ -388,19 +388,19 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
     }
 
     @Override
-    public void getMoreChildren(RedditMoreComments comment) {
+    public void getMoreChildren(CommentStub comment) {
         // Comment stubs cannot appear in a listing view
     }
 
     @Override
     public void openCommentPermalink() {
-        RedditComment comment = (RedditComment) mListingSelected;
+        Comment comment = (Comment) mListingSelected;
         showCommentThread(comment.getSubreddit(), comment.getLinkId(), comment.getId());
     }
 
     @Override
     public void openReplyView() {
-        RedditComment comment = (RedditComment) mListingSelected;
+        Comment comment = (Comment) mListingSelected;
         if (comment.isArchived()) {
             mListingsView.showToast(R.string.listing_archived);
         } else {
@@ -429,7 +429,7 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
             return;
         }
 
-        RedditComment comment = (RedditComment) mListingSelected;
+        Comment comment = (Comment) mListingSelected;
         mBus.post(new SaveEvent(comment, null, true));
     }
 
@@ -440,30 +440,30 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
             return;
         }
 
-        RedditComment comment = (RedditComment) mListingSelected;
+        Comment comment = (Comment) mListingSelected;
         mBus.post(new SaveEvent(comment, null, false));
     }
 
     @Override
     public void shareComment() {
-        RedditComment comment = (RedditComment) mListingSelected;
+        Comment comment = (Comment) mListingSelected;
         mListingsView.openShareView(comment);
     }
 
     @Override
     public void openCommentUserProfile() {
-        RedditComment comment = (RedditComment) mListingSelected;
+        Comment comment = (Comment) mListingSelected;
         mListingsView.openUserProfileView(comment);
     }
 
     @Override
-    public void openCommentUserProfile(RedditComment comment) {
+    public void openCommentUserProfile(Comment comment) {
         mListingsView.openUserProfileView(comment);
     }
 
     @Override
     public void openCommentInBrowser() {
-        RedditComment comment = (RedditComment) mListingSelected;
+        Comment comment = (Comment) mListingSelected;
         mListingsView.openCommentInBrowser(comment);
     }
 
@@ -474,13 +474,13 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
             return;
         }
 
-        RedditComment comment = (RedditComment) mListingSelected;
+        Comment comment = (Comment) mListingSelected;
         mListingsView.showToast(R.string.implementation_pending);
     }
 
     @Override
-    public void openCommentLink(RedditComment comment) {
-//        RedditComment comment = (RedditComment) mListingSelected;
+    public void openCommentLink(Comment comment) {
+//        Comment comment = (Comment) mListingSelected;
         mListingsView.showCommentsForLink(comment.getSubreddit(), comment.getLinkId().substring(3), null);
     }
 

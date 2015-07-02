@@ -10,7 +10,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.HashMap;
 import java.util.List;
 
-public abstract class AbsRedditComment<T extends AbsRedditComment.Data> extends Listing<T> {
+public abstract class AbsComment<T extends AbsComment.Data> extends Listing<T> {
 
     private int depth;
     private boolean isVisible = true;
@@ -50,8 +50,8 @@ public abstract class AbsRedditComment<T extends AbsRedditComment.Data> extends 
             int i = 0;
             while (i < commentList.size()) {
                 Listing listing = commentList.get(i);
-                if (listing instanceof RedditComment) {
-                    RedditComment comment = (RedditComment) listing;
+                if (listing instanceof Comment) {
+                    Comment comment = (Comment) listing;
                     ListingResponse repliesListing = comment.getReplies();
                     if (repliesListing != null) {
                         List<Listing> replies = repliesListing.getData().getChildren();
@@ -62,8 +62,8 @@ public abstract class AbsRedditComment<T extends AbsRedditComment.Data> extends 
                         commentList.addAll(i + 1, comment.getReplies().getData().getChildren()); // Add all of the replies to commentList
                         comment.setReplies(null); // Remove replies for comment
                     }
-                } else { // Listing is a RedditMoreComments
-                    RedditMoreComments moreComments = (RedditMoreComments) listing;
+                } else { // Listing is a CommentStub
+                    CommentStub moreComments = (CommentStub) listing;
                     moreComments.setDepth(moreComments.getDepth() + 1); // Increase depth by 1
                 }
                 i++;
@@ -77,7 +77,7 @@ public abstract class AbsRedditComment<T extends AbsRedditComment.Data> extends 
             HashMap<String, Integer> depthMap = new HashMap<>();
 
             for (Listing listing : comments) {
-                AbsRedditComment comment = (AbsRedditComment) listing;
+                AbsComment comment = (AbsComment) listing;
                 String name = comment.getName();
                 String parentId = comment.getParentId();
                 if (depthMap.containsKey(parentId)) {

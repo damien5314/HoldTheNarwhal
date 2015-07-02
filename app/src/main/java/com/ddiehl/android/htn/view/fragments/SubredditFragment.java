@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.presenter.SubredditPresenter;
 import com.ddiehl.android.htn.view.adapters.ListingsAdapter;
-import com.ddiehl.reddit.listings.RedditLink;
+import com.ddiehl.reddit.listings.Link;
 
 public class SubredditFragment extends AbsListingsFragment {
 
@@ -58,7 +58,7 @@ public class SubredditFragment extends AbsListingsFragment {
         if (subreddit != null) {
             if (subreddit.equals("random")) {
                 if (mListingsPresenter.getNumListings() > 0) {
-                    subreddit = ((RedditLink) mListingsPresenter.getListing(0)).getSubreddit();
+                    subreddit = ((Link) mListingsPresenter.getListing(0)).getSubreddit();
                 }
             }
             setTitle(String.format(getString(R.string.link_subreddit), subreddit));

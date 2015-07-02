@@ -13,7 +13,7 @@ import com.ddiehl.android.htn.events.responses.SaveSubmittedEvent;
 import com.ddiehl.android.htn.events.responses.UserIdentitySavedEvent;
 import com.ddiehl.android.htn.events.responses.VoteSubmittedEvent;
 import com.ddiehl.android.htn.view.ListingsView;
-import com.ddiehl.reddit.listings.RedditLink;
+import com.ddiehl.reddit.listings.Link;
 import com.squareup.otto.Subscribe;
 
 public class SubredditPresenter extends AbsListingsPresenter {
@@ -38,7 +38,7 @@ public class SubredditPresenter extends AbsListingsPresenter {
         super.onListingsLoaded(event);
 
         if (mSubreddit != null && mSubreddit.equals("random")) {
-            mSubreddit = ((RedditLink) mListings.get(0)).getSubreddit();
+            mSubreddit = ((Link) mListings.get(0)).getSubreddit();
         }
     }
 

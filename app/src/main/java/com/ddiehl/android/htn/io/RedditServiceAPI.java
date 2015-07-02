@@ -7,7 +7,7 @@ package com.ddiehl.android.htn.io;
 import android.content.Context;
 
 import com.ddiehl.android.htn.BusProvider;
-import com.ddiehl.android.htn.RedditIdentityManager;
+import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.events.requests.GetUserIdentityEvent;
 import com.ddiehl.android.htn.events.requests.HideEvent;
 import com.ddiehl.android.htn.events.requests.LoadLinkCommentsEvent;
@@ -28,16 +28,16 @@ import com.ddiehl.android.htn.utils.BaseUtils;
 import com.ddiehl.reddit.Hideable;
 import com.ddiehl.reddit.Savable;
 import com.ddiehl.reddit.Votable;
-import com.ddiehl.reddit.adapters.AbsRedditCommentDeserializer;
+import com.ddiehl.reddit.adapters.AbsCommentDeserializer;
 import com.ddiehl.reddit.adapters.ListingDeserializer;
 import com.ddiehl.reddit.adapters.ListingResponseDeserializer;
 import com.ddiehl.reddit.identity.UserIdentity;
-import com.ddiehl.reddit.listings.AbsRedditComment;
+import com.ddiehl.reddit.listings.AbsComment;
 import com.ddiehl.reddit.listings.Listing;
 import com.ddiehl.reddit.listings.ListingResponse;
 import com.ddiehl.reddit.listings.MoreChildrenResponse;
-import com.ddiehl.reddit.listings.RedditLink;
-import com.ddiehl.reddit.listings.RedditMoreComments;
+import com.ddiehl.reddit.listings.Link;
+import com.ddiehl.reddit.listings.CommentStub;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -59,9 +59,9 @@ public class RedditServiceAPI implements RedditService {
     private Context mContext;
     private Bus mBus;
     private RedditAPI mAPI;
-    private RedditIdentityManager mIdentityManager;
+    private IdentityManager mIdentityManager;
 
-    RedditServiceAPI(Context context, RedditIdentityManager manager) {
+    RedditServiceAPI(Context context, IdentityManager manager) {
         mContext = context.getApplicationContext();
         mBus = BusProvider.getInstance();
         mBus.register(this);
@@ -74,7 +74,7 @@ public class RedditServiceAPI implements RedditService {
                 .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
                 .registerTypeAdapter(ListingResponse.class, new ListingResponseDeserializer())
                 .registerTypeAdapter(Listing.class, new ListingDeserializer())
-                .registerTypeAdapter(AbsRedditComment.class, new AbsRedditCommentDeserializer())
+                .registerTypeAdapter(AbsComment.class, new AbsCommentDeserializer())
                 .create();
 
         RestAdapter restAdapter = new RestAdapter.Builder()
@@ -189,8 +189,8 @@ public class RedditServiceAPI implements RedditService {
      */
     @Override
     public void onLoadMoreChildren(LoadMoreChildrenEvent event) {
-        RedditLink link = event.getRedditLink();
-        final RedditMoreComments parentStub = event.getParentCommentStub();
+        Link link = event.getLink();
+        final CommentStub parentStub = event.getParentCommentStub();
         List<String> children = event.getChildren();
 //        children = children.subList(0, Math.min(children.size(), 20));
         String sort = event.getSort();

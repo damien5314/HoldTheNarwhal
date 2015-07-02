@@ -7,14 +7,14 @@ package com.ddiehl.android.htn.presenter;
 import android.view.ContextMenu;
 import android.view.View;
 
-import com.ddiehl.reddit.listings.RedditComment;
-import com.ddiehl.reddit.listings.RedditMoreComments;
+import com.ddiehl.reddit.listings.Comment;
+import com.ddiehl.reddit.listings.CommentStub;
 
 public interface CommentPresenter {
 
-    void showCommentContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, RedditComment comment);
+    void showCommentContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, Comment comment);
     void showCommentThread(String subreddit, String linkId, String commentId);
-    void getMoreChildren(RedditMoreComments comment);
+    void getMoreChildren(CommentStub comment);
     void openCommentPermalink();
     void openReplyView();
     void upvoteComment();
@@ -23,9 +23,9 @@ public interface CommentPresenter {
     void unsaveComment();
     void shareComment();
     void openCommentUserProfile();
-    void openCommentUserProfile(RedditComment comment);
+    void openCommentUserProfile(Comment comment);
     void openCommentInBrowser();
     void reportComment();
-    void openCommentLink(RedditComment comment);
+    void openCommentLink(Comment comment);
 
 }

@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.presenter.CommentPresenter;
-import com.ddiehl.reddit.listings.RedditMoreComments;
+import com.ddiehl.reddit.listings.CommentStub;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -23,7 +23,7 @@ public class ThreadStubViewHolder extends RecyclerView.ViewHolder {
 
     private Context mContext;
     private CommentPresenter mCommentPresenter;
-    private RedditMoreComments mRedditMoreComments;
+    private CommentStub mCommentStub;
 
     @Bind(R.id.comment_more) TextView mMoreCommentsView;
 
@@ -34,8 +34,8 @@ public class ThreadStubViewHolder extends RecyclerView.ViewHolder {
         ButterKnife.bind(this, v);
     }
 
-    public void bind(RedditMoreComments comment) {
-        mRedditMoreComments = comment;
+    public void bind(CommentStub comment) {
+        mCommentStub = comment;
 
         // Add padding views to indentation_wrapper based on depth of comment
         int viewMargin = (comment.getDepth() - 2) * (int) mContext.getResources().getDimension(R.dimen.comment_indentation_margin);
@@ -63,10 +63,10 @@ public class ThreadStubViewHolder extends RecyclerView.ViewHolder {
 
     @OnClick(R.id.comment_more)
     void onClick() {
-        if (mRedditMoreComments.getCount() == 0) {
-            mCommentPresenter.showCommentThread(null, null, mRedditMoreComments.getParentId());
+        if (mCommentStub.getCount() == 0) {
+            mCommentPresenter.showCommentThread(null, null, mCommentStub.getParentId());
         } else {
-            mCommentPresenter.getMoreChildren(mRedditMoreComments);
+            mCommentPresenter.getMoreChildren(mCommentStub);
         }
     }
 }

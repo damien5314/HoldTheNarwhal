@@ -7,13 +7,13 @@ package com.ddiehl.android.htn.presenter;
 import android.view.ContextMenu;
 import android.view.View;
 
-import com.ddiehl.reddit.listings.RedditLink;
+import com.ddiehl.reddit.listings.Link;
 
 public interface LinkPresenter {
 
-    void showLinkContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, RedditLink link);
-    void openLink(RedditLink link);
-    void showCommentsForLink(RedditLink link);
+    void showLinkContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, Link link);
+    void openLink(Link link);
+    void showCommentsForLink(Link link);
     void showCommentsForLink();
     void upvoteLink();
     void downvoteLink();
@@ -21,7 +21,7 @@ public interface LinkPresenter {
     void unsaveLink();
     void shareLink();
     void openLinkUserProfile();
-    void openLinkUserProfile(RedditLink link);
+    void openLinkUserProfile(Link link);
     void openLinkInBrowser();
     void openCommentsInBrowser();
     void hideLink();

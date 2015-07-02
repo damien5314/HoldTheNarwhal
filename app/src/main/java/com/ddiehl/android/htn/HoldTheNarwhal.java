@@ -15,7 +15,7 @@ import com.squareup.otto.Bus;
 import com.squareup.picasso.Picasso;
 
 
-public class RedditApplication extends Application {
+public class HoldTheNarwhal extends Application {
 
     @Override
     public void onCreate() {
@@ -24,7 +24,7 @@ public class RedditApplication extends Application {
         Bus bus = BusProvider.getInstance();
         bus.register(this); // Listen for global events
 
-        RedditPreferences prefs = RedditPreferences.getInstance(this);
+        RedditPrefs prefs = RedditPrefs.getInstance(this);
         bus.register(prefs);
 
         RedditService authProxy = RedditServiceAuth.getInstance(this);

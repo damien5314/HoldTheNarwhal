@@ -15,8 +15,7 @@ import android.widget.TextView;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.presenter.LinkPresenter;
 import com.ddiehl.android.htn.view.widgets.RedditDateTextView;
-import com.ddiehl.reddit.listings.LinkPreview;
-import com.ddiehl.reddit.listings.RedditLink;
+import com.ddiehl.reddit.listings.Link;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -30,7 +29,7 @@ public class ListingsLinkViewHolder extends RecyclerView.ViewHolder
 
     private Context mContext;
     private LinkPresenter mLinkPresenter;
-    private RedditLink mRedditLink;
+    private Link mLink;
 
     @Bind(R.id.link_view) View mLinkView;
     @Bind(R.id.link_saved_view) View mSavedView;
@@ -56,12 +55,12 @@ public class ListingsLinkViewHolder extends RecyclerView.ViewHolder
 
     @OnClick({ R.id.link_title, R.id.link_thumbnail })
     void openLink() {
-        mLinkPresenter.openLink(mRedditLink);
+        mLinkPresenter.openLink(mLink);
     }
 
     @OnClick(R.id.link_comment_count)
     void showCommentsForLink() {
-        mLinkPresenter.showCommentsForLink(mRedditLink);
+        mLinkPresenter.showCommentsForLink(mLink);
     }
 
     @OnClick(R.id.link_view)
@@ -69,8 +68,8 @@ public class ListingsLinkViewHolder extends RecyclerView.ViewHolder
         v.showContextMenu();
     }
 
-    public void bind(RedditLink link, boolean showSelfText) {
-        mRedditLink = link;
+    public void bind(Link link, boolean showSelfText) {
+        mLink = link;
 
         if (link == null) {
             mLinkView.setVisibility(View.GONE);
@@ -124,12 +123,12 @@ public class ListingsLinkViewHolder extends RecyclerView.ViewHolder
         mLinkDomain.setText(String.format(mContext.getString(R.string.link_domain), link.getDomain()));
         mLinkComments.setText(String.format(mContext.getString(R.string.link_comment_count), link.getNumComments()));
 
-        List<LinkPreview.Image> images = link.getPreviewImages();
+        List<Link.Preview.Image> images = link.getPreviewImages();
         if (images != null && images.size() > 0) {
-            LinkPreview.Image imageToDisplay = null;
+            Link.Preview.Image imageToDisplay = null;
             // Retrieve preview image to display
-            LinkPreview.Image image = images.get(0);
-            LinkPreview.Image.Variants variants = image.getVariants();
+            Link.Preview.Image image = images.get(0);
+            Link.Preview.Image.Variants variants = image.getVariants();
             if (variants != null && variants.nsfw != null) {
                 imageToDisplay = variants.nsfw;
             } else {
@@ -137,8 +136,8 @@ public class ListingsLinkViewHolder extends RecyclerView.ViewHolder
             }
             // Set selected image to ImageView for thumbnail
             mLinkThumbnail.setVisibility(View.VISIBLE);
-            List<LinkPreview.Image.Res> resolutions = imageToDisplay.getResolutions();
-            LinkPreview.Image.Res res = resolutions.size() > 0 ? resolutions.get(0) : imageToDisplay.getSource();
+            List<Link.Preview.Image.Res> resolutions = imageToDisplay.getResolutions();
+            Link.Preview.Image.Res res = resolutions.size() > 0 ? resolutions.get(0) : imageToDisplay.getSource();
             Picasso.with(mContext)
                     .load(res.getUrl())
                     .placeholder(R.drawable.ic_thumbnail_placeholder)
@@ -194,6 +193,6 @@ public class ListingsLinkViewHolder extends RecyclerView.ViewHolder
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        mLinkPresenter.showLinkContextMenu(menu, v, menuInfo, mRedditLink);
+        mLinkPresenter.showLinkContextMenu(menu, v, menuInfo, mLink);
     }
 }

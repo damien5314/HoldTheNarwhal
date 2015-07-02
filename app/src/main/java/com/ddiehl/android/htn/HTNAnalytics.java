@@ -48,13 +48,13 @@ public class HTNAnalytics {
                 // Log initial Flurry event
                 Map<String, String> params = new HashMap<>();
 
-                UserIdentity identity = RedditIdentityManager.getInstance(context).getUserIdentity();
+                UserIdentity identity = IdentityManager.getInstance(context).getUserIdentity();
                 String userId = identity == null ?
                         "unauthorized" : BaseUtils.getMd5HexString(identity.getName());
                 params.put("user", userId);
                 FlurryAgent.setUserId(userId);
 
-                boolean adsEnabled = RedditPreferences.getInstance(context).getAdsEnabled();
+                boolean adsEnabled = RedditPrefs.getInstance(context).getAdsEnabled();
                 params.put("ads enabled", String.valueOf(adsEnabled));
 
                 FlurryAgent.logEvent("session started", params);
@@ -119,8 +119,8 @@ public class HTNAnalytics {
     @Subscribe
     public void onLoadMoreChildren(LoadMoreChildrenEvent event) {
         Map<String, String> params = new HashMap<>();
-        params.put("subreddit", event.getRedditLink().getSubreddit());
-        params.put("article", event.getRedditLink().getId());
+        params.put("subreddit", event.getLink().getSubreddit());
+        params.put("article", event.getLink().getId());
         params.put("sort", event.getSort());
         FlurryAgent.logEvent("load more comment children", params);
     }

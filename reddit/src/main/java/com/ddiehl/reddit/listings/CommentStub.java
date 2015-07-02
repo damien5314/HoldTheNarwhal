@@ -9,7 +9,7 @@ import com.google.gson.annotations.Expose;
 import java.util.List;
 
 @SuppressWarnings("unused")
-public class RedditMoreComments extends AbsRedditComment<RedditMoreComments.Data> {
+public class CommentStub extends AbsComment<CommentStub.Data> {
 
     public Integer getCount() {
         return data.count;
@@ -39,7 +39,7 @@ public class RedditMoreComments extends AbsRedditComment<RedditMoreComments.Data
         throw new UnsupportedOperationException("Cannot collapse a comment stub");
     }
 
-    public static class Data extends AbsRedditComment.Data {
+    public static class Data extends AbsComment.Data {
         @Expose private Integer count;
         @Expose private List<String> children;
     }

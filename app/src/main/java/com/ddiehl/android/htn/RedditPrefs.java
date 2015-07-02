@@ -9,7 +9,7 @@ import android.content.SharedPreferences;
 
 import java.util.UUID;
 
-public class RedditPreferences {
+public class RedditPrefs {
     public static final String PREFS_DEVICE_ID = "prefs_device_id";
     private static final String PREF_DEVICE_ID = "pref_device_id";
 
@@ -17,18 +17,18 @@ public class RedditPreferences {
     private static final String PREF_COMMENT_SORT = "pref_comment_sort";
     private static final String PREF_ENABLE_ADS = "pref_enable_ads";
 
-    private static RedditPreferences _instance;
+    private static RedditPrefs _instance;
     private Context mContext;
 
-    private RedditPreferences(Context context) {
+    private RedditPrefs(Context context) {
         mContext = context.getApplicationContext();
     }
 
-    public static RedditPreferences getInstance(Context context) {
+    public static RedditPrefs getInstance(Context context) {
         if (_instance == null) {
-            synchronized (RedditPreferences.class) {
+            synchronized (RedditPrefs.class) {
                 if (_instance == null) {
-                    _instance = new RedditPreferences(context);
+                    _instance = new RedditPrefs(context);
                 }
             }
         }
@@ -64,7 +64,7 @@ public class RedditPreferences {
     }
 
     public boolean getAdsEnabled() {
-        SharedPreferences sp = mContext.getSharedPreferences(RedditPreferences.PREFS_USER, Context.MODE_PRIVATE);
+        SharedPreferences sp = mContext.getSharedPreferences(RedditPrefs.PREFS_USER, Context.MODE_PRIVATE);
         return sp.getBoolean(PREF_ENABLE_ADS, false);
     }
 }

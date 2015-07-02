@@ -17,8 +17,8 @@ import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.presenter.CommentPresenter;
 import com.ddiehl.android.htn.presenter.LinkCommentsPresenter;
 import com.ddiehl.android.htn.view.widgets.RedditDateTextView;
-import com.ddiehl.reddit.listings.RedditComment;
-import com.ddiehl.reddit.listings.RedditLink;
+import com.ddiehl.reddit.listings.Comment;
+import com.ddiehl.reddit.listings.Link;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -29,7 +29,7 @@ public class ThreadCommentViewHolder extends RecyclerView.ViewHolder
 
     private Context mContext;
     private CommentPresenter mCommentPresenter;
-    private RedditComment mRedditComment;
+    private Comment mComment;
 
     @Bind(R.id.comment_expander_icon) ImageView mExpanderIcon;
     @Bind(R.id.comment_author) TextView mAuthorView;
@@ -50,7 +50,7 @@ public class ThreadCommentViewHolder extends RecyclerView.ViewHolder
     @OnClick(R.id.comment_metadata)
     void onClickMetadata(View v) {
         LinkCommentsPresenter p = (LinkCommentsPresenter) mCommentPresenter;
-        p.toggleThreadVisible(mRedditComment);
+        p.toggleThreadVisible(mComment);
     }
 
     @OnClick(R.id.comment_body)
@@ -58,8 +58,8 @@ public class ThreadCommentViewHolder extends RecyclerView.ViewHolder
         v.showContextMenu();
     }
 
-    public void bind(final RedditLink link, final RedditComment comment) {
-        mRedditComment = comment;
+    public void bind(final Link link, final Comment comment) {
+        mComment = comment;
 
         // Add padding views to indentation_wrapper based on depth of comment
         int viewMargin = (comment.getDepth() - 2)
@@ -147,12 +147,12 @@ public class ThreadCommentViewHolder extends RecyclerView.ViewHolder
         }
     }
 
-    public void bind(final RedditComment comment) {
+    public void bind(final Comment comment) {
         bind(null, comment);
     }
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        mCommentPresenter.showCommentContextMenu(menu, v, menuInfo, mRedditComment);
+        mCommentPresenter.showCommentContextMenu(menu, v, menuInfo, mComment);
     }
 }

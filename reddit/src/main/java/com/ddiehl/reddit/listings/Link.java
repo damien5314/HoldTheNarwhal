@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class RedditLink extends Listing<RedditLink.Data> implements Votable, Savable, Hideable {
+public class Link extends Listing<Link.Data> implements Votable, Savable, Hideable {
 
     public String getDomain() {
         return data.domain;
@@ -219,7 +219,7 @@ public class RedditLink extends Listing<RedditLink.Data> implements Votable, Sav
         return data.ups;
     }
 
-    public List<LinkPreview.Image> getPreviewImages() {
+    public List<Preview.Image> getPreviewImages() {
         if (data.preview == null)
             return null;
         return data.preview.images;
@@ -229,7 +229,7 @@ public class RedditLink extends Listing<RedditLink.Data> implements Votable, Sav
     static class Data extends Listing.Data {
 
         @Expose
-        private LinkPreview preview; // New field for preview images
+        private Preview preview; // New field for preview images
         @Expose
         private String domain;
         @SerializedName("banned_by")
@@ -434,6 +434,57 @@ public class RedditLink extends Listing<RedditLink.Data> implements Votable, Sav
             }
         }
 
+    }
+
+    public static class Preview {
+        @Expose
+        List<Image> images;
+
+        public static class Image {
+            @Expose
+            Res source;
+            @Expose List<Res> resolutions;
+            @Expose Variants variants;
+            String id;
+
+            public Res getSource() {
+                return source;
+            }
+
+            public List<Res> getResolutions() {
+                return resolutions;
+            }
+
+            public Variants getVariants() {
+                return variants;
+            }
+
+            public String getId() {
+                return id;
+            }
+
+            public static class Variants {
+                @Expose public Image nsfw;
+            }
+
+            public static class Res {
+                @Expose String url;
+                @Expose int width;
+                @Expose int height;
+
+                public String getUrl() {
+                    return url;
+                }
+
+                public int getWidth() {
+                    return width;
+                }
+
+                public int getHeight() {
+                    return height;
+                }
+            }
+        }
     }
 
 }

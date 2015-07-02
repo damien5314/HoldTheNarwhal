@@ -6,13 +6,13 @@ package com.ddiehl.android.htn.events.responses;
 
 import com.ddiehl.reddit.listings.Listing;
 import com.ddiehl.reddit.listings.ListingResponse;
-import com.ddiehl.reddit.listings.RedditLink;
+import com.ddiehl.reddit.listings.Link;
 
 import java.util.List;
 
 
 public class LinkCommentsLoadedEvent extends FailableEvent {
-    private RedditLink mLink;
+    private Link mLink;
     private List<Listing> mComments;
 
     public LinkCommentsLoadedEvent(List<ListingResponse> listingResponseList) {
@@ -20,7 +20,7 @@ public class LinkCommentsLoadedEvent extends FailableEvent {
         ListingResponse linkResponse = listingResponseList.get(0);
         ListingResponse commentsResponse = listingResponseList.get(1);
 
-        mLink = (RedditLink) linkResponse.getData().getChildren().get(0);
+        mLink = (Link) linkResponse.getData().getChildren().get(0);
         mComments = commentsResponse.getData().getChildren();
     }
 
@@ -28,7 +28,7 @@ public class LinkCommentsLoadedEvent extends FailableEvent {
         super(e);
     }
 
-    public RedditLink getLink() {
+    public Link getLink() {
         return mLink;
     }
 

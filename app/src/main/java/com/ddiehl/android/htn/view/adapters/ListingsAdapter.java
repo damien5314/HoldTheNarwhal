@@ -13,9 +13,9 @@ import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.presenter.ListingsPresenter;
 import com.ddiehl.android.htn.view.viewholders.ListingsCommentViewHolder;
 import com.ddiehl.android.htn.view.viewholders.ListingsLinkViewHolder;
+import com.ddiehl.reddit.listings.Comment;
 import com.ddiehl.reddit.listings.Listing;
-import com.ddiehl.reddit.listings.RedditComment;
-import com.ddiehl.reddit.listings.RedditLink;
+import com.ddiehl.reddit.listings.Link;
 
 public class ListingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -32,11 +32,11 @@ public class ListingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public int getItemViewType(int position) {
         Listing listing = mListingsPresenter.getListing(position);
 
-        if (listing instanceof RedditLink) {
+        if (listing instanceof Link) {
             return TYPE_LINK;
         }
 
-        if (listing instanceof RedditComment) {
+        if (listing instanceof Comment) {
             return TYPE_COMMENT;
         }
 
@@ -62,10 +62,10 @@ public class ListingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof ListingsLinkViewHolder) {
-            RedditLink link = (RedditLink) mListingsPresenter.getListing(position);
+            Link link = (Link) mListingsPresenter.getListing(position);
             ((ListingsLinkViewHolder) holder).bind(link, false);
         } else if (holder instanceof ListingsCommentViewHolder) {
-            RedditComment comment = (RedditComment) mListingsPresenter.getListing(position);
+            Comment comment = (Comment) mListingsPresenter.getListing(position);
             ((ListingsCommentViewHolder) holder).bind(comment);
         }
     }

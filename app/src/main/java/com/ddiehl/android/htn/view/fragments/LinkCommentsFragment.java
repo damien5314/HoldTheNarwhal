@@ -30,8 +30,8 @@ import com.ddiehl.android.htn.view.SettingsChangedListener;
 import com.ddiehl.android.htn.view.activities.MainActivity;
 import com.ddiehl.android.htn.view.adapters.LinkCommentsAdapter;
 import com.ddiehl.android.htn.view.dialogs.ChooseCommentSortDialog;
-import com.ddiehl.reddit.listings.RedditComment;
-import com.ddiehl.reddit.listings.RedditLink;
+import com.ddiehl.reddit.listings.Comment;
+import com.ddiehl.reddit.listings.Link;
 import com.flurry.android.FlurryAgent;
 import com.squareup.otto.Bus;
 
@@ -99,7 +99,7 @@ public class LinkCommentsFragment extends AbsRedditFragment
     }
 
     private void updateTitle() {
-        RedditLink link = mLinkCommentsPresenter.getLinkContext();
+        Link link = mLinkCommentsPresenter.getLinkContext();
         if (link != null) {
             setTitle(link.getTitle());
         } else {
@@ -124,7 +124,7 @@ public class LinkCommentsFragment extends AbsRedditFragment
     }
 
     @Override
-    public void showLinkContextMenu(ContextMenu menu, View v, RedditLink link) {
+    public void showLinkContextMenu(ContextMenu menu, View v, Link link) {
         getActivity().getMenuInflater().inflate(R.menu.link_context_menu, menu);
         String title = String.format(v.getContext().getString(R.string.menu_action_link),
                 link.getTitle(), link.getScore());
@@ -158,7 +158,7 @@ public class LinkCommentsFragment extends AbsRedditFragment
     }
 
     @Override
-    public void showCommentContextMenu(ContextMenu menu, View v, RedditComment comment) {
+    public void showCommentContextMenu(ContextMenu menu, View v, Comment comment) {
         getActivity().getMenuInflater().inflate(R.menu.comment_context_menu, menu);
         String title = String.format(v.getContext().getString(R.string.menu_action_comment),
                 comment.getAuthor(), comment.getScore());
@@ -177,7 +177,7 @@ public class LinkCommentsFragment extends AbsRedditFragment
     }
 
     @Override
-    public void openShareView(RedditComment comment) {
+    public void openShareView(Comment comment) {
         Intent i = new Intent(Intent.ACTION_SEND);
         i.setType("text/plain");
         i.putExtra(Intent.EXTRA_TEXT, comment.getUrl());
@@ -186,7 +186,7 @@ public class LinkCommentsFragment extends AbsRedditFragment
     }
 
     @Override
-    public void openCommentInBrowser(RedditComment comment) {
+    public void openCommentInBrowser(Comment comment) {
         Uri uri = Uri.parse(comment.getUrl());
         Intent i = new Intent(Intent.ACTION_VIEW, uri);
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -194,7 +194,7 @@ public class LinkCommentsFragment extends AbsRedditFragment
     }
 
     @Override
-    public void openShareView(RedditLink link) {
+    public void openShareView(Link link) {
         Intent i = new Intent(Intent.ACTION_SEND);
         i.setType("text/plain");
         i.putExtra(Intent.EXTRA_TEXT, "http://www.reddit.com" + link.getPermalink());
@@ -203,17 +203,17 @@ public class LinkCommentsFragment extends AbsRedditFragment
     }
 
     @Override
-    public void openUserProfileView(RedditLink link) {
+    public void openUserProfileView(Link link) {
         ((MainView) getActivity()).showUserProfile("overview", link.getAuthor());
     }
 
     @Override
-    public void openUserProfileView(RedditComment comment) {
+    public void openUserProfileView(Comment comment) {
         ((MainView) getActivity()).showUserProfile("overview", comment.getAuthor());
     }
 
     @Override
-    public void openLinkInBrowser(RedditLink link) {
+    public void openLinkInBrowser(Link link) {
         Uri uri = Uri.parse(link.getUrl());
         Intent i = new Intent(Intent.ACTION_VIEW, uri);
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -221,7 +221,7 @@ public class LinkCommentsFragment extends AbsRedditFragment
     }
 
     @Override
-    public void openCommentsInBrowser(RedditLink link) {
+    public void openCommentsInBrowser(Link link) {
         Uri uri = Uri.parse("http://www.reddit.com" + link.getPermalink());
         Intent i = new Intent(Intent.ACTION_VIEW, uri);
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -250,7 +250,7 @@ public class LinkCommentsFragment extends AbsRedditFragment
                 mLinkCommentsPresenter.shareLink();
                 return true;
             case R.id.action_link_view_user_profile:
-                RedditLink link = mLinkCommentsPresenter.getLinkContext();
+                Link link = mLinkCommentsPresenter.getLinkContext();
                 mLinkCommentsPresenter.openLinkUserProfile(link);
                 return true;
             case R.id.action_link_open_in_browser:
@@ -350,7 +350,7 @@ public class LinkCommentsFragment extends AbsRedditFragment
     }
 
     @Override
-    public void openLinkInWebView(RedditLink link) {
+    public void openLinkInWebView(Link link) {
         ((MainActivity) getActivity()).showWebViewForURL(link.getUrl());
     }
 
@@ -360,7 +360,7 @@ public class LinkCommentsFragment extends AbsRedditFragment
     }
 
     @Override
-    public void openReplyView(RedditComment comment) {
+    public void openReplyView(Comment comment) {
         showToast(R.string.implementation_pending);
     }
 

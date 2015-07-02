@@ -4,19 +4,19 @@
 
 package com.ddiehl.android.htn.presenter;
 
-import com.ddiehl.reddit.listings.AbsRedditComment;
-import com.ddiehl.reddit.listings.RedditLink;
-import com.ddiehl.reddit.listings.RedditMoreComments;
+import com.ddiehl.reddit.listings.AbsComment;
+import com.ddiehl.reddit.listings.CommentStub;
+import com.ddiehl.reddit.listings.Link;
 
 public interface LinkCommentsPresenter extends LinkPresenter, CommentPresenter {
 
-    RedditLink getLinkContext();
+    Link getLinkContext();
     void getComments();
-    void getMoreChildren(RedditMoreComments comment);
-    void toggleThreadVisible(AbsRedditComment comment);
+    void getMoreChildren(CommentStub comment);
+    void toggleThreadVisible(AbsComment comment);
 
     int getNumComments();
-    AbsRedditComment getComment(int position);
+    AbsComment getComment(int position);
 
     String getSort();
     void updateSort();

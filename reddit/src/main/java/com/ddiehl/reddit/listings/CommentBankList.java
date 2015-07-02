@@ -34,18 +34,18 @@ public class CommentBankList implements CommentBank {
     }
 
     @Override
-    public int indexOf(AbsRedditComment o) {
+    public int indexOf(AbsComment o) {
         return mData.indexOf(o);
     }
 
     @Override
-    public int visibleIndexOf(AbsRedditComment obj) {
+    public int visibleIndexOf(AbsComment obj) {
         return mVisibleData.indexOf(obj);
     }
 
     @Override
-    public AbsRedditComment get(int position) {
-        return (AbsRedditComment) mData.get(position);
+    public AbsComment get(int position) {
+        return (AbsComment) mData.get(position);
     }
 
     @Override
@@ -54,14 +54,14 @@ public class CommentBankList implements CommentBank {
     }
 
     @Override
-    public AbsRedditComment remove(int position) {
-        AbsRedditComment result = (AbsRedditComment) mData.remove(position);
+    public AbsComment remove(int position) {
+        AbsComment result = (AbsComment) mData.remove(position);
         syncVisibleData();
         return result;
     }
 
     @Override
-    public boolean remove(AbsRedditComment comment) {
+    public boolean remove(AbsComment comment) {
         boolean removed = mData.remove(comment);
         syncVisibleData();
         return removed;
@@ -82,7 +82,7 @@ public class CommentBankList implements CommentBank {
 
     @Override
     public boolean isVisible(int position) {
-        return ((AbsRedditComment) mData.get(position)).isVisible();
+        return ((AbsComment) mData.get(position)).isVisible();
     }
 
     @Override
@@ -91,27 +91,27 @@ public class CommentBankList implements CommentBank {
     }
 
     @Override
-    public AbsRedditComment getVisibleComment(int position) {
-        return (AbsRedditComment) mVisibleData.get(position);
+    public AbsComment getVisibleComment(int position) {
+        return (AbsComment) mVisibleData.get(position);
     }
 
     private void syncVisibleData() {
         mVisibleData.clear();
         for (Listing comment : mData) {
-            if (((AbsRedditComment) comment).isVisible()) {
+            if (((AbsComment) comment).isVisible()) {
                 mVisibleData.add(comment);
             }
         }
     }
 
     @Override
-    public void toggleThreadVisible(AbsRedditComment comment) {
+    public void toggleThreadVisible(AbsComment comment) {
         setThreadVisible(indexOf(comment), comment.isCollapsed());
     }
 
     private void setThreadVisible(int position, boolean visible) {
         int totalItemCount = mData.size();
-        RedditComment parentComment = (RedditComment) mData.get(position);
+        Comment parentComment = (Comment) mData.get(position);
         int parentCommentDepth = parentComment.getDepth();
         parentComment.setCollapsed(!visible);
         ArrayList<Integer> collapsedCommentLevels = new ArrayList<>();
@@ -123,7 +123,7 @@ public class CommentBankList implements CommentBank {
         if (position + 1 < totalItemCount) {
             // Retrieve first child comment
             int currentChildCommentPosition = position + 1;
-            AbsRedditComment currentChildComment = (AbsRedditComment) mData.get(currentChildCommentPosition);
+            AbsComment currentChildComment = (AbsComment) mData.get(currentChildCommentPosition);
             int currentChildCommentDepth = currentChildComment.getDepth();
             // Loop through remaining comments until we reach another comment at same depth
             // as the parent, or we reach the end of the comment list
@@ -157,7 +157,7 @@ public class CommentBankList implements CommentBank {
                 currentChildCommentPosition++;
                 // Retrieve comment at current position
                 if (currentChildCommentPosition < totalItemCount) {
-                    currentChildComment = (AbsRedditComment) mData.get(currentChildCommentPosition);
+                    currentChildComment = (AbsComment) mData.get(currentChildCommentPosition);
                     currentChildCommentDepth = currentChildComment.getDepth();
                 }
             }

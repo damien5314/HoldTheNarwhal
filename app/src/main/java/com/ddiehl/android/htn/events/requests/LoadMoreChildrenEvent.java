@@ -4,29 +4,29 @@
 
 package com.ddiehl.android.htn.events.requests;
 
-import com.ddiehl.reddit.listings.RedditLink;
-import com.ddiehl.reddit.listings.RedditMoreComments;
+import com.ddiehl.reddit.listings.CommentStub;
+import com.ddiehl.reddit.listings.Link;
 
 import java.util.List;
 
 public class LoadMoreChildrenEvent {
-    private RedditLink mRedditLink;
-    private RedditMoreComments mMoreComments;
+    private Link mLink;
+    private CommentStub mMoreComments;
     private List<String> mChildren;
     private String mSort;
 
-    public LoadMoreChildrenEvent(RedditLink link, RedditMoreComments moreComments, List<String> children, String sort) {
-        mRedditLink = link;
+    public LoadMoreChildrenEvent(Link link, CommentStub moreComments, List<String> children, String sort) {
+        mLink = link;
         mMoreComments = moreComments;
         mChildren = children;
         mSort = sort;
     }
 
-    public RedditLink getRedditLink() {
-        return mRedditLink;
+    public Link getLink() {
+        return mLink;
     }
 
-    public RedditMoreComments getParentCommentStub() {
+    public CommentStub getParentCommentStub() {
         return mMoreComments;
     }
 

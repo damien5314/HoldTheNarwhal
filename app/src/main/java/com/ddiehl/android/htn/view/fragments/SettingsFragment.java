@@ -14,7 +14,7 @@ import android.preference.PreferenceGroup;
 import android.support.design.widget.Snackbar;
 
 import com.ddiehl.android.htn.R;
-import com.ddiehl.android.htn.RedditPreferences;
+import com.ddiehl.android.htn.RedditPrefs;
 import com.flurry.android.FlurryAgent;
 
 import java.util.HashMap;
@@ -26,7 +26,7 @@ public class SettingsFragment extends PreferenceFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getPreferenceManager().setSharedPreferencesName(RedditPreferences.PREFS_USER);
+        getPreferenceManager().setSharedPreferencesName(RedditPrefs.PREFS_USER);
         addPreferencesFromResource(R.xml.preferences);
     }
 

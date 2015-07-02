@@ -11,17 +11,17 @@ public interface CommentBank {
 
     boolean addAll(Collection<Listing> collection);
     boolean addAll(int index, Collection<Listing> collection);
-    int indexOf(AbsRedditComment obj);
-    int visibleIndexOf(AbsRedditComment obj);
-    AbsRedditComment get(int position);
+    int indexOf(AbsComment obj);
+    int visibleIndexOf(AbsComment obj);
+    AbsComment get(int position);
     int size();
-    AbsRedditComment remove(int position);
-    boolean remove(AbsRedditComment comment);
+    AbsComment remove(int position);
+    boolean remove(AbsComment comment);
     void clear();
     void setData(List<Listing> data);
     boolean isVisible(int position);
     int getNumVisible();
-    AbsRedditComment getVisibleComment(int position);
-    void toggleThreadVisible(AbsRedditComment comment);
+    AbsComment getVisibleComment(int position);
+    void toggleThreadVisible(AbsComment comment);
 
 }

@@ -21,7 +21,7 @@ import android.view.View;
 import com.ddiehl.android.htn.BuildConfig;
 import com.ddiehl.android.htn.BusProvider;
 import com.ddiehl.android.htn.R;
-import com.ddiehl.android.htn.RedditPreferences;
+import com.ddiehl.android.htn.RedditPrefs;
 import com.ddiehl.android.htn.presenter.ListingsPresenter;
 import com.ddiehl.android.htn.utils.NUtils;
 import com.ddiehl.android.htn.view.ListingsView;
@@ -31,8 +31,8 @@ import com.ddiehl.android.htn.view.activities.MainActivity;
 import com.ddiehl.android.htn.view.adapters.ListingsAdapter;
 import com.ddiehl.android.htn.view.dialogs.ChooseLinkSortDialog;
 import com.ddiehl.android.htn.view.dialogs.ChooseTimespanDialog;
-import com.ddiehl.reddit.listings.RedditComment;
-import com.ddiehl.reddit.listings.RedditLink;
+import com.ddiehl.reddit.listings.Comment;
+import com.ddiehl.reddit.listings.Link;
 import com.flurry.android.FlurryAgent;
 import com.mopub.nativeads.MoPubAdRecycleAdapter;
 import com.mopub.nativeads.MoPubNativeAdRenderer;
@@ -131,7 +131,7 @@ public abstract class AbsListingsFragment extends AbsRedditFragment
     }
 
     private void loadAdsIfEnabled() {
-        boolean adsEnabled = RedditPreferences.getInstance(getActivity()).getAdsEnabled();
+        boolean adsEnabled = RedditPrefs.getInstance(getActivity()).getAdsEnabled();
         if (adsEnabled) {
             String key = NUtils.getMoPubApiKey(BuildConfig.DEBUG);
             mAdAdapter.loadAds(key, mAdRequestParameters);
@@ -230,7 +230,7 @@ public abstract class AbsListingsFragment extends AbsRedditFragment
     }
 
     @Override
-    public void showLinkContextMenu(ContextMenu menu, View v, RedditLink link) {
+    public void showLinkContextMenu(ContextMenu menu, View v, Link link) {
         getActivity().getMenuInflater().inflate(R.menu.link_context_menu, menu);
         String title = String.format(v.getContext().getString(R.string.menu_action_link),
                 link.getTitle(), link.getScore());
@@ -243,7 +243,7 @@ public abstract class AbsListingsFragment extends AbsRedditFragment
     }
 
     @Override
-    public void showCommentContextMenu(ContextMenu menu, View v, RedditComment comment) {
+    public void showCommentContextMenu(ContextMenu menu, View v, Comment comment) {
         getActivity().getMenuInflater().inflate(R.menu.comment_context_menu, menu);
         String title = String.format(getString(R.string.menu_action_comment),
                 comment.getAuthor(), comment.getScore());
@@ -328,7 +328,7 @@ public abstract class AbsListingsFragment extends AbsRedditFragment
     }
 
     @Override
-    public void openShareView(RedditLink link) {
+    public void openShareView(Link link) {
         Intent i = new Intent(Intent.ACTION_SEND);
         i.setType("text/plain");
         i.putExtra(Intent.EXTRA_TEXT, "http://www.reddit.com" + link.getPermalink());
@@ -337,7 +337,7 @@ public abstract class AbsListingsFragment extends AbsRedditFragment
     }
 
     @Override
-    public void openLinkInBrowser(RedditLink link) {
+    public void openLinkInBrowser(Link link) {
         Uri uri = Uri.parse(link.getUrl());
         Intent i = new Intent(Intent.ACTION_VIEW, uri);
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -345,7 +345,7 @@ public abstract class AbsListingsFragment extends AbsRedditFragment
     }
 
     @Override
-    public void openCommentsInBrowser(RedditLink link) {
+    public void openCommentsInBrowser(Link link) {
         Uri uri = Uri.parse("http://www.reddit.com" + link.getPermalink());
         Intent i = new Intent(Intent.ACTION_VIEW, uri);
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -353,7 +353,7 @@ public abstract class AbsListingsFragment extends AbsRedditFragment
     }
 
     @Override
-    public void openLinkInWebView(RedditLink link) {
+    public void openLinkInWebView(Link link) {
         // Log analytics event
         Map<String, String> params = new HashMap<>();
         params.put("subreddit", link.getSubreddit());
@@ -383,12 +383,12 @@ public abstract class AbsListingsFragment extends AbsRedditFragment
     }
 
     @Override
-    public void openReplyView(RedditComment comment) {
+    public void openReplyView(Comment comment) {
         showToast(R.string.implementation_pending);
     }
 
     @Override
-    public void openShareView(RedditComment comment) {
+    public void openShareView(Comment comment) {
         Intent i = new Intent(Intent.ACTION_SEND);
         i.setType("text/plain");
         i.putExtra(Intent.EXTRA_TEXT, comment.getUrl());
@@ -397,17 +397,17 @@ public abstract class AbsListingsFragment extends AbsRedditFragment
     }
 
     @Override
-    public void openUserProfileView(RedditLink link) {
+    public void openUserProfileView(Link link) {
         ((MainView) getActivity()).showUserProfile("overview", link.getAuthor());
     }
 
     @Override
-    public void openUserProfileView(RedditComment comment) {
+    public void openUserProfileView(Comment comment) {
         ((MainView) getActivity()).showUserProfile("overview", comment.getAuthor());
     }
 
     @Override
-    public void openCommentInBrowser(RedditComment comment) {
+    public void openCommentInBrowser(Comment comment) {
         Uri uri = Uri.parse(comment.getUrl());
         Intent i = new Intent(Intent.ACTION_VIEW, uri);
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

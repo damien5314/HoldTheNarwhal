@@ -13,10 +13,10 @@ import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.view.viewholders.ThreadStubViewHolder;
 import com.ddiehl.android.htn.view.viewholders.ThreadCommentViewHolder;
 import com.ddiehl.android.htn.view.viewholders.ListingsLinkViewHolder;
-import com.ddiehl.reddit.listings.AbsRedditComment;
-import com.ddiehl.reddit.listings.RedditComment;
-import com.ddiehl.reddit.listings.RedditLink;
-import com.ddiehl.reddit.listings.RedditMoreComments;
+import com.ddiehl.reddit.listings.AbsComment;
+import com.ddiehl.reddit.listings.Comment;
+import com.ddiehl.reddit.listings.CommentStub;
+import com.ddiehl.reddit.listings.Link;
 import com.ddiehl.android.htn.presenter.LinkCommentsPresenter;
 
 public class LinkCommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -35,9 +35,9 @@ public class LinkCommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         if (position == 0)
             return TYPE_LINK;
 
-        AbsRedditComment comment = mLinkCommentsPresenter.getComment(position - 1);
+        AbsComment comment = mLinkCommentsPresenter.getComment(position - 1);
 
-        if (comment instanceof RedditComment)
+        if (comment instanceof Comment)
             return TYPE_COMMENT;
         else
             return TYPE_COMMENT_STUB;
@@ -66,14 +66,14 @@ public class LinkCommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof ListingsLinkViewHolder) {
-            RedditLink link = mLinkCommentsPresenter.getLinkContext();
+            Link link = mLinkCommentsPresenter.getLinkContext();
             ((ListingsLinkViewHolder) holder).bind(link, true);
         } else if (holder instanceof ThreadCommentViewHolder) {
-            RedditLink link = mLinkCommentsPresenter.getLinkContext();
-            RedditComment comment = (RedditComment) mLinkCommentsPresenter.getComment(position - 1);
+            Link link = mLinkCommentsPresenter.getLinkContext();
+            Comment comment = (Comment) mLinkCommentsPresenter.getComment(position - 1);
             ((ThreadCommentViewHolder) holder).bind(link, comment);
         } else if (holder instanceof ThreadStubViewHolder) {
-            RedditMoreComments comment = (RedditMoreComments) mLinkCommentsPresenter.getComment(position - 1);
+            CommentStub comment = (CommentStub) mLinkCommentsPresenter.getComment(position - 1);
             ((ThreadStubViewHolder) holder).bind(comment);
         }
     }

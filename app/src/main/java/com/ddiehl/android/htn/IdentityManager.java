@@ -18,8 +18,8 @@ import com.squareup.otto.Bus;
 
 import java.util.Date;
 
-public class RedditIdentityManager {
-    private static final String TAG = RedditIdentityManager.class.getSimpleName();
+public class IdentityManager {
+    private static final String TAG = IdentityManager.class.getSimpleName();
 
     private static final String PREFS_USER_ACCESS_TOKEN = "prefs_user_access_token";
     private static final String PREFS_APPLICATION_ACCESS_TOKEN = "prefs_application_access_token";
@@ -50,7 +50,7 @@ public class RedditIdentityManager {
     // Seconds within expiration we should try to retrieve a new auth token
     private static final int EXPIRATION_THRESHOLD = 60;
 
-    private static RedditIdentityManager _instance;
+    private static IdentityManager _instance;
 
     private Bus mBus;
     private Context mContext;
@@ -59,7 +59,7 @@ public class RedditIdentityManager {
     private AccessToken mApplicationAccessToken;
     private UserIdentity mUserIdentity;
 
-    private RedditIdentityManager(Context context) {
+    private IdentityManager(Context context) {
         mBus = BusProvider.getInstance();
         mContext = context.getApplicationContext();
         mUserAccessToken = getSavedUserAccessToken();
@@ -283,11 +283,11 @@ public class RedditIdentityManager {
                 .edit().clear().apply();
     }
 
-    public static RedditIdentityManager getInstance(Context context) {
+    public static IdentityManager getInstance(Context context) {
         if (_instance == null) {
-            synchronized (RedditIdentityManager.class) {
+            synchronized (IdentityManager.class) {
                 if (_instance == null) {
-                    _instance = new RedditIdentityManager(context);
+                    _instance = new IdentityManager(context);
                 }
             }
         }

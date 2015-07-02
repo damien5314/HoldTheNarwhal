@@ -7,14 +7,14 @@ package com.ddiehl.android.htn.view;
 import android.view.ContextMenu;
 import android.view.View;
 
-import com.ddiehl.reddit.listings.RedditComment;
+import com.ddiehl.reddit.listings.Comment;
 
 public interface CommentView extends BaseView {
 
-    void showCommentContextMenu(ContextMenu menu, View v, RedditComment comment);
+    void showCommentContextMenu(ContextMenu menu, View v, Comment comment);
     void showCommentThread(String subreddit, String linkId, String commentId);
-    void openShareView(RedditComment comment);
-    void openUserProfileView(RedditComment comment);
-    void openCommentInBrowser(RedditComment comment);
-    void openReplyView(RedditComment comment);
+    void openShareView(Comment comment);
+    void openUserProfileView(Comment comment);
+    void openCommentInBrowser(Comment comment);
+    void openReplyView(Comment comment);
 }

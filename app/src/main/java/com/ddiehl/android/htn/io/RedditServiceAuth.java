@@ -8,8 +8,8 @@ package com.ddiehl.android.htn.io;
 import android.content.Context;
 
 import com.ddiehl.android.htn.BusProvider;
-import com.ddiehl.android.htn.RedditIdentityManager;
-import com.ddiehl.android.htn.RedditPreferences;
+import com.ddiehl.android.htn.IdentityManager;
+import com.ddiehl.android.htn.RedditPrefs;
 import com.ddiehl.android.htn.events.requests.AuthorizeApplicationEvent;
 import com.ddiehl.android.htn.events.requests.GetUserIdentityEvent;
 import com.ddiehl.android.htn.events.requests.HideEvent;
@@ -69,14 +69,14 @@ public class RedditServiceAuth implements RedditService {
     private Bus mBus;
     private RedditAuthAPI mAuthAPI;
     private RedditServiceAPI mServiceAPI;
-    private RedditIdentityManager mIdentityManager;
+    private IdentityManager mIdentityManager;
 
     private Object mQueuedEvent;
 
     private RedditServiceAuth(Context context) {
         mContext = context.getApplicationContext();
         mBus = BusProvider.getInstance();
-        mIdentityManager = RedditIdentityManager.getInstance(mContext);
+        mIdentityManager = IdentityManager.getInstance(mContext);
         mAuthAPI = buildApi();
         mServiceAPI = new RedditServiceAPI(mContext, mIdentityManager);
     }
@@ -105,7 +105,7 @@ public class RedditServiceAuth implements RedditService {
     @Subscribe
     public void onAuthorizeApplication(AuthorizeApplicationEvent event) {
         String grantType = "https://oauth.reddit.com/grants/installed_client";
-        String deviceId = RedditPreferences.getInstance(mContext).getDeviceId();
+        String deviceId = RedditPrefs.getInstance(mContext).getDeviceId();
 
         mAuthAPI.getApplicationAuthToken(grantType, deviceId, new Callback<AuthorizationResponse>() {
             @Override

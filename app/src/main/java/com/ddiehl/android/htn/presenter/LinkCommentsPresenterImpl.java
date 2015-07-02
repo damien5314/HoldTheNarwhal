@@ -10,8 +10,8 @@ import android.view.View;
 
 import com.ddiehl.android.htn.BusProvider;
 import com.ddiehl.android.htn.R;
-import com.ddiehl.android.htn.RedditIdentityManager;
-import com.ddiehl.android.htn.RedditPreferences;
+import com.ddiehl.android.htn.IdentityManager;
+import com.ddiehl.android.htn.RedditPrefs;
 import com.ddiehl.android.htn.events.requests.HideEvent;
 import com.ddiehl.android.htn.events.requests.LoadLinkCommentsEvent;
 import com.ddiehl.android.htn.events.requests.LoadMoreChildrenEvent;
@@ -26,13 +26,13 @@ import com.ddiehl.android.htn.view.LinkCommentsView;
 import com.ddiehl.reddit.Archivable;
 import com.ddiehl.reddit.Savable;
 import com.ddiehl.reddit.Votable;
-import com.ddiehl.reddit.listings.AbsRedditComment;
+import com.ddiehl.reddit.listings.AbsComment;
+import com.ddiehl.reddit.listings.Comment;
 import com.ddiehl.reddit.listings.CommentBank;
 import com.ddiehl.reddit.listings.CommentBankList;
+import com.ddiehl.reddit.listings.CommentStub;
 import com.ddiehl.reddit.listings.Listing;
-import com.ddiehl.reddit.listings.RedditComment;
-import com.ddiehl.reddit.listings.RedditLink;
-import com.ddiehl.reddit.listings.RedditMoreComments;
+import com.ddiehl.reddit.listings.Link;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -45,12 +45,12 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
     private Context mContext;
 
     private LinkCommentsView mLinkCommentsView;
-    private RedditLink mLinkContext;
+    private Link mLinkContext;
     private CommentBank mCommentBank;
     private Bus mBus;
-    private RedditPreferences mPreferences;
+    private RedditPrefs mPreferences;
 
-    private RedditIdentityManager mIdentityManager;
+    private IdentityManager mIdentityManager;
 
     private String mSubreddit;
     private String mArticleId;
@@ -65,8 +65,8 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
         mLinkCommentsView = view;
         mCommentBank = new CommentBankList();
         mBus = BusProvider.getInstance();
-        mIdentityManager = RedditIdentityManager.getInstance(context);
-        mPreferences = RedditPreferences.getInstance(mContext);
+        mIdentityManager = IdentityManager.getInstance(context);
+        mPreferences = RedditPrefs.getInstance(mContext);
         mSubreddit = subreddit;
         mArticleId = articleId;
         mCommentId = commentId;
@@ -89,14 +89,14 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
         mLinkContext = event.getLink();
         mLinkCommentsView.setTitle(mLinkContext.getTitle());
         List<Listing> comments = event.getComments();
-        AbsRedditComment.Utils.flattenCommentList(comments);
+        AbsComment.Utils.flattenCommentList(comments);
         mCommentBank.clear();
         mCommentBank.addAll(comments);
         mLinkCommentsView.commentsUpdated();
     }
 
     @Override
-    public void getMoreChildren(RedditMoreComments comment) {
+    public void getMoreChildren(CommentStub comment) {
         mLinkCommentsView.showSpinner(null);
         List<String> children = comment.getChildren();
         // Truncate list of children to 20
@@ -111,23 +111,23 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
             return;
         }
 
-        RedditMoreComments parentStub = event.getParentStub();
+        CommentStub parentStub = event.getParentStub();
         List<Listing> comments = event.getComments();
 
         if (comments == null || comments.size() == 0) {
             mCommentBank.remove(parentStub);
         } else {
-            AbsRedditComment.Utils.setDepthForCommentsList(comments, parentStub.getDepth());
+            AbsComment.Utils.setDepthForCommentsList(comments, parentStub.getDepth());
 
-            // TODO: Pass RedditMoreComments along with event so we don't have to search for it
+            // TODO: Pass CommentStub along with event so we don't have to search for it
             for (int i = 0; i < mCommentBank.size(); i++) {
-                AbsRedditComment comment = mCommentBank.get(i);
-                if (comment instanceof RedditMoreComments) {
+                AbsComment comment = mCommentBank.get(i);
+                if (comment instanceof CommentStub) {
                     String id = comment.getId();
                     if (id.equals(parentStub.getId())) { // Found the base comment
-                        ((RedditMoreComments) comment).removeChildren(comments);
-                        ((RedditMoreComments) comment).setCount(((RedditMoreComments) comment).getChildren().size());
-                        if (((RedditMoreComments) comment).getCount() == 0)
+                        ((CommentStub) comment).removeChildren(comments);
+                        ((CommentStub) comment).setCount(((CommentStub) comment).getChildren().size());
+                        if (((CommentStub) comment).getCount() == 0)
                             mCommentBank.remove(i);
                         mCommentBank.addAll(i, comments);
                         break;
@@ -140,7 +140,7 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
     }
 
     @Override
-    public RedditLink getLinkContext() {
+    public Link getLinkContext() {
         return mLinkContext;
     }
 
@@ -160,12 +160,12 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
     }
 
     @Override
-    public AbsRedditComment getComment(int position) {
+    public AbsComment getComment(int position) {
         return mCommentBank.getVisibleComment(position);
     }
 
     @Override
-    public void toggleThreadVisible(AbsRedditComment comment) {
+    public void toggleThreadVisible(AbsComment comment) {
         mCommentBank.toggleThreadVisible(comment);
         mLinkCommentsView.commentsUpdated();
     }
@@ -181,7 +181,7 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
     }
 
     @Override
-    public void showLinkContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, RedditLink link) {
+    public void showLinkContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, Link link) {
         mListingSelected = link;
         mLinkCommentsView.showLinkContextMenu(menu, v, link);
         menu.findItem(R.id.action_link_save).setVisible(!link.isSaved());
@@ -189,7 +189,7 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
     }
 
     @Override
-    public void openLink(RedditLink link) {
+    public void openLink(Link link) {
         if (link == null)
             return;
 
@@ -206,7 +206,7 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
     }
 
     @Override
-    public void showCommentsForLink(RedditLink link) {
+    public void showCommentsForLink(Link link) {
         mLinkCommentsView.showCommentsForLink(link.getSubreddit(), link.getId(), null);
     }
 
@@ -253,7 +253,7 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
     }
 
     @Override
-    public void openLinkUserProfile(RedditLink link) {
+    public void openLinkUserProfile(Link link) {
         mLinkCommentsView.openUserProfileView(link);
     }
 
@@ -298,7 +298,7 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
     }
 
     @Override
-    public void showCommentContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, RedditComment comment) {
+    public void showCommentContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, Comment comment) {
         mListingSelected = comment;
         mLinkCommentsView.showCommentContextMenu(menu, v, comment);
         menu.findItem(R.id.action_comment_save).setVisible(!comment.isSaved());
@@ -329,10 +329,10 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
         }
 
         listing.applyVote(event.getDirection());
-        if (listing instanceof RedditLink) {
+        if (listing instanceof Link) {
             mLinkCommentsView.linkUpdated();
         } else {
-            mLinkCommentsView.commentUpdatedAt(mCommentBank.visibleIndexOf(((AbsRedditComment) listing)));
+            mLinkCommentsView.commentUpdatedAt(mCommentBank.visibleIndexOf(((AbsComment) listing)));
         }
     }
 
@@ -346,22 +346,22 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
         }
 
         listing.isSaved(event.isToSave());
-        if (listing instanceof RedditLink) {
+        if (listing instanceof Link) {
             mLinkCommentsView.linkUpdated();
         } else {
-            mLinkCommentsView.commentUpdatedAt(mCommentBank.visibleIndexOf(((AbsRedditComment) listing)));
+            mLinkCommentsView.commentUpdatedAt(mCommentBank.visibleIndexOf(((AbsComment) listing)));
         }
     }
 
     @Override
     public void openCommentPermalink() {
-        RedditComment comment = (RedditComment) mListingSelected;
+        Comment comment = (Comment) mListingSelected;
         showCommentThread(comment.getSubreddit(), comment.getLinkId(), comment.getId());
     }
 
     @Override
     public void openReplyView() {
-        RedditComment comment = (RedditComment) mListingSelected;
+        Comment comment = (Comment) mListingSelected;
         if (comment.isArchived()) {
             mLinkCommentsView.showToast(R.string.listing_archived);
         } else {
@@ -390,7 +390,7 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
             return;
         }
 
-        RedditComment comment = (RedditComment) mListingSelected;
+        Comment comment = (Comment) mListingSelected;
         mBus.post(new SaveEvent(comment, null, true));
     }
 
@@ -401,30 +401,30 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
             return;
         }
 
-        RedditComment comment = (RedditComment) mListingSelected;
+        Comment comment = (Comment) mListingSelected;
         mBus.post(new SaveEvent(comment, null, false));
     }
 
     @Override
     public void shareComment() {
-        RedditComment comment = (RedditComment) mListingSelected;
+        Comment comment = (Comment) mListingSelected;
         mLinkCommentsView.openShareView(comment);
     }
 
     @Override
     public void openCommentUserProfile() {
-        RedditComment comment = (RedditComment) mListingSelected;
+        Comment comment = (Comment) mListingSelected;
         mLinkCommentsView.openUserProfileView(comment);
     }
 
     @Override
-    public void openCommentUserProfile(RedditComment comment) {
+    public void openCommentUserProfile(Comment comment) {
         mLinkCommentsView.openUserProfileView(comment);
     }
 
     @Override
     public void openCommentInBrowser() {
-        RedditComment comment = (RedditComment) mListingSelected;
+        Comment comment = (Comment) mListingSelected;
         mLinkCommentsView.openCommentInBrowser(comment);
     }
 
@@ -435,12 +435,12 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
             return;
         }
 
-        RedditComment comment = (RedditComment) mListingSelected;
+        Comment comment = (Comment) mListingSelected;
         mLinkCommentsView.showToast(R.string.implementation_pending);
     }
 
     @Override
-    public void openCommentLink(RedditComment comment) {
+    public void openCommentLink(Comment comment) {
         // Link is already being displayed with this presenter
     }
 

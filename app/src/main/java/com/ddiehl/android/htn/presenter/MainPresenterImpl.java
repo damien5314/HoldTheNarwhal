@@ -9,7 +9,7 @@ import android.util.Log;
 
 import com.ddiehl.android.htn.BusProvider;
 import com.ddiehl.android.htn.R;
-import com.ddiehl.android.htn.RedditIdentityManager;
+import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.events.requests.UserSignOutEvent;
 import com.ddiehl.android.htn.events.responses.UserIdentityRetrievedEvent;
 import com.ddiehl.android.htn.events.responses.UserIdentitySavedEvent;
@@ -27,7 +27,7 @@ public class MainPresenterImpl implements MainPresenter {
     private Context mContext;
 
     private MainView mMainView;
-    private RedditIdentityManager mIdentityManager;
+    private IdentityManager mIdentityManager;
     private String mUsernameContext;
 
     public MainPresenterImpl(Context context, MainView view) {
@@ -35,7 +35,7 @@ public class MainPresenterImpl implements MainPresenter {
         mContext = context.getApplicationContext();
 
         mMainView = view;
-        mIdentityManager = RedditIdentityManager.getInstance(mContext);
+        mIdentityManager = IdentityManager.getInstance(mContext);
     }
 
     @Subscribe

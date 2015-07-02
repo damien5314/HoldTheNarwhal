@@ -12,7 +12,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 @SuppressWarnings("unused")
-public class RedditComment extends AbsRedditComment<RedditComment.Data> implements Votable, Savable {
+public class Comment extends AbsComment<Comment.Data> implements Votable, Savable {
 
     private boolean isCollapsed = false;
 
@@ -202,7 +202,7 @@ public class RedditComment extends AbsRedditComment<RedditComment.Data> implemen
         return data.linkUrl;
     }
 
-    public static class Data extends AbsRedditComment.Data {
+    public static class Data extends AbsComment.Data {
 
         // Attributes specific to listing views
         @Expose @SerializedName("link_title")

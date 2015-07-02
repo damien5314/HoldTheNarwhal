@@ -18,7 +18,7 @@ import android.widget.TextView;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.presenter.CommentPresenter;
 import com.ddiehl.android.htn.view.widgets.RedditDateTextView;
-import com.ddiehl.reddit.listings.RedditComment;
+import com.ddiehl.reddit.listings.Comment;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -29,7 +29,7 @@ public class ListingsCommentViewHolder extends RecyclerView.ViewHolder
 
     private Context mContext;
     private CommentPresenter mCommentPresenter;
-    private RedditComment mRedditComment;
+    private Comment mComment;
 
     @Bind(R.id.comment_link_title) TextView mCommentLinkTitleView;
     @Bind(R.id.comment_expander_icon) ImageView mExpanderIcon;
@@ -60,11 +60,11 @@ public class ListingsCommentViewHolder extends RecyclerView.ViewHolder
 
     @OnClick(R.id.comment_link_title)
     void onClickTitle() {
-        mCommentPresenter.openCommentLink(mRedditComment);
+        mCommentPresenter.openCommentLink(mComment);
     }
 
-    public void bind(final RedditComment comment) {
-        mRedditComment = comment;
+    public void bind(final Comment comment) {
+        mComment = comment;
 
         // Add author and subreddit to link title text
         String linkTitle = comment.getLinkTitle();
@@ -144,6 +144,6 @@ public class ListingsCommentViewHolder extends RecyclerView.ViewHolder
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        mCommentPresenter.showCommentContextMenu(menu, v, menuInfo, mRedditComment);
+        mCommentPresenter.showCommentContextMenu(menu, v, menuInfo, mComment);
     }
 }
