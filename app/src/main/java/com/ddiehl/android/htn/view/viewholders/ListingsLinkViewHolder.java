@@ -15,8 +15,11 @@ import android.widget.TextView;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.presenter.LinkPresenter;
 import com.ddiehl.android.htn.view.widgets.RedditDateTextView;
+import com.ddiehl.reddit.listings.LinkPreview;
 import com.ddiehl.reddit.listings.RedditLink;
 import com.squareup.picasso.Picasso;
+
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -121,23 +124,45 @@ public class ListingsLinkViewHolder extends RecyclerView.ViewHolder
         mLinkDomain.setText(String.format(mContext.getString(R.string.link_domain), link.getDomain()));
         mLinkComments.setText(String.format(mContext.getString(R.string.link_comment_count), link.getNumComments()));
 
-        String thumbnailUrl = link.getThumbnail();
-        switch (thumbnailUrl) {
-            case "nsfw":
-                Picasso.with(mContext)
-                        .load(R.drawable.ic_nsfw2)
-                        .into(mLinkThumbnail);
-                break;
-            case "": case "default": case "self":
-                mLinkThumbnail.setVisibility(View.GONE);
-                break;
-            default:
-                Picasso.with(mContext)
-                        .load(thumbnailUrl)
-                        .placeholder(R.drawable.ic_thumbnail_placeholder)
-                        .error(R.drawable.ic_alert_error)
-                        .into(mLinkThumbnail);
-                mLinkThumbnail.setVisibility(View.VISIBLE);
+        List<LinkPreview.Image> images = link.getPreviewImages();
+        if (images != null && images.size() > 0) {
+            LinkPreview.Image imageToDisplay = null;
+            // Retrieve preview image to display
+            LinkPreview.Image image = images.get(0);
+            LinkPreview.Image.Variants variants = image.getVariants();
+            if (variants != null && variants.nsfw != null) {
+                imageToDisplay = variants.nsfw;
+            } else {
+                imageToDisplay = image;
+            }
+            // Set selected image to ImageView for thumbnail
+            mLinkThumbnail.setVisibility(View.VISIBLE);
+            List<LinkPreview.Image.Res> resolutions = imageToDisplay.getResolutions();
+            LinkPreview.Image.Res res = resolutions.size() > 0 ? resolutions.get(0) : imageToDisplay.getSource();
+            Picasso.with(mContext)
+                    .load(res.getUrl())
+                    .placeholder(R.drawable.ic_thumbnail_placeholder)
+                    .error(R.drawable.ic_alert_error)
+                    .into(mLinkThumbnail);
+        } else { // Default to the old logic with thumbnail field
+            String thumbnailUrl = link.getThumbnail();
+            switch (thumbnailUrl) {
+                case "nsfw":
+                    Picasso.with(mContext)
+                            .load(R.drawable.ic_nsfw2)
+                            .into(mLinkThumbnail);
+                    break;
+                case "": case "default": case "self":
+                    mLinkThumbnail.setVisibility(View.GONE);
+                    break;
+                default:
+                    Picasso.with(mContext)
+                            .load(thumbnailUrl)
+                            .placeholder(R.drawable.ic_thumbnail_placeholder)
+                            .error(R.drawable.ic_alert_error)
+                            .into(mLinkThumbnail);
+                    mLinkThumbnail.setVisibility(View.VISIBLE);
+            }
         }
 
         // Set background tint based on isLiked
