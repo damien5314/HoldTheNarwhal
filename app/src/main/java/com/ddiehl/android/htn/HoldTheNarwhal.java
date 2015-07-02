@@ -14,10 +14,12 @@ import com.ddiehl.android.htn.io.RedditServiceAuth;
 import com.squareup.otto.Bus;
 import com.squareup.picasso.Picasso;
 
+import hugo.weaving.DebugLog;
+
 
 public class HoldTheNarwhal extends Application {
 
-    @Override
+    @Override @DebugLog
     public void onCreate() {
         super.onCreate();
 

@@ -48,6 +48,7 @@ import com.squareup.otto.Bus;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import hugo.weaving.DebugLog;
 
 public class MainActivity extends AppCompatActivity
         implements MainView, ConfirmSignOutDialog.Callbacks, NavigationView.OnNavigationItemSelectedListener {
@@ -69,7 +70,7 @@ public class MainActivity extends AppCompatActivity
     @Bind(R.id.account_name) TextView mAccountNameView;
     @Bind(R.id.sign_out_button) View mSignOutView;
 
-    @Override
+    @Override @DebugLog
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
