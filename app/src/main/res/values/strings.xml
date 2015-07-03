@@ -7,6 +7,7 @@
 
     <!-- Application -->
     <string name="app_name">Hold the Narwhal</string>
+    <string name="application_loading">Loading HTN</string>
 
     <!-- Navigation drawer -->
     <string name="drawer_navigate_to_subreddit">go to subreddit</string>

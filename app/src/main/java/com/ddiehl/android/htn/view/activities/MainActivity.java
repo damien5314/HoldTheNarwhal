@@ -9,9 +9,12 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -25,9 +28,13 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.ddiehl.android.htn.BuildConfig;
 import com.ddiehl.android.htn.BusProvider;
+import com.ddiehl.android.htn.HTNAnalytics;
 import com.ddiehl.android.htn.R;
+import com.ddiehl.android.htn.RedditPrefs;
 import com.ddiehl.android.htn.events.responses.UserAuthCodeReceivedEvent;
+import com.ddiehl.android.htn.io.RedditService;
 import com.ddiehl.android.htn.io.RedditServiceAuth;
 import com.ddiehl.android.htn.presenter.MainPresenter;
 import com.ddiehl.android.htn.presenter.MainPresenterImpl;
@@ -44,6 +51,7 @@ import com.flurry.android.FlurryAgent;
 import com.mopub.common.MoPub;
 import com.mopub.mobileads.MoPubConversionTracker;
 import com.squareup.otto.Bus;
+import com.squareup.picasso.Picasso;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -86,13 +94,62 @@ public class MainActivity extends AppCompatActivity
 
         ButterKnife.bind(this);
 
+        setMirroredIcons();
+
+        showSpinner(R.string.application_loading);
+        initializeApp();
+        dismissSpinner();
+
         mMainPresenter = new MainPresenterImpl(this, this);
         updateUserIdentity();
         mNavigationView.setNavigationItemSelectedListener(this);
+    }
+
+    private void initializeApp() {
+        Bus bus = BusProvider.getInstance();
+        bus.register(this); // Listen for global events
+
+        RedditPrefs prefs = RedditPrefs.getInstance(this);
+        bus.register(prefs);
+
+        RedditService authProxy = RedditServiceAuth.getInstance(this);
+        bus.register(authProxy);
+
+        if (BuildConfig.DEBUG)
+            Picasso.with(this).setIndicatorsEnabled(true);
+
+        HTNAnalytics analytics = HTNAnalytics.getInstance();
+        analytics.init(this);
+        bus.register(analytics);
 
         // MoPub configuration
         new MoPubConversionTracker().reportAppOpen(this);
         MoPub.setLocationAwareness(MoPub.LocationAwareness.DISABLED);
+    }
+
+    private void setMirroredIcons() {
+        if (Build.VERSION.SDK_INT >= 19) {
+            int[] ids = new int[] {
+                    R.drawable.ic_action_refresh,
+                    R.drawable.ic_sign_out,
+                    R.drawable.ic_action_reply,
+                    R.drawable.ic_action_save,
+                    R.drawable.ic_action_share,
+                    R.drawable.ic_action_show_comments,
+                    R.drawable.ic_change_sort,
+                    R.drawable.ic_change_timespan,
+                    R.drawable.ic_navigation_go,
+                    R.drawable.ic_saved,
+                    R.drawable.ic_saved_dark
+            };
+
+            for (int id : ids) {
+                Drawable res = ContextCompat.getDrawable(this, id);
+                if (res != null) {
+                    res.setAutoMirrored(true);
+                }
+            }
+        }
     }
 
     @Override
