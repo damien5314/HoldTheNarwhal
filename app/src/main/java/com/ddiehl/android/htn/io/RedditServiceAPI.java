@@ -9,6 +9,7 @@ import android.content.Context;
 import com.ddiehl.android.htn.BusProvider;
 import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.events.requests.GetUserIdentityEvent;
+import com.ddiehl.android.htn.events.requests.GetUserPrefsEvent;
 import com.ddiehl.android.htn.events.requests.HideEvent;
 import com.ddiehl.android.htn.events.requests.LoadLinkCommentsEvent;
 import com.ddiehl.android.htn.events.requests.LoadMoreChildrenEvent;
@@ -33,11 +34,11 @@ import com.ddiehl.reddit.adapters.ListingDeserializer;
 import com.ddiehl.reddit.adapters.ListingResponseDeserializer;
 import com.ddiehl.reddit.identity.UserIdentity;
 import com.ddiehl.reddit.listings.AbsComment;
+import com.ddiehl.reddit.listings.CommentStub;
+import com.ddiehl.reddit.listings.Link;
 import com.ddiehl.reddit.listings.Listing;
 import com.ddiehl.reddit.listings.ListingResponse;
 import com.ddiehl.reddit.listings.MoreChildrenResponse;
-import com.ddiehl.reddit.listings.Link;
-import com.ddiehl.reddit.listings.CommentStub;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -130,6 +131,11 @@ public class RedditServiceAPI implements RedditService {
 //        Toast.makeText(mContext, R.string.user_identity_retrieved, Toast.LENGTH_SHORT).show();
         UserIdentity id = event.getUserIdentity();
         mIdentityManager.saveUserIdentity(id);
+    }
+
+    @Subscribe
+    public void onGetUserPrefs(GetUserPrefsEvent event) {
+
     }
 
     /**

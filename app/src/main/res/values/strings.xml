@@ -88,7 +88,7 @@
     <string name="dialog_sign_out_message">Sign out from user account?</string>
     <string name="dialog_sign_out_ok">OK</string>
     <string name="dialog_sign_out_cancel">Cancel</string>
-    <string name="dialog_settings_comment_sort">comment sort</string>
+    <string name="dialog_settings_default_comment_sort">sort comments by</string>
 
     <!-- Events -->
     <string name="listing_archived">sorry, this is archived</string>

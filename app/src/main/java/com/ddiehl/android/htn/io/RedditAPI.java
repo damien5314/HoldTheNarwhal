@@ -4,6 +4,7 @@
 
 package com.ddiehl.android.htn.io;
 
+import com.ddiehl.reddit.identity.Prefs;
 import com.ddiehl.reddit.identity.UserIdentity;
 import com.ddiehl.reddit.listings.ListingResponse;
 import com.ddiehl.reddit.listings.MoreChildrenResponse;
@@ -21,6 +22,9 @@ public interface RedditAPI {
 
     @GET("/api/v1/me")
     void getUserIdentity(Callback<UserIdentity> callback);
+
+    @GET("/api/v1/me/prefs")
+    void getUserPrefs(Callback<Prefs> callback);
 
     @GET("/{sort}.json")
     void getLinks(@Query("r") String subreddit,
