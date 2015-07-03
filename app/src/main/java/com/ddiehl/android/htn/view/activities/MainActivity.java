@@ -28,7 +28,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.ddiehl.android.htn.BuildConfig;
 import com.ddiehl.android.htn.BusProvider;
 import com.ddiehl.android.htn.HTNAnalytics;
 import com.ddiehl.android.htn.R;
@@ -51,7 +50,6 @@ import com.flurry.android.FlurryAgent;
 import com.mopub.common.MoPub;
 import com.mopub.mobileads.MoPubConversionTracker;
 import com.squareup.otto.Bus;
-import com.squareup.picasso.Picasso;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -78,53 +76,66 @@ public class MainActivity extends AppCompatActivity
     @Bind(R.id.account_name) TextView mAccountNameView;
     @Bind(R.id.sign_out_button) View mSignOutView;
 
+    private boolean mInitialized;
+
     @Override @DebugLog
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mMainPresenter = new MainPresenterImpl(this, this);
+
+        ButterKnife.bind(this);
+        mNavigationView.setNavigationItemSelectedListener(this);
+
+        // Initialize app toolbar
         Toolbar toolbar = ButterKnife.findById(this, R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
-
         if (actionBar != null) {
             actionBar.setHomeAsUpIndicator(R.drawable.ic_navigation_menu);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+    }
 
-        ButterKnife.bind(this);
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mBus.register(mMainPresenter);
 
-        setMirroredIcons();
+        if (!mInitialized) {
+            showSpinner(R.string.application_loading);
+            initializeApp();
+            dismissSpinner();
+        }
 
-        showSpinner(R.string.application_loading);
-        initializeApp();
-        dismissSpinner();
+        FlurryAgent.onStartSession(this);
 
-        mMainPresenter = new MainPresenterImpl(this, this);
-        updateUserIdentity();
-        mNavigationView.setNavigationItemSelectedListener(this);
+        Fragment currentFragment = getFragmentManager().findFragmentById(R.id.fragment_container);
+        if (currentFragment == null) {
+            showSubreddit(null);
+        }
     }
 
     private void initializeApp() {
-        Bus bus = BusProvider.getInstance();
-        bus.register(this); // Listen for global events
-
         RedditPrefs prefs = RedditPrefs.getInstance(this);
-        bus.register(prefs);
+        mBus.register(prefs);
 
         RedditService authProxy = RedditServiceAuth.getInstance(this);
-        bus.register(authProxy);
-
-        if (BuildConfig.DEBUG)
-            Picasso.with(this).setIndicatorsEnabled(true);
+        mBus.register(authProxy);
 
         HTNAnalytics analytics = HTNAnalytics.getInstance();
         analytics.init(this);
-        bus.register(analytics);
+        mBus.register(analytics);
 
         // MoPub configuration
         new MoPubConversionTracker().reportAppOpen(this);
         MoPub.setLocationAwareness(MoPub.LocationAwareness.DISABLED);
+
+        updateUserIdentity();
+        setMirroredIcons();
+
+        mInitialized = true;
     }
 
     private void setMirroredIcons() {
@@ -149,18 +160,6 @@ public class MainActivity extends AppCompatActivity
                     res.setAutoMirrored(true);
                 }
             }
-        }
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        FlurryAgent.onStartSession(this);
-        mBus.register(mMainPresenter);
-
-        Fragment currentFragment = getFragmentManager().findFragmentById(R.id.fragment_container);
-        if (currentFragment == null) {
-            showSubreddit(null);
         }
     }
 
