@@ -11,7 +11,8 @@
             android:key="pref_enable_ads"
             android:enabled="false"
             android:title="@string/pref_enable_ads"
-            android:summary="@string/pref_enable_ads_summary"/>
+            android:summary="@string/pref_enable_ads_summary"
+            android:defaultValue="false"/>
 
     </PreferenceCategory>
 
@@ -31,13 +32,15 @@
             android:key="pref_media"
             android:title="@string/pref_media"
             android:dialogTitle="@string/pref_media"
+            android:summary="%s"
             android:entries="@array/pref_media_options"
             android:entryValues="@array/pref_media_option_values"
-            android:summary="%s"/> <!-- show thumbnails next to links -->
+            android:defaultValue="subreddit"/> <!-- show thumbnails next to links -->
 
         <CheckBoxPreference
             android:key="pref_no_profanity"
-            android:title="@string/pref_no_profanity"/> <!-- Make safe(r) for work -->
+            android:title="@string/pref_no_profanity"
+            android:defaultValue="true"/> <!-- Make safe(r) for work -->
 
     </PreferenceCategory>
 
@@ -56,9 +59,9 @@
             android:key="pref_clickgadget"
             android:title="@string/pref_clickgadget"/>-->
 
-        <CheckBoxPreference
+<!--        <CheckBoxPreference
             android:key="pref_compress"
-            android:title="@string/pref_compress"/>
+            android:title="@string/pref_compress"/>-->
 
         <CheckBoxPreference
             android:key="pref_domain_details"
@@ -74,7 +77,9 @@
 
         <EditTextPreference
             android:key="pref_numsites"
-            android:title="@string/pref_numsites"/>
+            android:title="@string/pref_numsites"
+            android:summary="%s"
+            android:defaultValue="25"/>
 
         <EditTextPreference
             android:key="pref_min_link_score"
@@ -108,7 +113,9 @@
 
         <EditTextPreference
             android:key="pref_num_comments"
-            android:title="@string/pref_num_comments"/>
+            android:title="@string/pref_num_comments"
+            android:summary="%s"
+            android:defaultValue="200"/>
 
     </PreferenceCategory>
 
@@ -155,7 +162,8 @@
 
         <CheckBoxPreference
             android:key="pref_over_18"
-            android:title="@string/pref_over_18"/>
+            android:title="@string/pref_over_18"
+            android:summary="@string/pref_over_18_summary"/>
 
         <CheckBoxPreference
             android:key="pref_label_nsfw"
