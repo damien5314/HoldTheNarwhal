@@ -20,119 +20,168 @@
         android:key="prefs_reddit"
         android:title="@string/preferences_reddit">
 
-        <CheckBoxPreference
-            android:key="pref_beta"/>
-
-        <CheckBoxPreference
-            android:key="pref_clickgadget"/>
-
-        <CheckBoxPreference
-            android:key="pref_collapse_read_messages"/>
-
-        <CheckBoxPreference
-            android:key="pref_compress"/>
-
-        <CheckBoxPreference
-            android:key="pref_creddit_autorenew"/>
-
-        <ListPreference
-            android:key="pref_default_comment_sort"
-            android:title="@string/dialog_settings_default_comment_sort"
-            android:dialogTitle="@string/dialog_settings_default_comment_sort"
-            android:entries="@array/comment_sort_options"
-            android:entryValues="@array/comment_sort_option_values"
-            android:defaultValue="@string/default_comment_sort"
-            android:summary="%s" />
-
-        <CheckBoxPreference
-            android:key="pref_domain_details"/>
-
-        <CheckBoxPreference
-            android:key="pref_email_messages"/>
-
-        <CheckBoxPreference
-            android:key="pref_enable_default_themes"/>
-
-        <CheckBoxPreference
-            android:key="pref_hide_ads"/>
-
-        <CheckBoxPreference
-            android:key="pref_hide_downs"/>
-
-        <CheckBoxPreference
-            android:key="pref_hide_from_robots"/>
-
-        <CheckBoxPreference
-            android:key="pref_hide_locationbar"/>
-
-        <CheckBoxPreference
-            android:key="pref_hide_ups"/>
-
-        <CheckBoxPreference
-            android:key="pref_highlight_controversial"/>
-
-        <CheckBoxPreference
-            android:key="pref_highlight_new_comments"/>
-
-        <CheckBoxPreference
-            android:key="pref_ignore_suggested_sort"/>
-
-        <CheckBoxPreference
-            android:key="pref_label_nsfw"/>
-
         <ListPreference
             android:key="pref_lang"/>
 
         <CheckBoxPreference
-            android:key="pref_mark_messages_read"/>
-
-        <ListPreference
-            android:key="pref_media"/>
-
-        <EditTextPreference
-            android:key="pref_min_comment_score"/>
-
-        <EditTextPreference
-            android:key="pref_min_link_score"/>
-
-        <CheckBoxPreference
-            android:key="pref_monitor_mentions"/>
-
-        <CheckBoxPreference
             android:key="pref_newwindow"/>
 
+        <PreferenceScreen
+            android:title="media">
+
+            <ListPreference
+                android:key="pref_media"/> <!-- show thumbnails next to links -->
+
+            <CheckBoxPreference
+                android:key="pref_no_profanity"/> <!-- Make safe(r) for work -->
+
+        </PreferenceScreen>
+
+        <PreferenceScreen
+            android:title="link options">
+
+            <CheckBoxPreference
+                android:key="pref_organic"/> <!-- show spotlight box on front page -->
+
+            <CheckBoxPreference
+                android:key="pref_show_trending"/>
+
+            <CheckBoxPreference
+                android:key="pref_clickgadget"/>
+
+            <CheckBoxPreference
+                android:key="pref_compress"/>
+
+            <CheckBoxPreference
+                android:key="pref_domain_details"/>
+
+            <CheckBoxPreference
+                android:key="pref_hide_ups"/>
+
+            <CheckBoxPreference
+                android:key="pref_hide_downs"/>
+
+            <EditTextPreference
+                android:key="pref_numsites"/>
+
+            <EditTextPreference
+                android:key="pref_min_link_score"/>
+
+        </PreferenceScreen>
+
+        <PreferenceScreen
+            android:title="comment options">
+
+            <ListPreference
+                android:key="pref_default_comment_sort"
+                android:title="@string/dialog_settings_default_comment_sort"
+                android:dialogTitle="@string/dialog_settings_default_comment_sort"
+                android:entries="@array/comment_sort_options"
+                android:entryValues="@array/comment_sort_option_values"
+                android:defaultValue="@string/default_comment_sort"
+                android:summary="%s" />
+
+            <CheckBoxPreference
+                android:key="pref_ignore_suggested_sort"/>
+
+            <CheckBoxPreference
+                android:key="pref_highlight_controversial"/>
+
+            <EditTextPreference
+                android:key="pref_min_comment_score"/>
+
+            <EditTextPreference
+                android:key="pref_num_comments"/>
+
+        </PreferenceScreen>
+
+        <PreferenceScreen
+            android:title="messaging options">
+
+            <CheckBoxPreference
+                android:key="pref_threaded_messages"/>
+
+            <CheckBoxPreference
+                android:key="pref_collapse_read_messages"/>
+
+            <CheckBoxPreference
+                android:key="pref_mark_messages_read"/>
+
+            <CheckBoxPreference
+                android:key="pref_monitor_mentions"/>
+
+        </PreferenceScreen>
+
+        <PreferenceScreen
+            android:title="display options">
+
+            <CheckBoxPreference
+                android:key="pref_enable_default_themes"/> <!-- allow subreddits to show me custom themes -->
+
+            <CheckBoxPreference
+                android:key="pref_show_flair"/>
+
+            <CheckBoxPreference
+                android:key="pref_show_link_flair"/>
+
+        </PreferenceScreen>
+
+        <PreferenceScreen
+            android:title="content options">
+
+            <CheckBoxPreference
+                android:key="pref_over_18"/>
+
+            <CheckBoxPreference
+                android:key="pref_label_nsfw"/>
+
+            <CheckBoxPreference
+                android:key="pref_private_feeds"/>
+
+        </PreferenceScreen>
+
+        <PreferenceScreen
+            android:title="privacy options">
+
+            <CheckBoxPreference
+                android:key="pref_public_votes"/>
+
+            <CheckBoxPreference
+                android:key="pref_research"/>
+
+            <CheckBoxPreference
+                android:key="pref_hide_from_robots"/>
+
+        </PreferenceScreen>
+
         <CheckBoxPreference
-            android:key="pref_no_profanity"/>
+            android:key="pref_beta"/>
 
-        <EditTextPreference
-            android:key="pref_num_comments"/>
+        <PreferenceScreen
+            android:title="gold options">
 
-        <EditTextPreference
-            android:key="pref_numsites"/>
+            <CheckBoxPreference
+                android:key="pref_hide_ads"/>
+
+            <CheckBoxPreference
+                android:key="pref_store_visits"/>
+
+            <CheckBoxPreference
+                android:key="pref_highlight_new_comments"/>
+
+            <CheckBoxPreference
+                android:key="pref_show_gold_expiration"/>
+
+            <CheckBoxPreference
+                android:key="pref_creddit_autorenew"/>
+
+        </PreferenceScreen>
+<!--
+        <CheckBoxPreference
+            android:key="pref_email_messages"/>
 
         <CheckBoxPreference
-            android:key="pref_organic"/>
-
-        <CheckBoxPreference
-            android:key="pref_over_18"/>
-
-        <CheckBoxPreference
-            android:key="pref_private_feeds"/>
-
-        <CheckBoxPreference
-            android:key="pref_public_votes"/>
-
-        <CheckBoxPreference
-            android:key="pref_research"/>
-
-        <CheckBoxPreference
-            android:key="pref_show_flair"/>
-
-        <CheckBoxPreference
-            android:key="pref_show_gold_expiration"/>
-
-        <CheckBoxPreference
-            android:key="pref_show_link_flair"/>
+            android:key="pref_hide_locationbar"/>
 
         <CheckBoxPreference
             android:key="pref_show_promote"/>
@@ -140,20 +189,11 @@
         <CheckBoxPreference
             android:key="pref_show_stylesheets"/>
 
-        <CheckBoxPreference
-            android:key="pref_show_trending"/>
-
-        <CheckBoxPreference
-            android:key="pref_store_visits"/>
-
         <EditTextPreference
             android:key="pref_theme_selector"/>
 
         <CheckBoxPreference
-            android:key="pref_threaded_messages"/>
-
-        <CheckBoxPreference
-            android:key="pref_use_global_defaults"/>
+            android:key="pref_use_global_defaults"/>-->
 
     </PreferenceCategory>
 
