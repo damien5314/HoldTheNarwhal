@@ -5,11 +5,8 @@
 package com.ddiehl.android.htn.view.fragments;
 
 import android.os.Bundle;
-import android.preference.EditTextPreference;
-import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
-import android.preference.PreferenceGroup;
 
 import com.ddiehl.android.htn.BusProvider;
 import com.ddiehl.android.htn.R;
@@ -29,37 +26,13 @@ public class SettingsFragment extends PreferenceFragment implements SettingsView
         super.onCreate(savedInstanceState);
         getPreferenceManager().setSharedPreferencesName(RedditPrefs.PREFS_USER);
         addPreferencesFromResource(R.xml.preferences);
-        initializeAllPrefs(getPreferenceScreen());
         mSettingsPresenter = new SettingsPresenterImpl(getActivity(), this);
-    }
-
-    private void initializeAllPrefs(Preference root) {
-        if (root instanceof PreferenceGroup) {
-            PreferenceGroup pGrp = (PreferenceGroup) root;
-            for (int i = 0; i < pGrp.getPreferenceCount(); i++) {
-                initializeAllPrefs(pGrp.getPreference(i));
-            }
-        } else {
-            updatePref(root);
-        }
+        mSettingsPresenter.updateAllPrefs();
     }
 
     @Override
-    public void updatePref(String key) {
-        Preference p = findPreference(key);
-        updatePref(p);
-    }
-
-    @Override
-    public void updatePref(Preference p) {
-        if (p instanceof ListPreference) {
-            ListPreference listPref = (ListPreference) p;
-            p.setSummary(listPref.getEntry());
-        }
-        if (p instanceof EditTextPreference) {
-            EditTextPreference editTextPref = (EditTextPreference) p;
-            p.setSummary(editTextPref.getText());
-        }
+    public Preference getRootPreference() {
+        return getPreferenceScreen();
     }
 
     @Override

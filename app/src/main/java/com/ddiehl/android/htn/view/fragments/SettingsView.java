@@ -6,7 +6,6 @@ import com.ddiehl.android.htn.view.BaseView;
 
 public interface SettingsView extends BaseView {
 
-    void updatePref(String key);
-    void updatePref(Preference preference);
+    Preference getRootPreference();
 
 }
