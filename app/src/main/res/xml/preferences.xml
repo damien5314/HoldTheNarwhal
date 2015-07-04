@@ -65,15 +65,18 @@
 
         <CheckBoxPreference
             android:key="pref_domain_details"
-            android:title="@string/pref_domain_details"/>
+            android:title="@string/pref_domain_details"
+            android:defaultValue="false"/>
 
         <CheckBoxPreference
             android:key="pref_hide_ups"
-            android:title="@string/pref_hide_ups"/>
+            android:title="@string/pref_hide_ups"
+            android:defaultValue="false"/>
 
         <CheckBoxPreference
             android:key="pref_hide_downs"
-            android:title="@string/pref_hide_downs"/>
+            android:title="@string/pref_hide_downs"
+            android:defaultValue="false"/>
 
         <EditTextPreference
             android:key="pref_numsites"
@@ -83,7 +86,8 @@
 
         <EditTextPreference
             android:key="pref_min_link_score"
-            android:title="@string/pref_min_link_score"/>
+            android:title="@string/pref_min_link_score"
+            android:defaultValue="-4"/>
 
     </PreferenceCategory>
 
@@ -105,11 +109,13 @@
 
         <CheckBoxPreference
             android:key="pref_highlight_controversial"
-            android:title="@string/pref_highlight_controversial"/>
+            android:title="@string/pref_highlight_controversial"
+            android:defaultValue="false"/>
 
         <EditTextPreference
             android:key="pref_min_comment_score"
-            android:title="@string/pref_min_comment_score"/>
+            android:title="@string/pref_min_comment_score"
+            android:defaultValue="-4"/>
 
         <EditTextPreference
             android:key="pref_num_comments"
@@ -124,19 +130,23 @@
 
         <CheckBoxPreference
             android:key="pref_threaded_messages"
-            android:title="@string/pref_threaded_messages"/>
+            android:title="@string/pref_threaded_messages"
+            android:defaultValue="true"/>
 
         <CheckBoxPreference
             android:key="pref_collapse_read_messages"
-            android:title="@string/pref_collapse_read_messages"/>
+            android:title="@string/pref_collapse_read_messages"
+            android:defaultValue="false"/>
 
         <CheckBoxPreference
             android:key="pref_mark_messages_read"
-            android:title="@string/pref_mark_messages_read"/>
+            android:title="@string/pref_mark_messages_read"
+            android:defaultValue="true"/>
 
         <CheckBoxPreference
             android:key="pref_monitor_mentions"
-            android:title="@string/pref_monitor_mentions"/>
+            android:title="@string/pref_monitor_mentions"
+            android:defaultValue="true"/>
 
     </PreferenceCategory>
 
@@ -149,11 +159,13 @@
 
         <CheckBoxPreference
             android:key="pref_show_flair"
-            android:title="@string/pref_show_flair"/>
+            android:title="@string/pref_show_flair"
+            android:defaultValue="true"/>
 
         <CheckBoxPreference
             android:key="pref_show_link_flair"
-            android:title="@string/pref_show_link_flair"/>
+            android:title="@string/pref_show_link_flair"
+            android:defaultValue="true"/>
 
     </PreferenceCategory>
 
@@ -163,12 +175,14 @@
         <CheckBoxPreference
             android:key="pref_over_18"
             android:title="@string/pref_over_18"
-            android:summary="@string/pref_over_18_summary"/>
+            android:summary="@string/pref_over_18_summary"
+            android:defaultValue="false"/>
 
         <CheckBoxPreference
             android:key="pref_label_nsfw"
             android:title="@string/pref_label_nsfw"
-            android:summary="@string/pref_label_nsfw_summary"/>
+            android:summary="@string/pref_label_nsfw_summary"
+            android:defaultValue="true"/>
 
 <!--        <CheckBoxPreference
             android:key="pref_private_feeds"
@@ -181,21 +195,25 @@
 
         <CheckBoxPreference
             android:key="pref_public_votes"
-            android:title="@string/pref_public_votes"/>
+            android:title="@string/pref_public_votes"
+            android:defaultValue="false"/>
 
         <CheckBoxPreference
             android:key="pref_research"
-            android:title="@string/pref_research"/>
+            android:title="@string/pref_research"
+            android:defaultValue="false"/>
 
         <CheckBoxPreference
             android:key="pref_hide_from_robots"
-            android:title="@string/pref_hide_from_robots"/>
+            android:title="@string/pref_hide_from_robots"
+            android:defaultValue="false"/>
 
     </PreferenceCategory>
 
     <CheckBoxPreference
         android:key="pref_beta"
-        android:title="@string/pref_beta"/>
+        android:title="@string/pref_beta"
+        android:defaultValue="false"/>
 
     <PreferenceCategory
         android:title="gold options">
@@ -206,7 +224,8 @@
 
         <CheckBoxPreference
             android:key="pref_store_visits"
-            android:title="@string/pref_store_visits"/>
+            android:title="@string/pref_store_visits"
+            android:defaultValue="false"/>
 
 <!--        <CheckBoxPreference
             android:key="pref_highlight_new_comments"
@@ -214,11 +233,13 @@
 
         <CheckBoxPreference
             android:key="pref_show_gold_expiration"
-            android:title="@string/pref_show_gold_expiration"/>
+            android:title="@string/pref_show_gold_expiration"
+            android:defaultValue="false"/>
 
         <CheckBoxPreference
             android:key="pref_creddit_autorenew"
-            android:title="@string/pref_creddit_autorenew"/>
+            android:title="@string/pref_creddit_autorenew"
+            android:defaultValue="false"/>
 
     </PreferenceCategory>
 

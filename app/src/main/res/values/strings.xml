@@ -1,8 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  ~ Copyright (c) 2015 Damien Diehl. All rights reserved.
-  -->
-
 <resources>
 
     <!-- Application -->
@@ -58,8 +54,24 @@
     <string name="pref_enable_ads_thanks">Thank you for your support!</string>
 
     <!-- Context menus -->
-    <string name="menu_sort_title">Sort by</string>
-    <string name="menu_timespan_title">Timespan</string>
+    <string name="menu_sort_title">sort by</string>
+    <string name="link_sort_hot">hot</string>
+    <string name="link_sort_new">new</string>
+    <string name="link_sort_top">top</string>
+    <string name="link_sort_controversial">controversial</string>
+    <string name="comment_sort_best">best</string>
+    <string name="comment_sort_top">top</string>
+    <string name="comment_sort_new">new</string>
+    <string name="comment_sort_controversial">controversial</string>
+    <string name="comment_sort_old">old</string>
+    <string name="comment_sort_qa">q&#38;a</string>
+    <string name="menu_timespan_title">timespan</string>
+    <string name="timespan_hour">hour</string>
+    <string name="timespan_day">day</string>
+    <string name="timespan_week">week</string>
+    <string name="timespan_month">month</string>
+    <string name="timespan_year">year</string>
+    <string name="timespan_all">all</string>
     <string name="menu_action_link">%1$s &#091;%2$s&#093;</string>
     <string name="menu_action_comment">&#091;%2$s&#093; /u/%1$s</string>
     <!--<string name="menu_action_link">%s</string>-->
@@ -136,6 +148,9 @@
     <string name="pref_lang_summary">this does not affect the language of HTN</string>
     <string name="pref_newwindow">open links in a new window</string>
     <string name="pref_media">link thumbnail options</string>
+    <string name="pref_media_on">always show thumbnails</string>
+    <string name="pref_media_off">never show thumbnails</string>
+    <string name="pref_media_subreddit">let subreddit decide</string>
     <string name="pref_no_profanity">make safe(r) for work</string>
     <string name="pref_organic">show the spotlight box on the front page</string>
     <string name="pref_show_trending">show trending subreddits on the front page</string>
@@ -147,7 +162,7 @@
     <string name="pref_numsites">number of links to show</string>
     <string name="pref_min_link_score">minimum score to display</string>
     <string name="pref_ignore_suggested_sort">ignore suggested sorts</string>
-    <string name="pref_highlight_controversial">show controversial comments (†)</string>
+    <string name="pref_highlight_controversial">label controversial comments (†)</string>
     <string name="pref_min_comment_score">minimum score to display</string>
     <string name="pref_num_comments">number of comments to show</string>
     <string name="pref_threaded_messages">show message conversations</string>
