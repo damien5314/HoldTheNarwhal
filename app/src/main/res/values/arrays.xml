@@ -38,7 +38,7 @@
 
     <string-array name="pref_media_options">
         <item>show thumbnails next to links</item>
-        <item>don't show thumbnails next to links</item>
+        <item>don\'t show thumbnails next to links</item>
         <item>show thumbnails based on that subreddit\'s media preferences</item>
     </string-array>
 

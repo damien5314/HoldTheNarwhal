@@ -130,6 +130,8 @@
     <string name="timespan_now">just now</string>
     <string name="welcome_user">welcome, %s</string>
     <string name="user_signed_out">signed out</string>
+
+    <!-- Settings -->
     <string name="pref_lang">interface language</string>
     <string name="pref_lang_summary">this does not affect the language of HTN</string>
     <string name="pref_newwindow">open links in a new window</string>
@@ -138,5 +140,35 @@
     <string name="pref_organic">show the spotlight box on the front page</string>
     <string name="pref_show_trending">show trending subreddits on the front page</string>
     <string name="pref_clickgadget">show me links I\'ve recently viewed</string>
+    <string name="pref_compress">compress the link display</string>
+    <string name="pref_domain_details">show additional details in the domain text when available</string>
+    <string name="pref_hide_ups">don\'t show me submissions after I\'ve upvoted them</string>
+    <string name="pref_hide_downs">don\'t show me submissions after I\'ve downvoted them</string>
+    <string name="pref_numsites">display %s links at once</string>
+    <string name="pref_min_link_score">don\'t show me submissions with a score less than %s</string>
+    <string name="pref_ignore_suggested_sort">ignore suggested sorts</string>
+    <string name="pref_highlight_controversial">show a dagger (†) on comments voted controversial</string>
+    <string name="pref_min_comment_score">don\'t show me comments with a score less than %s</string>
+    <string name="pref_num_comments">display %s comments by default</string>
+    <string name="pref_threaded_messages">show message conversations in the inbox</string>
+    <string name="pref_collapse_read_messages">collapse messages after I\'ve read them</string>
+    <string name="pref_mark_messages_read">mark messages as read when I open my inbox</string>
+    <string name="pref_monitor_mentions">notify me when people say my username</string>
+    <string name="pref_enable_default_themes">allow subreddits to show me custom themes</string>
+    <string name="pref_show_flair">show user flair</string>
+    <string name="pref_show_link_flair">show link flair</string>
+    <string name="pref_over_18">I am over 18 years old and willing to view adult content</string>
+    <string name="pref_label_nsfw">label posts that are not safe for work (nsfw)</string>
+    <string name="pref_label_nsfw_summary">requires not \'safer for work\' mode</string>
+    <string name="pref_private_feeds">enable private rss feeds</string>
+    <string name="pref_public_votes">make my votes public</string>
+    <string name="pref_research">allow my data to be used for research purposes</string>
+    <string name="pref_hide_from_robots">don\'t allow search engines to index my user profile</string>
+    <string name="pref_beta">I would like to beta test features for reddit</string>
+    <string name="pref_hide_ads">hide ads</string>
+    <string name="pref_store_visits">remember what links I\'ve visited</string>
+    <string name="pref_highlight_new_comments">highlight new comments</string>
+    <string name="pref_show_gold_expiration">show gold expiration</string>
+    <string name="pref_creddit_autorenew">use a creddit to automatically renew my gold if it expires</string>
 
 </resources>
