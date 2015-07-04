@@ -38,7 +38,7 @@ public class ChooseTimespanDialog extends DialogFragment {
         Bundle args = getArguments();
         String currentSetting = args.getString(ARG_SETTING);
         if (currentSetting != null) {
-            String[] settings = getResources().getStringArray(R.array.timespan_options);
+            String[] settings = getResources().getStringArray(R.array.timespan_option_values);
             for (int i = 0; i < settings.length; i++) {
                 if (settings[i].equals(currentSetting))
                     selectedItem = i;
@@ -50,11 +50,11 @@ public class ChooseTimespanDialog extends DialogFragment {
         builder.setTitle(R.string.menu_timespan_title)
                 .setSingleChoiceItems(R.array.timespan_options, selectedItem, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        String selectedChoice = getResources().getStringArray(R.array.timespan_options)[which];
+                        String selectedChoice = getResources().getStringArray(R.array.timespan_option_values)[which];
                         Intent data = new Intent();
                         data.putExtra(EXTRA_TIMESPAN, selectedChoice);
                         getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, data);
-                        ChooseTimespanDialog.this.dismiss();
+                        dismiss();
                     }
                 });
         return builder.create();

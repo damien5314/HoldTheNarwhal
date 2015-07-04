@@ -42,6 +42,15 @@
         <item>@string/timespan_all</item>
     </string-array>
 
+    <string-array name="timespan_option_values">
+        <item>hour</item>
+        <item>day</item>
+        <item>week</item>
+        <item>month</item>
+        <item>year</item>
+        <item>all</item>
+    </string-array>
+
     <string-array name="pref_media_options">
         <item>@string/pref_media_on</item>
         <item>@string/pref_media_off</item>
