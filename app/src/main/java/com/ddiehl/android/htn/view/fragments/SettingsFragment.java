@@ -28,6 +28,7 @@ public class SettingsFragment extends PreferenceFragment
         super.onCreate(savedInstanceState);
         getPreferenceManager().setSharedPreferencesName(RedditPrefs.PREFS_USER);
         addPreferencesFromResource(R.xml.preferences);
+        initSummary(getPreferenceScreen());
     }
 
     private void initSummary(Preference p) {
