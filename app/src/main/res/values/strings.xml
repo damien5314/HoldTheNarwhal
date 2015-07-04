@@ -130,5 +130,13 @@
     <string name="timespan_now">just now</string>
     <string name="welcome_user">welcome, %s</string>
     <string name="user_signed_out">signed out</string>
+    <string name="pref_lang">interface language</string>
+    <string name="pref_lang_summary">this does not affect the language of HTN</string>
+    <string name="pref_newwindow">open links in a new window</string>
+    <string name="pref_media">link thumbnail options</string>
+    <string name="pref_no_profanity">make safe(r) for work</string>
+    <string name="pref_organic">show the spotlight box on the front page</string>
+    <string name="pref_show_trending">show trending subreddits on the front page</string>
+    <string name="pref_clickgadget">show me links I\'ve recently viewed</string>
 
 </resources>
