@@ -40,6 +40,7 @@
         <CheckBoxPreference
             android:key="pref_no_profanity"
             android:title="@string/pref_no_profanity"
+            android:summary="@string/pref_no_profanity_summary"
             android:defaultValue="true"
             android:dependency="pref_over_18"
             android:disableDependentsState="true"/> <!-- make safe(r) for work -->

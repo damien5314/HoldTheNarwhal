@@ -152,6 +152,7 @@
     <string name="pref_media_off">never show thumbnails</string>
     <string name="pref_media_subreddit">let subreddit decide</string>
     <string name="pref_no_profanity">make safe(r) for work</string>
+    <string name="pref_no_profanity_summary">don\'t show thumbnails next to anything labeled nsfw</string>
     <string name="pref_organic">show the spotlight box on the front page</string>
     <string name="pref_show_trending">show trending subreddits on the front page</string>
     <string name="pref_clickgadget">show me links I\'ve recently viewed</string>
