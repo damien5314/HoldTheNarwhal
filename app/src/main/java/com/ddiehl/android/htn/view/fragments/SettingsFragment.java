@@ -6,6 +6,7 @@ package com.ddiehl.android.htn.view.fragments;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
@@ -13,6 +14,7 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
 
 import com.ddiehl.android.htn.BusProvider;
+import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.RedditPrefs;
 import com.ddiehl.android.htn.view.BaseView;
@@ -27,13 +29,39 @@ public class SettingsFragment extends PreferenceFragment
         implements BaseView, SharedPreferences.OnSharedPreferenceChangeListener {
 
     private Bus mBus = BusProvider.getInstance();
+    private IdentityManager mIdentityManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getPreferenceManager().setSharedPreferencesName(RedditPrefs.PREFS_USER);
         addPreferencesFromResource(R.xml.preferences);
+        mIdentityManager = IdentityManager.getInstance(getActivity());
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mBus.register(this);
         updateAllPrefs();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    public void onStop() {
+        mBus.unregister(this);
+        super.onStop();
     }
 
     public void updateAllPrefs() {
@@ -50,6 +78,7 @@ public class SettingsFragment extends PreferenceFragment
         } else {
             updatePref(root);
         }
+
     }
 
     public void updatePref(Preference p) {
@@ -64,46 +93,30 @@ public class SettingsFragment extends PreferenceFragment
     }
 
     @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        updatePref(((Preference) sharedPreferences.getAll().get(key)));
+    public void onSharedPreferenceChanged(SharedPreferences sp, String key) {
+        updatePref(findPreference(key));
 
         // Show appreciation for users enabling ads
-        if (key.equals("pref_enable_ads")) {
-            if (sharedPreferences.getBoolean("pref_enable_ads", false)) {
+        if (key.equals(RedditPrefs.PREF_ENABLE_ADS)) {
+            if (sp.getBoolean(RedditPrefs.PREF_ENABLE_ADS, false)) {
                 showToast(R.string.pref_enable_ads_thanks);
             }
+        }
+
+        if (!sp.getBoolean(RedditPrefs.PREF_OVER_18, false)) {
+            ((CheckBoxPreference) findPreference(RedditPrefs.PREF_NO_PROFANITY)).setChecked(true);
+        }
+
+        if (sp.getBoolean(RedditPrefs.PREF_NO_PROFANITY, true)) {
+            ((CheckBoxPreference) findPreference(RedditPrefs.PREF_LABEL_NSFW)).setChecked(true);
         }
 
         // Send Flurry event
         Map<String, String> params = new HashMap<>();
         params.put("key", key);
-        Map prefs = sharedPreferences.getAll();
+        Map prefs = sp.getAll();
         params.put("value", String.valueOf(prefs.get(key)));
         FlurryAgent.logEvent("setting changed", params);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        mBus.register(this);
-    }
-
-    @Override
-    public void onStop() {
-        mBus.unregister(this);
-        super.onStop();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
     }
 
     @Override

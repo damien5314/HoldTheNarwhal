@@ -40,7 +40,9 @@
         <CheckBoxPreference
             android:key="pref_no_profanity"
             android:title="@string/pref_no_profanity"
-            android:defaultValue="true"/> <!-- Make safe(r) for work -->
+            android:defaultValue="true"
+            android:dependency="pref_over_18"
+            android:disableDependentsState="true"/> <!-- make safe(r) for work -->
 
     </PreferenceCategory>
 
@@ -182,7 +184,8 @@
             android:key="pref_label_nsfw"
             android:title="@string/pref_label_nsfw"
             android:summary="@string/pref_label_nsfw_summary"
-            android:defaultValue="true"/>
+            android:defaultValue="true"
+            android:dependency="pref_no_profanity"/>
 
 <!--        <CheckBoxPreference
             android:key="pref_private_feeds"
