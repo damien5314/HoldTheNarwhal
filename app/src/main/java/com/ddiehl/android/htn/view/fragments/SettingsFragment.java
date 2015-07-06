@@ -32,6 +32,8 @@ public class SettingsFragment extends PreferenceFragment
     private Bus mBus = BusProvider.getInstance();
     private IdentityManager mIdentityManager;
 
+    private boolean isChanging = false;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,6 +99,11 @@ public class SettingsFragment extends PreferenceFragment
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sp, String key) {
         updatePref(findPreference(key));
+
+        if (isChanging)
+            return;
+        isChanging = true;
+
         Map<String, String> changedSettings = new HashMap<>(); // Track changed keys and values
 
         switch (key) {
@@ -148,6 +155,8 @@ public class SettingsFragment extends PreferenceFragment
         Map prefs = sp.getAll();
         params.put("value", String.valueOf(prefs.get(key)));
         FlurryAgent.logEvent("setting changed", params);
+
+        isChanging = false;
     }
 
     @Override
