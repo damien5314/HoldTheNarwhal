@@ -45,7 +45,7 @@
             android:title="@string/pref_no_profanity"
             android:summary="@string/pref_no_profanity_summary"
             android:defaultValue="true"
-            android:dependency="pref_over_18"
+            android:dependency="over_18"
             android:disableDependentsState="true"/> <!-- make safe(r) for work -->
 
     </PreferenceCategory>
@@ -189,7 +189,7 @@
             android:title="@string/pref_label_nsfw"
             android:summary="@string/pref_label_nsfw_summary"
             android:defaultValue="true"
-            android:dependency="pref_no_profanity"/>
+            android:dependency="no_profanity"/>
 
 <!--        <CheckBoxPreference
             android:key="private_feeds"

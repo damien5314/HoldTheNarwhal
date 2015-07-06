@@ -107,7 +107,7 @@ public class SettingsFragment extends PreferenceFragment
                 }
                 break;
             default:
-                Preference p = (Preference) sp.getAll().get(key);
+                Preference p = findPreference(key);
                 if (p instanceof CheckBoxPreference) {
                     boolean value = ((CheckBoxPreference) p).isChecked();
                     changedSettings.put(key, String.valueOf(value));
