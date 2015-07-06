@@ -43,6 +43,7 @@ public class SettingsFragment extends PreferenceFragment
     public void onStart() {
         super.onStart();
         mBus.register(this);
+        getActivity().setTitle(R.string.settings_fragment_title);
         updateAllPrefs();
     }
 
