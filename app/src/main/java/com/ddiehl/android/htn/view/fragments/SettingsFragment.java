@@ -17,6 +17,7 @@ import com.ddiehl.android.htn.BusProvider;
 import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.RedditPrefs;
+import com.ddiehl.android.htn.events.requests.UpdateUserPrefsEvent;
 import com.ddiehl.android.htn.view.BaseView;
 import com.ddiehl.android.htn.view.MainView;
 import com.flurry.android.FlurryAgent;
@@ -96,21 +97,50 @@ public class SettingsFragment extends PreferenceFragment
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sp, String key) {
         updatePref(findPreference(key));
+        Map<String, String> changedSettings = new HashMap<>(); // Track changed keys and values
 
-        // Show appreciation for users enabling ads
-        if (key.equals(RedditPrefs.PREF_ENABLE_ADS)) {
-            if (sp.getBoolean(RedditPrefs.PREF_ENABLE_ADS, false)) {
-                showToast(R.string.pref_enable_ads_thanks);
+        switch (key) {
+            case RedditPrefs.PREF_ENABLE_ADS:
+                if (sp.getBoolean(RedditPrefs.PREF_ENABLE_ADS, false)) {
+                    // Show appreciation for users enabling ads
+                    showToast(R.string.pref_enable_ads_thanks);
+                }
+                break;
+            default:
+                Preference p = (Preference) sp.getAll().get(key);
+                if (p instanceof CheckBoxPreference) {
+                    boolean value = ((CheckBoxPreference) p).isChecked();
+                    changedSettings.put(key, String.valueOf(value));
+                } else if (p instanceof ListPreference) {
+                    String value = ((ListPreference) p).getValue();
+                    changedSettings.put(key, value);
+                } else if (p instanceof EditTextPreference) {
+                    String value = ((EditTextPreference) p).getEditText().getText().toString();
+                    changedSettings.put(key, value);
+                }
+                break;
+        }
+
+        // Force "make safe(r) for work" to be true if "over 18" is false
+        if (!sp.getBoolean(RedditPrefs.PREF_OVER_18, false)) {
+            CheckBoxPreference pref = ((CheckBoxPreference) findPreference(RedditPrefs.PREF_NO_PROFANITY));
+            if (!pref.isChecked()) {
+                changedSettings.put(RedditPrefs.PREF_NO_PROFANITY, String.valueOf(true));
+                pref.setChecked(true);
             }
         }
 
-        if (!sp.getBoolean(RedditPrefs.PREF_OVER_18, false)) {
-            ((CheckBoxPreference) findPreference(RedditPrefs.PREF_NO_PROFANITY)).setChecked(true);
+        // Force "label nsfw" to be true if "make safe(r) for work" is true
+        if (sp.getBoolean(RedditPrefs.PREF_NO_PROFANITY, true)) {
+            CheckBoxPreference pref = ((CheckBoxPreference) findPreference(RedditPrefs.PREF_LABEL_NSFW));
+            if (!pref.isChecked()) {
+                changedSettings.put(RedditPrefs.PREF_LABEL_NSFW, String.valueOf(true));
+                pref.setChecked(true);
+            }
         }
 
-        if (sp.getBoolean(RedditPrefs.PREF_NO_PROFANITY, true)) {
-            ((CheckBoxPreference) findPreference(RedditPrefs.PREF_LABEL_NSFW)).setChecked(true);
-        }
+        // Post SettingsUpdate event with changed keys and values
+        mBus.post(new UpdateUserPrefsEvent(changedSettings));
 
         // Send Flurry event
         Map<String, String> params = new HashMap<>();

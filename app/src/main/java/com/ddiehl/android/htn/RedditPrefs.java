@@ -19,60 +19,58 @@ public class RedditPrefs {
     public static final String PREF_ENABLE_ADS = "pref_enable_ads";
 
     // reddit settings
-    public static final String PREF_BETA = "pref_beta";
-    public static final String PREF_CLICKGAGDET = "pref_clickgagdet";
-    public static final String PREF_COLLAPSE_READ_MESSAGES = "pref_collapse_read_messages";
-    public static final String PREF_COMPRESS = "pref_compress";
-    public static final String PREF_CREDDIT_AUTORENEW = "pref_creddit_autorenew";
-    public static final String PREF_DEFAULT_COMMENT_SORT = "pref_default_comment_sort";
-    public static final String PREF_DOMAIN_DETAILS = "pref_domain_details";
-    public static final String PREF_EMAIL_MESSAGES = "pref_email_messages";
-    public static final String PREF_ENABLE_DEFAULT_THEMES = "pref_enable_default_themes";
-    public static final String PREF_HIDE_ADS = "pref_hide_ads";
-    public static final String PREF_HIDE_DOWNS = "pref_hide_downs";
-    public static final String PREF_HIDE_FROM_ROBOTS = "pref_hide_from_robots";
-    public static final String PREF_HIDE_LOCATIONBAR = "pref_hide_locationbar";
-    public static final String PREF_HIDE_UPS = "pref_hide_ups";
-    public static final String PREF_HIGHLIGHT_CONTROVERSIAL = "pref_highlight_controversial";
-    public static final String PREF_HIGHLIGHT_NEW_COMMENTS = "pref_highlight_new_comments";
-    public static final String PREF_IGNORE_SUGGESTED_SORT = "pref_ignore_suggested_sort";
-    public static final String PREF_LABEL_NSFW = "pref_label_nsfw";
-    public static final String PREF_LANG = "pref_lang";
-    public static final String PREF_MARK_MESSAGES_READ = "pref_mark_messages_read";
-    public static final String PREF_MEDIA = "pref_media";
-    public static final String PREF_MIN_COMMENT_SCORE = "pref_min_comment_score";
-    public static final String PREF_MIN_LINK_SCORE = "pref_min_link_score";
-    public static final String PREF_MONITOR_MENTIONS = "pref_monitor_mentions";
-    public static final String PREF_NEWWINDOW = "pref_newwindow";
-    public static final String PREF_NO_PROFANITY = "pref_no_profanity";
-    public static final String PREF_NUM_COMMENTS = "pref_num_comments";
-    public static final String PREF_NUMSITES = "pref_numsites";
-    public static final String PREF_ORGANIC = "pref_organic";
-    public static final String PREF_OVER_18 = "pref_over_18";
-    public static final String PREF_public_FEEDS = "pref_public_feeds";
-    public static final String PREF_PUBLIC_VOTES = "pref_public_votes";
-    public static final String PREF_RESEARCH = "pref_research";
-    public static final String PREF_SHOW_FLAIR = "pref_show_flair";
-    public static final String PREF_SHOW_GOLD_EXPIRATION = "pref_show_gold_expiration";
-    public static final String PREF_SHOW_LINK_FLAIR = "pref_show_link_flair";
-    public static final String PREF_SHOW_PROMOTE = "pref_show_promote";
-    public static final String PREF_SHOW_STYLESHEETS = "pref_show_stylesheets";
-    public static final String PREF_SHOW_TRENDING = "pref_show_trending";
-    public static final String PREF_STORE_VISITS = "pref_store_visits";
-    public static final String PREF_THEME_SELECTOR = "pref_theme_selector";
-    public static final String PREF_THREADED_MESSAGES = "pref_threaded_messages";
-    public static final String PREF_USE_GLOBAL_DEFAULTS = "pref_use_global_defaults";
+    public static final String PREF_BETA = "beta";
+    public static final String PREF_CLICKGAGDET = "clickgadget";
+    public static final String PREF_COLLAPSE_READ_MESSAGES = "collapse_read_messages";
+    public static final String PREF_COMPRESS = "compress";
+    public static final String PREF_CREDDIT_AUTORENEW = "creddit_autorenew";
+    public static final String PREF_DEFAULT_COMMENT_SORT = "default_comment_sort";
+    public static final String PREF_DOMAIN_DETAILS = "domain_details";
+    public static final String PREF_EMAIL_MESSAGES = "email_messages";
+    public static final String PREF_ENABLE_DEFAULT_THEMES = "enable_default_themes";
+    public static final String PREF_HIDE_ADS = "hide_ads";
+    public static final String PREF_HIDE_DOWNS = "hide_downs";
+    public static final String PREF_HIDE_FROM_ROBOTS = "hide_from_robots";
+    public static final String PREF_HIDE_LOCATIONBAR = "hide_locationbar";
+    public static final String PREF_HIDE_UPS = "hide_ups";
+    public static final String PREF_HIGHLIGHT_CONTROVERSIAL = "highlight_controversial";
+    public static final String PREF_HIGHLIGHT_NEW_COMMENTS = "highlight_new_comments";
+    public static final String PREF_IGNORE_SUGGESTED_SORT = "ignore_suggested_sort";
+    public static final String PREF_LABEL_NSFW = "label_nsfw";
+    public static final String PREF_LANG = "lang";
+    public static final String PREF_MARK_MESSAGES_READ = "mark_messages_read";
+    public static final String PREF_MEDIA = "media";
+    public static final String PREF_MIN_COMMENT_SCORE = "min_comment_score";
+    public static final String PREF_MIN_LINK_SCORE = "min_link_score";
+    public static final String PREF_MONITOR_MENTIONS = "monitor_mentions";
+    public static final String PREF_NEWWINDOW = "newwindow";
+    public static final String PREF_NO_PROFANITY = "no_profanity";
+    public static final String PREF_NUM_COMMENTS = "num_comments";
+    public static final String PREF_NUMSITES = "numsites";
+    public static final String PREF_ORGANIC = "organic";
+    public static final String PREF_OVER_18 = "over_18";
+    public static final String PREF_PUBLIC_FEEDS = "public_feeds";
+    public static final String PREF_PUBLIC_VOTES = "public_votes";
+    public static final String PREF_RESEARCH = "research";
+    public static final String PREF_SHOW_FLAIR = "show_flair";
+    public static final String PREF_SHOW_GOLD_EXPIRATION = "show_gold_expiration";
+    public static final String PREF_SHOW_LINK_FLAIR = "show_link_flair";
+    public static final String PREF_SHOW_PROMOTE = "show_promote";
+    public static final String PREF_SHOW_STYLESHEETS = "show_stylesheets";
+    public static final String PREF_SHOW_TRENDING = "show_trending";
+    public static final String PREF_STORE_VISITS = "store_visits";
+    public static final String PREF_THEME_SELECTOR = "theme_selector";
+    public static final String PREF_THREADED_MESSAGES = "threaded_messages";
+    public static final String PREF_USE_GLOBAL_DEFAULTS = "use_global_defaults";
 
-    public static final String PREFS_REDDIT =
-            "threaded_messages, hide_downs, email_messages, show_link_flair, creddit_autorenew, " +
-                    "show_trending, private_feeds, monitor_mentions, research, ignore_suggested_sort, " +
-                    "media, clickgadget, use_global_defaults, label_nsfw, domain_details, " +
-                    "show_stylesheets, highlight_controversial, no_profanity, default_theme_sr, " +
-                    "lang, hide_ups, hide_from_robots, compress, store_visits, beta, " +
-                    "show_gold_expiration, over_18, enable_default_themes, show_promote, " +
-                    "min_comment_score, public_votes, organic, collapse_read_messages, show_flair, " +
-                    "mark_messages_read, hide_ads, min_link_score, newwindow, numsites, num_comments, " +
-                    "highlight_new_comments, default_comment_sort, hide_locationbar";
+    public static final String PREFS_REDDIT = "threaded_messages, hide_downs, email_messages, show_link_flair, " +
+            "creddit_autorenew, show_trending, private_feeds, monitor_mentions, research, ignore_suggested_sort, " +
+            "media, clickgadget, use_global_defaults, label_nsfw, domain_details, show_stylesheets, " +
+            "highlight_controversial, no_profanity, default_theme_sr, lang, hide_ups, hide_from_robots, " +
+            "compress, store_visits, beta, show_gold_expiration, over_18, enable_default_themes, show_promote, " +
+            "min_comment_score, public_votes, organic, collapse_read_messages, show_flair, mark_messages_read, " +
+            "hide_ads, min_link_score, newwindow, numsites, num_comments, highlight_new_comments, " +
+            "default_comment_sort, hide_locationbar";
 
     private static RedditPrefs _instance;
     private Context mContext;
