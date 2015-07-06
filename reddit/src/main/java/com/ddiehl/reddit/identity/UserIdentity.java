@@ -27,6 +27,12 @@ public class UserIdentity {
     @Expose private String id;
     @Expose @SerializedName("inbox_count") private Integer inboxCount;
 
+    private UserSettings mUserSettings;
+
+    public UserSettings getUserSettings() {
+        return mUserSettings;
+    }
+
     public Boolean hasMail() {
         return hasMail;
     }
