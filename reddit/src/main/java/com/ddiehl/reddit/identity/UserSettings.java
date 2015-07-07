@@ -53,4 +53,175 @@ public class UserSettings {
     @Expose @SerializedName("threaded_messages") Boolean mThreadedMessages;
     @Expose @SerializedName("use_global_defaults") Boolean mUseGlobalDefaults;
 
+    public Boolean getBeta() {
+        return mBeta;
+    }
+
+    public Boolean getClickgadget() {
+        return mClickgadget;
+    }
+
+    public Boolean getCollapseReadMessages() {
+        return mCollapseReadMessages;
+    }
+
+    public Boolean getCompress() {
+        return mCompress;
+    }
+
+    public Boolean getCredditAutoRenew() {
+        return mCredditAutoRenew;
+    }
+
+    public String getDefaultCommentSort() {
+        return mDefaultCommentSort;
+    }
+
+    public Boolean getDomainDetails() {
+        return mDomainDetails;
+    }
+
+    public Boolean getEmailMessages() {
+        return mEmailMessages;
+    }
+
+    public Boolean getEnableDefaultThemes() {
+        return mEnableDefaultThemes;
+    }
+
+    public Boolean getHideAds() {
+        return mHideAds;
+    }
+
+    public Boolean getHideDowns() {
+        return mHideDowns;
+    }
+
+    public Boolean getHideFromRobots() {
+        return mHideFromRobots;
+    }
+
+    public Boolean getHideLocationBar() {
+        return mHideLocationBar;
+    }
+
+    public Boolean getHideUps() {
+        return mHideUps;
+    }
+
+    public Boolean getHighlightControversial() {
+        return mHighlightControversial;
+    }
+
+    public Boolean getHighlightNewComments() {
+        return mHighlightNewComments;
+    }
+
+    public Boolean getIgnoreSuggestedSort() {
+        return mIgnoreSuggestedSort;
+    }
+
+    public Boolean getLabelNsfw() {
+        return mLabelNsfw;
+    }
+
+    public String getLang() {
+        return mLang;
+    }
+
+    public Boolean getMarkMessagesRead() {
+        return mMarkMessagesRead;
+    }
+
+    public String getMedia() {
+        return mMedia;
+    }
+
+    public Integer getMinCommentScore() {
+        return mMinCommentScore;
+    }
+
+    public Integer getMinLinkScore() {
+        return mMinLinkScore;
+    }
+
+    public Boolean getMonitorMentions() {
+        return mMonitorMentions;
+    }
+
+    public Boolean getNewWindow() {
+        return mNewWindow;
+    }
+
+    public Boolean getNoProfanity() {
+        return mNoProfanity;
+    }
+
+    public Integer getNumComments() {
+        return mNumComments;
+    }
+
+    public Integer getNumLinks() {
+        return mNumLinks;
+    }
+
+    public Boolean getOrganic() {
+        return mOrganic;
+    }
+
+    public Boolean getOver18() {
+        return mOver18;
+    }
+
+    public Boolean getPublicFeeds() {
+        return mPublicFeeds;
+    }
+
+    public Boolean getPublicVotes() {
+        return mPublicVotes;
+    }
+
+    public Boolean getResearch() {
+        return mResearch;
+    }
+
+    public Boolean getShowFlair() {
+        return mShowFlair;
+    }
+
+    public Boolean getShowGoldExpiration() {
+        return mShowGoldExpiration;
+    }
+
+    public Boolean getShowLinkFlair() {
+        return mShowLinkFlair;
+    }
+
+    public Boolean getShowPromote() {
+        return mShowPromote;
+    }
+
+    public Boolean getShowStylesheets() {
+        return mShowStylesheets;
+    }
+
+    public Boolean getShowTrending() {
+        return mShowTrending;
+    }
+
+    public Boolean getStoreVisits() {
+        return mStoreVisits;
+    }
+
+    public String getThemeSelector() {
+        return mThemeSelector;
+    }
+
+    public Boolean getThreadedMessages() {
+        return mThreadedMessages;
+    }
+
+    public Boolean getUseGlobalDefaults() {
+        return mUseGlobalDefaults;
+    }
 }

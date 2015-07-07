@@ -87,7 +87,6 @@ public class RedditServiceAuth implements RedditService {
     private RedditAuthAPI buildApi() {
         Gson gson = new GsonBuilder()
                 .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-
                 .create();
 
         RestAdapter restAdapter = new RestAdapter.Builder()

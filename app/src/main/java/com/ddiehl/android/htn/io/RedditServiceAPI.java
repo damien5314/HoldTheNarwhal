@@ -10,7 +10,7 @@ import com.ddiehl.android.htn.AccessTokenManager;
 import com.ddiehl.android.htn.BusProvider;
 import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.events.requests.GetUserIdentityEvent;
-import com.ddiehl.android.htn.events.requests.GetUserPrefsEvent;
+import com.ddiehl.android.htn.events.requests.GetUserSettingsEvent;
 import com.ddiehl.android.htn.events.requests.HideEvent;
 import com.ddiehl.android.htn.events.requests.LoadLinkCommentsEvent;
 import com.ddiehl.android.htn.events.requests.LoadMoreChildrenEvent;
@@ -137,7 +137,7 @@ public class RedditServiceAPI implements RedditService {
     }
 
     @Subscribe
-    public void onGetUserPrefs(GetUserPrefsEvent event) {
+    public void onGetUserPrefs(GetUserSettingsEvent event) {
 
     }
 

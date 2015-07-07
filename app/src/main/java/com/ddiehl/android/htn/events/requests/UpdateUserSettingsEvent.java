@@ -6,11 +6,11 @@ package com.ddiehl.android.htn.events.requests;
 
 import java.util.Map;
 
-public class UpdateUserPrefsEvent {
+public class UpdateUserSettingsEvent {
 
     private Map<String, String> mPrefs;
 
-    public UpdateUserPrefsEvent(Map<String, String> prefs) {
+    public UpdateUserSettingsEvent(Map<String, String> prefs) {
         mPrefs = prefs;
     }
 

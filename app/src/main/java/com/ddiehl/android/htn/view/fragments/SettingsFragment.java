@@ -14,14 +14,16 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
 
 import com.ddiehl.android.htn.BusProvider;
-import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.SettingsManager;
-import com.ddiehl.android.htn.events.requests.UpdateUserPrefsEvent;
+import com.ddiehl.android.htn.events.requests.GetUserSettingsEvent;
+import com.ddiehl.android.htn.events.requests.UpdateUserSettingsEvent;
+import com.ddiehl.android.htn.events.responses.UserSettingsRetrievedEvent;
 import com.ddiehl.android.htn.view.BaseView;
 import com.ddiehl.android.htn.view.MainView;
 import com.flurry.android.FlurryAgent;
 import com.squareup.otto.Bus;
+import com.squareup.otto.Subscribe;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,7 +32,8 @@ public class SettingsFragment extends PreferenceFragment
         implements BaseView, SharedPreferences.OnSharedPreferenceChangeListener {
 
     private Bus mBus = BusProvider.getInstance();
-    private IdentityManager mIdentityManager;
+    private SettingsManager mSettingsManager;
+    private boolean mSettingsRetrievedFromRemote = false;
 
     private boolean isChanging = false;
 
@@ -39,7 +42,7 @@ public class SettingsFragment extends PreferenceFragment
         super.onCreate(savedInstanceState);
         getPreferenceManager().setSharedPreferencesName(SettingsManager.PREFS_USER);
         addPreferencesFromResource(R.xml.preferences);
-        mIdentityManager = IdentityManager.getInstance(getActivity());
+        mSettingsManager = SettingsManager.getInstance(getActivity());
     }
 
     @Override
@@ -54,6 +57,11 @@ public class SettingsFragment extends PreferenceFragment
     public void onResume() {
         super.onResume();
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+
+        if (!mSettingsRetrievedFromRemote) {
+            showSpinner(null);
+            mBus.post(new GetUserSettingsEvent());
+        }
     }
 
     @Override
@@ -66,6 +74,19 @@ public class SettingsFragment extends PreferenceFragment
     public void onStop() {
         mBus.unregister(this);
         super.onStop();
+    }
+
+    @Subscribe
+    public void onSettingsRetrieved(UserSettingsRetrievedEvent event) {
+        if (event.isFailed()) {
+            dismissSpinner();
+            return;
+        }
+
+        mSettingsManager.saveSettings(event.getSettings());
+
+        mSettingsRetrievedFromRemote = true;
+        dismissSpinner();
     }
 
     public void updateAllPrefs() {
@@ -147,7 +168,7 @@ public class SettingsFragment extends PreferenceFragment
         }
 
         // Post SettingsUpdate event with changed keys and values
-        mBus.post(new UpdateUserPrefsEvent(changedSettings));
+        mBus.post(new UpdateUserSettingsEvent(changedSettings));
 
         // Send Flurry event
         Map<String, String> params = new HashMap<>();

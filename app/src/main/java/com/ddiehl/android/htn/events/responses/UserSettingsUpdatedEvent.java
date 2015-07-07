@@ -4,5 +4,5 @@
 
 package com.ddiehl.android.htn.events.responses;
 
-public class UserPrefsUpdatedEvent {
+public class UserSettingsUpdatedEvent {
 }

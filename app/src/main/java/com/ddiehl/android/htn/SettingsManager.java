@@ -3,6 +3,8 @@ package com.ddiehl.android.htn;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.ddiehl.reddit.identity.UserSettings;
+
 public class SettingsManager {
 
     public static final String PREFS_USER = "prefs_user";
@@ -98,5 +100,53 @@ public class SettingsManager {
             }
         }
         return _instance;
+    }
+
+    public void saveSettings(UserSettings settings) {
+        mContext.getSharedPreferences(PREFS_USER, Context.MODE_PRIVATE).edit()
+                .putBoolean(PREF_BETA, settings.getBeta())
+                .putBoolean(PREF_CLICKGAGDET, settings.getClickgadget())
+                .putBoolean(PREF_COLLAPSE_READ_MESSAGES, settings.getCollapseReadMessages())
+                .putBoolean(PREF_COMPRESS, settings.getCompress())
+                .putBoolean(PREF_CREDDIT_AUTORENEW, settings.getCredditAutoRenew())
+                .putString(PREF_DEFAULT_COMMENT_SORT, settings.getDefaultCommentSort())
+                .putBoolean(PREF_DOMAIN_DETAILS, settings.getDomainDetails())
+                .putBoolean(PREF_EMAIL_MESSAGES, settings.getEmailMessages())
+                .putBoolean(PREF_ENABLE_DEFAULT_THEMES, settings.getEnableDefaultThemes())
+                .putBoolean(PREF_HIDE_ADS, settings.getHideAds())
+                .putBoolean(PREF_HIDE_DOWNS, settings.getHideDowns())
+                .putBoolean(PREF_HIDE_FROM_ROBOTS, settings.getHideFromRobots())
+                .putBoolean(PREF_HIDE_LOCATIONBAR, settings.getHideLocationBar())
+                .putBoolean(PREF_HIDE_UPS, settings.getHideUps())
+                .putBoolean(PREF_HIGHLIGHT_CONTROVERSIAL, settings.getHighlightControversial())
+                .putBoolean(PREF_HIGHLIGHT_NEW_COMMENTS, settings.getHighlightNewComments())
+                .putBoolean(PREF_IGNORE_SUGGESTED_SORT, settings.getIgnoreSuggestedSort())
+                .putBoolean(PREF_LABEL_NSFW, settings.getLabelNsfw())
+                .putString(PREF_LANG, settings.getLang())
+                .putBoolean(PREF_MARK_MESSAGES_READ, settings.getMarkMessagesRead())
+                .putString(PREF_MEDIA, settings.getMedia())
+                .putInt(PREF_MIN_COMMENT_SCORE, settings.getMinCommentScore())
+                .putInt(PREF_MIN_LINK_SCORE, settings.getMinLinkScore())
+                .putBoolean(PREF_MONITOR_MENTIONS, settings.getMonitorMentions())
+                .putBoolean(PREF_NEWWINDOW, settings.getNewWindow())
+                .putBoolean(PREF_NO_PROFANITY, settings.getNoProfanity())
+                .putInt(PREF_NUM_COMMENTS, settings.getNumComments())
+                .putInt(PREF_NUMSITES, settings.getNumLinks())
+                .putBoolean(PREF_ORGANIC, settings.getOrganic())
+                .putBoolean(PREF_OVER_18, settings.getOver18())
+                .putBoolean(PREF_PUBLIC_FEEDS, settings.getPublicFeeds())
+                .putBoolean(PREF_PUBLIC_VOTES, settings.getPublicVotes())
+                .putBoolean(PREF_RESEARCH, settings.getResearch())
+                .putBoolean(PREF_SHOW_FLAIR, settings.getShowFlair())
+                .putBoolean(PREF_SHOW_GOLD_EXPIRATION, settings.getShowGoldExpiration())
+                .putBoolean(PREF_SHOW_LINK_FLAIR, settings.getShowLinkFlair())
+                .putBoolean(PREF_SHOW_PROMOTE, settings.getShowPromote())
+                .putBoolean(PREF_SHOW_STYLESHEETS, settings.getShowStylesheets())
+                .putBoolean(PREF_SHOW_TRENDING, settings.getShowTrending())
+                .putBoolean(PREF_STORE_VISITS, settings.getStoreVisits())
+                .putString(PREF_THEME_SELECTOR, settings.getThemeSelector())
+                .putBoolean(PREF_THREADED_MESSAGES, settings.getThreadedMessages())
+                .putBoolean(PREF_USE_GLOBAL_DEFAULTS, settings.getUseGlobalDefaults())
+                .apply();
     }
 }
