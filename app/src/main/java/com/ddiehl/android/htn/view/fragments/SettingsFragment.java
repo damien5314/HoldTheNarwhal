@@ -16,7 +16,7 @@ import android.preference.PreferenceGroup;
 import com.ddiehl.android.htn.BusProvider;
 import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
-import com.ddiehl.android.htn.RedditPrefs;
+import com.ddiehl.android.htn.SettingsManager;
 import com.ddiehl.android.htn.events.requests.UpdateUserPrefsEvent;
 import com.ddiehl.android.htn.view.BaseView;
 import com.ddiehl.android.htn.view.MainView;
@@ -37,7 +37,7 @@ public class SettingsFragment extends PreferenceFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getPreferenceManager().setSharedPreferencesName(RedditPrefs.PREFS_USER);
+        getPreferenceManager().setSharedPreferencesName(SettingsManager.PREFS_USER);
         addPreferencesFromResource(R.xml.preferences);
         mIdentityManager = IdentityManager.getInstance(getActivity());
     }
@@ -107,8 +107,8 @@ public class SettingsFragment extends PreferenceFragment
         Map<String, String> changedSettings = new HashMap<>(); // Track changed keys and values
 
         switch (key) {
-            case RedditPrefs.PREF_ENABLE_ADS:
-                if (sp.getBoolean(RedditPrefs.PREF_ENABLE_ADS, false)) {
+            case SettingsManager.PREF_ENABLE_ADS:
+                if (sp.getBoolean(SettingsManager.PREF_ENABLE_ADS, false)) {
                     // Show appreciation for users enabling ads
                     showToast(R.string.pref_enable_ads_thanks);
                 }
@@ -129,19 +129,19 @@ public class SettingsFragment extends PreferenceFragment
         }
 
         // Force "make safe(r) for work" to be true if "over 18" is false
-        if (!sp.getBoolean(RedditPrefs.PREF_OVER_18, false)) {
-            CheckBoxPreference pref = ((CheckBoxPreference) findPreference(RedditPrefs.PREF_NO_PROFANITY));
+        if (!sp.getBoolean(SettingsManager.PREF_OVER_18, false)) {
+            CheckBoxPreference pref = ((CheckBoxPreference) findPreference(SettingsManager.PREF_NO_PROFANITY));
             if (!pref.isChecked()) {
-                changedSettings.put(RedditPrefs.PREF_NO_PROFANITY, String.valueOf(true));
+                changedSettings.put(SettingsManager.PREF_NO_PROFANITY, String.valueOf(true));
                 pref.setChecked(true);
             }
         }
 
         // Force "label nsfw" to be true if "make safe(r) for work" is true
-        if (sp.getBoolean(RedditPrefs.PREF_NO_PROFANITY, true)) {
-            CheckBoxPreference pref = ((CheckBoxPreference) findPreference(RedditPrefs.PREF_LABEL_NSFW));
+        if (sp.getBoolean(SettingsManager.PREF_NO_PROFANITY, true)) {
+            CheckBoxPreference pref = ((CheckBoxPreference) findPreference(SettingsManager.PREF_LABEL_NSFW));
             if (!pref.isChecked()) {
-                changedSettings.put(RedditPrefs.PREF_LABEL_NSFW, String.valueOf(true));
+                changedSettings.put(SettingsManager.PREF_LABEL_NSFW, String.valueOf(true));
                 pref.setChecked(true);
             }
         }

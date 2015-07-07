@@ -36,8 +36,8 @@ public class HTNAnalytics {
 
     private HTNAnalytics() { }
 
-    public void init(final Context context) {
-        FlurryAgent.init(context, NUtils.getFlurryApiKey(BuildConfig.DEBUG));
+    public void init(final Context c) {
+        FlurryAgent.init(c, NUtils.getFlurryApiKey(BuildConfig.DEBUG));
         FlurryAgent.setContinueSessionMillis(FLURRY_SESSION_TIMEOUT_SECONDS * 1000);
         FlurryAgent.setCaptureUncaughtExceptions(true);
         FlurryAgent.setLogEnabled(BuildConfig.DEBUG); // Disable Flurry logging for release builds
@@ -48,13 +48,13 @@ public class HTNAnalytics {
                 // Log initial Flurry event
                 Map<String, String> params = new HashMap<>();
 
-                UserIdentity identity = IdentityManager.getInstance(context).getUserIdentity();
+                UserIdentity identity = IdentityManager.getInstance(c).getUserIdentity();
                 String userId = identity == null ?
                         "unauthorized" : BaseUtils.getMd5HexString(identity.getName());
                 params.put("user", userId);
                 FlurryAgent.setUserId(userId);
 
-                boolean adsEnabled = RedditPrefs.getInstance(context).getAdsEnabled();
+                boolean adsEnabled = SettingsManager.getInstance(c).getAdsEnabled();
                 params.put("ads enabled", String.valueOf(adsEnabled));
 
                 FlurryAgent.logEvent("session started", params);

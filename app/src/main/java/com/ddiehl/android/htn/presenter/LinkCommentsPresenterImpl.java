@@ -8,10 +8,11 @@ import android.content.Context;
 import android.view.ContextMenu;
 import android.view.View;
 
+import com.ddiehl.android.htn.AccessTokenManager;
 import com.ddiehl.android.htn.BusProvider;
-import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.IdentityManager;
-import com.ddiehl.android.htn.RedditPrefs;
+import com.ddiehl.android.htn.R;
+import com.ddiehl.android.htn.SettingsManager;
 import com.ddiehl.android.htn.events.requests.HideEvent;
 import com.ddiehl.android.htn.events.requests.LoadLinkCommentsEvent;
 import com.ddiehl.android.htn.events.requests.LoadMoreChildrenEvent;
@@ -31,8 +32,8 @@ import com.ddiehl.reddit.listings.Comment;
 import com.ddiehl.reddit.listings.CommentBank;
 import com.ddiehl.reddit.listings.CommentBankList;
 import com.ddiehl.reddit.listings.CommentStub;
-import com.ddiehl.reddit.listings.Listing;
 import com.ddiehl.reddit.listings.Link;
+import com.ddiehl.reddit.listings.Listing;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -48,9 +49,10 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
     private Link mLinkContext;
     private CommentBank mCommentBank;
     private Bus mBus;
-    private RedditPrefs mPreferences;
 
+    private AccessTokenManager mAccessTokenManager;
     private IdentityManager mIdentityManager;
+    private SettingsManager mSettingsManager;
 
     private String mSubreddit;
     private String mArticleId;
@@ -65,12 +67,13 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
         mLinkCommentsView = view;
         mCommentBank = new CommentBankList();
         mBus = BusProvider.getInstance();
-        mIdentityManager = IdentityManager.getInstance(context);
-        mPreferences = RedditPrefs.getInstance(mContext);
+        mAccessTokenManager = AccessTokenManager.getInstance(mContext);
+        mIdentityManager = IdentityManager.getInstance(mContext);
+        mSettingsManager = SettingsManager.getInstance(mContext);
         mSubreddit = subreddit;
         mArticleId = articleId;
         mCommentId = commentId;
-        mSort = mPreferences.getCommentSort();
+        mSort = mSettingsManager.getCommentSort();
     }
 
     @Override
@@ -146,7 +149,7 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
 
     @Override
     public void updateSort() {
-        String sort = mPreferences.getCommentSort();
+        String sort = mSettingsManager.getCommentSort();
         updateSort(sort);
     }
 
@@ -154,7 +157,7 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
     public void updateSort(String sort) {
         if (!mSort.equals(sort)) {
             mSort = sort;
-            mPreferences.saveCommentSort(mSort);
+            mSettingsManager.saveCommentSort(mSort);
             getComments();
         }
     }
@@ -224,7 +227,7 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
 
     @Override
     public void saveLink() {
-        if (!mIdentityManager.isUserAuthorized()) {
+        if (!mAccessTokenManager.isUserAuthorized()) {
             mLinkCommentsView.showToast(R.string.user_required);
             return;
         }
@@ -234,7 +237,7 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
 
     @Override
     public void unsaveLink() {
-        if (!mIdentityManager.isUserAuthorized()) {
+        if (!mAccessTokenManager.isUserAuthorized()) {
             mLinkCommentsView.showToast(R.string.user_required);
             return;
         }
@@ -269,7 +272,7 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
 
     @Override
     public void hideLink() {
-        if (!mIdentityManager.isUserAuthorized()) {
+        if (!mAccessTokenManager.isUserAuthorized()) {
             mLinkCommentsView.showToast(R.string.user_required);
             return;
         }
@@ -279,7 +282,7 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
 
     @Override
     public void unhideLink() {
-        if (!mIdentityManager.isUserAuthorized()) {
+        if (!mAccessTokenManager.isUserAuthorized()) {
             mLinkCommentsView.showToast(R.string.user_required);
             return;
         }
@@ -289,7 +292,7 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
 
     @Override
     public void reportLink() {
-        if (!mIdentityManager.isUserAuthorized()) {
+        if (!mAccessTokenManager.isUserAuthorized()) {
             mLinkCommentsView.showToast(R.string.user_required);
             return;
         }
@@ -385,7 +388,7 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
 
     @Override
     public void saveComment() {
-        if (!mIdentityManager.isUserAuthorized()) {
+        if (!mAccessTokenManager.isUserAuthorized()) {
             mLinkCommentsView.showToast(R.string.user_required);
             return;
         }
@@ -396,7 +399,7 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
 
     @Override
     public void unsaveComment() {
-        if (!mIdentityManager.isUserAuthorized()) {
+        if (!mAccessTokenManager.isUserAuthorized()) {
             mLinkCommentsView.showToast(R.string.user_required);
             return;
         }
@@ -430,7 +433,7 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
 
     @Override
     public void reportComment() {
-        if (!mIdentityManager.isUserAuthorized()) {
+        if (!mAccessTokenManager.isUserAuthorized()) {
             mLinkCommentsView.showToast(R.string.user_required);
             return;
         }
@@ -448,7 +451,7 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
         Listing listing = mListingSelected;
         if (((Archivable) listing).isArchived()) {
             mLinkCommentsView.showToast(R.string.listing_archived);
-        } else if (!mIdentityManager.isUserAuthorized()) {
+        } else if (!mAccessTokenManager.isUserAuthorized()) {
             mLinkCommentsView.showToast(R.string.user_required);
         } else {
             Votable votable = (Votable) listing;

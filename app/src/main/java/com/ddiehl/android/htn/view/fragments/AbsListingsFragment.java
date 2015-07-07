@@ -21,7 +21,7 @@ import android.view.View;
 import com.ddiehl.android.htn.BuildConfig;
 import com.ddiehl.android.htn.BusProvider;
 import com.ddiehl.android.htn.R;
-import com.ddiehl.android.htn.RedditPrefs;
+import com.ddiehl.android.htn.SettingsManager;
 import com.ddiehl.android.htn.presenter.ListingsPresenter;
 import com.ddiehl.android.htn.utils.NUtils;
 import com.ddiehl.android.htn.view.ListingsView;
@@ -131,7 +131,7 @@ public abstract class AbsListingsFragment extends AbsRedditFragment
     }
 
     private void loadAdsIfEnabled() {
-        boolean adsEnabled = RedditPrefs.getInstance(getActivity()).getAdsEnabled();
+        boolean adsEnabled = SettingsManager.getInstance(getActivity()).getAdsEnabled();
         if (adsEnabled) {
             String key = NUtils.getMoPubApiKey(BuildConfig.DEBUG);
             mAdAdapter.loadAds(key, mAdRequestParameters);

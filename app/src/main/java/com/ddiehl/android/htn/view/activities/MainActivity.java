@@ -28,10 +28,12 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.ddiehl.android.htn.AccessTokenManager;
 import com.ddiehl.android.htn.BusProvider;
 import com.ddiehl.android.htn.HTNAnalytics;
+import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
-import com.ddiehl.android.htn.RedditPrefs;
+import com.ddiehl.android.htn.SettingsManager;
 import com.ddiehl.android.htn.events.responses.UserAuthCodeReceivedEvent;
 import com.ddiehl.android.htn.io.RedditService;
 import com.ddiehl.android.htn.io.RedditServiceAuth;
@@ -105,7 +107,7 @@ public class MainActivity extends AppCompatActivity
 
         if (!mInitialized) {
             showSpinner(R.string.application_loading);
-            initializeApp();
+            initializeApp(); // TODO Put this into a background thread
             dismissSpinner();
         }
 
@@ -118,8 +120,14 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void initializeApp() {
-        RedditPrefs prefs = RedditPrefs.getInstance(this);
-        mBus.register(prefs);
+        AccessTokenManager atm = AccessTokenManager.getInstance(this);
+        mBus.register(atm);
+
+        IdentityManager identityManager = IdentityManager.getInstance(this);
+        mBus.register(identityManager);
+
+        SettingsManager settingsManager = SettingsManager.getInstance(this);
+        mBus.register(settingsManager);
 
         RedditService authProxy = RedditServiceAuth.getInstance(this);
         mBus.register(authProxy);

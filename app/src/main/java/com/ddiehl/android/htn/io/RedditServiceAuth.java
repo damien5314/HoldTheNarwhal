@@ -7,6 +7,7 @@ package com.ddiehl.android.htn.io;
 
 import android.content.Context;
 
+import com.ddiehl.android.htn.AccessTokenManager;
 import com.ddiehl.android.htn.BusProvider;
 import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.RedditPrefs;
@@ -69,6 +70,7 @@ public class RedditServiceAuth implements RedditService {
     private Bus mBus;
     private RedditAuthAPI mAuthAPI;
     private RedditServiceAPI mServiceAPI;
+    private AccessTokenManager mAccessTokenManager;
     private IdentityManager mIdentityManager;
 
     private Object mQueuedEvent;
@@ -76,9 +78,10 @@ public class RedditServiceAuth implements RedditService {
     private RedditServiceAuth(Context context) {
         mContext = context.getApplicationContext();
         mBus = BusProvider.getInstance();
+        mAccessTokenManager = AccessTokenManager.getInstance(mContext);
         mIdentityManager = IdentityManager.getInstance(mContext);
         mAuthAPI = buildApi();
-        mServiceAPI = new RedditServiceAPI(mContext, mIdentityManager);
+        mServiceAPI = new RedditServiceAPI(mContext);
     }
 
     private RedditAuthAPI buildApi() {
@@ -131,7 +134,7 @@ public class RedditServiceAuth implements RedditService {
         }
 
 //        Toast.makeText(mContext, R.string.application_authorized, Toast.LENGTH_SHORT).show();
-        mIdentityManager.saveApplicationAccessTokenResponse(event.getResponse());
+        mAccessTokenManager.saveApplicationAccessTokenResponse(event.getResponse());
         if (mQueuedEvent != null) {
             Object e = mQueuedEvent;
             mQueuedEvent = null;
@@ -193,8 +196,8 @@ public class RedditServiceAuth implements RedditService {
      */
     @Subscribe
     public void onUserSignOut(UserSignOutEvent event) {
-        if (mIdentityManager.getUserAccessToken() != null) {
-            mAuthAPI.revokeUserAuthToken(mIdentityManager.getUserAccessToken().getToken(),
+        if (mAccessTokenManager.getUserAccessToken() != null) {
+            mAuthAPI.revokeUserAuthToken(mAccessTokenManager.getUserAccessToken().getToken(),
                     "access_token", new Callback<Response>() {
                 @Override
                 public void success(Response response, Response response2) {
@@ -209,7 +212,7 @@ public class RedditServiceAuth implements RedditService {
                 }
             });
 
-            mAuthAPI.revokeUserAuthToken(mIdentityManager.getUserAccessToken().getRefreshToken(),
+            mAuthAPI.revokeUserAuthToken(mAccessTokenManager.getUserAccessToken().getRefreshToken(),
                     "refresh_token", new Callback<Response>() {
                         @Override
                         public void success(Response response, Response response2) {
@@ -224,7 +227,7 @@ public class RedditServiceAuth implements RedditService {
                     });
         }
 
-        mIdentityManager.clearSavedUserAccessToken();
+        mAccessTokenManager.clearSavedUserAccessToken();
         mIdentityManager.clearSavedUserIdentity();
         mBus.post(new UserIdentitySavedEvent(null));
     }
@@ -237,7 +240,7 @@ public class RedditServiceAuth implements RedditService {
         }
 
 //        Toast.makeText(mContext, R.string.user_authorized, Toast.LENGTH_SHORT).show();
-        mIdentityManager.saveUserAccessTokenResponse(event.getResponse());
+        mAccessTokenManager.saveUserAccessTokenResponse(event.getResponse());
         mIdentityManager.clearSavedUserIdentity();
         mBus.post(new GetUserIdentityEvent());
         if (mQueuedEvent != null) {
@@ -251,13 +254,13 @@ public class RedditServiceAuth implements RedditService {
     public void onUserAuthorizationRefreshed(UserAuthorizationRefreshedEvent event) {
         if (event.isFailed()) {
             mQueuedEvent = null;
-            mIdentityManager.clearSavedUserAccessToken();
+            mAccessTokenManager.clearSavedUserAccessToken();
             mIdentityManager.clearSavedUserIdentity();
             return;
         }
 
 //        Toast.makeText(mContext, R.string.user_authorization_refreshed, Toast.LENGTH_SHORT).show();
-        mIdentityManager.saveUserAccessTokenResponse(event.getResponse());
+        mAccessTokenManager.saveUserAccessTokenResponse(event.getResponse());
         if (mQueuedEvent != null) {
             Object e = mQueuedEvent;
             mQueuedEvent = null;
@@ -271,9 +274,9 @@ public class RedditServiceAuth implements RedditService {
 
     @Subscribe @Override
     public void onLoadLinks(LoadSubredditEvent event) {
-        if (!mIdentityManager.hasValidAccessToken()) {
+        if (!mAccessTokenManager.hasValidAccessToken()) {
             mQueuedEvent = event;
-            AccessToken userAccessToken = mIdentityManager.getUserAccessToken();
+            AccessToken userAccessToken = mAccessTokenManager.getUserAccessToken();
             String refreshToken = null;
             if (userAccessToken != null) {
                 refreshToken = userAccessToken.getRefreshToken();
@@ -290,9 +293,9 @@ public class RedditServiceAuth implements RedditService {
 
     @Subscribe @Override
     public void onLoadLinkComments(LoadLinkCommentsEvent event) {
-        if (!mIdentityManager.hasValidAccessToken()) {
+        if (!mAccessTokenManager.hasValidAccessToken()) {
             mQueuedEvent = event;
-            AccessToken userAccessToken = mIdentityManager.getUserAccessToken();
+            AccessToken userAccessToken = mAccessTokenManager.getUserAccessToken();
             String refreshToken = null;
             if (userAccessToken != null) {
                 refreshToken = userAccessToken.getRefreshToken();
@@ -309,9 +312,9 @@ public class RedditServiceAuth implements RedditService {
 
     @Subscribe @Override
     public void onLoadMoreChildren(LoadMoreChildrenEvent event) {
-        if (!mIdentityManager.hasValidAccessToken()) {
+        if (!mAccessTokenManager.hasValidAccessToken()) {
             mQueuedEvent = event;
-            AccessToken userAccessToken = mIdentityManager.getUserAccessToken();
+            AccessToken userAccessToken = mAccessTokenManager.getUserAccessToken();
             String refreshToken = null;
             if (userAccessToken != null) {
                 refreshToken = userAccessToken.getRefreshToken();
@@ -328,9 +331,9 @@ public class RedditServiceAuth implements RedditService {
 
     @Subscribe @Override
     public void onLoadUserProfile(LoadUserProfileEvent event) {
-        if (!mIdentityManager.hasValidAccessToken()) {
+        if (!mAccessTokenManager.hasValidAccessToken()) {
             mQueuedEvent = event;
-            AccessToken userAccessToken = mIdentityManager.getUserAccessToken();
+            AccessToken userAccessToken = mAccessTokenManager.getUserAccessToken();
             String refreshToken = null;
             if (userAccessToken != null) {
                 refreshToken = userAccessToken.getRefreshToken();
@@ -351,12 +354,12 @@ public class RedditServiceAuth implements RedditService {
 
     @Subscribe @Override
     public void onVote(VoteEvent event) {
-        if (mIdentityManager.hasValidUserAccessToken()) {
+        if (mAccessTokenManager.hasValidUserAccessToken()) {
             mServiceAPI.onVote(event);
             return;
         }
 
-        AccessToken token = mIdentityManager.getUserAccessToken();
+        AccessToken token = mAccessTokenManager.getUserAccessToken();
         if (token != null && token.hasRefreshToken()) {
             mQueuedEvent = event;
             mBus.post(new RefreshUserAccessTokenEvent(token.getRefreshToken()));
@@ -368,12 +371,12 @@ public class RedditServiceAuth implements RedditService {
 
     @Subscribe @Override
     public void onSave(SaveEvent event) {
-        if (mIdentityManager.hasValidUserAccessToken()) {
+        if (mAccessTokenManager.hasValidUserAccessToken()) {
             mServiceAPI.onSave(event);
             return;
         }
 
-        AccessToken token = mIdentityManager.getUserAccessToken();
+        AccessToken token = mAccessTokenManager.getUserAccessToken();
         if (token != null && token.hasRefreshToken()) {
             mQueuedEvent = event;
             mBus.post(new RefreshUserAccessTokenEvent(token.getRefreshToken()));
@@ -385,12 +388,12 @@ public class RedditServiceAuth implements RedditService {
 
     @Subscribe @Override
     public void onHide(HideEvent event) {
-        if (mIdentityManager.hasValidUserAccessToken()) {
+        if (mAccessTokenManager.hasValidUserAccessToken()) {
             mServiceAPI.onHide(event);
             return;
         }
 
-        AccessToken token = mIdentityManager.getUserAccessToken();
+        AccessToken token = mAccessTokenManager.getUserAccessToken();
         if (token != null && token.hasRefreshToken()) {
             mQueuedEvent = event;
             mBus.post(new RefreshUserAccessTokenEvent(token.getRefreshToken()));
@@ -402,12 +405,12 @@ public class RedditServiceAuth implements RedditService {
 
     @Override
     public void onReport(ReportEvent event) {
-        if (mIdentityManager.hasValidUserAccessToken()) {
+        if (mAccessTokenManager.hasValidUserAccessToken()) {
             mServiceAPI.onReport(event);
             return;
         }
 
-        AccessToken token = mIdentityManager.getUserAccessToken();
+        AccessToken token = mAccessTokenManager.getUserAccessToken();
         if (token != null && token.hasRefreshToken()) {
             mQueuedEvent = event;
             mBus.post(new RefreshUserAccessTokenEvent(token.getRefreshToken()));

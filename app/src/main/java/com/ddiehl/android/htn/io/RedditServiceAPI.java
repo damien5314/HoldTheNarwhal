@@ -6,6 +6,7 @@ package com.ddiehl.android.htn.io;
 
 import android.content.Context;
 
+import com.ddiehl.android.htn.AccessTokenManager;
 import com.ddiehl.android.htn.BusProvider;
 import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.events.requests.GetUserIdentityEvent;
@@ -60,14 +61,16 @@ public class RedditServiceAPI implements RedditService {
     private Context mContext;
     private Bus mBus;
     private RedditAPI mAPI;
+    private AccessTokenManager mAccessTokenManager;
     private IdentityManager mIdentityManager;
 
-    RedditServiceAPI(Context context, IdentityManager manager) {
+    RedditServiceAPI(Context context) {
         mContext = context.getApplicationContext();
         mBus = BusProvider.getInstance();
         mBus.register(this);
         mAPI = buildApi();
-        mIdentityManager = manager;
+        mAccessTokenManager = AccessTokenManager.getInstance(mContext);
+        mIdentityManager = IdentityManager.getInstance(mContext);
     }
 
     private RedditAPI buildApi() {
@@ -96,10 +99,10 @@ public class RedditServiceAPI implements RedditService {
     }
 
     private String getAccessToken() {
-        if (mIdentityManager.hasValidUserAccessToken()) {
-            return mIdentityManager.getUserAccessToken().getToken();
-        } else if (mIdentityManager.hasValidApplicationAccessToken()) {
-            return mIdentityManager.getApplicationAccessToken().getToken();
+        if (mAccessTokenManager.hasValidUserAccessToken()) {
+            return mAccessTokenManager.getUserAccessToken().getToken();
+        } else if (mAccessTokenManager.hasValidApplicationAccessToken()) {
+            return mAccessTokenManager.getApplicationAccessToken().getToken();
         }
         return null;
     }

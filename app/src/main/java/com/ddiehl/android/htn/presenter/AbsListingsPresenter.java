@@ -8,10 +8,11 @@ import android.content.Context;
 import android.view.ContextMenu;
 import android.view.View;
 
+import com.ddiehl.android.htn.AccessTokenManager;
 import com.ddiehl.android.htn.BusProvider;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.IdentityManager;
-import com.ddiehl.android.htn.RedditPrefs;
+import com.ddiehl.android.htn.SettingsManager;
 import com.ddiehl.android.htn.events.requests.HideEvent;
 import com.ddiehl.android.htn.events.requests.SaveEvent;
 import com.ddiehl.android.htn.events.requests.VoteEvent;
@@ -40,11 +41,12 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
 
     Context mContext;
     Bus mBus;
-    RedditPrefs mPreferences;
+    AccessTokenManager mAccessTokenManager;
+    IdentityManager mIdentityManager;
+    SettingsManager mSettingsManager;
+
     List<Listing> mListings;
     ListingsView mListingsView;
-
-    private IdentityManager mIdentityManager;
 
     String mShow;
     String mUsernameContext;
@@ -60,9 +62,10 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
                                 String show, String username, String subreddit, String sort, String timespan) {
         mContext = context.getApplicationContext();
         mBus = BusProvider.getInstance();
-        mPreferences = RedditPrefs.getInstance(mContext);
+        mAccessTokenManager = AccessTokenManager.getInstance(context);
+        mIdentityManager = IdentityManager.getInstance(mContext);
+        mSettingsManager = SettingsManager.getInstance(mContext);
         mListingsView = view;
-        mIdentityManager = IdentityManager.getInstance(context);
         mShow = show;
         mUsernameContext = username;
         mSubreddit = subreddit;
@@ -159,7 +162,7 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
     public void updateSort(String sort) {
         if (!mSort.equals(sort)) {
             mSort = sort;
-            mPreferences.saveCommentSort(mSort);
+            mSettingsManager.saveCommentSort(mSort);
             refreshData();
         }
     }
@@ -288,7 +291,7 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
 
     @Override
     public void saveLink() {
-        if (!mIdentityManager.isUserAuthorized()) {
+        if (!mAccessTokenManager.isUserAuthorized()) {
             mListingsView.showToast(R.string.user_required);
             return;
         }
@@ -299,7 +302,7 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
 
     @Override
     public void unsaveLink() {
-        if (!mIdentityManager.isUserAuthorized()) {
+        if (!mAccessTokenManager.isUserAuthorized()) {
             mListingsView.showToast(R.string.user_required);
             return;
         }
@@ -340,7 +343,7 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
 
     @Override
     public void hideLink() {
-        if (!mIdentityManager.isUserAuthorized()) {
+        if (!mAccessTokenManager.isUserAuthorized()) {
             mListingsView.showToast(R.string.user_required);
             return;
         }
@@ -351,7 +354,7 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
 
     @Override
     public void unhideLink() {
-        if (!mIdentityManager.isUserAuthorized()) {
+        if (!mAccessTokenManager.isUserAuthorized()) {
             mListingsView.showToast(R.string.user_required);
             return;
         }
@@ -362,7 +365,7 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
 
     @Override
     public void reportLink() {
-        if (!mIdentityManager.isUserAuthorized()) {
+        if (!mAccessTokenManager.isUserAuthorized()) {
             mListingsView.showToast(R.string.user_required);
             return;
         }
@@ -424,7 +427,7 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
 
     @Override
     public void saveComment() {
-        if (!mIdentityManager.isUserAuthorized()) {
+        if (!mAccessTokenManager.isUserAuthorized()) {
             mListingsView.showToast(R.string.user_required);
             return;
         }
@@ -435,7 +438,7 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
 
     @Override
     public void unsaveComment() {
-        if (!mIdentityManager.isUserAuthorized()) {
+        if (!mAccessTokenManager.isUserAuthorized()) {
             mListingsView.showToast(R.string.user_required);
             return;
         }
@@ -469,7 +472,7 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
 
     @Override
     public void reportComment() {
-        if (!mIdentityManager.isUserAuthorized()) {
+        if (!mAccessTokenManager.isUserAuthorized()) {
             mListingsView.showToast(R.string.user_required);
             return;
         }
@@ -493,7 +496,7 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
         Listing listing = mListingSelected;
         if (((Archivable) listing).isArchived()) {
             mListingsView.showToast(R.string.listing_archived);
-        } else if (!mIdentityManager.isUserAuthorized()) {
+        } else if (!mAccessTokenManager.isUserAuthorized()) {
             mListingsView.showToast(R.string.user_required);
         } else {
             Votable votable = (Votable) listing;
