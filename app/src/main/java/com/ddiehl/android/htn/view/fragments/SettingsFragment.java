@@ -104,7 +104,7 @@ public class SettingsFragment extends PreferenceFragment
         }
 
         UserSettings settings = event.getSettings();
-        mSettingsManager.saveSettings(settings);
+        mSettingsManager.saveUserSettings(settings);
 
         mSettingsRetrievedFromRemote = true;
         addUserPreferences();

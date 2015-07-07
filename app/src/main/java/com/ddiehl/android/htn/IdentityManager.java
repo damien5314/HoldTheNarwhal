@@ -38,11 +38,13 @@ public class IdentityManager {
 
     private Bus mBus;
     private Context mContext;
+    private SettingsManager mSettingsManager;
     private UserIdentity mUserIdentity;
 
-    private IdentityManager(Context context) {
+    private IdentityManager(Context c) {
         mBus = BusProvider.getInstance();
-        mContext = context.getApplicationContext();
+        mContext = c.getApplicationContext();
+        mSettingsManager = SettingsManager.getInstance(c);
         mUserIdentity = getSavedUserIdentity();
     }
 
@@ -125,6 +127,7 @@ public class IdentityManager {
         mUserIdentity = null;
         mContext.getSharedPreferences(PREFS_USER_IDENTITY, Context.MODE_PRIVATE)
                 .edit().clear().apply();
+        mSettingsManager.clearUserSettings();
     }
 
     public static IdentityManager getInstance(Context context) {

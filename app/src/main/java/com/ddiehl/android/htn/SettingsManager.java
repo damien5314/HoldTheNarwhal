@@ -106,7 +106,7 @@ public class SettingsManager {
         return _instance;
     }
 
-    public void saveSettings(UserSettings settings) {
+    public void saveUserSettings(UserSettings settings) {
         mContext.getSharedPreferences(PREFS_USER, Context.MODE_PRIVATE).edit()
                 .putBoolean(PREF_BETA, settings.getBeta())
                 .putBoolean(PREF_CLICKGAGDET, settings.getClickgadget())
@@ -153,6 +153,54 @@ public class SettingsManager {
                 .putString(PREF_THEME_SELECTOR, settings.getThemeSelector())
                 .putBoolean(PREF_THREADED_MESSAGES, settings.getThreadedMessages())
                 .putBoolean(PREF_USE_GLOBAL_DEFAULTS, settings.getUseGlobalDefaults())
+                .apply();
+    }
+
+    public void clearUserSettings() {
+        mContext.getSharedPreferences(PREFS_USER, Context.MODE_PRIVATE).edit()
+                .remove(PREF_BETA)
+                .remove(PREF_CLICKGAGDET)
+                .remove(PREF_COLLAPSE_READ_MESSAGES)
+                .remove(PREF_COMPRESS)
+                .remove(PREF_CREDDIT_AUTORENEW)
+                .remove(PREF_DEFAULT_COMMENT_SORT)
+                .remove(PREF_DOMAIN_DETAILS)
+                .remove(PREF_EMAIL_MESSAGES)
+                .remove(PREF_ENABLE_DEFAULT_THEMES)
+                .remove(PREF_HIDE_ADS)
+                .remove(PREF_HIDE_DOWNS)
+                .remove(PREF_HIDE_FROM_ROBOTS)
+                .remove(PREF_HIDE_LOCATIONBAR)
+                .remove(PREF_HIDE_UPS)
+                .remove(PREF_HIGHLIGHT_CONTROVERSIAL)
+                .remove(PREF_HIGHLIGHT_NEW_COMMENTS)
+                .remove(PREF_IGNORE_SUGGESTED_SORT)
+                .remove(PREF_LABEL_NSFW)
+                .remove(PREF_LANG)
+                .remove(PREF_MARK_MESSAGES_READ)
+                .remove(PREF_MEDIA)
+                .remove(PREF_MIN_COMMENT_SCORE)
+                .remove(PREF_MIN_LINK_SCORE)
+                .remove(PREF_MONITOR_MENTIONS)
+                .remove(PREF_NEWWINDOW)
+                .remove(PREF_NO_PROFANITY)
+                .remove(PREF_NUM_COMMENTS)
+                .remove(PREF_NUMSITES)
+                .remove(PREF_ORGANIC)
+                .remove(PREF_OVER_18)
+                .remove(PREF_PUBLIC_FEEDS)
+                .remove(PREF_PUBLIC_VOTES)
+                .remove(PREF_RESEARCH)
+                .remove(PREF_SHOW_FLAIR)
+                .remove(PREF_SHOW_GOLD_EXPIRATION)
+                .remove(PREF_SHOW_LINK_FLAIR)
+                .remove(PREF_SHOW_PROMOTE)
+                .remove(PREF_SHOW_STYLESHEETS)
+                .remove(PREF_SHOW_TRENDING)
+                .remove(PREF_STORE_VISITS)
+                .remove(PREF_THEME_SELECTOR)
+                .remove(PREF_THREADED_MESSAGES)
+                .remove(PREF_USE_GLOBAL_DEFAULTS)
                 .apply();
     }
 }
