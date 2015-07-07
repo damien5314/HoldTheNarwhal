@@ -55,7 +55,8 @@ public class RedditServiceAuth implements RedditService {
     public static final String DURATION = "permanent";
     public static final String STATE = BaseUtils.getRandomString();
     public static final String REDIRECT_URI = "http://127.0.0.1/";
-    public static final String SCOPE = "identity,mysubreddits,privatemessages,read,report,save,submit,vote,history";
+    public static final String SCOPE =
+            "identity,mysubreddits,privatemessages,read,report,save,submit,vote,history,account";
     public static final String HTTP_AUTH_HEADER = AuthUtils.getHttpAuthHeader(CLIENT_ID, "");
 
     public static final String AUTHORIZATION_URL = "https://www.reddit.com/api/v1/authorize.compact" +

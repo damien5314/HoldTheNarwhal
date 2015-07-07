@@ -96,6 +96,7 @@ public class RedditServiceAPI implements RedditService {
                         request.addHeader("User-Agent", RedditService.USER_AGENT);
                         request.addHeader("Authorization", "bearer " + getAccessToken());
                         request.addHeader("Content-Length", "0");
+//                        request.addHeader("Content-Length", String.valueOf(request.toString().length())));
                         request.addQueryParam("raw_json", "1");
                     }
                 })
@@ -395,7 +396,7 @@ public class RedditServiceAPI implements RedditService {
 
     }
 
-    @Override @Subscribe
+    @Override
     public void onGetUserSettings(GetUserSettingsEvent event) {
         mAPI.getUserSettings(new Callback<UserSettings>() {
             @Override
@@ -413,7 +414,7 @@ public class RedditServiceAPI implements RedditService {
         });
     }
 
-    @Override @Subscribe
+    @Override
     public void onUpdateUserSettings(UpdateUserSettingsEvent event) {
         String json = new GsonBuilder().create().toJson(event.getPrefs());
         Log.d(TAG, "Generated JSON:\n" + json);
