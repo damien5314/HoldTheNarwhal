@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2015 Damien Diehl. All rights reserved.
+  -->
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:key="prefs_user">
+
+    <PreferenceCategory
+        android:title="gold options">
+
+<!--    <CheckBoxPreference
+            android:key="hide_ads"
+            android:title="@string/pref_hide_ads"/>-->
+
+        <CheckBoxPreference
+            android:key="store_visits"
+            android:title="@string/pref_store_visits"
+            android:defaultValue="false"/>
+
+<!--    <CheckBoxPreference
+            android:key="highlight_new_comments"
+            android:title="@string/pref_highlight_new_comments"/>-->
+
+        <CheckBoxPreference
+            android:key="show_gold_expiration"
+            android:title="@string/pref_show_gold_expiration"
+            android:defaultValue="false"/>
+
+        <CheckBoxPreference
+            android:key="creddit_autorenew"
+            android:title="@string/pref_creddit_autorenew"
+            android:defaultValue="false"/>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

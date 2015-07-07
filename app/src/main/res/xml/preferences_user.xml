@@ -6,20 +6,6 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
                   android:key="prefs_user">
 
-    <!-- Show these to all users -->
-    <!-- Ensure any preferences here get synced with preferences.xml -->
-    <PreferenceCategory
-        android:title="@string/preferences_app">
-
-        <CheckBoxPreference
-            android:key="pref_enable_ads"
-            android:enabled="false"
-            android:title="@string/pref_enable_ads"
-            android:summary="@string/pref_enable_ads_summary"
-            android:defaultValue="false"/>
-
-    </PreferenceCategory>
-
 <!--    <ListPreference
         android:key="lang"
         android:title="@string/pref_lang"
@@ -222,34 +208,6 @@
         android:key="beta"
         android:title="@string/pref_beta"
         android:defaultValue="false"/>
-
-    <PreferenceCategory
-        android:title="gold options">
-
-<!--        <CheckBoxPreference
-            android:key="hide_ads"
-            android:title="@string/pref_hide_ads"/>-->
-
-        <CheckBoxPreference
-            android:key="store_visits"
-            android:title="@string/pref_store_visits"
-            android:defaultValue="false"/>
-
-<!--        <CheckBoxPreference
-            android:key="highlight_new_comments"
-            android:title="@string/pref_highlight_new_comments"/>-->
-
-        <CheckBoxPreference
-            android:key="show_gold_expiration"
-            android:title="@string/pref_show_gold_expiration"
-            android:defaultValue="false"/>
-
-        <CheckBoxPreference
-            android:key="creddit_autorenew"
-            android:title="@string/pref_creddit_autorenew"
-            android:defaultValue="false"/>
-
-    </PreferenceCategory>
 
     <!--
         <CheckBoxPreference

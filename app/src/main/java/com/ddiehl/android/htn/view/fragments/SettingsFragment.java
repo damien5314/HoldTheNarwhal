@@ -22,6 +22,7 @@ import com.ddiehl.android.htn.events.requests.UpdateUserSettingsEvent;
 import com.ddiehl.android.htn.events.responses.UserSettingsRetrievedEvent;
 import com.ddiehl.android.htn.view.BaseView;
 import com.ddiehl.android.htn.view.MainView;
+import com.ddiehl.reddit.identity.UserIdentity;
 import com.ddiehl.reddit.identity.UserSettings;
 import com.flurry.android.FlurryAgent;
 import com.squareup.otto.Bus;
@@ -48,10 +49,17 @@ public class SettingsFragment extends PreferenceFragment
 
         getPreferenceManager().setSharedPreferencesName(SettingsManager.PREFS_USER);
 
+        addPreferencesFromResource(R.xml.preferences);
         if (mSettingsRetrievedFromRemote) {
-            addPreferencesFromResource(R.xml.preferences_user);
-        } else {
-            addPreferencesFromResource(R.xml.preferences);
+            addUserPreferences();
+        }
+    }
+
+    private void addUserPreferences() {
+        addPreferencesFromResource(R.xml.preferences_user);
+        UserIdentity user = mIdentityManager.getUserIdentity();
+        if (user.isGold()) {
+            addPreferencesFromResource(R.xml.preferences_gold);
         }
     }
 
@@ -70,6 +78,7 @@ public class SettingsFragment extends PreferenceFragment
 
         if (!mSettingsRetrievedFromRemote && mIdentityManager.getUserIdentity() != null) {
             showSpinner(null);
+            getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
             mBus.post(new GetUserSettingsEvent());
         }
     }
@@ -90,6 +99,7 @@ public class SettingsFragment extends PreferenceFragment
     public void onSettingsRetrieved(UserSettingsRetrievedEvent event) {
         if (event.isFailed()) {
             dismissSpinner();
+            getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
             return;
         }
 
@@ -97,8 +107,10 @@ public class SettingsFragment extends PreferenceFragment
         mSettingsManager.saveSettings(settings);
 
         mSettingsRetrievedFromRemote = true;
-        addPreferencesFromResource(R.xml.preferences_user);
+        addUserPreferences();
+        updateAllPrefs();
         dismissSpinner();
+        getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
     }
 
     public void updateAllPrefs() {
@@ -200,19 +212,16 @@ public class SettingsFragment extends PreferenceFragment
     @Override
     public void showSpinner(String msg) {
         ((MainView) getActivity()).showSpinner(msg);
-        getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
     }
 
     @Override
     public void showSpinner(int resId) {
         ((MainView) getActivity()).showSpinner(resId);
-        getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
     }
 
     @Override
     public void dismissSpinner() {
         ((MainView) getActivity()).dismissSpinner();
-        getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
     }
 
     @Override

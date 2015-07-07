@@ -396,6 +396,7 @@ public class RedditServiceAPI implements RedditService {
         mAPI.getUserSettings(new Callback<UserSettings>() {
             @Override
             public void success(UserSettings settings, Response response) {
+                BaseUtils.printResponseStatus(response);
                 mBus.post(new UserSettingsRetrievedEvent(settings));
             }
 
