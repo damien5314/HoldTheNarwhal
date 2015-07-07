@@ -5,6 +5,7 @@
 package com.ddiehl.android.htn.io;
 
 import com.ddiehl.android.htn.BuildConfig;
+import com.ddiehl.android.htn.events.requests.GetUserSettingsEvent;
 import com.ddiehl.android.htn.events.requests.HideEvent;
 import com.ddiehl.android.htn.events.requests.LoadLinkCommentsEvent;
 import com.ddiehl.android.htn.events.requests.LoadSubredditEvent;
@@ -30,4 +31,5 @@ public interface RedditService {
     void onSave(SaveEvent event);
     void onHide(HideEvent event);
     void onReport(ReportEvent event);
+    void onGetUserSettings(GetUserSettingsEvent event);
 }

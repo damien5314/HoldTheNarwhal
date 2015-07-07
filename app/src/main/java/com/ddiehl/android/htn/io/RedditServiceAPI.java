@@ -25,6 +25,7 @@ import com.ddiehl.android.htn.events.responses.ListingsLoadedEvent;
 import com.ddiehl.android.htn.events.responses.MoreChildrenLoadedEvent;
 import com.ddiehl.android.htn.events.responses.SaveSubmittedEvent;
 import com.ddiehl.android.htn.events.responses.UserIdentityRetrievedEvent;
+import com.ddiehl.android.htn.events.responses.UserSettingsRetrievedEvent;
 import com.ddiehl.android.htn.events.responses.VoteSubmittedEvent;
 import com.ddiehl.android.htn.utils.BaseUtils;
 import com.ddiehl.reddit.Hideable;
@@ -34,6 +35,7 @@ import com.ddiehl.reddit.adapters.AbsCommentDeserializer;
 import com.ddiehl.reddit.adapters.ListingDeserializer;
 import com.ddiehl.reddit.adapters.ListingResponseDeserializer;
 import com.ddiehl.reddit.identity.UserIdentity;
+import com.ddiehl.reddit.identity.UserSettings;
 import com.ddiehl.reddit.listings.AbsComment;
 import com.ddiehl.reddit.listings.CommentStub;
 import com.ddiehl.reddit.listings.Link;
@@ -131,14 +133,8 @@ public class RedditServiceAPI implements RedditService {
             return;
         }
 
-//        Toast.makeText(mContext, R.string.user_identity_retrieved, Toast.LENGTH_SHORT).show();
         UserIdentity id = event.getUserIdentity();
         mIdentityManager.saveUserIdentity(id);
-    }
-
-    @Subscribe
-    public void onGetUserPrefs(GetUserSettingsEvent event) {
-
     }
 
     /**
@@ -393,5 +389,22 @@ public class RedditServiceAPI implements RedditService {
     @Override
     public void onReport(final ReportEvent event) {
 
+    }
+
+    @Override @Subscribe
+    public void onGetUserSettings(GetUserSettingsEvent event) {
+        mAPI.getUserSettings(new Callback<UserSettings>() {
+            @Override
+            public void success(UserSettings settings, Response response) {
+                mBus.post(new UserSettingsRetrievedEvent(settings));
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                BaseUtils.printResponse(error.getResponse());
+                mBus.post(error);
+                mBus.post(new UserSettingsRetrievedEvent(error));
+            }
+        });
     }
 }

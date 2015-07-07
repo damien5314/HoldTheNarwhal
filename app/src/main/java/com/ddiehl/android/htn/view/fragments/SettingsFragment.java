@@ -22,6 +22,7 @@ import com.ddiehl.android.htn.events.requests.UpdateUserSettingsEvent;
 import com.ddiehl.android.htn.events.responses.UserSettingsRetrievedEvent;
 import com.ddiehl.android.htn.view.BaseView;
 import com.ddiehl.android.htn.view.MainView;
+import com.ddiehl.reddit.identity.UserSettings;
 import com.flurry.android.FlurryAgent;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
@@ -67,7 +68,7 @@ public class SettingsFragment extends PreferenceFragment
         super.onResume();
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
 
-        if (!mSettingsRetrievedFromRemote) {
+        if (!mSettingsRetrievedFromRemote && mIdentityManager.getUserIdentity() != null) {
             showSpinner(null);
             mBus.post(new GetUserSettingsEvent());
         }
@@ -92,9 +93,11 @@ public class SettingsFragment extends PreferenceFragment
             return;
         }
 
-        mSettingsManager.saveSettings(event.getSettings());
+        UserSettings settings = event.getSettings();
+        mSettingsManager.saveSettings(settings);
 
         mSettingsRetrievedFromRemote = true;
+        addPreferencesFromResource(R.xml.preferences_user);
         dismissSpinner();
     }
 
