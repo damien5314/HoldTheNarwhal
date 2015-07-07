@@ -14,6 +14,7 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
 
 import com.ddiehl.android.htn.BusProvider;
+import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.SettingsManager;
 import com.ddiehl.android.htn.events.requests.GetUserSettingsEvent;
@@ -32,6 +33,7 @@ public class SettingsFragment extends PreferenceFragment
         implements BaseView, SharedPreferences.OnSharedPreferenceChangeListener {
 
     private Bus mBus = BusProvider.getInstance();
+    private IdentityManager mIdentityManager;
     private SettingsManager mSettingsManager;
     private boolean mSettingsRetrievedFromRemote = false;
 
@@ -40,9 +42,16 @@ public class SettingsFragment extends PreferenceFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getPreferenceManager().setSharedPreferencesName(SettingsManager.PREFS_USER);
-        addPreferencesFromResource(R.xml.preferences);
+        mIdentityManager = IdentityManager.getInstance(getActivity());
         mSettingsManager = SettingsManager.getInstance(getActivity());
+
+        getPreferenceManager().setSharedPreferencesName(SettingsManager.PREFS_USER);
+
+        if (mSettingsRetrievedFromRemote) {
+            addPreferencesFromResource(R.xml.preferences_user);
+        } else {
+            addPreferencesFromResource(R.xml.preferences);
+        }
     }
 
     @Override
