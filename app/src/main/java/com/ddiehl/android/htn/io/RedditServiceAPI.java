@@ -60,6 +60,7 @@ import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
+import retrofit.mime.TypedString;
 
 public class RedditServiceAPI implements RedditService {
     private static final String TAG = RedditServiceAPI.class.getSimpleName();
@@ -95,7 +96,7 @@ public class RedditServiceAPI implements RedditService {
                     public void intercept(RequestFacade request) {
                         request.addHeader("User-Agent", RedditService.USER_AGENT);
                         request.addHeader("Authorization", "bearer " + getAccessToken());
-                        request.addHeader("Content-Length", "0");
+//                        request.addHeader("Content-Length", "0");
 //                        request.addHeader("Content-Length", String.valueOf(request.toString().length())));
                         request.addQueryParam("raw_json", "1");
                     }
@@ -419,7 +420,7 @@ public class RedditServiceAPI implements RedditService {
         String json = new GsonBuilder().create().toJson(event.getPrefs());
         Log.d(TAG, "Generated JSON:\n" + json);
 
-        mAPI.updateUserSettings(json, new Callback<Response>() {
+        mAPI.updateUserSettings(new TypedString(json), new Callback<Response>() {
             @Override
             public void success(Response response, Response response2) {
                 BaseUtils.printResponseStatus(response);

@@ -19,6 +19,7 @@ import retrofit.http.PATCH;
 import retrofit.http.POST;
 import retrofit.http.Path;
 import retrofit.http.Query;
+import retrofit.mime.TypedString;
 
 public interface RedditAPI {
 
@@ -29,7 +30,7 @@ public interface RedditAPI {
     void getUserSettings(Callback<UserSettings> callback);
 
     @PATCH("/api/v1/me/prefs")
-    void updateUserSettings(@Body String json, Callback<Response> callback);
+    void updateUserSettings(@Body TypedString json, Callback<Response> callback);
 
     @GET("/{sort}.json")
     void getLinks(@Query("r") String subreddit,
