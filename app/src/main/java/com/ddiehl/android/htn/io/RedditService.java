@@ -13,6 +13,7 @@ import com.ddiehl.android.htn.events.requests.LoadMoreChildrenEvent;
 import com.ddiehl.android.htn.events.requests.LoadUserProfileEvent;
 import com.ddiehl.android.htn.events.requests.ReportEvent;
 import com.ddiehl.android.htn.events.requests.SaveEvent;
+import com.ddiehl.android.htn.events.requests.UpdateUserSettingsEvent;
 import com.ddiehl.android.htn.events.requests.VoteEvent;
 
 
@@ -32,4 +33,5 @@ public interface RedditService {
     void onHide(HideEvent event);
     void onReport(ReportEvent event);
     void onGetUserSettings(GetUserSettingsEvent event);
+    void onUpdateUserSettings(UpdateUserSettingsEvent event);
 }

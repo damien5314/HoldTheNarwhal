@@ -22,6 +22,7 @@ import com.ddiehl.android.htn.events.requests.LoadUserProfileEvent;
 import com.ddiehl.android.htn.events.requests.RefreshUserAccessTokenEvent;
 import com.ddiehl.android.htn.events.requests.ReportEvent;
 import com.ddiehl.android.htn.events.requests.SaveEvent;
+import com.ddiehl.android.htn.events.requests.UpdateUserSettingsEvent;
 import com.ddiehl.android.htn.events.requests.UserSignOutEvent;
 import com.ddiehl.android.htn.events.requests.VoteEvent;
 import com.ddiehl.android.htn.events.responses.ApplicationAuthorizedEvent;
@@ -424,6 +425,23 @@ public class RedditServiceAuth implements RedditService {
     public void onGetUserSettings(GetUserSettingsEvent event) {
         if (mAccessTokenManager.hasValidUserAccessToken()) {
             mServiceAPI.onGetUserSettings(event);
+            return;
+        }
+
+        AccessToken token = mAccessTokenManager.getUserAccessToken();
+        if (token != null && token.hasRefreshToken()) {
+            mQueuedEvent = event;
+            mBus.post(new RefreshUserAccessTokenEvent(token.getRefreshToken()));
+        } else {
+            mQueuedEvent = null;
+//            mBus.post(new UserRequiredException());
+        }
+    }
+
+    @Override @Subscribe
+    public void onUpdateUserSettings(UpdateUserSettingsEvent event) {
+        if (mAccessTokenManager.hasValidUserAccessToken()) {
+            mServiceAPI.onUpdateUserSettings(event);
             return;
         }
 

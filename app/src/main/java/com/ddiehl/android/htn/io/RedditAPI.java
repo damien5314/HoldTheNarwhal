@@ -13,7 +13,9 @@ import java.util.List;
 
 import retrofit.Callback;
 import retrofit.client.Response;
+import retrofit.http.Body;
 import retrofit.http.GET;
+import retrofit.http.PATCH;
 import retrofit.http.POST;
 import retrofit.http.Path;
 import retrofit.http.Query;
@@ -25,6 +27,9 @@ public interface RedditAPI {
 
     @GET("/api/v1/me/prefs")
     void getUserSettings(Callback<UserSettings> callback);
+
+    @PATCH("/api/v1/me/prefs")
+    void updateUserSettings(@Body String json, Callback<Response> callback);
 
     @GET("/{sort}.json")
     void getLinks(@Query("r") String subreddit,

@@ -4,5 +4,13 @@
 
 package com.ddiehl.android.htn.events.responses;
 
-public class UserSettingsUpdatedEvent {
+public class UserSettingsUpdatedEvent extends FailableEvent {
+
+    public UserSettingsUpdatedEvent() {
+
+    }
+
+    public UserSettingsUpdatedEvent(Exception e) {
+        super(e);
+    }
 }

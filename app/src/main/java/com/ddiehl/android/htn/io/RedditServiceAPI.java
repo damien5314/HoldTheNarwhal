@@ -5,6 +5,7 @@
 package com.ddiehl.android.htn.io;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.ddiehl.android.htn.AccessTokenManager;
 import com.ddiehl.android.htn.BusProvider;
@@ -18,6 +19,7 @@ import com.ddiehl.android.htn.events.requests.LoadSubredditEvent;
 import com.ddiehl.android.htn.events.requests.LoadUserProfileEvent;
 import com.ddiehl.android.htn.events.requests.ReportEvent;
 import com.ddiehl.android.htn.events.requests.SaveEvent;
+import com.ddiehl.android.htn.events.requests.UpdateUserSettingsEvent;
 import com.ddiehl.android.htn.events.requests.VoteEvent;
 import com.ddiehl.android.htn.events.responses.HideSubmittedEvent;
 import com.ddiehl.android.htn.events.responses.LinkCommentsLoadedEvent;
@@ -26,6 +28,7 @@ import com.ddiehl.android.htn.events.responses.MoreChildrenLoadedEvent;
 import com.ddiehl.android.htn.events.responses.SaveSubmittedEvent;
 import com.ddiehl.android.htn.events.responses.UserIdentityRetrievedEvent;
 import com.ddiehl.android.htn.events.responses.UserSettingsRetrievedEvent;
+import com.ddiehl.android.htn.events.responses.UserSettingsUpdatedEvent;
 import com.ddiehl.android.htn.events.responses.VoteSubmittedEvent;
 import com.ddiehl.android.htn.utils.BaseUtils;
 import com.ddiehl.reddit.Hideable;
@@ -59,6 +62,7 @@ import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
 
 public class RedditServiceAPI implements RedditService {
+    private static final String TAG = RedditServiceAPI.class.getSimpleName();
 
     private Context mContext;
     private Bus mBus;
@@ -405,6 +409,27 @@ public class RedditServiceAPI implements RedditService {
                 BaseUtils.printResponse(error.getResponse());
                 mBus.post(error);
                 mBus.post(new UserSettingsRetrievedEvent(error));
+            }
+        });
+    }
+
+    @Override @Subscribe
+    public void onUpdateUserSettings(UpdateUserSettingsEvent event) {
+        String json = new GsonBuilder().create().toJson(event.getPrefs());
+        Log.d(TAG, "Generated JSON:\n" + json);
+
+        mAPI.updateUserSettings(json, new Callback<Response>() {
+            @Override
+            public void success(Response response, Response response2) {
+                BaseUtils.printResponseStatus(response);
+                mBus.post(new UserSettingsUpdatedEvent());
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                BaseUtils.printResponse(error.getResponse());
+                mBus.post(error);
+                mBus.post(new UserSettingsUpdatedEvent(error));
             }
         });
     }
