@@ -53,23 +53,23 @@ public class UserSettings {
     @Expose @SerializedName("threaded_messages") Boolean mThreadedMessages;
     @Expose @SerializedName("use_global_defaults") Boolean mUseGlobalDefaults;
 
-    public Boolean getBeta() {
+    public boolean getBeta() {
         return mBeta;
     }
 
-    public Boolean getClickgadget() {
+    public boolean getClickgadget() {
         return mClickgadget;
     }
 
-    public Boolean getCollapseReadMessages() {
+    public boolean getCollapseReadMessages() {
         return mCollapseReadMessages;
     }
 
-    public Boolean getCompress() {
+    public boolean getCompress() {
         return mCompress;
     }
 
-    public Boolean getCredditAutoRenew() {
+    public boolean getCredditAutoRenew() {
         return mCredditAutoRenew;
     }
 
@@ -77,51 +77,51 @@ public class UserSettings {
         return mDefaultCommentSort;
     }
 
-    public Boolean getDomainDetails() {
+    public boolean getDomainDetails() {
         return mDomainDetails;
     }
 
-    public Boolean getEmailMessages() {
+    public boolean getEmailMessages() {
         return mEmailMessages;
     }
 
-    public Boolean getEnableDefaultThemes() {
+    public boolean getEnableDefaultThemes() {
         return mEnableDefaultThemes;
     }
 
-    public Boolean getHideAds() {
+    public boolean getHideAds() {
         return mHideAds;
     }
 
-    public Boolean getHideDowns() {
+    public boolean getHideDowns() {
         return mHideDowns;
     }
 
-    public Boolean getHideFromRobots() {
+    public boolean getHideFromRobots() {
         return mHideFromRobots;
     }
 
-    public Boolean getHideLocationBar() {
+    public boolean getHideLocationBar() {
         return mHideLocationBar;
     }
 
-    public Boolean getHideUps() {
+    public boolean getHideUps() {
         return mHideUps;
     }
 
-    public Boolean getHighlightControversial() {
+    public boolean getHighlightControversial() {
         return mHighlightControversial;
     }
 
-    public Boolean getHighlightNewComments() {
+    public boolean getHighlightNewComments() {
         return mHighlightNewComments;
     }
 
-    public Boolean getIgnoreSuggestedSort() {
+    public boolean getIgnoreSuggestedSort() {
         return mIgnoreSuggestedSort;
     }
 
-    public Boolean getLabelNsfw() {
+    public boolean getLabelNsfw() {
         return mLabelNsfw;
     }
 
@@ -129,7 +129,7 @@ public class UserSettings {
         return mLang;
     }
 
-    public Boolean getMarkMessagesRead() {
+    public boolean getMarkMessagesRead() {
         return mMarkMessagesRead;
     }
 
@@ -145,15 +145,15 @@ public class UserSettings {
         return mMinLinkScore;
     }
 
-    public Boolean getMonitorMentions() {
+    public boolean getMonitorMentions() {
         return mMonitorMentions;
     }
 
-    public Boolean getNewWindow() {
+    public boolean getNewWindow() {
         return mNewWindow;
     }
 
-    public Boolean getNoProfanity() {
+    public boolean getNoProfanity() {
         return mNoProfanity;
     }
 
@@ -165,51 +165,51 @@ public class UserSettings {
         return mNumLinks;
     }
 
-    public Boolean getOrganic() {
+    public boolean getOrganic() {
         return mOrganic;
     }
 
-    public Boolean getOver18() {
+    public boolean getOver18() {
         return mOver18;
     }
 
-    public Boolean getPublicFeeds() {
-        return mPublicFeeds;
+    public boolean getPublicFeeds() {
+        return mPublicFeeds == null ? false : mPublicFeeds;
     }
 
-    public Boolean getPublicVotes() {
+    public boolean getPublicVotes() {
         return mPublicVotes;
     }
 
-    public Boolean getResearch() {
+    public boolean getResearch() {
         return mResearch;
     }
 
-    public Boolean getShowFlair() {
+    public boolean getShowFlair() {
         return mShowFlair;
     }
 
-    public Boolean getShowGoldExpiration() {
+    public boolean getShowGoldExpiration() {
         return mShowGoldExpiration;
     }
 
-    public Boolean getShowLinkFlair() {
+    public boolean getShowLinkFlair() {
         return mShowLinkFlair;
     }
 
-    public Boolean getShowPromote() {
-        return mShowPromote;
+    public boolean getShowPromote() {
+        return mShowPromote == null ? false : mShowPromote;
     }
 
-    public Boolean getShowStylesheets() {
+    public boolean getShowStylesheets() {
         return mShowStylesheets;
     }
 
-    public Boolean getShowTrending() {
+    public boolean getShowTrending() {
         return mShowTrending;
     }
 
-    public Boolean getStoreVisits() {
+    public boolean getStoreVisits() {
         return mStoreVisits;
     }
 
@@ -217,11 +217,11 @@ public class UserSettings {
         return mThemeSelector;
     }
 
-    public Boolean getThreadedMessages() {
+    public boolean getThreadedMessages() {
         return mThreadedMessages;
     }
 
-    public Boolean getUseGlobalDefaults() {
+    public boolean getUseGlobalDefaults() {
         return mUseGlobalDefaults;
     }
 }

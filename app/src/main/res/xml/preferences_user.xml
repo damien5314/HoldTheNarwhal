@@ -41,14 +41,6 @@
             android:entryValues="@array/pref_media_option_values"
             android:defaultValue="subreddit"/> <!-- show thumbnails next to links -->
 
-        <CheckBoxPreference
-            android:key="no_profanity"
-            android:title="@string/pref_no_profanity"
-            android:summary="@string/pref_no_profanity_summary"
-            android:defaultValue="true"
-            android:dependency="over_18"
-            android:disableDependentsState="true"/> <!-- make safe(r) for work -->
-
     </PreferenceCategory>
 
     <PreferenceCategory
@@ -85,13 +77,13 @@
             android:title="@string/pref_hide_downs"
             android:defaultValue="false"/>
 
-        <EditTextPreference
+        <com.ddiehl.android.htn.view.widgets.IntEditTextPreference
             android:key="numsites"
             android:title="@string/pref_numsites"
             android:summary="%s"
             android:defaultValue="25"/>
 
-        <EditTextPreference
+        <com.ddiehl.android.htn.view.widgets.IntEditTextPreference
             android:key="min_link_score"
             android:title="@string/pref_min_link_score"
             android:defaultValue="-4"/>
@@ -119,12 +111,12 @@
             android:title="@string/pref_highlight_controversial"
             android:defaultValue="false"/>
 
-        <EditTextPreference
+        <com.ddiehl.android.htn.view.widgets.IntEditTextPreference
             android:key="min_comment_score"
             android:title="@string/pref_min_comment_score"
             android:defaultValue="-4"/>
 
-        <EditTextPreference
+        <com.ddiehl.android.htn.view.widgets.IntEditTextPreference
             android:key="num_comments"
             android:title="@string/pref_num_comments"
             android:summary="%s"
@@ -184,6 +176,14 @@
             android:title="@string/pref_over_18"
             android:summary="@string/pref_over_18_summary"
             android:defaultValue="false"/>
+
+        <CheckBoxPreference
+            android:key="no_profanity"
+            android:title="@string/pref_no_profanity"
+            android:summary="@string/pref_no_profanity_summary"
+            android:defaultValue="true"
+            android:dependency="over_18"
+            android:disableDependentsState="true"/> <!-- make safe(r) for work -->
 
         <CheckBoxPreference
             android:key="label_nsfw"

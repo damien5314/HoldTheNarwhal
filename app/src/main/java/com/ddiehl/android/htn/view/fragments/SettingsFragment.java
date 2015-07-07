@@ -200,16 +200,19 @@ public class SettingsFragment extends PreferenceFragment
     @Override
     public void showSpinner(String msg) {
         ((MainView) getActivity()).showSpinner(msg);
+        getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
     }
 
     @Override
     public void showSpinner(int resId) {
         ((MainView) getActivity()).showSpinner(resId);
+        getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
     }
 
     @Override
     public void dismissSpinner() {
         ((MainView) getActivity()).dismissSpinner();
+        getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
     }
 
     @Override
