@@ -69,7 +69,7 @@
             android:summary="%s"
             android:defaultValue="25"/>
 
-        <com.ddiehl.android.htn.view.widgets.IntEditTextPreference
+        <EditTextPreference
             android:key="min_link_score"
             android:title="@string/pref_min_link_score"
             android:defaultValue="-4"/>
@@ -97,7 +97,7 @@
             android:title="@string/pref_highlight_controversial"
             android:defaultValue="false"/>
 
-        <com.ddiehl.android.htn.view.widgets.IntEditTextPreference
+        <EditTextPreference
             android:key="min_comment_score"
             android:title="@string/pref_min_comment_score"
             android:defaultValue="-4"/>

@@ -49,7 +49,7 @@ public class SettingsFragment extends PreferenceFragment
 
         getPreferenceManager().setSharedPreferencesName(SettingsManager.PREFS_USER);
 
-        addPreferencesFromResource(R.xml.preferences);
+        addPreferencesFromResource(R.xml.preferences_all);
         if (mSettingsRetrievedFromRemote) {
             addUserPreferences();
         }
@@ -137,7 +137,8 @@ public class SettingsFragment extends PreferenceFragment
         }
         if (p instanceof EditTextPreference) {
             EditTextPreference editTextPref = (EditTextPreference) p;
-            p.setSummary(editTextPref.getText());
+            String s = editTextPref.getText();
+            p.setSummary(s.equals("null") ? "" : s);
         }
     }
 
