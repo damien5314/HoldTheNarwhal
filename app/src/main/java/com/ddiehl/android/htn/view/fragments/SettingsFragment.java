@@ -192,8 +192,10 @@ public class SettingsFragment extends PreferenceFragment
             }
         }
 
-        // Post SettingsUpdate event with changed keys and values
-        mBus.post(new UpdateUserSettingsEvent(changedSettings));
+        if (changedSettings.size() > 0) {
+            // Post SettingsUpdate event with changed keys and values
+            mBus.post(new UpdateUserSettingsEvent(changedSettings));
+        }
 
         // Send Flurry event
         Map<String, String> params = new HashMap<>();
