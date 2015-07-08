@@ -53,6 +53,8 @@ public class BaseUtils {
                     return c.getString(R.string.error_500);
                 case 503:
                     return c.getString(R.string.error_503);
+                case 520:
+                    return c.getString(R.string.error_520);
                 default:
                     String errorMsg = c.getString(R.string.error_xxx);
                     return String.format(errorMsg, response.getStatus());
