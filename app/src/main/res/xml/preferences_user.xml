@@ -102,19 +102,19 @@
             android:defaultValue="false"/>
 
         <EditTextPreference
-            android:key="min_comment_score"
-            android:title="@string/pref_min_comment_score"
-            android:hint="@string/pref_min_comment_score_hint"
-            android:defaultValue="-4"
-            android:inputType="numberSigned"/>
-
-        <EditTextPreference
             android:key="num_comments"
             android:title="@string/pref_num_comments"
             android:hint="@string/pref_num_comments_hint"
             android:summary="%s"
             android:defaultValue="200"
             android:inputType="number"/>
+
+        <EditTextPreference
+            android:key="min_comment_score"
+            android:title="@string/pref_min_comment_score"
+            android:hint="@string/pref_min_comment_score_hint"
+            android:defaultValue="-4"
+            android:inputType="numberSigned"/>
 
     </PreferenceCategory>
 

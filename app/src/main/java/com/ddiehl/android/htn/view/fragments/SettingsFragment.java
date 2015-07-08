@@ -106,7 +106,7 @@ public class SettingsFragment extends PreferenceFragment
         addPreferencesFromResource(R.xml.preferences_user);
         UserIdentity user = mIdentityManager.getUserIdentity();
         if (user != null && user.isGold()) {
-            addPreferencesFromResource(R.xml.preferences_gold);
+            addPreferencesFromResource(R.xml.preferences_user_gold);
         }
     }
 
@@ -144,30 +144,24 @@ public class SettingsFragment extends PreferenceFragment
 
     private void updateAllPrefSummaries() {
         Preference root = getPreferenceScreen();
-        updateAllPrefSummaries(root);
+        updatePrefSummary(root);
     }
 
-    private void updateAllPrefSummaries(Preference root) {
-        if (root instanceof PreferenceGroup) {
-            PreferenceGroup pGrp = (PreferenceGroup) root;
+    private void updatePrefSummary(Preference p) {
+        if (p instanceof PreferenceGroup) {
+            PreferenceGroup pGrp = (PreferenceGroup) p;
             for (int i = 0; i < pGrp.getPreferenceCount(); i++) {
-                updateAllPrefSummaries(pGrp.getPreference(i));
+                updatePrefSummary(pGrp.getPreference(i));
             }
         } else {
-            updatePrefSummary(root);
-        }
-
-    }
-
-    public void updatePrefSummary(Preference p) {
-        if (p instanceof ListPreference) {
-            ListPreference listPref = (ListPreference) p;
-            p.setSummary(listPref.getEntry());
-        }
-        if (p instanceof EditTextPreference) {
-            EditTextPreference editTextPref = (EditTextPreference) p;
-            String s = editTextPref.getText();
-            p.setSummary(s.equals("null") ? "" : s);
+            if (p instanceof ListPreference) {
+                ListPreference listPref = (ListPreference) p;
+                p.setSummary(listPref.getEntry());
+            } else if (p instanceof EditTextPreference) {
+                EditTextPreference editTextPref = (EditTextPreference) p;
+                String s = editTextPref.getText();
+                p.setSummary(s.equals("null") ? "" : s);
+            }
         }
     }
 
