@@ -42,7 +42,6 @@ public class SettingsFragment extends PreferenceFragment
     private IdentityManager mIdentityManager;
     private SettingsManager mSettingsManager;
 
-//    private boolean mSettingsRetrievedFromRemote = false;
     private boolean mIsChanging = false;
 
     @Override
@@ -55,19 +54,18 @@ public class SettingsFragment extends PreferenceFragment
         getPreferenceManager().setSharedPreferencesName(SettingsManager.PREFS_USER);
 
         addPreferencesFromResource(R.xml.preferences_all);
-//        if (mSettingsRetrievedFromRemote) {
         if (mSettingsManager.hasFromRemote()) {
             addUserPreferences();
         }
     }
 
-    private void refresh() {
+    private void refresh(boolean pullFromServer) {
         getPreferenceScreen().removeAll();
         addPreferencesFromResource(R.xml.preferences_all);
         if (mSettingsManager.hasFromRemote()) {
             addUserPreferences();
         } else {
-            if (mIdentityManager.getUserIdentity() != null) {
+            if (pullFromServer) {
                 getData();
             }
         }
@@ -128,7 +126,6 @@ public class SettingsFragment extends PreferenceFragment
         UserSettings settings = event.getSettings();
         mSettingsManager.saveUserSettings(settings);
 
-//        mSettingsRetrievedFromRemote = true;
         addUserPreferences();
         updateAllPrefSummaries();
         dismissSpinner();
@@ -137,15 +134,12 @@ public class SettingsFragment extends PreferenceFragment
 
     @Subscribe
     public void onUserSignIn(UserAuthorizedEvent event) {
-        refresh();
+        refresh(true);
     }
 
     @Subscribe
     public void onUserSignOut(UserSignOutEvent event) {
-//        mSettingsRetrievedFromRemote = false;
-//        mIsChanging = true;
-        refresh();
-//        mIsChanging = false;
+        refresh(false);
     }
 
     private void updateAllPrefSummaries() {
