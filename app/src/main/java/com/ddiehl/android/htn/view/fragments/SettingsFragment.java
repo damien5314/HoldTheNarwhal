@@ -21,7 +21,7 @@ import com.ddiehl.android.htn.SettingsManager;
 import com.ddiehl.android.htn.events.requests.GetUserSettingsEvent;
 import com.ddiehl.android.htn.events.requests.UpdateUserSettingsEvent;
 import com.ddiehl.android.htn.events.requests.UserSignOutEvent;
-import com.ddiehl.android.htn.events.responses.UserAuthorizedEvent;
+import com.ddiehl.android.htn.events.responses.UserIdentityRetrievedEvent;
 import com.ddiehl.android.htn.events.responses.UserSettingsRetrievedEvent;
 import com.ddiehl.android.htn.view.BaseView;
 import com.ddiehl.android.htn.view.MainView;
@@ -52,37 +52,7 @@ public class SettingsFragment extends PreferenceFragment
         mSettingsManager = SettingsManager.getInstance(getActivity());
 
         getPreferenceManager().setSharedPreferencesName(SettingsManager.PREFS_USER);
-
-        addPreferencesFromResource(R.xml.preferences_all);
-        if (mSettingsManager.hasFromRemote()) {
-            addUserPreferences();
-        }
-    }
-
-    private void refresh(boolean pullFromServer) {
-        getPreferenceScreen().removeAll();
-        addPreferencesFromResource(R.xml.preferences_all);
-        if (mSettingsManager.hasFromRemote()) {
-            addUserPreferences();
-        } else {
-            if (pullFromServer) {
-                getData();
-            }
-        }
-    }
-
-    private void addUserPreferences() {
-        addPreferencesFromResource(R.xml.preferences_user);
-        UserIdentity user = mIdentityManager.getUserIdentity();
-        if (user.isGold()) {
-            addPreferencesFromResource(R.xml.preferences_gold);
-        }
-    }
-
-    private void getData() {
-        showSpinner(null);
-        getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
-        mBus.post(new GetUserSettingsEvent());
+        addPreferencesFromResource(R.xml.preferences_all); // Required for PreferenceScreen.getSharedPreferences() to not return null
     }
 
     @Override
@@ -90,7 +60,6 @@ public class SettingsFragment extends PreferenceFragment
         super.onStart();
         mBus.register(this);
         getActivity().setTitle(R.string.settings_fragment_title);
-        updateAllPrefSummaries();
     }
 
     @Override
@@ -98,8 +67,8 @@ public class SettingsFragment extends PreferenceFragment
         super.onResume();
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
 
-        if (!mSettingsManager.hasFromRemote() && mIdentityManager.getUserIdentity() != null) {
-            getData();
+        if (mIdentityManager.getUserIdentity() != null) {
+            refresh(true);
         }
     }
 
@@ -115,6 +84,32 @@ public class SettingsFragment extends PreferenceFragment
         super.onStop();
     }
 
+    private void refresh(boolean pullFromServer) {
+        getPreferenceScreen().removeAll();
+        addPreferencesFromResource(R.xml.preferences_all);
+        if (mSettingsManager.hasFromRemote()) {
+            addUserPreferences();
+        }
+        updateAllPrefSummaries();
+        if (pullFromServer) {
+            getData();
+        }
+    }
+
+    private void addUserPreferences() {
+        addPreferencesFromResource(R.xml.preferences_user);
+        UserIdentity user = mIdentityManager.getUserIdentity();
+        if (user != null && user.isGold()) {
+            addPreferencesFromResource(R.xml.preferences_gold);
+        }
+    }
+
+    private void getData() {
+        showSpinner(null);
+        getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
+        mBus.post(new GetUserSettingsEvent());
+    }
+
     @Subscribe
     public void onSettingsRetrieved(UserSettingsRetrievedEvent event) {
         if (event.isFailed()) {
@@ -126,14 +121,13 @@ public class SettingsFragment extends PreferenceFragment
         UserSettings settings = event.getSettings();
         mSettingsManager.saveUserSettings(settings);
 
-        addUserPreferences();
-        updateAllPrefSummaries();
+        refresh(false);
         dismissSpinner();
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
     }
 
     @Subscribe
-    public void onUserSignIn(UserAuthorizedEvent event) {
+    public void onUserIdentityRetrieved(UserIdentityRetrievedEvent event) {
         refresh(true);
     }
 
