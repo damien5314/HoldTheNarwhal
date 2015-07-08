@@ -63,11 +63,13 @@
             android:title="@string/pref_hide_downs"
             android:defaultValue="false"/>
 
-        <com.ddiehl.android.htn.view.widgets.IntEditTextPreference
+        <ListPreference
             android:key="numsites"
             android:title="@string/pref_numsites"
+            android:dialogTitle="@string/pref_numsites"
             android:summary="%s"
-            android:defaultValue="25"/>
+            android:entries="@array/pref_num_links_values"
+            android:entryValues="@array/pref_num_links_values"/>
 
         <EditTextPreference
             android:key="min_link_score"
@@ -102,7 +104,8 @@
             android:title="@string/pref_min_comment_score"
             android:defaultValue="-4"/>
 
-        <com.ddiehl.android.htn.view.widgets.IntEditTextPreference
+        <!--<com.ddiehl.android.htn.view.widgets.IntEditTextPreference-->
+        <EditTextPreference
             android:key="num_comments"
             android:title="@string/pref_num_comments"
             android:summary="%s"
