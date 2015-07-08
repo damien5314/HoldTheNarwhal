@@ -12,6 +12,9 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import com.ddiehl.android.htn.AccessTokenManager;
 import com.ddiehl.android.htn.BusProvider;
@@ -47,6 +50,8 @@ public class SettingsFragment extends PreferenceFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
+        setHasOptionsMenu(true);
         mAccessTokenManager = AccessTokenManager.getInstance(getActivity());
         mIdentityManager = IdentityManager.getInstance(getActivity());
         mSettingsManager = SettingsManager.getInstance(getActivity());
@@ -85,6 +90,7 @@ public class SettingsFragment extends PreferenceFragment
     }
 
     private void refresh(boolean pullFromServer) {
+        getActivity().invalidateOptionsMenu();
         getPreferenceScreen().removeAll();
         addPreferencesFromResource(R.xml.preferences_all);
         if (mSettingsManager.hasFromRemote()) {
@@ -228,6 +234,28 @@ public class SettingsFragment extends PreferenceFragment
         FlurryAgent.logEvent("setting changed", params);
 
         mIsChanging = false;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.settings_menu, menu);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        menu.findItem(R.id.action_refresh).setVisible(mSettingsManager.hasFromRemote());
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_refresh:
+                refresh(true);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
