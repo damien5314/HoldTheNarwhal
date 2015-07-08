@@ -5,6 +5,7 @@
 package com.ddiehl.android.htn.view.fragments;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.net.Uri;
@@ -356,7 +357,11 @@ public class LinkCommentsFragment extends AbsRedditFragment
 
     @Override
     public void showCommentsForLink(String subreddit, String linkId, String commentId) {
-        // Comments for link are already displayed in this view
+        Fragment f = LinkCommentsFragment.newInstance(subreddit, linkId, commentId);
+        getFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, f)
+                .addToBackStack(null)
+                .commit();
     }
 
     @Override

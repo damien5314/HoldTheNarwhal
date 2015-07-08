@@ -55,14 +55,14 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
     private SettingsManager mSettingsManager;
 
     private String mSubreddit;
-    private String mArticleId;
+    private String mLinkId;
     private String mCommentId;
     private String mSort; // Remove this and read from preferences when needed
 
     private Listing mListingSelected;
 
     public LinkCommentsPresenterImpl(Context context, LinkCommentsView view,
-                                     String subreddit, String articleId, String commentId) {
+                                     String subreddit, String linkId, String commentId) {
         mContext = context.getApplicationContext();
         mLinkCommentsView = view;
         mCommentBank = new CommentBankList();
@@ -71,7 +71,7 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
         mIdentityManager = IdentityManager.getInstance(mContext);
         mSettingsManager = SettingsManager.getInstance(mContext);
         mSubreddit = subreddit;
-        mArticleId = articleId;
+        mLinkId = linkId;
         mCommentId = commentId;
         mSort = mSettingsManager.getCommentSort();
     }
@@ -79,7 +79,7 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
     @Override
     public void getComments() {
         mLinkCommentsView.showSpinner(null);
-        mBus.post(new LoadLinkCommentsEvent(mSubreddit, mArticleId, mSort, mCommentId));
+        mBus.post(new LoadLinkCommentsEvent(mSubreddit, mLinkId, mSort, mCommentId));
     }
 
     @Subscribe
@@ -314,7 +314,8 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
         // so only set if it's not null
         mSubreddit = subreddit == null ? mSubreddit : subreddit;
         mCommentId = commentId.contains("_") ? commentId.substring(3) : commentId; // Remove type prefix
-        getComments();
+//        getComments();
+        mLinkCommentsView.showCommentsForLink(mSubreddit, mLinkId, mCommentId);
     }
 
     @Subscribe
