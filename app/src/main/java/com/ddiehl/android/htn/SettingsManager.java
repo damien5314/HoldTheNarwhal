@@ -17,6 +17,7 @@ public class SettingsManager {
     public static final String PREF_ENABLE_ADS = "pref_enable_ads";
 
     // reddit settings
+    public static final String PREF_FLAG_FOR_USER = "pref_flag_for_user";
     public static final String PREF_BETA = "beta";
     public static final String PREF_CLICKGAGDET = "clickgadget";
     public static final String PREF_COLLAPSE_READ_MESSAGES = "collapse_read_messages";
@@ -108,6 +109,7 @@ public class SettingsManager {
 
     public void saveUserSettings(UserSettings settings) {
         mContext.getSharedPreferences(PREFS_USER, Context.MODE_PRIVATE).edit()
+                .putBoolean(PREF_FLAG_FOR_USER, true)
                 .putBoolean(PREF_BETA, settings.getBeta())
                 .putBoolean(PREF_CLICKGAGDET, settings.getClickgadget())
                 .putBoolean(PREF_COLLAPSE_READ_MESSAGES, settings.getCollapseReadMessages())
@@ -158,6 +160,7 @@ public class SettingsManager {
 
     public void clearUserSettings() {
         mContext.getSharedPreferences(PREFS_USER, Context.MODE_PRIVATE).edit()
+                .remove(PREF_FLAG_FOR_USER)
                 .remove(PREF_BETA)
                 .remove(PREF_CLICKGAGDET)
                 .remove(PREF_COLLAPSE_READ_MESSAGES)
@@ -202,5 +205,10 @@ public class SettingsManager {
                 .remove(PREF_THREADED_MESSAGES)
                 .remove(PREF_USE_GLOBAL_DEFAULTS)
                 .apply();
+    }
+
+    public boolean hasFromRemote() {
+        SharedPreferences sp = mContext.getSharedPreferences(PREFS_USER, Context.MODE_PRIVATE);
+        return sp.getBoolean(PREF_FLAG_FOR_USER, false);
     }
 }

@@ -13,12 +13,15 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
 
+import com.ddiehl.android.htn.AccessTokenManager;
 import com.ddiehl.android.htn.BusProvider;
 import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.SettingsManager;
 import com.ddiehl.android.htn.events.requests.GetUserSettingsEvent;
 import com.ddiehl.android.htn.events.requests.UpdateUserSettingsEvent;
+import com.ddiehl.android.htn.events.requests.UserSignOutEvent;
+import com.ddiehl.android.htn.events.responses.UserAuthorizedEvent;
 import com.ddiehl.android.htn.events.responses.UserSettingsRetrievedEvent;
 import com.ddiehl.android.htn.view.BaseView;
 import com.ddiehl.android.htn.view.MainView;
@@ -35,23 +38,38 @@ public class SettingsFragment extends PreferenceFragment
         implements BaseView, SharedPreferences.OnSharedPreferenceChangeListener {
 
     private Bus mBus = BusProvider.getInstance();
+    private AccessTokenManager mAccessTokenManager;
     private IdentityManager mIdentityManager;
     private SettingsManager mSettingsManager;
-    private boolean mSettingsRetrievedFromRemote = false;
 
-    private boolean isChanging = false;
+//    private boolean mSettingsRetrievedFromRemote = false;
+    private boolean mIsChanging = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mAccessTokenManager = AccessTokenManager.getInstance(getActivity());
         mIdentityManager = IdentityManager.getInstance(getActivity());
         mSettingsManager = SettingsManager.getInstance(getActivity());
 
         getPreferenceManager().setSharedPreferencesName(SettingsManager.PREFS_USER);
 
         addPreferencesFromResource(R.xml.preferences_all);
-        if (mSettingsRetrievedFromRemote) {
+//        if (mSettingsRetrievedFromRemote) {
+        if (mSettingsManager.hasFromRemote()) {
             addUserPreferences();
+        }
+    }
+
+    private void refresh() {
+        getPreferenceScreen().removeAll();
+        addPreferencesFromResource(R.xml.preferences_all);
+        if (mSettingsManager.hasFromRemote()) {
+            addUserPreferences();
+        } else {
+            if (mIdentityManager.getUserIdentity() != null) {
+                getData();
+            }
         }
     }
 
@@ -63,12 +81,18 @@ public class SettingsFragment extends PreferenceFragment
         }
     }
 
+    private void getData() {
+        showSpinner(null);
+        getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
+        mBus.post(new GetUserSettingsEvent());
+    }
+
     @Override
     public void onStart() {
         super.onStart();
         mBus.register(this);
         getActivity().setTitle(R.string.settings_fragment_title);
-        updateAllPrefs();
+        updateAllPrefSummaries();
     }
 
     @Override
@@ -76,10 +100,8 @@ public class SettingsFragment extends PreferenceFragment
         super.onResume();
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
 
-        if (!mSettingsRetrievedFromRemote && mIdentityManager.getUserIdentity() != null) {
-            showSpinner(null);
-            getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
-            mBus.post(new GetUserSettingsEvent());
+        if (!mSettingsManager.hasFromRemote() && mIdentityManager.getUserIdentity() != null) {
+            getData();
         }
     }
 
@@ -106,31 +128,44 @@ public class SettingsFragment extends PreferenceFragment
         UserSettings settings = event.getSettings();
         mSettingsManager.saveUserSettings(settings);
 
-        mSettingsRetrievedFromRemote = true;
+//        mSettingsRetrievedFromRemote = true;
         addUserPreferences();
-        updateAllPrefs();
+        updateAllPrefSummaries();
         dismissSpinner();
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
     }
 
-    public void updateAllPrefs() {
-        Preference root = getPreferenceScreen();
-        updateAllPrefs(root);
+    @Subscribe
+    public void onUserSignIn(UserAuthorizedEvent event) {
+        refresh();
     }
 
-    private void updateAllPrefs(Preference root) {
+    @Subscribe
+    public void onUserSignOut(UserSignOutEvent event) {
+//        mSettingsRetrievedFromRemote = false;
+//        mIsChanging = true;
+        refresh();
+//        mIsChanging = false;
+    }
+
+    private void updateAllPrefSummaries() {
+        Preference root = getPreferenceScreen();
+        updateAllPrefSummaries(root);
+    }
+
+    private void updateAllPrefSummaries(Preference root) {
         if (root instanceof PreferenceGroup) {
             PreferenceGroup pGrp = (PreferenceGroup) root;
             for (int i = 0; i < pGrp.getPreferenceCount(); i++) {
-                updateAllPrefs(pGrp.getPreference(i));
+                updateAllPrefSummaries(pGrp.getPreference(i));
             }
         } else {
-            updatePref(root);
+            updatePrefSummary(root);
         }
 
     }
 
-    public void updatePref(Preference p) {
+    public void updatePrefSummary(Preference p) {
         if (p instanceof ListPreference) {
             ListPreference listPref = (ListPreference) p;
             p.setSummary(listPref.getEntry());
@@ -144,11 +179,11 @@ public class SettingsFragment extends PreferenceFragment
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sp, String key) {
-        updatePref(findPreference(key));
+        updatePrefSummary(findPreference(key));
 
-        if (isChanging)
+        if (mIsChanging || mIdentityManager.getUserIdentity() == null)
             return;
-        isChanging = true;
+        mIsChanging = true;
 
         Map<String, String> changedSettings = new HashMap<>(); // Track changed keys and values
 
@@ -204,7 +239,7 @@ public class SettingsFragment extends PreferenceFragment
         params.put("value", String.valueOf(prefs.get(key)));
         FlurryAgent.logEvent("setting changed", params);
 
-        isChanging = false;
+        mIsChanging = false;
     }
 
     @Override
