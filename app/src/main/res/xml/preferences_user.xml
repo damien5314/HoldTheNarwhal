@@ -74,7 +74,8 @@
         <EditTextPreference
             android:key="min_link_score"
             android:title="@string/pref_min_link_score"
-            android:defaultValue="-4"/>
+            android:defaultValue="-4"
+            android:inputType="numberSigned"/>
 
     </PreferenceCategory>
 
@@ -102,7 +103,8 @@
         <EditTextPreference
             android:key="min_comment_score"
             android:title="@string/pref_min_comment_score"
-            android:defaultValue="-4"/>
+            android:defaultValue="-4"
+            android:inputType="numberSigned"/>
 
         <!--<com.ddiehl.android.htn.view.widgets.IntEditTextPreference-->
         <EditTextPreference
