@@ -53,17 +53,6 @@ public class SettingsFragment extends PreferenceFragment
 
         getPreferenceManager().setSharedPreferencesName(SettingsManager.PREFS_USER);
         addPreferencesFromResource(R.xml.preferences_all); // Required for getSharedPreferences()
-
-//        ((EditTextPreference) findPreference(SettingsManager.PREF_MIN_LINK_SCORE)).getEditText()
-//                .addTextChangedListener(new TextWatcher() {
-//            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
-//            @Override public void onTextChanged(CharSequence s, int start, int before, int count) { }
-//
-//            @Override
-//            public void afterTextChanged(Editable s) {
-//
-//            }
-//        });
     }
 
     @Override

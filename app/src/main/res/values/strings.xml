@@ -167,10 +167,13 @@
     <string name="pref_hide_downs">hide submissions after downvoting</string>
     <string name="pref_numsites">number of links to show</string>
     <string name="pref_min_link_score">minimum score to display</string>
+    <string name="pref_min_link_score_hint">leave blank to show all</string>
     <string name="pref_ignore_suggested_sort">ignore suggested sorts</string>
     <string name="pref_highlight_controversial">label controversial comments (†)</string>
     <string name="pref_min_comment_score">minimum score to display</string>
+    <string name="pref_min_comment_score_hint">@string/pref_min_link_score_hint</string>
     <string name="pref_num_comments">number of comments to show</string>
+    <string name="pref_num_comments_hint">(1 - 500)</string>
     <string name="pref_threaded_messages">show message conversations</string>
     <string name="pref_collapse_read_messages">collapse messages after reading</string>
     <string name="pref_mark_messages_read">mark messages read when opening inbox</string>
