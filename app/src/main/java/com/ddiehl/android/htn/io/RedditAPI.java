@@ -47,7 +47,7 @@ public interface RedditAPI {
                      Callback<List<ListingResponse>> callback);
 
     /** https://snap.apigee.com/1cqZR33 */
-    @POST("/api/morechildren?api_type=json")
+    @GET("/api/morechildren?api_type=json")
     void getMoreChildren(@Query("link_id") String linkId,
                          @Query("children") String children,
                          @Query("sort") String sort,
