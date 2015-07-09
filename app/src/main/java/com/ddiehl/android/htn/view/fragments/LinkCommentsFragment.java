@@ -28,7 +28,6 @@ import com.ddiehl.android.htn.presenter.LinkCommentsPresenter;
 import com.ddiehl.android.htn.presenter.LinkCommentsPresenterImpl;
 import com.ddiehl.android.htn.view.LinkCommentsView;
 import com.ddiehl.android.htn.view.MainView;
-import com.ddiehl.android.htn.view.SettingsChangedListener;
 import com.ddiehl.android.htn.view.activities.MainActivity;
 import com.ddiehl.android.htn.view.adapters.LinkCommentsAdapter;
 import com.ddiehl.android.htn.view.dialogs.ChooseCommentSortDialog;
@@ -40,7 +39,7 @@ import com.squareup.otto.Bus;
 import butterknife.ButterKnife;
 
 public class LinkCommentsFragment extends AbsRedditFragment
-        implements LinkCommentsView, SettingsChangedListener {
+        implements LinkCommentsView {
 
     private static final String ARG_SUBREDDIT = "subreddit";
     private static final String ARG_ARTICLE = "article";
@@ -369,10 +368,5 @@ public class LinkCommentsFragment extends AbsRedditFragment
     @Override
     public void openReplyView(Comment comment) {
         showToast(R.string.implementation_pending);
-    }
-
-    @Override
-    public void onSettingsChanged() {
-        mLinkCommentsPresenter.updateSort();
     }
 }

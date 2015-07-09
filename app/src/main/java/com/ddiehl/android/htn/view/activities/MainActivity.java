@@ -42,7 +42,6 @@ import com.ddiehl.android.htn.presenter.MainPresenter;
 import com.ddiehl.android.htn.presenter.MainPresenterImpl;
 import com.ddiehl.android.htn.utils.BaseUtils;
 import com.ddiehl.android.htn.view.MainView;
-import com.ddiehl.android.htn.view.SettingsChangedListener;
 import com.ddiehl.android.htn.view.dialogs.ConfirmSignOutDialog;
 import com.ddiehl.android.htn.view.fragments.SettingsFragment;
 import com.ddiehl.android.htn.view.fragments.SubredditFragment;
@@ -425,11 +424,4 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    private void updateSettingsListener() {
-        Fragment f = getFragmentManager().findFragmentById(R.id.fragment_container);
-        if (f instanceof SettingsChangedListener) {
-            SettingsChangedListener l = (SettingsChangedListener) f;
-            l.onSettingsChanged();
-        }
-    }
 }

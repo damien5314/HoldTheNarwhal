@@ -26,7 +26,6 @@ import com.ddiehl.android.htn.presenter.ListingsPresenter;
 import com.ddiehl.android.htn.utils.NUtils;
 import com.ddiehl.android.htn.view.ListingsView;
 import com.ddiehl.android.htn.view.MainView;
-import com.ddiehl.android.htn.view.SettingsChangedListener;
 import com.ddiehl.android.htn.view.activities.MainActivity;
 import com.ddiehl.android.htn.view.adapters.ListingsAdapter;
 import com.ddiehl.android.htn.view.dialogs.ChooseLinkSortDialog;
@@ -48,7 +47,7 @@ import java.util.Map;
 import butterknife.ButterKnife;
 
 public abstract class AbsListingsFragment extends AbsRedditFragment
-        implements ListingsView, SettingsChangedListener {
+        implements ListingsView {
     private static final String TAG = AbsListingsFragment.class.getSimpleName();
 
     private static final int REQUEST_CHOOSE_SORT = 0;
@@ -428,10 +427,5 @@ public abstract class AbsListingsFragment extends AbsRedditFragment
     @Override
     public void listingRemovedAt(int position) {
         mListingsAdapter.notifyItemRemoved(position);
-    }
-
-    @Override
-    public void onSettingsChanged() {
-//        mListingsPresenter.refreshData();
     }
 }
