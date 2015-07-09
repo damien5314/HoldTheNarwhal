@@ -24,7 +24,6 @@ import com.ddiehl.android.htn.SettingsManager;
 import com.ddiehl.android.htn.events.requests.GetUserSettingsEvent;
 import com.ddiehl.android.htn.events.requests.UpdateUserSettingsEvent;
 import com.ddiehl.android.htn.events.requests.UserSignOutEvent;
-import com.ddiehl.android.htn.events.responses.UserIdentityRetrievedEvent;
 import com.ddiehl.android.htn.events.responses.UserSettingsRetrievedEvent;
 import com.ddiehl.android.htn.view.BaseView;
 import com.ddiehl.android.htn.view.MainView;
@@ -112,7 +111,6 @@ public class SettingsFragment extends PreferenceFragment
 
     private void getData() {
         showSpinner(null);
-        getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
         mBus.post(new GetUserSettingsEvent());
     }
 
@@ -120,21 +118,16 @@ public class SettingsFragment extends PreferenceFragment
     public void onSettingsRetrieved(UserSettingsRetrievedEvent event) {
         if (event.isFailed()) {
             dismissSpinner();
-            getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
             return;
         }
 
         UserSettings settings = event.getSettings();
+        getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
         mSettingsManager.saveUserSettings(settings);
+        getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
 
         refresh(false);
         dismissSpinner();
-        getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
-    }
-
-    @Subscribe
-    public void onUserIdentityRetrieved(UserIdentityRetrievedEvent event) {
-        refresh(true);
     }
 
     @Subscribe

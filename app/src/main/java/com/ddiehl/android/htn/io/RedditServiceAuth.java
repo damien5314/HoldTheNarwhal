@@ -263,6 +263,7 @@ public class RedditServiceAuth implements RedditService {
 
 //        Toast.makeText(mContext, R.string.user_authorization_refreshed, Toast.LENGTH_SHORT).show();
         mAccessTokenManager.saveUserAccessTokenResponse(event.getResponse());
+        mBus.post(new GetUserIdentityEvent()); // Refresh user identity in case it's out of date
         if (mQueuedEvent != null) {
             Object e = mQueuedEvent;
             mQueuedEvent = null;

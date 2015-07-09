@@ -5,11 +5,11 @@
 package com.ddiehl.android.htn.io;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.ddiehl.android.htn.AccessTokenManager;
 import com.ddiehl.android.htn.BusProvider;
 import com.ddiehl.android.htn.IdentityManager;
+import com.ddiehl.android.htn.SettingsManager;
 import com.ddiehl.android.htn.events.requests.GetUserIdentityEvent;
 import com.ddiehl.android.htn.events.requests.GetUserSettingsEvent;
 import com.ddiehl.android.htn.events.requests.HideEvent;
@@ -70,14 +70,16 @@ public class RedditServiceAPI implements RedditService {
     private RedditAPI mAPI;
     private AccessTokenManager mAccessTokenManager;
     private IdentityManager mIdentityManager;
+    private SettingsManager mSettingsManager;
 
-    RedditServiceAPI(Context context) {
-        mContext = context.getApplicationContext();
+    RedditServiceAPI(Context c) {
+        mContext = c.getApplicationContext();
         mBus = BusProvider.getInstance();
         mBus.register(this);
         mAPI = buildApi();
         mAccessTokenManager = AccessTokenManager.getInstance(mContext);
         mIdentityManager = IdentityManager.getInstance(mContext);
+        mSettingsManager = SettingsManager.getInstance(mContext);
     }
 
     private RedditAPI buildApi() {
@@ -141,6 +143,7 @@ public class RedditServiceAPI implements RedditService {
 
         UserIdentity id = event.getUserIdentity();
         mIdentityManager.saveUserIdentity(id);
+        mBus.post(new GetUserSettingsEvent());
     }
 
     /**
@@ -418,8 +421,6 @@ public class RedditServiceAPI implements RedditService {
     @Override
     public void onUpdateUserSettings(UpdateUserSettingsEvent event) {
         String json = new GsonBuilder().create().toJson(event.getPrefs());
-        Log.d(TAG, "Generated JSON:\n" + json);
-
         mAPI.updateUserSettings(new TypedString(json), new Callback<Response>() {
             @Override
             public void success(Response response, Response response2) {
