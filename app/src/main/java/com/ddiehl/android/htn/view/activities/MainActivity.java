@@ -9,9 +9,13 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
+import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -25,10 +29,14 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.ddiehl.android.htn.AccessTokenManager;
 import com.ddiehl.android.htn.BusProvider;
-import com.ddiehl.android.htn.HoldTheNarwhal;
+import com.ddiehl.android.htn.HTNAnalytics;
+import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
+import com.ddiehl.android.htn.SettingsManager;
 import com.ddiehl.android.htn.events.responses.UserAuthCodeReceivedEvent;
+import com.ddiehl.android.htn.io.RedditService;
 import com.ddiehl.android.htn.io.RedditServiceAuth;
 import com.ddiehl.android.htn.presenter.MainPresenter;
 import com.ddiehl.android.htn.presenter.MainPresenterImpl;
@@ -42,6 +50,8 @@ import com.ddiehl.android.htn.view.fragments.UserProfileFragment;
 import com.ddiehl.android.htn.view.fragments.WebViewFragment;
 import com.ddiehl.reddit.identity.UserIdentity;
 import com.flurry.android.FlurryAgent;
+import com.mopub.common.MoPub;
+import com.mopub.mobileads.MoPubConversionTracker;
 import com.squareup.otto.Bus;
 
 import butterknife.Bind;
@@ -69,37 +79,115 @@ public class MainActivity extends AppCompatActivity
     @Bind(R.id.account_name) TextView mAccountNameView;
     @Bind(R.id.sign_out_button) View mSignOutView;
 
+    private boolean mIsInitialized = false;
+
     @Override @DebugLog
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        init.execute();
+    }
 
-        mMainPresenter = new MainPresenterImpl(this, this);
+    private AsyncTask<Void, Void, Void> init = new AsyncTask<Void, Void, Void>() {
+        AccessTokenManager atm;
+        IdentityManager identityManager;
+        SettingsManager settingsManager;
+        RedditService authProxy;
+        HTNAnalytics analytics;
 
-        ButterKnife.bind(this);
-        mNavigationView.setNavigationItemSelectedListener(this);
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
 
-        // Initialize app toolbar
-        Toolbar toolbar = ButterKnife.findById(this, R.id.toolbar);
-        setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setHomeAsUpIndicator(R.drawable.ic_navigation_menu);
-            actionBar.setDisplayHomeAsUpEnabled(true);
+            ButterKnife.bind(MainActivity.this);
+            mNavigationView.setNavigationItemSelectedListener(MainActivity.this);
+
+            // Initialize app toolbar
+            Toolbar toolbar = ButterKnife.findById(MainActivity.this, R.id.toolbar);
+            setSupportActionBar(toolbar);
+            ActionBar actionBar = getSupportActionBar();
+            if (actionBar != null) {
+                actionBar.setHomeAsUpIndicator(R.drawable.ic_navigation_menu);
+                actionBar.setDisplayHomeAsUpEnabled(true);
+            }
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            mMainPresenter = new MainPresenterImpl(MainActivity.this, MainActivity.this);
+            atm = AccessTokenManager.getInstance(MainActivity.this);
+            identityManager = IdentityManager.getInstance(MainActivity.this);
+            settingsManager = SettingsManager.getInstance(MainActivity.this);
+            authProxy = RedditServiceAuth.getInstance(MainActivity.this);
+            analytics = HTNAnalytics.getInstance();
+            analytics.init(MainActivity.this);
+
+            // MoPub configuration
+            new MoPubConversionTracker().reportAppOpen(MainActivity.this);
+            MoPub.setLocationAwareness(MoPub.LocationAwareness.DISABLED);
+
+            setMirroredIcons();
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+
+            mBus.register(atm);
+            mBus.register(identityManager);
+            mBus.register(settingsManager);
+            mBus.register(authProxy);
+            mBus.register(analytics);
+
+            mIsInitialized = true;
+            onAppInitialized();
+        }
+    };
+
+    private void setMirroredIcons() {
+        if (Build.VERSION.SDK_INT >= 19) {
+            int[] ids = new int[] {
+                    R.drawable.ic_action_refresh,
+                    R.drawable.ic_sign_out,
+                    R.drawable.ic_action_reply,
+                    R.drawable.ic_action_save,
+                    R.drawable.ic_action_share,
+                    R.drawable.ic_action_show_comments,
+                    R.drawable.ic_change_sort,
+                    R.drawable.ic_change_timespan,
+                    R.drawable.ic_navigation_go,
+                    R.drawable.ic_saved,
+                    R.drawable.ic_saved_dark
+            };
+
+            for (int id : ids) {
+                Drawable res = ContextCompat.getDrawable(this, id);
+                if (res != null) {
+                    res.setAutoMirrored(true);
+                }
+            }
         }
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        mBus.register(mMainPresenter);
-        FlurryAgent.onStartSession(this);
 
-        if (!HoldTheNarwhal.isInitialized) {
+        if (!mIsInitialized) {
             showSpinner(R.string.application_loading);
         } else {
-            mMainPresenter.onAppInitialized(null);
+            onAppInitialized();
         }
+    }
+
+    private void onAppInitialized() {
+        mBus.register(mMainPresenter);
+        FlurryAgent.onStartSession(this);
+        dismissSpinner();
+        updateUserIdentity();
+        showSubreddit(null);
     }
 
     @Override
