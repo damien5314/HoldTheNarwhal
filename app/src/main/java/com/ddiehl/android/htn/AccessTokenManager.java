@@ -52,7 +52,7 @@ public class AccessTokenManager {
         return hasUserAccessToken();
     }
 
-    private boolean hasUserAccessToken() {
+    public boolean hasUserAccessToken() {
         return getUserAccessToken() != null;
     }
 

@@ -7,7 +7,9 @@ package com.ddiehl.android.htn;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.ddiehl.android.htn.events.responses.UserSettingsRetrievedEvent;
 import com.ddiehl.reddit.identity.UserSettings;
+import com.squareup.otto.Subscribe;
 
 public class SettingsManager {
 
@@ -96,15 +98,15 @@ public class SettingsManager {
         return sp.getBoolean(PREF_ENABLE_ADS, false);
     }
 
-    public static SettingsManager getInstance(Context c) {
-        if (_instance == null) {
-            synchronized (SettingsManager.class) {
-                if (_instance == null) {
-                    _instance = new SettingsManager(c);
-                }
-            }
-        }
-        return _instance;
+    public boolean hasFromRemote() {
+        SharedPreferences sp = mContext.getSharedPreferences(PREFS_USER, Context.MODE_PRIVATE);
+        return sp.getBoolean(PREF_FLAG_FOR_USER, false);
+    }
+
+    @Subscribe
+    public void onUserSettingsRetrieved(UserSettingsRetrievedEvent event) {
+        UserSettings settings = event.getSettings();
+        saveUserSettings(settings);
     }
 
     public void saveUserSettings(UserSettings settings) {
@@ -207,8 +209,14 @@ public class SettingsManager {
                 .apply();
     }
 
-    public boolean hasFromRemote() {
-        SharedPreferences sp = mContext.getSharedPreferences(PREFS_USER, Context.MODE_PRIVATE);
-        return sp.getBoolean(PREF_FLAG_FOR_USER, false);
+    public static SettingsManager getInstance(Context c) {
+        if (_instance == null) {
+            synchronized (SettingsManager.class) {
+                if (_instance == null) {
+                    _instance = new SettingsManager(c);
+                }
+            }
+        }
+        return _instance;
     }
 }

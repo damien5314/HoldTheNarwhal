@@ -41,7 +41,7 @@ public class SettingsFragment extends PreferenceFragment
 
     private Bus mBus = BusProvider.getInstance();
     private AccessTokenManager mAccessTokenManager;
-    private IdentityManager mIdentityManager;
+//    private IdentityManager mIdentityManager;
     private SettingsManager mSettingsManager;
 
     private boolean mIsChanging = false;
@@ -52,7 +52,7 @@ public class SettingsFragment extends PreferenceFragment
         setRetainInstance(true);
         setHasOptionsMenu(true);
         mAccessTokenManager = AccessTokenManager.getInstance(getActivity());
-        mIdentityManager = IdentityManager.getInstance(getActivity());
+//        mIdentityManager = IdentityManager.getInstance(getActivity());
         mSettingsManager = SettingsManager.getInstance(getActivity());
 
         getPreferenceManager().setSharedPreferencesName(SettingsManager.PREFS_USER);
@@ -63,6 +63,7 @@ public class SettingsFragment extends PreferenceFragment
     public void onStart() {
         super.onStart();
         mBus.register(this);
+        mBus.unregister(mSettingsManager);
         getActivity().setTitle(R.string.settings_fragment_title);
     }
 
@@ -71,7 +72,7 @@ public class SettingsFragment extends PreferenceFragment
         super.onResume();
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
 
-        if (mIdentityManager.getUserIdentity() != null) {
+        if (mAccessTokenManager.hasUserAccessToken()) {
             refresh(true);
         }
     }
@@ -84,6 +85,7 @@ public class SettingsFragment extends PreferenceFragment
 
     @Override
     public void onStop() {
+        mBus.register(mSettingsManager);
         mBus.unregister(this);
         super.onStop();
     }
@@ -103,7 +105,7 @@ public class SettingsFragment extends PreferenceFragment
 
     private void addUserPreferences() {
         addPreferencesFromResource(R.xml.preferences_user);
-        UserIdentity user = mIdentityManager.getUserIdentity();
+        UserIdentity user = IdentityManager.getInstance(getActivity()).getUserIdentity();
         if (user != null && user.isGold()) {
             addPreferencesFromResource(R.xml.preferences_user_gold);
         }
@@ -162,7 +164,7 @@ public class SettingsFragment extends PreferenceFragment
     public void onSharedPreferenceChanged(SharedPreferences sp, String key) {
         updatePrefSummary(findPreference(key));
 
-        if (mIsChanging || mIdentityManager.getUserIdentity() == null)
+        if (mIsChanging || !mAccessTokenManager.hasUserAccessToken())
             return;
         mIsChanging = true;
 

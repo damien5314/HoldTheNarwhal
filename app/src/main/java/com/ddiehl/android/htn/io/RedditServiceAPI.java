@@ -132,6 +132,43 @@ public class RedditServiceAPI implements RedditService {
         });
     }
 
+    @Override
+    public void onGetUserSettings(GetUserSettingsEvent event) {
+        mAPI.getUserSettings(new Callback<UserSettings>() {
+            @Override
+            public void success(UserSettings settings, Response response) {
+                BaseUtils.printResponseStatus(response);
+                mBus.post(new UserSettingsRetrievedEvent(settings));
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                BaseUtils.printResponse(error.getResponse());
+                mBus.post(error);
+                mBus.post(new UserSettingsRetrievedEvent(error));
+            }
+        });
+    }
+
+    @Override
+    public void onUpdateUserSettings(UpdateUserSettingsEvent event) {
+        String json = new GsonBuilder().create().toJson(event.getPrefs());
+        mAPI.updateUserSettings(new TypedString(json), new Callback<Response>() {
+            @Override
+            public void success(Response response, Response response2) {
+                BaseUtils.printResponseStatus(response);
+                mBus.post(new UserSettingsUpdatedEvent());
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                BaseUtils.printResponse(error.getResponse());
+                mBus.post(error);
+                mBus.post(new UserSettingsUpdatedEvent(error));
+            }
+        });
+    }
+
     /**
      * Retrieves link listings for subreddit
      */
@@ -384,42 +421,5 @@ public class RedditServiceAPI implements RedditService {
     @Override
     public void onReport(final ReportEvent event) {
 
-    }
-
-    @Override
-    public void onGetUserSettings(GetUserSettingsEvent event) {
-        mAPI.getUserSettings(new Callback<UserSettings>() {
-            @Override
-            public void success(UserSettings settings, Response response) {
-                BaseUtils.printResponseStatus(response);
-                mBus.post(new UserSettingsRetrievedEvent(settings));
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                BaseUtils.printResponse(error.getResponse());
-                mBus.post(error);
-                mBus.post(new UserSettingsRetrievedEvent(error));
-            }
-        });
-    }
-
-    @Override
-    public void onUpdateUserSettings(UpdateUserSettingsEvent event) {
-        String json = new GsonBuilder().create().toJson(event.getPrefs());
-        mAPI.updateUserSettings(new TypedString(json), new Callback<Response>() {
-            @Override
-            public void success(Response response, Response response2) {
-                BaseUtils.printResponseStatus(response);
-                mBus.post(new UserSettingsUpdatedEvent());
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                BaseUtils.printResponse(error.getResponse());
-                mBus.post(error);
-                mBus.post(new UserSettingsUpdatedEvent(error));
-            }
-        });
     }
 }

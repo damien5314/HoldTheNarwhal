@@ -7,9 +7,11 @@ package com.ddiehl.android.htn;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.ddiehl.android.htn.events.responses.UserIdentityRetrievedEvent;
 import com.ddiehl.android.htn.events.responses.UserIdentitySavedEvent;
 import com.ddiehl.reddit.identity.UserIdentity;
 import com.squareup.otto.Bus;
+import com.squareup.otto.Subscribe;
 
 import java.util.Date;
 
@@ -38,13 +40,11 @@ public class IdentityManager {
 
     private Bus mBus;
     private Context mContext;
-    private SettingsManager mSettingsManager;
     private UserIdentity mUserIdentity;
 
     private IdentityManager(Context c) {
         mBus = BusProvider.getInstance();
         mContext = c.getApplicationContext();
-        mSettingsManager = SettingsManager.getInstance(c);
         mUserIdentity = getSavedUserIdentity();
     }
 
@@ -80,6 +80,12 @@ public class IdentityManager {
         }
 
         return null;
+    }
+
+    @Subscribe
+    public void onUserIdentityRetrieved(UserIdentityRetrievedEvent event) {
+        UserIdentity id = event.getUserIdentity();
+        saveUserIdentity(id);
     }
 
     public void saveUserIdentity(UserIdentity identity) {
@@ -127,7 +133,7 @@ public class IdentityManager {
         mUserIdentity = null;
         mContext.getSharedPreferences(PREFS_USER_IDENTITY, Context.MODE_PRIVATE)
                 .edit().clear().apply();
-        mSettingsManager.clearUserSettings();
+        SettingsManager.getInstance(mContext).clearUserSettings();
     }
 
     public static IdentityManager getInstance(Context context) {
