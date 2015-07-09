@@ -1,3 +1,7 @@
+<!--
+  ~ Copyright (c) 2015 Damien Diehl. All rights reserved.
+  -->
+
 <resources>
 
     <!-- Base application theme. -->
@@ -14,7 +18,7 @@
         <item name="android:windowActionModeOverlay">true</item>
     </style>
 
-    <style name="ToolbarThemeLightText" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="ToolbarThemeLightText" parent="AppTheme">
         <item name="android:textColorPrimary">@color/icons</item>
         <item name="actionMenuTextColor">@color/icons</item>
         <item name="android:textColorSecondary">@color/icons</item>

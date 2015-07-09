@@ -8,8 +8,6 @@ import android.content.Context;
 
 import com.ddiehl.android.htn.AccessTokenManager;
 import com.ddiehl.android.htn.BusProvider;
-import com.ddiehl.android.htn.IdentityManager;
-import com.ddiehl.android.htn.SettingsManager;
 import com.ddiehl.android.htn.events.requests.GetUserIdentityEvent;
 import com.ddiehl.android.htn.events.requests.GetUserSettingsEvent;
 import com.ddiehl.android.htn.events.requests.HideEvent;
@@ -68,15 +66,11 @@ public class RedditServiceAPI implements RedditService {
     private Bus mBus = BusProvider.getInstance();
     private RedditAPI mAPI;
     private AccessTokenManager mAccessTokenManager;
-    private IdentityManager mIdentityManager;
-    private SettingsManager mSettingsManager;
 
     RedditServiceAPI(Context c) {
         mContext = c.getApplicationContext();
         mAPI = buildApi();
         mAccessTokenManager = AccessTokenManager.getInstance(mContext);
-        mIdentityManager = IdentityManager.getInstance(mContext);
-        mSettingsManager = SettingsManager.getInstance(mContext);
     }
 
     private RedditAPI buildApi() {

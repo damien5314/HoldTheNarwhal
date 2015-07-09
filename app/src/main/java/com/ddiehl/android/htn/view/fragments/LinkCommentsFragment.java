@@ -23,6 +23,7 @@ import android.view.ViewGroup;
 
 import com.ddiehl.android.htn.BusProvider;
 import com.ddiehl.android.htn.R;
+import com.ddiehl.android.htn.SettingsManager;
 import com.ddiehl.android.htn.presenter.LinkCommentsPresenter;
 import com.ddiehl.android.htn.presenter.LinkCommentsPresenterImpl;
 import com.ddiehl.android.htn.view.LinkCommentsView;
@@ -345,7 +346,8 @@ public class LinkCommentsFragment extends AbsRedditFragment
 
     private void showChooseCommentSortDialog() {
         FragmentManager fm = getActivity().getFragmentManager();
-        ChooseCommentSortDialog chooseCommentSortDialog = ChooseCommentSortDialog.newInstance(mLinkCommentsPresenter.getSort());
+        String currentSort = SettingsManager.getInstance(getActivity()).getCommentSort();
+        ChooseCommentSortDialog chooseCommentSortDialog = ChooseCommentSortDialog.newInstance(currentSort);
         chooseCommentSortDialog.setTargetFragment(this, REQUEST_CHOOSE_SORT);
         chooseCommentSortDialog.show(fm, DIALOG_CHOOSE_SORT);
     }

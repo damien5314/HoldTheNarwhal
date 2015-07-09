@@ -10,9 +10,7 @@ import android.util.Log;
 import com.ddiehl.android.htn.BusProvider;
 import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
-import com.ddiehl.android.htn.events.requests.GetUserSettingsEvent;
 import com.ddiehl.android.htn.events.requests.UserSignOutEvent;
-import com.ddiehl.android.htn.events.responses.UserIdentityRetrievedEvent;
 import com.ddiehl.android.htn.events.responses.UserIdentitySavedEvent;
 import com.ddiehl.android.htn.utils.BaseUtils;
 import com.ddiehl.android.htn.view.MainView;
@@ -59,18 +57,12 @@ public class MainPresenterImpl implements MainPresenter {
     @Subscribe
     public void onUserIdentitySaved(UserIdentitySavedEvent event) {
         mMainView.updateUserIdentity();
-    }
-
-    @Subscribe
-    public void onUserIdentityRetrieved(UserIdentityRetrievedEvent event) {
-        if (event.isFailed()) {
-            return;
-        }
 
         UserIdentity id = event.getUserIdentity();
-        mMainView.showToast(String.format(mContext.getString(R.string.welcome_user), id.getName()));
-        mIdentityManager.saveUserIdentity(id);
-        mBus.post(new GetUserSettingsEvent());
+        if (id != null) {
+            mMainView.showToast(String.format(mContext.getString(R.string.welcome_user), id.getName()));
+//            mIdentityManager.saveUserIdentity(id);
+        }
     }
 
     @Subscribe

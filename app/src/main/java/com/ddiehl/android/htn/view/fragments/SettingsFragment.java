@@ -4,9 +4,7 @@
 
 package com.ddiehl.android.htn.view.fragments;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
@@ -22,29 +20,22 @@ import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.SettingsManager;
 import com.ddiehl.android.htn.events.requests.GetUserSettingsEvent;
-import com.ddiehl.android.htn.events.requests.UpdateUserSettingsEvent;
 import com.ddiehl.android.htn.events.requests.UserSignOutEvent;
+import com.ddiehl.android.htn.events.responses.UserAuthorizedEvent;
 import com.ddiehl.android.htn.events.responses.UserSettingsRetrievedEvent;
 import com.ddiehl.android.htn.view.BaseView;
 import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.reddit.identity.UserIdentity;
 import com.ddiehl.reddit.identity.UserSettings;
-import com.flurry.android.FlurryAgent;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
-import java.util.HashMap;
-import java.util.Map;
-
-public class SettingsFragment extends PreferenceFragment
-        implements BaseView, SharedPreferences.OnSharedPreferenceChangeListener {
+public class SettingsFragment extends PreferenceFragment implements BaseView {
 
     private Bus mBus = BusProvider.getInstance();
     private AccessTokenManager mAccessTokenManager;
 //    private IdentityManager mIdentityManager;
     private SettingsManager mSettingsManager;
-
-    private boolean mIsChanging = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -70,7 +61,7 @@ public class SettingsFragment extends PreferenceFragment
     @Override
     public void onResume() {
         super.onResume();
-        getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+//        getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
 
         if (mAccessTokenManager.hasUserAccessToken()) {
             refresh(true);
@@ -80,7 +71,7 @@ public class SettingsFragment extends PreferenceFragment
     @Override
     public void onPause() {
         super.onPause();
-        getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
+//        getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
     }
 
     @Override
@@ -124,12 +115,17 @@ public class SettingsFragment extends PreferenceFragment
         }
 
         UserSettings settings = event.getSettings();
-        getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
+//        getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
         mSettingsManager.saveUserSettings(settings);
-        getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+//        getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
 
         refresh(false);
         dismissSpinner();
+    }
+
+    @Subscribe
+    public void onUserAuthorized(UserAuthorizedEvent event) {
+        refresh(true);
     }
 
     @Subscribe
@@ -158,71 +154,6 @@ public class SettingsFragment extends PreferenceFragment
                 p.setSummary(s.equals("null") ? "" : s);
             }
         }
-    }
-
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sp, String key) {
-        updatePrefSummary(findPreference(key));
-
-        if (mIsChanging || !mAccessTokenManager.hasUserAccessToken())
-            return;
-        mIsChanging = true;
-
-        Map<String, String> changedSettings = new HashMap<>(); // Track changed keys and values
-
-        switch (key) {
-            case SettingsManager.PREF_ENABLE_ADS:
-                if (sp.getBoolean(SettingsManager.PREF_ENABLE_ADS, false)) {
-                    // Show appreciation for users enabling ads
-                    showToast(R.string.pref_enable_ads_thanks);
-                }
-                break;
-            default:
-                Preference p = findPreference(key);
-                if (p instanceof CheckBoxPreference) {
-                    boolean value = ((CheckBoxPreference) p).isChecked();
-                    changedSettings.put(key, String.valueOf(value));
-                } else if (p instanceof ListPreference) {
-                    String value = ((ListPreference) p).getValue();
-                    changedSettings.put(key, value);
-                } else if (p instanceof EditTextPreference) {
-                    String value = ((EditTextPreference) p).getEditText().getText().toString();
-                    changedSettings.put(key, value);
-                }
-                break;
-        }
-
-        // Force "make safe(r) for work" to be true if "over 18" is false
-        if (!sp.getBoolean(SettingsManager.PREF_OVER_18, false)) {
-            CheckBoxPreference pref = ((CheckBoxPreference) findPreference(SettingsManager.PREF_NO_PROFANITY));
-            if (!pref.isChecked()) {
-                changedSettings.put(SettingsManager.PREF_NO_PROFANITY, String.valueOf(true));
-                pref.setChecked(true);
-            }
-        }
-
-        // Force "label nsfw" to be true if "make safe(r) for work" is true
-        if (sp.getBoolean(SettingsManager.PREF_NO_PROFANITY, true)) {
-            CheckBoxPreference pref = ((CheckBoxPreference) findPreference(SettingsManager.PREF_LABEL_NSFW));
-            if (!pref.isChecked()) {
-                changedSettings.put(SettingsManager.PREF_LABEL_NSFW, String.valueOf(true));
-                pref.setChecked(true);
-            }
-        }
-
-        if (changedSettings.size() > 0) {
-            // Post SettingsUpdate event with changed keys and values
-            mBus.post(new UpdateUserSettingsEvent(changedSettings));
-        }
-
-        // Send Flurry event
-        Map<String, String> params = new HashMap<>();
-        params.put("key", key);
-        Map prefs = sp.getAll();
-        params.put("value", String.valueOf(prefs.get(key)));
-        FlurryAgent.logEvent("setting changed", params);
-
-        mIsChanging = false;
     }
 
     @Override

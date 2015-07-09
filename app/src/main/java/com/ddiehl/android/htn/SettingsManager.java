@@ -7,11 +7,17 @@ package com.ddiehl.android.htn;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.ddiehl.android.htn.events.requests.UpdateUserSettingsEvent;
 import com.ddiehl.android.htn.events.responses.UserSettingsRetrievedEvent;
 import com.ddiehl.reddit.identity.UserSettings;
+import com.flurry.android.FlurryAgent;
+import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
-public class SettingsManager {
+import java.util.HashMap;
+import java.util.Map;
+
+public class SettingsManager implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     public static final String PREFS_USER = "prefs_user";
 
@@ -76,31 +82,32 @@ public class SettingsManager {
     private static SettingsManager _instance;
 
     private Context mContext;
+    private Bus mBus = BusProvider.getInstance();
+    private SharedPreferences mSharedPreferences;
 
     private SettingsManager(Context c) {
         mContext = c.getApplicationContext();
+        mSharedPreferences = mContext.getSharedPreferences(PREFS_USER, Context.MODE_PRIVATE);
+        mSharedPreferences.registerOnSharedPreferenceChangeListener(this);
     }
 
     public String getCommentSort() {
-        return mContext.getSharedPreferences(PREFS_USER, Context.MODE_PRIVATE)
-                .getString(PREF_DEFAULT_COMMENT_SORT, mContext.getString(R.string.default_comment_sort));
+        return mSharedPreferences.getString(PREF_DEFAULT_COMMENT_SORT,
+                mContext.getString(R.string.default_comment_sort));
     }
 
     public void saveCommentSort(String pref) {
-        mContext.getSharedPreferences(PREFS_USER, Context.MODE_PRIVATE)
-                .edit()
+        mSharedPreferences.edit()
                 .putString(PREF_DEFAULT_COMMENT_SORT, pref)
                 .apply();
     }
 
     public boolean getAdsEnabled() {
-        SharedPreferences sp = mContext.getSharedPreferences(PREFS_USER, Context.MODE_PRIVATE);
-        return sp.getBoolean(PREF_ENABLE_ADS, false);
+        return mSharedPreferences.getBoolean(PREF_ENABLE_ADS, false);
     }
 
     public boolean hasFromRemote() {
-        SharedPreferences sp = mContext.getSharedPreferences(PREFS_USER, Context.MODE_PRIVATE);
-        return sp.getBoolean(PREF_FLAG_FOR_USER, false);
+        return mSharedPreferences.getBoolean(PREF_FLAG_FOR_USER, false);
     }
 
     @Subscribe
@@ -109,8 +116,71 @@ public class SettingsManager {
         saveUserSettings(settings);
     }
 
+    private boolean mIsChanging = false;
+
+    private Object getValueFromKey(SharedPreferences sp, String key) {
+        return sp.getAll().get(key);
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sp, String key) {
+//        updatePrefSummary(findPreference(key)); // Don't think this was needed anyway
+
+        if (mIsChanging)
+            return;
+        mIsChanging = true;
+
+        Map<String, String> changedSettings = new HashMap<>(); // Track changed keys and values
+
+        switch (key) {
+            case SettingsManager.PREF_ENABLE_ADS:
+                if (sp.getBoolean(SettingsManager.PREF_ENABLE_ADS, false)) {
+                    // Show appreciation for users enabling ads
+//                    showToast(R.string.pref_enable_ads_thanks);
+                }
+                break;
+            default:
+                Object p = getValueFromKey(sp, key);
+                changedSettings.put(key, String.valueOf(p));
+                break;
+        }
+
+        // Force "make safe(r) for work" to be true if "over 18" is false
+        if (!sp.getBoolean(SettingsManager.PREF_OVER_18, false)) {
+            boolean pref = sp.getBoolean(SettingsManager.PREF_NO_PROFANITY, true);
+            if (!pref) {
+                sp.edit().putBoolean(SettingsManager.PREF_NO_PROFANITY, true).apply();
+                changedSettings.put(SettingsManager.PREF_NO_PROFANITY, String.valueOf(true));
+            }
+        }
+
+        // Force "label nsfw" to be true if "make safe(r) for work" is true
+        if (sp.getBoolean(SettingsManager.PREF_NO_PROFANITY, true)) {
+            boolean pref = sp.getBoolean(SettingsManager.PREF_LABEL_NSFW, true);
+            if (!pref) {
+                sp.edit().putBoolean(SettingsManager.PREF_LABEL_NSFW, true).apply();
+                changedSettings.put(SettingsManager.PREF_LABEL_NSFW, String.valueOf(true));
+            }
+        }
+
+        if (changedSettings.size() > 0 && AccessTokenManager.getInstance(mContext).hasUserAccessToken()) {
+            // Post SettingsUpdate event with changed keys and values
+            mBus.post(new UpdateUserSettingsEvent(changedSettings));
+        }
+
+        // Send Flurry event
+        Map<String, String> params = new HashMap<>();
+        params.put("key", key);
+        Map prefs = sp.getAll();
+        params.put("value", String.valueOf(prefs.get(key)));
+        FlurryAgent.logEvent("setting changed", params);
+
+        mIsChanging = false;
+    }
+
     public void saveUserSettings(UserSettings settings) {
-        mContext.getSharedPreferences(PREFS_USER, Context.MODE_PRIVATE).edit()
+        mSharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
+        mSharedPreferences.edit()
                 .putBoolean(PREF_FLAG_FOR_USER, true)
                 .putBoolean(PREF_BETA, settings.getBeta())
                 .putBoolean(PREF_CLICKGAGDET, settings.getClickgadget())
@@ -158,10 +228,12 @@ public class SettingsManager {
                 .putBoolean(PREF_THREADED_MESSAGES, settings.getThreadedMessages())
                 .putBoolean(PREF_USE_GLOBAL_DEFAULTS, settings.getUseGlobalDefaults())
                 .apply();
+        mSharedPreferences.registerOnSharedPreferenceChangeListener(this);
     }
 
     public void clearUserSettings() {
-        mContext.getSharedPreferences(PREFS_USER, Context.MODE_PRIVATE).edit()
+        mSharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
+        mSharedPreferences.edit()
                 .remove(PREF_FLAG_FOR_USER)
                 .remove(PREF_BETA)
                 .remove(PREF_CLICKGAGDET)
@@ -207,6 +279,7 @@ public class SettingsManager {
                 .remove(PREF_THREADED_MESSAGES)
                 .remove(PREF_USE_GLOBAL_DEFAULTS)
                 .apply();
+        mSharedPreferences.registerOnSharedPreferenceChangeListener(this);
     }
 
     public static SettingsManager getInstance(Context c) {
