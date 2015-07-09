@@ -49,7 +49,6 @@ import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.squareup.otto.Bus;
-import com.squareup.otto.Subscribe;
 
 import java.io.InputStream;
 import java.util.List;
@@ -66,7 +65,7 @@ public class RedditServiceAPI implements RedditService {
     private static final String TAG = RedditServiceAPI.class.getSimpleName();
 
     private Context mContext;
-    private Bus mBus;
+    private Bus mBus = BusProvider.getInstance();
     private RedditAPI mAPI;
     private AccessTokenManager mAccessTokenManager;
     private IdentityManager mIdentityManager;
@@ -74,8 +73,6 @@ public class RedditServiceAPI implements RedditService {
 
     RedditServiceAPI(Context c) {
         mContext = c.getApplicationContext();
-        mBus = BusProvider.getInstance();
-        mBus.register(this);
         mAPI = buildApi();
         mAccessTokenManager = AccessTokenManager.getInstance(mContext);
         mIdentityManager = IdentityManager.getInstance(mContext);
@@ -117,7 +114,7 @@ public class RedditServiceAPI implements RedditService {
         return null;
     }
 
-    @Subscribe
+    @Override
     public void onGetUserIdentity(GetUserIdentityEvent event) {
         mAPI.getUserIdentity(new Callback<UserIdentity>() {
             @Override
@@ -133,17 +130,6 @@ public class RedditServiceAPI implements RedditService {
                 mBus.post(new UserIdentityRetrievedEvent(error));
             }
         });
-    }
-
-    @Subscribe
-    public void onUserIdentityRetrieved(UserIdentityRetrievedEvent event) {
-        if (event.isFailed()) {
-            return;
-        }
-
-        UserIdentity id = event.getUserIdentity();
-        mIdentityManager.saveUserIdentity(id);
-        mBus.post(new GetUserSettingsEvent());
     }
 
     /**

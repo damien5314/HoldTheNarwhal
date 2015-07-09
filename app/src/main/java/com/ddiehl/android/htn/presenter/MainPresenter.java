@@ -4,6 +4,7 @@
 
 package com.ddiehl.android.htn.presenter;
 
+import com.ddiehl.android.htn.events.AppInitializedEvent;
 import com.ddiehl.reddit.identity.UserIdentity;
 
 public interface MainPresenter {
@@ -12,4 +13,5 @@ public interface MainPresenter {
     void signOutUser();
     String getUsernameContext();
     void setUsernameContext(String username);
+    void onAppInitialized(AppInitializedEvent event);
 }

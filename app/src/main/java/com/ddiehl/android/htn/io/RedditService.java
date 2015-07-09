@@ -5,6 +5,7 @@
 package com.ddiehl.android.htn.io;
 
 import com.ddiehl.android.htn.BuildConfig;
+import com.ddiehl.android.htn.events.requests.GetUserIdentityEvent;
 import com.ddiehl.android.htn.events.requests.GetUserSettingsEvent;
 import com.ddiehl.android.htn.events.requests.HideEvent;
 import com.ddiehl.android.htn.events.requests.LoadLinkCommentsEvent;
@@ -28,10 +29,11 @@ public interface RedditService {
     void onLoadMoreChildren(LoadMoreChildrenEvent event);
     void onLoadUserProfile(LoadUserProfileEvent event);
 
+    void onGetUserIdentity(GetUserIdentityEvent event);
+    void onGetUserSettings(GetUserSettingsEvent event);
+    void onUpdateUserSettings(UpdateUserSettingsEvent event);
     void onVote(VoteEvent event);
     void onSave(SaveEvent event);
     void onHide(HideEvent event);
     void onReport(ReportEvent event);
-    void onGetUserSettings(GetUserSettingsEvent event);
-    void onUpdateUserSettings(UpdateUserSettingsEvent event);
 }

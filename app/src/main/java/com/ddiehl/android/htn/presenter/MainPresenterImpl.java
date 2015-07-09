@@ -10,6 +10,8 @@ import android.util.Log;
 import com.ddiehl.android.htn.BusProvider;
 import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
+import com.ddiehl.android.htn.events.AppInitializedEvent;
+import com.ddiehl.android.htn.events.requests.GetUserSettingsEvent;
 import com.ddiehl.android.htn.events.requests.UserSignOutEvent;
 import com.ddiehl.android.htn.events.responses.UserIdentityRetrievedEvent;
 import com.ddiehl.android.htn.events.responses.UserIdentitySavedEvent;
@@ -43,6 +45,17 @@ public class MainPresenterImpl implements MainPresenter {
     }
 
     @Subscribe
+    public void onAppInitialized(AppInitializedEvent event) {
+        mMainView.dismissSpinner();
+        mMainView.updateUserIdentity();
+        mMainView.showSubreddit(null);
+//        Fragment currentFragment = getFragmentManager().findFragmentById(R.id.fragment_container);
+//        if (currentFragment == null) {
+//            showSubreddit(null);
+//        }
+    }
+
+    @Subscribe
     public void onNetworkError(RetrofitError error) {
         Log.e("HTN", "RetrofitError: " + error.getKind().toString());
         Log.e("HTN", Log.getStackTraceString(error));
@@ -62,8 +75,14 @@ public class MainPresenterImpl implements MainPresenter {
 
     @Subscribe
     public void onUserIdentityRetrieved(UserIdentityRetrievedEvent event) {
-        UserIdentity identity = event.getUserIdentity();
-        mMainView.showToast(String.format(mContext.getString(R.string.welcome_user), identity.getName()));
+        if (event.isFailed()) {
+            return;
+        }
+
+        UserIdentity id = event.getUserIdentity();
+        mMainView.showToast(String.format(mContext.getString(R.string.welcome_user), id.getName()));
+        mIdentityManager.saveUserIdentity(id);
+        mBus.post(new GetUserSettingsEvent());
     }
 
     @Subscribe
