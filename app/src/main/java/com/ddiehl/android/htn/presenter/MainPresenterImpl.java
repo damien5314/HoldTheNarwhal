@@ -32,6 +32,7 @@ public class MainPresenterImpl implements MainPresenter {
     private MainView mMainView;
     private IdentityManager mIdentityManager;
     private String mUsernameContext;
+    private String mLastUser;
 
     public MainPresenterImpl(Context context, MainView view) {
         mBus = BusProvider.getInstance();
@@ -59,7 +60,7 @@ public class MainPresenterImpl implements MainPresenter {
         mMainView.updateUserIdentity();
 
         UserIdentity id = event.getUserIdentity();
-        if (id != null) {
+        if (id != null && !id.getName().equals(mLastUser)) {
             mMainView.showToast(String.format(mContext.getString(R.string.welcome_user), id.getName()));
 //            mIdentityManager.saveUserIdentity(id);
         }
@@ -68,6 +69,7 @@ public class MainPresenterImpl implements MainPresenter {
     @Subscribe
     public void onUserSignOut(UserSignOutEvent event) {
         mMainView.showToast(R.string.user_signed_out);
+        mLastUser = null;
     }
 
     @Override
