@@ -147,7 +147,9 @@ public abstract class AbsListingsFragment extends AbsRedditFragment
 
     @Override
     public void onDestroy() {
-        mAdAdapter.destroy();
+        if (mAdAdapter != null) {
+            mAdAdapter.destroy();
+        }
         super.onDestroy();
     }
 
