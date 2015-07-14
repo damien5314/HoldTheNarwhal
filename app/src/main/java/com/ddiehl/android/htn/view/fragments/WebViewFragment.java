@@ -131,7 +131,11 @@ public class WebViewFragment extends AbsRedditFragment {
 
     @Override
     public void onDestroyView() {
-        mWebView.destroy();
+        if (mWebView != null) {
+            ((ViewGroup) mWebView.getParent()).removeView(mWebView);
+            mWebView.removeAllViews();
+            mWebView.destroy();
+        }
         super.onDestroyView();
     }
 
