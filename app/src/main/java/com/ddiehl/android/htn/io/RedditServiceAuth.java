@@ -45,6 +45,7 @@ import retrofit.Callback;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
+import retrofit.client.OkClient;
 import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
 
@@ -102,6 +103,7 @@ public class RedditServiceAuth implements RedditService {
                         request.addHeader("Authorization", HTTP_AUTH_HEADER);
                     }
                 })
+                .setClient(new OkClient())
                 .build();
 
         return restAdapter.create(RedditAuthAPI.class);
@@ -200,17 +202,17 @@ public class RedditServiceAuth implements RedditService {
         if (mAccessTokenManager.getUserAccessToken() != null) {
             mAuthAPI.revokeUserAuthToken(mAccessTokenManager.getUserAccessToken().getToken(),
                     "access_token", new Callback<Response>() {
-                @Override
-                public void success(Response response, Response response2) {
-                    BaseUtils.printResponseStatus(response);
-                }
+                        @Override
+                        public void success(Response response, Response response2) {
+                            BaseUtils.printResponseStatus(response);
+                        }
 
-                @Override
-                public void failure(RetrofitError error) {
-                    mBus.post(error);
-                    BaseUtils.printResponse(error.getResponse());
-                }
-            });
+                        @Override
+                        public void failure(RetrofitError error) {
+                            mBus.post(error);
+                            BaseUtils.printResponse(error.getResponse());
+                        }
+                    });
 
             mAuthAPI.revokeUserAuthToken(mAccessTokenManager.getUserAccessToken().getRefreshToken(),
                     "refresh_token", new Callback<Response>() {

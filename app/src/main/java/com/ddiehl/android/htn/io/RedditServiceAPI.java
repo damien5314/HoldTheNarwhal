@@ -46,8 +46,11 @@ import com.ddiehl.reddit.listings.MoreChildrenResponse;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.squareup.okhttp.Cache;
+import com.squareup.okhttp.OkHttpClient;
 import com.squareup.otto.Bus;
 
+import java.io.File;
 import java.io.InputStream;
 import java.util.List;
 
@@ -55,6 +58,7 @@ import retrofit.Callback;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
+import retrofit.client.OkClient;
 import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
 import retrofit.mime.TypedString;
@@ -81,6 +85,12 @@ public class RedditServiceAPI implements RedditService {
                 .registerTypeAdapter(AbsComment.class, new AbsCommentDeserializer())
                 .create();
 
+        int cacheSize = 10 * 1024 * 1024; // 10 MiB
+        OkHttpClient client = new OkHttpClient()
+                .setCache(new Cache(
+                        new File(mContext.getCacheDir().getAbsolutePath(), "htn-http-cache"),
+                        cacheSize));
+
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint(ENDPOINT_AUTHORIZED)
                 .setConverter(new GsonConverter(gson))
@@ -89,11 +99,10 @@ public class RedditServiceAPI implements RedditService {
                     public void intercept(RequestFacade request) {
                         request.addHeader("User-Agent", RedditService.USER_AGENT);
                         request.addHeader("Authorization", "bearer " + getAccessToken());
-//                        request.addHeader("Content-Length", "0");
-//                        request.addHeader("Content-Length", String.valueOf(request.toString().length())));
                         request.addQueryParam("raw_json", "1");
                     }
                 })
+                .setClient(new OkClient(client))
                 .build();
 
         return restAdapter.create(RedditAPI.class);
