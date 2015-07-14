@@ -5,17 +5,12 @@
 package com.ddiehl.android.htn.utils;
 
 import android.net.Uri;
-import android.util.Base64;
 import android.util.Log;
 
 import com.ddiehl.android.htn.io.RedditServiceAuth;
 
 public class AuthUtils {
     private static final String TAG = AuthUtils.class.getSimpleName();
-
-    public static String getHttpAuthHeader(String username, String password) {
-        return "Basic " + Base64.encodeToString(String.format("%s:%s", username, password).getBytes(), Base64.NO_WRAP);
-    }
 
     public static String getUserAuthCodeFromRedirectUri(String url) {
         Uri uri = Uri.parse(url);

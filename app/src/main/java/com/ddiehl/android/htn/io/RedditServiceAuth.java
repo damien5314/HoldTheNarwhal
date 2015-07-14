@@ -30,7 +30,6 @@ import com.ddiehl.android.htn.events.responses.UserAuthCodeReceivedEvent;
 import com.ddiehl.android.htn.events.responses.UserAuthorizationRefreshedEvent;
 import com.ddiehl.android.htn.events.responses.UserAuthorizedEvent;
 import com.ddiehl.android.htn.events.responses.UserIdentitySavedEvent;
-import com.ddiehl.android.htn.utils.AuthUtils;
 import com.ddiehl.android.htn.utils.BaseUtils;
 import com.ddiehl.android.htn.utils.NUtils;
 import com.ddiehl.reddit.identity.AccessToken;
@@ -38,8 +37,15 @@ import com.ddiehl.reddit.identity.AuthorizationResponse;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.squareup.okhttp.Authenticator;
+import com.squareup.okhttp.Credentials;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
+
+import java.io.IOException;
+import java.net.Proxy;
 
 import retrofit.Callback;
 import retrofit.RequestInterceptor;
@@ -58,7 +64,7 @@ public class RedditServiceAuth implements RedditService {
     public static final String REDIRECT_URI = "http://127.0.0.1/";
     public static final String SCOPE =
             "identity,mysubreddits,privatemessages,read,report,save,submit,vote,history,account";
-    public static final String HTTP_AUTH_HEADER = AuthUtils.getHttpAuthHeader(CLIENT_ID, "");
+    public static final String HTTP_AUTH_HEADER = Credentials.basic(CLIENT_ID, "");
 
     public static final String AUTHORIZATION_URL = "https://www.reddit.com/api/v1/authorize.compact" +
             "?client_id=" + CLIENT_ID +
@@ -100,10 +106,21 @@ public class RedditServiceAuth implements RedditService {
                     @Override
                     public void intercept(RequestFacade request) {
                         request.addHeader("User-Agent", RedditService.USER_AGENT);
-                        request.addHeader("Authorization", HTTP_AUTH_HEADER);
                     }
                 })
-                .setClient(new OkClient())
+                .setClient(new OkClient(new OkHttpClient().setAuthenticator(new Authenticator() {
+                    @Override
+                    public Request authenticate(Proxy proxy, com.squareup.okhttp.Response response) throws IOException {
+                        return response.request().newBuilder()
+                                .header("Authorization", HTTP_AUTH_HEADER)
+                                .build();
+                    }
+
+                    @Override
+                    public Request authenticateProxy(Proxy proxy, com.squareup.okhttp.Response response) throws IOException {
+                        return null;
+                    }
+                })))
                 .build();
 
         return restAdapter.create(RedditAuthAPI.class);
