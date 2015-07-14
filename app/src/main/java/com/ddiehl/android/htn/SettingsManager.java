@@ -146,18 +146,20 @@ public class SettingsManager implements SharedPreferences.OnSharedPreferenceChan
         }
 
         // Force "make safe(r) for work" to be true if "over 18" is false
-        if (!sp.getBoolean(SettingsManager.PREF_OVER_18, false)) {
-            boolean pref = sp.getBoolean(SettingsManager.PREF_NO_PROFANITY, true);
-            if (!pref) {
+        boolean over18 = sp.getBoolean(SettingsManager.PREF_OVER_18, false);
+        if (!over18) {
+            boolean noProfanity = sp.getBoolean(SettingsManager.PREF_NO_PROFANITY, true);
+            if (!noProfanity) {
                 sp.edit().putBoolean(SettingsManager.PREF_NO_PROFANITY, true).apply();
                 changedSettings.put(SettingsManager.PREF_NO_PROFANITY, String.valueOf(true));
             }
         }
 
         // Force "label nsfw" to be true if "make safe(r) for work" is true
-        if (sp.getBoolean(SettingsManager.PREF_NO_PROFANITY, true)) {
-            boolean pref = sp.getBoolean(SettingsManager.PREF_LABEL_NSFW, true);
-            if (!pref) {
+        boolean noProfanity = sp.getBoolean(SettingsManager.PREF_NO_PROFANITY, true);
+        if (noProfanity) {
+            boolean labelNsfw = sp.getBoolean(SettingsManager.PREF_LABEL_NSFW, true);
+            if (!labelNsfw) {
                 sp.edit().putBoolean(SettingsManager.PREF_LABEL_NSFW, true).apply();
                 changedSettings.put(SettingsManager.PREF_LABEL_NSFW, String.valueOf(true));
             }

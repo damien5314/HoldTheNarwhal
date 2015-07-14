@@ -4,7 +4,10 @@
 
 package com.ddiehl.android.htn.view.fragments;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
@@ -30,7 +33,8 @@ import com.ddiehl.reddit.identity.UserSettings;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
-public class SettingsFragment extends PreferenceFragment implements BaseView {
+public class SettingsFragment extends PreferenceFragment
+        implements BaseView, SharedPreferences.OnSharedPreferenceChangeListener {
 
     private Bus mBus = BusProvider.getInstance();
     private AccessTokenManager mAccessTokenManager;
@@ -43,7 +47,6 @@ public class SettingsFragment extends PreferenceFragment implements BaseView {
         setRetainInstance(true);
         setHasOptionsMenu(true);
         mAccessTokenManager = AccessTokenManager.getInstance(getActivity());
-//        mIdentityManager = IdentityManager.getInstance(getActivity());
         mSettingsManager = SettingsManager.getInstance(getActivity());
 
         getPreferenceManager().setSharedPreferencesName(SettingsManager.PREFS_USER);
@@ -61,7 +64,8 @@ public class SettingsFragment extends PreferenceFragment implements BaseView {
     @Override
     public void onResume() {
         super.onResume();
-//        getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+        getActivity().getSharedPreferences(SettingsManager.PREFS_USER, Context.MODE_PRIVATE)
+                .registerOnSharedPreferenceChangeListener(this);
 
         if (mAccessTokenManager.hasUserAccessToken()) {
             refresh(true);
@@ -70,8 +74,9 @@ public class SettingsFragment extends PreferenceFragment implements BaseView {
 
     @Override
     public void onPause() {
+        getActivity().getSharedPreferences(SettingsManager.PREFS_USER, Context.MODE_PRIVATE)
+                .unregisterOnSharedPreferenceChangeListener(this);
         super.onPause();
-//        getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
     }
 
     @Override
@@ -79,6 +84,14 @@ public class SettingsFragment extends PreferenceFragment implements BaseView {
         mBus.register(mSettingsManager);
         mBus.unregister(this);
         super.onStop();
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        Preference p = findPreference(key);
+        if (p instanceof CheckBoxPreference) {
+            ((CheckBoxPreference) p).setChecked(sharedPreferences.getBoolean(key, false)); // default = false?
+        }
     }
 
     private void refresh(boolean pullFromServer) {
@@ -115,9 +128,7 @@ public class SettingsFragment extends PreferenceFragment implements BaseView {
         }
 
         UserSettings settings = event.getSettings();
-//        getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
         mSettingsManager.saveUserSettings(settings);
-//        getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
 
         refresh(false);
         dismissSpinner();
