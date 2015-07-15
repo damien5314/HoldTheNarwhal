@@ -62,29 +62,35 @@ public interface RedditAPI {
                         Callback<ListingResponse> callback);
 
     @POST("/api/vote")
-    void vote(@Query("id") String id,
+    void vote(@Body String nullBody,
+              @Query("id") String id,
               @Query("dir") int dir,
               Callback<Response> response);
 
     @POST("/api/save")
-    void save(@Query("id") String id,
+    void save(@Body String nullBody,
+              @Query("id") String id,
               @Query("category") String category,
               Callback<Response> response);
 
     @POST("/api/unsave")
-    void unsave(@Query("id") String id,
+    void unsave(@Body String nullBody,
+                @Query("id") String id,
                 Callback<Response> response);
 
     @POST("/api/hide")
-    void hide(@Query("id") String id,
+    void hide(@Body String nullBody,
+              @Query("id") String id,
               Callback<Response> response);
 
     @POST("/api/unhide")
-    void unhide(@Query("id") String id,
+    void unhide(@Body String nullBody,
+                @Query("id") String id,
                 Callback<Response> response);
 
     @POST("/api/report?api_type=json")
-    void report(@Query("thing_id") String id,
+    void report(@Body String nullBody,
+                @Query("thing_id") String id,
                 @Query("reason") String reason,
                 @Query("otherReason") String otherReason,
                 Callback<Response> response);

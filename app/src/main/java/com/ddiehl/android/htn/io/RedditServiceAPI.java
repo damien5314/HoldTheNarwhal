@@ -289,7 +289,7 @@ public class RedditServiceAPI implements RedditService {
         final Votable listing = event.getListing();
         String fullname = String.format("%s_%s", event.getType(), listing.getId());
 
-        mAPI.vote(fullname, event.getDirection(), new Callback<Response>() {
+        mAPI.vote("", fullname, event.getDirection(), new Callback<Response>() {
             @Override
             public void success(Response response, Response response2) {
                 BaseUtils.printResponseStatus(response);
@@ -324,7 +324,7 @@ public class RedditServiceAPI implements RedditService {
         final Savable listing = event.getListing();
 
         if (event.isToSave()) { // Save
-            mAPI.save(listing.getName(), event.getCategory(), new Callback<Response>() {
+            mAPI.save("", listing.getName(), event.getCategory(), new Callback<Response>() {
                 @Override
                 public void success(Response response, Response response2) {
                     saveSuccess(response, listing, event.getCategory(), true);
@@ -338,7 +338,7 @@ public class RedditServiceAPI implements RedditService {
                 }
             });
         } else { // Unsave
-            mAPI.unsave(listing.getName(), new Callback<Response>() {
+            mAPI.unsave("", listing.getName(), new Callback<Response>() {
                 @Override
                 public void success(Response response, Response response2) {
                     saveSuccess(response, listing, event.getCategory(), false);
@@ -375,7 +375,7 @@ public class RedditServiceAPI implements RedditService {
         final Hideable listing = event.getListing();
 
         if (event.isToHide()) { // Hide
-            mAPI.hide(listing.getName(), new Callback<Response>() {
+            mAPI.hide("", listing.getName(), new Callback<Response>() {
                 @Override
                 public void success(Response response, Response response2) {
                     hideSuccess(response, listing, true);
@@ -389,7 +389,7 @@ public class RedditServiceAPI implements RedditService {
                 }
             });
         } else { // Unhide
-            mAPI.unhide(listing.getName(), new Callback<Response>() {
+            mAPI.unhide("", listing.getName(), new Callback<Response>() {
                 @Override
                 public void success(Response response, Response response2) {
                     hideSuccess(response, listing, false);
