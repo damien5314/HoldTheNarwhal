@@ -37,15 +37,9 @@ import com.ddiehl.reddit.identity.AuthorizationResponse;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.squareup.okhttp.Authenticator;
 import com.squareup.okhttp.Credentials;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
-
-import java.io.IOException;
-import java.net.Proxy;
 
 import retrofit.Callback;
 import retrofit.RequestInterceptor;
@@ -106,21 +100,10 @@ public class RedditServiceAuth implements RedditService {
                     @Override
                     public void intercept(RequestFacade request) {
                         request.addHeader("User-Agent", RedditService.USER_AGENT);
+                        request.addHeader("Authorization", HTTP_AUTH_HEADER);
                     }
                 })
-                .setClient(new OkClient(new OkHttpClient().setAuthenticator(new Authenticator() {
-                    @Override
-                    public Request authenticate(Proxy proxy, com.squareup.okhttp.Response response) throws IOException {
-                        return response.request().newBuilder()
-                                .header("Authorization", HTTP_AUTH_HEADER)
-                                .build();
-                    }
-
-                    @Override
-                    public Request authenticateProxy(Proxy proxy, com.squareup.okhttp.Response response) throws IOException {
-                        return null;
-                    }
-                })))
+                .setClient(new OkClient())
                 .build();
 
         return restAdapter.create(RedditAuthAPI.class);
