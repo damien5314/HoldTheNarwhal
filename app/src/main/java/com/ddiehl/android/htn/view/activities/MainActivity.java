@@ -60,6 +60,7 @@ import hugo.weaving.DebugLog;
 
 public class MainActivity extends AppCompatActivity
         implements MainView, ConfirmSignOutDialog.Callbacks, NavigationView.OnNavigationItemSelectedListener {
+    public static final String TAG = MainActivity.class.getSimpleName();
 
     private static final String DIALOG_CONFIRM_SIGN_OUT = "dialog_confirm_sign_out";
 
@@ -84,10 +85,23 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        init.execute();
+
+        if (savedInstanceState != null) {
+            mIsInitialized = savedInstanceState.getBoolean("initialized", false);
+        }
+
+        if (!mIsInitialized) {
+            new Init().execute();
+        }
     }
 
-    private AsyncTask<Void, Void, Void> init = new AsyncTask<Void, Void, Void>() {
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean("initialized", mIsInitialized);
+    }
+
+    private class Init extends AsyncTask<Void, Void, Void> {
         AccessTokenManager atm;
         IdentityManager identityManager;
         SettingsManager settingsManager;
@@ -143,7 +157,7 @@ public class MainActivity extends AppCompatActivity
             mIsInitialized = true;
             onAppInitialized();
         }
-    };
+    }
 
     private void setMirroredIcons() {
         if (Build.VERSION.SDK_INT >= 19) {
@@ -186,7 +200,7 @@ public class MainActivity extends AppCompatActivity
         FlurryAgent.onStartSession(this);
         dismissSpinner();
         updateUserIdentity();
-        showSubreddit(null);
+        showSubredditIfEmpty(null);
     }
 
     @Override
@@ -277,6 +291,14 @@ public class MainActivity extends AppCompatActivity
         fm.beginTransaction().replace(R.id.fragment_container, f)
                 .addToBackStack(null)
                 .commit();
+    }
+
+    private void showSubredditIfEmpty(String subreddit) {
+        FragmentManager fm = getFragmentManager();
+        Fragment f = fm.findFragmentById(R.id.fragment_container);
+        if (f == null) {
+            showSubreddit(subreddit);
+        }
     }
 
     @Override
