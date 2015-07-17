@@ -34,10 +34,12 @@ import com.ddiehl.android.htn.utils.BaseUtils;
 import com.ddiehl.android.htn.utils.NUtils;
 import com.ddiehl.reddit.identity.AccessToken;
 import com.ddiehl.reddit.identity.AuthorizationResponse;
+import com.facebook.stetho.okhttp.StethoInterceptor;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.squareup.okhttp.Credentials;
+import com.squareup.okhttp.OkHttpClient;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -89,11 +91,15 @@ public class RedditServiceAuth implements RedditService {
     }
 
     private RedditAuthAPI buildApi() {
+        OkHttpClient client = new OkHttpClient();
+        client.networkInterceptors().add(new StethoInterceptor());
+
         Gson gson = new GsonBuilder()
                 .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
                 .create();
 
         RestAdapter restAdapter = new RestAdapter.Builder()
+                .setClient(new OkClient(client))
                 .setEndpoint(ENDPOINT_NORMAL)
                 .setConverter(new GsonConverter(gson))
                 .setRequestInterceptor(new RequestInterceptor() {
@@ -103,7 +109,6 @@ public class RedditServiceAuth implements RedditService {
                         request.addHeader("Authorization", HTTP_AUTH_HEADER);
                     }
                 })
-                .setClient(new OkClient())
                 .build();
 
         return restAdapter.create(RedditAuthAPI.class);

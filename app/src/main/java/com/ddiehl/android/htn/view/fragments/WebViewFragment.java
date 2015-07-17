@@ -21,6 +21,7 @@ import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 import android.widget.ZoomButtonsController;
 
+import com.ddiehl.android.htn.BuildConfig;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.io.RedditServiceAuth;
 import com.ddiehl.android.htn.utils.AuthUtils;
@@ -36,6 +37,12 @@ public class WebViewFragment extends AbsRedditFragment {
 
     private String mUrl;
     @Bind(R.id.web_view) WebView mWebView;
+
+    static {
+        if (BuildConfig.DEBUG && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            WebView.setWebContentsDebuggingEnabled(true);
+        }
+    }
 
     public static Fragment newInstance(String url) {
         Bundle args = new Bundle();

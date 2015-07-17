@@ -43,6 +43,7 @@ import com.ddiehl.reddit.listings.Link;
 import com.ddiehl.reddit.listings.Listing;
 import com.ddiehl.reddit.listings.ListingResponse;
 import com.ddiehl.reddit.listings.MoreChildrenResponse;
+import com.facebook.stetho.okhttp.StethoInterceptor;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -78,6 +79,13 @@ public class RedditServiceAPI implements RedditService {
     }
 
     private RedditAPI buildApi() {
+        int cacheSize = 10 * 1024 * 1024; // 10 MiB
+        OkHttpClient client = new OkHttpClient()
+                .setCache(new Cache(
+                        new File(mContext.getCacheDir().getAbsolutePath(), "htn-http-cache"),
+                        cacheSize));
+        client.networkInterceptors().add(new StethoInterceptor());
+
         Gson gson = new GsonBuilder()
                 .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
                 .registerTypeAdapter(ListingResponse.class, new ListingResponseDeserializer())
@@ -85,13 +93,8 @@ public class RedditServiceAPI implements RedditService {
                 .registerTypeAdapter(AbsComment.class, new AbsCommentDeserializer())
                 .create();
 
-        int cacheSize = 10 * 1024 * 1024; // 10 MiB
-        OkHttpClient client = new OkHttpClient()
-                .setCache(new Cache(
-                        new File(mContext.getCacheDir().getAbsolutePath(), "htn-http-cache"),
-                        cacheSize));
-
         RestAdapter restAdapter = new RestAdapter.Builder()
+                .setClient(new OkClient(client))
                 .setEndpoint(ENDPOINT_AUTHORIZED)
                 .setConverter(new GsonConverter(gson))
                 .setRequestInterceptor(new RequestInterceptor() {
@@ -102,7 +105,6 @@ public class RedditServiceAPI implements RedditService {
                         request.addQueryParam("raw_json", "1");
                     }
                 })
-                .setClient(new OkClient(client))
                 .build();
 
         return restAdapter.create(RedditAPI.class);
