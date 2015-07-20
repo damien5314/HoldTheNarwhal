@@ -64,10 +64,8 @@ public class MainActivity extends AppCompatActivity
 
     private static final String DIALOG_CONFIRM_SIGN_OUT = "dialog_confirm_sign_out";
 
-    private static final int REQUEST_CODE_SETTINGS = 1001;
-
-    private MainPresenter mMainPresenter;
     private Bus mBus = BusProvider.getInstance();
+    private MainPresenter mMainPresenter;
     private String mLastAuthCode;
 
     private ProgressDialog mProgressBar;
@@ -79,26 +77,11 @@ public class MainActivity extends AppCompatActivity
     @Bind(R.id.account_name) TextView mAccountNameView;
     @Bind(R.id.sign_out_button) View mSignOutView;
 
-    private boolean mIsInitialized = false;
-
     @Override @DebugLog
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        if (savedInstanceState != null) {
-            mIsInitialized = savedInstanceState.getBoolean("initialized", false);
-        }
-
-        if (!mIsInitialized) {
-            new Init().execute();
-        }
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putBoolean("initialized", mIsInitialized);
+        new Init().execute();
     }
 
     private class Init extends AsyncTask<Void, Void, Void> {
@@ -154,7 +137,6 @@ public class MainActivity extends AppCompatActivity
             mBus.register(authProxy);
             mBus.register(analytics);
 
-            mIsInitialized = true;
             onAppInitialized();
         }
     }
@@ -188,7 +170,7 @@ public class MainActivity extends AppCompatActivity
     protected void onStart() {
         super.onStart();
 
-        if (!mIsInitialized) {
+        if (mMainPresenter == null) {
             showSpinner(R.string.application_loading);
         } else {
             onAppInitialized();
