@@ -5,7 +5,9 @@
 package com.ddiehl.android.htn.view.fragments;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.MailTo;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -28,6 +30,7 @@ import com.ddiehl.android.htn.BuildConfig;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.io.RedditServiceAuth;
 import com.ddiehl.android.htn.utils.AuthUtils;
+import com.ddiehl.android.htn.utils.BaseUtils;
 import com.ddiehl.android.htn.view.MainView;
 
 import butterknife.Bind;
@@ -90,6 +93,7 @@ public class WebViewFragment extends AbsRedditFragment {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 Log.d(TAG, "Loading URL: " + url);
+
                 if (url.contains(RedditServiceAuth.REDIRECT_URI)
                         && !url.equals(RedditServiceAuth.AUTHORIZATION_URL)) {
                     // Pass auth code back to the Activity, which will pop this fragment
@@ -97,6 +101,14 @@ public class WebViewFragment extends AbsRedditFragment {
                     ((MainView) getActivity()).onUserAuthCodeReceived(authCode);
                     return true; // Can we do this to prevent the page from loading at all?
                 }
+
+                if (url.startsWith("mailto:")) {
+                    MailTo mt = MailTo.parse(url);
+                    Intent i = BaseUtils.getNewEmailIntent(mt.getTo(), mt.getSubject(), mt.getBody(), mt.getCc());
+                    getActivity().startActivity(i);
+                    return true;
+                }
+
                 return false;
             }
 
