@@ -4,7 +4,6 @@
 
 package com.ddiehl.android.htn.view.fragments;
 
-import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.graphics.Bitmap;
 import android.os.Build;
@@ -77,7 +76,6 @@ public class WebViewFragment extends AbsRedditFragment {
         settings.setJavaScriptEnabled(true);
         settings.setUseWideViewPort(true);
         settings.setLoadWithOverviewMode(true);
-        settings.setBuiltInZoomControls(true);
         disableWebViewZoomControls(mWebView);
 
         mWebView.setWebViewClient(new WebViewClient() {
@@ -148,6 +146,7 @@ public class WebViewFragment extends AbsRedditFragment {
 
     /**
      * Disable zoom buttons for WebView.
+     * http://stackoverflow.com/a/14751673/3238938
      * http://twigstechtips.blogspot.com/2013/09/android-disable-webview-zoom-controls.html
      */
     private void disableWebViewZoomControls(final WebView webView) {
@@ -156,12 +155,7 @@ public class WebViewFragment extends AbsRedditFragment {
 
         // Use the API 11+ calls to disable the controls
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB) {
-            new Runnable() {
-                @SuppressLint("NewApi")
-                public void run() {
-                    webView.getSettings().setDisplayZoomControls(false);
-                }
-            }.run();
+            webView.getSettings().setDisplayZoomControls(false);
         } else {
             try {
                 ZoomButtonsController zoom_control;
