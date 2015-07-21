@@ -84,6 +84,12 @@ public class MainActivity extends AppCompatActivity
     @Bind(R.id.account_name) TextView mAccountNameView;
     @Bind(R.id.sign_out_button) View mSignOutView;
 
+    private AccessTokenManager mAccessTokenManager;
+    private IdentityManager mIdentityManager;
+    private SettingsManager mSettingsManager;
+    private RedditService mAuthProxy;
+    private HTNAnalytics mAnalytics;
+
     @Override @DebugLog
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,11 +102,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     private class Init extends AsyncTask<Void, Void, Void> {
-        AccessTokenManager atm;
-        IdentityManager identityManager;
-        SettingsManager settingsManager;
-        RedditService authProxy;
-        HTNAnalytics analytics;
 
         @Override
         protected void onPreExecute() {
@@ -122,11 +123,11 @@ public class MainActivity extends AppCompatActivity
         @Override
         protected Void doInBackground(Void... params) {
             mMainPresenter = new MainPresenterImpl(MainActivity.this, MainActivity.this);
-            atm = AccessTokenManager.getInstance(MainActivity.this);
-            identityManager = IdentityManager.getInstance(MainActivity.this);
-            settingsManager = SettingsManager.getInstance(MainActivity.this);
-            authProxy = RedditServiceAuth.getInstance(MainActivity.this);
-            analytics = HTNAnalytics.getInstance();
+            mAccessTokenManager = AccessTokenManager.getInstance(MainActivity.this);
+            mIdentityManager = IdentityManager.getInstance(MainActivity.this);
+            mSettingsManager = SettingsManager.getInstance(MainActivity.this);
+            mAuthProxy = RedditServiceAuth.getInstance(MainActivity.this);
+            mAnalytics = HTNAnalytics.getInstance();
 
             // Configure MoPub
             new MoPubConversionTracker().reportAppOpen(MainActivity.this);
@@ -140,12 +141,6 @@ public class MainActivity extends AppCompatActivity
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-
-            mBus.register(atm);
-            mBus.register(identityManager);
-            mBus.register(settingsManager);
-            mBus.register(authProxy);
-            mBus.register(analytics);
 
             onAppInitialized();
         }
@@ -215,6 +210,12 @@ public class MainActivity extends AppCompatActivity
 
     private void onAppInitialized() {
         mBus.register(mMainPresenter);
+        mBus.register(mAccessTokenManager);
+        mBus.register(mIdentityManager);
+        mBus.register(mSettingsManager);
+        mBus.register(mAuthProxy);
+        mBus.register(mAnalytics);
+
         FlurryAgent.onStartSession(this);
         dismissSpinner();
         updateUserIdentity();
@@ -226,6 +227,11 @@ public class MainActivity extends AppCompatActivity
         super.onStop();
         FlurryAgent.onEndSession(this);
         mBus.unregister(mMainPresenter);
+        mBus.unregister(mAccessTokenManager);
+        mBus.unregister(mIdentityManager);
+        mBus.unregister(mSettingsManager);
+        mBus.unregister(mAuthProxy);
+        mBus.unregister(mAnalytics);
     }
 
     @Override
