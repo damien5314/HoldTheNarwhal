@@ -9,8 +9,12 @@ import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
@@ -31,6 +35,7 @@ import butterknife.ButterKnife;
 
 
 public class WebViewFragment extends AbsRedditFragment {
+    public static final String TAG = WebViewFragment.class.getSimpleName();
 
     private static final String ARG_URL = "url";
 
@@ -56,6 +61,7 @@ public class WebViewFragment extends AbsRedditFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+        setHasOptionsMenu(true);
 
         Bundle args = getArguments();
 
@@ -81,6 +87,7 @@ public class WebViewFragment extends AbsRedditFragment {
         mWebView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                Log.d(TAG, "Loading URL: " + url);
                 if (url.contains(RedditServiceAuth.REDIRECT_URI)
                         && !url.equals(RedditServiceAuth.AUTHORIZATION_URL)) {
                     // Pass auth code back to the Activity, which will pop this fragment
@@ -167,5 +174,22 @@ public class WebViewFragment extends AbsRedditFragment {
                 e.printStackTrace();
             }
         }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.web_view, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_refresh:
+                mWebView.reload();
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }
