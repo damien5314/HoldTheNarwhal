@@ -30,6 +30,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ddiehl.android.htn.AccessTokenManager;
+import com.ddiehl.android.htn.BuildConfig;
 import com.ddiehl.android.htn.BusProvider;
 import com.ddiehl.android.htn.HTNAnalytics;
 import com.ddiehl.android.htn.IdentityManager;
@@ -41,6 +42,7 @@ import com.ddiehl.android.htn.io.RedditServiceAuth;
 import com.ddiehl.android.htn.presenter.MainPresenter;
 import com.ddiehl.android.htn.presenter.MainPresenterImpl;
 import com.ddiehl.android.htn.utils.BaseUtils;
+import com.ddiehl.android.htn.utils.NUtils;
 import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.android.htn.view.dialogs.ConfirmSignOutDialog;
 import com.ddiehl.android.htn.view.fragments.SettingsFragment;
@@ -49,9 +51,13 @@ import com.ddiehl.android.htn.view.fragments.UserProfileFragment;
 import com.ddiehl.android.htn.view.fragments.WebViewFragment;
 import com.ddiehl.reddit.identity.UserIdentity;
 import com.flurry.android.FlurryAgent;
+import com.flurry.android.FlurryAgentListener;
 import com.mopub.common.MoPub;
 import com.mopub.mobileads.MoPubConversionTracker;
 import com.squareup.otto.Bus;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -63,6 +69,7 @@ public class MainActivity extends AppCompatActivity
     public static final String TAG = MainActivity.class.getSimpleName();
 
     private static final String DIALOG_CONFIRM_SIGN_OUT = "dialog_confirm_sign_out";
+    private static final int FLURRY_SESSION_TIMEOUT_SECONDS = 30;
 
     private Bus mBus = BusProvider.getInstance();
     private MainPresenter mMainPresenter;
@@ -81,6 +88,10 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Configure Flurry
+        initializeFlurry();
+
         new Init().execute();
     }
 
@@ -116,9 +127,8 @@ public class MainActivity extends AppCompatActivity
             settingsManager = SettingsManager.getInstance(MainActivity.this);
             authProxy = RedditServiceAuth.getInstance(MainActivity.this);
             analytics = HTNAnalytics.getInstance();
-            analytics.init(MainActivity.this);
 
-            // MoPub configuration
+            // Configure MoPub
             new MoPubConversionTracker().reportAppOpen(MainActivity.this);
             MoPub.setLocationAwareness(MoPub.LocationAwareness.DISABLED);
 
@@ -139,6 +149,32 @@ public class MainActivity extends AppCompatActivity
 
             onAppInitialized();
         }
+    }
+
+    private void initializeFlurry() {
+        FlurryAgent.init(this, NUtils.getFlurryApiKey(BuildConfig.DEBUG));
+        FlurryAgent.setContinueSessionMillis(FLURRY_SESSION_TIMEOUT_SECONDS * 1000);
+        FlurryAgent.setCaptureUncaughtExceptions(true);
+        FlurryAgent.setLogEnabled(BuildConfig.DEBUG); // Disable Flurry logging for release builds
+
+        FlurryAgent.setFlurryAgentListener(new FlurryAgentListener() {
+            @Override
+            public void onSessionStarted() {
+                // Log initial Flurry event
+                Map<String, String> params = new HashMap<>();
+
+                UserIdentity identity = IdentityManager.getInstance(MainActivity.this).getUserIdentity();
+                String userId = identity == null ?
+                        "unauthorized" : BaseUtils.getMd5HexString(identity.getName());
+                params.put("user", userId);
+                FlurryAgent.setUserId(userId);
+
+                boolean adsEnabled = SettingsManager.getInstance(MainActivity.this).getAdsEnabled();
+                params.put("ads enabled", String.valueOf(adsEnabled));
+
+                FlurryAgent.logEvent("session started", params);
+            }
+        });
     }
 
     private void setMirroredIcons() {

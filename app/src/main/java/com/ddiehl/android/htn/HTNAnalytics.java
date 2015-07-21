@@ -4,8 +4,6 @@
 
 package com.ddiehl.android.htn;
 
-import android.content.Context;
-
 import com.ddiehl.android.htn.events.requests.HideEvent;
 import com.ddiehl.android.htn.events.requests.LoadLinkCommentsEvent;
 import com.ddiehl.android.htn.events.requests.LoadMoreChildrenEvent;
@@ -17,11 +15,9 @@ import com.ddiehl.android.htn.events.requests.UserSignOutEvent;
 import com.ddiehl.android.htn.events.requests.VoteEvent;
 import com.ddiehl.android.htn.events.responses.UserIdentityRetrievedEvent;
 import com.ddiehl.android.htn.utils.BaseUtils;
-import com.ddiehl.android.htn.utils.NUtils;
 import com.ddiehl.reddit.identity.UserIdentity;
 import com.ddiehl.reddit.listings.Listing;
 import com.flurry.android.FlurryAgent;
-import com.flurry.android.FlurryAgentListener;
 import com.squareup.otto.Subscribe;
 
 import java.util.Date;
@@ -30,37 +26,9 @@ import java.util.Map;
 
 public class HTNAnalytics {
 
-    private static final int FLURRY_SESSION_TIMEOUT_SECONDS = 30;
-
     private static HTNAnalytics _instance;
 
     private HTNAnalytics() { }
-
-    public void init(final Context c) {
-        FlurryAgent.init(c, NUtils.getFlurryApiKey(BuildConfig.DEBUG));
-        FlurryAgent.setContinueSessionMillis(FLURRY_SESSION_TIMEOUT_SECONDS * 1000);
-        FlurryAgent.setCaptureUncaughtExceptions(true);
-        FlurryAgent.setLogEnabled(BuildConfig.DEBUG); // Disable Flurry logging for release builds
-
-        FlurryAgent.setFlurryAgentListener(new FlurryAgentListener() {
-            @Override
-            public void onSessionStarted() {
-                // Log initial Flurry event
-                Map<String, String> params = new HashMap<>();
-
-                UserIdentity identity = IdentityManager.getInstance(c).getUserIdentity();
-                String userId = identity == null ?
-                        "unauthorized" : BaseUtils.getMd5HexString(identity.getName());
-                params.put("user", userId);
-                FlurryAgent.setUserId(userId);
-
-                boolean adsEnabled = SettingsManager.getInstance(c).getAdsEnabled();
-                params.put("ads enabled", String.valueOf(adsEnabled));
-
-                FlurryAgent.logEvent("session started", params);
-            }
-        });
-    }
 
     @Subscribe
     public void onSignIn(UserIdentityRetrievedEvent event) {
