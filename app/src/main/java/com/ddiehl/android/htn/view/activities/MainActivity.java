@@ -201,7 +201,8 @@ public class MainActivity extends AppCompatActivity
     protected void onStart() {
         super.onStart();
 
-        if (mMainPresenter == null) {
+        if (mMainPresenter == null || mAccessTokenManager == null || mIdentityManager == null
+                || mSettingsManager == null || mAuthProxy == null || mAnalytics == null) {
             showSpinner(R.string.application_loading);
         } else {
             onAppInitialized();
