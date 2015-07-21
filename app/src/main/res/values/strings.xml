@@ -54,6 +54,7 @@
     <string name="preferences_reddit">reddit</string>
     <string name="preferences_app">app</string>
     <string name="pref_enable_ads">enable ads</string>
+    <string name="pref_about_app">about app</string>
     <string name="pref_enable_ads_summary">ads support development of HTN</string>
     <string name="pref_enable_ads_thanks">Thank you for your support!</string>
 

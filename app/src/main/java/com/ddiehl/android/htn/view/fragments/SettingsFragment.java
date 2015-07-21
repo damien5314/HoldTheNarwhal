@@ -50,7 +50,7 @@ public class SettingsFragment extends PreferenceFragment
         mSettingsManager = SettingsManager.getInstance(getActivity());
 
         getPreferenceManager().setSharedPreferencesName(SettingsManager.PREFS_USER);
-        addPreferencesFromResource(R.xml.preferences_all); // Required for getSharedPreferences()
+        addDefaultPreferences();
     }
 
     @Override
@@ -97,7 +97,7 @@ public class SettingsFragment extends PreferenceFragment
     private void refresh(boolean pullFromServer) {
         getActivity().invalidateOptionsMenu();
         getPreferenceScreen().removeAll();
-        addPreferencesFromResource(R.xml.preferences_all);
+        addDefaultPreferences();
         if (mSettingsManager.hasFromRemote()) {
             addUserPreferences();
         }
@@ -105,6 +105,18 @@ public class SettingsFragment extends PreferenceFragment
         if (pullFromServer) {
             getData();
         }
+    }
+
+    private void addDefaultPreferences() {
+        addPreferencesFromResource(R.xml.preferences_all); // Required for getSharedPreferences()
+        Preference prefAboutApp = findPreference("pref_about_app");
+        prefAboutApp.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                showAboutApp();
+                return false;
+            }
+        });
     }
 
     private void addUserPreferences() {
@@ -217,5 +229,12 @@ public class SettingsFragment extends PreferenceFragment
     @Override
     public void showToast(int resId) {
         ((MainView) getActivity()).showToast(resId);
+    }
+
+    private void showAboutApp() {
+        getFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, WebViewFragment.newInstance("file:///android_asset/htn_about_app.html"))
+                .addToBackStack(null)
+                .commit();
     }
 }

@@ -48,6 +48,8 @@ public class WebViewFragment extends AbsRedditFragment {
         }
     }
 
+    private WebViewFragment() { }
+
     public static Fragment newInstance(String url) {
         Bundle args = new Bundle();
         args.putString(ARG_URL, url);
