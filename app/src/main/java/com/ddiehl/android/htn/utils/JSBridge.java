@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.webkit.JavascriptInterface;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class JSBridge {
@@ -34,7 +35,8 @@ public class JSBridge {
         try {
             String packageName = mContext.getPackageName();
             PackageInfo pInfo = mContext.getPackageManager().getPackageInfo(packageName, 0);
-            return new Date(pInfo.lastUpdateTime).toString();
+
+            return SimpleDateFormat.getDateInstance().format(new Date(pInfo.lastUpdateTime));
         } catch (Exception e) {
             return null;
         }
