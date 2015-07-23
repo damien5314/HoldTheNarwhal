@@ -33,6 +33,9 @@ import com.ddiehl.reddit.identity.UserSettings;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
+import java.io.IOException;
+import java.io.InputStream;
+
 public class SettingsFragment extends PreferenceFragment
         implements BaseView, SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -113,7 +116,7 @@ public class SettingsFragment extends PreferenceFragment
         prefAboutApp.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                showAboutApp();
+                showAboutAppMarkdown();
                 return false;
             }
         });
@@ -231,10 +234,24 @@ public class SettingsFragment extends PreferenceFragment
         ((MainView) getActivity()).showToast(resId);
     }
 
-    private void showAboutApp() {
+    private void showAboutAppHtml() {
         getFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, WebViewFragment.newInstance("file:///android_asset/htn_about_app.html"))
+                .replace(R.id.fragment_container,
+                        WebViewFragment.newInstance("file:///android_asset/htn_about_app.html"))
                 .addToBackStack(null)
                 .commit();
+    }
+
+    private void showAboutAppMarkdown() {
+        InputStream in_s = null;
+        try {
+            in_s = getActivity().getAssets().open("htn_about_app.md");
+            getFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, MarkdownTextFragment.newInstance(in_s))
+                    .addToBackStack(null)
+                    .commit();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

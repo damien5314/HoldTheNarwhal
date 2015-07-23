@@ -11,6 +11,11 @@ import android.widget.Toast;
 
 import com.ddiehl.android.htn.R;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -91,7 +96,7 @@ public class BaseUtils {
                 TypedInput body = response.getBody();
                 Log.d(TAG, "--BODY-- LENGTH: " + body.length());
                 InputStream in_s = body.in();
-                Log.d(TAG, inputStreamToString(in_s));
+                Log.d(TAG, getStringFromInputStream(in_s));
                 in_s.close();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -99,9 +104,32 @@ public class BaseUtils {
         }
     }
 
-    public static String inputStreamToString(InputStream i) {
+    public static String getStringFromInputStream(InputStream i) {
         Scanner s = new Scanner(i).useDelimiter("\\A");
         return s.hasNext() ? s.next() : "";
+    }
+
+    public static String getTextFromFile(File file) throws IOException {
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(file));
+            try {
+                StringBuilder sb = new StringBuilder();
+                String line = br.readLine();
+
+                while (line != null) {
+                    sb.append(line);
+                    sb.append("\n");
+                    line = br.readLine();
+                }
+                return sb.toString();
+            } finally {
+                br.close();
+            }
+        } catch (FileNotFoundException e) {
+            Log.e(TAG, "Unable to find file: " + file.getAbsolutePath());
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public static String getRandomString() {

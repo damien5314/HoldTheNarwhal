@@ -1,3 +1,7 @@
+<!--
+  ~ Copyright (c) 2015 Damien Diehl. All rights reserved.
+  -->
+
 <resources>
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
@@ -43,5 +47,6 @@
     <dimen name="banner_ad_margin">4dp</dimen>
     <dimen name="banner_ad_text_size">14sp</dimen>
     <dimen name="banner_ad_header_text_size">10sp</dimen>
+    <dimen name="about_app_text_size">18sp</dimen>
 
 </resources>
