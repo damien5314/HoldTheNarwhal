@@ -8,6 +8,7 @@ package com.ddiehl.android.htn.view.viewholders;
 import android.content.Context;
 import android.os.Build;
 import android.support.v7.widget.RecyclerView;
+import android.text.method.LinkMovementMethod;
 import android.view.ContextMenu;
 import android.view.View;
 import android.widget.ImageView;
@@ -23,11 +24,13 @@ import com.ddiehl.reddit.listings.Link;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import in.uncod.android.bypass.Bypass;
 
 public class ThreadCommentViewHolder extends RecyclerView.ViewHolder
         implements View.OnCreateContextMenuListener {
 
     private Context mContext;
+    private Bypass mBypass;
     private CommentPresenter mCommentPresenter;
     private Comment mComment;
 
@@ -42,6 +45,7 @@ public class ThreadCommentViewHolder extends RecyclerView.ViewHolder
     public ThreadCommentViewHolder(View v, CommentPresenter presenter) {
         super(v);
         mContext = v.getContext().getApplicationContext();
+        mBypass = new Bypass(mContext);
         mCommentPresenter = presenter;
         ButterKnife.bind(this, v);
         itemView.setOnCreateContextMenuListener(this);
@@ -101,7 +105,7 @@ public class ThreadCommentViewHolder extends RecyclerView.ViewHolder
             mAuthorView.setBackgroundResource(0);
             mAuthorView.setTextColor(mContext.getResources().getColor(R.color.secondary_text));
         }
-        mBodyView.setVisibility(View.VISIBLE);
+        mBodyView.setVisibility(View.VISIBLE); // FIXME: Try commenting this out
         mAuthorView.setText(comment.getAuthor());
         mScoreView.setText(String.format(mContext.getString(R.string.comment_score), comment.getScore()));
         mTimestampView.setDate(comment.getCreateUtc().longValue());
@@ -116,7 +120,12 @@ public class ThreadCommentViewHolder extends RecyclerView.ViewHolder
                     mTimestampView.setEdited(true);
             }
         }
-        mBodyView.setText(comment.getBody().trim());
+
+        // Bypass markdown formatting
+        CharSequence formatted = mBypass.markdownToSpannable(comment.getBody().trim());
+        mBodyView.setText(formatted);
+        mBodyView.setMovementMethod(LinkMovementMethod.getInstance());
+
         if (comment.isCollapsed()) {
             mBodyView.setVisibility(View.GONE);
             mExpanderIcon.setImageResource(R.drawable.ic_thread_expand);

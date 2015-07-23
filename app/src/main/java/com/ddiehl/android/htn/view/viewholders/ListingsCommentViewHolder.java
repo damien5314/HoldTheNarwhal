@@ -9,6 +9,7 @@ import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.method.LinkMovementMethod;
 import android.text.style.RelativeSizeSpan;
 import android.view.ContextMenu;
 import android.view.View;
@@ -23,11 +24,13 @@ import com.ddiehl.reddit.listings.Comment;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import in.uncod.android.bypass.Bypass;
 
 public class ListingsCommentViewHolder extends RecyclerView.ViewHolder
         implements View.OnCreateContextMenuListener {
 
     private Context mContext;
+    private Bypass mBypass;
     private CommentPresenter mCommentPresenter;
     private Comment mComment;
 
@@ -43,6 +46,7 @@ public class ListingsCommentViewHolder extends RecyclerView.ViewHolder
     public ListingsCommentViewHolder(View v, CommentPresenter presenter) {
         super(v);
         mContext = v.getContext().getApplicationContext();
+        mBypass = new Bypass(mContext);
         mCommentPresenter = presenter;
         ButterKnife.bind(this, v);
         itemView.setOnCreateContextMenuListener(this);
@@ -117,13 +121,12 @@ public class ListingsCommentViewHolder extends RecyclerView.ViewHolder
                     mTimestampView.setEdited(true);
             }
         }
-        // Bypass markdown formatting
-//        Bypass bypass = new Bypass(mContext);
-//        CharSequence formatted = bypass.markdownToSpannable(comment.getBody().trim());
-//        mBodyView.setText(formatted);
-//        mBodyView.setMovementMethod(LinkMovementMethod.getInstance());
-        mBodyView.setText(comment.getBody().trim());
         mExpanderIcon.setImageResource(0);
+
+        // Bypass markdown formatting
+        CharSequence formatted = mBypass.markdownToSpannable(comment.getBody().trim());
+        mBodyView.setText(formatted);
+        mBodyView.setMovementMethod(LinkMovementMethod.getInstance());
 
         // Set background tint based on isLiked
         if (comment.isLiked() == null) {

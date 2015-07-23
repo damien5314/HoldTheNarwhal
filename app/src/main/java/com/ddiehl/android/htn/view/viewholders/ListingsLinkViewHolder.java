@@ -7,6 +7,7 @@ package com.ddiehl.android.htn.view.viewholders;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.method.LinkMovementMethod;
 import android.view.ContextMenu;
 import android.view.View;
 import android.widget.ImageView;
@@ -23,11 +24,13 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import in.uncod.android.bypass.Bypass;
 
 public class ListingsLinkViewHolder extends RecyclerView.ViewHolder
         implements View.OnCreateContextMenuListener {
 
     private Context mContext;
+    private Bypass mBypass;
     private LinkPresenter mLinkPresenter;
     private Link mLink;
 
@@ -47,7 +50,8 @@ public class ListingsLinkViewHolder extends RecyclerView.ViewHolder
 
     public ListingsLinkViewHolder(View v, LinkPresenter presenter) {
         super(v);
-        mContext = v.getContext();
+        mContext = v.getContext().getApplicationContext();
+        mBypass = new Bypass(mContext);
         mLinkPresenter = presenter;
         ButterKnife.bind(this, v);
         itemView.setOnCreateContextMenuListener(this);
@@ -79,7 +83,10 @@ public class ListingsLinkViewHolder extends RecyclerView.ViewHolder
 
         mLinkView.setVisibility(View.VISIBLE);
         if (link.getSelftext() != null && !link.getSelftext().equals("") && showSelfText) {
-            mSelfText.setText(link.getSelftext());
+            // Bypass markdown formatting
+            CharSequence formatted = mBypass.markdownToSpannable(link.getSelftext());
+            mSelfText.setText(formatted);
+            mSelfText.setMovementMethod(LinkMovementMethod.getInstance());
             mSelfText.setVisibility(View.VISIBLE);
         } else {
             mSelfText.setVisibility(View.GONE);
