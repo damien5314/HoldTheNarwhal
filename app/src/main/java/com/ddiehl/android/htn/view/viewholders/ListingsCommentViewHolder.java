@@ -117,6 +117,11 @@ public class ListingsCommentViewHolder extends RecyclerView.ViewHolder
                     mTimestampView.setEdited(true);
             }
         }
+        // Bypass markdown formatting
+//        Bypass bypass = new Bypass(mContext);
+//        CharSequence formatted = bypass.markdownToSpannable(comment.getBody().trim());
+//        mBodyView.setText(formatted);
+//        mBodyView.setMovementMethod(LinkMovementMethod.getInstance());
         mBodyView.setText(comment.getBody().trim());
         mExpanderIcon.setImageResource(0);
 
