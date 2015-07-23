@@ -51,7 +51,7 @@ public class ListingsLinkViewHolder extends RecyclerView.ViewHolder
     public ListingsLinkViewHolder(View v, LinkPresenter presenter) {
         super(v);
         mContext = v.getContext().getApplicationContext();
-        mBypass = new Bypass(mContext);
+        mBypass = Bypass.getInstance(mContext);
         mLinkPresenter = presenter;
         ButterKnife.bind(this, v);
         itemView.setOnCreateContextMenuListener(this);

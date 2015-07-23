@@ -61,15 +61,12 @@ import android.widget.TextView;
  *
  * Special characters should be decoded (e.g. &#3232; ಠ_ಠ)
  */
-public class RedditTextView extends TextView {
+public class MarkdownTextView extends TextView {
 
-    public RedditTextView(Context context, AttributeSet attrs) {
+    public MarkdownTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    /**
-     * *check*\n\n**check**\n\n*check*\n**check**\n\n***check***\n\n^^^^I ^^^^swear ^^^^to ^^^^god ^^^^I ^^^^can ^^^^never ^^^^get ^^^^this ^^^^right ^^^^check\n\n*1\n*2\n*3\n\n* 1\n* 2\n* 3\n\n&gt;check\n\n&gt;&gt;check\n&gt;&gt;&gt;check\n\n&gt;&gt;&gt;&gt;check\n\n    System.out.println(\"check\");\n\n~~check~~\n~~~check~~~\n\n[stuff](https://reddit.com/r/test)\n\n/r/test\n\n/u/test\n\n|check1|check2|check3|\n:--------|:-----:|--------:\n|c|d|e|\n|a|b|c|\n\n48. 46.
-     */
     @Override
     public CharSequence getText() {
         Spannable text = (Spannable) super.getText();

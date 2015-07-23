@@ -45,7 +45,7 @@ public class ThreadCommentViewHolder extends RecyclerView.ViewHolder
     public ThreadCommentViewHolder(View v, CommentPresenter presenter) {
         super(v);
         mContext = v.getContext().getApplicationContext();
-        mBypass = new Bypass(mContext);
+        mBypass = Bypass.getInstance(mContext);
         mCommentPresenter = presenter;
         ButterKnife.bind(this, v);
         itemView.setOnCreateContextMenuListener(this);

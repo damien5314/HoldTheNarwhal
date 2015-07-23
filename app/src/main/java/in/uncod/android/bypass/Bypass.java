@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2015 Damien Diehl. All rights reserved.
+ */
+
 package in.uncod.android.bypass;
 
 import android.content.Context;
@@ -18,11 +22,12 @@ import android.text.style.URLSpan;
 import android.util.DisplayMetrics;
 import android.util.Patterns;
 import android.util.TypedValue;
-import in.uncod.android.bypass.Element.Type;
-import in.uncod.android.bypass.style.HorizontalLineSpan;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
+import in.uncod.android.bypass.Element.Type;
+import in.uncod.android.bypass.style.HorizontalLineSpan;
 
 public class Bypass {
 	static {
@@ -46,7 +51,7 @@ public class Bypass {
 	 * @deprecated Use {@link #Bypass(android.content.Context)} instead.
 	 */
 	@Deprecated
-	public Bypass() {
+	private Bypass() {
 		// Default constructor for backwards-compatibility
 		mOptions = new Options();
 		mListItemIndent = 20;
@@ -56,11 +61,11 @@ public class Bypass {
 		mHruleTopBottomPadding = 20;
 	}
 
-	public Bypass(Context context) {
+    private Bypass(Context context) {
 		this(context, new Options());
 	}
 
-	public Bypass(Context context, Options options) {
+    private Bypass(Context context, Options options) {
 		mOptions = options;
 
 		DisplayMetrics dm = context.getResources().getDisplayMetrics();
@@ -407,4 +412,19 @@ public class Bypass {
 		public Drawable getDrawable(String source);
 
 	}
+
+	// Singleton implementation
+	private static Bypass _instance;
+
+    public static Bypass getInstance(Context c) {
+        if (_instance == null) {
+            synchronized (Bypass.class) {
+                if (_instance == null) {
+                    Options o = new Bypass.Options();
+                    _instance = new Bypass(c, o);
+                }
+            }
+        }
+        return _instance;
+    }
 }

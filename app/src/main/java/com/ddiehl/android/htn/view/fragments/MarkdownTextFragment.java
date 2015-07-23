@@ -56,7 +56,7 @@ public class MarkdownTextFragment extends Fragment {
         TextView tv = (TextView) v.findViewById(R.id.about_app_text_view);
 
         // Bypass markdown formatting
-        Bypass bp = new Bypass(getActivity());
+        Bypass bp = Bypass.getInstance(getActivity());
         CharSequence formatted = bp.markdownToSpannable(mText);
         tv.setText(formatted);
         tv.setMovementMethod(LinkMovementMethod.getInstance());
