@@ -23,5 +23,6 @@
     <color name="author_moderator_text">#ffffff</color>
     <color name="author_admin_background">#FF0011</color>
     <color name="author_admin_text">#ffffff</color>
+    <color name="markdown_quote_block">@color/primary_light</color>
 
 </resources>
