@@ -46,6 +46,10 @@
     <string name="navigation_tabs_downvoted">downvoted</string>
     <string name="navigation_tabs_hidden">hidden</string>
     <string name="navigation_tabs_saved">saved</string>
+    <string name="user_link_karma">link karma</string>
+    <string name="user_comment_karma">comment karma</string>
+    <string name="user_note_label">note</string>
+    <string name="user_note_hint">likes pictures of cats</string>
 
     <!-- Ads -->
     <string name="advertisement">advertisement</string>
