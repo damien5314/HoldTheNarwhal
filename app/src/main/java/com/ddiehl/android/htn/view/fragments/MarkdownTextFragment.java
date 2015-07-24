@@ -8,7 +8,6 @@ import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,8 +17,6 @@ import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.utils.BaseUtils;
 
 import java.io.InputStream;
-
-import in.uncod.android.bypass.Bypass;
 
 public class MarkdownTextFragment extends Fragment {
     private static final String TAG = MarkdownTextFragment.class.getSimpleName();
@@ -54,13 +51,7 @@ public class MarkdownTextFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = View.inflate(getActivity(), R.layout.fragment_markdown_text, null);
         TextView tv = (TextView) v.findViewById(R.id.about_app_text_view);
-
-        // Bypass markdown formatting
-        Bypass bp = Bypass.getInstance(getActivity());
-        CharSequence formatted = bp.markdownToSpannable(mText);
-        tv.setText(formatted);
-        tv.setMovementMethod(LinkMovementMethod.getInstance());
-
+        tv.setText(mText);
         return v;
     }
 }

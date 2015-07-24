@@ -2,14 +2,16 @@
  * Copyright (c) 2015 Damien Diehl. All rights reserved.
  */
 
-package com.ddiehl.android.htn.text;
+package com.ddiehl.android.htn.view.widgets;
 
 import android.content.Context;
-import android.graphics.Typeface;
-import android.text.Spannable;
-import android.text.style.StyleSpan;
+import android.text.method.LinkMovementMethod;
 import android.util.AttributeSet;
 import android.widget.TextView;
+
+import com.ddiehl.android.htn.R;
+
+import in.uncod.android.bypass.Bypass;
 
 /**
  * Decorates a TextView with logic to set spans with stylization based on
@@ -63,39 +65,48 @@ import android.widget.TextView;
  */
 public class MarkdownTextView extends TextView {
 
+    public MarkdownTextView(Context context) {
+        super(context);
+        setMovementMethod(LinkMovementMethod.getInstance());
+    }
+
     public MarkdownTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        setMovementMethod(LinkMovementMethod.getInstance());
+    }
+
+    public MarkdownTextView(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        setMovementMethod(LinkMovementMethod.getInstance());
     }
 
     @Override
     public CharSequence getText() {
-        Spannable text = (Spannable) super.getText();
+        return super.getText();
+    }
 
-        final String LINE_DELIMITER = "\n";
-        String[] lines = text.toString().split(LINE_DELIMITER);
+    @Override
+    public void setText(CharSequence text, BufferType type) {
+        Bypass b = BypassWrapper.getInstance(getContext());
+        CharSequence formatted = b.markdownToSpannable(text.toString());
+        super.setText(formatted, type);
+    }
 
-        int lineStartIndex;
-        int lineEndIndex = 0 - LINE_DELIMITER.length();
-        for (String line : lines) {
-            lineStartIndex = lineEndIndex + LINE_DELIMITER.length();
-            lineEndIndex = lineStartIndex + line.length();
+    private static class BypassWrapper {
 
-            // Process formatting at line level
+        private static Bypass _instance;
 
-            // Process formatting at character level
-            for (int i = lineStartIndex; i < lineEndIndex; i++) {
-                if (line.substring(i, i+2).equals("**")) {
-                    int boldStartIndex = i+1;
-                    for (int j = i+2; j < lineEndIndex; j++) {
-                        if (line.substring(j, j+2).equals("**")) {
-                            text.setSpan(new StyleSpan(Typeface.BOLD), i, j, Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
-
-                        }
+        public static Bypass getInstance(Context c) {
+            if (_instance == null) {
+                synchronized (Bypass.class) {
+                    if (_instance == null) {
+                        Bypass.Options o = new Bypass.Options();
+                        o.setBlockQuoteColor(c.getResources().getColor(R.color.reddit_blue));
+                        _instance = new Bypass(c, o);
                     }
                 }
             }
+            return _instance;
         }
-
-        return text;
     }
 }
