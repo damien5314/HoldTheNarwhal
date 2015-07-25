@@ -3,109 +3,142 @@
   ~ Copyright (c) 2015 Damien Diehl. All rights reserved.
   -->
 
-<LinearLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin">
+    android:layout_height="wrap_content">
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingStart="@dimen/user_note_label_padding_start"
-            android:paddingLeft="@dimen/user_note_label_padding_start"
-            android:textSize="@dimen/user_note_label_text_size"
-            android:text="@string/user_note_label"/>
-
-        <EditText
-            android:id="@+id/user_note"
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="text"
-            android:hint="@string/user_note_hint"/>
-
-    </LinearLayout>
-
-    <!-- link karma & comment karma -->
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/user_profile_summary_karma_height">
-
-        <LinearLayout
-            android:id="@+id/user_link_karma"
-            android:orientation="vertical"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
+            android:paddingBottom="8dp">
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="3"
-                android:gravity="center"
-                android:textSize="@dimen/user_karma_text_size"
-                android:textColor="@color/primary_text"
-                tools:text="57,321"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:textSize="@dimen/user_karma_label_text_size"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/user_note_label_text_size"
                 android:textColor="@color/secondary_text"
-                android:text="@string/user_link_karma" />
+                android:text="@string/user_note_label"/>
+
+            <EditText
+                android:id="@+id/user_note"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:textSize="28sp"
+                android:hint="@string/user_note_hint"/>
 
         </LinearLayout>
 
+        <!-- link karma & comment karma -->
         <LinearLayout
-            android:id="@+id/user_comment_karma"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp">
+
+            <LinearLayout
+                android:id="@+id/user_link_karma"
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textSize="@dimen/user_karma_text_size"
+                    android:textColor="@color/primary_text"
+                    tools:text="57,321"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textSize="@dimen/user_karma_label_text_size"
+                    android:textColor="@color/secondary_text"
+                    android:text="@string/user_link_karma" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/user_comment_karma"
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textSize="@dimen/user_karma_text_size"
+                    android:textColor="@color/primary_text"
+                    tools:text="113,069"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textSize="@dimen/user_karma_label_text_size"
+                    android:textColor="@color/secondary_text"
+                    android:text="@string/user_comment_karma" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- Friend/Unfriend button -->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp">
+
+            <Button
+                android:id="@+id/user_friend_button"
+                android:layout_width="@dimen/user_friend_button_width"
+                android:layout_height="@dimen/user_friend_button_height"
+                android:layout_gravity="center"
+                android:text="@string/user_friend_button_text"/>
+
+        </FrameLayout>
+
+        <!-- trophies -->
+        <LinearLayout
             android:orientation="vertical"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp">
 
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="3"
-                android:gravity="center"
-                android:textSize="@dimen/user_karma_text_size"
-                android:textColor="@color/primary_text"
-                tools:text="113,069"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:textSize="@dimen/user_karma_label_text_size"
+                android:layout_height="wrap_content"
                 android:textColor="@color/secondary_text"
-                android:text="@string/user_comment_karma" />
+                android:textSize="@dimen/user_trophies_label_text_size"
+                android:text="@string/user_trophies_label"/>
+
+            <GridLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:columnCount="2"/>
 
         </LinearLayout>
 
     </LinearLayout>
 
-    <!-- reddit gold status -->
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-    </RelativeLayout>
-
-    <!-- trophies -->
-    <!-- Friend/Unfriend buttons -->
-
-</LinearLayout>
+</ScrollView>

@@ -38,6 +38,7 @@
     <string name="listing_comment_title_format">%1$s \nby /u/%2$s on /r/%3$s</string>
 
     <!-- User Profile -->
+    <string name="navigation_tabs_summary">summary</string>
     <string name="navigation_tabs_overview">overview</string>
     <string name="navigation_tabs_comments">comments</string>
     <string name="navigation_tabs_submitted">submitted</string>
@@ -50,6 +51,8 @@
     <string name="user_comment_karma">comment karma</string>
     <string name="user_note_label">note</string>
     <string name="user_note_hint">likes pictures of cats</string>
+    <string name="user_trophies_label">trophies</string>
+    <string name="user_friend_button_text">add to friends</string>
 
     <!-- Ads -->
     <string name="advertisement">advertisement</string>
