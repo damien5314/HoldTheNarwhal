@@ -6,6 +6,8 @@ package com.ddiehl.android.htn.utils;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -19,9 +21,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Scanner;
 import java.util.UUID;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 import retrofit.RetrofitError;
 import retrofit.client.Header;
@@ -166,5 +171,33 @@ public class BaseUtils {
         intent.putExtra(Intent.EXTRA_CC, cc);
         intent.setType("message/rfc822");
         return intent;
+    }
+
+    public static long getBuildTime(Context c) {
+        ZipFile zf = null;
+        try {
+            ApplicationInfo ai = c.getPackageManager().getApplicationInfo(c.getPackageName(), 0);
+            zf = new ZipFile(ai.sourceDir);
+            ZipEntry ze = zf.getEntry("classes.dex");
+            return ze.getTime();
+        } catch (IOException e) {
+            Log.e(TAG, "Exception while getting build time", e);
+        } catch (PackageManager.NameNotFoundException e) {
+            Log.e(TAG, "Unable to find package name: " + c.getPackageName(), e);
+        } finally {
+            try {
+                if (zf != null) {
+                    zf.close();
+                }
+            } catch (Exception e) {
+                Log.e(TAG, "Error while closing ZipFile", e);
+            }
+        }
+        return -1;
+    }
+
+    public static String getBuildTimeFormatted(Context c) {
+        long t = getBuildTime(c);
+        return SimpleDateFormat.getInstance().format(new java.util.Date(t));
     }
 }
