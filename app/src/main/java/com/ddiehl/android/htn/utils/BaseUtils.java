@@ -198,6 +198,6 @@ public class BaseUtils {
 
     public static String getBuildTimeFormatted(Context c) {
         long t = getBuildTime(c);
-        return SimpleDateFormat.getInstance().format(new java.util.Date(t));
+        return SimpleDateFormat.getDateInstance().format(new java.util.Date(t));
     }
 }

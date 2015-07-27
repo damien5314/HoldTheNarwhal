@@ -16,6 +16,8 @@ import in.uncod.android.bypass.Bypass;
 
 public class MarkdownTextView extends TextView {
 
+    private CharSequence mRawText;
+
     public MarkdownTextView(Context context) {
         super(context);
         setMovementMethod(LinkMovementMethod.getInstance());
@@ -32,7 +34,13 @@ public class MarkdownTextView extends TextView {
     }
 
     @Override
+    public CharSequence getText() {
+        return mRawText;
+    }
+
+    @Override
     public void setText(CharSequence text, BufferType type) {
+        mRawText = text;
         Bypass b = BypassWrapper.getInstance(getContext());
         CharSequence formatted = b.markdownToSpannable(text.toString());
         super.setText(formatted, type);

@@ -8,27 +8,24 @@ import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
+import com.ddiehl.android.htn.BuildConfig;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.utils.BaseUtils;
+import com.ddiehl.android.htn.view.widgets.MarkdownTextView;
 
 import java.io.InputStream;
 
-public class MarkdownTextFragment extends Fragment {
-    private static final String TAG = MarkdownTextFragment.class.getSimpleName();
+import butterknife.ButterKnife;
 
-    public static final String ARG_TEXT = "arg_text";
-
-    private String mText;
-
-    public MarkdownTextFragment() { }
+public class AboutAppFragment extends MarkdownTextFragment {
 
     public static Fragment newInstance(@NonNull String text) {
-        Fragment f = new MarkdownTextFragment();
+        Fragment f = new AboutAppFragment();
         Bundle args = new Bundle();
         args.putString(ARG_TEXT, text);
         f.setArguments(args);
@@ -40,18 +37,14 @@ public class MarkdownTextFragment extends Fragment {
         return newInstance(text == null ? "" : text);
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Bundle args = getArguments();
-        mText = args.getString(ARG_TEXT, "");
-    }
-
     @Nullable @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = View.inflate(getActivity(), R.layout.fragment_markdown_text, null);
-        TextView tv = (TextView) v.findViewById(R.id.markdown_text_view);
-        tv.setText(mText);
+        View v = super.onCreateView(inflater, container, savedInstanceState);
+        CharSequence ins = String.format("Version %1$s\n\nReleased %2$s\n\n",
+                BuildConfig.VERSION_NAME,
+                BaseUtils.getBuildTimeFormatted(v.getContext()));
+        MarkdownTextView tv = ButterKnife.findById(v, R.id.markdown_text_view);
+        tv.setText(TextUtils.concat(ins, tv.getText()));
         return v;
     }
 }

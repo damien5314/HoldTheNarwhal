@@ -247,7 +247,7 @@ public class SettingsFragment extends PreferenceFragment
         try {
             in_s = getActivity().getAssets().open("htn_about_app.md");
             getFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, MarkdownTextFragment.newInstance(in_s))
+                    .replace(R.id.fragment_container, AboutAppFragment.newInstance(in_s))
                     .addToBackStack(null)
                     .commit();
         } catch (IOException e) {
