@@ -14,7 +14,8 @@ import com.ddiehl.android.htn.events.requests.HideEvent;
 import com.ddiehl.android.htn.events.requests.LoadLinkCommentsEvent;
 import com.ddiehl.android.htn.events.requests.LoadMoreChildrenEvent;
 import com.ddiehl.android.htn.events.requests.LoadSubredditEvent;
-import com.ddiehl.android.htn.events.requests.LoadUserProfileEvent;
+import com.ddiehl.android.htn.events.requests.LoadUserProfileListingEvent;
+import com.ddiehl.android.htn.events.requests.LoadUserProfileSummaryEvent;
 import com.ddiehl.android.htn.events.requests.ReportEvent;
 import com.ddiehl.android.htn.events.requests.SaveEvent;
 import com.ddiehl.android.htn.events.requests.UpdateUserSettingsEvent;
@@ -218,7 +219,14 @@ public class RedditServiceAPI implements RedditService {
     }
 
     @Override
-    public void onLoadUserProfile(LoadUserProfileEvent event) {
+    public void onLoadUserProfileSummary(LoadUserProfileSummaryEvent event) {
+        final String userId = event.getUsername();
+
+        // TODO Call API for required data
+    }
+
+    @Override
+    public void onLoadUserProfile(LoadUserProfileListingEvent event) {
         final String show = event.getShow();
         final String userId = event.getUsername();
         final String sort = event.getSort();

@@ -8,7 +8,7 @@ import com.ddiehl.android.htn.events.requests.HideEvent;
 import com.ddiehl.android.htn.events.requests.LoadLinkCommentsEvent;
 import com.ddiehl.android.htn.events.requests.LoadMoreChildrenEvent;
 import com.ddiehl.android.htn.events.requests.LoadSubredditEvent;
-import com.ddiehl.android.htn.events.requests.LoadUserProfileEvent;
+import com.ddiehl.android.htn.events.requests.LoadUserProfileListingEvent;
 import com.ddiehl.android.htn.events.requests.ReportEvent;
 import com.ddiehl.android.htn.events.requests.SaveEvent;
 import com.ddiehl.android.htn.events.requests.UserSignOutEvent;
@@ -60,7 +60,7 @@ public class HTNAnalytics {
     }
 
     @Subscribe
-    public void onLoadUserProfile(LoadUserProfileEvent event) {
+    public void onLoadUserProfile(LoadUserProfileListingEvent event) {
         Map<String, String> params = new HashMap<>();
         params.put("show", event.getShow());
         params.put("user", BaseUtils.getMd5HexString(event.getUsername()));

@@ -9,9 +9,10 @@ import com.ddiehl.android.htn.events.requests.GetUserIdentityEvent;
 import com.ddiehl.android.htn.events.requests.GetUserSettingsEvent;
 import com.ddiehl.android.htn.events.requests.HideEvent;
 import com.ddiehl.android.htn.events.requests.LoadLinkCommentsEvent;
-import com.ddiehl.android.htn.events.requests.LoadSubredditEvent;
 import com.ddiehl.android.htn.events.requests.LoadMoreChildrenEvent;
-import com.ddiehl.android.htn.events.requests.LoadUserProfileEvent;
+import com.ddiehl.android.htn.events.requests.LoadSubredditEvent;
+import com.ddiehl.android.htn.events.requests.LoadUserProfileListingEvent;
+import com.ddiehl.android.htn.events.requests.LoadUserProfileSummaryEvent;
 import com.ddiehl.android.htn.events.requests.ReportEvent;
 import com.ddiehl.android.htn.events.requests.SaveEvent;
 import com.ddiehl.android.htn.events.requests.UpdateUserSettingsEvent;
@@ -27,7 +28,8 @@ public interface RedditService {
     void onLoadLinks(LoadSubredditEvent event);
     void onLoadLinkComments(LoadLinkCommentsEvent event);
     void onLoadMoreChildren(LoadMoreChildrenEvent event);
-    void onLoadUserProfile(LoadUserProfileEvent event);
+    void onLoadUserProfileSummary(LoadUserProfileSummaryEvent event);
+    void onLoadUserProfile(LoadUserProfileListingEvent event);
 
     void onGetUserIdentity(GetUserIdentityEvent event);
     void onGetUserSettings(GetUserSettingsEvent event);

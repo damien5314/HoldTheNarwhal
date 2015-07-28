@@ -6,7 +6,7 @@ package com.ddiehl.android.htn.presenter;
 
 import android.content.Context;
 
-import com.ddiehl.android.htn.events.requests.LoadUserProfileEvent;
+import com.ddiehl.android.htn.events.requests.LoadUserProfileListingEvent;
 import com.ddiehl.android.htn.events.responses.HideSubmittedEvent;
 import com.ddiehl.android.htn.events.responses.ListingsLoadedEvent;
 import com.ddiehl.android.htn.events.responses.SaveSubmittedEvent;
@@ -25,7 +25,7 @@ public class UserProfileListingPresenter extends AbsListingsPresenter {
 
     @Override
     public void requestData() {
-        mBus.post(new LoadUserProfileEvent(mShow, mUsernameContext, mSort, mTimespan, mNextPageListingId));
+        mBus.post(new LoadUserProfileListingEvent(mShow, mUsernameContext, mSort, mTimespan, mNextPageListingId));
     }
 
     public void requestData(String show) {

@@ -29,8 +29,8 @@ public class UserProfileSummaryFragment extends AbsRedditFragment {
 
     public UserProfileSummaryFragment() { }
 
-    public static UserProfileListingFragment newInstance(String username) {
-        UserProfileListingFragment f = new UserProfileListingFragment();
+    public static UserProfileSummaryFragment newInstance(String username) {
+        UserProfileSummaryFragment f = new UserProfileSummaryFragment();
         Bundle args = new Bundle();
         args.putString(ARG_USERNAME, username);
         f.setArguments(args);

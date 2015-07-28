@@ -18,7 +18,8 @@ import com.ddiehl.android.htn.events.requests.HideEvent;
 import com.ddiehl.android.htn.events.requests.LoadLinkCommentsEvent;
 import com.ddiehl.android.htn.events.requests.LoadMoreChildrenEvent;
 import com.ddiehl.android.htn.events.requests.LoadSubredditEvent;
-import com.ddiehl.android.htn.events.requests.LoadUserProfileEvent;
+import com.ddiehl.android.htn.events.requests.LoadUserProfileListingEvent;
+import com.ddiehl.android.htn.events.requests.LoadUserProfileSummaryEvent;
 import com.ddiehl.android.htn.events.requests.RefreshUserAccessTokenEvent;
 import com.ddiehl.android.htn.events.requests.ReportEvent;
 import com.ddiehl.android.htn.events.requests.SaveEvent;
@@ -291,7 +292,26 @@ public class RedditServiceAuth implements RedditService {
     }
 
     @Subscribe @Override
-    public void onLoadUserProfile(LoadUserProfileEvent event) {
+    public void onLoadUserProfileSummary(LoadUserProfileSummaryEvent event) {
+        if (!mAccessTokenManager.hasValidAccessToken()) {
+            mQueuedEvent = event;
+            AccessToken userAccessToken = mAccessTokenManager.getUserAccessToken();
+            String refreshToken = null;
+            if (userAccessToken != null) {
+                refreshToken = userAccessToken.getRefreshToken();
+            }
+            if (refreshToken != null) {
+                mBus.post(new RefreshUserAccessTokenEvent(refreshToken));
+            } else {
+                mBus.post(new AuthorizeApplicationEvent());
+            }
+        } else {
+            mServiceAPI.onLoadUserProfileSummary(event);
+        }
+    }
+
+    @Subscribe @Override
+    public void onLoadUserProfile(LoadUserProfileListingEvent event) {
         if (!mAccessTokenManager.hasValidAccessToken()) {
             mQueuedEvent = event;
             AccessToken userAccessToken = mAccessTokenManager.getUserAccessToken();

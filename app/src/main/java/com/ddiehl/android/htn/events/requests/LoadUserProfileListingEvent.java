@@ -4,7 +4,7 @@
 
 package com.ddiehl.android.htn.events.requests;
 
-public class LoadUserProfileEvent {
+public class LoadUserProfileListingEvent {
 
     private String mShow;
     private String mUsername;
@@ -12,7 +12,7 @@ public class LoadUserProfileEvent {
     private String mTimeSpan;
     private String mAfter;
 
-    public LoadUserProfileEvent(String show, String username, String sort, String timespan, String after) {
+    public LoadUserProfileListingEvent(String show, String username, String sort, String timespan, String after) {
         mShow = show;
         mUsername = username;
         mSort = sort;
