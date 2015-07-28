@@ -73,7 +73,6 @@ public class MainActivity extends AppCompatActivity
 
     private Bus mBus = BusProvider.getInstance();
     private MainPresenter mMainPresenter;
-    private String mLastAuthCode;
 
     private ProgressDialog mProgressBar;
     private Dialog mSubredditNavigationDialog;
@@ -419,11 +418,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onUserAuthCodeReceived(String authCode) {
-        // Fix for API 10; authorization page was loading twice with same auth code
-        if (authCode.equals(mLastAuthCode))
-            return;
-        mLastAuthCode = authCode;
-
         FragmentManager fm = getFragmentManager();
         fm.popBackStack();
 
