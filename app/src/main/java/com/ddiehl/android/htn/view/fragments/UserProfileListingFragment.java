@@ -58,7 +58,7 @@ public class UserProfileListingFragment extends AbsListingsFragment implements L
 
     @Nullable @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.listings_user_profile_fragment, container, false);
+        View v = inflater.inflate(R.layout.user_profile_listings_fragment, container, false);
         ButterKnife.bind(this, v);
         instantiateListView(v);
         updateUserProfileTabs();

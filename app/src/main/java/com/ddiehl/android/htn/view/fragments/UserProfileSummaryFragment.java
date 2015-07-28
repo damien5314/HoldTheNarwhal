@@ -39,7 +39,7 @@ public class UserProfileSummaryFragment extends AbsRedditFragment {
 
     @Nullable @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.listings_user_profile_fragment, container, false);
+        View v = inflater.inflate(R.layout.user_profile_summary_fragment, container, false);
         ButterKnife.bind(this, v);
         instantiateView();
         updateUserProfileTabs();
