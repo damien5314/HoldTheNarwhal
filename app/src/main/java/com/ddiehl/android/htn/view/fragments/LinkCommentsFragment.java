@@ -99,7 +99,8 @@ public class LinkCommentsFragment extends AbsRedditFragment
         updateTitle();
     }
 
-    private void updateTitle() {
+    @Override
+    public void updateTitle() {
         Link link = mLinkCommentsPresenter.getLinkContext();
         if (link != null) {
             setTitle(link.getTitle());

@@ -13,13 +13,13 @@ import com.ddiehl.android.htn.events.responses.SaveSubmittedEvent;
 import com.ddiehl.android.htn.events.responses.UserIdentitySavedEvent;
 import com.ddiehl.android.htn.events.responses.VoteSubmittedEvent;
 import com.ddiehl.android.htn.view.ListingsView;
-import com.ddiehl.android.htn.view.fragments.UserProfileFragment;
+import com.ddiehl.android.htn.view.fragments.UserProfileListingFragment;
 import com.squareup.otto.Subscribe;
 
-public class UserProfilePresenter extends AbsListingsPresenter {
+public class UserProfileListingPresenter extends AbsListingsPresenter {
 
-    public UserProfilePresenter(Context context, ListingsView view, String show, String username,
-                                String sort, String timespan) {
+    public UserProfileListingPresenter(Context context, ListingsView view, String show,
+                                       String username, String sort, String timespan) {
         super(context, view, show, username, null, sort, timespan);
     }
 
@@ -36,7 +36,7 @@ public class UserProfilePresenter extends AbsListingsPresenter {
     @Subscribe @Override
     public void onUserIdentitySaved(UserIdentitySavedEvent event) {
         super.onUserIdentitySaved(event);
-        ((UserProfileFragment) mListingsView).updateUserProfileTabs();
+        ((UserProfileListingFragment) mListingsView).updateUserProfileTabs();
     }
 
     @Subscribe @Override

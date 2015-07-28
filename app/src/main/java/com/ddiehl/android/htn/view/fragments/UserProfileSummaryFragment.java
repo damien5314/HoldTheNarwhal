@@ -12,58 +12,42 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ddiehl.android.htn.R;
-import com.ddiehl.android.htn.presenter.UserProfilePresenter;
-import com.ddiehl.android.htn.view.ListingsView;
-import com.ddiehl.android.htn.view.adapters.ListingsAdapter;
+import com.ddiehl.android.htn.presenter.UserProfileSummaryPresenter;
+import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.reddit.identity.UserIdentity;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class UserProfileFragment extends AbsListingsFragment implements ListingsView {
+public class UserProfileSummaryFragment extends AbsRedditFragment {
 
-    private static final String ARG_SHOW = "arg_show";
     private static final String ARG_USERNAME = "arg_username";
+
+    private UserProfileSummaryPresenter mPresenter;
 
     @Bind(R.id.user_profile_tabs) TabLayout mUserProfileTabs;
 
-    public UserProfileFragment() { }
+    public UserProfileSummaryFragment() { }
 
-    public static UserProfileFragment newInstance(String show, String username) {
-        UserProfileFragment f = new UserProfileFragment();
+    public static UserProfileListingFragment newInstance(String username) {
+        UserProfileListingFragment f = new UserProfileListingFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_SHOW, show);
         args.putString(ARG_USERNAME, username);
         f.setArguments(args);
         return f;
     }
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        Bundle args = getArguments();
-        String show = args.getString(ARG_SHOW);
-        String username = args.getString(ARG_USERNAME);
-        mListingsPresenter = new UserProfilePresenter(getActivity(), this, show, username, "new", "all");
-        mListingsAdapter = new ListingsAdapter(mListingsPresenter);
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        updateTitle();
-    }
-
     @Nullable @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-//        View v = inflater.inflate(R.layout.listings_fragment, container, false);
         View v = inflater.inflate(R.layout.listings_user_profile_fragment, container, false);
         ButterKnife.bind(this, v);
-        instantiateListView(v);
+        instantiateView();
         updateUserProfileTabs();
-//        updateTitle();
         return v;
+    }
+
+    private void instantiateView() {
+
     }
 
     public void updateUserProfileTabs() {
@@ -71,6 +55,8 @@ public class UserProfileFragment extends AbsListingsFragment implements Listings
         mUserProfileTabs.setOnTabSelectedListener(null);
 
         // Normal tabs
+        mUserProfileTabs.addTab(mUserProfileTabs.newTab()
+                .setText(getString(R.string.navigation_tabs_summary)).setTag("summary"));
         mUserProfileTabs.addTab(mUserProfileTabs.newTab()
                 .setText(getString(R.string.navigation_tabs_overview)).setTag("overview"));
         mUserProfileTabs.addTab(mUserProfileTabs.newTab()
@@ -81,9 +67,9 @@ public class UserProfileFragment extends AbsListingsFragment implements Listings
                 .setText(getString(R.string.navigation_tabs_gilded)).setTag("gilded"));
 
         // Authorized tabs
-        UserIdentity id = mListingsPresenter.getAuthorizedUser();
+        UserIdentity id = mPresenter.getAuthorizedUser();
         boolean showAuthorizedTabs = id != null &&
-                id.getName().equals(mListingsPresenter.getUsernameContext());
+                id.getName().equals(mPresenter.getUsernameContext());
         if (showAuthorizedTabs) {
             mUserProfileTabs.addTab(mUserProfileTabs.newTab()
                     .setText(getString(R.string.navigation_tabs_upvoted)).setTag("upvoted"));
@@ -106,14 +92,20 @@ public class UserProfileFragment extends AbsListingsFragment implements Listings
 
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-//                showUserProfile((String) tab.getTag(), mMainPresenter.getUsernameContext());
-                ((UserProfilePresenter) mListingsPresenter).requestData((String) tab.getTag());
+                if (tab.getTag().equals("summary")) {
+                    // Already on this tab
+                } else {
+                    ((MainView) getActivity()).showUserProfile(
+                            (String) tab.getTag(), mPresenter.getUsernameContext());
+                }
             }
         });
     }
 
     @Override
     public void updateTitle() {
-        setTitle(String.format(getString(R.string.username), mListingsPresenter.getUsernameContext()));
+        setTitle(String.format(getString(R.string.username), mPresenter.getUsernameContext()));
     }
+
+
 }

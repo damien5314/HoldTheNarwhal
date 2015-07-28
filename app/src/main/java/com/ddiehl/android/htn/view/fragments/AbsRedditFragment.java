@@ -10,6 +10,8 @@ import com.ddiehl.android.htn.view.MainView;
 
 public abstract class AbsRedditFragment extends Fragment {
 
+    abstract void updateTitle();
+
     public void setTitle(CharSequence title) {
         getActivity().setTitle(title);
     }

@@ -46,7 +46,8 @@ import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.android.htn.view.dialogs.ConfirmSignOutDialog;
 import com.ddiehl.android.htn.view.fragments.SettingsFragment;
 import com.ddiehl.android.htn.view.fragments.SubredditFragment;
-import com.ddiehl.android.htn.view.fragments.UserProfileFragment;
+import com.ddiehl.android.htn.view.fragments.UserProfileListingFragment;
+import com.ddiehl.android.htn.view.fragments.UserProfileSummaryFragment;
 import com.ddiehl.android.htn.view.fragments.WebViewFragment;
 import com.ddiehl.reddit.identity.UserIdentity;
 import com.flurry.android.FlurryAgent;
@@ -280,7 +281,24 @@ public class MainActivity extends AppCompatActivity
         closeNavigationDrawer();
         mMainPresenter.setUsernameContext(username);
         FragmentManager fm = getFragmentManager();
-        Fragment f = UserProfileFragment.newInstance(show, username);
+        Fragment f = UserProfileListingFragment.newInstance(show, username);
+        fm.beginTransaction().replace(R.id.fragment_container, f)
+                .addToBackStack(null)
+                .commit();
+    }
+
+    @Override
+    public void showUserProfileSummary() {
+        String username = mMainPresenter.getAuthorizedUser().getName();
+        showUserProfileSummary(username);
+    }
+
+    @Override
+    public void showUserProfileSummary(String username) {
+        closeNavigationDrawer();
+        mMainPresenter.setUsernameContext(username);
+        FragmentManager fm = getFragmentManager();
+        Fragment f = UserProfileSummaryFragment.newInstance(username);
         fm.beginTransaction().replace(R.id.fragment_container, f)
                 .addToBackStack(null)
                 .commit();

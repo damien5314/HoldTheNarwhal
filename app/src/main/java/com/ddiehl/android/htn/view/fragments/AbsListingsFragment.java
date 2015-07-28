@@ -66,8 +66,6 @@ public abstract class AbsListingsFragment extends AbsRedditFragment
     MoPubAdRecycleAdapter mAdAdapter;
     RequestParameters mAdRequestParameters;
 
-    abstract void updateTitle();
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

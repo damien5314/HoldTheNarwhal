@@ -71,6 +71,11 @@ public class WebViewFragment extends AbsRedditFragment {
         Bundle args = getArguments();
 
         mUrl = args.getString(ARG_URL);
+        updateTitle();
+    }
+
+    @Override
+    void updateTitle() {
         getActivity().setTitle(R.string.app_name);
     }
 
@@ -167,7 +172,7 @@ public class WebViewFragment extends AbsRedditFragment {
      * http://stackoverflow.com/a/14751673/3238938
      * http://twigstechtips.blogspot.com/2013/09/android-disable-webview-zoom-controls.html
      */
-    private void disableWebViewZoomControls(final WebView webView) {
+    private static void disableWebViewZoomControls(final WebView webView) {
         webView.getSettings().setSupportZoom(true);
         webView.getSettings().setBuiltInZoomControls(true);
 
@@ -180,8 +185,7 @@ public class WebViewFragment extends AbsRedditFragment {
                 zoom_control = ((ZoomButtonsController) webView.getClass()
                         .getMethod("getZoomButtonsController").invoke(webView, (Object[]) null));
                 zoom_control.getContainer().setVisibility(View.GONE);
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }

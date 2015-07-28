@@ -114,6 +114,7 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
         return mListings.get(position);
     }
 
+    @Override
     public String getShow() {
         return mShow;
     }
