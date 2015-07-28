@@ -108,7 +108,7 @@ public class UserProfileListingFragment extends AbsListingsFragment implements L
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 if (tab.getTag().equals("summary")) {
-                    ((MainView) getActivity()).showUserProfileSummary();
+                    ((MainView) getActivity()).showUserProfile();
                 } else {
                     ((UserProfileListingPresenter) mListingsPresenter).requestData((String) tab.getTag());
                 }

@@ -7,17 +7,26 @@ package com.ddiehl.android.htn.presenter;
 import android.content.Context;
 
 import com.ddiehl.android.htn.events.requests.LoadUserProfileSummaryEvent;
-import com.ddiehl.android.htn.view.ListingsView;
 
 public class UserProfileSummaryPresenter extends AbsListingsPresenter {
 
-    public UserProfileSummaryPresenter(Context c, ListingsView view, String show, String username,
-                                       String subreddit, String sort, String timespan) {
-        super(c, view, show, username, subreddit, sort, timespan);
+    public UserProfileSummaryPresenter(Context c, String username) {
+        super(c, null, null, username, null, null, null);
+    }
+
+    @Override
+    public void refreshData() {
+        if (mListingsRequested)
+            return;
+
+        mListingsRequested = true;
+        mListingsView.showSpinner(null);
+        requestData();
     }
 
     @Override
     void requestData() {
         mBus.post(new LoadUserProfileSummaryEvent(mUsernameContext));
     }
+
 }

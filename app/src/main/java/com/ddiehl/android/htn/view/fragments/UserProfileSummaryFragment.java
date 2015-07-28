@@ -37,6 +37,15 @@ public class UserProfileSummaryFragment extends AbsRedditFragment {
         return f;
     }
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        Bundle args = getArguments();
+        String username = args.getString(ARG_USERNAME);
+        mPresenter = new UserProfileSummaryPresenter(getActivity(), username);
+    }
+
     @Nullable @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.user_profile_summary_fragment, container, false);

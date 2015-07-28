@@ -11,9 +11,8 @@ public interface MainView extends BaseView {
     void closeNavigationDrawer();
     void showLoginView();
     void showUserProfile();
-    void showUserProfile(String show, String username);
-    void showUserProfileSummary();
     void showUserProfileSummary(String username);
+    void showUserProfile(String show, String username);
     void showUserSubreddits();
     void showSubreddit(String subreddit);
     void showWebViewForURL(String url);

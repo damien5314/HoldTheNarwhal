@@ -272,67 +272,37 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void showUserProfile() {
         String username = mMainPresenter.getAuthorizedUser().getName();
-        showUserProfile("overview", username);
+        showUserProfileSummary(username);
     }
 
     @Override
     public void showUserProfile(String show, String username) {
         closeNavigationDrawer();
         mMainPresenter.setUsernameContext(username);
-        FragmentManager fm = getFragmentManager();
         Fragment f = UserProfileListingFragment.newInstance(show, username);
-        fm.beginTransaction().replace(R.id.fragment_container, f)
-                .addToBackStack(null)
-                .commit();
-    }
-
-    @Override
-    public void showUserProfileSummary() {
-        String username = mMainPresenter.getAuthorizedUser().getName();
-        showUserProfileSummary(username);
+        showFragment(f);
     }
 
     @Override
     public void showUserProfileSummary(String username) {
         closeNavigationDrawer();
         mMainPresenter.setUsernameContext(username);
-        FragmentManager fm = getFragmentManager();
         Fragment f = UserProfileSummaryFragment.newInstance(username);
-        fm.beginTransaction().replace(R.id.fragment_container, f)
-                .addToBackStack(null)
-                .commit();
-    }
-
-    private void showSubredditIfEmpty(String subreddit) {
-        FragmentManager fm = getFragmentManager();
-        Fragment f = fm.findFragmentById(R.id.fragment_container);
-        if (f == null) {
-            showSubreddit(subreddit);
-        }
+        showFragment(f);
     }
 
     @Override
     public void showSubreddit(String subreddit) {
         closeNavigationDrawer();
-        FragmentManager fm = getFragmentManager();
         Fragment f = SubredditFragment.newInstance(subreddit);
-        FragmentTransaction ft = fm.beginTransaction().replace(R.id.fragment_container, f);
-
-        Fragment cf = fm.findFragmentById(R.id.fragment_container);
-        if (cf != null) {
-            ft.addToBackStack(null);
-        }
-
-        ft.commit();
+        showFragment(f);
     }
 
     @Override
     public void showWebViewForURL(String url) {
         closeNavigationDrawer();
         Fragment f = WebViewFragment.newInstance(url);
-        getFragmentManager().beginTransaction().replace(R.id.fragment_container, f)
-                .addToBackStack(null)
-                .commit();
+        showFragment(f);
     }
 
     @Override
@@ -345,32 +315,6 @@ public class MainActivity extends AppCompatActivity
         ConfirmSignOutDialog dialog = ConfirmSignOutDialog.newInstance();
         dialog.show(getFragmentManager(), DIALOG_CONFIRM_SIGN_OUT);
         FlurryAgent.logEvent("clicked sign out");
-    }
-
-    private void showSubredditNavigationDialog() {
-        if (mSubredditNavigationDialog == null) {
-            mSubredditNavigationDialog = new Dialog(this);
-            mSubredditNavigationDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            mSubredditNavigationDialog.setContentView(R.layout.navigate_to_subreddit_edit_text);
-            ButterKnife.findById(mSubredditNavigationDialog, R.id.drawer_navigate_to_subreddit_go)
-                    .setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            EditText vInput = ButterKnife.findById(mSubredditNavigationDialog,
-                                    R.id.drawer_navigate_to_subreddit_text);
-                            String inputSubreddit = vInput.getText().toString();
-                            if (inputSubreddit.equals("")) return;
-
-                            inputSubreddit = inputSubreddit.substring(3);
-                            inputSubreddit = inputSubreddit.trim();
-                            vInput.setText("");
-                            mSubredditNavigationDialog.dismiss();
-                            showSubreddit(inputSubreddit);
-                        }
-                    });
-        }
-        mDrawerLayout.closeDrawer(GravityCompat.START);
-        mSubredditNavigationDialog.show();
     }
 
     @Override
@@ -418,8 +362,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onUserAuthCodeReceived(String authCode) {
-        FragmentManager fm = getFragmentManager();
-        fm.popBackStack();
+        getFragmentManager().popBackStack();
 
         // Notify auth API about the auth code retrieval
         mBus.post(new UserAuthCodeReceivedEvent(authCode));
@@ -436,19 +379,63 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void showSettings() {
-        getFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new SettingsFragment())
-                .addToBackStack(null)
-                .commit();
+        showFragment(new SettingsFragment());
     }
 
     @Override
-     public void onBackPressed() {
-        if (getFragmentManager().getBackStackEntryCount() > 0) {
-            getFragmentManager().popBackStack();
+    public void onBackPressed() {
+        FragmentManager fm = getFragmentManager();
+        if (fm.getBackStackEntryCount() > 0) {
+            fm.popBackStack();
         } else {
             super.onBackPressed();
         }
+    }
+
+    private void showSubredditNavigationDialog() {
+        if (mSubredditNavigationDialog == null) {
+            mSubredditNavigationDialog = new Dialog(this);
+            mSubredditNavigationDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            mSubredditNavigationDialog.setContentView(R.layout.navigate_to_subreddit_edit_text);
+            ButterKnife.findById(mSubredditNavigationDialog, R.id.drawer_navigate_to_subreddit_go)
+                    .setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            EditText vInput = ButterKnife.findById(mSubredditNavigationDialog,
+                                    R.id.drawer_navigate_to_subreddit_text);
+                            String inputSubreddit = vInput.getText().toString();
+                            if (inputSubreddit.equals("")) return;
+
+                            inputSubreddit = inputSubreddit.substring(3);
+                            inputSubreddit = inputSubreddit.trim();
+                            vInput.setText("");
+                            mSubredditNavigationDialog.dismiss();
+                            showSubreddit(inputSubreddit);
+                        }
+                    });
+        }
+        mDrawerLayout.closeDrawer(GravityCompat.START);
+        mSubredditNavigationDialog.show();
+    }
+
+    private void showSubredditIfEmpty(String subreddit) {
+        FragmentManager fm = getFragmentManager();
+        Fragment f = fm.findFragmentById(R.id.fragment_container);
+        if (f == null) {
+            showSubreddit(subreddit);
+        }
+    }
+
+    private void showFragment(Fragment f) {
+        FragmentManager fm = getFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction().replace(R.id.fragment_container, f);
+
+        Fragment cf = fm.findFragmentById(R.id.fragment_container);
+        if (cf != null) {
+            ft.addToBackStack(null);
+        }
+
+        ft.commit();
     }
 
 }
