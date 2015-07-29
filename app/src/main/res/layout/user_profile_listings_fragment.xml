@@ -11,8 +11,14 @@
 
     <include layout="@layout/user_profile_navigation_tabs" />
 
-    <include layout="@layout/listings_fragment" />
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <include layout="@layout/user_profile_summary" />
+        <include layout="@layout/listings_fragment" />
+
+        <include layout="@layout/user_profile_summary" />
+
+    </FrameLayout>
 
 </LinearLayout>
