@@ -47,7 +47,6 @@ import com.ddiehl.android.htn.view.dialogs.ConfirmSignOutDialog;
 import com.ddiehl.android.htn.view.fragments.SettingsFragment;
 import com.ddiehl.android.htn.view.fragments.SubredditFragment;
 import com.ddiehl.android.htn.view.fragments.UserProfileListingFragment;
-import com.ddiehl.android.htn.view.fragments.UserProfileSummaryFragment;
 import com.ddiehl.android.htn.view.fragments.WebViewFragment;
 import com.ddiehl.reddit.identity.UserIdentity;
 import com.flurry.android.FlurryAgent;
@@ -272,7 +271,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void showUserProfile() {
         String username = mMainPresenter.getAuthorizedUser().getName();
-        showUserProfileSummary(username);
+        showUserProfile("summary", username);
     }
 
     @Override
@@ -280,14 +279,6 @@ public class MainActivity extends AppCompatActivity
         closeNavigationDrawer();
         mMainPresenter.setUsernameContext(username);
         Fragment f = UserProfileListingFragment.newInstance(show, username);
-        showFragment(f);
-    }
-
-    @Override
-    public void showUserProfileSummary(String username) {
-        closeNavigationDrawer();
-        mMainPresenter.setUsernameContext(username);
-        Fragment f = UserProfileSummaryFragment.newInstance(username);
         showFragment(f);
     }
 
@@ -331,7 +322,7 @@ public class MainActivity extends AppCompatActivity
     public void showSpinner(String message) {
         if (mProgressBar == null) {
             mProgressBar = new ProgressDialog(this, R.style.ProgressDialog);
-            mProgressBar.setCancelable(false);
+            mProgressBar.setCancelable(true);
             mProgressBar.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         }
         mProgressBar.setMessage(message);

@@ -67,8 +67,6 @@ public class RedditServiceAuth implements RedditService {
             "&redirect_uri=" + REDIRECT_URI +
             "&scope=" + SCOPE;
 
-    private static RedditServiceAuth _instance;
-
     private Context mContext;
     private Bus mBus;
     private RedditAuthAPI mAuthAPI;
@@ -444,6 +442,12 @@ public class RedditServiceAuth implements RedditService {
             mQueuedEvent = null;
         }
     }
+
+    //////////////////////////////////////////////
+    ////////// Singleton implementation //////////
+    //////////////////////////////////////////////
+
+    private static RedditServiceAuth _instance;
 
     public static RedditServiceAuth getInstance(Context context) {
         if (_instance == null) {

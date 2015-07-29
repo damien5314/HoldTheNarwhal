@@ -20,6 +20,7 @@ import com.ddiehl.android.htn.events.responses.HideSubmittedEvent;
 import com.ddiehl.android.htn.events.responses.ListingsLoadedEvent;
 import com.ddiehl.android.htn.events.responses.SaveSubmittedEvent;
 import com.ddiehl.android.htn.events.responses.UserIdentitySavedEvent;
+import com.ddiehl.android.htn.events.responses.UserProfileSummaryLoadedEvent;
 import com.ddiehl.android.htn.events.responses.VoteSubmittedEvent;
 import com.ddiehl.android.htn.view.ListingsView;
 import com.ddiehl.reddit.Archivable;
@@ -197,6 +198,17 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
         mListingsView.listingsUpdated();
         mNextPageListingId = event.getResponse().getData().getAfter();
         mListingsRequested = false;
+    }
+
+    @Subscribe
+    public void onUserProfileSummaryLoaded(UserProfileSummaryLoadedEvent event) {
+        mListingsView.dismissSpinner();
+        if (event.isFailed()) {
+            mListingsRequested = false;
+            return;
+        }
+
+        // TODO Display data on success
     }
 
     @Subscribe

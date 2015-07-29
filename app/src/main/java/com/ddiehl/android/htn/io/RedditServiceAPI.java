@@ -26,6 +26,7 @@ import com.ddiehl.android.htn.events.responses.ListingsLoadedEvent;
 import com.ddiehl.android.htn.events.responses.MoreChildrenLoadedEvent;
 import com.ddiehl.android.htn.events.responses.SaveSubmittedEvent;
 import com.ddiehl.android.htn.events.responses.UserIdentityRetrievedEvent;
+import com.ddiehl.android.htn.events.responses.UserProfileSummaryLoadedEvent;
 import com.ddiehl.android.htn.events.responses.UserSettingsRetrievedEvent;
 import com.ddiehl.android.htn.events.responses.UserSettingsUpdatedEvent;
 import com.ddiehl.android.htn.events.responses.VoteSubmittedEvent;
@@ -223,6 +224,8 @@ public class RedditServiceAPI implements RedditService {
         final String userId = event.getUsername();
 
         // TODO Call API for required data
+        mBus.post(new UserProfileSummaryLoadedEvent(
+                RetrofitError.unexpectedError("", new RuntimeException())));
     }
 
     @Override

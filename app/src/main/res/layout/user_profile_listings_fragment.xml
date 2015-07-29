@@ -13,4 +13,6 @@
 
     <include layout="@layout/listings_fragment" />
 
+    <include layout="@layout/user_profile_summary" />
+
 </LinearLayout>

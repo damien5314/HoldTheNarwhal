@@ -4,5 +4,22 @@
 
 package com.ddiehl.android.htn.events.responses;
 
-public class UserProfileSummaryLoadedEvent {
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+
+
+public class UserProfileSummaryLoadedEvent extends FailableEvent {
+    private Response mResponse;
+
+    public UserProfileSummaryLoadedEvent(Response response) {
+        mResponse = response;
+    }
+
+    public UserProfileSummaryLoadedEvent(RetrofitError e) {
+        super(e);
+    }
+
+    public Response getResponse() {
+        return mResponse;
+    }
 }

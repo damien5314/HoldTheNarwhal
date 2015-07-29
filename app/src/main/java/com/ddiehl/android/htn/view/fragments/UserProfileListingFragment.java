@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.presenter.UserProfileListingPresenter;
-import com.ddiehl.android.htn.view.ListingsView;
 import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.android.htn.view.adapters.ListingsAdapter;
 import com.ddiehl.reddit.identity.UserIdentity;
@@ -21,12 +20,14 @@ import com.ddiehl.reddit.identity.UserIdentity;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class UserProfileListingFragment extends AbsListingsFragment implements ListingsView {
+public class UserProfileListingFragment extends AbsListingsFragment {
 
     private static final String ARG_SHOW = "arg_show";
     private static final String ARG_USERNAME = "arg_username";
 
     @Bind(R.id.user_profile_tabs) TabLayout mUserProfileTabs;
+    @Bind(R.id.user_profile_summary) View mUserProfileSummary;
+    @Bind(R.id.recycler_view) View mListView;
 
     public UserProfileListingFragment() { }
 
@@ -107,10 +108,17 @@ public class UserProfileListingFragment extends AbsListingsFragment implements L
 
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
+//                ((MainView) getActivity()).showUserProfile((String) tab.getTag(),
+//                        mListingsPresenter.getUsernameContext());
+                String tag = (String) tab.getTag();
                 if (tab.getTag().equals("summary")) {
-                    ((MainView) getActivity()).showUserProfile();
+                    mUserProfileSummary.setVisibility(View.VISIBLE);
+                    mListView.setVisibility(View.GONE);
+                    ((MainView) getActivity()).showUserProfile(tag, mListingsPresenter.getUsernameContext());
                 } else {
-                    ((UserProfileListingPresenter) mListingsPresenter).requestData((String) tab.getTag());
+                    mUserProfileSummary.setVisibility(View.GONE);
+                    mListView.setVisibility(View.VISIBLE);
+                    ((UserProfileListingPresenter) mListingsPresenter).requestData(tag);
                 }
             }
         });

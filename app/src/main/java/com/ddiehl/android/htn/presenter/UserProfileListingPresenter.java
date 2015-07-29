@@ -7,10 +7,12 @@ package com.ddiehl.android.htn.presenter;
 import android.content.Context;
 
 import com.ddiehl.android.htn.events.requests.LoadUserProfileListingEvent;
+import com.ddiehl.android.htn.events.requests.LoadUserProfileSummaryEvent;
 import com.ddiehl.android.htn.events.responses.HideSubmittedEvent;
 import com.ddiehl.android.htn.events.responses.ListingsLoadedEvent;
 import com.ddiehl.android.htn.events.responses.SaveSubmittedEvent;
 import com.ddiehl.android.htn.events.responses.UserIdentitySavedEvent;
+import com.ddiehl.android.htn.events.responses.UserProfileSummaryLoadedEvent;
 import com.ddiehl.android.htn.events.responses.VoteSubmittedEvent;
 import com.ddiehl.android.htn.view.ListingsView;
 import com.ddiehl.android.htn.view.fragments.UserProfileListingFragment;
@@ -25,12 +27,21 @@ public class UserProfileListingPresenter extends AbsListingsPresenter {
 
     @Override
     public void requestData() {
-        mBus.post(new LoadUserProfileListingEvent(mShow, mUsernameContext, mSort, mTimespan, mNextPageListingId));
+        if (mShow.equals("summary")) {
+            mBus.post(new LoadUserProfileSummaryEvent(mUsernameContext));
+        } else {
+            mBus.post(new LoadUserProfileListingEvent(mShow, mUsernameContext, mSort, mTimespan, mNextPageListingId));
+        }
     }
 
     public void requestData(String show) {
         mShow = show;
         refreshData();
+    }
+
+    @Subscribe
+    public void onUserProfileSummaryLoaded(UserProfileSummaryLoadedEvent event) {
+        super.onUserProfileSummaryLoaded(event);
     }
 
     @Subscribe @Override
