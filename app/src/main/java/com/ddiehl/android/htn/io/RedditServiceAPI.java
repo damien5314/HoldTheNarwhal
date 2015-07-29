@@ -35,7 +35,6 @@ import com.ddiehl.reddit.Votable;
 import com.ddiehl.reddit.adapters.AbsCommentDeserializer;
 import com.ddiehl.reddit.adapters.ListingDeserializer;
 import com.ddiehl.reddit.adapters.ListingResponseDeserializer;
-import com.ddiehl.reddit.identity.UserIdentity;
 import com.ddiehl.reddit.identity.UserSettings;
 import com.ddiehl.reddit.listings.AbsComment;
 import com.ddiehl.reddit.listings.CommentStub;
@@ -56,7 +55,6 @@ import java.io.InputStream;
 import java.util.List;
 
 import retrofit.Callback;
-import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.OkClient;
@@ -97,13 +95,10 @@ public class RedditServiceAPI implements RedditService {
                 .setClient(new OkClient(client))
                 .setEndpoint(ENDPOINT_AUTHORIZED)
                 .setConverter(new GsonConverter(gson))
-                .setRequestInterceptor(new RequestInterceptor() {
-                    @Override
-                    public void intercept(RequestFacade request) {
-                        request.addHeader("User-Agent", RedditService.USER_AGENT);
-                        request.addHeader("Authorization", "bearer " + getAccessToken());
-                        request.addQueryParam("raw_json", "1");
-                    }
+                .setRequestInterceptor(request -> {
+                    request.addHeader("User-Agent", RedditService.USER_AGENT);
+                    request.addHeader("Authorization", "bearer " + getAccessToken());
+                    request.addQueryParam("raw_json", "1");
                 })
                 .build();
 
@@ -121,20 +116,13 @@ public class RedditServiceAPI implements RedditService {
 
     @Override
     public void onGetUserIdentity(GetUserIdentityEvent event) {
-        mAPI.getUserIdentity(new Callback<UserIdentity>() {
-            @Override
-            public void success(UserIdentity userIdentity, Response response) {
-                BaseUtils.printResponseStatus(response);
-                mBus.post(new UserIdentityRetrievedEvent(userIdentity));
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                BaseUtils.printResponse(error.getResponse());
-                mBus.post(error);
-                mBus.post(new UserIdentityRetrievedEvent(error));
-            }
-        });
+        mAPI.getUserIdentity()
+                .subscribe(
+                        userIdentity -> mBus.post(new UserIdentityRetrievedEvent(userIdentity)),
+                        error -> {
+                            mBus.post(error);
+                            mBus.post(new UserIdentityRetrievedEvent(error));
+                });
     }
 
     @Override

@@ -14,7 +14,7 @@ public class UserIdentityRetrievedEvent extends FailableEvent {
         mUserIdentity = response;
     }
 
-    public UserIdentityRetrievedEvent(Exception error) {
+    public UserIdentityRetrievedEvent(Throwable error) {
         super(error);
     }
 

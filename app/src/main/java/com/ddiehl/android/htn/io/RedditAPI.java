@@ -20,11 +20,12 @@ import retrofit.http.POST;
 import retrofit.http.Path;
 import retrofit.http.Query;
 import retrofit.mime.TypedString;
+import rx.Observable;
 
 public interface RedditAPI {
 
     @GET("/api/v1/me")
-    void getUserIdentity(Callback<UserIdentity> callback);
+    Observable<UserIdentity> getUserIdentity();
 
     @GET("/api/v1/me/prefs")
     void getUserSettings(Callback<UserSettings> callback);

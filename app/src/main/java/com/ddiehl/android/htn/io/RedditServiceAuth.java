@@ -44,7 +44,6 @@ import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import retrofit.Callback;
-import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.OkClient;
@@ -102,12 +101,9 @@ public class RedditServiceAuth implements RedditService {
                 .setClient(new OkClient(client))
                 .setEndpoint(ENDPOINT_NORMAL)
                 .setConverter(new GsonConverter(gson))
-                .setRequestInterceptor(new RequestInterceptor() {
-                    @Override
-                    public void intercept(RequestFacade request) {
-                        request.addHeader("User-Agent", RedditService.USER_AGENT);
-                        request.addHeader("Authorization", HTTP_AUTH_HEADER);
-                    }
+                .setRequestInterceptor(request -> {
+                    request.addHeader("User-Agent", RedditService.USER_AGENT);
+                    request.addHeader("Authorization", HTTP_AUTH_HEADER);
                 })
                 .build();
 

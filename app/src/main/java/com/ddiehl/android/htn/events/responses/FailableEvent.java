@@ -6,17 +6,17 @@ package com.ddiehl.android.htn.events.responses;
 
 public abstract class FailableEvent {
 
-    private Exception mError;
+    private Throwable mError;
     private boolean mFailed = false;
 
     public FailableEvent() { }
 
-    public FailableEvent(Exception error) {
+    public FailableEvent(Throwable error) {
         mError = error;
         mFailed = true;
     }
 
-    public Exception getError() {
+    public Throwable getError() {
         return mError;
     }
 

@@ -71,6 +71,9 @@
 -dontwarn butterknife.Views$InjectViewProcessor
 -dontwarn com.gc.materialdesign.views.**
 
+### Retrolambda ###
+-dontwarn java.lang.invoke.*
+
 ### Gson ###
 # Gson uses generic type information stored in a class file when working with
 # fields. Proguard removes such information by default, so configure it to keep
