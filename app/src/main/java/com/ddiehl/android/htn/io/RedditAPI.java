@@ -11,7 +11,6 @@ import com.ddiehl.reddit.listings.MoreChildrenResponse;
 
 import java.util.List;
 
-import retrofit.Callback;
 import retrofit.client.Response;
 import retrofit.http.Body;
 import retrofit.http.GET;
@@ -28,72 +27,71 @@ public interface RedditAPI {
     Observable<UserIdentity> getUserIdentity();
 
     @GET("/api/v1/me/prefs")
-    void getUserSettings(Callback<UserSettings> callback);
+    Observable<UserSettings> getUserSettings();
 
     @PATCH("/api/v1/me/prefs")
-    void updateUserSettings(@Body TypedString json, Callback<Response> callback);
+    Observable<Response> updateUserSettings(@Body TypedString json);
 
     @GET("/{sort}.json")
-    void getLinks(@Query("r") String subreddit,
-                  @Path("sort") String sort,
-                  @Query("t") String timespan,
-                  @Query("after") String after,
-                  Callback<ListingResponse> callback);
+    Observable<ListingResponse> getLinks(
+            @Query("r") String subreddit,
+            @Path("sort") String sort,
+            @Query("t") String timespan,
+            @Query("after") String after);
 
     @GET("/r/{subreddit}/comments/{articleId}.json")
-    void getComments(@Path("subreddit") String subreddit,
-                     @Path("articleId") String articleId,
-                     @Query("sort") String sort,
-                     @Query("comment") String commentId,
-                     Callback<List<ListingResponse>> callback);
+    Observable<List<ListingResponse>> getComments(
+            @Path("subreddit") String subreddit,
+            @Path("articleId") String articleId,
+            @Query("sort") String sort,
+            @Query("comment") String commentId);
 
-    /** https://snap.apigee.com/1cqZR33 */
     @GET("/api/morechildren?api_type=json")
-    void getMoreChildren(@Query("link_id") String linkId,
-                         @Query("children") String children,
-                         @Query("sort") String sort,
-                         Callback<MoreChildrenResponse> callback);
+    Observable<MoreChildrenResponse> getMoreChildren(
+            @Query("link_id") String linkId,
+            @Query("children") String children,
+            @Query("sort") String sort);
 
     @GET("/user/{username}/{show}")
-    void getUserProfile(@Path("show") String show,
-                        @Path("username") String username,
-                        @Query("sort") String sort,
-                        @Query("t") String timespan,
-                        @Query("after") String after,
-                        Callback<ListingResponse> callback);
+    Observable<ListingResponse> getUserProfile(
+            @Path("show") String show,
+            @Path("username") String username,
+            @Query("sort") String sort,
+            @Query("t") String timespan,
+            @Query("after") String after);
 
     @POST("/api/vote")
-    void vote(@Body String nullBody,
-              @Query("id") String id,
-              @Query("dir") int dir,
-              Callback<Response> response);
+    Observable<Response> vote(
+            @Body String nullBody,
+            @Query("id") String id,
+            @Query("dir") int dir);
 
     @POST("/api/save")
-    void save(@Body String nullBody,
-              @Query("id") String id,
-              @Query("category") String category,
-              Callback<Response> response);
+    Observable<Response> save(
+            @Body String nullBody,
+            @Query("id") String id,
+            @Query("category") String category);
 
     @POST("/api/unsave")
-    void unsave(@Body String nullBody,
-                @Query("id") String id,
-                Callback<Response> response);
+    Observable<Response> unsave(
+            @Body String nullBody,
+            @Query("id") String id);
 
     @POST("/api/hide")
-    void hide(@Body String nullBody,
-              @Query("id") String id,
-              Callback<Response> response);
+    Observable<Response> hide(
+            @Body String nullBody,
+            @Query("id") String id);
 
     @POST("/api/unhide")
-    void unhide(@Body String nullBody,
-                @Query("id") String id,
-                Callback<Response> response);
+    Observable<Response> unhide(
+            @Body String nullBody,
+            @Query("id") String id);
 
     @POST("/api/report?api_type=json")
-    void report(@Body String nullBody,
-                @Query("thing_id") String id,
-                @Query("reason") String reason,
-                @Query("otherReason") String otherReason,
-                Callback<Response> response);
+    Observable<Response> report(
+            @Body String nullBody,
+            @Query("thing_id") String id,
+            @Query("reason") String reason,
+            @Query("otherReason") String otherReason);
 
 }

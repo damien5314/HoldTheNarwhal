@@ -16,7 +16,7 @@ public class ApplicationAuthorizedEvent extends FailableEvent {
         mResponse = response;
     }
 
-    public ApplicationAuthorizedEvent(Exception error) {
+    public ApplicationAuthorizedEvent(Throwable error) {
         super(error);
     }
 

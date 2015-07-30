@@ -24,7 +24,7 @@ public class LinkCommentsLoadedEvent extends FailableEvent {
         mComments = commentsResponse.getData().getChildren();
     }
 
-    public LinkCommentsLoadedEvent(Exception e) {
+    public LinkCommentsLoadedEvent(Throwable e) {
         super(e);
     }
 

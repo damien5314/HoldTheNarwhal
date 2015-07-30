@@ -14,7 +14,7 @@ public class UserSettingsRetrievedEvent extends FailableEvent {
         mSettings = settings;
     }
 
-    public UserSettingsRetrievedEvent(Exception e) {
+    public UserSettingsRetrievedEvent(Throwable e) {
         super(e);
     }
 

@@ -10,7 +10,7 @@ public class UserSettingsUpdatedEvent extends FailableEvent {
 
     }
 
-    public UserSettingsUpdatedEvent(Exception e) {
+    public UserSettingsUpdatedEvent(Throwable e) {
         super(e);
     }
 }

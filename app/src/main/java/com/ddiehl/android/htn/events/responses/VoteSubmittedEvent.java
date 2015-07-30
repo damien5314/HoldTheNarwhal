@@ -15,7 +15,7 @@ public class VoteSubmittedEvent extends FailableEvent {
         mDirection = direction;
     }
 
-    public VoteSubmittedEvent(Exception e) {
+    public VoteSubmittedEvent(Throwable e) {
         super(e);
     }
 

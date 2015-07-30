@@ -33,7 +33,6 @@ import com.ddiehl.android.htn.events.responses.UserIdentitySavedEvent;
 import com.ddiehl.android.htn.utils.BaseUtils;
 import com.ddiehl.android.htn.utils.NUtils;
 import com.ddiehl.reddit.identity.AccessToken;
-import com.ddiehl.reddit.identity.AuthorizationResponse;
 import com.facebook.stetho.okhttp.StethoInterceptor;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
@@ -43,11 +42,8 @@ import com.squareup.okhttp.OkHttpClient;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
-import retrofit.Callback;
 import retrofit.RestAdapter;
-import retrofit.RetrofitError;
 import retrofit.client.OkClient;
-import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
 
 public class RedditServiceAuth implements RedditService {
@@ -115,20 +111,13 @@ public class RedditServiceAuth implements RedditService {
         String grantType = "https://oauth.reddit.com/grants/installed_client";
         String deviceId = RedditPrefs.getInstance(mContext).getDeviceId();
 
-        mAuthAPI.getApplicationAuthToken(grantType, deviceId, new Callback<AuthorizationResponse>() {
-            @Override
-            public void success(AuthorizationResponse response, Response response1) {
-                BaseUtils.printResponseStatus(response1);
-                mBus.post(new ApplicationAuthorizedEvent(response));
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                BaseUtils.printResponse(error.getResponse());
-                mBus.post(error);
-                mBus.post(new ApplicationAuthorizedEvent(error));
-            }
-        });
+        mAuthAPI.getApplicationAuthToken(grantType, deviceId)
+                .subscribe(
+                        response -> mBus.post(new ApplicationAuthorizedEvent(response)),
+                        error -> {
+                            mBus.post(error);
+                            mBus.post(new ApplicationAuthorizedEvent(error));
+                        });
     }
 
     @Subscribe
@@ -154,21 +143,13 @@ public class RedditServiceAuth implements RedditService {
         String grantType = "authorization_code";
         String authCode = event.getCode();
 
-        mAuthAPI.getUserAuthToken(grantType, authCode, RedditServiceAuth.REDIRECT_URI,
-                new Callback<AuthorizationResponse>() {
-                    @Override
-                    public void success(AuthorizationResponse response, Response response1) {
-                        BaseUtils.printResponseStatus(response1);
-                        mBus.post(new UserAuthorizedEvent(response));
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        BaseUtils.printResponse(error.getResponse());
-                        mBus.post(error);
-                        mBus.post(new UserAuthorizedEvent(error));
-                    }
-                });
+        mAuthAPI.getUserAuthToken(grantType, authCode, RedditServiceAuth.REDIRECT_URI)
+                .subscribe(
+                        response -> mBus.post(new UserAuthorizedEvent(response)),
+                        error -> {
+                            mBus.post(error);
+                            mBus.post(new UserAuthorizedEvent(error));
+                        });
     }
 
     /**
@@ -179,20 +160,13 @@ public class RedditServiceAuth implements RedditService {
         String grantType = "refresh_token";
         String refreshToken = event.getRefreshToken();
 
-        mAuthAPI.refreshUserAuthToken(grantType, refreshToken, new Callback<AuthorizationResponse>() {
-            @Override
-            public void success(AuthorizationResponse response, Response response1) {
-                BaseUtils.printResponseStatus(response1);
-                mBus.post(new UserAuthorizationRefreshedEvent(response));
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                BaseUtils.printResponse(error.getResponse());
-                mBus.post(error);
-                mBus.post(new UserAuthorizationRefreshedEvent(error));
-            }
-        });
+        mAuthAPI.refreshUserAuthToken(grantType, refreshToken)
+                .subscribe(
+                        response -> mBus.post(new UserAuthorizationRefreshedEvent(response)),
+                        error -> {
+                            mBus.post(error);
+                            mBus.post(new UserAuthorizationRefreshedEvent(error));
+                        });
     }
 
     /**
@@ -200,34 +174,12 @@ public class RedditServiceAuth implements RedditService {
      */
     @Subscribe
     public void onUserSignOut(UserSignOutEvent event) {
-        if (mAccessTokenManager.getUserAccessToken() != null) {
-            mAuthAPI.revokeUserAuthToken(mAccessTokenManager.getUserAccessToken().getToken(),
-                    "access_token", new Callback<Response>() {
-                        @Override
-                        public void success(Response response, Response response2) {
-                            BaseUtils.printResponseStatus(response);
-                        }
-
-                        @Override
-                        public void failure(RetrofitError error) {
-                            mBus.post(error);
-                            BaseUtils.printResponse(error.getResponse());
-                        }
-                    });
-
-            mAuthAPI.revokeUserAuthToken(mAccessTokenManager.getUserAccessToken().getRefreshToken(),
-                    "refresh_token", new Callback<Response>() {
-                        @Override
-                        public void success(Response response, Response response2) {
-                            BaseUtils.printResponseStatus(response);
-                        }
-
-                        @Override
-                        public void failure(RetrofitError error) {
-                            mBus.post(error);
-                            BaseUtils.printResponse(error.getResponse());
-                        }
-                    });
+        AccessToken token = mAccessTokenManager.getUserAccessToken();
+        if (token != null) {
+            mAuthAPI.revokeUserAuthToken(token.getToken(), "access_token")
+                    .subscribe(response -> {}, mBus::post);
+            mAuthAPI.revokeUserAuthToken(token.getRefreshToken(), "refresh_token")
+                    .subscribe(response -> {}, mBus::post);
         }
 
         mAccessTokenManager.clearSavedUserAccessToken();
@@ -367,7 +319,6 @@ public class RedditServiceAuth implements RedditService {
             mBus.post(new RefreshUserAccessTokenEvent(token.getRefreshToken()));
         } else {
             mQueuedEvent = null;
-//            mBus.post(new UserRequiredException());
         }
     }
 
@@ -384,7 +335,6 @@ public class RedditServiceAuth implements RedditService {
             mBus.post(new RefreshUserAccessTokenEvent(token.getRefreshToken()));
         } else {
             mQueuedEvent = null;
-//            mBus.post(new UserRequiredException());
         }
     }
 
@@ -401,7 +351,6 @@ public class RedditServiceAuth implements RedditService {
             mBus.post(new RefreshUserAccessTokenEvent(token.getRefreshToken()));
         } else {
             mQueuedEvent = null;
-//            mBus.post(new UserRequiredException());
         }
     }
 
@@ -418,7 +367,6 @@ public class RedditServiceAuth implements RedditService {
             mBus.post(new RefreshUserAccessTokenEvent(token.getRefreshToken()));
         } else {
             mQueuedEvent = null;
-//            mBus.post(new UserRequiredException());
         }
     }
 
@@ -435,7 +383,6 @@ public class RedditServiceAuth implements RedditService {
             mBus.post(new RefreshUserAccessTokenEvent(token.getRefreshToken()));
         } else {
             mQueuedEvent = null;
-//            mBus.post(new UserRequiredException());
         }
     }
 
@@ -452,7 +399,6 @@ public class RedditServiceAuth implements RedditService {
             mBus.post(new RefreshUserAccessTokenEvent(token.getRefreshToken()));
         } else {
             mQueuedEvent = null;
-//            mBus.post(new UserRequiredException());
         }
     }
 
@@ -469,7 +415,6 @@ public class RedditServiceAuth implements RedditService {
             mBus.post(new RefreshUserAccessTokenEvent(token.getRefreshToken()));
         } else {
             mQueuedEvent = null;
-//            mBus.post(new UserRequiredException());
         }
     }
 

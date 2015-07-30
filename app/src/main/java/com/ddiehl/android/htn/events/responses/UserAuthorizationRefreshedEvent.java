@@ -15,7 +15,7 @@ public class UserAuthorizationRefreshedEvent extends FailableEvent {
         mResponse = response;
     }
 
-    public UserAuthorizationRefreshedEvent(Exception e) {
+    public UserAuthorizationRefreshedEvent(Throwable e) {
         super(e);
     }
 

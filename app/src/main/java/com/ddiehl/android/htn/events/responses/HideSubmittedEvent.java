@@ -15,7 +15,7 @@ public class HideSubmittedEvent extends FailableEvent {
         mToHide = toHide;
     }
 
-    public HideSubmittedEvent(Exception e) {
+    public HideSubmittedEvent(Throwable e) {
         super(e);
     }
 

@@ -35,13 +35,11 @@ import com.ddiehl.reddit.Votable;
 import com.ddiehl.reddit.adapters.AbsCommentDeserializer;
 import com.ddiehl.reddit.adapters.ListingDeserializer;
 import com.ddiehl.reddit.adapters.ListingResponseDeserializer;
-import com.ddiehl.reddit.identity.UserSettings;
 import com.ddiehl.reddit.listings.AbsComment;
 import com.ddiehl.reddit.listings.CommentStub;
 import com.ddiehl.reddit.listings.Link;
 import com.ddiehl.reddit.listings.Listing;
 import com.ddiehl.reddit.listings.ListingResponse;
-import com.ddiehl.reddit.listings.MoreChildrenResponse;
 import com.facebook.stetho.okhttp.StethoInterceptor;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
@@ -54,13 +52,12 @@ import java.io.File;
 import java.io.InputStream;
 import java.util.List;
 
-import retrofit.Callback;
 import retrofit.RestAdapter;
-import retrofit.RetrofitError;
 import retrofit.client.OkClient;
 import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
 import retrofit.mime.TypedString;
+import rx.functions.Action1;
 
 public class RedditServiceAPI implements RedditService {
     private static final String TAG = RedditServiceAPI.class.getSimpleName();
@@ -127,39 +124,25 @@ public class RedditServiceAPI implements RedditService {
 
     @Override
     public void onGetUserSettings(GetUserSettingsEvent event) {
-        mAPI.getUserSettings(new Callback<UserSettings>() {
-            @Override
-            public void success(UserSettings settings, Response response) {
-                BaseUtils.printResponseStatus(response);
-                mBus.post(new UserSettingsRetrievedEvent(settings));
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                BaseUtils.printResponse(error.getResponse());
-                mBus.post(error);
-                mBus.post(new UserSettingsRetrievedEvent(error));
-            }
-        });
+        mAPI.getUserSettings()
+                .subscribe(
+                        settings -> mBus.post(new UserSettingsRetrievedEvent(settings)),
+                        error -> {
+                            mBus.post(error);
+                            mBus.post(new UserSettingsRetrievedEvent(error));
+                        });
     }
 
     @Override
     public void onUpdateUserSettings(UpdateUserSettingsEvent event) {
-        String json = new GsonBuilder().create().toJson(event.getPrefs());
-        mAPI.updateUserSettings(new TypedString(json), new Callback<Response>() {
-            @Override
-            public void success(Response response, Response response2) {
-                BaseUtils.printResponseStatus(response);
-                mBus.post(new UserSettingsUpdatedEvent());
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                BaseUtils.printResponse(error.getResponse());
-                mBus.post(error);
-                mBus.post(new UserSettingsUpdatedEvent(error));
-            }
-        });
+        String json = new Gson().toJson(event.getPrefs());
+        mAPI.updateUserSettings(new TypedString(json))
+                .subscribe(
+                        response -> mBus.post(new UserSettingsUpdatedEvent()),
+                        error -> {
+                            mBus.post(error);
+                            mBus.post(new UserSettingsUpdatedEvent(error));
+                        });
     }
 
     /**
@@ -172,20 +155,13 @@ public class RedditServiceAPI implements RedditService {
         String timespan = event.getTimeSpan();
         String after = event.getAfter();
 
-        mAPI.getLinks(subreddit, sort, timespan, after, new Callback<ListingResponse>() {
-            @Override
-            public void success(ListingResponse linksResponse, Response response) {
-                BaseUtils.printResponseStatus(response);
-                mBus.post(new ListingsLoadedEvent(linksResponse));
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                BaseUtils.printResponse(error.getResponse());
-                mBus.post(error);
-                mBus.post(new ListingsLoadedEvent(error));
-            }
-        });
+        mAPI.getLinks(subreddit, sort, timespan, after)
+                .subscribe(
+                        linksResponse -> mBus.post(new ListingsLoadedEvent(linksResponse)),
+                        error -> {
+                            mBus.post(error);
+                            mBus.post(new ListingsLoadedEvent(error));
+                        });
     }
 
     /**
@@ -198,20 +174,13 @@ public class RedditServiceAPI implements RedditService {
         String sort = event.getSort();
         String commentId = event.getCommentId();
 
-        mAPI.getComments(subreddit, article, sort, commentId, new Callback<List<ListingResponse>>() {
-            @Override
-            public void success(List<ListingResponse> listingsList, Response response) {
-                BaseUtils.printResponseStatus(response);
-                mBus.post(new LinkCommentsLoadedEvent(listingsList));
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                BaseUtils.printResponse(error.getResponse());
-                mBus.post(error);
-                mBus.post(new LinkCommentsLoadedEvent(error));
-            }
-        });
+        mAPI.getComments(subreddit, article, sort, commentId)
+                .subscribe(
+                        listingsList -> mBus.post(new LinkCommentsLoadedEvent(listingsList)),
+                        error -> {
+                            mBus.post(error);
+                            mBus.post(new LinkCommentsLoadedEvent(error));
+                        });
     }
 
     /**
@@ -231,20 +200,13 @@ public class RedditServiceAPI implements RedditService {
         String childrenString = b.toString();
         childrenString = childrenString.substring(0, Math.max(childrenString.length() - 1, 0));
 
-        mAPI.getMoreChildren(link.getName(), childrenString, sort, new Callback<MoreChildrenResponse>() {
-            @Override
-            public void success(MoreChildrenResponse moreChildrenResponse, Response response) {
-                BaseUtils.printResponseStatus(response);
-                mBus.post(new MoreChildrenLoadedEvent(parentStub, moreChildrenResponse));
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                BaseUtils.printResponse(error.getResponse());
-                mBus.post(error);
-                mBus.post(new MoreChildrenLoadedEvent(error));
-            }
-        });
+        mAPI.getMoreChildren(link.getName(), childrenString, sort)
+                .subscribe(
+                        response -> {},
+                        error -> {
+                            mBus.post(error);
+                            mBus.post(new MoreChildrenLoadedEvent(error));
+                        });
     }
 
     @Override
@@ -255,20 +217,13 @@ public class RedditServiceAPI implements RedditService {
         final String timespan = event.getTimeSpan();
         final String after = event.getAfter();
 
-        mAPI.getUserProfile(show, userId, sort, timespan, after, new Callback<ListingResponse>() {
-            @Override
-            public void success(ListingResponse listing, Response response) {
-                BaseUtils.printResponseStatus(response);
-                mBus.post(new ListingsLoadedEvent(listing));
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                BaseUtils.printResponse(error.getResponse());
-                mBus.post(error);
-                mBus.post(new ListingsLoadedEvent(error));
-            }
-        });
+        mAPI.getUserProfile(show, userId, sort, timespan, after)
+                .subscribe(
+                        listing -> mBus.post(new ListingsLoadedEvent(listing)),
+                        error -> {
+                            mBus.post(error);
+                            mBus.post(new ListingsLoadedEvent(error));
+                        });
     }
 
     /**
@@ -279,31 +234,24 @@ public class RedditServiceAPI implements RedditService {
         final Votable listing = event.getListing();
         String fullname = String.format("%s_%s", event.getType(), listing.getId());
 
-        mAPI.vote("", fullname, event.getDirection(), new Callback<Response>() {
-            @Override
-            public void success(Response response, Response response2) {
-                BaseUtils.printResponseStatus(response);
+        mAPI.vote("", fullname, event.getDirection())
+                .subscribe(
+                        response -> {
 
-                try {
-                    InputStream in = response.getBody().in();
-                    if (BaseUtils.getStringFromInputStream(in).contains("USER_REQUIRED")) {
-//                        throw new UserRequiredException();
-                    } else {
-                        mBus.post(new VoteSubmittedEvent(listing, event.getDirection()));
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    mBus.post(new VoteSubmittedEvent(e));
-                }
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                BaseUtils.printResponse(error.getResponse());
-                mBus.post(error);
-                mBus.post(new VoteSubmittedEvent(error));
-            }
-        });
+                            try {
+                                InputStream in = response.getBody().in();
+                                if (!BaseUtils.getStringFromInputStream(in).contains("USER_REQUIRED")) {
+                                    mBus.post(new VoteSubmittedEvent(listing, event.getDirection()));
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                mBus.post(new VoteSubmittedEvent(e));
+                            }
+                        },
+                        error -> {
+                            mBus.post(error);
+                            mBus.post(new VoteSubmittedEvent(error));
+                        });
     }
 
     /**
@@ -312,102 +260,63 @@ public class RedditServiceAPI implements RedditService {
     @Override
     public void onSave(final SaveEvent event) {
         final Savable listing = event.getListing();
+        final String category = event.getCategory();
+        final boolean toSave = event.isToSave();
+
+        Action1<Response> onSaveSuccess = (response) -> {
+            try {
+                InputStream in = response.getBody().in();
+                if (!BaseUtils.getStringFromInputStream(in).contains("USER_REQUIRED")) {
+                    mBus.post(new SaveSubmittedEvent(listing, category, toSave));
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                mBus.post(new SaveSubmittedEvent(e));
+            }
+        };
+
+        Action1<Throwable> onSaveFailure = (error) -> {
+            mBus.post(error);
+            mBus.post(new SaveSubmittedEvent(error));
+        };
 
         if (event.isToSave()) { // Save
-            mAPI.save("", listing.getName(), event.getCategory(), new Callback<Response>() {
-                @Override
-                public void success(Response response, Response response2) {
-                    saveSuccess(response, listing, event.getCategory(), true);
-                }
-
-                @Override
-                public void failure(RetrofitError error) {
-                    BaseUtils.printResponse(error.getResponse());
-                    mBus.post(error);
-                    mBus.post(new SaveSubmittedEvent(error));
-                }
-            });
+            mAPI.save("", listing.getName(), event.getCategory())
+                    .subscribe(onSaveSuccess, onSaveFailure);
         } else { // Unsave
-            mAPI.unsave("", listing.getName(), new Callback<Response>() {
-                @Override
-                public void success(Response response, Response response2) {
-                    saveSuccess(response, listing, event.getCategory(), false);
-                }
-
-                @Override
-                public void failure(RetrofitError error) {
-                    BaseUtils.printResponse(error.getResponse());
-                    mBus.post(error);
-                    mBus.post(new SaveSubmittedEvent(error));
-                }
-            });
-        }
-    }
-
-    private void saveSuccess(Response response, Savable listing, String category, boolean toSave) {
-        BaseUtils.printResponseStatus(response);
-
-        try {
-            InputStream in = response.getBody().in();
-            if (BaseUtils.getStringFromInputStream(in).contains("USER_REQUIRED")) {
-//                throw new UserRequiredException();
-            } else {
-                mBus.post(new SaveSubmittedEvent(listing, category, toSave));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            mBus.post(new SaveSubmittedEvent(e));
+            mAPI.unsave("", listing.getName())
+                    .subscribe(onSaveSuccess, onSaveFailure);
         }
     }
 
     @Override
     public void onHide(final HideEvent event) {
         final Hideable listing = event.getListing();
+        final boolean toHide = event.isToHide();
+
+        Action1<Response> onSuccess = (response) -> {
+            try {
+                InputStream in = response.getBody().in();
+                if (!BaseUtils.getStringFromInputStream(in).contains("USER_REQUIRED")) {
+                    mBus.post(new HideSubmittedEvent(listing, toHide));
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                mBus.post(new HideSubmittedEvent(e));
+            }
+        };
+
+        Action1<Throwable> onFailure = (error) -> {
+            mBus.post(error);
+            mBus.post(new HideSubmittedEvent(error));
+        };
 
         if (event.isToHide()) { // Hide
-            mAPI.hide("", listing.getName(), new Callback<Response>() {
-                @Override
-                public void success(Response response, Response response2) {
-                    hideSuccess(response, listing, true);
-                }
-
-                @Override
-                public void failure(RetrofitError error) {
-                    BaseUtils.printResponse(error.getResponse());
-                    mBus.post(error);
-                    mBus.post(new HideSubmittedEvent(error));
-                }
-            });
+            mAPI.hide("", listing.getName())
+                    .subscribe(onSuccess, onFailure);
         } else { // Unhide
-            mAPI.unhide("", listing.getName(), new Callback<Response>() {
-                @Override
-                public void success(Response response, Response response2) {
-                    hideSuccess(response, listing, false);
-                }
-
-                @Override
-                public void failure(RetrofitError error) {
-                    BaseUtils.printResponse(error.getResponse());
-                    mBus.post(error);
-                    mBus.post(new HideSubmittedEvent(error));
-                }
-            });
-        }
-    }
-
-    private void hideSuccess(Response response, Hideable listing, boolean toHide) {
-        BaseUtils.printResponseStatus(response);
-
-        try {
-            InputStream in = response.getBody().in();
-            if (BaseUtils.getStringFromInputStream(in).contains("USER_REQUIRED")) {
-//                throw new UserRequiredException();
-            } else {
-                mBus.post(new HideSubmittedEvent(listing, toHide));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            mBus.post(new HideSubmittedEvent(e));
+            mAPI.unhide("", listing.getName())
+                    .subscribe(onSuccess, onFailure);
         }
     }
 

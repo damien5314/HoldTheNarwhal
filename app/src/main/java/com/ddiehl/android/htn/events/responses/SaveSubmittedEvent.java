@@ -17,7 +17,7 @@ public class SaveSubmittedEvent extends FailableEvent {
         mToSave = b;
     }
 
-    public SaveSubmittedEvent(Exception e) {
+    public SaveSubmittedEvent(Throwable e) {
         super(e);
     }
 

@@ -19,7 +19,7 @@ public class MoreChildrenLoadedEvent extends FailableEvent {
         mComments = moreChildrenResponse.getChildComments();
     }
 
-    public MoreChildrenLoadedEvent(Exception e) {
+    public MoreChildrenLoadedEvent(Throwable e) {
         super(e);
     }
 

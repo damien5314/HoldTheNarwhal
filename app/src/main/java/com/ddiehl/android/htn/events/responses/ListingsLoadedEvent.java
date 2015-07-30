@@ -9,8 +9,6 @@ import com.ddiehl.reddit.listings.ListingResponse;
 
 import java.util.List;
 
-import retrofit.RetrofitError;
-
 
 public class ListingsLoadedEvent extends FailableEvent {
     private ListingResponse mResponse;
@@ -21,7 +19,7 @@ public class ListingsLoadedEvent extends FailableEvent {
         mListings = response.getData().getChildren();
     }
 
-    public ListingsLoadedEvent(RetrofitError e) {
+    public ListingsLoadedEvent(Throwable e) {
         super(e);
     }
 
