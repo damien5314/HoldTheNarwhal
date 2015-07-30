@@ -57,6 +57,7 @@ import retrofit.client.OkClient;
 import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
 import retrofit.mime.TypedString;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 
 public class RedditServiceAPI implements RedditService {
@@ -80,6 +81,7 @@ public class RedditServiceAPI implements RedditService {
                         new File(mContext.getCacheDir().getAbsolutePath(), "htn-http-cache"),
                         cacheSize));
         client.networkInterceptors().add(new StethoInterceptor());
+        client.networkInterceptors().add(new LoggingInterceptor());
 
         Gson gson = new GsonBuilder()
                 .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
@@ -114,17 +116,19 @@ public class RedditServiceAPI implements RedditService {
     @Override
     public void onGetUserIdentity(GetUserIdentityEvent event) {
         mAPI.getUserIdentity()
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         userIdentity -> mBus.post(new UserIdentityRetrievedEvent(userIdentity)),
                         error -> {
                             mBus.post(error);
                             mBus.post(new UserIdentityRetrievedEvent(error));
-                });
+                        });
     }
 
     @Override
     public void onGetUserSettings(GetUserSettingsEvent event) {
         mAPI.getUserSettings()
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         settings -> mBus.post(new UserSettingsRetrievedEvent(settings)),
                         error -> {
@@ -137,6 +141,7 @@ public class RedditServiceAPI implements RedditService {
     public void onUpdateUserSettings(UpdateUserSettingsEvent event) {
         String json = new Gson().toJson(event.getPrefs());
         mAPI.updateUserSettings(new TypedString(json))
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         response -> mBus.post(new UserSettingsUpdatedEvent()),
                         error -> {
@@ -156,6 +161,7 @@ public class RedditServiceAPI implements RedditService {
         String after = event.getAfter();
 
         mAPI.getLinks(subreddit, sort, timespan, after)
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         linksResponse -> mBus.post(new ListingsLoadedEvent(linksResponse)),
                         error -> {
@@ -175,6 +181,7 @@ public class RedditServiceAPI implements RedditService {
         String commentId = event.getCommentId();
 
         mAPI.getComments(subreddit, article, sort, commentId)
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         listingsList -> mBus.post(new LinkCommentsLoadedEvent(listingsList)),
                         error -> {
@@ -201,8 +208,9 @@ public class RedditServiceAPI implements RedditService {
         childrenString = childrenString.substring(0, Math.max(childrenString.length() - 1, 0));
 
         mAPI.getMoreChildren(link.getName(), childrenString, sort)
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        response -> {},
+                        response -> mBus.post(new MoreChildrenLoadedEvent(parentStub, response)),
                         error -> {
                             mBus.post(error);
                             mBus.post(new MoreChildrenLoadedEvent(error));
@@ -218,6 +226,7 @@ public class RedditServiceAPI implements RedditService {
         final String after = event.getAfter();
 
         mAPI.getUserProfile(show, userId, sort, timespan, after)
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         listing -> mBus.post(new ListingsLoadedEvent(listing)),
                         error -> {
@@ -235,6 +244,7 @@ public class RedditServiceAPI implements RedditService {
         String fullname = String.format("%s_%s", event.getType(), listing.getId());
 
         mAPI.vote("", fullname, event.getDirection())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         response -> {
 
@@ -282,9 +292,11 @@ public class RedditServiceAPI implements RedditService {
 
         if (event.isToSave()) { // Save
             mAPI.save("", listing.getName(), event.getCategory())
+                    .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(onSaveSuccess, onSaveFailure);
         } else { // Unsave
             mAPI.unsave("", listing.getName())
+                    .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(onSaveSuccess, onSaveFailure);
         }
     }
@@ -313,9 +325,11 @@ public class RedditServiceAPI implements RedditService {
 
         if (event.isToHide()) { // Hide
             mAPI.hide("", listing.getName())
+                    .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(onSuccess, onFailure);
         } else { // Unhide
             mAPI.unhide("", listing.getName())
+                    .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(onSuccess, onFailure);
         }
     }

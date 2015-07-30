@@ -12,6 +12,9 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.ddiehl.android.htn.R;
+import com.squareup.okhttp.Headers;
+import com.squareup.okhttp.Response;
+import com.squareup.okhttp.ResponseBody;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -22,16 +25,12 @@ import java.io.InputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
-import java.util.List;
 import java.util.Scanner;
 import java.util.UUID;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 import retrofit.RetrofitError;
-import retrofit.client.Header;
-import retrofit.client.Response;
-import retrofit.mime.TypedInput;
 
 
 public class BaseUtils {
@@ -40,7 +39,7 @@ public class BaseUtils {
     public static void showError(Context context, RetrofitError error) {
         Log.e(TAG, "RetrofitError: " + error.getKind().toString());
         Log.d(TAG, Log.getStackTraceString(error));
-        Response response = error.getResponse();
+        retrofit.client.Response response = error.getResponse();
         if (response != null) {
             switch (response.getStatus()) {
                 default:
@@ -53,7 +52,7 @@ public class BaseUtils {
     }
 
     public static String getFriendlyError(Context c, RetrofitError error) {
-        Response response = error.getResponse();
+        retrofit.client.Response response = error.getResponse();
         if (response == null) {
             return c.getString(R.string.error_network_unavailable);
         } else {
@@ -81,26 +80,25 @@ public class BaseUtils {
 
     public static void printResponseStatus(Response response) {
         if (response != null) {
-            Log.d(TAG, "URL: " + response.getUrl() + " (STATUS: " + response.getStatus() + ")");
+            Log.d(TAG, "URL: " + response.request().urlString()
+                    + " (STATUS: " + response.code() + ")");
         }
     }
 
     public static void printResponseHeaders(Response response) {
         if (response != null) {
             Log.d(TAG, "--HEADERS--");
-            List<Header> headersList = response.getHeaders();
-            for (Header header : headersList) {
-                Log.d(TAG, header.toString());
-            }
+            Headers headers = response.headers();
+            Log.d(TAG, headers.toString());
         }
     }
 
     public static void printResponseBody(Response response) {
         if (response != null) {
             try {
-                TypedInput body = response.getBody();
-                Log.d(TAG, "--BODY-- LENGTH: " + body.length());
-                InputStream in_s = body.in();
+                ResponseBody body = response.body();
+                Log.d(TAG, "--BODY-- LENGTH: " + body.bytes().length);
+                InputStream in_s = body.byteStream();
                 Log.d(TAG, getStringFromInputStream(in_s));
                 in_s.close();
             } catch (Exception e) {

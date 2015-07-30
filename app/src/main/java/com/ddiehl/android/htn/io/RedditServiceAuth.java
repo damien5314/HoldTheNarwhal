@@ -45,6 +45,7 @@ import com.squareup.otto.Subscribe;
 import retrofit.RestAdapter;
 import retrofit.client.OkClient;
 import retrofit.converter.GsonConverter;
+import rx.android.schedulers.AndroidSchedulers;
 
 public class RedditServiceAuth implements RedditService {
 
@@ -88,6 +89,7 @@ public class RedditServiceAuth implements RedditService {
     private RedditAuthAPI buildApi() {
         OkHttpClient client = new OkHttpClient();
         client.networkInterceptors().add(new StethoInterceptor());
+        client.networkInterceptors().add(new LoggingInterceptor());
 
         Gson gson = new GsonBuilder()
                 .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
@@ -112,6 +114,7 @@ public class RedditServiceAuth implements RedditService {
         String deviceId = RedditPrefs.getInstance(mContext).getDeviceId();
 
         mAuthAPI.getApplicationAuthToken(grantType, deviceId)
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         response -> mBus.post(new ApplicationAuthorizedEvent(response)),
                         error -> {
@@ -144,6 +147,7 @@ public class RedditServiceAuth implements RedditService {
         String authCode = event.getCode();
 
         mAuthAPI.getUserAuthToken(grantType, authCode, RedditServiceAuth.REDIRECT_URI)
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         response -> mBus.post(new UserAuthorizedEvent(response)),
                         error -> {
@@ -161,6 +165,7 @@ public class RedditServiceAuth implements RedditService {
         String refreshToken = event.getRefreshToken();
 
         mAuthAPI.refreshUserAuthToken(grantType, refreshToken)
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         response -> mBus.post(new UserAuthorizationRefreshedEvent(response)),
                         error -> {
@@ -177,8 +182,10 @@ public class RedditServiceAuth implements RedditService {
         AccessToken token = mAccessTokenManager.getUserAccessToken();
         if (token != null) {
             mAuthAPI.revokeUserAuthToken(token.getToken(), "access_token")
+                    .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(response -> {}, mBus::post);
             mAuthAPI.revokeUserAuthToken(token.getRefreshToken(), "refresh_token")
+                    .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(response -> {}, mBus::post);
         }
 
