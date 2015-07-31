@@ -10,7 +10,6 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -98,52 +97,30 @@ public class MainActivity extends AppCompatActivity
         // Configure Flurry
         initializeFlurry();
 
-        new Init().execute();
-    }
+        ButterKnife.bind(MainActivity.this);
+        mNavigationView.setNavigationItemSelectedListener(MainActivity.this);
 
-    private class Init extends AsyncTask<Void, Void, Void> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-            ButterKnife.bind(MainActivity.this);
-            mNavigationView.setNavigationItemSelectedListener(MainActivity.this);
-
-            // Initialize app toolbar
-            Toolbar toolbar = ButterKnife.findById(MainActivity.this, R.id.toolbar);
-            setSupportActionBar(toolbar);
-            ActionBar actionBar = getSupportActionBar();
-            if (actionBar != null) {
-                actionBar.setHomeAsUpIndicator(R.drawable.ic_navigation_menu);
-                actionBar.setDisplayHomeAsUpEnabled(true);
-            }
+        // Initialize app toolbar
+        Toolbar toolbar = ButterKnife.findById(MainActivity.this, R.id.toolbar);
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_navigation_menu);
+            actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        @Override
-        protected Void doInBackground(Void... params) {
-            mMainPresenter = new MainPresenterImpl(MainActivity.this, MainActivity.this);
-            mAccessTokenManager = AccessTokenManager.getInstance(MainActivity.this);
-            mIdentityManager = IdentityManager.getInstance(MainActivity.this);
-            mSettingsManager = SettingsManager.getInstance(MainActivity.this);
-            mAuthProxy = RedditServiceAuth.getInstance(MainActivity.this);
-            mAnalytics = HTNAnalytics.getInstance();
+        mMainPresenter = new MainPresenterImpl(MainActivity.this, MainActivity.this);
+        mAccessTokenManager = AccessTokenManager.getInstance(MainActivity.this);
+        mIdentityManager = IdentityManager.getInstance(MainActivity.this);
+        mSettingsManager = SettingsManager.getInstance(MainActivity.this);
+        mAuthProxy = RedditServiceAuth.getInstance(MainActivity.this);
+        mAnalytics = HTNAnalytics.getInstance();
 
-            // Configure MoPub
-            new MoPubConversionTracker().reportAppOpen(MainActivity.this);
-            MoPub.setLocationAwareness(MoPub.LocationAwareness.DISABLED);
+        // Configure MoPub
+        new MoPubConversionTracker().reportAppOpen(MainActivity.this);
+        MoPub.setLocationAwareness(MoPub.LocationAwareness.DISABLED);
 
-            setMirroredIcons();
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-
-            onAppInitialized();
-        }
+        setMirroredIcons();
     }
 
     private void initializeFlurry() {
@@ -201,22 +178,12 @@ public class MainActivity extends AppCompatActivity
     protected void onStart() {
         super.onStart();
 
-        if (mMainPresenter == null || mAccessTokenManager == null || mIdentityManager == null
-                || mSettingsManager == null || mAuthProxy == null || mAnalytics == null) {
-            showSpinner(R.string.application_loading);
-        } else {
-            onAppInitialized();
-        }
-    }
-
-    private void onAppInitialized() {
         mBus.register(mMainPresenter);
         mBus.register(mAccessTokenManager);
         mBus.register(mIdentityManager);
         mBus.register(mSettingsManager);
         mBus.register(mAuthProxy);
         mBus.register(mAnalytics);
-
         FlurryAgent.onStartSession(this);
         dismissSpinner();
         updateUserIdentity();
@@ -225,7 +192,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onStop() {
-        super.onStop();
         FlurryAgent.onEndSession(this);
         mBus.unregister(mMainPresenter);
         mBus.unregister(mAccessTokenManager);
@@ -233,6 +199,8 @@ public class MainActivity extends AppCompatActivity
         mBus.unregister(mSettingsManager);
         mBus.unregister(mAuthProxy);
         mBus.unregister(mAnalytics);
+
+        super.onStop();
     }
 
     @Override

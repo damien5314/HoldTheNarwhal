@@ -48,14 +48,12 @@ public class ChooseTimespanDialog extends DialogFragment {
         // Build dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(R.string.menu_timespan_title)
-                .setSingleChoiceItems(R.array.timespan_options, selectedItem, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        String selectedChoice = getResources().getStringArray(R.array.timespan_option_values)[which];
-                        Intent data = new Intent();
-                        data.putExtra(EXTRA_TIMESPAN, selectedChoice);
-                        getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, data);
-                        dismiss();
-                    }
+                .setSingleChoiceItems(R.array.timespan_options, selectedItem, (dialog, which) -> {
+                    String selectedChoice = getResources().getStringArray(R.array.timespan_option_values)[which];
+                    Intent data = new Intent();
+                    data.putExtra(EXTRA_TIMESPAN, selectedChoice);
+                    getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, data);
+                    dismiss();
                 });
         return builder.create();
     }

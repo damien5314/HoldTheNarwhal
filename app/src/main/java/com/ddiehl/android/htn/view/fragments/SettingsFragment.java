@@ -113,12 +113,9 @@ public class SettingsFragment extends PreferenceFragment
     private void addDefaultPreferences() {
         addPreferencesFromResource(R.xml.preferences_all); // Required for getSharedPreferences()
         Preference prefAboutApp = findPreference("pref_about_app");
-        prefAboutApp.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                showAboutAppMarkdown();
-                return false;
-            }
+        prefAboutApp.setOnPreferenceClickListener(preference -> {
+            showAboutAppMarkdown();
+            return false;
         });
     }
 

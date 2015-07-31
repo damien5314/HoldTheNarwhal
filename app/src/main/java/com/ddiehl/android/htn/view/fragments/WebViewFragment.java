@@ -140,17 +140,14 @@ public class WebViewFragment extends AbsRedditFragment {
         });
 
         mWebView.loadUrl(mUrl);
-        mWebView.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                // Check if the key event was the Back button and if there's history
-                if (event.getAction() == KeyEvent.ACTION_UP
-                        && (keyCode == KeyEvent.KEYCODE_BACK) && mWebView.canGoBack()) {
-                    mWebView.goBack();
-                    return true;
-                }
-                return false;
+        mWebView.setOnKeyListener((v1, keyCode, event) -> {
+            // Check if the key event was the Back button and if there's history
+            if (event.getAction() == KeyEvent.ACTION_UP
+                    && (keyCode == KeyEvent.KEYCODE_BACK) && mWebView.canGoBack()) {
+                mWebView.goBack();
+                return true;
             }
+            return false;
         });
 
         if (Build.VERSION.SDK_INT >= 17) {

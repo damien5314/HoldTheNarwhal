@@ -7,7 +7,6 @@ package com.ddiehl.android.htn.view.dialogs;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
@@ -35,20 +34,14 @@ public class ConfirmSignOutDialog extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(R.string.dialog_sign_out_title)
                 .setMessage(R.string.dialog_sign_out_message)
-                .setPositiveButton(R.string.dialog_sign_out_ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (getActivity() instanceof Callbacks) {
-                            ((Callbacks) getActivity()).onSignOutConfirm();
-                        }
+                .setPositiveButton(R.string.dialog_sign_out_ok, (dialog, which) -> {
+                    if (getActivity() instanceof Callbacks) {
+                        ((Callbacks) getActivity()).onSignOutConfirm();
                     }
                 })
-                .setNegativeButton(R.string.dialog_sign_out_cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (getActivity() instanceof Callbacks) {
-                            ((Callbacks) getActivity()).onSignOutCancel();
-                        }
+                .setNegativeButton(R.string.dialog_sign_out_cancel, (dialog, which) -> {
+                    if (getActivity() instanceof Callbacks) {
+                        ((Callbacks) getActivity()).onSignOutCancel();
                     }
                 })
         .setCancelable(true);
