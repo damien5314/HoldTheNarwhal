@@ -31,7 +31,6 @@ import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.io.RedditServiceAuth;
 import com.ddiehl.android.htn.utils.AuthUtils;
 import com.ddiehl.android.htn.utils.BaseUtils;
-import com.ddiehl.android.htn.utils.JSBridge;
 import com.ddiehl.android.htn.view.MainView;
 
 import butterknife.Bind;
@@ -52,7 +51,7 @@ public class WebViewFragment extends AbsRedditFragment {
         }
     }
 
-    private WebViewFragment() { }
+    public WebViewFragment() { }
 
     public static Fragment newInstance(String url) {
         Bundle args = new Bundle();
@@ -149,10 +148,6 @@ public class WebViewFragment extends AbsRedditFragment {
             }
             return false;
         });
-
-        if (Build.VERSION.SDK_INT >= 17) {
-            mWebView.addJavascriptInterface(new JSBridge(getActivity()), "Android");
-        }
 
         return v;
     }
