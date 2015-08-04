@@ -4,6 +4,7 @@
 
 package com.ddiehl.android.htn.io;
 
+import com.ddiehl.reddit.identity.Trophy;
 import com.ddiehl.reddit.identity.UserIdentity;
 import com.ddiehl.reddit.identity.UserSettings;
 import com.ddiehl.reddit.listings.ListingResponse;
@@ -59,6 +60,18 @@ public interface RedditAPI {
             @Query("sort") String sort,
             @Query("t") String timespan,
             @Query("after") String after);
+
+    @GET("/user/{username}/about")
+    Observable<UserIdentity> getUserInfo(
+            @Path("username") String username);
+
+    @GET("/api/v1/me/friends/{username}")
+    Observable<UserIdentity> getFriendInfo(
+            @Path("username") String username);
+
+    @GET("/api/v1/user/{username}/trophies")
+    Observable<List<Trophy>> getUserTrophies(
+            @Path("username") String username);
 
     @POST("/api/vote")
     Observable<Response> vote(

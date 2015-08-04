@@ -55,6 +55,7 @@ import java.io.InputStream;
 import java.util.List;
 
 import retrofit.RestAdapter;
+import retrofit.RetrofitError;
 import retrofit.client.OkClient;
 import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
@@ -224,6 +225,16 @@ public class RedditServiceAPI implements RedditService {
         final String userId = event.getUsername();
 
         // TODO Call API for required data
+        // /user/{username}/about for friend status, karma, create date
+        // /api/v1/me/friends/dadmachine for friend note
+        // /api/v1/user/username/trophies for user trophies
+        mAPI.getUserInfo(userId)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        response -> { },
+                        mBus::post
+                );
+
         mBus.post(new UserProfileSummaryLoadedEvent(
                 RetrofitError.unexpectedError("", new RuntimeException())));
     }
