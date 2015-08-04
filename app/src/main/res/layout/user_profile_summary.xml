@@ -144,11 +144,11 @@
                 android:textSize="@dimen/user_trophies_label_text_size"
                 android:text="@string/user_trophies_label"/>
 
-            <GridLayout
+            <TableLayout
                 android:id="@+id/user_trophies"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:columnCount="2"/>
+                android:stretchColumns="true"/>
 
         </LinearLayout>
 

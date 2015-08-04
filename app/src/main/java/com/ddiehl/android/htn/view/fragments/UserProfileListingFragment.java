@@ -11,8 +11,9 @@ import android.support.design.widget.TabLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.GridLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TableLayout;
 import android.widget.TextView;
 
 import com.ddiehl.android.htn.BusProvider;
@@ -51,7 +52,7 @@ public class UserProfileListingFragment extends AbsListingsFragment {
     @Bind(R.id.user_link_karma) TextView mLinkKarma;
     @Bind(R.id.user_comment_karma) TextView mCommentKarma;
     @Bind(R.id.user_friend_note) TextView mFriendNote;
-    @Bind(R.id.user_trophies) GridLayout mTrophies;
+    @Bind(R.id.user_trophies) TableLayout mTrophies;
 
     private Context mContext;
     private Bus mBus = BusProvider.getInstance();
@@ -131,18 +132,30 @@ public class UserProfileListingFragment extends AbsListingsFragment {
 
     @Subscribe
     public void onTrophiesLoaded(TrophiesLoadedEvent event) {
+        final int numColumns = 2;
         List<Listing> trophies = event.getListings();
-        if (trophies != null) {
-            for (Listing t : trophies) {
-                View v = View.inflate(mContext, R.layout.trophy_layout, mTrophies);
-                Trophy trophy = (Trophy) t;
-                Picasso.with(mContext)
-                        .load(trophy.getIcon40())
-                        .into(((ImageView) v.findViewById(R.id.trophy_icon)));
-                ((TextView) v.findViewById(R.id.trophy_name))
-                        .setText(trophy.getName() + " - " + trophy.getDescription());
-//            mTrophies.addView();
+        ViewGroup row = new LinearLayout(mContext);
+        for (int i = 0; i < trophies.size(); i++) {
+            View v = View.inflate(mContext, R.layout.trophy_layout, null);
+            Trophy trophy = (Trophy) trophies.get(i);
+
+            String name = trophy.getName();
+            String description = trophy.getDescription();
+            if (description != null) {
+                name += " - " + description;
             }
+            TextView trophyNameView = (TextView) v.findViewById(R.id.trophy_name);
+            trophyNameView.setText(name);
+
+            Picasso.with(mContext)
+                    .load(trophy.getIcon70())
+                    .into(((ImageView) v.findViewById(R.id.trophy_icon)));
+
+            if (i % numColumns == 0) {
+                row = new LinearLayout(mContext);
+                mTrophies.addView(row);
+            }
+            row.addView(v);
         }
     }
 
