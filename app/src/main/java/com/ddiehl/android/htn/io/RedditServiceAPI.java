@@ -228,21 +228,25 @@ public class RedditServiceAPI implements RedditService {
         mAPI.getUserInfo(username)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        response -> mBus.post(new UserInfoLoadedEvent(response)),
+                        user -> {
+                            mBus.post(new UserInfoLoadedEvent(user));
+                            if (user.isFriend()) {
+                                // FIXME Make this proper functional style
+                                // getFriendInfo for friend note
+                                mAPI.getFriendInfo(username)
+                                        .observeOn(AndroidSchedulers.mainThread())
+                                        .subscribe(
+                                                response -> mBus.post(new FriendInfoLoadedEvent(response)),
+                                                error -> {
+                                                    mBus.post(error);
+                                                    mBus.post(new FriendInfoLoadedEvent(error));
+                                                }
+                                        );
+                            }
+                        },
                         error -> {
                             mBus.post(error);
                             mBus.post(new UserInfoLoadedEvent(error));
-                        }
-                );
-
-        // getFriendInfo for friend note
-        mAPI.getFriendInfo(username)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        response -> mBus.post(new FriendInfoLoadedEvent(response)),
-                        error -> {
-                            mBus.post(error);
-                            mBus.post(new FriendInfoLoadedEvent(error));
                         }
                 );
 

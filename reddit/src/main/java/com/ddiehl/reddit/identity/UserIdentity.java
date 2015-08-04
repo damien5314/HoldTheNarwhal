@@ -26,6 +26,7 @@ public class UserIdentity {
     @Expose @SerializedName("has_verified_email") private Boolean hasVerifiedEmail;
     @Expose private String id;
     @Expose @SerializedName("inbox_count") private Integer inboxCount;
+    @Expose @SerializedName("is_friend") private Boolean isFriend;
 
     private UserSettings mUserSettings;
 
@@ -159,6 +160,10 @@ public class UserIdentity {
 
     public void setInboxCount(Integer inboxCount) {
         this.inboxCount = inboxCount;
+    }
+
+    public boolean isFriend() {
+        return isFriend;
     }
 
     @Override

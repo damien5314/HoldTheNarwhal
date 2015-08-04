@@ -2,9 +2,8 @@
  * Copyright (c) 2015 Damien Diehl. All rights reserved.
  */
 
-package com.ddiehl.reddit.identity;
+package com.ddiehl.reddit.listings;
 
-import com.ddiehl.reddit.listings.Listing;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
