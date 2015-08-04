@@ -10,6 +10,8 @@ import android.support.design.widget.TabLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.GridLayout;
+import android.widget.TextView;
 
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.presenter.UserProfileListingPresenter;
@@ -28,6 +30,14 @@ public class UserProfileListingFragment extends AbsListingsFragment {
     @Bind(R.id.user_profile_tabs) TabLayout mUserProfileTabs;
     @Bind(R.id.user_profile_summary) View mUserProfileSummary;
     @Bind(R.id.recycler_view) View mListView;
+    @Bind(R.id.user_note_layout) View mUserNoteLayout;
+
+    // Views for user profile summary elements
+    @Bind(R.id.user_created) TextView mCreateDate;
+    @Bind(R.id.user_link_karma) TextView mLinkKarma;
+    @Bind(R.id.user_comment_karma) TextView mCommentKarma;
+    @Bind(R.id.user_friend_note) TextView mFriendNote;
+    @Bind(R.id.user_trophies) GridLayout mTrophies;
 
     public UserProfileListingFragment() { }
 

@@ -19,28 +19,15 @@
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin">
 
-        <LinearLayout
-            android:orientation="vertical"
+        <TextView
+            android:id="@+id/user_created"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="8dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/user_note_label_text_size"
-                android:textColor="@color/secondary_text"
-                android:text="@string/user_note_label"/>
-
-            <EditText
-                android:id="@+id/user_note"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="text"
-                android:textSize="28sp"
-                android:hint="@string/user_note_hint"/>
-
-        </LinearLayout>
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:textSize="@dimen/user_created_text_size"
+            android:textColor="@color/primary_text"
+            tools:text="Redditor since April 20, 2008"/>
 
         <!-- link karma & comment karma -->
         <LinearLayout
@@ -51,13 +38,13 @@
             android:paddingBottom="8dp">
 
             <LinearLayout
-                android:id="@+id/user_link_karma"
                 android:orientation="vertical"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1">
 
                 <TextView
+                    android:id="@+id/user_link_karma"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
@@ -76,13 +63,13 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/user_comment_karma"
                 android:orientation="vertical"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1">
 
                 <TextView
+                    android:id="@+id/user_comment_karma"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
@@ -118,6 +105,30 @@
 
         </FrameLayout>
 
+        <LinearLayout
+            android:id="@+id/user_note_layout"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/user_note_label_text_size"
+                android:textColor="@color/secondary_text"
+                android:text="@string/user_note_label"/>
+
+            <EditText
+                android:id="@+id/user_friend_note"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:textSize="28sp"
+                android:hint="@string/user_note_hint"/>
+
+        </LinearLayout>
+
         <!-- trophies -->
         <LinearLayout
             android:orientation="vertical"
@@ -134,6 +145,7 @@
                 android:text="@string/user_trophies_label"/>
 
             <GridLayout
+                android:id="@+id/user_trophies"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:columnCount="2"/>
