@@ -26,7 +26,6 @@ import com.ddiehl.android.htn.events.responses.LinkCommentsLoadedEvent;
 import com.ddiehl.android.htn.events.responses.ListingsLoadedEvent;
 import com.ddiehl.android.htn.events.responses.MoreChildrenLoadedEvent;
 import com.ddiehl.android.htn.events.responses.SaveSubmittedEvent;
-import com.ddiehl.android.htn.events.responses.TrophiesLoadedEvent;
 import com.ddiehl.android.htn.events.responses.UserIdentityRetrievedEvent;
 import com.ddiehl.android.htn.events.responses.UserInfoLoadedEvent;
 import com.ddiehl.android.htn.events.responses.UserSettingsRetrievedEvent;
@@ -251,10 +250,10 @@ public class RedditServiceAPI implements RedditService {
         mAPI.getUserTrophies(username)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        response -> mBus.post(new TrophiesLoadedEvent(response)),
+                        response -> mBus.post(new ListingsLoadedEvent(response)),
                         error -> {
                             mBus.post(error);
-                            mBus.post(new TrophiesLoadedEvent(error));
+                            mBus.post(new ListingsLoadedEvent(error));
                         }
                 );
     }
