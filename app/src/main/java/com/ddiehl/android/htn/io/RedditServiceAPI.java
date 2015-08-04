@@ -20,13 +20,15 @@ import com.ddiehl.android.htn.events.requests.ReportEvent;
 import com.ddiehl.android.htn.events.requests.SaveEvent;
 import com.ddiehl.android.htn.events.requests.UpdateUserSettingsEvent;
 import com.ddiehl.android.htn.events.requests.VoteEvent;
+import com.ddiehl.android.htn.events.responses.FriendInfoLoadedEvent;
 import com.ddiehl.android.htn.events.responses.HideSubmittedEvent;
 import com.ddiehl.android.htn.events.responses.LinkCommentsLoadedEvent;
 import com.ddiehl.android.htn.events.responses.ListingsLoadedEvent;
 import com.ddiehl.android.htn.events.responses.MoreChildrenLoadedEvent;
 import com.ddiehl.android.htn.events.responses.SaveSubmittedEvent;
+import com.ddiehl.android.htn.events.responses.TrophiesLoadedEvent;
 import com.ddiehl.android.htn.events.responses.UserIdentityRetrievedEvent;
-import com.ddiehl.android.htn.events.responses.UserProfileSummaryLoadedEvent;
+import com.ddiehl.android.htn.events.responses.UserInfoLoadedEvent;
 import com.ddiehl.android.htn.events.responses.UserSettingsRetrievedEvent;
 import com.ddiehl.android.htn.events.responses.UserSettingsUpdatedEvent;
 import com.ddiehl.android.htn.events.responses.VoteSubmittedEvent;
@@ -55,7 +57,6 @@ import java.io.InputStream;
 import java.util.List;
 
 import retrofit.RestAdapter;
-import retrofit.RetrofitError;
 import retrofit.client.OkClient;
 import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
@@ -222,21 +223,40 @@ public class RedditServiceAPI implements RedditService {
 
     @Override
     public void onLoadUserProfileSummary(LoadUserProfileSummaryEvent event) {
-        final String userId = event.getUsername();
+        final String username = event.getUsername();
 
-        // TODO Call API for required data
-        // /user/{username}/about for friend status, karma, create date
-        // /api/v1/me/friends/dadmachine for friend note
-        // /api/v1/user/username/trophies for user trophies
-        mAPI.getUserInfo(userId)
+        // getUserInfo for friend status, karma, create date
+        mAPI.getUserInfo(username)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        response -> { },
-                        mBus::post
+                        response -> mBus.post(new UserInfoLoadedEvent(response)),
+                        error -> {
+                            mBus.post(error);
+                            mBus.post(new UserInfoLoadedEvent(error));
+                        }
                 );
 
-        mBus.post(new UserProfileSummaryLoadedEvent(
-                RetrofitError.unexpectedError("", new RuntimeException())));
+        // getFriendInfo for friend note
+        mAPI.getFriendInfo(username)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        response -> mBus.post(new FriendInfoLoadedEvent(response)),
+                        error -> {
+                            mBus.post(error);
+                            mBus.post(new FriendInfoLoadedEvent(error));
+                        }
+                );
+
+        // getUserTrophies for user trophies
+        mAPI.getUserTrophies(username)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        response -> mBus.post(new TrophiesLoadedEvent(response)),
+                        error -> {
+                            mBus.post(error);
+                            mBus.post(new TrophiesLoadedEvent(error));
+                        }
+                );
     }
 
     @Override
