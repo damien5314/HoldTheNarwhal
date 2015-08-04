@@ -4,29 +4,45 @@
 
 package com.ddiehl.reddit.identity;
 
+import com.ddiehl.reddit.listings.Listing;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class UserIdentity {
-
-    // Variables for response from me.json
-    @Expose @SerializedName("has_mail") private Boolean hasMail;
-    @Expose private String name;
-    @Expose private Long created;
-    @Expose @SerializedName("hide_from_robots") private Boolean hideFromRobots;
-    @Expose @SerializedName("gold_creddits") private Integer goldCreddits;
-    @Expose @SerializedName("created_utc") private Long createdUTC;
-    @Expose @SerializedName("has_mod_mail") private Boolean hasModMail;
-    @Expose @SerializedName("link_karma") private Integer linkKarma;
-    @Expose @SerializedName("comment_karma") private Integer commentKarma;
-    @Expose @SerializedName("over_18") private Boolean isOver18;
-    @Expose @SerializedName("is_gold") private Boolean isGold;
-    @Expose @SerializedName("is_mod") private Boolean isMod;
-    @Expose @SerializedName("gold_expiration") private Long goldExpiration;
-    @Expose @SerializedName("has_verified_email") private Boolean hasVerifiedEmail;
-    @Expose private String id;
-    @Expose @SerializedName("inbox_count") private Integer inboxCount;
-    @Expose @SerializedName("is_friend") private Boolean isFriend;
+public class UserIdentity extends Listing.Data {
+    @Expose @SerializedName("has_mail")
+    private Boolean hasMail;
+    @Expose
+    private String name;
+    @Expose
+    private Long created;
+    @Expose @SerializedName("hide_from_robots")
+    private Boolean hideFromRobots;
+    @Expose @SerializedName("gold_creddits")
+    private Integer goldCreddits;
+    @Expose @SerializedName("created_utc")
+    private Long createdUTC;
+    @Expose @SerializedName("has_mod_mail")
+    private Boolean hasModMail;
+    @Expose @SerializedName("link_karma")
+    private Integer linkKarma;
+    @Expose @SerializedName("comment_karma")
+    private Integer commentKarma;
+    @Expose @SerializedName("over_18")
+    private Boolean isOver18;
+    @Expose @SerializedName("is_gold")
+    private Boolean isGold;
+    @Expose @SerializedName("is_mod")
+    private Boolean isMod;
+    @Expose @SerializedName("gold_expiration")
+    private Long goldExpiration;
+    @Expose @SerializedName("has_verified_email")
+    private Boolean hasVerifiedEmail;
+//    @Expose
+//    private String id;
+    @Expose @SerializedName("inbox_count")
+    private Integer inboxCount;
+    @Expose @SerializedName("is_friend")
+    private Boolean isFriend;
 
     private UserSettings mUserSettings;
 
@@ -35,7 +51,7 @@ public class UserIdentity {
     }
 
     public Boolean hasMail() {
-        return hasMail;
+        return this.hasMail != null && this.hasMail;
     }
 
     public void hasMail(Boolean hasMail) {
@@ -43,7 +59,7 @@ public class UserIdentity {
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public void setName(String name) {
@@ -51,7 +67,7 @@ public class UserIdentity {
     }
 
     public Long getCreated() {
-        return created;
+        return this.created;
     }
 
     public void setCreated(Long created) {
@@ -59,15 +75,14 @@ public class UserIdentity {
     }
 
     public Boolean isHiddenFromRobots() {
-        return hideFromRobots;
+        return this.hideFromRobots != null && this.hideFromRobots;
     }
 
-    public void isHiddenFromRobots(Boolean hideFromRobots) {
-        this.hideFromRobots = hideFromRobots;
+    public void isHiddenFromRobots(Boolean hideFromRobots) { this.hideFromRobots = hideFromRobots;
     }
 
     public Integer getGoldCreddits() {
-        return goldCreddits;
+        return this.goldCreddits;
     }
 
     public void setGoldCreddits(Integer goldCreddits) {
@@ -75,7 +90,7 @@ public class UserIdentity {
     }
 
     public Long getCreatedUTC() {
-        return createdUTC;
+        return this.createdUTC;
     }
 
     public void setCreatedUTC(Long createdUTC) {
@@ -83,7 +98,7 @@ public class UserIdentity {
     }
 
     public Boolean hasModMail() {
-        return hasModMail;
+        return this.hasModMail != null && this.hasModMail;
     }
 
     public void hasModMail(Boolean hasModMail) {
@@ -91,7 +106,7 @@ public class UserIdentity {
     }
 
     public Integer getLinkKarma() {
-        return linkKarma;
+        return this.linkKarma;
     }
 
     public void setLinkKarma(Integer linkKarma) {
@@ -99,7 +114,7 @@ public class UserIdentity {
     }
 
     public Integer getCommentKarma() {
-        return commentKarma;
+        return this.commentKarma;
     }
 
     public void setCommentKarma(Integer commentKarma) {
@@ -107,7 +122,7 @@ public class UserIdentity {
     }
 
     public Boolean isOver18() {
-        return isOver18;
+        return this.isOver18 != null && this.isOver18;
     }
 
     public void isOver18(Boolean isOver18) {
@@ -115,7 +130,7 @@ public class UserIdentity {
     }
 
     public Boolean isGold() {
-        return isGold;
+        return this.isGold != null && this.isGold;
     }
 
     public void isGold(Boolean isGold) {
@@ -123,7 +138,7 @@ public class UserIdentity {
     }
 
     public Boolean isMod() {
-        return isMod;
+        return this.isMod != null && this.isMod;
     }
 
     public void isMod(Boolean isMod) {
@@ -131,7 +146,7 @@ public class UserIdentity {
     }
 
     public Long getGoldExpiration() {
-        return goldExpiration;
+        return this.goldExpiration;
     }
 
     public void setGoldExpiration(Long goldExpiration) {
@@ -139,7 +154,7 @@ public class UserIdentity {
     }
 
     public Boolean hasVerifiedEmail() {
-        return hasVerifiedEmail;
+        return this.hasVerifiedEmail != null && this.hasVerifiedEmail;
     }
 
     public void hasVerifiedEmail(Boolean hasVerifiedEmail) {
@@ -147,7 +162,7 @@ public class UserIdentity {
     }
 
     public String getId() {
-        return id;
+        return this.id;
     }
 
     public void setId(String id) {
@@ -155,7 +170,7 @@ public class UserIdentity {
     }
 
     public Integer getInboxCount() {
-        return inboxCount;
+        return this.inboxCount;
     }
 
     public void setInboxCount(Integer inboxCount) {
@@ -163,11 +178,6 @@ public class UserIdentity {
     }
 
     public boolean isFriend() {
-        return isFriend;
-    }
-
-    @Override
-    public String toString() {
-        return getId() + " - " + getName() + " - Gold: " + isGold();
+        return this.isFriend != null && this.isFriend;
     }
 }

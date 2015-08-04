@@ -4,6 +4,7 @@
 
 package com.ddiehl.android.htn.view.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -11,13 +12,26 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.ddiehl.android.htn.BusProvider;
 import com.ddiehl.android.htn.R;
+import com.ddiehl.android.htn.events.responses.FriendInfoLoadedEvent;
+import com.ddiehl.android.htn.events.responses.TrophiesLoadedEvent;
+import com.ddiehl.android.htn.events.responses.UserInfoLoadedEvent;
 import com.ddiehl.android.htn.presenter.UserProfileListingPresenter;
 import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.android.htn.view.adapters.ListingsAdapter;
+import com.ddiehl.reddit.identity.FriendInfo;
 import com.ddiehl.reddit.identity.UserIdentity;
+import com.ddiehl.reddit.listings.Listing;
+import com.ddiehl.reddit.listings.Trophy;
+import com.squareup.otto.Bus;
+import com.squareup.otto.Subscribe;
+import com.squareup.picasso.Picasso;
+
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -30,7 +44,7 @@ public class UserProfileListingFragment extends AbsListingsFragment {
     @Bind(R.id.user_profile_tabs) TabLayout mUserProfileTabs;
     @Bind(R.id.user_profile_summary) View mUserProfileSummary;
     @Bind(R.id.recycler_view) View mListView;
-    @Bind(R.id.user_note_layout) View mUserNoteLayout;
+    @Bind(R.id.user_note_layout) View mFriendNoteLayout;
 
     // Views for user profile summary elements
     @Bind(R.id.user_created) TextView mCreateDate;
@@ -38,6 +52,9 @@ public class UserProfileListingFragment extends AbsListingsFragment {
     @Bind(R.id.user_comment_karma) TextView mCommentKarma;
     @Bind(R.id.user_friend_note) TextView mFriendNote;
     @Bind(R.id.user_trophies) GridLayout mTrophies;
+
+    private Context mContext;
+    private Bus mBus = BusProvider.getInstance();
 
     public UserProfileListingFragment() { }
 
@@ -70,10 +87,63 @@ public class UserProfileListingFragment extends AbsListingsFragment {
     @Nullable @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.user_profile_listings_fragment, container, false);
+        mContext = v.getContext();
         ButterKnife.bind(this, v);
         instantiateListView(v);
         updateUserProfileTabs();
+        mFriendNoteLayout.setVisibility(View.GONE);
         return v;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mBus.register(this);
+    }
+
+    @Override
+    public void onStop() {
+        mBus.unregister(this);
+        super.onStop();
+    }
+
+    @Subscribe
+    public void onUserInfoLoaded(UserInfoLoadedEvent event) {
+        UserIdentity user = event.getUserIdentity();
+//        String created = String.format(mContext.getString(R.string.user_profile_summary_created),
+//                SimpleDateFormat.getDateInstance().format(new Date(user.getCreatedUTC() * 1000)));
+//        mCreateDate.setText(created);
+        mLinkKarma.setText(String.valueOf(user.getLinkKarma()));
+        mCommentKarma.setText(String.valueOf(user.getCommentKarma()));
+
+        if (user.isFriend()) {
+            // TODO Set button to friended state
+            // TODO Custom button class to handle dual state?
+        }
+    }
+
+    @Subscribe
+    public void onFriendInfoLoaded(FriendInfoLoadedEvent event) {
+        mFriendNoteLayout.setVisibility(View.VISIBLE);
+        FriendInfo friend = event.getFriendInfo();
+        mFriendNote.setText(friend.getNote());
+    }
+
+    @Subscribe
+    public void onTrophiesLoaded(TrophiesLoadedEvent event) {
+        List<Listing> trophies = event.getListings();
+        if (trophies != null) {
+            for (Listing t : trophies) {
+                View v = View.inflate(mContext, R.layout.trophy_layout, mTrophies);
+                Trophy trophy = (Trophy) t;
+                Picasso.with(mContext)
+                        .load(trophy.getIcon40())
+                        .into(((ImageView) v.findViewById(R.id.trophy_icon)));
+                ((TextView) v.findViewById(R.id.trophy_name))
+                        .setText(trophy.getName() + " - " + trophy.getDescription());
+//            mTrophies.addView();
+            }
+        }
     }
 
     public void updateUserProfileTabs() {

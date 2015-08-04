@@ -26,6 +26,7 @@ import com.ddiehl.android.htn.events.responses.LinkCommentsLoadedEvent;
 import com.ddiehl.android.htn.events.responses.ListingsLoadedEvent;
 import com.ddiehl.android.htn.events.responses.MoreChildrenLoadedEvent;
 import com.ddiehl.android.htn.events.responses.SaveSubmittedEvent;
+import com.ddiehl.android.htn.events.responses.TrophiesLoadedEvent;
 import com.ddiehl.android.htn.events.responses.UserIdentityRetrievedEvent;
 import com.ddiehl.android.htn.events.responses.UserInfoLoadedEvent;
 import com.ddiehl.android.htn.events.responses.UserSettingsRetrievedEvent;
@@ -38,6 +39,7 @@ import com.ddiehl.reddit.Votable;
 import com.ddiehl.reddit.adapters.AbsCommentDeserializer;
 import com.ddiehl.reddit.adapters.ListingDeserializer;
 import com.ddiehl.reddit.adapters.ListingResponseDeserializer;
+import com.ddiehl.reddit.identity.UserIdentity;
 import com.ddiehl.reddit.listings.AbsComment;
 import com.ddiehl.reddit.listings.CommentStub;
 import com.ddiehl.reddit.listings.Link;
@@ -228,7 +230,8 @@ public class RedditServiceAPI implements RedditService {
         mAPI.getUserInfo(username)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        user -> {
+                        listing -> {
+                            UserIdentity user = listing.getUser();
                             mBus.post(new UserInfoLoadedEvent(user));
                             if (user.isFriend()) {
                                 // FIXME Make this proper functional style
@@ -254,10 +257,10 @@ public class RedditServiceAPI implements RedditService {
         mAPI.getUserTrophies(username)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        response -> mBus.post(new ListingsLoadedEvent(response)),
+                        response -> mBus.post(new TrophiesLoadedEvent(response)),
                         error -> {
                             mBus.post(error);
-                            mBus.post(new ListingsLoadedEvent(error));
+                            mBus.post(new TrophiesLoadedEvent(error));
                         }
                 );
     }

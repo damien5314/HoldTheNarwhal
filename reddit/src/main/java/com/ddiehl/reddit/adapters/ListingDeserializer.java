@@ -4,10 +4,11 @@
 
 package com.ddiehl.reddit.adapters;
 
-import com.ddiehl.reddit.listings.CommentStub;
-import com.ddiehl.reddit.listings.Listing;
 import com.ddiehl.reddit.listings.Comment;
+import com.ddiehl.reddit.listings.CommentStub;
 import com.ddiehl.reddit.listings.Link;
+import com.ddiehl.reddit.listings.Listing;
+import com.ddiehl.reddit.listings.Trophy;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
@@ -17,6 +18,7 @@ import com.google.gson.JsonParseException;
 import java.lang.reflect.Type;
 
 public class ListingDeserializer implements JsonDeserializer<Listing> {
+    private static final String TAG = ListingDeserializer.class.getSimpleName();
 
     @Override
     public Listing deserialize(
@@ -31,11 +33,14 @@ public class ListingDeserializer implements JsonDeserializer<Listing> {
             case "t3":
                 listing = context.deserialize(json, Link.class);
                 return listing;
+            case "t6":
+                listing = context.deserialize(json, Trophy.class);
+                return listing;
             case "more":
                 listing = context.deserialize(json, CommentStub.class);
                 return listing;
             default:
-                System.out.println("No deserialization class set for listing type: " + kind);
+                System.err.println("No deserialization class set for listing type: " + kind);
                 return null;
         }
     }

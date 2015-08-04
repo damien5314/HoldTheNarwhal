@@ -9,6 +9,8 @@ import com.ddiehl.reddit.identity.UserIdentity;
 import com.ddiehl.reddit.identity.UserSettings;
 import com.ddiehl.reddit.listings.ListingResponse;
 import com.ddiehl.reddit.listings.MoreChildrenResponse;
+import com.ddiehl.reddit.listings.TrophyResponse;
+import com.ddiehl.reddit.listings.UserIdentityListing;
 
 import java.util.List;
 
@@ -62,7 +64,7 @@ public interface RedditAPI {
             @Query("after") String after);
 
     @GET("/user/{username}/about")
-    Observable<UserIdentity> getUserInfo(
+    Observable<UserIdentityListing> getUserInfo(
             @Path("username") String username);
 
     @GET("/api/v1/me/friends/{username}")
@@ -70,7 +72,7 @@ public interface RedditAPI {
             @Path("username") String username);
 
     @GET("/api/v1/user/{username}/trophies")
-    Observable<ListingResponse> getUserTrophies(
+    Observable<TrophyResponse> getUserTrophies(
             @Path("username") String username);
 
     @POST("/api/vote")
