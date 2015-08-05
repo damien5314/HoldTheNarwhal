@@ -27,7 +27,7 @@
             android:paddingBottom="8dp"
             android:textSize="@dimen/user_created_text_size"
             android:textColor="@color/primary_text"
-            tools:text="Redditor since April 20, 2008"/>
+            tools:text="redditor since April 20, 2008"/>
 
         <!-- link karma & comment karma -->
         <LinearLayout
@@ -137,18 +137,19 @@
             android:paddingTop="8dp"
             android:paddingBottom="8dp">
 
-            <TextView
+            <!--<TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/secondary_text"
                 android:textSize="@dimen/user_trophies_label_text_size"
-                android:text="@string/user_trophies_label"/>
+                android:text="@string/user_trophies_label"/>-->
 
             <TableLayout
                 android:id="@+id/user_trophies"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:stretchColumns="true"/>
+                android:shrinkColumns="*"
+                android:stretchColumns="*"/>
 
         </LinearLayout>
 

@@ -12,8 +12,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.ddiehl.android.htn.BusProvider;
@@ -134,7 +134,7 @@ public class UserProfileListingFragment extends AbsListingsFragment {
     public void onTrophiesLoaded(TrophiesLoadedEvent event) {
         final int numColumns = 2;
         List<Listing> trophies = event.getListings();
-        ViewGroup row = new LinearLayout(mContext);
+        TableRow row = (TableRow) View.inflate(mContext, R.layout.trophy_row, null);
         for (int i = 0; i < trophies.size(); i++) {
             View v = View.inflate(mContext, R.layout.trophy_layout, null);
             Trophy trophy = (Trophy) trophies.get(i);
@@ -152,7 +152,7 @@ public class UserProfileListingFragment extends AbsListingsFragment {
                     .into(((ImageView) v.findViewById(R.id.trophy_icon)));
 
             if (i % numColumns == 0) {
-                row = new LinearLayout(mContext);
+                row = (TableRow) View.inflate(mContext, R.layout.trophy_row, null);
                 mTrophies.addView(row);
             }
             row.addView(v);
