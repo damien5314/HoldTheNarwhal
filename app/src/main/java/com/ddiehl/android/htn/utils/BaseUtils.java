@@ -8,7 +8,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.ddiehl.android.htn.R;
@@ -197,5 +200,15 @@ public class BaseUtils {
     public static String getBuildTimeFormatted(Context c) {
         long t = getBuildTime(c);
         return SimpleDateFormat.getDateInstance().format(new java.util.Date(t));
+    }
+
+    public static float getScreenWidth(Context c) {
+        Display display = ((WindowManager) c.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+        DisplayMetrics outMetrics = new DisplayMetrics ();
+        display.getMetrics(outMetrics);
+
+        float density = c.getResources().getDisplayMetrics().density;
+//        float dpHeight = outMetrics.heightPixels / density;
+        return outMetrics.widthPixels / density;
     }
 }

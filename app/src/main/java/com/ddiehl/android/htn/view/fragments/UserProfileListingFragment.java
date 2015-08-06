@@ -21,6 +21,7 @@ import com.ddiehl.android.htn.events.responses.FriendInfoLoadedEvent;
 import com.ddiehl.android.htn.events.responses.TrophiesLoadedEvent;
 import com.ddiehl.android.htn.events.responses.UserInfoLoadedEvent;
 import com.ddiehl.android.htn.presenter.UserProfileListingPresenter;
+import com.ddiehl.android.htn.utils.BaseUtils;
 import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.android.htn.view.adapters.ListingsAdapter;
 import com.ddiehl.reddit.identity.FriendInfo;
@@ -31,6 +32,8 @@ import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.Bind;
@@ -115,9 +118,9 @@ public class UserProfileListingFragment extends AbsListingsFragment {
         dismissSpinner();
 
         UserIdentity user = event.getUserIdentity();
-//        String created = String.format(mContext.getString(R.string.user_profile_summary_created),
-//                SimpleDateFormat.getDateInstance().format(new Date(user.getCreatedUTC() * 1000)));
-//        mCreateDate.setText(created);
+        String created = String.format(mContext.getString(R.string.user_profile_summary_created),
+                SimpleDateFormat.getDateInstance().format(new Date(user.getCreatedUTC() * 1000)));
+        mCreateDate.setText(created);
         mLinkKarma.setText(String.valueOf(user.getLinkKarma()));
         mCommentKarma.setText(String.valueOf(user.getCommentKarma()));
 
@@ -146,7 +149,8 @@ public class UserProfileListingFragment extends AbsListingsFragment {
         }
         dismissSpinner();
 
-        final int numColumns = 2;
+        final int minDpWidth = 160;
+        final int numColumns = ((int) BaseUtils.getScreenWidth(mContext)) / minDpWidth;
         List<Listing> trophies = event.getListings();
         LinearLayout row = null;
         LayoutInflater inflater = getActivity().getLayoutInflater();
