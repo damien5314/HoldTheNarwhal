@@ -7,7 +7,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="0dp"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_weight="1">
 
     <ImageView
         android:id="@+id/trophy_icon"
@@ -17,7 +18,7 @@
 
     <TextView
         android:id="@+id/trophy_name"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="20sp"
         android:textColor="@color/secondary_text"

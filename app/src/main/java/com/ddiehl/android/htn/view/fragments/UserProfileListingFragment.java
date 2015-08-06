@@ -12,8 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TableLayout;
-import android.widget.TableRow;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.ddiehl.android.htn.BusProvider;
@@ -52,7 +51,7 @@ public class UserProfileListingFragment extends AbsListingsFragment {
     @Bind(R.id.user_link_karma) TextView mLinkKarma;
     @Bind(R.id.user_comment_karma) TextView mCommentKarma;
     @Bind(R.id.user_friend_note) TextView mFriendNote;
-    @Bind(R.id.user_trophies) TableLayout mTrophies;
+    @Bind(R.id.user_trophies) LinearLayout mTrophies;
 
     private Context mContext;
     private Bus mBus = BusProvider.getInstance();
@@ -110,6 +109,11 @@ public class UserProfileListingFragment extends AbsListingsFragment {
 
     @Subscribe
     public void onUserInfoLoaded(UserInfoLoadedEvent event) {
+        if (event.isFailed()) {
+            return;
+        }
+        dismissSpinner();
+
         UserIdentity user = event.getUserIdentity();
 //        String created = String.format(mContext.getString(R.string.user_profile_summary_created),
 //                SimpleDateFormat.getDateInstance().format(new Date(user.getCreatedUTC() * 1000)));
@@ -125,6 +129,11 @@ public class UserProfileListingFragment extends AbsListingsFragment {
 
     @Subscribe
     public void onFriendInfoLoaded(FriendInfoLoadedEvent event) {
+        if (event.isFailed()) {
+            return;
+        }
+        dismissSpinner();
+
         mFriendNoteLayout.setVisibility(View.VISIBLE);
         FriendInfo friend = event.getFriendInfo();
         mFriendNote.setText(friend.getNote());
@@ -132,11 +141,15 @@ public class UserProfileListingFragment extends AbsListingsFragment {
 
     @Subscribe
     public void onTrophiesLoaded(TrophiesLoadedEvent event) {
+        if (event.isFailed()) {
+            return;
+        }
+        dismissSpinner();
+
         final int numColumns = 2;
         List<Listing> trophies = event.getListings();
-        TableRow row = (TableRow) View.inflate(mContext, R.layout.trophy_row, null);
+        LinearLayout row = (LinearLayout) View.inflate(mContext, R.layout.trophy_row, null);
         for (int i = 0; i < trophies.size(); i++) {
-            View v = View.inflate(mContext, R.layout.trophy_layout, null);
             Trophy trophy = (Trophy) trophies.get(i);
 
             String name = trophy.getName();
@@ -144,19 +157,22 @@ public class UserProfileListingFragment extends AbsListingsFragment {
             if (description != null) {
                 name += " - " + description;
             }
+
+            LinearLayout v = (LinearLayout) View.inflate(mContext, R.layout.trophy_layout, null);
+
             TextView trophyNameView = (TextView) v.findViewById(R.id.trophy_name);
             trophyNameView.setText(name);
-
             Picasso.with(mContext)
                     .load(trophy.getIcon70())
                     .into(((ImageView) v.findViewById(R.id.trophy_icon)));
 
             if (i % numColumns == 0) {
-                row = (TableRow) View.inflate(mContext, R.layout.trophy_row, null);
+                row = (LinearLayout) View.inflate(mContext, R.layout.trophy_row, null);
                 mTrophies.addView(row);
             }
             row.addView(v);
         }
+        mTrophies.invalidate();
     }
 
     public void updateUserProfileTabs() {
