@@ -144,19 +144,10 @@
                 android:textSize="@dimen/user_trophies_label_text_size"
                 android:text="@string/user_trophies_label"/>-->
 
-            <LinearLayout
+            <TableLayout
                 android:id="@+id/user_trophies"
-                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <LinearLayout
-                    xmlns:android="http://schemas.android.com/apk/res/android"
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-            </LinearLayout>
+                android:layout_height="wrap_content" />
 
         </LinearLayout>
 

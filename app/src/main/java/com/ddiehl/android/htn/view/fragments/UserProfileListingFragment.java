@@ -148,8 +148,14 @@ public class UserProfileListingFragment extends AbsListingsFragment {
 
         final int numColumns = 2;
         List<Listing> trophies = event.getListings();
-        LinearLayout row = (LinearLayout) View.inflate(mContext, R.layout.trophy_row, null);
+        LinearLayout row = null;
+        LayoutInflater inflater = getActivity().getLayoutInflater();
         for (int i = 0; i < trophies.size(); i++) {
+            if (i % numColumns == 0) {
+                row = (LinearLayout) inflater.inflate(R.layout.trophy_row, mTrophies, false);
+                mTrophies.addView(row);
+            }
+
             Trophy trophy = (Trophy) trophies.get(i);
 
             String name = trophy.getName();
@@ -158,21 +164,15 @@ public class UserProfileListingFragment extends AbsListingsFragment {
                 name += " - " + description;
             }
 
-            LinearLayout v = (LinearLayout) View.inflate(mContext, R.layout.trophy_layout, null);
+            LinearLayout v = (LinearLayout) inflater.inflate(R.layout.trophy_layout, row, false);
+            if (row != null) row.addView(v);
 
             TextView trophyNameView = (TextView) v.findViewById(R.id.trophy_name);
             trophyNameView.setText(name);
             Picasso.with(mContext)
                     .load(trophy.getIcon70())
                     .into(((ImageView) v.findViewById(R.id.trophy_icon)));
-
-            if (i % numColumns == 0) {
-                row = (LinearLayout) View.inflate(mContext, R.layout.trophy_row, null);
-                mTrophies.addView(row);
-            }
-            row.addView(v);
         }
-        mTrophies.invalidate();
     }
 
     public void updateUserProfileTabs() {
