@@ -35,6 +35,7 @@ import com.ddiehl.android.htn.HTNAnalytics;
 import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.SettingsManager;
+import com.ddiehl.android.htn.events.requests.UserSignOutEvent;
 import com.ddiehl.android.htn.events.responses.UserAuthCodeReceivedEvent;
 import com.ddiehl.android.htn.io.RedditService;
 import com.ddiehl.android.htn.io.RedditServiceAuth;
@@ -270,8 +271,13 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void showUserProfile() {
-        String username = mMainPresenter.getAuthorizedUser().getName();
-        showUserProfile("summary", username);
+        UserIdentity user = mMainPresenter.getAuthorizedUser();
+        if (user != null) {
+            String username = user.getName();
+            showUserProfile("summary", username);
+        } else {
+            mBus.post(new UserSignOutEvent());
+        }
     }
 
     @Override
