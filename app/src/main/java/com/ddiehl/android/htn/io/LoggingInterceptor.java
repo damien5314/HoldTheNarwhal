@@ -14,6 +14,9 @@ import com.squareup.okhttp.Response;
 
 import java.io.IOException;
 
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+
 class LoggingInterceptor implements Interceptor {
     private static final String TAG = LoggingInterceptor.class.getSimpleName();
 
@@ -27,7 +30,11 @@ class LoggingInterceptor implements Interceptor {
             return response;
         } catch (Exception e) {
             Log.e(TAG, "Exception occurred while sending HTTP request", e);
-            BusProvider.getInstance().post(e);
+            Observable.just(null)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe((action) -> {
+                        BusProvider.getInstance().post(e);
+                    });
         }
         return null;
     }
