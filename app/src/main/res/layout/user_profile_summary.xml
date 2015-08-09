@@ -27,6 +27,7 @@
             android:paddingBottom="8dp"
             android:textSize="@dimen/user_created_text_size"
             android:textColor="@color/primary_text"
+            android:gravity="center"
             tools:text="redditor since April 20, 2008"/>
 
         <!-- link karma & comment karma -->

@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TableLayout;
 import android.widget.TextView;
 
 import com.ddiehl.android.htn.BusProvider;
@@ -177,6 +178,9 @@ public class UserProfileListingFragment extends AbsListingsFragment {
                     .load(trophy.getIcon70())
                     .into(((ImageView) v.findViewById(R.id.trophy_icon)));
         }
+        int lastIndex = mTrophies.getChildCount() - 1;
+        ((TableLayout.LayoutParams) mTrophies.getChildAt(lastIndex).getLayoutParams())
+                .bottomMargin = 0;
     }
 
     public void updateUserProfileTabs() {
