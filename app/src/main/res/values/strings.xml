@@ -52,6 +52,7 @@
     <string name="user_comment_karma">comment karma</string>
     <string name="user_note_label">note</string>
     <string name="user_note_hint">likes pictures of cats</string>
+    <string name="user_friend_note_confirm_button">save</string>
     <string name="user_trophies_label">trophies</string>
     <string name="user_friend_button_text">add to friends</string>
 

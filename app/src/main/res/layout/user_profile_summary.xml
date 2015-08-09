@@ -120,13 +120,27 @@
                 android:textColor="@color/secondary_text"
                 android:text="@string/user_note_label"/>
 
-            <EditText
-                android:id="@+id/user_friend_note"
+            <LinearLayout
+                android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="text"
-                android:textSize="28sp"
-                android:hint="@string/user_note_hint"/>
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/user_friend_note_edit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:textSize="28sp"
+                    android:hint="@string/user_note_hint"/>
+
+                <Button
+                    android:id="@+id/user_friend_note_confirm"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="@string/user_friend_note_confirm_button"/>
+
+            </LinearLayout>
 
         </LinearLayout>
 

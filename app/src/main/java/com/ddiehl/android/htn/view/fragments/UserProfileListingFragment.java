@@ -54,7 +54,7 @@ public class UserProfileListingFragment extends AbsListingsFragment {
     @Bind(R.id.user_created) TextView mCreateDate;
     @Bind(R.id.user_link_karma) TextView mLinkKarma;
     @Bind(R.id.user_comment_karma) TextView mCommentKarma;
-    @Bind(R.id.user_friend_note) TextView mFriendNote;
+    @Bind(R.id.user_friend_note_edit) TextView mFriendNote;
     @Bind(R.id.user_trophies) LinearLayout mTrophies;
 
     private Context mContext;
