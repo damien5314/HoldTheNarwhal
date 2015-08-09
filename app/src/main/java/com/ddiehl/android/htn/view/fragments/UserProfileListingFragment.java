@@ -11,12 +11,14 @@ import android.support.design.widget.TabLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
 import com.ddiehl.android.htn.BusProvider;
+import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.events.responses.FriendInfoLoadedEvent;
 import com.ddiehl.android.htn.events.responses.TrophiesLoadedEvent;
@@ -54,6 +56,8 @@ public class UserProfileListingFragment extends AbsListingsFragment {
     @Bind(R.id.user_created) TextView mCreateDate;
     @Bind(R.id.user_link_karma) TextView mLinkKarma;
     @Bind(R.id.user_comment_karma) TextView mCommentKarma;
+    @Bind(R.id.user_friend_button_layout) View mFriendButtonLayout;
+    @Bind(R.id.user_friend_button) Button mFriendButton;
     @Bind(R.id.user_friend_note_edit) TextView mFriendNote;
     @Bind(R.id.user_trophies) LinearLayout mTrophies;
 
@@ -95,6 +99,7 @@ public class UserProfileListingFragment extends AbsListingsFragment {
         ButterKnife.bind(this, v);
         instantiateListView(v);
         updateUserProfileTabs();
+        mFriendButtonLayout.setVisibility(View.GONE);
         mFriendNoteLayout.setVisibility(View.GONE);
         return v;
     }
@@ -125,9 +130,14 @@ public class UserProfileListingFragment extends AbsListingsFragment {
         mLinkKarma.setText(String.valueOf(user.getLinkKarma()));
         mCommentKarma.setText(String.valueOf(user.getCommentKarma()));
 
-        if (user.isFriend()) {
-            // TODO Set button to friended state
-            // TODO Custom button class to handle dual state?
+        // If user is self, hide friend button
+        String self = IdentityManager.getInstance(mContext).getUserIdentity().getName();
+        if (!user.getName().equals(self)) {
+            mFriendButtonLayout.setVisibility(View.VISIBLE);
+            if (user.isFriend()) {
+                // TODO Set button to friended state
+                // TODO Custom button class to handle dual state?
+            }
         }
     }
 
