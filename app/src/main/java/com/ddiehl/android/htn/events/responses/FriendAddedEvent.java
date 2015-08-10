@@ -2,16 +2,20 @@
  * Copyright (c) 2015 Damien Diehl. All rights reserved.
  */
 
-package com.ddiehl.android.htn.events.requests;
+package com.ddiehl.android.htn.events.responses;
 
-public class FriendAddEvent {
+public class FriendAddedEvent extends FailableEvent {
 
     private String mUsername;
     private String mNote;
 
-    public FriendAddEvent(String username, String note) {
+    public FriendAddedEvent(String username, String note) {
         mUsername = username;
         mNote = note;
+    }
+
+    public FriendAddedEvent(Throwable error) {
+        super(error);
     }
 
     public String getUsername() {

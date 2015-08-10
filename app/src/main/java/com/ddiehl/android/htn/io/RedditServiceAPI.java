@@ -8,6 +8,8 @@ import android.content.Context;
 
 import com.ddiehl.android.htn.AccessTokenManager;
 import com.ddiehl.android.htn.BusProvider;
+import com.ddiehl.android.htn.events.requests.FriendAddEvent;
+import com.ddiehl.android.htn.events.requests.FriendDeleteEvent;
 import com.ddiehl.android.htn.events.requests.GetUserIdentityEvent;
 import com.ddiehl.android.htn.events.requests.GetUserSettingsEvent;
 import com.ddiehl.android.htn.events.requests.HideEvent;
@@ -20,6 +22,8 @@ import com.ddiehl.android.htn.events.requests.ReportEvent;
 import com.ddiehl.android.htn.events.requests.SaveEvent;
 import com.ddiehl.android.htn.events.requests.UpdateUserSettingsEvent;
 import com.ddiehl.android.htn.events.requests.VoteEvent;
+import com.ddiehl.android.htn.events.responses.FriendAddedEvent;
+import com.ddiehl.android.htn.events.responses.FriendDeletedEvent;
 import com.ddiehl.android.htn.events.responses.FriendInfoLoadedEvent;
 import com.ddiehl.android.htn.events.responses.HideSubmittedEvent;
 import com.ddiehl.android.htn.events.responses.LinkCommentsLoadedEvent;
@@ -385,5 +389,32 @@ public class RedditServiceAPI implements RedditService {
     @Override
     public void onReport(final ReportEvent event) {
 
+    }
+
+    @Override
+    public void onAddFriend(FriendAddEvent event) {
+        String username = event.getUsername();
+        String note = event.getNote();
+        mAPI.addFriend(username, note)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        response -> mBus.post(new FriendAddedEvent(username, note)),
+                        error -> {
+                            mBus.post(error);
+                            mBus.post(new FriendAddedEvent(error));
+                        });
+    }
+
+    @Override
+    public void onDeleteFriend(FriendDeleteEvent event) {
+        String username = event.getUsername();
+        mAPI.deleteFriend(username)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        response -> mBus.post(new FriendDeleteEvent(username)),
+                        error -> {
+                            mBus.post(error);
+                            mBus.post(new FriendDeletedEvent(error));
+                        });
     }
 }

@@ -103,11 +103,12 @@ public class UserProfileListingFragment extends AbsListingsFragment {
         updateUserProfileTabs();
         mFriendButtonLayout.setVisibility(View.GONE);
         mFriendNoteLayout.setVisibility(View.GONE);
+        String username = mListingsPresenter.getUsernameContext();
         mFriendButton.setPositiveOnClickListener((l) -> {
-            mBus.post(new FriendAddEvent());
+            mBus.post(new FriendAddEvent(username, ""));
         });
         mFriendButton.setNegativeOnClickListener((l) -> {
-            mBus.post(new FriendDeleteEvent());
+            mBus.post(new FriendDeleteEvent(username));
         });
         return v;
     }

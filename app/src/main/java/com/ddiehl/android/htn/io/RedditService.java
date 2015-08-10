@@ -5,6 +5,8 @@
 package com.ddiehl.android.htn.io;
 
 import com.ddiehl.android.htn.BuildConfig;
+import com.ddiehl.android.htn.events.requests.FriendAddEvent;
+import com.ddiehl.android.htn.events.requests.FriendDeleteEvent;
 import com.ddiehl.android.htn.events.requests.GetUserIdentityEvent;
 import com.ddiehl.android.htn.events.requests.GetUserSettingsEvent;
 import com.ddiehl.android.htn.events.requests.HideEvent;
@@ -38,4 +40,7 @@ public interface RedditService {
     void onSave(SaveEvent event);
     void onHide(HideEvent event);
     void onReport(ReportEvent event);
+
+    void onAddFriend(FriendAddEvent event);
+    void onDeleteFriend(FriendDeleteEvent event);
 }

@@ -12,6 +12,8 @@ import com.ddiehl.android.htn.BusProvider;
 import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.RedditPrefs;
 import com.ddiehl.android.htn.events.requests.AuthorizeApplicationEvent;
+import com.ddiehl.android.htn.events.requests.FriendAddEvent;
+import com.ddiehl.android.htn.events.requests.FriendDeleteEvent;
 import com.ddiehl.android.htn.events.requests.GetUserIdentityEvent;
 import com.ddiehl.android.htn.events.requests.GetUserSettingsEvent;
 import com.ddiehl.android.htn.events.requests.HideEvent;
@@ -431,6 +433,38 @@ public class RedditServiceAuth implements RedditService {
     public void onReport(ReportEvent event) {
         if (mAccessTokenManager.hasValidUserAccessToken()) {
             mServiceAPI.onReport(event);
+            return;
+        }
+
+        AccessToken token = mAccessTokenManager.getUserAccessToken();
+        if (token != null && token.hasRefreshToken()) {
+            mQueuedEvent = event;
+            mBus.post(new RefreshUserAccessTokenEvent(token.getRefreshToken()));
+        } else {
+            mQueuedEvent = null;
+        }
+    }
+
+    @Override
+    public void onAddFriend(FriendAddEvent event) {
+        if (mAccessTokenManager.hasValidUserAccessToken()) {
+            mServiceAPI.onAddFriend(event);
+            return;
+        }
+
+        AccessToken token = mAccessTokenManager.getUserAccessToken();
+        if (token != null && token.hasRefreshToken()) {
+            mQueuedEvent = event;
+            mBus.post(new RefreshUserAccessTokenEvent(token.getRefreshToken()));
+        } else {
+            mQueuedEvent = null;
+        }
+    }
+
+    @Override
+    public void onDeleteFriend(FriendDeleteEvent event) {
+        if (mAccessTokenManager.hasValidUserAccessToken()) {
+            mServiceAPI.onDeleteFriend(event);
             return;
         }
 

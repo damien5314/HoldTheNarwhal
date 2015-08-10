@@ -16,9 +16,11 @@ import java.util.List;
 
 import retrofit.client.Response;
 import retrofit.http.Body;
+import retrofit.http.DELETE;
 import retrofit.http.GET;
 import retrofit.http.PATCH;
 import retrofit.http.POST;
+import retrofit.http.PUT;
 import retrofit.http.Path;
 import retrofit.http.Query;
 import retrofit.mime.TypedString;
@@ -109,4 +111,12 @@ public interface RedditAPI {
             @Query("reason") String reason,
             @Query("otherReason") String otherReason);
 
+    @PUT("/api/v1/me/friends")
+    Observable<Response> addFriend(
+            String username,
+            String note);
+
+    @DELETE("/api/v1/me/friends")
+    Observable<Response> deleteFriend(
+            String username);
 }
