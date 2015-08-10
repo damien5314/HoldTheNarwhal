@@ -11,7 +11,6 @@ import android.support.design.widget.TabLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
@@ -20,6 +19,8 @@ import android.widget.TextView;
 import com.ddiehl.android.htn.BusProvider;
 import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
+import com.ddiehl.android.htn.events.requests.FriendAddEvent;
+import com.ddiehl.android.htn.events.requests.FriendDeleteEvent;
 import com.ddiehl.android.htn.events.responses.FriendInfoLoadedEvent;
 import com.ddiehl.android.htn.events.responses.TrophiesLoadedEvent;
 import com.ddiehl.android.htn.events.responses.UserInfoLoadedEvent;
@@ -27,6 +28,7 @@ import com.ddiehl.android.htn.presenter.UserProfileListingPresenter;
 import com.ddiehl.android.htn.utils.BaseUtils;
 import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.android.htn.view.adapters.ListingsAdapter;
+import com.ddiehl.android.htn.view.widgets.DualStateButton;
 import com.ddiehl.reddit.identity.FriendInfo;
 import com.ddiehl.reddit.identity.UserIdentity;
 import com.ddiehl.reddit.listings.Listing;
@@ -57,7 +59,7 @@ public class UserProfileListingFragment extends AbsListingsFragment {
     @Bind(R.id.user_link_karma) TextView mLinkKarma;
     @Bind(R.id.user_comment_karma) TextView mCommentKarma;
     @Bind(R.id.user_friend_button_layout) View mFriendButtonLayout;
-    @Bind(R.id.user_friend_button) Button mFriendButton;
+    @Bind(R.id.user_friend_button) DualStateButton mFriendButton;
     @Bind(R.id.user_friend_note_edit) TextView mFriendNote;
     @Bind(R.id.user_trophies) LinearLayout mTrophies;
 
@@ -101,6 +103,12 @@ public class UserProfileListingFragment extends AbsListingsFragment {
         updateUserProfileTabs();
         mFriendButtonLayout.setVisibility(View.GONE);
         mFriendNoteLayout.setVisibility(View.GONE);
+        mFriendButton.setPositiveOnClickListener((l) -> {
+            mBus.post(new FriendAddEvent());
+        });
+        mFriendButton.setNegativeOnClickListener((l) -> {
+            mBus.post(new FriendDeleteEvent());
+        });
         return v;
     }
 
