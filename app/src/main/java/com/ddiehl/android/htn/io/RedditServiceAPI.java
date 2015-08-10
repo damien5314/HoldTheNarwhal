@@ -413,7 +413,7 @@ public class RedditServiceAPI implements RedditService {
         mAPI.deleteFriend(username)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        response -> mBus.post(new FriendDeleteEvent(username)),
+                        response -> mBus.post(new FriendDeletedEvent(username)),
                         error -> {
                             mBus.post(error);
                             mBus.post(new FriendDeletedEvent(error));
