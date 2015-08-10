@@ -23,7 +23,6 @@ class LoggingInterceptor implements Interceptor {
     @Override
     public Response intercept(Chain chain) throws IOException {
         try {
-
             Request request = chain.request();
             Response response = chain.proceed(request);
             BaseUtils.printResponseStatus(response);

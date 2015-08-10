@@ -111,12 +111,12 @@ public interface RedditAPI {
             @Query("reason") String reason,
             @Query("otherReason") String otherReason);
 
-    @PUT("/api/v1/me/friends")
+    @PUT("/api/v1/me/friends/{username}")
     Observable<Response> addFriend(
-            String username,
-            String note);
+            @Path("username") String username,
+            @Body TypedString json);
 
-    @DELETE("/api/v1/me/friends")
+    @DELETE("/api/v1/me/friends/{username}")
     Observable<Response> deleteFriend(
-            String username);
+            @Path("username") String username);
 }

@@ -21,6 +21,8 @@ import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.events.requests.FriendAddEvent;
 import com.ddiehl.android.htn.events.requests.FriendDeleteEvent;
+import com.ddiehl.android.htn.events.responses.FriendAddedEvent;
+import com.ddiehl.android.htn.events.responses.FriendDeletedEvent;
 import com.ddiehl.android.htn.events.responses.FriendInfoLoadedEvent;
 import com.ddiehl.android.htn.events.responses.TrophiesLoadedEvent;
 import com.ddiehl.android.htn.events.responses.UserInfoLoadedEvent;
@@ -105,9 +107,11 @@ public class UserProfileListingFragment extends AbsListingsFragment {
         mFriendNoteLayout.setVisibility(View.GONE);
         String username = mListingsPresenter.getUsernameContext();
         mFriendButton.setPositiveOnClickListener((l) -> {
+            ((MainView) getActivity()).showSpinner(null);
             mBus.post(new FriendAddEvent(username, ""));
         });
         mFriendButton.setNegativeOnClickListener((l) -> {
+            ((MainView) getActivity()).showSpinner(null);
             mBus.post(new FriendDeleteEvent(username));
         });
         return v;
@@ -127,10 +131,10 @@ public class UserProfileListingFragment extends AbsListingsFragment {
 
     @Subscribe
     public void onUserInfoLoaded(UserInfoLoadedEvent event) {
+        dismissSpinner();
         if (event.isFailed()) {
             return;
         }
-        dismissSpinner();
 
         UserIdentity user = event.getUserIdentity();
         String created = String.format(mContext.getString(R.string.user_profile_summary_created),
@@ -139,23 +143,24 @@ public class UserProfileListingFragment extends AbsListingsFragment {
         mLinkKarma.setText(String.valueOf(user.getLinkKarma()));
         mCommentKarma.setText(String.valueOf(user.getCommentKarma()));
 
-        // If user is self, hide friend button
+        // If user is not self, show friend button
         String self = IdentityManager.getInstance(mContext).getUserIdentity().getName();
         if (!user.getName().equals(self)) {
             mFriendButtonLayout.setVisibility(View.VISIBLE);
             if (user.isFriend()) {
-                // TODO Set button to friended state
-                // TODO Custom button class to handle dual state?
+                mFriendButton.setState(DualStateButton.State.NEGATIVE);
+            } else {
+                mFriendButton.setState(DualStateButton.State.POSITIVE);
             }
         }
     }
 
     @Subscribe
     public void onFriendInfoLoaded(FriendInfoLoadedEvent event) {
+        dismissSpinner();
         if (event.isFailed()) {
             return;
         }
-        dismissSpinner();
 
         mFriendNoteLayout.setVisibility(View.VISIBLE);
         FriendInfo friend = event.getFriendInfo();
@@ -164,10 +169,10 @@ public class UserProfileListingFragment extends AbsListingsFragment {
 
     @Subscribe
     public void onTrophiesLoaded(TrophiesLoadedEvent event) {
+        dismissSpinner();
         if (event.isFailed()) {
             return;
         }
-        dismissSpinner();
 
         final int minDpWidth = 160;
         final int numColumns = ((int) BaseUtils.getScreenWidth(mContext)) / minDpWidth;
@@ -200,6 +205,24 @@ public class UserProfileListingFragment extends AbsListingsFragment {
         int lastIndex = mTrophies.getChildCount() - 1;
         ((TableLayout.LayoutParams) mTrophies.getChildAt(lastIndex).getLayoutParams())
                 .bottomMargin = 0;
+    }
+
+    @Subscribe
+    public void onFriendAdded(FriendAddedEvent event) {
+        dismissSpinner();
+        if (event.isFailed()) {
+            return;
+        }
+        mFriendButton.setState(DualStateButton.State.NEGATIVE);
+    }
+
+    @Subscribe
+    public void onFriendDeleted(FriendDeletedEvent event) {
+        dismissSpinner();
+        if (event.isFailed()) {
+            return;
+        }
+        mFriendButton.setState(DualStateButton.State.POSITIVE);
     }
 
     public void updateUserProfileTabs() {

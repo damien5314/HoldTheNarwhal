@@ -43,6 +43,7 @@ import com.ddiehl.reddit.Votable;
 import com.ddiehl.reddit.adapters.AbsCommentDeserializer;
 import com.ddiehl.reddit.adapters.ListingDeserializer;
 import com.ddiehl.reddit.adapters.ListingResponseDeserializer;
+import com.ddiehl.reddit.identity.Friend;
 import com.ddiehl.reddit.identity.UserIdentity;
 import com.ddiehl.reddit.listings.AbsComment;
 import com.ddiehl.reddit.listings.CommentStub;
@@ -395,7 +396,8 @@ public class RedditServiceAPI implements RedditService {
     public void onAddFriend(FriendAddEvent event) {
         String username = event.getUsername();
         String note = event.getNote();
-        mAPI.addFriend(username, note)
+        String json = note == null || note.equals("") ? "{}" : new Gson().toJson(new Friend(note));
+        mAPI.addFriend(username, new TypedString(json))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         response -> mBus.post(new FriendAddedEvent(username, note)),

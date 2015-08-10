@@ -45,7 +45,7 @@ public class DualStateButton extends Button {
         mNegativeOnClickListener = l;
     }
 
-    private enum State {
+    public enum State {
         POSITIVE, NEGATIVE
     }
 }
