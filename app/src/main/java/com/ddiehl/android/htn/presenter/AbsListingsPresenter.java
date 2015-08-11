@@ -10,8 +10,8 @@ import android.view.View;
 
 import com.ddiehl.android.htn.AccessTokenManager;
 import com.ddiehl.android.htn.BusProvider;
-import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.IdentityManager;
+import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.SettingsManager;
 import com.ddiehl.android.htn.events.requests.HideEvent;
 import com.ddiehl.android.htn.events.requests.SaveEvent;
@@ -20,7 +20,7 @@ import com.ddiehl.android.htn.events.responses.HideSubmittedEvent;
 import com.ddiehl.android.htn.events.responses.ListingsLoadedEvent;
 import com.ddiehl.android.htn.events.responses.SaveSubmittedEvent;
 import com.ddiehl.android.htn.events.responses.UserIdentitySavedEvent;
-import com.ddiehl.android.htn.events.responses.UserProfileSummaryLoadedEvent;
+import com.ddiehl.android.htn.events.responses.UserInfoLoadedEvent;
 import com.ddiehl.android.htn.events.responses.VoteSubmittedEvent;
 import com.ddiehl.android.htn.view.ListingsView;
 import com.ddiehl.reddit.Archivable;
@@ -30,8 +30,8 @@ import com.ddiehl.reddit.Votable;
 import com.ddiehl.reddit.identity.UserIdentity;
 import com.ddiehl.reddit.listings.Comment;
 import com.ddiehl.reddit.listings.CommentStub;
-import com.ddiehl.reddit.listings.Listing;
 import com.ddiehl.reddit.listings.Link;
+import com.ddiehl.reddit.listings.Listing;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -201,14 +201,15 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
     }
 
     @Subscribe
-    public void onUserProfileSummaryLoaded(UserProfileSummaryLoadedEvent event) {
+    public void onUserInfoLoaded(UserInfoLoadedEvent event) {
         mListingsView.dismissSpinner();
         if (event.isFailed()) {
             mListingsRequested = false;
             return;
         }
 
-        // TODO Display data on success
+        // TODO
+        mListingsRequested = false;
     }
 
     @Subscribe

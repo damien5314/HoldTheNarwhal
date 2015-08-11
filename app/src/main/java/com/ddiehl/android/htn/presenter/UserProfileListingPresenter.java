@@ -12,7 +12,7 @@ import com.ddiehl.android.htn.events.responses.HideSubmittedEvent;
 import com.ddiehl.android.htn.events.responses.ListingsLoadedEvent;
 import com.ddiehl.android.htn.events.responses.SaveSubmittedEvent;
 import com.ddiehl.android.htn.events.responses.UserIdentitySavedEvent;
-import com.ddiehl.android.htn.events.responses.UserProfileSummaryLoadedEvent;
+import com.ddiehl.android.htn.events.responses.UserInfoLoadedEvent;
 import com.ddiehl.android.htn.events.responses.VoteSubmittedEvent;
 import com.ddiehl.android.htn.view.ListingsView;
 import com.ddiehl.android.htn.view.fragments.UserProfileListingFragment;
@@ -40,8 +40,8 @@ public class UserProfileListingPresenter extends AbsListingsPresenter {
     }
 
     @Subscribe
-    public void onUserProfileSummaryLoaded(UserProfileSummaryLoadedEvent event) {
-        super.onUserProfileSummaryLoaded(event);
+    public void onUserInfoLoaded(UserInfoLoadedEvent event) {
+        super.onUserInfoLoaded(event);
     }
 
     @Subscribe @Override

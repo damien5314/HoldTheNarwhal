@@ -270,15 +270,18 @@ public class UserProfileListingFragment extends AbsListingsFragment {
 //                ((MainView) getActivity()).showUserProfile((String) tab.getTag(),
 //                        mListingsPresenter.getUsernameContext());
                 String tag = (String) tab.getTag();
+
                 if (tab.getTag().equals("summary")) {
                     mUserProfileSummary.setVisibility(View.VISIBLE);
                     mListView.setVisibility(View.GONE);
-                    ((MainView) getActivity()).showUserProfile(tag, mListingsPresenter.getUsernameContext());
+//                    ((MainView) getActivity()).showUserProfile(tag, mListingsPresenter.getUsernameContext());
                 } else {
                     mUserProfileSummary.setVisibility(View.GONE);
                     mListView.setVisibility(View.VISIBLE);
-                    ((UserProfileListingPresenter) mListingsPresenter).requestData(tag);
+//                    ((UserProfileListingPresenter) mListingsPresenter).requestData(tag);
                 }
+
+                ((UserProfileListingPresenter) mListingsPresenter).requestData(tag);
             }
         });
     }
