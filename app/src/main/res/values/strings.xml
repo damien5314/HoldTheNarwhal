@@ -54,7 +54,8 @@
     <string name="user_note_hint">likes pictures of cats</string>
     <string name="user_friend_note_confirm_button">save</string>
     <string name="user_trophies_label">trophies</string>
-    <string name="user_friend_button_text">add to friends</string>
+    <string name="user_friend_add_button_text">add to friends</string>
+    <string name="user_friend_delete_button_text">remove from friends</string>
 
     <!-- Ads -->
     <string name="advertisement">advertisement</string>

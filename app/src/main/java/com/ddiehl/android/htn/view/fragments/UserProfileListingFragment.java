@@ -11,6 +11,7 @@ import android.support.design.widget.TabLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
@@ -30,7 +31,6 @@ import com.ddiehl.android.htn.presenter.UserProfileListingPresenter;
 import com.ddiehl.android.htn.utils.BaseUtils;
 import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.android.htn.view.adapters.ListingsAdapter;
-import com.ddiehl.android.htn.view.widgets.DualStateButton;
 import com.ddiehl.reddit.identity.FriendInfo;
 import com.ddiehl.reddit.identity.UserIdentity;
 import com.ddiehl.reddit.listings.Listing;
@@ -61,7 +61,7 @@ public class UserProfileListingFragment extends AbsListingsFragment {
     @Bind(R.id.user_link_karma) TextView mLinkKarma;
     @Bind(R.id.user_comment_karma) TextView mCommentKarma;
     @Bind(R.id.user_friend_button_layout) View mFriendButtonLayout;
-    @Bind(R.id.user_friend_button) DualStateButton mFriendButton;
+    @Bind(R.id.user_friend_button) Button mFriendButton;
     @Bind(R.id.user_friend_note_edit) TextView mFriendNote;
     @Bind(R.id.user_trophies) LinearLayout mTrophies;
 
@@ -105,15 +105,6 @@ public class UserProfileListingFragment extends AbsListingsFragment {
         updateUserProfileTabs();
         mFriendButtonLayout.setVisibility(View.GONE);
         mFriendNoteLayout.setVisibility(View.GONE);
-        String username = mListingsPresenter.getUsernameContext();
-        mFriendButton.setPositiveOnClickListener((l) -> {
-            ((MainView) getActivity()).showSpinner(null);
-            mBus.post(new FriendAddEvent(username, ""));
-        });
-        mFriendButton.setNegativeOnClickListener((l) -> {
-            ((MainView) getActivity()).showSpinner(null);
-            mBus.post(new FriendDeleteEvent(username));
-        });
         return v;
     }
 
@@ -148,9 +139,9 @@ public class UserProfileListingFragment extends AbsListingsFragment {
         if (!user.getName().equals(self)) {
             mFriendButtonLayout.setVisibility(View.VISIBLE);
             if (user.isFriend()) {
-                mFriendButton.setState(DualStateButton.State.NEGATIVE);
+                setFriendButtonState(true);
             } else {
-                mFriendButton.setState(DualStateButton.State.POSITIVE);
+                setFriendButtonState(false);
             }
         }
     }
@@ -213,7 +204,7 @@ public class UserProfileListingFragment extends AbsListingsFragment {
         if (event.isFailed()) {
             return;
         }
-        mFriendButton.setState(DualStateButton.State.NEGATIVE);
+        setFriendButtonState(true);
     }
 
     @Subscribe
@@ -222,7 +213,7 @@ public class UserProfileListingFragment extends AbsListingsFragment {
         if (event.isFailed()) {
             return;
         }
-        mFriendButton.setState(DualStateButton.State.POSITIVE);
+        setFriendButtonState(false);
     }
 
     public void updateUserProfileTabs() {
@@ -284,6 +275,23 @@ public class UserProfileListingFragment extends AbsListingsFragment {
                 ((UserProfileListingPresenter) mListingsPresenter).requestData(tag);
             }
         });
+    }
+
+    private void setFriendButtonState(boolean isFriend) {
+        String username = mListingsPresenter.getUsernameContext();
+        if (isFriend) {
+            mFriendButton.setText(R.string.user_friend_delete_button_text);
+            mFriendButton.setOnClickListener((v) -> {
+                ((MainView) getActivity()).showSpinner(null);
+                mBus.post(new FriendDeleteEvent(username));
+            });
+        } else {
+            mFriendButton.setText(R.string.user_friend_add_button_text);
+            mFriendButton.setOnClickListener((v) -> {
+                ((MainView) getActivity()).showSpinner(null);
+                mBus.post(new FriendAddEvent(username, ""));
+            });
+        }
     }
 
     @Override

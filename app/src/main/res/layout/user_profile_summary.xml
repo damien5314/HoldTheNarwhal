@@ -98,12 +98,11 @@
             android:paddingTop="8dp"
             android:paddingBottom="8dp">
 
-            <com.ddiehl.android.htn.view.widgets.DualStateButton
+            <Button
                 android:id="@+id/user_friend_button"
                 android:layout_width="@dimen/user_friend_button_width"
                 android:layout_height="@dimen/user_friend_button_height"
-                android:layout_gravity="center"
-                android:text="@string/user_friend_button_text"/>
+                android:layout_gravity="center"/>
 
         </FrameLayout>
 
