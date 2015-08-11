@@ -51,7 +51,6 @@ import com.ddiehl.android.htn.view.fragments.UserProfileListingFragment;
 import com.ddiehl.android.htn.view.fragments.WebViewFragment;
 import com.ddiehl.reddit.identity.UserIdentity;
 import com.flurry.android.FlurryAgent;
-import com.flurry.android.FlurryAgentListener;
 import com.mopub.common.MoPub;
 import com.mopub.mobileads.MoPubConversionTracker;
 import com.squareup.otto.Bus;
@@ -129,23 +128,20 @@ public class MainActivity extends AppCompatActivity
         FlurryAgent.setCaptureUncaughtExceptions(true);
         FlurryAgent.setLogEnabled(BuildConfig.DEBUG); // Disable Flurry logging for release builds
 
-        FlurryAgent.setFlurryAgentListener(new FlurryAgentListener() {
-            @Override
-            public void onSessionStarted() {
-                // Log initial Flurry event
-                Map<String, String> params = new HashMap<>();
+        FlurryAgent.setFlurryAgentListener(() -> {
+            // Log initial Flurry event
+            Map<String, String> params = new HashMap<>();
 
-                UserIdentity identity = IdentityManager.getInstance(MainActivity.this).getUserIdentity();
-                String userId = identity == null ?
-                        "unauthorized" : BaseUtils.getMd5HexString(identity.getName());
-                params.put("user", userId);
-                FlurryAgent.setUserId(userId);
+            UserIdentity identity = IdentityManager.getInstance(MainActivity.this).getUserIdentity();
+            String userId = identity == null ?
+                    "unauthorized" : BaseUtils.getMd5HexString(identity.getName());
+            params.put("user", userId);
+            FlurryAgent.setUserId(userId);
 
-                boolean adsEnabled = SettingsManager.getInstance(MainActivity.this).getAdsEnabled();
-                params.put("ads enabled", String.valueOf(adsEnabled));
+            boolean adsEnabled = SettingsManager.getInstance(MainActivity.this).getAdsEnabled();
+            params.put("ads enabled", String.valueOf(adsEnabled));
 
-                FlurryAgent.logEvent("session started", params);
-            }
+            FlurryAgent.logEvent("session started", params);
         });
     }
 
