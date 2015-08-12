@@ -23,8 +23,8 @@
             android:id="@+id/user_created"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp"
+            android:paddingTop="@dimen/baseline_spacing"
+            android:paddingBottom="@dimen/baseline_spacing"
             android:textSize="@dimen/user_created_text_size"
             android:textColor="@color/primary_text"
             android:gravity="center"
@@ -36,8 +36,8 @@
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp">
+            android:paddingTop="@dimen/baseline_spacing"
+            android:paddingBottom="@dimen/baseline_spacing">
 
             <LinearLayout
                 android:orientation="vertical"
@@ -60,7 +60,7 @@
                     android:gravity="center"
                     android:textSize="@dimen/user_karma_label_text_size"
                     android:textColor="@color/secondary_text"
-                    android:text="@string/user_link_karma" />
+                    android:text="@string/user_link_score" />
 
             </LinearLayout>
 
@@ -85,7 +85,7 @@
                     android:gravity="center"
                     android:textSize="@dimen/user_karma_label_text_size"
                     android:textColor="@color/secondary_text"
-                    android:text="@string/user_comment_karma" />
+                    android:text="@string/user_comment_score" />
 
             </LinearLayout>
 
@@ -96,8 +96,8 @@
             android:id="@+id/user_friend_button_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp">
+            android:paddingTop="@dimen/baseline_spacing"
+            android:paddingBottom="@dimen/baseline_spacing">
 
             <Button
                 android:id="@+id/user_friend_button"
@@ -112,8 +112,8 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp">
+            android:paddingTop="@dimen/baseline_spacing"
+            android:paddingBottom="@dimen/baseline_spacing">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -133,7 +133,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:inputType="text"
-                    android:textSize="28sp"/>
+                    android:textSize="@dimen/user_friend_note_text_size"/>
 
                 <Button
                     android:id="@+id/user_friend_note_confirm"
@@ -151,7 +151,7 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="8dp">
+            android:paddingTop="@dimen/baseline_spacing">
 
             <!--<TextView
                 android:layout_width="match_parent"

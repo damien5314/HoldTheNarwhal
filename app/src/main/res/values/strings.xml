@@ -48,8 +48,8 @@
     <string name="navigation_tabs_hidden">hidden</string>
     <string name="navigation_tabs_saved">saved</string>
     <string name="user_profile_summary_created">redditor since %s</string>
-    <string name="user_link_karma">link karma</string>
-    <string name="user_comment_karma">comment karma</string>
+    <string name="user_link_score">link score</string>
+    <string name="user_comment_score">comment score</string>
     <string name="user_note_label">note</string>
     <string name="user_note_hint">likes pictures of cats</string>
     <string name="user_friend_note_confirm_button">save</string>
