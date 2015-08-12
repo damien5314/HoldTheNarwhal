@@ -1,4 +1,4 @@
-# SimpleRedditReader
+# Hold the Narwhal
 
 This app is in alpha. Many features are incomplete or missing, but functionality present should be working fine and not cause any crashes. Please take this into account when leaving a rating, and if you observe any issues with your particular device, please let me know in a review, or the email at the bottom of the page. Thanks for using HTN!
 
