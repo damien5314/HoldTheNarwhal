@@ -124,7 +124,7 @@ public abstract class AbsListingsFragment extends AbsRedditFragment
             mListingsPresenter.refreshData();
         }
 
-//        loadAdsIfEnabled();
+        loadAdsIfEnabled();
     }
 
     private void loadAdsIfEnabled() {
