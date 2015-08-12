@@ -40,6 +40,7 @@ import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
 
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -142,8 +143,8 @@ public class UserProfileFragment extends AbsListingsFragment {
                 SimpleDateFormat.getDateInstance().format(new Date(user.getCreatedUTC() * 1000)));
         mCreateDate.setText(created);
         mKarmaLayout.setVisibility(View.VISIBLE);
-        mLinkKarma.setText(String.valueOf(user.getLinkKarma()));
-        mCommentKarma.setText(String.valueOf(user.getCommentKarma()));
+        mLinkKarma.setText(NumberFormat.getInstance().format(user.getLinkKarma()));
+        mCommentKarma.setText(NumberFormat.getInstance().format(user.getCommentKarma()));
 
         // If user is not self, show friend button
         String self = IdentityManager.getInstance(mContext).getUserIdentity().getName();
@@ -193,7 +194,6 @@ public class UserProfileFragment extends AbsListingsFragment {
             String name = trophy.getName();
             String description = trophy.getDescription();
             if (description != null) {
-//                name += " - " + description;
                 name += "\n" + description;
             }
 
