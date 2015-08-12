@@ -32,6 +32,7 @@
 
         <!-- link karma & comment karma -->
         <LinearLayout
+            android:id="@+id/user_karma_layout"
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

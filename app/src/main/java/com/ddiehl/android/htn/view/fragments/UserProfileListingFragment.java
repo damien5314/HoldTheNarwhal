@@ -58,6 +58,7 @@ public class UserProfileListingFragment extends AbsListingsFragment {
 
     // Views for user profile summary elements
     @Bind(R.id.user_created) TextView mCreateDate;
+    @Bind(R.id.user_karma_layout) View mKarmaLayout;
     @Bind(R.id.user_link_karma) TextView mLinkKarma;
     @Bind(R.id.user_comment_karma) TextView mCommentKarma;
     @Bind(R.id.user_friend_button_layout) View mFriendButtonLayout;
@@ -103,6 +104,7 @@ public class UserProfileListingFragment extends AbsListingsFragment {
         ButterKnife.bind(this, v);
         instantiateListView(v);
         updateUserProfileTabs();
+        mKarmaLayout.setVisibility(View.GONE);
         mFriendButtonLayout.setVisibility(View.GONE);
         mFriendNoteLayout.setVisibility(View.GONE);
         return v;
@@ -131,6 +133,7 @@ public class UserProfileListingFragment extends AbsListingsFragment {
         String created = String.format(mContext.getString(R.string.user_profile_summary_created),
                 SimpleDateFormat.getDateInstance().format(new Date(user.getCreatedUTC() * 1000)));
         mCreateDate.setText(created);
+        mKarmaLayout.setVisibility(View.VISIBLE);
         mLinkKarma.setText(String.valueOf(user.getLinkKarma()));
         mCommentKarma.setText(String.valueOf(user.getCommentKarma()));
 
@@ -182,7 +185,8 @@ public class UserProfileListingFragment extends AbsListingsFragment {
             String name = trophy.getName();
             String description = trophy.getDescription();
             if (description != null) {
-                name += " - " + description;
+//                name += " - " + description;
+                name += "\n" + description;
             }
 
             LinearLayout v = (LinearLayout) inflater.inflate(R.layout.trophy_layout, row, false);
