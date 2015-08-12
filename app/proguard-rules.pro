@@ -50,8 +50,8 @@
 ### Flurry ###
 -dontwarn com.flurry.**
 
-### RxJava ###
-#-dontwarn rx.**
+### RxAndroid ###
+-dontwarn rx.**
 
 ### Debugging ###
 #-renamesourcefileattribute SourceFile
@@ -71,8 +71,14 @@
 -dontwarn butterknife.Views$InjectViewProcessor
 -dontwarn com.gc.materialdesign.views.**
 
-### Retrolambda ###
+### Retrolambda and RxAndroid ###
 -dontwarn java.lang.invoke.*
+
+### Bypass ###
+#-keepclass class **.Bypass
+#-keepclassmembernames class **.Bypass {
+#    native <methods>;
+#}
 
 ### Gson ###
 # Gson uses generic type information stored in a class file when working with
