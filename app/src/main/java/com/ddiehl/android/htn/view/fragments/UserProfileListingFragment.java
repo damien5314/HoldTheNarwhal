@@ -210,6 +210,8 @@ public class UserProfileListingFragment extends AbsListingsFragment {
             return;
         }
         setFriendButtonState(true);
+        mFriendNote.setText("");
+        mFriendNoteLayout.setVisibility(View.VISIBLE);
     }
 
     @Subscribe
@@ -219,6 +221,8 @@ public class UserProfileListingFragment extends AbsListingsFragment {
             return;
         }
         setFriendButtonState(false);
+        mFriendNote.setText("");
+        mFriendNoteLayout.setVisibility(View.GONE);
     }
 
     public void updateUserProfileTabs() {
