@@ -206,12 +206,12 @@ public class LinkCommentsFragment extends AbsRedditFragment
 
     @Override
     public void openUserProfileView(Link link) {
-        ((MainView) getActivity()).showUserProfile("overview", link.getAuthor());
+        ((MainView) getActivity()).showUserProfile("summary", link.getAuthor());
     }
 
     @Override
     public void openUserProfileView(Comment comment) {
-        ((MainView) getActivity()).showUserProfile("overview", comment.getAuthor());
+        ((MainView) getActivity()).showUserProfile("summary", comment.getAuthor());
     }
 
     @Override

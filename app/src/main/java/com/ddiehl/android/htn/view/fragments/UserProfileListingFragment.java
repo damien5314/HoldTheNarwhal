@@ -170,6 +170,7 @@ public class UserProfileListingFragment extends AbsListingsFragment {
         List<Listing> trophies = event.getListings();
         LinearLayout row = null;
         LayoutInflater inflater = getActivity().getLayoutInflater();
+        mTrophies.removeAllViews(); // Reset layout
         for (int i = 0; i < trophies.size(); i++) {
             if (i % numColumns == 0) {
                 row = (LinearLayout) inflater.inflate(R.layout.trophy_row, mTrophies, false);
