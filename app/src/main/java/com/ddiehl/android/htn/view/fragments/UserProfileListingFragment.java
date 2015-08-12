@@ -64,6 +64,7 @@ public class UserProfileListingFragment extends AbsListingsFragment {
     @Bind(R.id.user_friend_button_layout) View mFriendButtonLayout;
     @Bind(R.id.user_friend_button) Button mFriendButton;
     @Bind(R.id.user_friend_note_edit) TextView mFriendNote;
+    @Bind(R.id.user_friend_note_confirm) Button mFriendNoteSave;
     @Bind(R.id.user_trophies) LinearLayout mTrophies;
 
     private Context mContext;
@@ -107,6 +108,11 @@ public class UserProfileListingFragment extends AbsListingsFragment {
         mKarmaLayout.setVisibility(View.GONE);
         mFriendButtonLayout.setVisibility(View.GONE);
         mFriendNoteLayout.setVisibility(View.GONE);
+        mFriendNoteSave.setOnClickListener((view) -> {
+            String username = mListingsPresenter.getUsernameContext();
+            String note = mFriendNote.getText().toString();
+            mBus.post(new FriendAddEvent(username, note));
+        });
         return v;
     }
 
@@ -210,7 +216,7 @@ public class UserProfileListingFragment extends AbsListingsFragment {
             return;
         }
         setFriendButtonState(true);
-        mFriendNote.setText("");
+        mFriendNote.setText(event.getNote());
         mFriendNoteLayout.setVisibility(View.VISIBLE);
     }
 
