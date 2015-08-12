@@ -109,6 +109,7 @@ public class UserProfileListingFragment extends AbsListingsFragment {
         mFriendButtonLayout.setVisibility(View.GONE);
         mFriendNoteLayout.setVisibility(View.GONE);
         mFriendNoteSave.setOnClickListener((view) -> {
+            showSpinner(null);
             String username = mListingsPresenter.getUsernameContext();
             String note = mFriendNote.getText().toString();
             mBus.post(new FriendAddEvent(username, note));
@@ -213,6 +214,7 @@ public class UserProfileListingFragment extends AbsListingsFragment {
     public void onFriendAdded(FriendAddedEvent event) {
         dismissSpinner();
         if (event.isFailed()) {
+            showToast(R.string.user_friend_add_error);
             return;
         }
         setFriendButtonState(true);

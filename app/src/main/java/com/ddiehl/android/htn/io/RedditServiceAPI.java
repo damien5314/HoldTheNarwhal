@@ -63,6 +63,7 @@ import java.io.InputStream;
 import java.util.List;
 
 import retrofit.RestAdapter;
+import retrofit.RetrofitError;
 import retrofit.client.OkClient;
 import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
@@ -396,7 +397,12 @@ public class RedditServiceAPI implements RedditService {
     public void onAddFriend(FriendAddEvent event) {
         String username = event.getUsername();
         String note = event.getNote();
-        String json = note == null || note.equals("") ? "{}" : new Gson().toJson(new Friend(note));
+        if (note == null || note.equals("")) {
+            mBus.post(new FriendAddedEvent(RetrofitError.unexpectedError("",
+                    new RuntimeException("User note should be non-empty"))));
+            return;
+        }
+        String json = new Gson().toJson(new Friend(note));
         mAPI.addFriend(username, new TypedString(json))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
