@@ -22,6 +22,7 @@ import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.events.requests.FriendAddEvent;
 import com.ddiehl.android.htn.events.requests.FriendDeleteEvent;
+import com.ddiehl.android.htn.events.requests.FriendNoteSaveEvent;
 import com.ddiehl.android.htn.events.responses.FriendAddedEvent;
 import com.ddiehl.android.htn.events.responses.FriendDeletedEvent;
 import com.ddiehl.android.htn.events.responses.FriendInfoLoadedEvent;
@@ -112,7 +113,7 @@ public class UserProfileListingFragment extends AbsListingsFragment {
             showSpinner(null);
             String username = mListingsPresenter.getUsernameContext();
             String note = mFriendNote.getText().toString();
-            mBus.post(new FriendAddEvent(username, note));
+            mBus.post(new FriendNoteSaveEvent(username, note));
         });
         return v;
     }
@@ -306,7 +307,7 @@ public class UserProfileListingFragment extends AbsListingsFragment {
             mFriendButton.setText(R.string.user_friend_add_button_text);
             mFriendButton.setOnClickListener((v) -> {
                 ((MainView) getActivity()).showSpinner(null);
-                mBus.post(new FriendAddEvent(username, ""));
+                mBus.post(new FriendAddEvent(username));
             });
         }
     }

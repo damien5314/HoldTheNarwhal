@@ -10,6 +10,7 @@ import com.ddiehl.android.htn.AccessTokenManager;
 import com.ddiehl.android.htn.BusProvider;
 import com.ddiehl.android.htn.events.requests.FriendAddEvent;
 import com.ddiehl.android.htn.events.requests.FriendDeleteEvent;
+import com.ddiehl.android.htn.events.requests.FriendNoteSaveEvent;
 import com.ddiehl.android.htn.events.requests.GetUserIdentityEvent;
 import com.ddiehl.android.htn.events.requests.GetUserSettingsEvent;
 import com.ddiehl.android.htn.events.requests.HideEvent;
@@ -396,6 +397,20 @@ public class RedditServiceAPI implements RedditService {
     @Override
     public void onAddFriend(FriendAddEvent event) {
         String username = event.getUsername();
+        String json = "{}";
+        mAPI.addFriend(username, new TypedString(json))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        response -> mBus.post(new FriendAddedEvent(username, "")),
+                        error -> {
+                            mBus.post(error);
+                            mBus.post(new FriendAddedEvent(error));
+                        });
+    }
+
+    @Override
+    public void onSaveFriendNote(FriendNoteSaveEvent event) {
+        String username = event.getUsername();
         String note = event.getNote();
         if (note == null || note.equals("")) {
             mBus.post(new FriendAddedEvent(RetrofitError.unexpectedError("",
@@ -412,6 +427,8 @@ public class RedditServiceAPI implements RedditService {
                             mBus.post(new FriendAddedEvent(error));
                         });
     }
+
+
 
     @Override
     public void onDeleteFriend(FriendDeleteEvent event) {

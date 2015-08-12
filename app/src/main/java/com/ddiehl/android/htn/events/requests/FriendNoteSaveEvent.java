@@ -4,15 +4,21 @@
 
 package com.ddiehl.android.htn.events.requests;
 
-public class FriendAddEvent {
+public class FriendNoteSaveEvent {
 
     private String mUsername;
+    private String mNote;
 
-    public FriendAddEvent(String username) {
+    public FriendNoteSaveEvent(String username, String note) {
         mUsername = username;
+        mNote = note;
     }
 
     public String getUsername() {
         return mUsername;
+    }
+
+    public String getNote() {
+        return mNote;
     }
 }

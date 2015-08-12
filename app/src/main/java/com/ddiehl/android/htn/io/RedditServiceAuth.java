@@ -14,6 +14,7 @@ import com.ddiehl.android.htn.RedditPrefs;
 import com.ddiehl.android.htn.events.requests.AuthorizeApplicationEvent;
 import com.ddiehl.android.htn.events.requests.FriendAddEvent;
 import com.ddiehl.android.htn.events.requests.FriendDeleteEvent;
+import com.ddiehl.android.htn.events.requests.FriendNoteSaveEvent;
 import com.ddiehl.android.htn.events.requests.GetUserIdentityEvent;
 import com.ddiehl.android.htn.events.requests.GetUserSettingsEvent;
 import com.ddiehl.android.htn.events.requests.HideEvent;
@@ -465,6 +466,22 @@ public class RedditServiceAuth implements RedditService {
     public void onDeleteFriend(FriendDeleteEvent event) {
         if (mAccessTokenManager.hasValidUserAccessToken()) {
             mServiceAPI.onDeleteFriend(event);
+            return;
+        }
+
+        AccessToken token = mAccessTokenManager.getUserAccessToken();
+        if (token != null && token.hasRefreshToken()) {
+            mQueuedEvent = event;
+            mBus.post(new RefreshUserAccessTokenEvent(token.getRefreshToken()));
+        } else {
+            mQueuedEvent = null;
+        }
+    }
+
+    @Subscribe @Override
+    public void onSaveFriendNote(FriendNoteSaveEvent event) {
+        if (mAccessTokenManager.hasValidUserAccessToken()) {
+            mServiceAPI.onSaveFriendNote(event);
             return;
         }
 
