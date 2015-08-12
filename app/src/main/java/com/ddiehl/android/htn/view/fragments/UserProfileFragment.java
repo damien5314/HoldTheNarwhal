@@ -28,7 +28,7 @@ import com.ddiehl.android.htn.events.responses.FriendDeletedEvent;
 import com.ddiehl.android.htn.events.responses.FriendInfoLoadedEvent;
 import com.ddiehl.android.htn.events.responses.TrophiesLoadedEvent;
 import com.ddiehl.android.htn.events.responses.UserInfoLoadedEvent;
-import com.ddiehl.android.htn.presenter.UserProfileListingPresenter;
+import com.ddiehl.android.htn.presenter.UserProfilePresenter;
 import com.ddiehl.android.htn.utils.BaseUtils;
 import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.android.htn.view.adapters.ListingsAdapter;
@@ -47,7 +47,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class UserProfileListingFragment extends AbsListingsFragment {
+public class UserProfileFragment extends AbsListingsFragment {
 
     private static final String ARG_SHOW = "arg_show";
     private static final String ARG_USERNAME = "arg_username";
@@ -71,10 +71,10 @@ public class UserProfileListingFragment extends AbsListingsFragment {
     private Context mContext;
     private Bus mBus = BusProvider.getInstance();
 
-    public UserProfileListingFragment() { }
+    public UserProfileFragment() { }
 
-    public static UserProfileListingFragment newInstance(String show, String username) {
-        UserProfileListingFragment f = new UserProfileListingFragment();
+    public static UserProfileFragment newInstance(String show, String username) {
+        UserProfileFragment f = new UserProfileFragment();
         Bundle args = new Bundle();
         args.putString(ARG_SHOW, show);
         args.putString(ARG_USERNAME, username);
@@ -89,7 +89,7 @@ public class UserProfileListingFragment extends AbsListingsFragment {
         Bundle args = getArguments();
         String show = args.getString(ARG_SHOW);
         String username = args.getString(ARG_USERNAME);
-        mListingsPresenter = new UserProfileListingPresenter(getActivity(), this, show, username, "new", "all");
+        mListingsPresenter = new UserProfilePresenter(getActivity(), this, show, username, "new", "all");
         mListingsAdapter = new ListingsAdapter(mListingsPresenter);
     }
 
@@ -290,7 +290,7 @@ public class UserProfileListingFragment extends AbsListingsFragment {
 //                    ((UserProfileListingPresenter) mListingsPresenter).requestData(tag);
                 }
 
-                ((UserProfileListingPresenter) mListingsPresenter).requestData(tag);
+                ((UserProfilePresenter) mListingsPresenter).requestData(tag);
             }
         });
     }

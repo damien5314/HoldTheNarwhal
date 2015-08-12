@@ -47,7 +47,7 @@ import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.android.htn.view.dialogs.ConfirmSignOutDialog;
 import com.ddiehl.android.htn.view.fragments.SettingsFragment;
 import com.ddiehl.android.htn.view.fragments.SubredditFragment;
-import com.ddiehl.android.htn.view.fragments.UserProfileListingFragment;
+import com.ddiehl.android.htn.view.fragments.UserProfileFragment;
 import com.ddiehl.android.htn.view.fragments.WebViewFragment;
 import com.ddiehl.reddit.identity.UserIdentity;
 import com.flurry.android.FlurryAgent;
@@ -280,7 +280,7 @@ public class MainActivity extends AppCompatActivity
     public void showUserProfile(String show, String username) {
         closeNavigationDrawer();
         mMainPresenter.setUsernameContext(username);
-        Fragment f = UserProfileListingFragment.newInstance(show, username);
+        Fragment f = UserProfileFragment.newInstance(show, username);
         showFragment(f);
     }
 
