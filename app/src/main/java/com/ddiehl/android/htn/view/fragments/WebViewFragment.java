@@ -92,6 +92,7 @@ public class WebViewFragment extends AbsRedditFragment {
         settings.setJavaScriptEnabled(true);
         settings.setUseWideViewPort(true);
         settings.setLoadWithOverviewMode(true);
+        settings.setDomStorageEnabled(true);
         disableWebViewZoomControls(mWebView);
 
         mWebView.setWebViewClient(new WebViewClient() {
