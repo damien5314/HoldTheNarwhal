@@ -1,7 +1,11 @@
 Questions or comments? Feel free to send an [email](mailto:htn@damiendiehl.net)!
 
 ### Attributions ###
-Hold the Narwhal application for Android, Copyright (c) 2015 Damien Diehl. All rights reserved.
+Hold the Narwhal ("HTN") application for Android, Copyright (c) 2015 Damien Diehl. All rights
+reserved.
+
+Trademarks of reddit, including the reddit name, logo, and snoo, are used with express permission
+from reddit, Inc.
 
 Square / [OkHttp](http://square.github.io/okhttp/) library, subject to the Apache 2.0 license.
 You can obtain a copy of the license [here](http://www.apache.org/licenses/LICENSE-2.0).
@@ -35,9 +39,8 @@ this document was last updated.
 
 HTN may collect anonymous usage statistics to better understand the usage patterns of its
 users, and to support future development. These statistics do not contain any personally
-identifiable information, and cannot be traced back to you or your online accounts in any
-way.
+identifiable information, and cannot be traced back to you or your online persona in any way.
 
 Advertisements are presented through MoPub. HTN and its development team are not responsible
 for any statistics collected by MoPub through ad views and clicks. The content presented in
-these advertisements does not reflect the views of reddit, HTN or its development team.
+these advertisements does not reflect the views of reddit, HTN, or its development team.
