@@ -75,10 +75,7 @@
 -dontwarn java.lang.invoke.*
 
 ### Bypass ###
-#-keepclass class **.Bypass
-#-keepclassmembernames class **.Bypass {
-#    native <methods>;
-#}
+-keep class in.uncod.** { *; }
 
 ### Gson ###
 # Gson uses generic type information stored in a class file when working with
