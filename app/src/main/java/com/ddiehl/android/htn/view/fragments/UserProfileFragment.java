@@ -147,8 +147,8 @@ public class UserProfileFragment extends AbsListingsFragment {
         mCommentKarma.setText(NumberFormat.getInstance().format(user.getCommentKarma()));
 
         // If user is not self, show friend button
-        String self = IdentityManager.getInstance(mContext).getUserIdentity().getName();
-        if (!user.getName().equals(self)) {
+        UserIdentity self = IdentityManager.getInstance(mContext).getUserIdentity();
+        if (!user.getName().equals(self.getName())) {
             mFriendButtonLayout.setVisibility(View.VISIBLE);
             if (user.isFriend()) {
                 setFriendButtonState(true);
@@ -165,9 +165,12 @@ public class UserProfileFragment extends AbsListingsFragment {
             return;
         }
 
-        mFriendNoteLayout.setVisibility(View.VISIBLE);
-        FriendInfo friend = event.getFriendInfo();
-        mFriendNote.setText(friend.getNote());
+        UserIdentity self = IdentityManager.getInstance(mContext).getUserIdentity();
+        if (self != null && self.isGold()) {
+            mFriendNoteLayout.setVisibility(View.VISIBLE);
+            FriendInfo friend = event.getFriendInfo();
+            mFriendNote.setText(friend.getNote());
+        }
     }
 
     @Subscribe
@@ -219,8 +222,12 @@ public class UserProfileFragment extends AbsListingsFragment {
             return;
         }
         setFriendButtonState(true);
-        mFriendNote.setText(event.getNote());
-        mFriendNoteLayout.setVisibility(View.VISIBLE);
+
+        UserIdentity self = IdentityManager.getInstance(mContext).getUserIdentity();
+        if (self != null && self.isGold()) {
+            mFriendNote.setText(event.getNote());
+            mFriendNoteLayout.setVisibility(View.VISIBLE);
+        }
     }
 
     @Subscribe
