@@ -51,8 +51,7 @@ import com.ddiehl.android.htn.view.fragments.UserProfileFragment;
 import com.ddiehl.android.htn.view.fragments.WebViewFragment;
 import com.ddiehl.reddit.identity.UserIdentity;
 import com.flurry.android.FlurryAgent;
-import com.mopub.common.MoPub;
-import com.mopub.mobileads.MoPubConversionTracker;
+import com.inmobi.commons.InMobi;
 import com.squareup.otto.Bus;
 
 import java.util.HashMap;
@@ -116,8 +115,9 @@ public class MainActivity extends AppCompatActivity
         mAnalytics = HTNAnalytics.getInstance();
 
         // Configure MoPub
-        new MoPubConversionTracker().reportAppOpen(MainActivity.this);
-        MoPub.setLocationAwareness(MoPub.LocationAwareness.DISABLED);
+//        new MoPubConversionTracker().reportAppOpen(MainActivity.this);
+//        MoPub.setLocationAwareness(MoPub.LocationAwareness.DISABLED);
+        InMobi.initialize(this, "7a754516768e4a0e9c3af91f1fc9ebea");
 
         setMirroredIcons();
     }

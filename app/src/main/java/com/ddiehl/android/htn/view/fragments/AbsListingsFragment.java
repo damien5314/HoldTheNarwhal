@@ -18,12 +18,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.ddiehl.android.htn.BuildConfig;
 import com.ddiehl.android.htn.BusProvider;
 import com.ddiehl.android.htn.R;
-import com.ddiehl.android.htn.SettingsManager;
 import com.ddiehl.android.htn.presenter.ListingsPresenter;
-import com.ddiehl.android.htn.utils.NUtils;
 import com.ddiehl.android.htn.view.ListingsView;
 import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.android.htn.view.activities.MainActivity;
@@ -33,14 +30,9 @@ import com.ddiehl.android.htn.view.dialogs.ChooseTimespanDialog;
 import com.ddiehl.reddit.listings.Comment;
 import com.ddiehl.reddit.listings.Link;
 import com.flurry.android.FlurryAgent;
-import com.mopub.nativeads.MoPubAdRecycleAdapter;
-import com.mopub.nativeads.MoPubNativeAdRenderer;
-import com.mopub.nativeads.RequestParameters;
-import com.mopub.nativeads.ViewBinder;
 import com.squareup.otto.Bus;
 
 import java.util.Date;
-import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -63,8 +55,8 @@ public abstract class AbsListingsFragment extends AbsRedditFragment
     private int mFirstVisibleItem, mVisibleItemCount, mTotalItemCount;
     String mSelectedSort, mSelectedTimespan;
 
-    MoPubAdRecycleAdapter mAdAdapter;
-    RequestParameters mAdRequestParameters;
+//    MoPubAdRecycleAdapter mAdAdapter;
+//    RequestParameters mAdRequestParameters;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -95,24 +87,25 @@ public abstract class AbsListingsFragment extends AbsRedditFragment
         });
 
         // Set up ViewBinder and MoPubAdRecycleAdapter for MoPub ads
-        ViewBinder vb = new ViewBinder.Builder(R.layout.listings_banner_ad)
-                .iconImageId(R.id.ad_icon)
-                .titleId(R.id.ad_title)
-                .textId(R.id.ad_text)
-                .build();
-        MoPubNativeAdRenderer renderer = new MoPubNativeAdRenderer(vb);
-        mAdAdapter = new MoPubAdRecycleAdapter(getActivity(), mListingsAdapter);
-        mAdAdapter.registerAdRenderer(renderer);
-        rv.setAdapter(mAdAdapter);
+//        ViewBinder vb = new ViewBinder.Builder(R.layout.listings_banner_ad)
+//                .iconImageId(R.id.ad_icon)
+//                .titleId(R.id.ad_title)
+//                .textId(R.id.ad_text)
+//                .build();
+//        MoPubNativeAdRenderer renderer = new MoPubNativeAdRenderer(vb);
+//        mAdAdapter = new MoPubAdRecycleAdapter(getActivity(), mListingsAdapter);
+//        mAdAdapter.registerAdRenderer(renderer);
+//        rv.setAdapter(mAdAdapter);
+        rv.setAdapter(mListingsAdapter);
 
         // Set configuration for MoPub ads
-        mAdRequestParameters = new RequestParameters.Builder()
-                .desiredAssets(EnumSet.of(
-                        RequestParameters.NativeAdAsset.ICON_IMAGE,
-                        RequestParameters.NativeAdAsset.TITLE,
-                        RequestParameters.NativeAdAsset.TEXT
-                ))
-                .build();
+//        mAdRequestParameters = new RequestParameters.Builder()
+//                .desiredAssets(EnumSet.of(
+//                        RequestParameters.NativeAdAsset.ICON_IMAGE,
+//                        RequestParameters.NativeAdAsset.TITLE,
+//                        RequestParameters.NativeAdAsset.TEXT
+//                ))
+//                .build();
     }
 
     @Override
@@ -124,18 +117,18 @@ public abstract class AbsListingsFragment extends AbsRedditFragment
             mListingsPresenter.refreshData();
         }
 
-        loadAdsIfEnabled();
+//        loadAdsIfEnabled();
     }
 
-    private void loadAdsIfEnabled() {
-        boolean adsEnabled = SettingsManager.getInstance(getActivity()).getAdsEnabled();
-        if (adsEnabled) {
-            String key = NUtils.getMoPubApiKey(BuildConfig.DEBUG);
-            mAdAdapter.loadAds(key, mAdRequestParameters);
-        } else {
-            mAdAdapter.clearAds();
-        }
-    }
+//    private void loadAdsIfEnabled() {
+//        boolean adsEnabled = SettingsManager.getInstance(getActivity()).getAdsEnabled();
+//        if (adsEnabled) {
+//            String key = NUtils.getMoPubApiKey(BuildConfig.DEBUG);
+//            mAdAdapter.loadAds(key, mAdRequestParameters);
+//        } else {
+//            mAdAdapter.clearAds();
+//        }
+//    }
 
     @Override
     public void onPause() {
@@ -145,9 +138,9 @@ public abstract class AbsListingsFragment extends AbsRedditFragment
 
     @Override
     public void onDestroy() {
-        if (mAdAdapter != null) {
-            mAdAdapter.destroy();
-        }
+//        if (mAdAdapter != null) {
+//            mAdAdapter.destroy();
+//        }
         super.onDestroy();
     }
 
