@@ -1,0 +1,6 @@
+/*
+ * Copyright (c) 2015 Damien Diehl. All rights reserved.
+ */
+
+configurations.create("default")
+artifacts.add("default", file('InMobi-4.5.5.jar'))

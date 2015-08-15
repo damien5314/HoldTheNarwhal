@@ -35,8 +35,8 @@ android {
         }
 
         release {
-            debuggable false
-            minifyEnabled true
+            debuggable true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
         }
@@ -59,8 +59,9 @@ retrolambda {
 
 dependencies {
     compile project(':reddit')
-    compile project(':mopub')
+//    compile project(':mopub')
     compile project(':flurry')
+    compile project(':InMobi-4.5.5')
     compile 'com.android.support:appcompat-v7:22.2.1'
     compile 'com.android.support:support-v4:22.2.1'
     compile 'com.android.support:design:22.2.0'
