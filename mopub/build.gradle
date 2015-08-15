@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2015 Damien Diehl. All rights reserved.
+ */
+
 // This buildscript will assemble the MoPub SDK into an AAR.
 
 repositories {
@@ -48,6 +52,7 @@ android {
 }
 
 dependencies {
+    compile project(':InMobi-4.5.5')
     compile 'com.android.support:support-v4:22.0.0'
     compile 'com.android.support:support-annotations:22.0.0'
     compile 'com.mopub.volley:mopub-volley:1.1.0'
