@@ -14,8 +14,8 @@ android {
         applicationId "com.ddiehl.android.htn"
         minSdkVersion 15
         targetSdkVersion 22
-        versionCode 4
-        versionName "0.3.0"
+        versionCode 5
+        versionName "0.4.0-dev"
         ndk {
             moduleName "app"
         }
