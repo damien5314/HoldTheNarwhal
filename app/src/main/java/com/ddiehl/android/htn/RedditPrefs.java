@@ -13,6 +13,9 @@ public class RedditPrefs {
     public static final String PREFS_DEVICE_ID = "prefs_device_id";
     public static final String PREF_DEVICE_ID = "pref_device_id";
 
+    public static final String PREFS_USER = "prefs_user";
+    public static final String PREF_ALLOW_ANALYTICS = "pref_allow_analytics";
+
     private static RedditPrefs _instance;
     private Context mContext;
 
@@ -45,5 +48,10 @@ public class RedditPrefs {
         String deviceId = UUID.randomUUID().toString();
         sp.edit().putString(PREF_DEVICE_ID, deviceId).apply();
         return deviceId;
+    }
+
+    public static boolean areAnalyticsEnabled(Context c) {
+        return c.getSharedPreferences(PREFS_USER, Context.MODE_PRIVATE)
+                .getBoolean(PREF_ALLOW_ANALYTICS, false);
     }
 }

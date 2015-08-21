@@ -48,11 +48,13 @@ public class MainPresenterImpl implements MainPresenter {
         Log.e("HTN", Log.getStackTraceString(error));
         mMainView.showToast(BaseUtils.getFriendlyError(mContext, error));
 
-        // Log Flurry event
-        Map<String, String> params = new HashMap<>();
-        params.put("url", error.getUrl());
-        params.put("kind", error.getKind().toString());
-        FlurryAgent.logEvent("api error", params);
+        if (FlurryAgent.isSessionActive()) {
+            // Log Flurry event
+            Map<String, String> params = new HashMap<>();
+            params.put("url", error.getUrl());
+            params.put("kind", error.getKind().toString());
+            FlurryAgent.logEvent("api error", params);
+        }
     }
 
     @Subscribe

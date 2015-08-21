@@ -206,5 +206,6 @@
     <string name="pref_highlight_new_comments">highlight new comments</string>
     <string name="pref_show_gold_expiration">show gold expiration</string>
     <string name="pref_creddit_autorenew">automatically renew gold</string>
+    <string name="pref_allow_analytics">allow collection of anonymous usage data</string>
 
 </resources>

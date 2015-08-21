@@ -34,6 +34,7 @@ import com.ddiehl.android.htn.BusProvider;
 import com.ddiehl.android.htn.HTNAnalytics;
 import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
+import com.ddiehl.android.htn.RedditPrefs;
 import com.ddiehl.android.htn.SettingsManager;
 import com.ddiehl.android.htn.events.requests.UserSignOutEvent;
 import com.ddiehl.android.htn.events.responses.UserAuthCodeReceivedEvent;
@@ -92,7 +93,9 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         // Configure Flurry
-        initializeFlurry();
+        if (RedditPrefs.areAnalyticsEnabled(this)) {
+            initializeFlurry();
+        }
 
         ButterKnife.bind(MainActivity.this);
         mNavigationView.setNavigationItemSelectedListener(MainActivity.this);

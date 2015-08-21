@@ -346,15 +346,17 @@ public abstract class AbsListingsFragment extends AbsRedditFragment
 
     @Override
     public void openLinkInWebView(Link link) {
-        // Log analytics event
-        Map<String, String> params = new HashMap<>();
-        params.put("subreddit", link.getSubreddit());
-        params.put("id", link.getId());
-        params.put("domain", link.getDomain());
-        params.put("created", new Date(Double.valueOf(link.getCreatedUtc() * 1000).longValue()).toString());
-        params.put("nsfw", String.valueOf(link.getOver18()));
-        params.put("score", String.valueOf(link.getScore()));
-        FlurryAgent.logEvent("open link", params);
+        if (FlurryAgent.isSessionActive()) {
+            // Log analytics event
+            Map<String, String> params = new HashMap<>();
+            params.put("subreddit", link.getSubreddit());
+            params.put("id", link.getId());
+            params.put("domain", link.getDomain());
+            params.put("created", new Date(Double.valueOf(link.getCreatedUtc() * 1000).longValue()).toString());
+            params.put("nsfw", String.valueOf(link.getOver18()));
+            params.put("score", String.valueOf(link.getScore()));
+            FlurryAgent.logEvent("open link", params);
+        }
 
         ((MainActivity) getActivity()).showWebViewForURL(link.getUrl());
     }

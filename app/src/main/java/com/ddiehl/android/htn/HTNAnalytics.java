@@ -32,6 +32,9 @@ public class HTNAnalytics {
 
     @Subscribe
     public void onSignIn(UserIdentityRetrievedEvent event) {
+        if (!FlurryAgent.isSessionActive())
+            return;
+
         UserIdentity identity = event.getUserIdentity();
         Map<String, String> params = new HashMap<>();
         params.put("user", BaseUtils.getMd5HexString(identity.getName()));
@@ -46,12 +49,18 @@ public class HTNAnalytics {
 
     @Subscribe
     public void onSignOut(UserSignOutEvent event) {
+        if (!FlurryAgent.isSessionActive())
+            return;
+
         FlurryAgent.logEvent("user signed out");
         FlurryAgent.setUserId(null);
     }
 
     @Subscribe
     public void onLoadSubreddit(LoadSubredditEvent event) {
+        if (!FlurryAgent.isSessionActive())
+            return;
+
         Map<String, String> params = new HashMap<>();
         params.put("subreddit", event.getSubreddit());
         params.put("sort", event.getSort());
@@ -61,6 +70,9 @@ public class HTNAnalytics {
 
     @Subscribe
     public void onLoadUserProfile(LoadUserProfileListingEvent event) {
+        if (!FlurryAgent.isSessionActive())
+            return;
+
         Map<String, String> params = new HashMap<>();
         params.put("show", event.getShow());
         params.put("user", BaseUtils.getMd5HexString(event.getUsername()));
@@ -71,6 +83,9 @@ public class HTNAnalytics {
 
     @Subscribe
     public void onLoadLinkComments(LoadLinkCommentsEvent event) {
+        if (!FlurryAgent.isSessionActive())
+            return;
+
         Map<String, String> params = new HashMap<>();
         params.put("subreddit", event.getSubreddit());
         params.put("article", event.getArticle());
@@ -81,6 +96,9 @@ public class HTNAnalytics {
 
     @Subscribe
     public void onLoadMoreChildren(LoadMoreChildrenEvent event) {
+        if (!FlurryAgent.isSessionActive())
+            return;
+
         Map<String, String> params = new HashMap<>();
         params.put("subreddit", event.getLink().getSubreddit());
         params.put("article", event.getLink().getId());
@@ -90,6 +108,9 @@ public class HTNAnalytics {
 
     @Subscribe
     public void onVote(VoteEvent event) {
+        if (!FlurryAgent.isSessionActive())
+            return;
+
         Map<String, String> params = new HashMap<>();
         params.put("type", event.getType());
         params.put("id", event.getListing().getId());
@@ -99,6 +120,9 @@ public class HTNAnalytics {
 
     @Subscribe
     public void onSave(SaveEvent event) {
+        if (!FlurryAgent.isSessionActive())
+            return;
+
         Map<String, String> params = new HashMap<>();
         params.put("type", ((Listing) event.getListing()).getKind());
         params.put("id", ((Listing) event.getListing()).getId());
@@ -109,6 +133,9 @@ public class HTNAnalytics {
 
     @Subscribe
     public void onHide(HideEvent event) {
+        if (!FlurryAgent.isSessionActive())
+            return;
+
         Map<String, String> params = new HashMap<>();
         params.put("type", ((Listing) event.getListing()).getKind());
         params.put("id", ((Listing) event.getListing()).getId());
@@ -118,6 +145,9 @@ public class HTNAnalytics {
 
     @Subscribe
     public void onReport(ReportEvent event) {
+        if (!FlurryAgent.isSessionActive())
+            return;
+
         // TODO Implement analytics event once feature is implemented
     }
 

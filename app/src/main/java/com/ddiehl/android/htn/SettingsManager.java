@@ -170,12 +170,14 @@ public class SettingsManager implements SharedPreferences.OnSharedPreferenceChan
             mBus.post(new UpdateUserSettingsEvent(changedSettings));
         }
 
-        // Send Flurry event
-        Map<String, String> params = new HashMap<>();
-        params.put("key", key);
-        Map prefs = sp.getAll();
-        params.put("value", String.valueOf(prefs.get(key)));
-        FlurryAgent.logEvent("setting changed", params);
+        if (FlurryAgent.isSessionActive()) {
+            // Send Flurry event
+            Map<String, String> params = new HashMap<>();
+            params.put("key", key);
+            Map prefs = sp.getAll();
+            params.put("value", String.valueOf(prefs.get(key)));
+            FlurryAgent.logEvent("setting changed", params);
+        }
 
         mIsChanging = false;
     }
