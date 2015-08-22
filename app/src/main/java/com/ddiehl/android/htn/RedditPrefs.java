@@ -15,6 +15,7 @@ public class RedditPrefs {
 
     public static final String PREFS_USER = "prefs_user";
     public static final String PREF_ALLOW_ANALYTICS = "pref_allow_analytics";
+    public static final String PREF_ALLOW_ANALYTICS_ASKED = "pref_allow_analytics_asked";
 
     private static RedditPrefs _instance;
     private Context mContext;
@@ -53,5 +54,16 @@ public class RedditPrefs {
     public static boolean areAnalyticsEnabled(Context c) {
         return c.getSharedPreferences(PREFS_USER, Context.MODE_PRIVATE)
                 .getBoolean(PREF_ALLOW_ANALYTICS, false);
+    }
+
+    public static boolean askedForAnalytics(Context c) {
+        return c.getSharedPreferences(PREFS_USER, Context.MODE_PRIVATE)
+                .getBoolean(PREF_ALLOW_ANALYTICS_ASKED, false);
+    }
+
+    public static void setAskedForAnalytics(Context c, boolean b) {
+        c.getSharedPreferences(PREFS_USER, Context.MODE_PRIVATE).edit()
+                .putBoolean(PREF_ALLOW_ANALYTICS_ASKED, b)
+                .apply();
     }
 }

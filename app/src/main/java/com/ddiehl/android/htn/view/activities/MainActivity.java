@@ -29,7 +29,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ddiehl.android.htn.AccessTokenManager;
-import com.ddiehl.android.htn.BuildConfig;
 import com.ddiehl.android.htn.BusProvider;
 import com.ddiehl.android.htn.HTNAnalytics;
 import com.ddiehl.android.htn.IdentityManager;
@@ -42,8 +41,6 @@ import com.ddiehl.android.htn.io.RedditService;
 import com.ddiehl.android.htn.io.RedditServiceAuth;
 import com.ddiehl.android.htn.presenter.MainPresenter;
 import com.ddiehl.android.htn.presenter.MainPresenterImpl;
-import com.ddiehl.android.htn.utils.BaseUtils;
-import com.ddiehl.android.htn.utils.NUtils;
 import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.android.htn.view.dialogs.ConfirmSignOutDialog;
 import com.ddiehl.android.htn.view.fragments.SettingsFragment;
@@ -51,11 +48,7 @@ import com.ddiehl.android.htn.view.fragments.SubredditFragment;
 import com.ddiehl.android.htn.view.fragments.UserProfileFragment;
 import com.ddiehl.android.htn.view.fragments.WebViewFragment;
 import com.ddiehl.reddit.identity.UserIdentity;
-import com.flurry.android.FlurryAgent;
 import com.squareup.otto.Bus;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -67,7 +60,6 @@ public class MainActivity extends AppCompatActivity
     public static final String TAG = MainActivity.class.getSimpleName();
 
     private static final String DIALOG_CONFIRM_SIGN_OUT = "dialog_confirm_sign_out";
-    private static final int FLURRY_SESSION_TIMEOUT_SECONDS = 30;
 
     private Bus mBus = BusProvider.getInstance();
     private MainPresenter mMainPresenter;
@@ -94,7 +86,7 @@ public class MainActivity extends AppCompatActivity
 
         // Configure Flurry
         if (RedditPrefs.areAnalyticsEnabled(this)) {
-            initializeFlurry();
+            HTNAnalytics.initializeFlurry(this);
         }
 
         ButterKnife.bind(MainActivity.this);
@@ -122,29 +114,6 @@ public class MainActivity extends AppCompatActivity
 //        InMobi.initialize(this, "7a754516768e4a0e9c3af91f1fc9ebea");
 
         setMirroredIcons();
-    }
-
-    private void initializeFlurry() {
-        FlurryAgent.init(this, NUtils.getFlurryApiKey(BuildConfig.DEBUG));
-        FlurryAgent.setContinueSessionMillis(FLURRY_SESSION_TIMEOUT_SECONDS * 1000);
-        FlurryAgent.setCaptureUncaughtExceptions(true);
-        FlurryAgent.setLogEnabled(BuildConfig.DEBUG); // Disable Flurry logging for release builds
-
-        FlurryAgent.setFlurryAgentListener(() -> {
-            // Log initial Flurry event
-            Map<String, String> params = new HashMap<>();
-
-            UserIdentity identity = IdentityManager.getInstance(MainActivity.this).getUserIdentity();
-            String userId = identity == null ?
-                    "unauthorized" : BaseUtils.getMd5HexString(identity.getName());
-            params.put("user", userId);
-            FlurryAgent.setUserId(userId);
-
-//            boolean adsEnabled = SettingsManager.getInstance(MainActivity.this).getAdsEnabled();
-//            params.put("ads enabled", String.valueOf(adsEnabled));
-
-            FlurryAgent.logEvent("session started", params);
-        });
     }
 
     private void setMirroredIcons() {
@@ -182,7 +151,7 @@ public class MainActivity extends AppCompatActivity
         mBus.register(mSettingsManager);
         mBus.register(mAuthProxy);
         mBus.register(mAnalytics);
-        FlurryAgent.onStartSession(this);
+        HTNAnalytics.startSession(this);
         dismissSpinner();
         updateUserIdentity();
         showSubredditIfEmpty(null);
@@ -190,7 +159,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onStop() {
-        FlurryAgent.onEndSession(this);
+        HTNAnalytics.endSession(this);
         mBus.unregister(mMainPresenter);
         mBus.unregister(mAccessTokenManager);
         mBus.unregister(mIdentityManager);
@@ -209,7 +178,7 @@ public class MainActivity extends AppCompatActivity
         mSignOutView.setVisibility(identity == null ? View.GONE : View.VISIBLE);
         mGoldIndicator.setVisibility(identity != null && identity.isGold() ? View.VISIBLE : View.GONE);
         updateNavigationItems();
-        FlurryAgent.setUserId(identity == null ? null : BaseUtils.getMd5HexString(identity.getName()));
+        HTNAnalytics.setUserIdentity(identity == null ? null : identity.getName());
     }
 
     @Override
@@ -231,31 +200,31 @@ public class MainActivity extends AppCompatActivity
         switch (menuItem.getItemId()) {
             case R.id.drawer_navigate_to_subreddit:
                 showSubredditNavigationDialog();
-                FlurryAgent.logEvent("nav drawer - navigate to subreddit");
+                HTNAnalytics.logDrawerNavigateToSubreddit();
                 return true;
             case R.id.drawer_log_in:
                 showLoginView();
-                FlurryAgent.logEvent("nav drawer - log in");
+                HTNAnalytics.logDrawerLogIn();
                 return true;
             case R.id.drawer_user_profile:
                 showUserProfile();
-                FlurryAgent.logEvent("nav drawer - user profile");
+                HTNAnalytics.logDrawerUserProfile();
                 return true;
             case R.id.drawer_subreddits:
                 showUserSubreddits();
-                FlurryAgent.logEvent("nav drawer - user subreddits");
+                HTNAnalytics.logDrawerUserSubreddits();
                 return true;
             case R.id.drawer_front_page:
                 showSubreddit(null);
-                FlurryAgent.logEvent("nav drawer - navigate to front page");
+                HTNAnalytics.logDrawerFrontPage();
                 return true;
             case R.id.drawer_r_all:
                 showSubreddit("all");
-                FlurryAgent.logEvent("nav drawer - navigate to /r/all");
+                HTNAnalytics.logDrawerAllSubreddits();
                 return true;
             case R.id.drawer_random_subreddit:
                 showSubreddit("random");
-                FlurryAgent.logEvent("nav drawer - navigate to random subreddit");
+                HTNAnalytics.logDrawerRandomSubreddit();
                 return true;
         }
         return false;
@@ -309,7 +278,7 @@ public class MainActivity extends AppCompatActivity
     void onSignOut() {
         ConfirmSignOutDialog dialog = ConfirmSignOutDialog.newInstance();
         dialog.show(getFragmentManager(), DIALOG_CONFIRM_SIGN_OUT);
-        FlurryAgent.logEvent("clicked sign out");
+        HTNAnalytics.logClickedSignOut();
     }
 
     @Override

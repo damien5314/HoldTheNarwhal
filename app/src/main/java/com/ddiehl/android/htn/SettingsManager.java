@@ -10,7 +10,6 @@ import android.content.SharedPreferences;
 import com.ddiehl.android.htn.events.requests.UpdateUserSettingsEvent;
 import com.ddiehl.android.htn.events.responses.UserSettingsRetrievedEvent;
 import com.ddiehl.reddit.identity.UserSettings;
-import com.flurry.android.FlurryAgent;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -170,14 +169,8 @@ public class SettingsManager implements SharedPreferences.OnSharedPreferenceChan
             mBus.post(new UpdateUserSettingsEvent(changedSettings));
         }
 
-        if (FlurryAgent.isSessionActive()) {
-            // Send Flurry event
-            Map<String, String> params = new HashMap<>();
-            params.put("key", key);
-            Map prefs = sp.getAll();
-            params.put("value", String.valueOf(prefs.get(key)));
-            FlurryAgent.logEvent("setting changed", params);
-        }
+        Map prefs = sp.getAll();
+        HTNAnalytics.logSettingChanged(key, (String) prefs.get(key));
 
         mIsChanging = false;
     }

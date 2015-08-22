@@ -22,6 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ddiehl.android.htn.BusProvider;
+import com.ddiehl.android.htn.HTNAnalytics;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.SettingsManager;
 import com.ddiehl.android.htn.presenter.LinkCommentsPresenter;
@@ -33,7 +34,6 @@ import com.ddiehl.android.htn.view.adapters.LinkCommentsAdapter;
 import com.ddiehl.android.htn.view.dialogs.ChooseCommentSortDialog;
 import com.ddiehl.reddit.listings.Comment;
 import com.ddiehl.reddit.listings.Link;
-import com.flurry.android.FlurryAgent;
 import com.squareup.otto.Bus;
 
 import butterknife.ButterKnife;
@@ -311,7 +311,7 @@ public class LinkCommentsFragment extends AbsRedditFragment
             case REQUEST_CHOOSE_SORT:
                 if (resultCode == Activity.RESULT_OK) {
                     String sort = data.getStringExtra(ChooseCommentSortDialog.EXTRA_SORT);
-                    FlurryAgent.logEvent("option - change sort - " + sort);
+                    HTNAnalytics.logOptionChangeSort(sort);
                     mLinkCommentsPresenter.updateSort(sort);
                 }
                 getActivity().invalidateOptionsMenu();
@@ -329,15 +329,15 @@ public class LinkCommentsFragment extends AbsRedditFragment
         switch (item.getItemId()) {
             case R.id.action_change_sort:
                 showChooseCommentSortDialog();
-                FlurryAgent.logEvent("option - change sort");
+                HTNAnalytics.logOptionChangeSort();
                 return true;
             case R.id.action_refresh:
                 mLinkCommentsPresenter.getComments();
-                FlurryAgent.logEvent("option - refresh");
+                HTNAnalytics.logOptionRefresh();
                 return true;
             case R.id.action_settings:
                 ((MainActivity) getActivity()).showSettings();
-                FlurryAgent.logEvent("option - settings");
+                HTNAnalytics.logOptionSettings();
                 return true;
         }
 

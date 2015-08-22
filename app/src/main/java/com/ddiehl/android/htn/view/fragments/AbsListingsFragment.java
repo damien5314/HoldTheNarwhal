@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.ddiehl.android.htn.BusProvider;
+import com.ddiehl.android.htn.HTNAnalytics;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.presenter.ListingsPresenter;
 import com.ddiehl.android.htn.view.ListingsView;
@@ -29,12 +30,7 @@ import com.ddiehl.android.htn.view.dialogs.ChooseLinkSortDialog;
 import com.ddiehl.android.htn.view.dialogs.ChooseTimespanDialog;
 import com.ddiehl.reddit.listings.Comment;
 import com.ddiehl.reddit.listings.Link;
-import com.flurry.android.FlurryAgent;
 import com.squareup.otto.Bus;
-
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 import butterknife.ButterKnife;
 
@@ -150,7 +146,7 @@ public abstract class AbsListingsFragment extends AbsRedditFragment
             case REQUEST_CHOOSE_SORT:
                 if (resultCode == Activity.RESULT_OK) {
                     mSelectedSort = data.getStringExtra(ChooseLinkSortDialog.EXTRA_SORT);
-                    FlurryAgent.logEvent("option - change sort - " + mSelectedSort);
+                    HTNAnalytics.logOptionChangeSort(mSelectedSort);
                     if (mSelectedSort.equals("top") || mSelectedSort.equals("controversial")) {
                         showTimespanOptionsMenu();
                     } else {
@@ -162,7 +158,7 @@ public abstract class AbsListingsFragment extends AbsRedditFragment
             case REQUEST_CHOOSE_TIMESPAN:
                 if (resultCode == Activity.RESULT_OK) {
                     mSelectedTimespan = data.getStringExtra(ChooseTimespanDialog.EXTRA_TIMESPAN);
-                    FlurryAgent.logEvent("option - change timespan - " + mSelectedTimespan);
+                    HTNAnalytics.logOptionChangeTimespan(mSelectedTimespan);
                     mListingsPresenter.updateSort(mSelectedSort, mSelectedTimespan);
                     getActivity().invalidateOptionsMenu();
                 }
@@ -188,19 +184,19 @@ public abstract class AbsListingsFragment extends AbsRedditFragment
         switch (item.getItemId()) {
             case R.id.action_change_sort:
                 showSortOptionsMenu();
-                FlurryAgent.logEvent("option - change sort");
+                HTNAnalytics.logOptionChangeSort();
                 return true;
             case R.id.action_change_timespan:
                 showTimespanOptionsMenu();
-                FlurryAgent.logEvent("option - change timespan");
+                HTNAnalytics.logOptionChangeTimespan();
                 return true;
             case R.id.action_refresh:
                 mListingsPresenter.refreshData();
-                FlurryAgent.logEvent("option - refresh");
+                HTNAnalytics.logOptionRefresh();
                 return true;
             case R.id.action_settings:
                 ((MainActivity) getActivity()).showSettings();
-                FlurryAgent.logEvent("option - settings");
+                HTNAnalytics.logOptionSettings();
                 return true;
         }
 
@@ -346,18 +342,7 @@ public abstract class AbsListingsFragment extends AbsRedditFragment
 
     @Override
     public void openLinkInWebView(Link link) {
-        if (FlurryAgent.isSessionActive()) {
-            // Log analytics event
-            Map<String, String> params = new HashMap<>();
-            params.put("subreddit", link.getSubreddit());
-            params.put("id", link.getId());
-            params.put("domain", link.getDomain());
-            params.put("created", new Date(Double.valueOf(link.getCreatedUtc() * 1000).longValue()).toString());
-            params.put("nsfw", String.valueOf(link.getOver18()));
-            params.put("score", String.valueOf(link.getScore()));
-            FlurryAgent.logEvent("open link", params);
-        }
-
+        HTNAnalytics.logOpenLink(link);
         ((MainActivity) getActivity()).showWebViewForURL(link.getUrl());
     }
 
