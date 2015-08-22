@@ -22,6 +22,7 @@ public class SettingsManager implements SharedPreferences.OnSharedPreferenceChan
 
     // app settings
     public static final String PREF_ENABLE_ADS = "pref_enable_ads";
+    public static final String PREF_ALLOW_ANALYTICS = "pref_allow_analytics";
 
     // reddit settings
     public static final String PREF_FLAG_FOR_USER = "pref_flag_for_user";
@@ -84,6 +85,8 @@ public class SettingsManager implements SharedPreferences.OnSharedPreferenceChan
     private Bus mBus = BusProvider.getInstance();
     private SharedPreferences mSharedPreferences;
 
+    private boolean mIsChanging = false;
+
     private SettingsManager(Context c) {
         mContext = c.getApplicationContext();
         mSharedPreferences = mContext.getSharedPreferences(PREFS_USER, Context.MODE_PRIVATE);
@@ -115,8 +118,6 @@ public class SettingsManager implements SharedPreferences.OnSharedPreferenceChan
         saveUserSettings(settings);
     }
 
-    private boolean mIsChanging = false;
-
     private Object getValueFromKey(SharedPreferences sp, String key) {
         return sp.getAll().get(key);
     }
@@ -137,6 +138,8 @@ public class SettingsManager implements SharedPreferences.OnSharedPreferenceChan
                     // Show appreciation for users enabling ads
 //                    showToast(R.string.pref_enable_ads_thanks);
                 }
+                break;
+            case SettingsManager.PREF_ALLOW_ANALYTICS:
                 break;
             default:
                 Object p = getValueFromKey(sp, key);
@@ -170,7 +173,7 @@ public class SettingsManager implements SharedPreferences.OnSharedPreferenceChan
         }
 
         Map prefs = sp.getAll();
-        HTNAnalytics.logSettingChanged(key, (String) prefs.get(key));
+        HTNAnalytics.logSettingChanged(key, prefs.get(key).toString());
 
         mIsChanging = false;
     }
