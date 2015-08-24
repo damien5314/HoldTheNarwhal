@@ -4,6 +4,7 @@
 
 package com.ddiehl.android.htn.view.activities;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -66,6 +67,7 @@ public class MainActivity extends AppCompatActivity
 
     private ProgressDialog mProgressBar;
     private Dialog mSubredditNavigationDialog;
+    private Dialog mAnalyticsRequestDialog;
 
     @Bind(R.id.drawer_layout) DrawerLayout mDrawerLayout;
     @Bind(R.id.navigation_view) NavigationView mNavigationView;
@@ -145,16 +147,17 @@ public class MainActivity extends AppCompatActivity
     protected void onStart() {
         super.onStart();
 
+        HTNAnalytics.startSession(this);
         mBus.register(mMainPresenter);
         mBus.register(mAccessTokenManager);
         mBus.register(mIdentityManager);
         mBus.register(mSettingsManager);
         mBus.register(mAuthProxy);
         mBus.register(mAnalytics);
-        HTNAnalytics.startSession(this);
-        dismissSpinner();
         updateUserIdentity();
-        showSubredditIfEmpty(null);
+        if (!showAnalyticsRequestIfNeverShown()) {
+            showSubredditIfEmpty(null);
+        }
     }
 
     @Override
@@ -400,6 +403,40 @@ public class MainActivity extends AppCompatActivity
         }
 
         ft.commit();
+    }
+
+    private boolean showAnalyticsRequestIfNeverShown() {
+        if (!RedditPrefs.askedForAnalytics(this)) {
+            showAnalyticsRequestDialog();
+            return true;
+        }
+        return false;
+    }
+
+    private void showAnalyticsRequestDialog() {
+        if (mAnalyticsRequestDialog == null) {
+            mAnalyticsRequestDialog = new AlertDialog.Builder(this)
+                    .setTitle(R.string.dialog_analytics_title)
+                    .setMessage(R.string.dialog_analytics_message)
+                    .setNeutralButton(R.string.dialog_analytics_accept, (dialog, which) -> {
+                        RedditPrefs.setAnalyticsEnabled(this, true);
+                        RedditPrefs.setAskedForAnalytics(this, true);
+                        showSubredditIfEmpty(null);
+                    })
+                    .setNegativeButton(R.string.dialog_analytics_decline, (dialog, which) -> {
+                        RedditPrefs.setAnalyticsEnabled(this, false);
+                        RedditPrefs.setAskedForAnalytics(this, true);
+                        showSubredditIfEmpty(null);
+                    })
+                    .create();
+        }
+        mAnalyticsRequestDialog.show();
+    }
+
+    private void dismissAnalyticsRequestDialog() {
+        if (mAnalyticsRequestDialog != null && mAnalyticsRequestDialog.isShowing()) {
+            mAnalyticsRequestDialog.dismiss();
+        }
     }
 
 }

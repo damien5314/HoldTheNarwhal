@@ -58,15 +58,15 @@ public class HTNAnalytics {
     }
 
     public static void startSession(Context context) {
-        if (RedditPrefs.areAnalyticsEnabled(context)) {
-            FlurryAgent.onStartSession(context);
-        }
+        if (!RedditPrefs.areAnalyticsEnabled(context))
+            return;
+        FlurryAgent.onStartSession(context);
     }
 
     public static void endSession(Context context) {
-        if (FlurryAgent.isSessionActive()) {
-            FlurryAgent.onEndSession(context);
-        }
+        if (!FlurryAgent.isSessionActive())
+            return;
+        FlurryAgent.onEndSession(context);
     }
 
     public static void setUserIdentity(String name) {

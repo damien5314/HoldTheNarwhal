@@ -4,6 +4,7 @@
 
 package com.ddiehl.android.htn.view.dialogs;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -19,10 +20,12 @@ public class AnalyticsDialog extends DialogFragment {
                 .setTitle(R.string.dialog_analytics_title)
                 .setMessage(R.string.dialog_analytics_message)
                 .setNeutralButton(R.string.dialog_analytics_accept, (dialog, which) -> {
-                    // Set preference to accepted
+                    getTargetFragment().onActivityResult(getTargetRequestCode(),
+                            Activity.RESULT_OK, null);
                 })
                 .setNegativeButton(R.string.dialog_analytics_decline, (dialog, which) -> {
-                    // Set preference to declined
+                    getTargetFragment().onActivityResult(getTargetRequestCode(),
+                            Activity.RESULT_CANCELED, null);
                 })
                 .create();
     }
