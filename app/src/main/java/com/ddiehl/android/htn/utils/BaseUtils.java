@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.support.annotation.NonNull;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
@@ -143,7 +144,7 @@ public class BaseUtils {
     }
 
     // http://www.mkyong.com/java/java-md5-hashing-example/
-    public static String getMd5HexString(String s) {
+    public static String getMd5HexString(@NonNull String s) {
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
             md.update(s.getBytes());

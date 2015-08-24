@@ -70,10 +70,10 @@ public class HTNAnalytics {
     }
 
     public static void setUserIdentity(String name) {
-        if (!FlurryAgent.isSessionActive())
-            return;
-        String encoded = BaseUtils.getMd5HexString(name); // Always encode PII
-        FlurryAgent.setUserId(name == null ? null : encoded);
+//        if (!FlurryAgent.isSessionActive())
+//            return;
+        String encoded = name == null ? null : BaseUtils.getMd5HexString(name); // Always encode PII
+        FlurryAgent.setUserId(encoded);
     }
 
     public static void logOpenLink(Link link) {

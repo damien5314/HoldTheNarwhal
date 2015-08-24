@@ -140,6 +140,12 @@ public class SettingsManager implements SharedPreferences.OnSharedPreferenceChan
                 }
                 break;
             case SettingsManager.PREF_ALLOW_ANALYTICS:
+                boolean allowed = sp.getBoolean(PREF_ALLOW_ANALYTICS, false);
+                if (allowed) {
+                    HTNAnalytics.startSession(mContext);
+                } else {
+                    HTNAnalytics.endSession(mContext);
+                }
                 break;
             default:
                 Object p = getValueFromKey(sp, key);

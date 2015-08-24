@@ -87,9 +87,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         // Configure Flurry
-        if (RedditPrefs.areAnalyticsEnabled(this)) {
-            HTNAnalytics.initializeFlurry(this);
-        }
+        HTNAnalytics.initializeFlurry(this);
 
         ButterKnife.bind(MainActivity.this);
         mNavigationView.setNavigationItemSelectedListener(MainActivity.this);
