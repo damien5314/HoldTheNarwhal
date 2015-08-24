@@ -147,7 +147,6 @@ public class MainActivity extends AppCompatActivity
     protected void onStart() {
         super.onStart();
 
-        HTNAnalytics.startSession(this);
         mBus.register(mMainPresenter);
         mBus.register(mAccessTokenManager);
         mBus.register(mIdentityManager);
@@ -156,6 +155,7 @@ public class MainActivity extends AppCompatActivity
         mBus.register(mAnalytics);
         updateUserIdentity();
         if (!showAnalyticsRequestIfNeverShown()) {
+            HTNAnalytics.startSession(this);
             showSubredditIfEmpty(null);
         }
     }
@@ -421,11 +421,13 @@ public class MainActivity extends AppCompatActivity
                     .setNeutralButton(R.string.dialog_analytics_accept, (dialog, which) -> {
                         RedditPrefs.setAnalyticsEnabled(this, true);
                         RedditPrefs.setAskedForAnalytics(this, true);
+                        HTNAnalytics.startSession(this);
                         showSubredditIfEmpty(null);
                     })
                     .setNegativeButton(R.string.dialog_analytics_decline, (dialog, which) -> {
                         RedditPrefs.setAnalyticsEnabled(this, false);
                         RedditPrefs.setAskedForAnalytics(this, true);
+                        HTNAnalytics.endSession(this);
                         showSubredditIfEmpty(null);
                     })
                     .create();
