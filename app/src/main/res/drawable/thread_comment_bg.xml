@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2015 Damien Diehl. All rights reserved.
+  -->
+
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item>
         <shape>
-            <solid android:color="#000000" />
+            <solid android:color="@color/primary" />
         </shape>
     </item>
 

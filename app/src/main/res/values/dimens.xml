@@ -18,7 +18,7 @@
     <dimen name="navigation_drawer_item_margin">16dp</dimen>
     <dimen name="navigation_drawer_item_text">18sp</dimen>
     <dimen name="navigation_drawer_icon_margin">16dp</dimen>
-    <dimen name="comment_indentation_margin">6dp</dimen>
+    <dimen name="comment_indentation_margin">8dp</dimen>
     <dimen name="comment_expander_size">12dp</dimen> <!-- 12dp -->
     <dimen name="comment_author_text_size">16sp</dimen>
     <dimen name="comment_secondary_data_text_size">14sp</dimen>
