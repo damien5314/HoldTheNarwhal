@@ -183,6 +183,11 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
     }
 
     @Override
+    public boolean getShowControversiality() {
+        return mSettingsManager.getShowControversiality();
+    }
+
+    @Override
     public int getNumComments() {
         return mCommentBank.getNumVisible();
     }

@@ -38,6 +38,7 @@ public class ThreadCommentViewHolder extends RecyclerView.ViewHolder
     @Bind(R.id.comment_saved_icon) View mSavedView;
     @Bind(R.id.comment_body) TextView mBodyView;
     @Bind(R.id.comment_gilded_text_view) TextView mGildedText;
+    @Bind(R.id.comment_controversiality_indicator) View mControversialityIndicator;
 
     public ThreadCommentViewHolder(View v, CommentPresenter presenter) {
         super(v);
@@ -58,7 +59,7 @@ public class ThreadCommentViewHolder extends RecyclerView.ViewHolder
         v.showContextMenu();
     }
 
-    public void bind(final Link link, final Comment comment) {
+    public void bind(final Link link, final Comment comment, boolean showControversiality) {
         mComment = comment;
 
         // Add padding views to indentation_wrapper based on depth of comment
@@ -146,10 +147,12 @@ public class ThreadCommentViewHolder extends RecyclerView.ViewHolder
         } else {
             mGildedText.setVisibility(View.GONE);
         }
+
+        mControversialityIndicator.setVisibility(showControversiality ? View.VISIBLE : View.GONE);
     }
 
-    public void bind(final Comment comment) {
-        bind(null, comment);
+    public void bind(final Comment comment, boolean showControversiality) {
+        bind(null, comment, showControversiality);
     }
 
     @Override

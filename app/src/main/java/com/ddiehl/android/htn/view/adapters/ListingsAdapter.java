@@ -66,7 +66,9 @@ public class ListingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             ((ListingsLinkViewHolder) holder).bind(link, false);
         } else if (holder instanceof ListingsCommentViewHolder) {
             Comment comment = (Comment) mListingsPresenter.getListing(position);
-            ((ListingsCommentViewHolder) holder).bind(comment);
+            boolean showControversiality = mListingsPresenter.getShowControversiality()
+                    && comment.getControversiality() > 0;
+            ((ListingsCommentViewHolder) holder).bind(comment, showControversiality);
         }
     }
 

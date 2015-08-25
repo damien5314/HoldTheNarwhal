@@ -24,6 +24,7 @@ public interface ListingsPresenter extends LinkPresenter, CommentPresenter {
     String getSort();
     String getTimespan();
     String getShow();
+    boolean getShowControversiality();
     void updateSubreddit(String subreddit);
     void updateSort();
     void updateSort(String sort);

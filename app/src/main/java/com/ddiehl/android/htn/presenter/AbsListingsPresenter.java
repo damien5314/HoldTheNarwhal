@@ -146,6 +146,11 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
     }
 
     @Override
+    public boolean getShowControversiality() {
+        return mSettingsManager.getShowControversiality();
+    }
+
+    @Override
     public void updateSubreddit(String subreddit) {
         mSubreddit = subreddit;
         mSort = "hot";

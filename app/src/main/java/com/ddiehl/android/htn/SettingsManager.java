@@ -119,6 +119,10 @@ public class SettingsManager implements SharedPreferences.OnSharedPreferenceChan
         }
     }
 
+    public boolean getShowControversiality() {
+        return mSharedPreferences.getBoolean(PREF_HIGHLIGHT_CONTROVERSIAL, false);
+    }
+
     public boolean getAdsEnabled() {
         return mSharedPreferences.getBoolean(PREF_ENABLE_ADS, false);
     }

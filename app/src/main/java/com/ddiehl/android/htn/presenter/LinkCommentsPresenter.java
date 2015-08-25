@@ -19,6 +19,7 @@ public interface LinkCommentsPresenter extends LinkPresenter, CommentPresenter {
     AbsComment getComment(int position);
 
     String getSort();
+    boolean getShowControversiality();
     void updateSort();
     void updateSort(String sort);
 
