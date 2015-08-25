@@ -165,4 +165,27 @@ public class CommentBankList implements CommentBank {
 
         syncVisibleData();
     }
+
+    @Override
+    public void collapseAllThreadsUnder(Integer score) {
+        if (score == null)
+            return;
+        Listing current;
+        Comment comment;
+        for (int i = 0; i < mData.size(); i++) {
+            current = mData.get(i);
+            if (!(current instanceof Comment)) {
+                continue;
+            }
+            comment = (Comment) current;
+            if (comment.isCollapsed()) {
+                continue;
+            }
+            if (comment.getScore() < score) {
+                setThreadVisible(i, false);
+            }
+        }
+
+        syncVisibleData();
+    }
 }

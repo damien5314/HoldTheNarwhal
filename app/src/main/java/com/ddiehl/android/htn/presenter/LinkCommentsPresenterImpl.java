@@ -95,6 +95,8 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
         AbsComment.Utils.flattenCommentList(comments);
         mCommentBank.clear();
         mCommentBank.addAll(comments);
+        Integer minScore = mSettingsManager.getMinCommentScore();
+        mCommentBank.collapseAllThreadsUnder(minScore);
         mLinkCommentsView.commentsUpdated();
     }
 
@@ -139,6 +141,8 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
             }
         }
 
+        Integer minScore = mSettingsManager.getMinCommentScore();
+        mCommentBank.collapseAllThreadsUnder(minScore);
         mLinkCommentsView.commentsUpdated();
     }
 

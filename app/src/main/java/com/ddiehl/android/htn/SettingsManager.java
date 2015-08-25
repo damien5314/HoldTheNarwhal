@@ -105,6 +105,20 @@ public class SettingsManager implements SharedPreferences.OnSharedPreferenceChan
                 .apply();
     }
 
+    public Integer getMinCommentScore() {
+        String str = mSharedPreferences.getString(PREF_MIN_COMMENT_SCORE, null);
+        if (str == null) {
+            return null;
+        } else {
+            try {
+                return Integer.valueOf(str);
+            } catch (Exception e) {
+                // In all likelihood, this isn't an integer ("null")
+                return null;
+            }
+        }
+    }
+
     public boolean getAdsEnabled() {
         return mSharedPreferences.getBoolean(PREF_ENABLE_ADS, false);
     }
