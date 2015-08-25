@@ -5,6 +5,8 @@
 package com.ddiehl.android.htn;
 
 import android.content.Context;
+import android.os.Build;
+import android.util.Log;
 
 import com.ddiehl.android.htn.events.requests.HideEvent;
 import com.ddiehl.android.htn.events.requests.LoadLinkCommentsEvent;
@@ -31,53 +33,70 @@ import java.util.Map;
 import retrofit.RetrofitError;
 
 public class HTNAnalytics {
+    private static final String TAG = HTNAnalytics.class.getSimpleName();
 
     private static final int FLURRY_SESSION_TIMEOUT_SECONDS = 30;
 
-    public static void initializeFlurry(Context context) {
-        FlurryAgent.init(context, NUtils.getFlurryApiKey(BuildConfig.DEBUG));
+    private Context mContext;
+    private boolean mInitialized = false;
+
+    public void initializeFlurry(Context context) {
+        if (mInitialized) {
+            Log.e(TAG, "Analytics already initialized");
+            return;
+        }
+
+        mContext = context.getApplicationContext();
+        String apiKey = NUtils.getFlurryApiKey(BuildConfig.DEBUG);
+        FlurryAgent.init(mContext, apiKey);
         FlurryAgent.setContinueSessionMillis(FLURRY_SESSION_TIMEOUT_SECONDS * 1000);
         FlurryAgent.setCaptureUncaughtExceptions(true);
         FlurryAgent.setLogEnabled(BuildConfig.DEBUG); // Disable Flurry logging for release builds
+        FlurryAgent.setFlurryAgentListener(this::onStartSession);
 
-        FlurryAgent.setFlurryAgentListener(() -> {
-            // Log initial Flurry event
-            Map<String, String> params = new HashMap<>();
-
-            UserIdentity identity = IdentityManager.getInstance(context).getUserIdentity();
-            String userId = identity == null ?
-                    "unauthorized" : BaseUtils.getMd5HexString(identity.getName());
-            params.put("user", userId);
-            FlurryAgent.setUserId(userId);
-
-//            boolean adsEnabled = SettingsManager.getInstance(MainActivity.this).getAdsEnabled();
-//            params.put("ads enabled", String.valueOf(adsEnabled));
-
-            FlurryAgent.logEvent("session started", params);
-        });
+        mInitialized = true;
     }
 
-    public static void startSession(Context context) {
-        if (!RedditPrefs.areAnalyticsEnabled(context))
+    public void startSession() {
+        if (Build.VERSION.SDK_INT >= 14)
+            return; // Sessions are handled automatically API 14+
+        FlurryAgent.onStartSession(mContext);
+    }
+
+    private void onStartSession() {
+        if (!RedditPrefs.areAnalyticsEnabled(mContext))
             return;
-        FlurryAgent.onStartSession(context);
+
+        // Log initial Flurry event
+        Map<String, String> params = new HashMap<>();
+
+        UserIdentity identity = IdentityManager.getInstance(mContext).getUserIdentity();
+        String userId = identity == null ?
+                "unauthorized" : BaseUtils.getMd5HexString(identity.getName());
+        params.put("user", userId);
+        FlurryAgent.setUserId(userId);
+
+//        boolean adsEnabled = SettingsManager.getInstance(MainActivity.this).getAdsEnabled();
+//        params.put("ads enabled", String.valueOf(adsEnabled));
+
+        FlurryAgent.logEvent("session started", params);
     }
 
-    public static void endSession(Context context) {
-        if (!FlurryAgent.isSessionActive())
-            return;
-        FlurryAgent.onEndSession(context);
+    public void endSession() {
+        if (Build.VERSION.SDK_INT >= 14)
+            return; // Sessions are handled automatically API 14+
+        FlurryAgent.onEndSession(mContext);
     }
 
-    public static void setUserIdentity(String name) {
-//        if (!FlurryAgent.isSessionActive())
+    public void setUserIdentity(String name) {
+//        if (!RedditPrefs.areAnalyticsEnabled(mContext))
 //            return;
         String encoded = name == null ? null : BaseUtils.getMd5HexString(name); // Always encode PII
         FlurryAgent.setUserId(encoded);
     }
 
-    public static void logOpenLink(Link link) {
-        if (!FlurryAgent.isSessionActive())
+    public void logOpenLink(Link link) {
+        if (!RedditPrefs.areAnalyticsEnabled(mContext))
             return;
         Map<String, String> params = new HashMap<>();
         params.put("subreddit", link.getSubreddit());
@@ -89,92 +108,92 @@ public class HTNAnalytics {
         FlurryAgent.logEvent("open link", params);
     }
 
-    public static void logOptionChangeSort() {
-        if (!FlurryAgent.isSessionActive())
+    public void logOptionChangeSort() {
+        if (!RedditPrefs.areAnalyticsEnabled(mContext))
             return;
         FlurryAgent.logEvent("option - change sort");
     }
 
-    public static void logOptionChangeSort(String sort) {
-        if (!FlurryAgent.isSessionActive())
+    public void logOptionChangeSort(String sort) {
+        if (!RedditPrefs.areAnalyticsEnabled(mContext))
             return;
         FlurryAgent.logEvent("option - change sort - " + sort);
     }
 
-    public static void logOptionChangeTimespan() {
-        if (!FlurryAgent.isSessionActive())
+    public void logOptionChangeTimespan() {
+        if (!RedditPrefs.areAnalyticsEnabled(mContext))
             return;
         FlurryAgent.logEvent("option - change timespan");
     }
 
-    public static void logOptionChangeTimespan(String timespan) {
-        if (!FlurryAgent.isSessionActive())
+    public void logOptionChangeTimespan(String timespan) {
+        if (!RedditPrefs.areAnalyticsEnabled(mContext))
             return;
         FlurryAgent.logEvent("option - change timespan - " + timespan);
     }
 
-    public static void logOptionRefresh() {
-        if (!FlurryAgent.isSessionActive())
+    public void logOptionRefresh() {
+        if (!RedditPrefs.areAnalyticsEnabled(mContext))
             return;
         FlurryAgent.logEvent("option - refresh");
     }
 
-    public static void logOptionSettings() {
-        if (!FlurryAgent.isSessionActive())
+    public void logOptionSettings() {
+        if (!RedditPrefs.areAnalyticsEnabled(mContext))
             return;
         FlurryAgent.logEvent("option - settings");
     }
 
-    public static void logDrawerNavigateToSubreddit() {
-        if (!FlurryAgent.isSessionActive())
+    public void logDrawerNavigateToSubreddit() {
+        if (!RedditPrefs.areAnalyticsEnabled(mContext))
             return;
         FlurryAgent.logEvent("nav drawer - navigate to subreddit");
     }
 
-    public static void logDrawerLogIn() {
-        if (!FlurryAgent.isSessionActive())
+    public void logDrawerLogIn() {
+        if (!RedditPrefs.areAnalyticsEnabled(mContext))
             return;
         FlurryAgent.logEvent("nav drawer - log in");
     }
 
-    public static void logDrawerUserProfile() {
-        if (!FlurryAgent.isSessionActive())
+    public void logDrawerUserProfile() {
+        if (!RedditPrefs.areAnalyticsEnabled(mContext))
             return;
         FlurryAgent.logEvent("nav drawer - user profile");
     }
 
-    public static void logDrawerUserSubreddits() {
-        if (!FlurryAgent.isSessionActive())
+    public void logDrawerUserSubreddits() {
+        if (!RedditPrefs.areAnalyticsEnabled(mContext))
             return;
         FlurryAgent.logEvent("nav drawer - user subreddits");
     }
 
-    public static void logDrawerFrontPage() {
-        if (!FlurryAgent.isSessionActive())
+    public void logDrawerFrontPage() {
+        if (!RedditPrefs.areAnalyticsEnabled(mContext))
             return;
         FlurryAgent.logEvent("nav drawer - navigate to front page");
     }
 
-    public static void logDrawerAllSubreddits() {
-        if (!FlurryAgent.isSessionActive())
+    public void logDrawerAllSubreddits() {
+        if (!RedditPrefs.areAnalyticsEnabled(mContext))
             return;
         FlurryAgent.logEvent("nav drawer - navigate to /r/all");
     }
 
-    public static void logDrawerRandomSubreddit() {
-        if (!FlurryAgent.isSessionActive())
+    public void logDrawerRandomSubreddit() {
+        if (!RedditPrefs.areAnalyticsEnabled(mContext))
             return;
         FlurryAgent.logEvent("nav drawer - navigate to random subreddit");
     }
 
-    public static void logClickedSignOut() {
-        if (!FlurryAgent.isSessionActive())
+    public void logClickedSignOut() {
+        if (!RedditPrefs.areAnalyticsEnabled(mContext))
             return;
         FlurryAgent.logEvent("clicked sign out");
     }
 
-    public static void logSettingChanged(String key, String value) {
-        if (!FlurryAgent.isSessionActive())
+    public void logSettingChanged(String key, String value) {
+        if (!RedditPrefs.areAnalyticsEnabled(mContext))
             return;
         Map<String, String> params = new HashMap<>();
         params.put("key", key);
@@ -182,8 +201,8 @@ public class HTNAnalytics {
         FlurryAgent.logEvent("setting changed", params);
     }
 
-    public static void logApiError(RetrofitError error) {
-        if (!FlurryAgent.isSessionActive())
+    public void logApiError(RetrofitError error) {
+        if (!RedditPrefs.areAnalyticsEnabled(mContext))
             return;
         Map<String, String> params = new HashMap<>();
         params.put("url", error.getUrl());
@@ -197,7 +216,7 @@ public class HTNAnalytics {
 
     @Subscribe
     public void onSignIn(UserIdentityRetrievedEvent event) {
-        if (!FlurryAgent.isSessionActive())
+        if (!RedditPrefs.areAnalyticsEnabled(mContext))
             return;
 
         UserIdentity identity = event.getUserIdentity();
@@ -214,7 +233,7 @@ public class HTNAnalytics {
 
     @Subscribe
     public void onSignOut(UserSignOutEvent event) {
-        if (!FlurryAgent.isSessionActive())
+        if (!RedditPrefs.areAnalyticsEnabled(mContext))
             return;
 
         FlurryAgent.logEvent("user signed out");
@@ -223,7 +242,7 @@ public class HTNAnalytics {
 
     @Subscribe
     public void onLoadSubreddit(LoadSubredditEvent event) {
-        if (!FlurryAgent.isSessionActive())
+        if (!RedditPrefs.areAnalyticsEnabled(mContext))
             return;
 
         Map<String, String> params = new HashMap<>();
@@ -235,7 +254,7 @@ public class HTNAnalytics {
 
     @Subscribe
     public void onLoadUserProfile(LoadUserProfileListingEvent event) {
-        if (!FlurryAgent.isSessionActive())
+        if (!RedditPrefs.areAnalyticsEnabled(mContext))
             return;
 
         Map<String, String> params = new HashMap<>();
@@ -248,7 +267,7 @@ public class HTNAnalytics {
 
     @Subscribe
     public void onLoadLinkComments(LoadLinkCommentsEvent event) {
-        if (!FlurryAgent.isSessionActive())
+        if (!RedditPrefs.areAnalyticsEnabled(mContext))
             return;
 
         Map<String, String> params = new HashMap<>();
@@ -261,7 +280,7 @@ public class HTNAnalytics {
 
     @Subscribe
     public void onLoadMoreChildren(LoadMoreChildrenEvent event) {
-        if (!FlurryAgent.isSessionActive())
+        if (!RedditPrefs.areAnalyticsEnabled(mContext))
             return;
 
         Map<String, String> params = new HashMap<>();
@@ -273,7 +292,7 @@ public class HTNAnalytics {
 
     @Subscribe
     public void onVote(VoteEvent event) {
-        if (!FlurryAgent.isSessionActive())
+        if (!RedditPrefs.areAnalyticsEnabled(mContext))
             return;
 
         Map<String, String> params = new HashMap<>();
@@ -285,7 +304,7 @@ public class HTNAnalytics {
 
     @Subscribe
     public void onSave(SaveEvent event) {
-        if (!FlurryAgent.isSessionActive())
+        if (!RedditPrefs.areAnalyticsEnabled(mContext))
             return;
 
         Map<String, String> params = new HashMap<>();
@@ -298,7 +317,7 @@ public class HTNAnalytics {
 
     @Subscribe
     public void onHide(HideEvent event) {
-        if (!FlurryAgent.isSessionActive())
+        if (!RedditPrefs.areAnalyticsEnabled(mContext))
             return;
 
         Map<String, String> params = new HashMap<>();
@@ -310,7 +329,7 @@ public class HTNAnalytics {
 
     @Subscribe
     public void onReport(ReportEvent event) {
-        if (!FlurryAgent.isSessionActive())
+        if (!RedditPrefs.areAnalyticsEnabled(mContext))
             return;
 
         // TODO Implement analytics event once feature is implemented

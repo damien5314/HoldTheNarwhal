@@ -44,7 +44,7 @@ public class MainPresenterImpl implements MainPresenter {
         Log.e("HTN", "RetrofitError: " + error.getKind().toString());
         Log.e("HTN", Log.getStackTraceString(error));
         mMainView.showToast(BaseUtils.getFriendlyError(mContext, error));
-        HTNAnalytics.logApiError(error);
+        HTNAnalytics.getInstance().logApiError(error);
     }
 
     @Subscribe

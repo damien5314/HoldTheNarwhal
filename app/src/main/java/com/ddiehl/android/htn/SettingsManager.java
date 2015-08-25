@@ -83,6 +83,7 @@ public class SettingsManager implements SharedPreferences.OnSharedPreferenceChan
 
     private Context mContext;
     private Bus mBus = BusProvider.getInstance();
+    private HTNAnalytics mAnalytics = HTNAnalytics.getInstance();
     private SharedPreferences mSharedPreferences;
 
     private boolean mIsChanging = false;
@@ -142,9 +143,9 @@ public class SettingsManager implements SharedPreferences.OnSharedPreferenceChan
             case SettingsManager.PREF_ALLOW_ANALYTICS:
                 boolean allowed = sp.getBoolean(PREF_ALLOW_ANALYTICS, false);
                 if (allowed) {
-                    HTNAnalytics.startSession(mContext);
+                    mAnalytics.startSession();
                 } else {
-                    HTNAnalytics.endSession(mContext);
+                    mAnalytics.endSession();
                 }
                 break;
             default:
@@ -179,7 +180,7 @@ public class SettingsManager implements SharedPreferences.OnSharedPreferenceChan
         }
 
         Map prefs = sp.getAll();
-        HTNAnalytics.logSettingChanged(key, prefs.get(key).toString());
+        mAnalytics.logSettingChanged(key, prefs.get(key).toString());
 
         mIsChanging = false;
     }

@@ -49,6 +49,7 @@ public class LinkCommentsFragment extends AbsRedditFragment
     private static final String DIALOG_CHOOSE_SORT = "dialog_choose_sort";
 
     private Bus mBus = BusProvider.getInstance();
+    private HTNAnalytics mAnalytics = HTNAnalytics.getInstance();
     private LinkCommentsPresenter mLinkCommentsPresenter;
 
     private LinkCommentsAdapter mLinkCommentsAdapter;
@@ -311,7 +312,7 @@ public class LinkCommentsFragment extends AbsRedditFragment
             case REQUEST_CHOOSE_SORT:
                 if (resultCode == Activity.RESULT_OK) {
                     String sort = data.getStringExtra(ChooseCommentSortDialog.EXTRA_SORT);
-                    HTNAnalytics.logOptionChangeSort(sort);
+                    mAnalytics.logOptionChangeSort(sort);
                     mLinkCommentsPresenter.updateSort(sort);
                 }
                 getActivity().invalidateOptionsMenu();
@@ -329,15 +330,15 @@ public class LinkCommentsFragment extends AbsRedditFragment
         switch (item.getItemId()) {
             case R.id.action_change_sort:
                 showChooseCommentSortDialog();
-                HTNAnalytics.logOptionChangeSort();
+                mAnalytics.logOptionChangeSort();
                 return true;
             case R.id.action_refresh:
                 mLinkCommentsPresenter.getComments();
-                HTNAnalytics.logOptionRefresh();
+                mAnalytics.logOptionRefresh();
                 return true;
             case R.id.action_settings:
                 ((MainActivity) getActivity()).showSettings();
-                HTNAnalytics.logOptionSettings();
+                mAnalytics.logOptionSettings();
                 return true;
         }
 

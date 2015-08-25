@@ -63,6 +63,7 @@ public class MainActivity extends AppCompatActivity
     private static final String DIALOG_CONFIRM_SIGN_OUT = "dialog_confirm_sign_out";
 
     private Bus mBus = BusProvider.getInstance();
+    private HTNAnalytics mAnalytics = HTNAnalytics.getInstance();
     private MainPresenter mMainPresenter;
 
     private ProgressDialog mProgressBar;
@@ -79,7 +80,6 @@ public class MainActivity extends AppCompatActivity
     private IdentityManager mIdentityManager;
     private SettingsManager mSettingsManager;
     private RedditService mAuthProxy;
-    private HTNAnalytics mAnalytics;
 
     @Override @DebugLog
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         // Configure Flurry
-        HTNAnalytics.initializeFlurry(this);
+        mAnalytics.initializeFlurry(this);
 
         ButterKnife.bind(MainActivity.this);
         mNavigationView.setNavigationItemSelectedListener(MainActivity.this);
@@ -106,7 +106,6 @@ public class MainActivity extends AppCompatActivity
         mIdentityManager = IdentityManager.getInstance(MainActivity.this);
         mSettingsManager = SettingsManager.getInstance(MainActivity.this);
         mAuthProxy = RedditServiceAuth.getInstance(MainActivity.this);
-        mAnalytics = HTNAnalytics.getInstance();
 
         // Configure MoPub
 //        new MoPubConversionTracker().reportAppOpen(MainActivity.this);
@@ -153,14 +152,14 @@ public class MainActivity extends AppCompatActivity
         mBus.register(mAnalytics);
         updateUserIdentity();
         if (!showAnalyticsRequestIfNeverShown()) {
-            HTNAnalytics.startSession(this);
+            mAnalytics.startSession();
             showSubredditIfEmpty(null);
         }
     }
 
     @Override
     protected void onStop() {
-        HTNAnalytics.endSession(this);
+        mAnalytics.endSession();
         mBus.unregister(mMainPresenter);
         mBus.unregister(mAccessTokenManager);
         mBus.unregister(mIdentityManager);
@@ -179,7 +178,7 @@ public class MainActivity extends AppCompatActivity
         mSignOutView.setVisibility(identity == null ? View.GONE : View.VISIBLE);
         mGoldIndicator.setVisibility(identity != null && identity.isGold() ? View.VISIBLE : View.GONE);
         updateNavigationItems();
-        HTNAnalytics.setUserIdentity(identity == null ? null : identity.getName());
+        mAnalytics.setUserIdentity(identity == null ? null : identity.getName());
     }
 
     @Override
@@ -201,31 +200,31 @@ public class MainActivity extends AppCompatActivity
         switch (menuItem.getItemId()) {
             case R.id.drawer_navigate_to_subreddit:
                 showSubredditNavigationDialog();
-                HTNAnalytics.logDrawerNavigateToSubreddit();
+                mAnalytics.logDrawerNavigateToSubreddit();
                 return true;
             case R.id.drawer_log_in:
                 showLoginView();
-                HTNAnalytics.logDrawerLogIn();
+                mAnalytics.logDrawerLogIn();
                 return true;
             case R.id.drawer_user_profile:
                 showUserProfile();
-                HTNAnalytics.logDrawerUserProfile();
+                mAnalytics.logDrawerUserProfile();
                 return true;
             case R.id.drawer_subreddits:
                 showUserSubreddits();
-                HTNAnalytics.logDrawerUserSubreddits();
+                mAnalytics.logDrawerUserSubreddits();
                 return true;
             case R.id.drawer_front_page:
                 showSubreddit(null);
-                HTNAnalytics.logDrawerFrontPage();
+                mAnalytics.logDrawerFrontPage();
                 return true;
             case R.id.drawer_r_all:
                 showSubreddit("all");
-                HTNAnalytics.logDrawerAllSubreddits();
+                mAnalytics.logDrawerAllSubreddits();
                 return true;
             case R.id.drawer_random_subreddit:
                 showSubreddit("random");
-                HTNAnalytics.logDrawerRandomSubreddit();
+                mAnalytics.logDrawerRandomSubreddit();
                 return true;
         }
         return false;
@@ -279,7 +278,7 @@ public class MainActivity extends AppCompatActivity
     void onSignOut() {
         ConfirmSignOutDialog dialog = ConfirmSignOutDialog.newInstance();
         dialog.show(getFragmentManager(), DIALOG_CONFIRM_SIGN_OUT);
-        HTNAnalytics.logClickedSignOut();
+        mAnalytics.logClickedSignOut();
     }
 
     @Override
@@ -416,21 +415,27 @@ public class MainActivity extends AppCompatActivity
             mAnalyticsRequestDialog = new AlertDialog.Builder(this)
                     .setTitle(R.string.dialog_analytics_title)
                     .setMessage(R.string.dialog_analytics_message)
-                    .setNeutralButton(R.string.dialog_analytics_accept, (dialog, which) -> {
-                        RedditPrefs.setAnalyticsEnabled(this, true);
-                        RedditPrefs.setAskedForAnalytics(this, true);
-                        HTNAnalytics.startSession(this);
-                        showSubredditIfEmpty(null);
-                    })
-                    .setNegativeButton(R.string.dialog_analytics_decline, (dialog, which) -> {
-                        RedditPrefs.setAnalyticsEnabled(this, false);
-                        RedditPrefs.setAskedForAnalytics(this, true);
-                        HTNAnalytics.endSession(this);
-                        showSubredditIfEmpty(null);
-                    })
+                    .setNeutralButton(R.string.dialog_analytics_accept,
+                            (dialog, which) -> onAnalyticsAccepted())
+                    .setNegativeButton(R.string.dialog_analytics_decline,
+                            (dialog, which) -> onAnalyticsDeclined())
                     .create();
         }
         mAnalyticsRequestDialog.show();
+    }
+
+    private void onAnalyticsAccepted() {
+        RedditPrefs.setAskedForAnalytics(this, true);
+        RedditPrefs.setAnalyticsEnabled(this, true);
+        mAnalytics.startSession();
+        showSubredditIfEmpty(null);
+    }
+
+    private void onAnalyticsDeclined() {
+        RedditPrefs.setAskedForAnalytics(this, true);
+        RedditPrefs.setAnalyticsEnabled(this, false);
+        mAnalytics.endSession();
+        showSubredditIfEmpty(null);
     }
 
     private void dismissAnalyticsRequestDialog() {

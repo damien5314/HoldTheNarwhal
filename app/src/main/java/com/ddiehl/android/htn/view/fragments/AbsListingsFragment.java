@@ -44,6 +44,7 @@ public abstract class AbsListingsFragment extends AbsRedditFragment
     private static final String DIALOG_CHOOSE_TIMESPAN = "dialog_choose_timespan";
 
     Bus mBus = BusProvider.getInstance();
+    HTNAnalytics mAnalytics = HTNAnalytics.getInstance();
 
     ListingsPresenter mListingsPresenter;
     ListingsAdapter mListingsAdapter;
@@ -146,7 +147,7 @@ public abstract class AbsListingsFragment extends AbsRedditFragment
             case REQUEST_CHOOSE_SORT:
                 if (resultCode == Activity.RESULT_OK) {
                     mSelectedSort = data.getStringExtra(ChooseLinkSortDialog.EXTRA_SORT);
-                    HTNAnalytics.logOptionChangeSort(mSelectedSort);
+                    mAnalytics.logOptionChangeSort(mSelectedSort);
                     if (mSelectedSort.equals("top") || mSelectedSort.equals("controversial")) {
                         showTimespanOptionsMenu();
                     } else {
@@ -158,7 +159,7 @@ public abstract class AbsListingsFragment extends AbsRedditFragment
             case REQUEST_CHOOSE_TIMESPAN:
                 if (resultCode == Activity.RESULT_OK) {
                     mSelectedTimespan = data.getStringExtra(ChooseTimespanDialog.EXTRA_TIMESPAN);
-                    HTNAnalytics.logOptionChangeTimespan(mSelectedTimespan);
+                    mAnalytics.logOptionChangeTimespan(mSelectedTimespan);
                     mListingsPresenter.updateSort(mSelectedSort, mSelectedTimespan);
                     getActivity().invalidateOptionsMenu();
                 }
@@ -184,19 +185,19 @@ public abstract class AbsListingsFragment extends AbsRedditFragment
         switch (item.getItemId()) {
             case R.id.action_change_sort:
                 showSortOptionsMenu();
-                HTNAnalytics.logOptionChangeSort();
+                mAnalytics.logOptionChangeSort();
                 return true;
             case R.id.action_change_timespan:
                 showTimespanOptionsMenu();
-                HTNAnalytics.logOptionChangeTimespan();
+                mAnalytics.logOptionChangeTimespan();
                 return true;
             case R.id.action_refresh:
                 mListingsPresenter.refreshData();
-                HTNAnalytics.logOptionRefresh();
+                mAnalytics.logOptionRefresh();
                 return true;
             case R.id.action_settings:
                 ((MainActivity) getActivity()).showSettings();
-                HTNAnalytics.logOptionSettings();
+                mAnalytics.logOptionSettings();
                 return true;
         }
 
@@ -342,7 +343,7 @@ public abstract class AbsListingsFragment extends AbsRedditFragment
 
     @Override
     public void openLinkInWebView(Link link) {
-        HTNAnalytics.logOpenLink(link);
+        mAnalytics.logOpenLink(link);
         ((MainActivity) getActivity()).showWebViewForURL(link.getUrl());
     }
 
