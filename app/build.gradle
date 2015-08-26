@@ -15,7 +15,7 @@ android {
         minSdkVersion 15
         targetSdkVersion 22
         versionCode 5
-        versionName "0.4.0-dev"
+        versionName '0.4.0'
         ndk {
             moduleName "app"
         }
@@ -30,10 +30,10 @@ android {
     }
     buildTypes {
         debug {
-            applicationIdSuffix ".debug"
             minifyEnabled false
+            applicationIdSuffix ".debug"
+            versionNameSuffix '-dev'
         }
-
         release {
             debuggable false
             minifyEnabled true
@@ -45,6 +45,8 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    productFlavors {
+    }
 }
 
 def getLocalProperty(s) {
@@ -54,14 +56,16 @@ def getLocalProperty(s) {
 }
 
 retrolambda {
-    jdk getLocalProperty("jdk8.dir")
+    jdk System.getenv("JAVA8_HOME")
 }
 
 dependencies {
+    // Main dependencies
+    compile fileTree(include: '*.jar', dir: 'libs')
     compile project(':reddit')
-//    compile project(':mopub')
-    compile project(':flurry')
-//    compile project(':InMobi-4.5.5')
+    //    compile project(':flurry')
+    //    compile project(':mopub')
+    //    compile project(':InMobi-4.5.5')
     compile 'com.android.support:appcompat-v7:22.2.1'
     compile 'com.android.support:support-v4:22.2.1'
     compile 'com.android.support:design:22.2.0'
@@ -75,9 +79,11 @@ dependencies {
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.jakewharton:butterknife:7.0.0'
     compile 'io.reactivex:rxandroid:0.25.0'
-
+    // Debugging dependencies
     compile 'com.facebook.stetho:stetho:1.1.1'
     compile 'com.facebook.stetho:stetho-okhttp:1.1.1'
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.3.1'
     releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.3.1'
+    // Testing dependencies
+    testCompile 'org.robolectric:robolectric:3.0'
 }
