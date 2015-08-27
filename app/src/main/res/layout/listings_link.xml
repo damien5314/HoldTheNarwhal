@@ -174,7 +174,6 @@
                 android:id="@+id/link_thumbnail"
                 android:layout_width="@dimen/link_thumbnail_size"
                 android:layout_height="@dimen/link_thumbnail_size"
-                android:background="@drawable/thumbnail_bg"
                 android:src="@drawable/ic_thumbnail_placeholder"/>
 
         </LinearLayout>
