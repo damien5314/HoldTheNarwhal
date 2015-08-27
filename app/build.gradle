@@ -56,16 +56,15 @@ def getLocalProperty(s) {
 }
 
 retrolambda {
-    jdk System.getenv("JAVA8_HOME")
+    jdk getLocalProperty("jdk8.dir")
+    oldJdk getLocalProperty("jdk7.dir")
+    javaVersion JavaVersion.VERSION_1_7
 }
 
 dependencies {
     // Main dependencies
     compile fileTree(include: '*.jar', dir: 'libs')
     compile project(':reddit')
-    //    compile project(':flurry')
-    //    compile project(':mopub')
-    //    compile project(':InMobi-4.5.5')
     compile 'com.android.support:appcompat-v7:22.2.1'
     compile 'com.android.support:support-v4:22.2.1'
     compile 'com.android.support:design:22.2.0'
