@@ -36,8 +36,12 @@ public class ThreadStubViewHolder extends RecyclerView.ViewHolder {
 
     public void bind(CommentStub comment) {
         mCommentStub = comment;
+        addPaddingViews(comment);
+        setMoreCommentsText(comment);
+    }
 
-        // Add padding views to indentation_wrapper based on depth of comment
+    // Add padding views to indentation_wrapper based on depth of comment
+    private void addPaddingViews(CommentStub comment) {
         int viewMargin = (comment.getDepth() - 2) * (int) mContext.getResources().getDimension(R.dimen.comment_indentation_margin);
         RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) itemView.getLayoutParams();
         if (Build.VERSION.SDK_INT >= 17
@@ -46,8 +50,9 @@ public class ThreadStubViewHolder extends RecyclerView.ViewHolder {
         } else {
             params.setMargins(viewMargin, 0, 0, 0);
         }
+    }
 
-        mMoreCommentsView.setVisibility(View.VISIBLE);
+    private void setMoreCommentsText(CommentStub comment) {
         int count = comment.getCount();
         switch (count) {
             case 0:

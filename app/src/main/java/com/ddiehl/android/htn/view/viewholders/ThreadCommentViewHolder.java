@@ -61,8 +61,25 @@ public class ThreadCommentViewHolder extends RecyclerView.ViewHolder
 
     public void bind(final Link link, final Comment comment, boolean showControversiality) {
         mComment = comment;
+        addPaddingViews(comment);
+        showAuthor(link, comment);
+        showBody(comment);
+        showScore(comment);
+        showTimestamp(comment);
+        showEdited(comment);
+        setCollapsed(comment);
+        showLiked(comment);
+        showSaved(comment);
+        showGilded(comment);
+        showControversiality(comment, showControversiality);
+    }
 
-        // Add padding views to indentation_wrapper based on depth of comment
+    public void bind(final Comment comment, boolean showControversiality) {
+        bind(null, comment, showControversiality);
+    }
+
+    // Add padding views to indentation_wrapper based on depth of comment
+    private void addPaddingViews(Comment comment) {
         int viewMargin = (comment.getDepth() - 2)
                 * (int) mContext.getResources().getDimension(R.dimen.comment_indentation_margin);
         RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) itemView.getLayoutParams();
@@ -72,14 +89,18 @@ public class ThreadCommentViewHolder extends RecyclerView.ViewHolder
         } else {
             params.setMargins(viewMargin, 0, 0, 0);
         }
+    }
 
+    private void showAuthor(Link link, Comment comment) {
+        String author = comment.getAuthor();
         mAuthorView.setVisibility(View.VISIBLE);
+        mAuthorView.setText(author);
         String authorType = null;
         String distinguished = comment.getDistinguished();
         if (distinguished != null && !distinguished.equals("")) {
             authorType = distinguished;
         }
-        if (link != null && comment.getAuthor().equals(link.getAuthor())) {
+        if (link != null && author.equals(link.getAuthor())) {
             authorType = "op";
         }
         if (authorType != null) {
@@ -102,11 +123,22 @@ public class ThreadCommentViewHolder extends RecyclerView.ViewHolder
             mAuthorView.setBackgroundResource(0);
             mAuthorView.setTextColor(mContext.getResources().getColor(R.color.secondary_text));
         }
+    }
+
+    private void showBody(Comment comment) {
         mBodyView.setText(comment.getBody().trim());
-        mBodyView.setVisibility(View.VISIBLE); // FIXME: Try commenting this out
-        mAuthorView.setText(comment.getAuthor());
+//        mBodyView.setVisibility(View.VISIBLE);
+    }
+
+    private void showScore(Comment comment) {
         mScoreView.setText(String.format(mContext.getString(R.string.comment_score), comment.getScore()));
+    }
+
+    private void showTimestamp(Comment comment) {
         mTimestampView.setDate(comment.getCreateUtc().longValue());
+    }
+
+    private void showEdited(Comment comment) {
         if (comment.isEdited() != null) {
             switch (comment.isEdited()) {
                 case "":
@@ -118,7 +150,9 @@ public class ThreadCommentViewHolder extends RecyclerView.ViewHolder
                     mTimestampView.setEdited(true);
             }
         }
+    }
 
+    private void setCollapsed(Comment comment) {
         if (comment.isCollapsed()) {
             mBodyView.setVisibility(View.GONE);
             mExpanderIcon.setImageResource(R.drawable.ic_thread_expand);
@@ -126,8 +160,10 @@ public class ThreadCommentViewHolder extends RecyclerView.ViewHolder
             mBodyView.setVisibility(View.VISIBLE);
             mExpanderIcon.setImageResource(R.drawable.ic_thread_collapse);
         }
+    }
 
-        // Set background tint based on isLiked
+    // Set background tint based on isLiked
+    private void showLiked(Comment comment) {
         if (comment.isLiked() == null) {
             mExpanderIcon.setBackgroundResource(R.drawable.comment_expander_bg);
         } else if (comment.isLiked()) {
@@ -135,11 +171,14 @@ public class ThreadCommentViewHolder extends RecyclerView.ViewHolder
         } else {
             mExpanderIcon.setBackgroundResource(R.drawable.comment_expander_downvoted_bg);
         }
+    }
 
-        // Show/hide saved icon for saved comments
+    private void showSaved(Comment comment) {
         mSavedView.setVisibility(comment.isSaved() ? View.VISIBLE : View.GONE);
+    }
 
-        // Show gilding view if appropriate, else hide
+    // Show gilding view if appropriate, else hide
+    private void showGilded(Comment comment) {
         Integer gilded = comment.getGilded();
         if (gilded != null && gilded > 0) {
             mGildedText.setText(String.format(mContext.getString(R.string.link_gilded_text), gilded));
@@ -147,12 +186,12 @@ public class ThreadCommentViewHolder extends RecyclerView.ViewHolder
         } else {
             mGildedText.setVisibility(View.GONE);
         }
-
-        mControversialityIndicator.setVisibility(showControversiality ? View.VISIBLE : View.GONE);
     }
 
-    public void bind(final Comment comment, boolean showControversiality) {
-        bind(null, comment, showControversiality);
+    private void showControversiality(Comment comment, boolean showControversiality) {
+        mControversialityIndicator.setVisibility(showControversiality
+                ? (comment.getControversiality() > 0 ? View.VISIBLE : View.GONE)
+                : View.GONE);
     }
 
     @Override
