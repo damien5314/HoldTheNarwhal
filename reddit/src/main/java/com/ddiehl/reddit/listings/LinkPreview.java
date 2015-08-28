@@ -38,7 +38,6 @@ public class LinkPreview {
 
         public static class Variants {
             @Expose public Image nsfw;
-            // TODO What other variants are available to expose?
         }
 
         public static class Res {

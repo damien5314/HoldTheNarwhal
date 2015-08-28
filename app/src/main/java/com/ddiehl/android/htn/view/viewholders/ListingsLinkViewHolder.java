@@ -53,7 +53,7 @@ public class ListingsLinkViewHolder extends RecyclerView.ViewHolder
         itemView.setOnCreateContextMenuListener(this);
     }
 
-    @OnClick({ R.id.link_title, R.id.link_thumbnail })
+    @OnClick({ R.id.link_title, R.id.link_thumbnail})
     void openLink() {
         mLinkPresenter.openLink(mLink);
     }
@@ -135,12 +135,14 @@ public class ListingsLinkViewHolder extends RecyclerView.ViewHolder
                 imageToDisplay = image;
             }
             // Set selected image to ImageView for thumbnail
+//            mLinkThumbnailLayout.setVisibility(View.VISIBLE);
             mLinkThumbnail.setVisibility(View.VISIBLE);
             List<Link.Preview.Image.Res> resolutions = imageToDisplay.getResolutions();
             Link.Preview.Image.Res res = resolutions.size() > 0 ? resolutions.get(0) : imageToDisplay.getSource();
             Picasso.with(mContext)
                     .load(res.getUrl())
                     .placeholder(R.drawable.ic_thumbnail_placeholder)
+                    .fit().centerCrop()
                     .error(R.drawable.ic_alert_error)
                     .into(mLinkThumbnail);
         } else { // Default to the old logic with thumbnail field
@@ -158,6 +160,7 @@ public class ListingsLinkViewHolder extends RecyclerView.ViewHolder
                     Picasso.with(mContext)
                             .load(thumbnailUrl)
                             .placeholder(R.drawable.ic_thumbnail_placeholder)
+                            .fit().centerCrop()
                             .error(R.drawable.ic_alert_error)
                             .into(mLinkThumbnail);
                     mLinkThumbnail.setVisibility(View.VISIBLE);

@@ -125,20 +125,27 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
             AbsComment.Utils.setDepthForCommentsList(comments, parentStub.getDepth());
 
             // TODO: Pass CommentStub along with event so we don't have to search for it
-            for (int i = 0; i < mCommentBank.size(); i++) {
-                AbsComment comment = mCommentBank.get(i);
-                if (comment instanceof CommentStub) {
-                    String id = comment.getId();
-                    if (id.equals(parentStub.getId())) { // Found the base comment
-                        ((CommentStub) comment).removeChildren(comments);
-                        ((CommentStub) comment).setCount(((CommentStub) comment).getChildren().size());
-                        if (((CommentStub) comment).getCount() == 0)
-                            mCommentBank.remove(i);
-                        mCommentBank.addAll(i, comments);
-                        break;
-                    }
-                }
-            }
+            int stubIndex = mCommentBank.indexOf(parentStub);
+            parentStub.removeChildren(comments);
+            parentStub.setCount(parentStub.getChildren().size());
+            if (parentStub.getCount() == 0)
+                mCommentBank.remove(stubIndex);
+            mCommentBank.addAll(stubIndex, comments);
+
+//            for (int i = 0; i < mCommentBank.size(); i++) {
+//                AbsComment comment = mCommentBank.get(i);
+//                if (comment instanceof CommentStub) {
+//                    String id = comment.getId();
+//                    if (id.equals(parentStub.getId())) { // Found the base comment
+//                        ((CommentStub) comment).removeChildren(comments);
+//                        ((CommentStub) comment).setCount(((CommentStub) comment).getChildren().size());
+//                        if (((CommentStub) comment).getCount() == 0)
+//                            mCommentBank.remove(i);
+//                        mCommentBank.addAll(i, comments);
+//                        break;
+//                    }
+//                }
+//            }
         }
 
         Integer minScore = mSettingsManager.getMinCommentScore();

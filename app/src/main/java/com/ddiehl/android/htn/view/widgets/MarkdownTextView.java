@@ -40,10 +40,12 @@ public class MarkdownTextView extends TextView {
 
     @Override
     public void setText(CharSequence text, BufferType type) {
-        mRawText = text;
-        Bypass b = BypassWrapper.getInstance(getContext());
-        CharSequence formatted = b.markdownToSpannable(text.toString());
-        super.setText(formatted, type);
+        if (!isInEditMode()) {
+            mRawText = text;
+            Bypass b = BypassWrapper.getInstance(getContext());
+            CharSequence formatted = b.markdownToSpannable(text.toString());
+            super.setText(formatted, type);
+        }
     }
 
     private static class BypassWrapper {
