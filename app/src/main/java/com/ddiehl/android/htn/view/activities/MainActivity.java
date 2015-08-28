@@ -402,7 +402,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private boolean showAnalyticsRequestIfNeverShown() {
-        if (!SettingsManager.askedForAnalytics(this)) {
+        if (!mSettingsManager.askedForAnalytics()) {
             showAnalyticsRequestDialog();
             return true;
         }
@@ -424,15 +424,15 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void onAnalyticsAccepted() {
-        SettingsManager.setAskedForAnalytics(this, true);
-        SettingsManager.setAnalyticsEnabled(this, true);
+        mSettingsManager.setAskedForAnalytics(true);
+        mSettingsManager.setAnalyticsEnabled(true);
         mAnalytics.startSession();
         showSubredditIfEmpty(null);
     }
 
     private void onAnalyticsDeclined() {
-        SettingsManager.setAskedForAnalytics(this, true);
-        SettingsManager.setAnalyticsEnabled(this, false);
+        mSettingsManager.setAskedForAnalytics(true);
+        mSettingsManager.setAnalyticsEnabled(false);
         mAnalytics.endSession();
         showSubredditIfEmpty(null);
     }

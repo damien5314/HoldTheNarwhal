@@ -296,24 +296,24 @@ public class SettingsManager implements SharedPreferences.OnSharedPreferenceChan
         return deviceId;
     }
 
-    public static boolean areAnalyticsEnabled(Context c) {
-        return c.getSharedPreferences(PREFS_USER, Context.MODE_PRIVATE)
+    public boolean areAnalyticsEnabled() {
+        return mContext.getSharedPreferences(PREFS_USER, Context.MODE_PRIVATE)
                 .getBoolean(PREF_ALLOW_ANALYTICS, false);
     }
 
-    public static void setAnalyticsEnabled(Context c, boolean b) {
-        c.getSharedPreferences(PREFS_USER, Context.MODE_PRIVATE).edit()
+    public void setAnalyticsEnabled(boolean b) {
+        mContext.getSharedPreferences(PREFS_USER, Context.MODE_PRIVATE).edit()
                 .putBoolean(PREF_ALLOW_ANALYTICS, b)
                 .apply();
     }
 
-    public static boolean askedForAnalytics(Context c) {
-        return c.getSharedPreferences(PREFS_USER, Context.MODE_PRIVATE)
+    public boolean askedForAnalytics() {
+        return mContext.getSharedPreferences(PREFS_USER, Context.MODE_PRIVATE)
                 .getBoolean(PREF_ALLOW_ANALYTICS_ASKED, false);
     }
 
-    public static void setAskedForAnalytics(Context c, boolean b) {
-        c.getSharedPreferences(PREFS_USER, Context.MODE_PRIVATE).edit()
+    public void setAskedForAnalytics(boolean b) {
+        mContext.getSharedPreferences(PREFS_USER, Context.MODE_PRIVATE).edit()
                 .putBoolean(PREF_ALLOW_ANALYTICS_ASKED, b)
                 .apply();
     }

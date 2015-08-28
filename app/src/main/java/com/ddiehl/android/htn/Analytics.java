@@ -38,6 +38,7 @@ public class Analytics {
     private static final int FLURRY_SESSION_TIMEOUT_SECONDS = 30;
 
     private Context mContext;
+    private SettingsManager mSettingsManager;
     private boolean mInitialized = false;
 
     public void initializeFlurry(Context context) {
@@ -47,6 +48,7 @@ public class Analytics {
         }
 
         mContext = context.getApplicationContext();
+        mSettingsManager = SettingsManager.getInstance(mContext);
         String apiKey = NUtils.getFlurryApiKey(BuildConfig.DEBUG);
         FlurryAgent.init(mContext, apiKey);
         FlurryAgent.setContinueSessionMillis(FLURRY_SESSION_TIMEOUT_SECONDS * 1000);
@@ -64,7 +66,7 @@ public class Analytics {
     }
 
     private void onStartSession() {
-        if (!SettingsManager.areAnalyticsEnabled(mContext))
+        if (!mSettingsManager.areAnalyticsEnabled())
             return;
 
         // Log initial Flurry event
@@ -89,14 +91,14 @@ public class Analytics {
     }
 
     public void setUserIdentity(String name) {
-//        if (!SettingsManager.areAnalyticsEnabled(mContext))
+//        if (mSettingsManager.areAnalyticsEnabled(mContext))
 //            return;
         String encoded = name == null ? null : BaseUtils.getMd5HexString(name); // Always encode PII
         FlurryAgent.setUserId(encoded);
     }
 
     public void logOpenLink(Link link) {
-        if (!SettingsManager.areAnalyticsEnabled(mContext))
+        if (!mSettingsManager.areAnalyticsEnabled())
             return;
         Map<String, String> params = new HashMap<>();
         params.put("subreddit", link.getSubreddit());
@@ -109,91 +111,91 @@ public class Analytics {
     }
 
     public void logOptionChangeSort() {
-        if (!SettingsManager.areAnalyticsEnabled(mContext))
+        if (mSettingsManager.areAnalyticsEnabled())
             return;
         FlurryAgent.logEvent("option - change sort");
     }
 
     public void logOptionChangeSort(String sort) {
-        if (!SettingsManager.areAnalyticsEnabled(mContext))
+        if (mSettingsManager.areAnalyticsEnabled())
             return;
         FlurryAgent.logEvent("option - change sort - " + sort);
     }
 
     public void logOptionChangeTimespan() {
-        if (!SettingsManager.areAnalyticsEnabled(mContext))
+        if (mSettingsManager.areAnalyticsEnabled())
             return;
         FlurryAgent.logEvent("option - change timespan");
     }
 
     public void logOptionChangeTimespan(String timespan) {
-        if (!SettingsManager.areAnalyticsEnabled(mContext))
+        if (mSettingsManager.areAnalyticsEnabled())
             return;
         FlurryAgent.logEvent("option - change timespan - " + timespan);
     }
 
     public void logOptionRefresh() {
-        if (!SettingsManager.areAnalyticsEnabled(mContext))
+        if (mSettingsManager.areAnalyticsEnabled())
             return;
         FlurryAgent.logEvent("option - refresh");
     }
 
     public void logOptionSettings() {
-        if (!SettingsManager.areAnalyticsEnabled(mContext))
+        if (mSettingsManager.areAnalyticsEnabled())
             return;
         FlurryAgent.logEvent("option - settings");
     }
 
     public void logDrawerNavigateToSubreddit() {
-        if (!SettingsManager.areAnalyticsEnabled(mContext))
+        if (mSettingsManager.areAnalyticsEnabled())
             return;
         FlurryAgent.logEvent("nav drawer - navigate to subreddit");
     }
 
     public void logDrawerLogIn() {
-        if (!SettingsManager.areAnalyticsEnabled(mContext))
+        if (mSettingsManager.areAnalyticsEnabled())
             return;
         FlurryAgent.logEvent("nav drawer - log in");
     }
 
     public void logDrawerUserProfile() {
-        if (!SettingsManager.areAnalyticsEnabled(mContext))
+        if (mSettingsManager.areAnalyticsEnabled())
             return;
         FlurryAgent.logEvent("nav drawer - user profile");
     }
 
     public void logDrawerUserSubreddits() {
-        if (!SettingsManager.areAnalyticsEnabled(mContext))
+        if (mSettingsManager.areAnalyticsEnabled())
             return;
         FlurryAgent.logEvent("nav drawer - user subreddits");
     }
 
     public void logDrawerFrontPage() {
-        if (!SettingsManager.areAnalyticsEnabled(mContext))
+        if (mSettingsManager.areAnalyticsEnabled())
             return;
         FlurryAgent.logEvent("nav drawer - navigate to front page");
     }
 
     public void logDrawerAllSubreddits() {
-        if (!SettingsManager.areAnalyticsEnabled(mContext))
+        if (mSettingsManager.areAnalyticsEnabled())
             return;
         FlurryAgent.logEvent("nav drawer - navigate to /r/all");
     }
 
     public void logDrawerRandomSubreddit() {
-        if (!SettingsManager.areAnalyticsEnabled(mContext))
+        if (mSettingsManager.areAnalyticsEnabled())
             return;
         FlurryAgent.logEvent("nav drawer - navigate to random subreddit");
     }
 
     public void logClickedSignOut() {
-        if (!SettingsManager.areAnalyticsEnabled(mContext))
+        if (mSettingsManager.areAnalyticsEnabled())
             return;
         FlurryAgent.logEvent("clicked sign out");
     }
 
     public void logSettingChanged(String key, String value) {
-        if (!SettingsManager.areAnalyticsEnabled(mContext))
+        if (mSettingsManager.areAnalyticsEnabled())
             return;
         Map<String, String> params = new HashMap<>();
         params.put("key", key);
@@ -202,7 +204,7 @@ public class Analytics {
     }
 
     public void logApiError(RetrofitError error) {
-        if (!SettingsManager.areAnalyticsEnabled(mContext))
+        if (mSettingsManager.areAnalyticsEnabled())
             return;
         Map<String, String> params = new HashMap<>();
         params.put("url", error.getUrl());
@@ -216,7 +218,7 @@ public class Analytics {
 
     @Subscribe
     public void onSignIn(UserIdentityRetrievedEvent event) {
-        if (!SettingsManager.areAnalyticsEnabled(mContext))
+        if (mSettingsManager.areAnalyticsEnabled())
             return;
 
         UserIdentity identity = event.getUserIdentity();
@@ -233,7 +235,7 @@ public class Analytics {
 
     @Subscribe
     public void onSignOut(UserSignOutEvent event) {
-        if (!SettingsManager.areAnalyticsEnabled(mContext))
+        if (mSettingsManager.areAnalyticsEnabled())
             return;
 
         FlurryAgent.logEvent("user signed out");
@@ -242,7 +244,7 @@ public class Analytics {
 
     @Subscribe
     public void onLoadSubreddit(LoadSubredditEvent event) {
-        if (!SettingsManager.areAnalyticsEnabled(mContext))
+        if (mSettingsManager.areAnalyticsEnabled())
             return;
 
         Map<String, String> params = new HashMap<>();
@@ -254,7 +256,7 @@ public class Analytics {
 
     @Subscribe
     public void onLoadUserProfile(LoadUserProfileListingEvent event) {
-        if (!SettingsManager.areAnalyticsEnabled(mContext))
+        if (mSettingsManager.areAnalyticsEnabled())
             return;
 
         Map<String, String> params = new HashMap<>();
@@ -267,7 +269,7 @@ public class Analytics {
 
     @Subscribe
     public void onLoadLinkComments(LoadLinkCommentsEvent event) {
-        if (!SettingsManager.areAnalyticsEnabled(mContext))
+        if (mSettingsManager.areAnalyticsEnabled())
             return;
 
         Map<String, String> params = new HashMap<>();
@@ -280,7 +282,7 @@ public class Analytics {
 
     @Subscribe
     public void onLoadMoreChildren(LoadMoreChildrenEvent event) {
-        if (!SettingsManager.areAnalyticsEnabled(mContext))
+        if (mSettingsManager.areAnalyticsEnabled())
             return;
 
         Map<String, String> params = new HashMap<>();
@@ -292,7 +294,7 @@ public class Analytics {
 
     @Subscribe
     public void onVote(VoteEvent event) {
-        if (!SettingsManager.areAnalyticsEnabled(mContext))
+        if (mSettingsManager.areAnalyticsEnabled())
             return;
 
         Map<String, String> params = new HashMap<>();
@@ -304,7 +306,7 @@ public class Analytics {
 
     @Subscribe
     public void onSave(SaveEvent event) {
-        if (!SettingsManager.areAnalyticsEnabled(mContext))
+        if (mSettingsManager.areAnalyticsEnabled())
             return;
 
         Map<String, String> params = new HashMap<>();
@@ -317,7 +319,7 @@ public class Analytics {
 
     @Subscribe
     public void onHide(HideEvent event) {
-        if (!SettingsManager.areAnalyticsEnabled(mContext))
+        if (mSettingsManager.areAnalyticsEnabled())
             return;
 
         Map<String, String> params = new HashMap<>();
@@ -329,7 +331,7 @@ public class Analytics {
 
     @Subscribe
     public void onReport(ReportEvent event) {
-        if (!SettingsManager.areAnalyticsEnabled(mContext))
+        if (mSettingsManager.areAnalyticsEnabled())
             return;
 
         // TODO Implement analytics event once feature is implemented
