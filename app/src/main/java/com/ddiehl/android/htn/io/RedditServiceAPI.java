@@ -436,8 +436,6 @@ public class RedditServiceAPI implements RedditService {
                         });
     }
 
-
-
     @Override
     public void onDeleteFriend(FriendDeleteEvent event) {
         String username = event.getUsername();
@@ -449,5 +447,22 @@ public class RedditServiceAPI implements RedditService {
                             mBus.post(error);
                             mBus.post(new FriendDeletedEvent(error));
                         });
+    }
+
+    ///////////////
+    // Singleton //
+    ///////////////
+
+    private static RedditServiceAPI _instance;
+
+    public static RedditServiceAPI getInstance(Context context) {
+        if (_instance == null) {
+            synchronized (RedditServiceAPI.class) {
+                if (_instance == null) {
+                    _instance = new RedditServiceAPI(context);
+                }
+            }
+        }
+        return _instance;
     }
 }

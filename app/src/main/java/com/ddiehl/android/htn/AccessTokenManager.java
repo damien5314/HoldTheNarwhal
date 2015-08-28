@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2015 Damien Diehl. All rights reserved.
+ */
+
 package com.ddiehl.android.htn;
 
 import android.content.Context;
@@ -25,8 +29,6 @@ public class AccessTokenManager {
     // Seconds within expiration we should try to retrieve a new auth token
     private static final int EXPIRATION_THRESHOLD = 60;
 
-    private static AccessTokenManager _instance;
-
     private Context mContext;
     private AccessToken mUserAccessToken;
     private AccessToken mApplicationAccessToken;
@@ -35,17 +37,6 @@ public class AccessTokenManager {
         mContext = c.getApplicationContext();
         mUserAccessToken = getSavedUserAccessToken();
         mApplicationAccessToken = getSavedApplicationAccessToken();
-    }
-
-    public static AccessTokenManager getInstance(Context c) {
-        if (_instance == null) {
-            synchronized (AccessTokenManager.class) {
-                if (_instance == null) {
-                    _instance = new AccessTokenManager(c);
-                }
-            }
-        }
-        return _instance;
     }
 
     public boolean isUserAuthorized() {
@@ -181,5 +172,22 @@ public class AccessTokenManager {
         mApplicationAccessToken = null;
         mContext.getSharedPreferences(PREFS_APPLICATION_ACCESS_TOKEN, Context.MODE_PRIVATE)
                 .edit().clear().apply();
+    }
+
+    ///////////////
+    // Singleton //
+    ///////////////
+
+    private static AccessTokenManager _instance;
+
+    public static AccessTokenManager getInstance(Context c) {
+        if (_instance == null) {
+            synchronized (AccessTokenManager.class) {
+                if (_instance == null) {
+                    _instance = new AccessTokenManager(c);
+                }
+            }
+        }
+        return _instance;
     }
 }

@@ -494,9 +494,9 @@ public class RedditServiceAuth implements RedditService {
         }
     }
 
-    //////////////////////////////////////////////
-    ////////// Singleton implementation //////////
-    //////////////////////////////////////////////
+    ///////////////
+    // Singleton //
+    ///////////////
 
     private static RedditServiceAuth _instance;
 

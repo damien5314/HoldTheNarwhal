@@ -36,8 +36,6 @@ public class IdentityManager {
     private static final String PREF_ID = "pref_id";
     private static final String PREF_INBOX_COUNT = "pref_inbox_count";
 
-    private static IdentityManager _instance;
-
     private Bus mBus;
     private Context mContext;
     private UserIdentity mUserIdentity;
@@ -135,6 +133,12 @@ public class IdentityManager {
                 .edit().clear().apply();
         SettingsManager.getInstance(mContext).clearUserSettings();
     }
+
+    ///////////////
+    // Singleton //
+    ///////////////
+
+    private static IdentityManager _instance;
 
     public static IdentityManager getInstance(Context context) {
         if (_instance == null) {
