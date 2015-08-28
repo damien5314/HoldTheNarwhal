@@ -10,7 +10,7 @@ import android.content.Context;
 import com.ddiehl.android.htn.AccessTokenManager;
 import com.ddiehl.android.htn.BusProvider;
 import com.ddiehl.android.htn.IdentityManager;
-import com.ddiehl.android.htn.RedditPrefs;
+import com.ddiehl.android.htn.SettingsManager;
 import com.ddiehl.android.htn.events.requests.AuthorizeApplicationEvent;
 import com.ddiehl.android.htn.events.requests.FriendAddEvent;
 import com.ddiehl.android.htn.events.requests.FriendDeleteEvent;
@@ -113,7 +113,7 @@ public class RedditServiceAuth implements RedditService {
     @Subscribe
     public void onAuthorizeApplication(AuthorizeApplicationEvent event) {
         String grantType = "https://oauth.reddit.com/grants/installed_client";
-        String deviceId = RedditPrefs.getInstance(mContext).getDeviceId();
+        String deviceId = SettingsManager.getInstance(mContext).getDeviceId();
 
         mAuthAPI.getApplicationAuthToken(grantType, deviceId)
                 .observeOn(AndroidSchedulers.mainThread())

@@ -8,7 +8,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.ddiehl.android.htn.BusProvider;
-import com.ddiehl.android.htn.HTNAnalytics;
+import com.ddiehl.android.htn.Analytics;
 import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.events.requests.UserSignOutEvent;
@@ -44,7 +44,7 @@ public class MainPresenterImpl implements MainPresenter {
         Log.e("HTN", "RetrofitError: " + error.getKind().toString());
         Log.e("HTN", Log.getStackTraceString(error));
         mMainView.showToast(BaseUtils.getFriendlyError(mContext, error));
-        HTNAnalytics.getInstance().logApiError(error);
+        Analytics.getInstance().logApiError(error);
     }
 
     @Subscribe

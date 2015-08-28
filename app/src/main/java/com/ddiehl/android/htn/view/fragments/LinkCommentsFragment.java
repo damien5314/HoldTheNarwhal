@@ -22,7 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ddiehl.android.htn.BusProvider;
-import com.ddiehl.android.htn.HTNAnalytics;
+import com.ddiehl.android.htn.Analytics;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.SettingsManager;
 import com.ddiehl.android.htn.presenter.LinkCommentsPresenter;
@@ -49,7 +49,7 @@ public class LinkCommentsFragment extends AbsRedditFragment
     private static final String DIALOG_CHOOSE_SORT = "dialog_choose_sort";
 
     private Bus mBus = BusProvider.getInstance();
-    private HTNAnalytics mAnalytics = HTNAnalytics.getInstance();
+    private Analytics mAnalytics = Analytics.getInstance();
     private LinkCommentsPresenter mLinkCommentsPresenter;
 
     private LinkCommentsAdapter mLinkCommentsAdapter;

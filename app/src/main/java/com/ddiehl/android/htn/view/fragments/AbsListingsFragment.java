@@ -19,7 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.ddiehl.android.htn.BusProvider;
-import com.ddiehl.android.htn.HTNAnalytics;
+import com.ddiehl.android.htn.Analytics;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.presenter.ListingsPresenter;
 import com.ddiehl.android.htn.view.ListingsView;
@@ -44,7 +44,7 @@ public abstract class AbsListingsFragment extends AbsRedditFragment
     private static final String DIALOG_CHOOSE_TIMESPAN = "dialog_choose_timespan";
 
     Bus mBus = BusProvider.getInstance();
-    HTNAnalytics mAnalytics = HTNAnalytics.getInstance();
+    Analytics mAnalytics = Analytics.getInstance();
 
     ListingsPresenter mListingsPresenter;
     ListingsAdapter mListingsAdapter;

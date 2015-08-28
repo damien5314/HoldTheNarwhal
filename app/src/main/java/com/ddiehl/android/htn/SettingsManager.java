@@ -15,6 +15,7 @@ import com.squareup.otto.Subscribe;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public class SettingsManager implements SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -22,10 +23,13 @@ public class SettingsManager implements SharedPreferences.OnSharedPreferenceChan
 
     // app settings
     public static final String PREF_ENABLE_ADS = "pref_enable_ads";
+    public static final String PREFS_DEVICE_ID = "prefs_device_id";
+    public static final String PREF_DEVICE_ID = "pref_device_id";
     public static final String PREF_ALLOW_ANALYTICS = "pref_allow_analytics";
+    public static final String PREF_ALLOW_ANALYTICS_ASKED = "pref_allow_analytics_asked";
 
     // reddit settings
-    public static final String PREF_FLAG_FOR_USER = "pref_flag_for_user";
+    public static final String PREF_HAS_FROM_REMOTE = "pref_flag_for_user";
     public static final String PREF_BETA = "beta";
     public static final String PREF_CLICKGAGDET = "clickgadget";
     public static final String PREF_COLLAPSE_READ_MESSAGES = "collapse_read_messages";
@@ -79,11 +83,9 @@ public class SettingsManager implements SharedPreferences.OnSharedPreferenceChan
             "hide_ads, min_link_score, newwindow, numsites, num_comments, highlight_new_comments, " +
             "default_comment_sort, hide_locationbar";
 
-    private static SettingsManager _instance;
-
     private Context mContext;
     private Bus mBus = BusProvider.getInstance();
-    private HTNAnalytics mAnalytics = HTNAnalytics.getInstance();
+    private Analytics mAnalytics = Analytics.getInstance();
     private SharedPreferences mSharedPreferences;
 
     private boolean mIsChanging = false;
@@ -94,51 +96,25 @@ public class SettingsManager implements SharedPreferences.OnSharedPreferenceChan
         mSharedPreferences.registerOnSharedPreferenceChangeListener(this);
     }
 
-    public String getCommentSort() {
-        return mSharedPreferences.getString(PREF_DEFAULT_COMMENT_SORT,
-                mContext.getString(R.string.default_comment_sort));
+    private Object getValueFromKey(SharedPreferences sp, String key) {
+        return sp.getAll().get(key);
     }
 
-    public void saveCommentSort(String pref) {
-        mSharedPreferences.edit()
-                .putString(PREF_DEFAULT_COMMENT_SORT, pref)
-                .apply();
-    }
-
-    public Integer getMinCommentScore() {
-        String str = mSharedPreferences.getString(PREF_MIN_COMMENT_SCORE, null);
-        if (str == null) {
-            return null;
-        } else {
-            try {
-                return Integer.valueOf(str);
-            } catch (Exception e) {
-                // In all likelihood, this isn't an integer ("null")
-                return null;
-            }
-        }
-    }
-
-    public boolean getShowControversiality() {
-        return mSharedPreferences.getBoolean(PREF_HIGHLIGHT_CONTROVERSIAL, false);
-    }
-
-    public boolean getAdsEnabled() {
-        return mSharedPreferences.getBoolean(PREF_ENABLE_ADS, false);
+    private String generateDeviceId() {
+        SharedPreferences sp = mContext.getSharedPreferences(PREFS_DEVICE_ID, Context.MODE_PRIVATE);
+        String deviceId = UUID.randomUUID().toString();
+        sp.edit().putString(PREF_DEVICE_ID, deviceId).apply();
+        return deviceId;
     }
 
     public boolean hasFromRemote() {
-        return mSharedPreferences.getBoolean(PREF_FLAG_FOR_USER, false);
+        return mSharedPreferences.getBoolean(PREF_HAS_FROM_REMOTE, false);
     }
 
     @Subscribe
     public void onUserSettingsRetrieved(UserSettingsRetrievedEvent event) {
         UserSettings settings = event.getSettings();
         saveUserSettings(settings);
-    }
-
-    private Object getValueFromKey(SharedPreferences sp, String key) {
-        return sp.getAll().get(key);
     }
 
     @Override
@@ -206,7 +182,7 @@ public class SettingsManager implements SharedPreferences.OnSharedPreferenceChan
     public void saveUserSettings(UserSettings settings) {
         mSharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
         mSharedPreferences.edit()
-                .putBoolean(PREF_FLAG_FOR_USER, true)
+                .putBoolean(PREF_HAS_FROM_REMOTE, true)
                 .putBoolean(PREF_BETA, settings.getBeta())
                 .putBoolean(PREF_CLICKGAGDET, settings.getClickgadget())
                 .putBoolean(PREF_COLLAPSE_READ_MESSAGES, settings.getCollapseReadMessages())
@@ -259,7 +235,7 @@ public class SettingsManager implements SharedPreferences.OnSharedPreferenceChan
     public void clearUserSettings() {
         mSharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
         mSharedPreferences.edit()
-                .remove(PREF_FLAG_FOR_USER)
+                .remove(PREF_HAS_FROM_REMOTE)
                 .remove(PREF_BETA)
                 .remove(PREF_CLICKGAGDET)
                 .remove(PREF_COLLAPSE_READ_MESSAGES)
@@ -306,6 +282,84 @@ public class SettingsManager implements SharedPreferences.OnSharedPreferenceChan
                 .apply();
         mSharedPreferences.registerOnSharedPreferenceChangeListener(this);
     }
+
+    //////////////////
+    // App settings //
+    //////////////////
+
+    public String getDeviceId() {
+        SharedPreferences sp = mContext.getSharedPreferences(PREFS_DEVICE_ID, Context.MODE_PRIVATE);
+        String deviceId = sp.getString(PREF_DEVICE_ID, null);
+        if (deviceId == null) {
+            deviceId = generateDeviceId();
+        }
+        return deviceId;
+    }
+
+    public static boolean areAnalyticsEnabled(Context c) {
+        return c.getSharedPreferences(PREFS_USER, Context.MODE_PRIVATE)
+                .getBoolean(PREF_ALLOW_ANALYTICS, false);
+    }
+
+    public static void setAnalyticsEnabled(Context c, boolean b) {
+        c.getSharedPreferences(PREFS_USER, Context.MODE_PRIVATE).edit()
+                .putBoolean(PREF_ALLOW_ANALYTICS, b)
+                .apply();
+    }
+
+    public static boolean askedForAnalytics(Context c) {
+        return c.getSharedPreferences(PREFS_USER, Context.MODE_PRIVATE)
+                .getBoolean(PREF_ALLOW_ANALYTICS_ASKED, false);
+    }
+
+    public static void setAskedForAnalytics(Context c, boolean b) {
+        c.getSharedPreferences(PREFS_USER, Context.MODE_PRIVATE).edit()
+                .putBoolean(PREF_ALLOW_ANALYTICS_ASKED, b)
+                .apply();
+    }
+
+    public boolean getAdsEnabled() {
+        return mSharedPreferences.getBoolean(PREF_ENABLE_ADS, false);
+    }
+
+    /////////////////////
+    // Reddit settings //
+    /////////////////////
+
+    public String getCommentSort() {
+        return mSharedPreferences.getString(PREF_DEFAULT_COMMENT_SORT,
+                mContext.getString(R.string.default_comment_sort));
+    }
+
+    public void saveCommentSort(String pref) {
+        mSharedPreferences.edit()
+                .putString(PREF_DEFAULT_COMMENT_SORT, pref)
+                .apply();
+    }
+
+    public Integer getMinCommentScore() {
+        String str = mSharedPreferences.getString(PREF_MIN_COMMENT_SCORE, null);
+        if (str == null) {
+            return null;
+        } else {
+            try {
+                return Integer.valueOf(str);
+            } catch (Exception e) {
+                // In all likelihood, this isn't an integer ("null")
+                return null;
+            }
+        }
+    }
+
+    public boolean getShowControversiality() {
+        return mSharedPreferences.getBoolean(PREF_HIGHLIGHT_CONTROVERSIAL, false);
+    }
+
+    ///////////////
+    // Singleton //
+    ///////////////
+
+    private static SettingsManager _instance;
 
     public static SettingsManager getInstance(Context c) {
         if (_instance == null) {

@@ -30,11 +30,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ddiehl.android.htn.AccessTokenManager;
+import com.ddiehl.android.htn.Analytics;
 import com.ddiehl.android.htn.BusProvider;
-import com.ddiehl.android.htn.HTNAnalytics;
 import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
-import com.ddiehl.android.htn.RedditPrefs;
 import com.ddiehl.android.htn.SettingsManager;
 import com.ddiehl.android.htn.events.requests.UserSignOutEvent;
 import com.ddiehl.android.htn.events.responses.UserAuthCodeReceivedEvent;
@@ -63,7 +62,7 @@ public class MainActivity extends AppCompatActivity
     private static final String DIALOG_CONFIRM_SIGN_OUT = "dialog_confirm_sign_out";
 
     private Bus mBus = BusProvider.getInstance();
-    private HTNAnalytics mAnalytics = HTNAnalytics.getInstance();
+    private Analytics mAnalytics = Analytics.getInstance();
     private MainPresenter mMainPresenter;
 
     private ProgressDialog mProgressBar;
@@ -403,7 +402,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private boolean showAnalyticsRequestIfNeverShown() {
-        if (!RedditPrefs.askedForAnalytics(this)) {
+        if (!SettingsManager.askedForAnalytics(this)) {
             showAnalyticsRequestDialog();
             return true;
         }
@@ -425,15 +424,15 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void onAnalyticsAccepted() {
-        RedditPrefs.setAskedForAnalytics(this, true);
-        RedditPrefs.setAnalyticsEnabled(this, true);
+        SettingsManager.setAskedForAnalytics(this, true);
+        SettingsManager.setAnalyticsEnabled(this, true);
         mAnalytics.startSession();
         showSubredditIfEmpty(null);
     }
 
     private void onAnalyticsDeclined() {
-        RedditPrefs.setAskedForAnalytics(this, true);
-        RedditPrefs.setAnalyticsEnabled(this, false);
+        SettingsManager.setAskedForAnalytics(this, true);
+        SettingsManager.setAnalyticsEnabled(this, false);
         mAnalytics.endSession();
         showSubredditIfEmpty(null);
     }
