@@ -232,8 +232,12 @@ public class RedditServiceAPI implements RedditService {
     @Override
     public void onLoadUserProfileSummary(LoadUserProfileSummaryEvent event) {
         final String username = event.getUsername();
+        getUserInfo(username);
+        getUserTrophies(username);
+    }
 
-        // getUserInfo for friend status, karma, create date
+    // getUserInfo for friend status, karma, create date
+    private void getUserInfo(String username) {
         mAPI.getUserInfo(username)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
@@ -241,17 +245,7 @@ public class RedditServiceAPI implements RedditService {
                             UserIdentity user = listing.getUser();
                             mBus.post(new UserInfoLoadedEvent(user));
                             if (user.isFriend()) {
-                                // FIXME Make this proper functional style
-                                // getFriendInfo for friend note
-                                mAPI.getFriendInfo(username)
-                                        .observeOn(AndroidSchedulers.mainThread())
-                                        .subscribe(
-                                                response -> mBus.post(new FriendInfoLoadedEvent(response)),
-                                                error -> {
-                                                    mBus.post(error);
-                                                    mBus.post(new FriendInfoLoadedEvent(error));
-                                                }
-                                        );
+                                getFriendInfo(username); // getFriendInfo for friend note
                             }
                         },
                         error -> {
@@ -259,8 +253,10 @@ public class RedditServiceAPI implements RedditService {
                             mBus.post(new UserInfoLoadedEvent(error));
                         }
                 );
+    }
 
-        // getUserTrophies for user trophies
+    // getUserTrophies for user trophies
+    private void getUserTrophies(String username) {
         mAPI.getUserTrophies(username)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
@@ -268,6 +264,18 @@ public class RedditServiceAPI implements RedditService {
                         error -> {
                             mBus.post(error);
                             mBus.post(new TrophiesLoadedEvent(error));
+                        }
+                );
+    }
+
+    private void getFriendInfo(String username) {
+        mAPI.getFriendInfo(username)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        response -> mBus.post(new FriendInfoLoadedEvent(response)),
+                        error -> {
+                            mBus.post(error);
+                            mBus.post(new FriendInfoLoadedEvent(error));
                         }
                 );
     }
