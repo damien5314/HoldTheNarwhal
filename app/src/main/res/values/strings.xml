@@ -109,10 +109,9 @@
     <string name="dialog_sign_out_ok">OK</string>
     <string name="dialog_sign_out_cancel">Cancel</string>
     <string name="dialog_settings_default_comment_sort">sort comments by</string>
-    <string name="dialog_analytics_title">Allow Analytics</string>
-    <string name="dialog_analytics_message">This application collections anonymous usage statistics
-        to assist developers in creating a better application. You can disable this at any time
-        in settings.</string>
+    <string name="dialog_analytics_title">Privacy Note</string>
+    <string name="dialog_analytics_message">This app collects anonymous usage statistics to aid
+        development of new features. You can disable this any time in settings.</string>
     <string name="dialog_analytics_accept">Dismiss</string>
     <string name="dialog_analytics_decline">Disable</string>
 
