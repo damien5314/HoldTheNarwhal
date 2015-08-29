@@ -69,6 +69,7 @@ public abstract class AbsListingsFragment extends AbsRedditFragment
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mSwipeRefreshLayout = ButterKnife.findById(view, R.id.swipe_refresh_layout);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
     }
 
     void instantiateListView(View v) {
@@ -123,7 +124,6 @@ public abstract class AbsListingsFragment extends AbsRedditFragment
         }
 
 //        loadAdsIfEnabled();
-        mSwipeRefreshLayout.setOnRefreshListener(this);
     }
 
 //    private void loadAdsIfEnabled() {
@@ -138,7 +138,6 @@ public abstract class AbsListingsFragment extends AbsRedditFragment
 
     @Override
     public void onPause() {
-        mSwipeRefreshLayout.setOnRefreshListener(null);
         mBus.unregister(mListingsPresenter);
         super.onPause();
     }
@@ -428,7 +427,7 @@ public abstract class AbsListingsFragment extends AbsRedditFragment
 
     @Override
     public void showSpinner(String msg) {
-        mSwipeRefreshLayout.setRefreshing(true);
+        mSwipeRefreshLayout.post(() -> mSwipeRefreshLayout.setRefreshing(true));
     }
 
     @Override

@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu;
@@ -39,7 +40,7 @@ import com.squareup.otto.Bus;
 import butterknife.ButterKnife;
 
 public class LinkCommentsFragment extends AbsRedditFragment
-        implements LinkCommentsView {
+        implements LinkCommentsView, SwipeRefreshLayout.OnRefreshListener {
 
     private static final String ARG_SUBREDDIT = "subreddit";
     private static final String ARG_ARTICLE = "article";
@@ -53,6 +54,7 @@ public class LinkCommentsFragment extends AbsRedditFragment
     private LinkCommentsPresenter mLinkCommentsPresenter;
 
     private LinkCommentsAdapter mLinkCommentsAdapter;
+    SwipeRefreshLayout mSwipeRefreshLayout;
 
     public LinkCommentsFragment() { /* Default constructor */ }
 
@@ -92,6 +94,13 @@ public class LinkCommentsFragment extends AbsRedditFragment
         recyclerView.setAdapter(mLinkCommentsAdapter);
 
         return v;
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        mSwipeRefreshLayout = ButterKnife.findById(view, R.id.swipe_refresh_layout);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
     }
 
     @Override
@@ -370,5 +379,26 @@ public class LinkCommentsFragment extends AbsRedditFragment
     @Override
     public void openReplyView(Comment comment) {
         showToast(R.string.implementation_pending);
+    }
+
+    @Override
+    public void onRefresh() {
+        mLinkCommentsPresenter.getComments();
+        mAnalytics.logOptionRefresh();
+    }
+
+    @Override
+    public void showSpinner(String msg) {
+        mSwipeRefreshLayout.post(() -> mSwipeRefreshLayout.setRefreshing(true));
+    }
+
+    @Override
+    public void showSpinner(int resId) {
+        this.showSpinner(getString(resId));
+    }
+
+    @Override
+    public void dismissSpinner() {
+        mSwipeRefreshLayout.setRefreshing(false);
     }
 }
