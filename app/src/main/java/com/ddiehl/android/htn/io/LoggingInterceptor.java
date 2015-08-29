@@ -28,7 +28,7 @@ class LoggingInterceptor implements Interceptor {
             BaseUtils.printResponseStatus(response);
             return response;
         } catch (Exception e) {
-            Log.e(TAG, "Exception occurred while sending HTTP request", e);
+            Log.w(TAG, "Exception occurred while sending HTTP request");
             Observable.just(null)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe((action) -> {

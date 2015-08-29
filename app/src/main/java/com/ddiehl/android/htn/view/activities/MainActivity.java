@@ -347,6 +347,11 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
+        if (mDrawerLayout.isDrawerVisible(mNavigationView)) {
+            mDrawerLayout.closeDrawer(mNavigationView);
+            return;
+        }
+
         FragmentManager fm = getFragmentManager();
         if (fm.getBackStackEntryCount() > 0) {
             fm.popBackStack();
