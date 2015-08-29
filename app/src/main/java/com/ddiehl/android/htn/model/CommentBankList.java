@@ -2,7 +2,11 @@
  * Copyright (c) 2015 Damien Diehl. All rights reserved.
  */
 
-package com.ddiehl.reddit.listings;
+package com.ddiehl.android.htn.model;
+
+import com.ddiehl.reddit.listings.AbsComment;
+import com.ddiehl.reddit.listings.Comment;
+import com.ddiehl.reddit.listings.Listing;
 
 import java.util.ArrayList;
 import java.util.Collection;
