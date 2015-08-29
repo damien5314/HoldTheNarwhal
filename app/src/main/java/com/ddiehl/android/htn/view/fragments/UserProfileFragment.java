@@ -323,4 +323,27 @@ public class UserProfileFragment extends AbsListingsFragment {
     public void updateTitle() {
         setTitle(String.format(getString(R.string.username), mListingsPresenter.getUsernameContext()));
     }
+
+    @Override
+    public void showSpinner(String msg) {
+        if (mListingsPresenter.getShow().equals("summary")) {
+            ((MainView) getActivity()).showSpinner(msg);
+            return;
+        }
+        mSwipeRefreshLayout.setRefreshing(true);
+    }
+
+    @Override
+    public void showSpinner(int resId) {
+        this.showSpinner(getString(resId));
+    }
+
+    @Override
+    public void dismissSpinner() {
+        if (mListingsPresenter.getShow().equals("summary")) {
+            ((MainView) getActivity()).dismissSpinner();
+            return;
+        }
+        mSwipeRefreshLayout.setRefreshing(false);
+    }
 }

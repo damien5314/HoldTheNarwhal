@@ -10,6 +10,7 @@ import android.app.FragmentManager;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu;
@@ -18,8 +19,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.ddiehl.android.htn.BusProvider;
 import com.ddiehl.android.htn.Analytics;
+import com.ddiehl.android.htn.BusProvider;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.presenter.ListingsPresenter;
 import com.ddiehl.android.htn.view.ListingsView;
@@ -35,7 +36,7 @@ import com.squareup.otto.Bus;
 import butterknife.ButterKnife;
 
 public abstract class AbsListingsFragment extends AbsRedditFragment
-        implements ListingsView {
+        implements ListingsView, SwipeRefreshLayout.OnRefreshListener {
     private static final String TAG = AbsListingsFragment.class.getSimpleName();
 
     private static final int REQUEST_CHOOSE_SORT = 0;
@@ -48,6 +49,7 @@ public abstract class AbsListingsFragment extends AbsRedditFragment
 
     ListingsPresenter mListingsPresenter;
     ListingsAdapter mListingsAdapter;
+    SwipeRefreshLayout mSwipeRefreshLayout;
 
     private int mFirstVisibleItem, mVisibleItemCount, mTotalItemCount;
     String mSelectedSort, mSelectedTimespan;
@@ -61,6 +63,12 @@ public abstract class AbsListingsFragment extends AbsRedditFragment
         setRetainInstance(true);
         setHasOptionsMenu(true);
         mBus = BusProvider.getInstance();
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        mSwipeRefreshLayout = ButterKnife.findById(view, R.id.swipe_refresh_layout);
     }
 
     void instantiateListView(View v) {
@@ -115,6 +123,7 @@ public abstract class AbsListingsFragment extends AbsRedditFragment
         }
 
 //        loadAdsIfEnabled();
+        mSwipeRefreshLayout.setOnRefreshListener(this);
     }
 
 //    private void loadAdsIfEnabled() {
@@ -129,8 +138,9 @@ public abstract class AbsListingsFragment extends AbsRedditFragment
 
     @Override
     public void onPause() {
-        super.onPause();
+        mSwipeRefreshLayout.setOnRefreshListener(null);
         mBus.unregister(mListingsPresenter);
+        super.onPause();
     }
 
     @Override
@@ -408,5 +418,26 @@ public abstract class AbsListingsFragment extends AbsRedditFragment
     @Override
     public void listingRemovedAt(int position) {
         mListingsAdapter.notifyItemRemoved(position);
+    }
+
+    @Override
+    public void onRefresh() {
+        mListingsPresenter.refreshData();
+        mAnalytics.logOptionRefresh();
+    }
+
+    @Override
+    public void showSpinner(String msg) {
+        mSwipeRefreshLayout.setRefreshing(true);
+    }
+
+    @Override
+    public void showSpinner(int resId) {
+        mSwipeRefreshLayout.setRefreshing(true);
+    }
+
+    @Override
+    public void dismissSpinner() {
+        mSwipeRefreshLayout.setRefreshing(false);
     }
 }
