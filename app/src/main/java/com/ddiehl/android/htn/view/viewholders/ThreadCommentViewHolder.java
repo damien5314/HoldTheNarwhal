@@ -165,11 +165,11 @@ public class ThreadCommentViewHolder extends RecyclerView.ViewHolder
     // Set background tint based on isLiked
     private void showLiked(Comment comment) {
         if (comment.isLiked() == null) {
-            mAuthorView.setTextColor(ContextCompat.getColor(mContext, R.color.secondary_text));
+            mScoreView.setTextColor(ContextCompat.getColor(mContext, R.color.secondary_text));
         } else if (comment.isLiked()) {
-            mAuthorView.setTextColor(ContextCompat.getColor(mContext, R.color.reddit_orange_full));
+            mScoreView.setTextColor(ContextCompat.getColor(mContext, R.color.reddit_orange_full));
         } else {
-            mAuthorView.setTextColor(ContextCompat.getColor(mContext, R.color.reddit_blue_full));
+            mScoreView.setTextColor(ContextCompat.getColor(mContext, R.color.reddit_blue_full));
         }
     }
 
