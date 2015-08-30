@@ -4,14 +4,14 @@
   -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.ddiehl.android.htn" >
+          package="com.ddiehl.android.htn" >
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <!-- InMobi permissions -->
-    <uses-permission android:name="com.google.android.gms.permission.ACTIVITY_RECOGNITION" />
+    <!--<uses-permission android:name="com.google.android.gms.permission.ACTIVITY_RECOGNITION" />-->
     <!--<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />-->
     <!--<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />-->
     <!--<uses-permission android:name="android.permission.CALL_PHONE" />-->
@@ -33,8 +33,8 @@
         android:supportsRtl="true"
         android:hardwareAccelerated="true"> <!-- Hardware acceleration for InMobi -->
 
-        <meta-data android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
+        <!--<meta-data android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />-->
 
         <activity
             android:name="com.ddiehl.android.htn.view.activities.MainActivity"
@@ -57,11 +57,11 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="com.inmobi.androidsdk.IMBrowserActivity"
+        <!--<activity android:name="com.inmobi.androidsdk.IMBrowserActivity"
                   android:configChanges="keyboardHidden|orientation|keyboard|smallestScreenSize|screenSize"
                   android:theme="@android:style/Theme.Translucent.NoTitleBar"
-                  android:hardwareAccelerated="true" />
-        <receiver
+                  android:hardwareAccelerated="true" />-->
+        <!--<receiver
             android:name="com.inmobi.commons.analytics.androidsdk.IMAdTrackerReceiver"
             android:enabled="true"
             android:exported="true" >
@@ -70,8 +70,8 @@
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
                 <action android:name="com.inmobi.share.id" />
             </intent-filter>
-        </receiver>
-        <service android:enabled="true" android:name="com.inmobi.commons.internal.ActivityRecognitionManager" />
+        </receiver>-->
+        <!--<service android:enabled="true" android:name="com.inmobi.commons.internal.ActivityRecognitionManager" />-->
 
     </application>
 
