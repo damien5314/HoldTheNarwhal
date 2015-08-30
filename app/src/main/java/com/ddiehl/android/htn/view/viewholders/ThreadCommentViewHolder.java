@@ -7,10 +7,10 @@ package com.ddiehl.android.htn.view.viewholders;
 
 import android.content.Context;
 import android.os.Build;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ddiehl.android.htn.R;
@@ -31,7 +31,7 @@ public class ThreadCommentViewHolder extends RecyclerView.ViewHolder
     private CommentPresenter mCommentPresenter;
     private Comment mComment;
 
-    @Bind(R.id.comment_expander_icon) ImageView mExpanderIcon;
+//    @Bind(R.id.comment_expander_icon) ImageView mExpanderIcon;
     @Bind(R.id.comment_author) TextView mAuthorView;
     @Bind(R.id.comment_score) TextView mScoreView;
     @Bind(R.id.comment_timestamp) RedditDateTextView mTimestampView;
@@ -155,21 +155,21 @@ public class ThreadCommentViewHolder extends RecyclerView.ViewHolder
     private void setCollapsed(Comment comment) {
         if (comment.isCollapsed()) {
             mBodyView.setVisibility(View.GONE);
-            mExpanderIcon.setImageResource(R.drawable.ic_thread_expand);
+//            mExpanderIcon.setImageResource(R.drawable.ic_thread_expand);
         } else {
             mBodyView.setVisibility(View.VISIBLE);
-            mExpanderIcon.setImageResource(R.drawable.ic_thread_collapse);
+//            mExpanderIcon.setImageResource(R.drawable.ic_thread_collapse);
         }
     }
 
     // Set background tint based on isLiked
     private void showLiked(Comment comment) {
         if (comment.isLiked() == null) {
-            mExpanderIcon.setBackgroundResource(R.drawable.comment_expander_bg);
+            mAuthorView.setTextColor(ContextCompat.getColor(mContext, R.color.secondary_text));
         } else if (comment.isLiked()) {
-            mExpanderIcon.setBackgroundResource(R.drawable.comment_expander_upvoted_bg);
+            mAuthorView.setTextColor(ContextCompat.getColor(mContext, R.color.reddit_orange_full));
         } else {
-            mExpanderIcon.setBackgroundResource(R.drawable.comment_expander_downvoted_bg);
+            mAuthorView.setTextColor(ContextCompat.getColor(mContext, R.color.reddit_blue_full));
         }
     }
 

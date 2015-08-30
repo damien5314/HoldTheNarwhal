@@ -25,7 +25,7 @@
             android:layout_gravity="start|center"
             android:gravity="bottom">
 
-            <ImageView
+            <!--<ImageView
                 android:id="@+id/comment_expander_icon"
                 android:layout_width="@dimen/comment_expander_size"
                 android:layout_height="@dimen/comment_expander_size"
@@ -33,7 +33,7 @@
                 android:layout_marginEnd="@dimen/comment_expander_margin_horizontal"
                 android:layout_gravity="center_vertical"
                 android:src="@drawable/ic_thread_collapse"
-                android:background="@drawable/comment_expander_bg"/>
+                android:background="@drawable/comment_expander_bg"/>-->
 
             <TextView
                 android:id="@+id/comment_author"

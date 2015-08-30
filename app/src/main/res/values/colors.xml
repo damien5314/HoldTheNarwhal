@@ -19,7 +19,9 @@
     <color name="transparent">#00000000</color>
     <color name="indentation">@color/primary</color>
     <color name="reddit_orange">#60FF8B60</color>
+    <color name="reddit_orange_full">#FFFF8B60</color>
     <color name="reddit_blue">#609494FF</color>
+    <color name="reddit_blue_full">#FF9494FF</color>
     <color name="reddit_gold">#f6e600</color>
     <color name="author_op_background">#0055DF</color>
     <color name="author_op_text">#ffffff</color>
