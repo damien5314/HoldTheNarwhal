@@ -62,13 +62,10 @@ public class RedditServiceAuth implements RedditService {
             "submit,vote,history,account,subscribe";
     public static final String HTTP_AUTH_HEADER = Credentials.basic(CLIENT_ID, "");
 
-    public static final String AUTHORIZATION_URL = "https://www.reddit.com/api/v1/authorize.compact" +
-            "?client_id=" + CLIENT_ID +
-            "&response_type=" + RESPONSE_TYPE +
-            "&duration=" + DURATION +
-            "&state=" + STATE +
-            "&redirect_uri=" + REDIRECT_URI +
-            "&scope=" + SCOPE;
+    public static final String AUTHORIZATION_URL =
+            String.format("https://www.reddit.com/api/v1/authorize.compact" +
+                    "?client_id=%s&response_type=%s&duration=%s&state=%s&redirect_uri=%s&scope=%s",
+                    CLIENT_ID, RESPONSE_TYPE, DURATION, STATE, REDIRECT_URI, SCOPE);
 
     private Context mContext;
     private Bus mBus;

@@ -28,6 +28,15 @@ import rx.Observable;
 
 public interface RedditAPI {
 
+    @GET("/api/info")
+    Observable<ListingResponse> getInfo(
+            @Query("id") String id);
+
+    @GET("/r/{subreddit}/api/info")
+    Observable<ListingResponse> getInfo(
+            @Query("id") String id,
+            @Path("subreddit") String subreddit);
+
     @GET("/api/v1/me")
     Observable<UserIdentity> getUserIdentity();
 
