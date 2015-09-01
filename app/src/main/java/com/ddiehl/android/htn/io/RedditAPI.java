@@ -7,6 +7,7 @@ package com.ddiehl.android.htn.io;
 import com.ddiehl.reddit.identity.FriendInfo;
 import com.ddiehl.reddit.identity.UserIdentity;
 import com.ddiehl.reddit.identity.UserSettings;
+import com.ddiehl.reddit.listings.Listing;
 import com.ddiehl.reddit.listings.ListingResponse;
 import com.ddiehl.reddit.listings.MoreChildrenResponse;
 import com.ddiehl.reddit.listings.TrophyResponse;
@@ -35,6 +36,10 @@ public interface RedditAPI {
     @GET("/r/{subreddit}/api/info")
     Observable<ListingResponse> getInfo(
             @Query("id") String id,
+            @Path("subreddit") String subreddit);
+
+    @GET("/r/{subreddit}/about")
+    Observable<Listing> getSubredditInfo(
             @Path("subreddit") String subreddit);
 
     @GET("/api/v1/me")
