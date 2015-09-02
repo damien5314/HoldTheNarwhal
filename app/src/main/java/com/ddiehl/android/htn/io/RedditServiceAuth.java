@@ -351,22 +351,6 @@ public class RedditServiceAuth implements RedditService {
     //////// REQUIRES OAUTH SCOPE ///////
     /////////////////////////////////////
 
-//    @Override @Subscribe
-//    public void onGetSubredditInfo(GetSubredditInfoEvent event) {
-//        if (mAccessTokenManager.hasValidUserAccessToken()) {
-//            mServiceAPI.onGetSubredditInfo(event);
-//            return;
-//        }
-//
-//        AccessToken token = mAccessTokenManager.getUserAccessToken();
-//        if (token != null && token.hasRefreshToken()) {
-//            mQueuedEvent = event;
-//            mBus.post(new RefreshUserAccessTokenEvent(token.getRefreshToken()));
-//        } else {
-//            mQueuedEvent = null;
-//        }
-//    }
-
     @Override @Subscribe
     public void onGetUserIdentity(GetUserIdentityEvent event) {
         if (mAccessTokenManager.hasValidUserAccessToken()) {
