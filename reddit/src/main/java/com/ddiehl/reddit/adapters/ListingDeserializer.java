@@ -8,6 +8,7 @@ import com.ddiehl.reddit.listings.Comment;
 import com.ddiehl.reddit.listings.CommentStub;
 import com.ddiehl.reddit.listings.Link;
 import com.ddiehl.reddit.listings.Listing;
+import com.ddiehl.reddit.listings.Subreddit;
 import com.ddiehl.reddit.listings.Trophy;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
@@ -32,6 +33,9 @@ public class ListingDeserializer implements JsonDeserializer<Listing> {
                 return listing;
             case "t3":
                 listing = context.deserialize(json, Link.class);
+                return listing;
+            case "t5":
+                listing = context.deserialize(json, Subreddit.class);
                 return listing;
             case "t6":
                 listing = context.deserialize(json, Trophy.class);
