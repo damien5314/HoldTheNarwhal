@@ -5,6 +5,7 @@
 package com.ddiehl.android.htn.view.fragments;
 
 import android.app.Activity;
+import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
@@ -29,6 +30,7 @@ import com.ddiehl.android.htn.view.activities.MainActivity;
 import com.ddiehl.android.htn.view.adapters.ListingsAdapter;
 import com.ddiehl.android.htn.view.dialogs.ChooseLinkSortDialog;
 import com.ddiehl.android.htn.view.dialogs.ChooseTimespanDialog;
+import com.ddiehl.android.htn.view.dialogs.NsfwWarningDialog;
 import com.ddiehl.reddit.listings.Comment;
 import com.ddiehl.reddit.listings.Link;
 import com.squareup.otto.Bus;
@@ -39,8 +41,10 @@ public abstract class AbsListingsFragment extends AbsRedditFragment
         implements ListingsView, SwipeRefreshLayout.OnRefreshListener {
     private static final String TAG = AbsListingsFragment.class.getSimpleName();
 
-    private static final int REQUEST_CHOOSE_SORT = 0;
-    private static final int REQUEST_CHOOSE_TIMESPAN = 1;
+    private static final int REQUEST_NSFW_WARNING = 0x1;
+    private static final int REQUEST_CHOOSE_SORT = 0x2;
+    private static final int REQUEST_CHOOSE_TIMESPAN = 0x3;
+    private static final String DIALOG_NSFW_WARNING = "dialog_nsfw_warning";
     private static final String DIALOG_CHOOSE_SORT = "dialog_choose_sort";
     private static final String DIALOG_CHOOSE_TIMESPAN = "dialog_choose_timespan";
 
@@ -172,6 +176,8 @@ public abstract class AbsListingsFragment extends AbsRedditFragment
                     mListingsPresenter.updateSort(mSelectedSort, mSelectedTimespan);
                     getActivity().invalidateOptionsMenu();
                 }
+                break;
+            case REQUEST_NSFW_WARNING:
                 break;
         }
     }
@@ -438,5 +444,12 @@ public abstract class AbsListingsFragment extends AbsRedditFragment
     @Override
     public void dismissSpinner() {
         mSwipeRefreshLayout.setRefreshing(false);
+    }
+
+    @Override
+    public void displayOver18Required() {
+        DialogFragment dialog = new NsfwWarningDialog();
+        dialog.setTargetFragment(this, REQUEST_NSFW_WARNING);
+        dialog.show(getFragmentManager(), DIALOG_NSFW_WARNING);
     }
 }

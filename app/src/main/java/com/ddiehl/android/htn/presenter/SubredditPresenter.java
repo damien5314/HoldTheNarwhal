@@ -6,17 +6,23 @@ package com.ddiehl.android.htn.presenter;
 
 import android.content.Context;
 
+import com.ddiehl.android.htn.events.requests.GetSubredditInfoEvent;
 import com.ddiehl.android.htn.events.requests.LoadSubredditEvent;
 import com.ddiehl.android.htn.events.responses.HideSubmittedEvent;
 import com.ddiehl.android.htn.events.responses.ListingsLoadedEvent;
 import com.ddiehl.android.htn.events.responses.SaveSubmittedEvent;
+import com.ddiehl.android.htn.events.responses.SubredditInfoLoadedEvent;
 import com.ddiehl.android.htn.events.responses.UserIdentitySavedEvent;
 import com.ddiehl.android.htn.events.responses.VoteSubmittedEvent;
 import com.ddiehl.android.htn.view.ListingsView;
+import com.ddiehl.reddit.identity.UserIdentity;
 import com.ddiehl.reddit.listings.Link;
+import com.ddiehl.reddit.listings.Subreddit;
 import com.squareup.otto.Subscribe;
 
 public class SubredditPresenter extends AbsListingsPresenter {
+
+    private Subreddit mSubredditInfo;
 
     public SubredditPresenter(Context context, ListingsView view, String subreddit,
                               String sort, String timespan) {
@@ -25,7 +31,27 @@ public class SubredditPresenter extends AbsListingsPresenter {
 
     @Override
     public void requestData() {
-        mBus.post(new LoadSubredditEvent(mSubreddit, mSort, mTimespan, mNextPageListingId));
+        if (mSubreddit == null || mSubreddit.equals("all") || mSubredditInfo != null) {
+            mBus.post(new LoadSubredditEvent(mSubreddit, mSort, mTimespan, mNextPageListingId));
+        } else {
+            mBus.post(new GetSubredditInfoEvent(mSubreddit));
+        }
+    }
+
+    @Subscribe @SuppressWarnings("unused")
+    public void onSubredditInfoLoaded(SubredditInfoLoadedEvent event) {
+        if (event.isFailed())
+            return;
+
+        mSubredditInfo = event.getSubreddit();
+        UserIdentity user = getAuthorizedUser();
+        if (mSubredditInfo.isOver18() && (user == null || !user.isOver18())) {
+            mListingsView.displayOver18Required();
+        } else {
+            requestData();
+        }
+
+        // TODO Load subreddit image into navigation drawer
     }
 
     @Subscribe @Override

@@ -28,6 +28,7 @@ import com.ddiehl.android.htn.events.requests.ReportEvent;
 import com.ddiehl.android.htn.events.requests.SaveEvent;
 import com.ddiehl.android.htn.events.requests.UpdateUserSettingsEvent;
 import com.ddiehl.android.htn.events.requests.UserSignOutEvent;
+import com.ddiehl.android.htn.events.requests.GetSubredditInfoEvent;
 import com.ddiehl.android.htn.events.requests.VoteEvent;
 import com.ddiehl.android.htn.events.responses.ApplicationAuthorizedEvent;
 import com.ddiehl.android.htn.events.responses.UserAuthCodeReceivedEvent;
@@ -327,9 +328,44 @@ public class RedditServiceAuth implements RedditService {
         }
     }
 
+    @Subscribe @Override
+    public void onGetSubredditInfo(GetSubredditInfoEvent event) {
+        if (!mAccessTokenManager.hasValidAccessToken()) {
+            mQueuedEvent = event;
+            AccessToken userAccessToken = mAccessTokenManager.getUserAccessToken();
+            String refreshToken = null;
+            if (userAccessToken != null) {
+                refreshToken = userAccessToken.getRefreshToken();
+            }
+            if (refreshToken != null) {
+                mBus.post(new RefreshUserAccessTokenEvent(refreshToken));
+            } else {
+                mBus.post(new AuthorizeApplicationEvent());
+            }
+        } else {
+            mServiceAPI.onGetSubredditInfo(event);
+        }
+    }
+
     /////////////////////////////////////
     //////// REQUIRES OAUTH SCOPE ///////
     /////////////////////////////////////
+
+//    @Override @Subscribe
+//    public void onGetSubredditInfo(GetSubredditInfoEvent event) {
+//        if (mAccessTokenManager.hasValidUserAccessToken()) {
+//            mServiceAPI.onGetSubredditInfo(event);
+//            return;
+//        }
+//
+//        AccessToken token = mAccessTokenManager.getUserAccessToken();
+//        if (token != null && token.hasRefreshToken()) {
+//            mQueuedEvent = event;
+//            mBus.post(new RefreshUserAccessTokenEvent(token.getRefreshToken()));
+//        } else {
+//            mQueuedEvent = null;
+//        }
+//    }
 
     @Override @Subscribe
     public void onGetUserIdentity(GetUserIdentityEvent event) {

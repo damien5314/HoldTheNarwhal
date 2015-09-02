@@ -22,6 +22,7 @@ import com.ddiehl.android.htn.events.requests.LoadUserProfileSummaryEvent;
 import com.ddiehl.android.htn.events.requests.ReportEvent;
 import com.ddiehl.android.htn.events.requests.SaveEvent;
 import com.ddiehl.android.htn.events.requests.UpdateUserSettingsEvent;
+import com.ddiehl.android.htn.events.requests.GetSubredditInfoEvent;
 import com.ddiehl.android.htn.events.requests.VoteEvent;
 import com.ddiehl.android.htn.events.responses.FriendAddedEvent;
 import com.ddiehl.android.htn.events.responses.FriendDeletedEvent;
@@ -31,6 +32,7 @@ import com.ddiehl.android.htn.events.responses.LinkCommentsLoadedEvent;
 import com.ddiehl.android.htn.events.responses.ListingsLoadedEvent;
 import com.ddiehl.android.htn.events.responses.MoreChildrenLoadedEvent;
 import com.ddiehl.android.htn.events.responses.SaveSubmittedEvent;
+import com.ddiehl.android.htn.events.responses.SubredditInfoLoadedEvent;
 import com.ddiehl.android.htn.events.responses.TrophiesLoadedEvent;
 import com.ddiehl.android.htn.events.responses.UserIdentityRetrievedEvent;
 import com.ddiehl.android.htn.events.responses.UserInfoLoadedEvent;
@@ -296,6 +298,21 @@ public class RedditServiceAPI implements RedditService {
                             mBus.post(error);
                             mBus.post(new ListingsLoadedEvent(error));
                         });
+    }
+
+    @Override
+    public void onGetSubredditInfo(GetSubredditInfoEvent event) {
+        final String name = event.getSubredditName();
+
+        mAPI.getSubredditInfo(name)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        subreddit -> mBus.post(new SubredditInfoLoadedEvent(subreddit)),
+                        error -> {
+                            mBus.post(error);
+                            mBus.post(new SubredditInfoLoadedEvent(error));
+                        }
+                );
     }
 
     /**

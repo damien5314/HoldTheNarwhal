@@ -19,6 +19,7 @@ import com.ddiehl.android.htn.events.requests.LoadUserProfileSummaryEvent;
 import com.ddiehl.android.htn.events.requests.ReportEvent;
 import com.ddiehl.android.htn.events.requests.SaveEvent;
 import com.ddiehl.android.htn.events.requests.UpdateUserSettingsEvent;
+import com.ddiehl.android.htn.events.requests.GetSubredditInfoEvent;
 import com.ddiehl.android.htn.events.requests.VoteEvent;
 
 
@@ -34,6 +35,7 @@ public interface RedditService {
     void onLoadUserProfileSummary(LoadUserProfileSummaryEvent event);
     void onLoadUserProfile(LoadUserProfileListingEvent event);
 
+    void onGetSubredditInfo(GetSubredditInfoEvent event);
     void onGetUserIdentity(GetUserIdentityEvent event);
     void onGetUserSettings(GetUserSettingsEvent event);
     void onUpdateUserSettings(UpdateUserSettingsEvent event);

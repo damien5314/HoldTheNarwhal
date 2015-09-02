@@ -98,8 +98,8 @@ public class Subreddit extends Listing<Subreddit.Data> {
         data.publicDescription = publicDescription;
     }
 
-    public Boolean getOver18() {
-        return data.over18;
+    public boolean isOver18() {
+        return data.over18 == null ? false : data.over18;
     }
 
     public void setOver18(Boolean over18) {

@@ -4,7 +4,6 @@
 
 package com.ddiehl.android.htn.events.responses;
 
-import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 
@@ -15,7 +14,7 @@ public class UserProfileSummaryLoadedEvent extends FailableEvent {
         mResponse = response;
     }
 
-    public UserProfileSummaryLoadedEvent(RetrofitError e) {
+    public UserProfileSummaryLoadedEvent(Throwable e) {
         super(e);
     }
 
