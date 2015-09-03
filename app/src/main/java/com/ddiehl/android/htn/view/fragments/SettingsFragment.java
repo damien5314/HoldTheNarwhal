@@ -30,6 +30,7 @@ import com.ddiehl.android.htn.view.BaseView;
 import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.reddit.identity.UserIdentity;
 import com.ddiehl.reddit.identity.UserSettings;
+import com.ddiehl.reddit.listings.Subreddit;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -201,6 +202,8 @@ public class SettingsFragment extends PreferenceFragment
         return super.onOptionsItemSelected(item);
     }
 
+    // TODO How can get rid of code duplication in the below?
+
     @Override
     public void setTitle(CharSequence title) {
         getActivity().setTitle(title);
@@ -232,8 +235,8 @@ public class SettingsFragment extends PreferenceFragment
     }
 
     @Override
-    public void loadNavigationDrawerImage(String url) {
-        ((MainView) getActivity()).loadNavigationDrawerImage(url);
+    public void onSubredditInfoLoaded(Subreddit subredditInfo) {
+        ((MainView) getActivity()).loadImageIntoDrawerHeader(subredditInfo.getHeaderImageUrl());
     }
 
     private void showAboutAppHtml() {

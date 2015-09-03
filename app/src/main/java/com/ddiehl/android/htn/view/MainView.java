@@ -7,6 +7,7 @@ package com.ddiehl.android.htn.view;
 public interface MainView extends BaseView {
 
     void updateUserIdentity();
+    void loadImageIntoDrawerHeader(String url);
 
     void closeNavigationDrawer();
     void showLoginView();

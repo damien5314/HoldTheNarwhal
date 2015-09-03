@@ -4,6 +4,8 @@
 
 package com.ddiehl.android.htn.view;
 
+import com.ddiehl.reddit.listings.Subreddit;
+
 public interface BaseView {
 
     void setTitle(CharSequence title);
@@ -12,6 +14,6 @@ public interface BaseView {
     void dismissSpinner();
     void showToast(String msg);
     void showToast(int resId);
+    void onSubredditInfoLoaded(Subreddit subredditInfo);
 
-    void loadNavigationDrawerImage(String url);
 }

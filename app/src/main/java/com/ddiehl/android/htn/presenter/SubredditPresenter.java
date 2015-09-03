@@ -51,8 +51,7 @@ public class SubredditPresenter extends AbsListingsPresenter {
             requestData();
         }
 
-        String url = mSubredditInfo.getHeaderImageUrl();
-        mListingsView.loadNavigationDrawerImage(url);
+        mListingsView.onSubredditInfoLoaded(mSubredditInfo);
     }
 
     @Subscribe @Override

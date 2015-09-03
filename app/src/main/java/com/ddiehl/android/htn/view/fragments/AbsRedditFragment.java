@@ -7,6 +7,7 @@ package com.ddiehl.android.htn.view.fragments;
 import android.app.Fragment;
 
 import com.ddiehl.android.htn.view.MainView;
+import com.ddiehl.reddit.listings.Subreddit;
 
 public abstract class AbsRedditFragment extends Fragment {
 
@@ -36,8 +37,8 @@ public abstract class AbsRedditFragment extends Fragment {
         ((MainView) getActivity()).showToast(resId);
     }
 
-    public void loadNavigationDrawerImage(String url) {
-        ((MainView) getActivity()).loadNavigationDrawerImage(url);
+    public void onSubredditInfoLoaded(Subreddit subredditInfo) {
+        ((MainView) getActivity()).loadImageIntoDrawerHeader(subredditInfo.getHeaderImageUrl());
     }
 
 }

@@ -48,6 +48,7 @@ import com.ddiehl.android.htn.view.fragments.SubredditFragment;
 import com.ddiehl.android.htn.view.fragments.UserProfileFragment;
 import com.ddiehl.android.htn.view.fragments.WebViewFragment;
 import com.ddiehl.reddit.identity.UserIdentity;
+import com.ddiehl.reddit.listings.Subreddit;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
@@ -344,7 +345,12 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void loadNavigationDrawerImage(String url) {
+    public void onSubredditInfoLoaded(Subreddit subredditInfo) {
+        loadImageIntoDrawerHeader(subredditInfo.getHeaderImageUrl());
+    }
+
+    @Override
+    public void loadImageIntoDrawerHeader(String url) {
         Picasso.with(this)
                 .load(url)
                 .into(mHeaderImage);
