@@ -27,11 +27,13 @@ import android.widget.ProgressBar;
 import android.widget.ZoomButtonsController;
 
 import com.ddiehl.android.htn.BuildConfig;
+import com.ddiehl.android.htn.BusProvider;
 import com.ddiehl.android.htn.R;
+import com.ddiehl.android.htn.events.responses.UserAuthCodeReceivedEvent;
 import com.ddiehl.android.htn.io.RedditServiceAuth;
 import com.ddiehl.android.htn.utils.AuthUtils;
 import com.ddiehl.android.htn.utils.BaseUtils;
-import com.ddiehl.android.htn.view.MainView;
+import com.squareup.otto.Bus;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -42,6 +44,7 @@ public class WebViewFragment extends AbsRedditFragment {
 
     private static final String ARG_URL = "url";
 
+    private Bus mBus = BusProvider.getInstance();
     private String mUrl;
     @Bind(R.id.web_view) WebView mWebView;
 
@@ -104,9 +107,8 @@ public class WebViewFragment extends AbsRedditFragment {
                         && !url.equals(RedditServiceAuth.AUTHORIZATION_URL)) {
                     // Pass auth code back to the Activity, which will pop this fragment
                     String authCode = AuthUtils.getUserAuthCodeFromRedirectUri(url);
-                    // TODO Uncouple this from Activity
-                    ((MainView) getActivity()).onUserAuthCodeReceived(authCode);
-                    return true;
+                    mBus.post(new UserAuthCodeReceivedEvent(authCode));
+                    return true; // Can we do this to prevent the page from loading at all?
                 }
 
                 if (url.startsWith("mailto:")) {

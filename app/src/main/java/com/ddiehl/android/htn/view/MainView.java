@@ -16,6 +16,4 @@ public interface MainView extends BaseView {
     void showSubreddit(String subreddit);
     void showWebViewForURL(String url);
 
-    void onUserAuthCodeReceived(String authCode);
-
 }

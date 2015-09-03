@@ -49,6 +49,7 @@ import com.ddiehl.android.htn.view.fragments.UserProfileFragment;
 import com.ddiehl.android.htn.view.fragments.WebViewFragment;
 import com.ddiehl.reddit.identity.UserIdentity;
 import com.squareup.otto.Bus;
+import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
 
 import butterknife.Bind;
@@ -145,6 +146,7 @@ public class MainActivity extends AppCompatActivity
     protected void onStart() {
         super.onStart();
 
+        mBus.register(this);
         mBus.register(mMainPresenter);
         mBus.register(mAccessTokenManager);
         mBus.register(mIdentityManager);
@@ -161,6 +163,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onStop() {
         mAnalytics.endSession();
+        mBus.unregister(this);
         mBus.unregister(mMainPresenter);
         mBus.unregister(mAccessTokenManager);
         mBus.unregister(mIdentityManager);
@@ -325,12 +328,9 @@ public class MainActivity extends AppCompatActivity
         Snackbar.make(mDrawerLayout, s, Snackbar.LENGTH_SHORT).show();
     }
 
-    @Override
-    public void onUserAuthCodeReceived(String authCode) {
+    @Subscribe
+    public void onUserAuthCodeReceived(UserAuthCodeReceivedEvent event) {
         getFragmentManager().popBackStack();
-
-        // Notify auth API about the auth code retrieval
-        mBus.post(new UserAuthCodeReceivedEvent(authCode));
     }
 
     @Override
