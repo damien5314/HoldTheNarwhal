@@ -49,6 +49,7 @@ import com.ddiehl.android.htn.view.fragments.UserProfileFragment;
 import com.ddiehl.android.htn.view.fragments.WebViewFragment;
 import com.ddiehl.reddit.identity.UserIdentity;
 import com.squareup.otto.Bus;
+import com.squareup.picasso.Picasso;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -74,6 +75,7 @@ public class MainActivity extends AppCompatActivity
     @Bind(R.id.user_account_icon) ImageView mGoldIndicator;
     @Bind(R.id.account_name) TextView mAccountNameView;
     @Bind(R.id.sign_out_button) View mSignOutView;
+    @Bind(R.id.navigation_drawer_header_image) ImageView mHeaderImage;
 
     private AccessTokenManager mAccessTokenManager;
     private IdentityManager mIdentityManager;
@@ -339,6 +341,13 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onSignOutCancel() {
         // Do nothing
+    }
+
+    @Override
+    public void loadNavigationDrawerImage(String url) {
+        Picasso.with(this)
+                .load(url)
+                .into(mHeaderImage);
     }
 
     public void showSettings() {

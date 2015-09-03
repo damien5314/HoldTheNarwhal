@@ -36,4 +36,8 @@ public abstract class AbsRedditFragment extends Fragment {
         ((MainView) getActivity()).showToast(resId);
     }
 
+    public void loadNavigationDrawerImage(String url) {
+        ((MainView) getActivity()).loadNavigationDrawerImage(url);
+    }
+
 }

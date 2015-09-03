@@ -231,6 +231,11 @@ public class SettingsFragment extends PreferenceFragment
         ((MainView) getActivity()).showToast(resId);
     }
 
+    @Override
+    public void loadNavigationDrawerImage(String url) {
+        ((MainView) getActivity()).loadNavigationDrawerImage(url);
+    }
+
     private void showAboutAppHtml() {
         getFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container,

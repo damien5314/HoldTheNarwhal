@@ -10,7 +10,7 @@ import com.google.gson.annotations.SerializedName;
 @SuppressWarnings("unused")
 public class Subreddit extends Listing<Subreddit.Data> {
 
-    public String getBannerImage() {
+    public String getBannerImageUrl() {
         return data.bannerImage;
     }
 
@@ -58,12 +58,12 @@ public class Subreddit extends Listing<Subreddit.Data> {
         data.displayName = displayName;
     }
 
-    public String getHeaderImage() {
-        return data.headerImage;
+    public String getHeaderImageUrl() {
+        return data.headerImageUrl;
     }
 
     public void setHeaderImage(String headerImage) {
-        data.headerImage = headerImage;
+        data.headerImageUrl = headerImage;
     }
 
     public String getDescriptionHtml() {
@@ -162,11 +162,11 @@ public class Subreddit extends Listing<Subreddit.Data> {
         data.submitLinkLabel = submitLinkLabel;
     }
 
-    public String getHeaderSize() {
+    public Integer[] getHeaderSize() {
         return data.headerSize;
     }
 
-    public void setHeaderSize(String headerSize) {
+    public void setHeaderSize(Integer[] headerSize) {
         data.headerSize = headerSize;
     }
 
@@ -316,7 +316,7 @@ public class Subreddit extends Listing<Subreddit.Data> {
 
     static class Data extends Listing.Data {
 
-        @Expose @SerializedName("banner_image")
+        @Expose @SerializedName("banner_img")
         String bannerImage;
 
         @Expose @SerializedName("submit_text_html")
@@ -334,8 +334,8 @@ public class Subreddit extends Listing<Subreddit.Data> {
         @Expose @SerializedName("display_name")
         String displayName;
 
-        @Expose @SerializedName("header_image")
-        String headerImage;
+        @Expose @SerializedName("header_img")
+        String headerImageUrl;
 
         @Expose @SerializedName("description_html")
         String descriptionHtml;
@@ -374,7 +374,7 @@ public class Subreddit extends Listing<Subreddit.Data> {
         String submitLinkLabel;
 
         @Expose @SerializedName("header_size")
-        String headerSize;
+        Integer[] headerSize;
 
         @Expose @SerializedName("public_traffic")
         Boolean publicTraffic;

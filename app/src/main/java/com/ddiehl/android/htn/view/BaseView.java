@@ -12,4 +12,6 @@ public interface BaseView {
     void dismissSpinner();
     void showToast(String msg);
     void showToast(int resId);
+
+    void loadNavigationDrawerImage(String url);
 }
