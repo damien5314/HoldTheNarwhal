@@ -355,6 +355,12 @@ public class SettingsManager implements SharedPreferences.OnSharedPreferenceChan
         return mSharedPreferences.getBoolean(PREF_HIGHLIGHT_CONTROVERSIAL, false);
     }
 
+    public void setOver18(boolean b) {
+        mSharedPreferences.edit()
+                .putBoolean(PREF_OVER_18, b)
+                .apply();
+    }
+
     ///////////////
     // Singleton //
     ///////////////

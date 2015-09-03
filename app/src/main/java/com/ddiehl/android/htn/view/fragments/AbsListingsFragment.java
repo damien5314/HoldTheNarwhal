@@ -178,6 +178,9 @@ public abstract class AbsListingsFragment extends AbsRedditFragment
                 }
                 break;
             case REQUEST_NSFW_WARNING:
+                if (resultCode == Activity.RESULT_OK) {
+                    mListingsPresenter.refreshData();
+                }
                 break;
         }
     }

@@ -349,7 +349,7 @@ public class Subreddit extends Listing<Subreddit.Data> {
         @Expose @SerializedName("public_description")
         String publicDescription;
 
-        @Expose @SerializedName("over_18")
+        @Expose @SerializedName("over18")
         Boolean over18;
 
         @Expose @SerializedName("public_description_html")

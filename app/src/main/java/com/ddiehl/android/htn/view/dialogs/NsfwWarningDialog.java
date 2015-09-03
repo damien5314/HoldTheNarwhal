@@ -11,6 +11,7 @@ import android.app.DialogFragment;
 import android.os.Bundle;
 
 import com.ddiehl.android.htn.R;
+import com.ddiehl.android.htn.SettingsManager;
 
 public class NsfwWarningDialog extends DialogFragment {
 
@@ -18,10 +19,11 @@ public class NsfwWarningDialog extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        return new AlertDialog.Builder(getContext())
+        return new AlertDialog.Builder(getActivity())
                 .setTitle(R.string.dialog_nsfw_title)
                 .setMessage(R.string.dialog_nsfw_message)
                 .setPositiveButton(R.string.dialog_nsfw_confirm, (dialog, which) -> {
+                    SettingsManager.getInstance(getActivity()).setOver18(true);
                     getTargetFragment().onActivityResult(getTargetRequestCode(),
                             Activity.RESULT_OK, null);
                 })

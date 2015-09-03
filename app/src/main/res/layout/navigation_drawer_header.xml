@@ -17,8 +17,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:layout_gravity="start|top"
-        android:src="@drawable/ic_account_circle"/>
+        android:layout_gravity="start|top"/>
 
     <LinearLayout
         android:layout_width="fill_parent"
