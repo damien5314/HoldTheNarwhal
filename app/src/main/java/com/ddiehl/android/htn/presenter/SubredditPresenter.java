@@ -51,7 +51,6 @@ public class SubredditPresenter extends AbsListingsPresenter {
             requestData();
         }
 
-        // TODO Load subreddit image into navigation drawer
         String url = mSubredditInfo.getHeaderImageUrl();
         mListingsView.loadNavigationDrawerImage(url);
     }

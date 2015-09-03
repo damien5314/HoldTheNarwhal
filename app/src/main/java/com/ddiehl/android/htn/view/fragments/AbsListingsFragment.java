@@ -438,7 +438,7 @@ public abstract class AbsListingsFragment extends AbsRedditFragment
 
     @Override
     public void showSpinner(int resId) {
-        mSwipeRefreshLayout.setRefreshing(true);
+        mSwipeRefreshLayout.post(() -> mSwipeRefreshLayout.setRefreshing(true));
     }
 
     @Override
