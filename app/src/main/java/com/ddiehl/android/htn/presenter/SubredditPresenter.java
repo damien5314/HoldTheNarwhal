@@ -15,6 +15,7 @@ import com.ddiehl.android.htn.events.responses.SubredditInfoLoadedEvent;
 import com.ddiehl.android.htn.events.responses.UserIdentitySavedEvent;
 import com.ddiehl.android.htn.events.responses.VoteSubmittedEvent;
 import com.ddiehl.android.htn.view.ListingsView;
+import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.reddit.identity.UserIdentity;
 import com.ddiehl.reddit.listings.Link;
 import com.ddiehl.reddit.listings.Subreddit;
@@ -24,9 +25,9 @@ public class SubredditPresenter extends AbsListingsPresenter {
 
     private Subreddit mSubredditInfo;
 
-    public SubredditPresenter(Context context, ListingsView view, String subreddit,
+    public SubredditPresenter(Context context, MainView main, ListingsView view, String subreddit,
                               String sort, String timespan) {
-        super(context, view, null, null, subreddit, sort, timespan);
+        super(context, main, view, null, null, subreddit, sort, timespan);
     }
 
     @Override
@@ -46,12 +47,12 @@ public class SubredditPresenter extends AbsListingsPresenter {
         mSubredditInfo = event.getSubreddit();
         UserIdentity user = getAuthorizedUser();
         if (mSubredditInfo.isOver18() && (user == null || !user.isOver18())) {
-            mListingsView.displayOver18Required();
+            mMainView.showNsfwWarningDialog();
         } else {
             requestData();
         }
 
-        mListingsView.onSubredditInfoLoaded(mSubredditInfo);
+        mMainView.onSubredditInfoLoaded(mSubredditInfo);
     }
 
     @Subscribe @Override

@@ -39,7 +39,7 @@ import com.squareup.otto.Bus;
 
 import butterknife.ButterKnife;
 
-public class LinkCommentsFragment extends AbsRedditFragment
+public class LinkCommentsFragment extends Fragment
         implements LinkCommentsView, SwipeRefreshLayout.OnRefreshListener {
 
     private static final String ARG_SUBREDDIT = "subreddit";
@@ -51,6 +51,7 @@ public class LinkCommentsFragment extends AbsRedditFragment
 
     private Bus mBus = BusProvider.getInstance();
     private Analytics mAnalytics = Analytics.getInstance();
+    private MainView mMainView;
     private LinkCommentsPresenter mLinkCommentsPresenter;
 
     private LinkCommentsAdapter mLinkCommentsAdapter;
@@ -79,7 +80,9 @@ public class LinkCommentsFragment extends AbsRedditFragment
         String articleId = args.getString(ARG_ARTICLE);
         String commentId = args.getString(ARG_COMMENT_ID);
 
-        mLinkCommentsPresenter = new LinkCommentsPresenterImpl(getActivity(), this, subreddit, articleId, commentId);
+        mMainView = (MainView) getActivity();
+        mLinkCommentsPresenter = new LinkCommentsPresenterImpl(getActivity(), mMainView, this,
+                subreddit, articleId, commentId);
         mLinkCommentsAdapter = new LinkCommentsAdapter(mLinkCommentsPresenter);
 
         updateTitle();
@@ -109,13 +112,12 @@ public class LinkCommentsFragment extends AbsRedditFragment
         updateTitle();
     }
 
-    @Override
     public void updateTitle() {
         Link link = mLinkCommentsPresenter.getLinkContext();
         if (link != null) {
-            setTitle(link.getTitle());
+            mMainView.setTitle(link.getTitle());
         } else {
-            setTitle(getString(R.string.comments_fragment_title));
+            mMainView.setTitle(getString(R.string.comments_fragment_title));
         }
     }
 
@@ -378,7 +380,7 @@ public class LinkCommentsFragment extends AbsRedditFragment
 
     @Override
     public void openReplyView(Comment comment) {
-        showToast(R.string.implementation_pending);
+        mMainView.showToast(R.string.implementation_pending);
     }
 
     @Override
@@ -387,18 +389,18 @@ public class LinkCommentsFragment extends AbsRedditFragment
         mAnalytics.logOptionRefresh();
     }
 
-    @Override
-    public void showSpinner(String msg) {
-        mSwipeRefreshLayout.post(() -> mSwipeRefreshLayout.setRefreshing(true));
-    }
-
-    @Override
-    public void showSpinner(int resId) {
-        this.showSpinner(getString(resId));
-    }
-
-    @Override
-    public void dismissSpinner() {
-        mSwipeRefreshLayout.setRefreshing(false);
-    }
+//    @Override
+//    public void showSpinner(String msg) {
+//        mSwipeRefreshLayout.post(() -> mSwipeRefreshLayout.setRefreshing(true));
+//    }
+//
+//    @Override
+//    public void showSpinner(int resId) {
+//        this.showSpinner(getString(resId));
+//    }
+//
+//    @Override
+//    public void dismissSpinner() {
+//        mSwipeRefreshLayout.setRefreshing(false);
+//    }
 }

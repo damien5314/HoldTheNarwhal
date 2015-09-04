@@ -23,6 +23,7 @@ import com.ddiehl.android.htn.events.responses.UserIdentitySavedEvent;
 import com.ddiehl.android.htn.events.responses.UserInfoLoadedEvent;
 import com.ddiehl.android.htn.events.responses.VoteSubmittedEvent;
 import com.ddiehl.android.htn.view.ListingsView;
+import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.reddit.Archivable;
 import com.ddiehl.reddit.Hideable;
 import com.ddiehl.reddit.Savable;
@@ -48,6 +49,7 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
 
     List<Listing> mListings;
     ListingsView mListingsView;
+    MainView mMainView;
 
     String mShow;
     String mUsernameContext;
@@ -59,7 +61,7 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
     boolean mListingsRequested = false;
     String mNextPageListingId;
 
-    public AbsListingsPresenter(Context context, ListingsView view,
+    public AbsListingsPresenter(Context context, MainView main, ListingsView view,
                                 String show, String username, String subreddit, String sort, String timespan) {
         mContext = context.getApplicationContext();
         mBus = BusProvider.getInstance();
@@ -67,6 +69,7 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
         mIdentityManager = IdentityManager.getInstance(mContext);
         mSettingsManager = SettingsManager.getInstance(mContext);
         mListingsView = view;
+        mMainView = main;
         mShow = show;
         mUsernameContext = username;
         mSubreddit = subreddit;
@@ -93,7 +96,7 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
             return;
 
         mListingsRequested = true;
-        mListingsView.showSpinner(null);
+        mMainView.showSpinner(null);
         requestData();
     }
 
@@ -192,7 +195,7 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
 
     @Subscribe
     public void onListingsLoaded(ListingsLoadedEvent event) {
-        mListingsView.dismissSpinner();
+        mMainView.dismissSpinner();
         if (event.isFailed()) {
             mListingsRequested = false;
             return;
@@ -207,7 +210,7 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
 
     @Subscribe
     public void onUserInfoLoaded(UserInfoLoadedEvent event) {
-        mListingsView.dismissSpinner();
+        mMainView.dismissSpinner();
         if (event.isFailed()) {
             mListingsRequested = false;
             return;
@@ -222,7 +225,7 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
         Votable listing = event.getListing();
 
         if (event.isFailed()) {
-            mListingsView.showToast(R.string.vote_failed);
+            mMainView.showToast(R.string.vote_failed);
             return;
         }
 
@@ -235,7 +238,7 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
         Savable listing = event.getListing();
 
         if (event.isFailed()) {
-            mListingsView.showToast(R.string.save_failed);
+            mMainView.showToast(R.string.save_failed);
             return;
         }
 
@@ -248,13 +251,13 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
         Hideable listing = event.getListing();
 
         if (event.isFailed()) {
-            mListingsView.showToast(R.string.hide_failed);
+            mMainView.showToast(R.string.hide_failed);
             return;
         }
 
         int pos = mListings.indexOf(listing);
         if (event.isToHide()) {
-            mListingsView.showToast(R.string.link_hidden);
+            mMainView.showToast(R.string.link_hidden);
             mListings.remove(pos);
             mListingsView.listingRemovedAt(pos);
         } else {
@@ -311,7 +314,7 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
     @Override
     public void saveLink() {
         if (!mAccessTokenManager.isUserAuthorized()) {
-            mListingsView.showToast(R.string.user_required);
+            mMainView.showToast(R.string.user_required);
             return;
         }
 
@@ -322,7 +325,7 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
     @Override
     public void unsaveLink() {
         if (!mAccessTokenManager.isUserAuthorized()) {
-            mListingsView.showToast(R.string.user_required);
+            mMainView.showToast(R.string.user_required);
             return;
         }
 
@@ -363,7 +366,7 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
     @Override
     public void hideLink() {
         if (!mAccessTokenManager.isUserAuthorized()) {
-            mListingsView.showToast(R.string.user_required);
+            mMainView.showToast(R.string.user_required);
             return;
         }
 
@@ -374,7 +377,7 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
     @Override
     public void unhideLink() {
         if (!mAccessTokenManager.isUserAuthorized()) {
-            mListingsView.showToast(R.string.user_required);
+            mMainView.showToast(R.string.user_required);
             return;
         }
 
@@ -385,12 +388,12 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
     @Override
     public void reportLink() {
         if (!mAccessTokenManager.isUserAuthorized()) {
-            mListingsView.showToast(R.string.user_required);
+            mMainView.showToast(R.string.user_required);
             return;
         }
 
         Link link = (Link) mListingSelected;
-        mListingsView.showToast(R.string.implementation_pending);
+        mMainView.showToast(R.string.implementation_pending);
     }
 
     @Override
@@ -424,7 +427,7 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
     public void openReplyView() {
         Comment comment = (Comment) mListingSelected;
         if (comment.isArchived()) {
-            mListingsView.showToast(R.string.listing_archived);
+            mMainView.showToast(R.string.listing_archived);
         } else {
             mListingsView.openReplyView(comment);
         }
@@ -447,7 +450,7 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
     @Override
     public void saveComment() {
         if (!mAccessTokenManager.isUserAuthorized()) {
-            mListingsView.showToast(R.string.user_required);
+            mMainView.showToast(R.string.user_required);
             return;
         }
 
@@ -458,7 +461,7 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
     @Override
     public void unsaveComment() {
         if (!mAccessTokenManager.isUserAuthorized()) {
-            mListingsView.showToast(R.string.user_required);
+            mMainView.showToast(R.string.user_required);
             return;
         }
 
@@ -492,12 +495,12 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
     @Override
     public void reportComment() {
         if (!mAccessTokenManager.isUserAuthorized()) {
-            mListingsView.showToast(R.string.user_required);
+            mMainView.showToast(R.string.user_required);
             return;
         }
 
         Comment comment = (Comment) mListingSelected;
-        mListingsView.showToast(R.string.implementation_pending);
+        mMainView.showToast(R.string.implementation_pending);
     }
 
     @Override
@@ -514,9 +517,9 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
     private void vote(int dir) {
         Listing listing = mListingSelected;
         if (((Archivable) listing).isArchived()) {
-            mListingsView.showToast(R.string.listing_archived);
+            mMainView.showToast(R.string.listing_archived);
         } else if (!mAccessTokenManager.isUserAuthorized()) {
-            mListingsView.showToast(R.string.user_required);
+            mMainView.showToast(R.string.user_required);
         } else {
             Votable votable = (Votable) listing;
             mBus.post(new VoteEvent(votable, listing.getKind(), dir));

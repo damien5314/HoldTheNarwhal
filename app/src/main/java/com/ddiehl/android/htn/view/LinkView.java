@@ -9,7 +9,7 @@ import android.view.View;
 
 import com.ddiehl.reddit.listings.Link;
 
-public interface LinkView extends BaseView {
+public interface LinkView {
 
     void showLinkContextMenu(ContextMenu menu, View v, Link link);
     void openLinkInWebView(Link link);

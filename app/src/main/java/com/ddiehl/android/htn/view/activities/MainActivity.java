@@ -6,6 +6,7 @@ package com.ddiehl.android.htn.view.activities;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -13,6 +14,8 @@ import android.app.ProgressDialog;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
@@ -29,20 +32,16 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.ddiehl.android.htn.AccessTokenManager;
 import com.ddiehl.android.htn.Analytics;
 import com.ddiehl.android.htn.BusProvider;
-import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
-import com.ddiehl.android.htn.SettingsManager;
-import com.ddiehl.android.htn.events.requests.UserSignOutEvent;
 import com.ddiehl.android.htn.events.responses.UserAuthCodeReceivedEvent;
-import com.ddiehl.android.htn.io.RedditService;
 import com.ddiehl.android.htn.io.RedditServiceAuth;
 import com.ddiehl.android.htn.presenter.MainPresenter;
 import com.ddiehl.android.htn.presenter.MainPresenterImpl;
 import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.android.htn.view.dialogs.ConfirmSignOutDialog;
+import com.ddiehl.android.htn.view.dialogs.NsfwWarningDialog;
 import com.ddiehl.android.htn.view.fragments.SettingsFragment;
 import com.ddiehl.android.htn.view.fragments.SubredditFragment;
 import com.ddiehl.android.htn.view.fragments.UserProfileFragment;
@@ -59,16 +58,15 @@ import butterknife.OnClick;
 import hugo.weaving.DebugLog;
 
 public class MainActivity extends AppCompatActivity
-        implements MainView, ConfirmSignOutDialog.Callbacks, NavigationView.OnNavigationItemSelectedListener {
+        implements MainView, ConfirmSignOutDialog.Callbacks,
+        NavigationView.OnNavigationItemSelectedListener {
     public static final String TAG = MainActivity.class.getSimpleName();
 
+    public static final int REQUEST_NSFW_WARNING = 0x1;
+    private static final String DIALOG_NSFW_WARNING = "dialog_nsfw_warning";
     private static final String DIALOG_CONFIRM_SIGN_OUT = "dialog_confirm_sign_out";
 
-    private Bus mBus = BusProvider.getInstance();
-    private Analytics mAnalytics = Analytics.getInstance();
-    private MainPresenter mMainPresenter;
-
-    private ProgressDialog mProgressBar;
+    private ProgressDialog mLoadingOverlay;
     private Dialog mSubredditNavigationDialog;
     private Dialog mAnalyticsRequestDialog;
 
@@ -79,24 +77,25 @@ public class MainActivity extends AppCompatActivity
     @Bind(R.id.sign_out_button) View mSignOutView;
     @Bind(R.id.navigation_drawer_header_image) ImageView mHeaderImage;
 
-    private AccessTokenManager mAccessTokenManager;
-    private IdentityManager mIdentityManager;
-    private SettingsManager mSettingsManager;
-    private RedditService mAuthProxy;
+    private Bus mBus = BusProvider.getInstance();
+    private Analytics mAnalytics = Analytics.getInstance();
+    private MainPresenter mMainPresenter;
+
+    private UserIdentity mCurrentUser;
 
     @Override @DebugLog
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
+        
+        setMirroredIcons();
 
-        // Configure Flurry
-        mAnalytics.initializeFlurry(this);
-
-        ButterKnife.bind(MainActivity.this);
-        mNavigationView.setNavigationItemSelectedListener(MainActivity.this);
+        // Listen to events from the navigation drawer
+        mNavigationView.setNavigationItemSelectedListener(this);
 
         // Initialize app toolbar
-        Toolbar toolbar = ButterKnife.findById(MainActivity.this, R.id.toolbar);
+        Toolbar toolbar = ButterKnife.findById(this, R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -104,43 +103,8 @@ public class MainActivity extends AppCompatActivity
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        mMainPresenter = new MainPresenterImpl(MainActivity.this, MainActivity.this);
-        mAccessTokenManager = AccessTokenManager.getInstance(MainActivity.this);
-        mIdentityManager = IdentityManager.getInstance(MainActivity.this);
-        mSettingsManager = SettingsManager.getInstance(MainActivity.this);
-        mAuthProxy = RedditServiceAuth.getInstance(MainActivity.this);
-
-        // Configure MoPub
-//        new MoPubConversionTracker().reportAppOpen(MainActivity.this);
-//        MoPub.setLocationAwareness(MoPub.LocationAwareness.DISABLED);
-//        InMobi.initialize(this, "7a754516768e4a0e9c3af91f1fc9ebea");
-
-        setMirroredIcons();
-    }
-
-    private void setMirroredIcons() {
-        if (Build.VERSION.SDK_INT >= 19) {
-            int[] ids = new int[] {
-                    R.drawable.ic_action_refresh,
-                    R.drawable.ic_sign_out,
-                    R.drawable.ic_action_reply,
-                    R.drawable.ic_action_save,
-                    R.drawable.ic_action_share,
-                    R.drawable.ic_action_show_comments,
-                    R.drawable.ic_change_sort,
-                    R.drawable.ic_change_timespan,
-                    R.drawable.ic_navigation_go,
-                    R.drawable.ic_saved,
-                    R.drawable.ic_saved_dark
-            };
-
-            for (int id : ids) {
-                Drawable res = ContextCompat.getDrawable(this, id);
-                if (res != null) {
-                    res.setAutoMirrored(true);
-                }
-            }
-        }
+        // Initialize dependencies
+        mMainPresenter = new MainPresenterImpl(this, this);
     }
 
     @Override
@@ -149,55 +113,41 @@ public class MainActivity extends AppCompatActivity
 
         mBus.register(this);
         mBus.register(mMainPresenter);
-        mBus.register(mAccessTokenManager);
-        mBus.register(mIdentityManager);
-        mBus.register(mSettingsManager);
-        mBus.register(mAuthProxy);
-        mBus.register(mAnalytics);
-        updateUserIdentity();
-        if (!showAnalyticsRequestIfNeverShown()) {
-            mAnalytics.startSession();
-            showSubredditIfEmpty(null);
-        }
+
+        mMainPresenter.onApplicationStart();
     }
 
     @Override
     protected void onStop() {
-        mAnalytics.endSession();
+        mMainPresenter.onApplicationStop();
+
         mBus.unregister(this);
         mBus.unregister(mMainPresenter);
-        mBus.unregister(mAccessTokenManager);
-        mBus.unregister(mIdentityManager);
-        mBus.unregister(mSettingsManager);
-        mBus.unregister(mAuthProxy);
-        mBus.unregister(mAnalytics);
 
         super.onStop();
     }
 
     @Override
-    public void updateUserIdentity() {
-        UserIdentity identity = mMainPresenter.getAuthorizedUser();
+    public void updateUserIdentity(UserIdentity identity) {
+//        UserIdentity identity = mMainPresenter.getAuthorizedUser();
+        mCurrentUser = identity;
         mAccountNameView.setText(identity == null ?
                 getString(R.string.account_name_unauthorized) : identity.getName());
         mSignOutView.setVisibility(identity == null ? View.GONE : View.VISIBLE);
         mGoldIndicator.setVisibility(identity != null && identity.isGold() ? View.VISIBLE : View.GONE);
-        updateNavigationItems();
-        mAnalytics.setUserIdentity(identity == null ? null : identity.getName());
+    }
+
+    @Override
+    public void updateNavigationItems(boolean isLoggedIn) {
+        Menu menu = mNavigationView.getMenu();
+        menu.findItem(R.id.drawer_log_in).setVisible(!isLoggedIn);
+        menu.findItem(R.id.drawer_user_profile).setVisible(isLoggedIn);
+        menu.findItem(R.id.drawer_subreddits).setVisible(isLoggedIn);
     }
 
     @Override
     public void closeNavigationDrawer() {
         mDrawerLayout.closeDrawer(GravityCompat.START);
-    }
-
-    private void updateNavigationItems() {
-        Menu menu = mNavigationView.getMenu();
-        UserIdentity user = mMainPresenter.getAuthorizedUser();
-        boolean b = user != null && user.getName() != null;
-        menu.findItem(R.id.drawer_log_in).setVisible(!b);
-        menu.findItem(R.id.drawer_user_profile).setVisible(b);
-        menu.findItem(R.id.drawer_subreddits).setVisible(b);
     }
 
     @Override
@@ -212,7 +162,8 @@ public class MainActivity extends AppCompatActivity
                 mAnalytics.logDrawerLogIn();
                 return true;
             case R.id.drawer_user_profile:
-                showUserProfile();
+                String name = mCurrentUser.getName();
+                showUserProfile(name);
                 mAnalytics.logDrawerUserProfile();
                 return true;
             case R.id.drawer_subreddits:
@@ -242,18 +193,21 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void showUserProfile() {
-        UserIdentity user = mMainPresenter.getAuthorizedUser();
-        if (user != null) {
-            String username = user.getName();
-            showUserProfile("summary", username);
-        } else {
-            mBus.post(new UserSignOutEvent());
-        }
+    public void showUserProfile(@NonNull String username) {
+        showUserProfile("summary", username);
+
+        // This is not view logic
+//        UserIdentity user = mMainPresenter.getAuthorizedUser();
+//        if (user != null) {
+//            String username = user.getName();
+//            showUserProfile("summary", username);
+//        } else {
+//            mBus.post(new UserSignOutEvent());
+//        }
     }
 
     @Override
-    public void showUserProfile(String show, String username) {
+    public void showUserProfile(@NonNull String show, @NonNull String username) {
         closeNavigationDrawer();
         mMainPresenter.setUsernameContext(username);
         Fragment f = UserProfileFragment.newInstance(show, username);
@@ -268,7 +222,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void showWebViewForURL(String url) {
+    public void showWebViewForURL(@NonNull String url) {
         closeNavigationDrawer();
         Fragment f = WebViewFragment.newInstance(url);
         showFragment(f);
@@ -297,14 +251,14 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void showSpinner(String message) {
-        if (mProgressBar == null) {
-            mProgressBar = new ProgressDialog(this, R.style.ProgressDialog);
-            mProgressBar.setCancelable(true);
-            mProgressBar.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+    public void showSpinner(@NonNull String message) {
+        if (mLoadingOverlay == null) {
+            mLoadingOverlay = new ProgressDialog(this, R.style.ProgressDialog);
+            mLoadingOverlay.setCancelable(true);
+            mLoadingOverlay.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         }
-        mProgressBar.setMessage(message);
-        mProgressBar.show();
+        mLoadingOverlay.setMessage(message);
+        mLoadingOverlay.show();
     }
 
     @Override
@@ -314,8 +268,8 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void dismissSpinner() {
-        if (mProgressBar != null && mProgressBar.isShowing()) {
-            mProgressBar.dismiss();
+        if (mLoadingOverlay != null && mLoadingOverlay.isShowing()) {
+            mLoadingOverlay.dismiss();
         }
     }
 
@@ -325,11 +279,11 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void showToast(String s) {
-        Snackbar.make(mDrawerLayout, s, Snackbar.LENGTH_SHORT).show();
+    public void showToast(@NonNull String msg) {
+        Snackbar.make(mDrawerLayout, msg, Snackbar.LENGTH_SHORT).show();
     }
 
-    @Subscribe
+    @Subscribe @SuppressWarnings("unused")
     public void onUserAuthCodeReceived(UserAuthCodeReceivedEvent event) {
         getFragmentManager().popBackStack();
     }
@@ -345,7 +299,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onSubredditInfoLoaded(Subreddit subredditInfo) {
+    public void onSubredditInfoLoaded(@NonNull Subreddit subredditInfo) {
         loadImageIntoDrawerHeader(subredditInfo.getHeaderImageUrl());
     }
 
@@ -354,6 +308,13 @@ public class MainActivity extends AppCompatActivity
         Picasso.with(this)
                 .load(url)
                 .into(mHeaderImage);
+    }
+
+    @Override
+    public void showNsfwWarningDialog() {
+        DialogFragment dialog = new NsfwWarningDialog();
+        dialog.setTargetFragment(getCurrentDisplayedFragment(), REQUEST_NSFW_WARNING);
+        dialog.show(getFragmentManager(), DIALOG_NSFW_WARNING);
     }
 
     public void showSettings() {
@@ -381,81 +342,60 @@ public class MainActivity extends AppCompatActivity
             mSubredditNavigationDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             mSubredditNavigationDialog.setContentView(R.layout.navigate_to_subreddit_edit_text);
             ButterKnife.findById(mSubredditNavigationDialog, R.id.drawer_navigate_to_subreddit_go)
-                    .setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            EditText vInput = ButterKnife.findById(mSubredditNavigationDialog,
-                                    R.id.drawer_navigate_to_subreddit_text);
-                            String inputSubreddit = vInput.getText().toString();
-                            if (inputSubreddit.equals("")) return;
+                    .setOnClickListener((v) -> {
+                        EditText vInput = ButterKnife.findById(mSubredditNavigationDialog,
+                                R.id.drawer_navigate_to_subreddit_text);
+                        String inputSubreddit = vInput.getText().toString();
+                        if (inputSubreddit.equals("")) return;
 
-                            inputSubreddit = inputSubreddit.substring(3);
-                            inputSubreddit = inputSubreddit.trim();
-                            vInput.setText("");
-                            mSubredditNavigationDialog.dismiss();
-                            showSubreddit(inputSubreddit);
-                        }
+                        inputSubreddit = inputSubreddit.substring(3);
+                        inputSubreddit = inputSubreddit.trim();
+                        vInput.setText("");
+                        mSubredditNavigationDialog.dismiss();
+                        showSubreddit(inputSubreddit);
                     });
         }
         mDrawerLayout.closeDrawer(GravityCompat.START);
         mSubredditNavigationDialog.show();
     }
 
-    private void showSubredditIfEmpty(String subreddit) {
+    @Override
+    public void showSubredditIfEmpty(@Nullable String subreddit) {
         FragmentManager fm = getFragmentManager();
-        Fragment f = fm.findFragmentById(R.id.fragment_container);
+        Fragment f = getCurrentDisplayedFragment();
         if (f == null) {
             showSubreddit(subreddit);
         }
     }
 
-    private void showFragment(Fragment f) {
-        FragmentManager fm = getFragmentManager();
-        FragmentTransaction ft = fm.beginTransaction().replace(R.id.fragment_container, f);
-
-        Fragment cf = fm.findFragmentById(R.id.fragment_container);
-        if (cf != null) {
-            ft.addToBackStack(null);
-        }
-
-        ft.commit();
-    }
-
-    private boolean showAnalyticsRequestIfNeverShown() {
-        if (!mSettingsManager.askedForAnalytics()) {
-            showAnalyticsRequestDialog();
-            return true;
-        }
-        return false;
-    }
-
-    private void showAnalyticsRequestDialog() {
+    @Override
+    public void showAnalyticsRequestDialog() {
         if (mAnalyticsRequestDialog == null) {
             mAnalyticsRequestDialog = new AlertDialog.Builder(this)
                     .setTitle(R.string.dialog_analytics_title)
                     .setMessage(R.string.dialog_analytics_message)
                     .setNeutralButton(R.string.dialog_analytics_accept,
-                            (dialog, which) -> onAnalyticsAccepted())
+                            (dialog, which) -> mMainPresenter.onAnalyticsAccepted())
                     .setNegativeButton(R.string.dialog_analytics_decline,
-                            (dialog, which) -> onAnalyticsDeclined())
+                            (dialog, which) -> mMainPresenter.onAnalyticsDeclined())
                     .create();
         }
         mAnalyticsRequestDialog.show();
     }
 
-    private void onAnalyticsAccepted() {
-        mSettingsManager.setAskedForAnalytics(true);
-        mSettingsManager.setAnalyticsEnabled(true);
-        mAnalytics.startSession();
-        showSubredditIfEmpty(null);
+    @Override
+    public void onAnalyticsAccepted() {
+        mMainPresenter.onAnalyticsAccepted();
     }
 
-    private void onAnalyticsDeclined() {
-        mSettingsManager.setAskedForAnalytics(true);
-        mSettingsManager.setAnalyticsEnabled(false);
-        mAnalytics.endSession();
-        showSubredditIfEmpty(null);
+    @Override
+    public void onAnalyticsDeclined() {
+        mMainPresenter.onAnalyticsDeclined();
     }
+
+    /////////////////
+    // Private API //
+    /////////////////
 
     private void dismissAnalyticsRequestDialog() {
         if (mAnalyticsRequestDialog != null && mAnalyticsRequestDialog.isShowing()) {
@@ -463,4 +403,44 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    private void setMirroredIcons() {
+        if (Build.VERSION.SDK_INT >= 19) {
+            int[] ids = new int[] {
+                    R.drawable.ic_action_refresh,
+                    R.drawable.ic_sign_out,
+                    R.drawable.ic_action_reply,
+                    R.drawable.ic_action_save,
+                    R.drawable.ic_action_share,
+                    R.drawable.ic_action_show_comments,
+                    R.drawable.ic_change_sort,
+                    R.drawable.ic_change_timespan,
+                    R.drawable.ic_navigation_go,
+                    R.drawable.ic_saved,
+                    R.drawable.ic_saved_dark
+            };
+
+            for (int id : ids) {
+                Drawable res = ContextCompat.getDrawable(this, id);
+                if (res != null) {
+                    res.setAutoMirrored(true);
+                }
+            }
+        }
+    }
+
+    private Fragment getCurrentDisplayedFragment() {
+        return getFragmentManager().findFragmentById(R.id.fragment_container);
+    }
+
+    private void showFragment(Fragment f) {
+        FragmentManager fm = getFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction().replace(R.id.fragment_container, f);
+
+        Fragment cf = getCurrentDisplayedFragment();
+        if (cf != null) {
+            ft.addToBackStack(null);
+        }
+
+        ft.commit();
+    }
 }

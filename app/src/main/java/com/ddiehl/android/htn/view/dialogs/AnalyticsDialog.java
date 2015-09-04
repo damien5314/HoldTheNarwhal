@@ -14,6 +14,11 @@ import com.ddiehl.android.htn.R;
 
 public class AnalyticsDialog extends DialogFragment {
 
+    public interface Callbacks {
+        void onAnalyticsAccepted();
+        void onAnalyticsDeclined();
+    }
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         return new AlertDialog.Builder(getActivity())

@@ -9,7 +9,7 @@ import android.view.View;
 
 import com.ddiehl.reddit.listings.Comment;
 
-public interface CommentView extends BaseView {
+public interface CommentView {
 
     void showCommentContextMenu(ContextMenu menu, View v, Comment comment);
     void showCommentThread(String subreddit, String linkId, String commentId);

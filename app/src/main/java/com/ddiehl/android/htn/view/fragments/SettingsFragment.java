@@ -26,11 +26,9 @@ import com.ddiehl.android.htn.events.requests.GetUserSettingsEvent;
 import com.ddiehl.android.htn.events.requests.UserSignOutEvent;
 import com.ddiehl.android.htn.events.responses.UserAuthorizedEvent;
 import com.ddiehl.android.htn.events.responses.UserSettingsRetrievedEvent;
-import com.ddiehl.android.htn.view.BaseView;
 import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.reddit.identity.UserIdentity;
 import com.ddiehl.reddit.identity.UserSettings;
-import com.ddiehl.reddit.listings.Subreddit;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -38,12 +36,13 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class SettingsFragment extends PreferenceFragment
-        implements BaseView, SharedPreferences.OnSharedPreferenceChangeListener {
+        implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private Bus mBus = BusProvider.getInstance();
     private AccessTokenManager mAccessTokenManager;
 //    private IdentityManager mIdentityManager;
     private SettingsManager mSettingsManager;
+    private MainView mMainView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -52,6 +51,7 @@ public class SettingsFragment extends PreferenceFragment
         setHasOptionsMenu(true);
         mAccessTokenManager = AccessTokenManager.getInstance(getActivity());
         mSettingsManager = SettingsManager.getInstance(getActivity());
+        mMainView = (MainView) getActivity();
 
         getPreferenceManager().setSharedPreferencesName(SettingsManager.PREFS_USER);
         addDefaultPreferences();
@@ -129,14 +129,14 @@ public class SettingsFragment extends PreferenceFragment
     }
 
     private void getData() {
-        showSpinner(null);
+        mMainView.showSpinner(null);
         mBus.post(new GetUserSettingsEvent());
     }
 
     @Subscribe
     public void onSettingsRetrieved(UserSettingsRetrievedEvent event) {
         if (event.isFailed()) {
-            dismissSpinner();
+            mMainView.dismissSpinner();
             return;
         }
 
@@ -144,7 +144,7 @@ public class SettingsFragment extends PreferenceFragment
         mSettingsManager.saveUserSettings(settings);
 
         refresh(false);
-        dismissSpinner();
+        mMainView.dismissSpinner();
     }
 
     @Subscribe @SuppressWarnings("unused")
@@ -200,43 +200,6 @@ public class SettingsFragment extends PreferenceFragment
                 return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    // TODO How can get rid of code duplication in the below?
-
-    @Override
-    public void setTitle(CharSequence title) {
-        getActivity().setTitle(title);
-    }
-
-    @Override
-    public void showSpinner(String msg) {
-        ((MainView) getActivity()).showSpinner(msg);
-    }
-
-    @Override
-    public void showSpinner(int resId) {
-        ((MainView) getActivity()).showSpinner(resId);
-    }
-
-    @Override
-    public void dismissSpinner() {
-        ((MainView) getActivity()).dismissSpinner();
-    }
-
-    @Override
-    public void showToast(String msg) {
-        ((MainView) getActivity()).showToast(msg);
-    }
-
-    @Override
-    public void showToast(int resId) {
-        ((MainView) getActivity()).showToast(resId);
-    }
-
-    @Override
-    public void onSubredditInfoLoaded(Subreddit subredditInfo) {
-        ((MainView) getActivity()).loadImageIntoDrawerHeader(subredditInfo.getHeaderImageUrl());
     }
 
     private void showAboutAppHtml() {

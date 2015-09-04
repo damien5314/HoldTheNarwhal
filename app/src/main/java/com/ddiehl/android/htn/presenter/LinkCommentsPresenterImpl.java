@@ -23,14 +23,15 @@ import com.ddiehl.android.htn.events.responses.MoreChildrenLoadedEvent;
 import com.ddiehl.android.htn.events.responses.SaveSubmittedEvent;
 import com.ddiehl.android.htn.events.responses.UserIdentitySavedEvent;
 import com.ddiehl.android.htn.events.responses.VoteSubmittedEvent;
+import com.ddiehl.android.htn.model.CommentBank;
+import com.ddiehl.android.htn.model.CommentBankList;
 import com.ddiehl.android.htn.view.LinkCommentsView;
+import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.reddit.Archivable;
 import com.ddiehl.reddit.Savable;
 import com.ddiehl.reddit.Votable;
 import com.ddiehl.reddit.listings.AbsComment;
 import com.ddiehl.reddit.listings.Comment;
-import com.ddiehl.android.htn.model.CommentBank;
-import com.ddiehl.android.htn.model.CommentBankList;
 import com.ddiehl.reddit.listings.CommentStub;
 import com.ddiehl.reddit.listings.Link;
 import com.ddiehl.reddit.listings.Listing;
@@ -45,6 +46,7 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
 
     private Context mContext;
 
+    private MainView mMainView;
     private LinkCommentsView mLinkCommentsView;
     private Link mLinkContext;
     private CommentBank mCommentBank;
@@ -61,9 +63,10 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
 
     private Listing mListingSelected;
 
-    public LinkCommentsPresenterImpl(Context context, LinkCommentsView view,
+    public LinkCommentsPresenterImpl(Context context, MainView main, LinkCommentsView view,
                                      String subreddit, String linkId, String commentId) {
         mContext = context.getApplicationContext();
+        mMainView = main;
         mLinkCommentsView = view;
         mCommentBank = new CommentBankList();
         mBus = BusProvider.getInstance();
@@ -78,19 +81,19 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
 
     @Override
     public void getComments() {
-        mLinkCommentsView.showSpinner(null);
+        mMainView.showSpinner(null);
         mBus.post(new LoadLinkCommentsEvent(mSubreddit, mLinkId, mSort, mCommentId));
     }
 
     @Subscribe
     public void onCommentsLoaded(LinkCommentsLoadedEvent event) {
-        mLinkCommentsView.dismissSpinner();
+        mMainView.dismissSpinner();
         if (event.isFailed()) {
             return;
         }
 
         mLinkContext = event.getLink();
-        mLinkCommentsView.setTitle(mLinkContext.getTitle());
+        mMainView.setTitle(mLinkContext.getTitle());
         List<Listing> comments = event.getComments();
         AbsComment.Utils.flattenCommentList(comments);
         mCommentBank.clear();
@@ -102,7 +105,7 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
 
     @Override
     public void getMoreChildren(CommentStub comment) {
-        mLinkCommentsView.showSpinner(null);
+        mMainView.showSpinner(null);
         List<String> children = comment.getChildren();
         // Truncate list of children to 20
         children = children.subList(0, Math.min(MAX_CHILDREN_PER_REQUEST, children.size()));
@@ -111,7 +114,7 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
 
     @Subscribe
     public void onMoreChildrenLoaded(MoreChildrenLoadedEvent event) {
-        mLinkCommentsView.dismissSpinner();
+        mMainView.dismissSpinner();
         if (event.isFailed()) {
             return;
         }
@@ -228,7 +231,7 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
     @Override
     public void saveLink() {
         if (!mAccessTokenManager.isUserAuthorized()) {
-            mLinkCommentsView.showToast(R.string.user_required);
+            mMainView.showToast(R.string.user_required);
             return;
         }
 
@@ -238,7 +241,7 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
     @Override
     public void unsaveLink() {
         if (!mAccessTokenManager.isUserAuthorized()) {
-            mLinkCommentsView.showToast(R.string.user_required);
+            mMainView.showToast(R.string.user_required);
             return;
         }
 
@@ -273,7 +276,7 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
     @Override
     public void hideLink() {
         if (!mAccessTokenManager.isUserAuthorized()) {
-            mLinkCommentsView.showToast(R.string.user_required);
+            mMainView.showToast(R.string.user_required);
             return;
         }
 
@@ -283,7 +286,7 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
     @Override
     public void unhideLink() {
         if (!mAccessTokenManager.isUserAuthorized()) {
-            mLinkCommentsView.showToast(R.string.user_required);
+            mMainView.showToast(R.string.user_required);
             return;
         }
 
@@ -293,11 +296,11 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
     @Override
     public void reportLink() {
         if (!mAccessTokenManager.isUserAuthorized()) {
-            mLinkCommentsView.showToast(R.string.user_required);
+            mMainView.showToast(R.string.user_required);
             return;
         }
 
-        mLinkCommentsView.showToast(R.string.implementation_pending);
+        mMainView.showToast(R.string.implementation_pending);
     }
 
     @Override
@@ -328,7 +331,7 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
         Votable listing = event.getListing();
 
         if (event.isFailed()) {
-            mLinkCommentsView.showToast(R.string.vote_failed);
+            mMainView.showToast(R.string.vote_failed);
             return;
         }
 
@@ -345,7 +348,7 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
         Savable listing = event.getListing();
 
         if (event.isFailed()) {
-            mLinkCommentsView.showToast(R.string.save_failed);
+            mMainView.showToast(R.string.save_failed);
             return;
         }
 
@@ -367,7 +370,7 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
     public void openReplyView() {
         Comment comment = (Comment) mListingSelected;
         if (comment.isArchived()) {
-            mLinkCommentsView.showToast(R.string.listing_archived);
+            mMainView.showToast(R.string.listing_archived);
         } else {
             mLinkCommentsView.openReplyView(comment);
         }
@@ -390,7 +393,7 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
     @Override
     public void saveComment() {
         if (!mAccessTokenManager.isUserAuthorized()) {
-            mLinkCommentsView.showToast(R.string.user_required);
+            mMainView.showToast(R.string.user_required);
             return;
         }
 
@@ -401,7 +404,7 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
     @Override
     public void unsaveComment() {
         if (!mAccessTokenManager.isUserAuthorized()) {
-            mLinkCommentsView.showToast(R.string.user_required);
+            mMainView.showToast(R.string.user_required);
             return;
         }
 
@@ -435,12 +438,12 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
     @Override
     public void reportComment() {
         if (!mAccessTokenManager.isUserAuthorized()) {
-            mLinkCommentsView.showToast(R.string.user_required);
+            mMainView.showToast(R.string.user_required);
             return;
         }
 
         Comment comment = (Comment) mListingSelected;
-        mLinkCommentsView.showToast(R.string.implementation_pending);
+        mMainView.showToast(R.string.implementation_pending);
     }
 
     @Override
@@ -451,9 +454,9 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
     private void vote(int dir) {
         Listing listing = mListingSelected;
         if (((Archivable) listing).isArchived()) {
-            mLinkCommentsView.showToast(R.string.listing_archived);
+            mMainView.showToast(R.string.listing_archived);
         } else if (!mAccessTokenManager.isUserAuthorized()) {
-            mLinkCommentsView.showToast(R.string.user_required);
+            mMainView.showToast(R.string.user_required);
         } else {
             Votable votable = (Votable) listing;
             mBus.post(new VoteEvent(votable, listing.getKind(), dir));

@@ -35,7 +35,8 @@ public class SubredditFragment extends AbsListingsFragment {
 
         Bundle args = getArguments();
         String subreddit = args.getString(ARG_SUBREDDIT);
-        mListingsPresenter = new SubredditPresenter(getActivity(), this, subreddit, "hot", "all");
+        mListingsPresenter = new SubredditPresenter(getActivity(), mMainView, this,
+                subreddit, "hot", "all");
         mListingsAdapter = new ListingsAdapter(mListingsPresenter);
     }
 
@@ -52,7 +53,6 @@ public class SubredditFragment extends AbsListingsFragment {
         updateTitle();
     }
 
-    @Override
     public void updateTitle() {
         String subreddit = mListingsPresenter.getSubreddit();
         if (subreddit != null) {
@@ -61,9 +61,9 @@ public class SubredditFragment extends AbsListingsFragment {
                     subreddit = ((Link) mListingsPresenter.getListing(0)).getSubreddit();
                 }
             }
-            setTitle(String.format(getString(R.string.link_subreddit), subreddit));
+            mMainView.setTitle(String.format(getString(R.string.link_subreddit), subreddit));
         } else {
-            setTitle(getString(R.string.front_page_title));
+            mMainView.setTitle(getString(R.string.front_page_title));
         }
     }
 

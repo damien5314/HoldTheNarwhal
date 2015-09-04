@@ -90,7 +90,8 @@ public class UserProfileFragment extends AbsListingsFragment {
         Bundle args = getArguments();
         String show = args.getString(ARG_SHOW);
         String username = args.getString(ARG_USERNAME);
-        mListingsPresenter = new UserProfilePresenter(getActivity(), this, show, username, "new", "all");
+        mListingsPresenter = new UserProfilePresenter(getActivity(), mMainView, this,
+                show, username, "new", "all");
         mListingsAdapter = new ListingsAdapter(mListingsPresenter);
     }
 
@@ -111,7 +112,7 @@ public class UserProfileFragment extends AbsListingsFragment {
         mFriendButtonLayout.setVisibility(View.GONE);
         mFriendNoteLayout.setVisibility(View.GONE);
         mFriendNoteSave.setOnClickListener((view) -> {
-            showSpinner(null);
+            mMainView.showSpinner(null);
             String username = mListingsPresenter.getUsernameContext();
             String note = mFriendNote.getText().toString();
             mBus.post(new FriendNoteSaveEvent(username, note));
@@ -133,7 +134,7 @@ public class UserProfileFragment extends AbsListingsFragment {
 
     @Subscribe
     public void onUserInfoLoaded(UserInfoLoadedEvent event) {
-        dismissSpinner();
+        mMainView.dismissSpinner();
         if (event.isFailed()) {
             return;
         }
@@ -160,7 +161,7 @@ public class UserProfileFragment extends AbsListingsFragment {
 
     @Subscribe
     public void onFriendInfoLoaded(FriendInfoLoadedEvent event) {
-        dismissSpinner();
+        mMainView.dismissSpinner();
         if (event.isFailed()) {
             return;
         }
@@ -175,7 +176,7 @@ public class UserProfileFragment extends AbsListingsFragment {
 
     @Subscribe
     public void onTrophiesLoaded(TrophiesLoadedEvent event) {
-        dismissSpinner();
+        mMainView.dismissSpinner();
         if (event.isFailed()) {
             return;
         }
@@ -216,9 +217,9 @@ public class UserProfileFragment extends AbsListingsFragment {
 
     @Subscribe
     public void onFriendAdded(FriendAddedEvent event) {
-        dismissSpinner();
+        mMainView.dismissSpinner();
         if (event.isFailed()) {
-            showToast(R.string.user_friend_add_error);
+            mMainView.showToast(R.string.user_friend_add_error);
             return;
         }
         setFriendButtonState(true);
@@ -232,7 +233,7 @@ public class UserProfileFragment extends AbsListingsFragment {
 
     @Subscribe
     public void onFriendDeleted(FriendDeletedEvent event) {
-        dismissSpinner();
+        mMainView.dismissSpinner();
         if (event.isFailed()) {
             return;
         }
@@ -319,31 +320,30 @@ public class UserProfileFragment extends AbsListingsFragment {
         }
     }
 
-    @Override
     public void updateTitle() {
-        setTitle(String.format(getString(R.string.username), mListingsPresenter.getUsernameContext()));
+        mMainView.setTitle(String.format(getString(R.string.username), mListingsPresenter.getUsernameContext()));
     }
 
-    @Override
-    public void showSpinner(String msg) {
-        if (mListingsPresenter.getShow().equals("summary")) {
-            ((MainView) getActivity()).showSpinner(msg);
-            return;
-        }
-        mSwipeRefreshLayout.setRefreshing(true);
-    }
-
-    @Override
-    public void showSpinner(int resId) {
-        this.showSpinner(getString(resId));
-    }
-
-    @Override
-    public void dismissSpinner() {
-        if (mListingsPresenter.getShow().equals("summary")) {
-            ((MainView) getActivity()).dismissSpinner();
-            return;
-        }
-        mSwipeRefreshLayout.setRefreshing(false);
-    }
+//    @Override
+//    public void showSpinner(String msg) {
+//        if (mListingsPresenter.getShow().equals("summary")) {
+//            ((MainView) getActivity()).showSpinner(msg);
+//            return;
+//        }
+//        mSwipeRefreshLayout.setRefreshing(true);
+//    }
+//
+//    @Override
+//    public void showSpinner(int resId) {
+//        this.showSpinner(getString(resId));
+//    }
+//
+//    @Override
+//    public void dismissSpinner() {
+//        if (mListingsPresenter.getShow().equals("summary")) {
+//            ((MainView) getActivity()).dismissSpinner();
+//            return;
+//        }
+//        mSwipeRefreshLayout.setRefreshing(false);
+//    }
 }

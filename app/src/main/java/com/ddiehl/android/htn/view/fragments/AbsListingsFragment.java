@@ -5,7 +5,6 @@
 package com.ddiehl.android.htn.view.fragments;
 
 import android.app.Activity;
-import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
@@ -30,27 +29,25 @@ import com.ddiehl.android.htn.view.activities.MainActivity;
 import com.ddiehl.android.htn.view.adapters.ListingsAdapter;
 import com.ddiehl.android.htn.view.dialogs.ChooseLinkSortDialog;
 import com.ddiehl.android.htn.view.dialogs.ChooseTimespanDialog;
-import com.ddiehl.android.htn.view.dialogs.NsfwWarningDialog;
 import com.ddiehl.reddit.listings.Comment;
 import com.ddiehl.reddit.listings.Link;
 import com.squareup.otto.Bus;
 
 import butterknife.ButterKnife;
 
-public abstract class AbsListingsFragment extends AbsRedditFragment
+public abstract class AbsListingsFragment extends Fragment
         implements ListingsView, SwipeRefreshLayout.OnRefreshListener {
     private static final String TAG = AbsListingsFragment.class.getSimpleName();
 
-    private static final int REQUEST_NSFW_WARNING = 0x1;
     private static final int REQUEST_CHOOSE_SORT = 0x2;
     private static final int REQUEST_CHOOSE_TIMESPAN = 0x3;
-    private static final String DIALOG_NSFW_WARNING = "dialog_nsfw_warning";
     private static final String DIALOG_CHOOSE_SORT = "dialog_choose_sort";
     private static final String DIALOG_CHOOSE_TIMESPAN = "dialog_choose_timespan";
 
     Bus mBus = BusProvider.getInstance();
     Analytics mAnalytics = Analytics.getInstance();
 
+    MainView mMainView;
     ListingsPresenter mListingsPresenter;
     ListingsAdapter mListingsAdapter;
     SwipeRefreshLayout mSwipeRefreshLayout;
@@ -67,6 +64,7 @@ public abstract class AbsListingsFragment extends AbsRedditFragment
         setRetainInstance(true);
         setHasOptionsMenu(true);
         mBus = BusProvider.getInstance();
+        mMainView = (MainView) getActivity();
     }
 
     @Override
@@ -177,7 +175,7 @@ public abstract class AbsListingsFragment extends AbsRedditFragment
                     getActivity().invalidateOptionsMenu();
                 }
                 break;
-            case REQUEST_NSFW_WARNING:
+            case MainActivity.REQUEST_NSFW_WARNING:
                 if (resultCode == Activity.RESULT_OK) {
                     mListingsPresenter.refreshData();
                 }
@@ -382,7 +380,7 @@ public abstract class AbsListingsFragment extends AbsRedditFragment
 
     @Override
     public void openReplyView(Comment comment) {
-        showToast(R.string.implementation_pending);
+        mMainView.showToast(R.string.implementation_pending);
     }
 
     @Override
@@ -415,7 +413,7 @@ public abstract class AbsListingsFragment extends AbsRedditFragment
     @Override
     public void listingsUpdated() {
         mListingsAdapter.notifyDataSetChanged();
-        updateTitle();
+//        mMainView.updateTitle();
     }
 
     @Override
@@ -434,25 +432,18 @@ public abstract class AbsListingsFragment extends AbsRedditFragment
         mAnalytics.logOptionRefresh();
     }
 
-    @Override
-    public void showSpinner(String msg) {
-        mSwipeRefreshLayout.post(() -> mSwipeRefreshLayout.setRefreshing(true));
-    }
-
-    @Override
-    public void showSpinner(int resId) {
-        mSwipeRefreshLayout.post(() -> mSwipeRefreshLayout.setRefreshing(true));
-    }
-
-    @Override
-    public void dismissSpinner() {
-        mSwipeRefreshLayout.setRefreshing(false);
-    }
-
-    @Override
-    public void displayOver18Required() {
-        DialogFragment dialog = new NsfwWarningDialog();
-        dialog.setTargetFragment(this, REQUEST_NSFW_WARNING);
-        dialog.show(getFragmentManager(), DIALOG_NSFW_WARNING);
-    }
+//    @Override
+//    public void showSpinner(String msg) {
+//        mSwipeRefreshLayout.post(() -> mSwipeRefreshLayout.setRefreshing(true));
+//    }
+//
+//    @Override
+//    public void showSpinner(int resId) {
+//        mSwipeRefreshLayout.post(() -> mSwipeRefreshLayout.setRefreshing(true));
+//    }
+//
+//    @Override
+//    public void dismissSpinner() {
+//        mSwipeRefreshLayout.setRefreshing(false);
+//    }
 }
