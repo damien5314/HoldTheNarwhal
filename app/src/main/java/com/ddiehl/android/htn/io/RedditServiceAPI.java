@@ -11,6 +11,7 @@ import com.ddiehl.android.htn.BusProvider;
 import com.ddiehl.android.htn.events.requests.FriendAddEvent;
 import com.ddiehl.android.htn.events.requests.FriendDeleteEvent;
 import com.ddiehl.android.htn.events.requests.FriendNoteSaveEvent;
+import com.ddiehl.android.htn.events.requests.GetSubredditInfoEvent;
 import com.ddiehl.android.htn.events.requests.GetUserIdentityEvent;
 import com.ddiehl.android.htn.events.requests.GetUserSettingsEvent;
 import com.ddiehl.android.htn.events.requests.HideEvent;
@@ -22,7 +23,6 @@ import com.ddiehl.android.htn.events.requests.LoadUserProfileSummaryEvent;
 import com.ddiehl.android.htn.events.requests.ReportEvent;
 import com.ddiehl.android.htn.events.requests.SaveEvent;
 import com.ddiehl.android.htn.events.requests.UpdateUserSettingsEvent;
-import com.ddiehl.android.htn.events.requests.GetSubredditInfoEvent;
 import com.ddiehl.android.htn.events.requests.VoteEvent;
 import com.ddiehl.android.htn.events.responses.FriendAddedEvent;
 import com.ddiehl.android.htn.events.responses.FriendDeletedEvent;
@@ -59,20 +59,20 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.squareup.okhttp.Cache;
 import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
 import com.squareup.otto.Bus;
 
 import java.io.File;
 import java.io.InputStream;
 import java.util.List;
 
-import retrofit.RestAdapter;
-import retrofit.RetrofitError;
-import retrofit.client.OkClient;
-import retrofit.client.Response;
-import retrofit.converter.GsonConverter;
-import retrofit.mime.TypedString;
+import retrofit.GsonConverterFactory;
+import retrofit.Response;
+import retrofit.Retrofit;
+import retrofit.RxJavaCallAdapterFactory;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 
 public class RedditServiceAPI implements RedditService {
     private static final String TAG = RedditServiceAPI.class.getSimpleName();
@@ -90,12 +90,20 @@ public class RedditServiceAPI implements RedditService {
 
     private RedditAPI buildApi() {
         int cacheSize = 10 * 1024 * 1024; // 10 MiB
-        OkHttpClient client = new OkHttpClient()
-                .setCache(new Cache(
-                        new File(mContext.getCacheDir().getAbsolutePath(), "htn-http-cache"),
-                        cacheSize));
-        client.networkInterceptors().add(new StethoInterceptor());
+        OkHttpClient client = new OkHttpClient();
+        File cache = new File(mContext.getCacheDir().getAbsolutePath(), "htn-http-cache");
+        client.setCache(new Cache(cache, cacheSize));
+        client.networkInterceptors().add(new RawResponseInterceptor());
+        client.networkInterceptors().add((chain) -> {
+            Request originalRequest = chain.request();
+            Request newRequest = originalRequest.newBuilder()
+                    .removeHeader("Authorization")
+                    .addHeader("Authorization", "bearer " + getAccessToken())
+                    .build();
+            return chain.proceed(newRequest);
+        });
         client.networkInterceptors().add(new LoggingInterceptor());
+        client.networkInterceptors().add(new StethoInterceptor());
 
         Gson gson = new GsonBuilder()
                 .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
@@ -104,15 +112,11 @@ public class RedditServiceAPI implements RedditService {
                 .registerTypeAdapter(AbsComment.class, new AbsCommentDeserializer())
                 .create();
 
-        RestAdapter restAdapter = new RestAdapter.Builder()
-                .setClient(new OkClient(client))
-                .setEndpoint(ENDPOINT_AUTHORIZED)
-                .setConverter(new GsonConverter(gson))
-                .setRequestInterceptor(request -> {
-                    request.addHeader("User-Agent", RedditService.USER_AGENT);
-                    request.addHeader("Authorization", "bearer " + getAccessToken());
-                    request.addQueryParam("raw_json", "1");
-                })
+        Retrofit restAdapter = new Retrofit.Builder()
+                .client(client)
+                .baseUrl(ENDPOINT_AUTHORIZED)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .build();
 
         return restAdapter.create(RedditAPI.class);
@@ -130,9 +134,10 @@ public class RedditServiceAPI implements RedditService {
     @Override
     public void onGetUserIdentity(GetUserIdentityEvent event) {
         mAPI.getUserIdentity()
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        userIdentity -> mBus.post(new UserIdentityRetrievedEvent(userIdentity)),
+                        response -> mBus.post(new UserIdentityRetrievedEvent(response.body())),
                         error -> {
                             mBus.post(error);
                             mBus.post(new UserIdentityRetrievedEvent(error));
@@ -142,9 +147,10 @@ public class RedditServiceAPI implements RedditService {
     @Override
     public void onGetUserSettings(GetUserSettingsEvent event) {
         mAPI.getUserSettings()
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        settings -> mBus.post(new UserSettingsRetrievedEvent(settings)),
+                        response -> mBus.post(new UserSettingsRetrievedEvent(response.body())),
                         error -> {
                             mBus.post(error);
                             mBus.post(new UserSettingsRetrievedEvent(error));
@@ -154,7 +160,8 @@ public class RedditServiceAPI implements RedditService {
     @Override
     public void onUpdateUserSettings(UpdateUserSettingsEvent event) {
         String json = new Gson().toJson(event.getPrefs());
-        mAPI.updateUserSettings(new TypedString(json))
+        mAPI.updateUserSettings(json)
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         response -> mBus.post(new UserSettingsUpdatedEvent()),
@@ -174,10 +181,11 @@ public class RedditServiceAPI implements RedditService {
         String timespan = event.getTimeSpan();
         String after = event.getAfter();
 
-        mAPI.getLinks(subreddit, sort, timespan, after)
+        mAPI.getLinks(sort, subreddit, timespan, after)
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        linksResponse -> mBus.post(new ListingsLoadedEvent(linksResponse)),
+                        response -> mBus.post(new ListingsLoadedEvent(response.body())),
                         error -> {
                             mBus.post(error);
                             mBus.post(new ListingsLoadedEvent(error));
@@ -195,9 +203,10 @@ public class RedditServiceAPI implements RedditService {
         String commentId = event.getCommentId();
 
         mAPI.getComments(subreddit, article, sort, commentId)
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        listingsList -> mBus.post(new LinkCommentsLoadedEvent(listingsList)),
+                        response -> mBus.post(new LinkCommentsLoadedEvent(response.body())),
                         error -> {
                             mBus.post(error);
                             mBus.post(new LinkCommentsLoadedEvent(error));
@@ -222,9 +231,10 @@ public class RedditServiceAPI implements RedditService {
         childrenString = childrenString.substring(0, Math.max(childrenString.length() - 1, 0));
 
         mAPI.getMoreChildren(link.getName(), childrenString, sort)
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        response -> mBus.post(new MoreChildrenLoadedEvent(parentStub, response)),
+                        response -> mBus.post(new MoreChildrenLoadedEvent(parentStub, response.body())),
                         error -> {
                             mBus.post(error);
                             mBus.post(new MoreChildrenLoadedEvent(error));
@@ -241,10 +251,11 @@ public class RedditServiceAPI implements RedditService {
     // getUserInfo for friend status, karma, create date
     private void getUserInfo(String username) {
         mAPI.getUserInfo(username)
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        listing -> {
-                            UserIdentity user = listing.getUser();
+                        response -> {
+                            UserIdentity user = response.body().getUser();
                             mBus.post(new UserInfoLoadedEvent(user));
                             if (user.isFriend()) {
                                 getFriendInfo(username); // getFriendInfo for friend note
@@ -260,9 +271,10 @@ public class RedditServiceAPI implements RedditService {
     // getUserTrophies for user trophies
     private void getUserTrophies(String username) {
         mAPI.getUserTrophies(username)
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        response -> mBus.post(new TrophiesLoadedEvent(response)),
+                        response -> mBus.post(new TrophiesLoadedEvent(response.body())),
                         error -> {
                             mBus.post(error);
                             mBus.post(new TrophiesLoadedEvent(error));
@@ -272,9 +284,10 @@ public class RedditServiceAPI implements RedditService {
 
     private void getFriendInfo(String username) {
         mAPI.getFriendInfo(username)
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        response -> mBus.post(new FriendInfoLoadedEvent(response)),
+                        response -> mBus.post(new FriendInfoLoadedEvent(response.body())),
                         error -> {
                             mBus.post(error);
                             mBus.post(new FriendInfoLoadedEvent(error));
@@ -291,9 +304,10 @@ public class RedditServiceAPI implements RedditService {
         final String after = event.getAfter();
 
         mAPI.getUserProfile(show, userId, sort, timespan, after)
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        listing -> mBus.post(new ListingsLoadedEvent(listing)),
+                        listing -> mBus.post(new ListingsLoadedEvent(listing.body())),
                         error -> {
                             mBus.post(error);
                             mBus.post(new ListingsLoadedEvent(error));
@@ -305,9 +319,10 @@ public class RedditServiceAPI implements RedditService {
         final String name = event.getSubredditName();
 
         mAPI.getSubredditInfo(name)
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        subreddit -> mBus.post(new SubredditInfoLoadedEvent(subreddit)),
+                        subreddit -> mBus.post(new SubredditInfoLoadedEvent(subreddit.body())),
                         error -> {
                             mBus.post(error);
                             mBus.post(new SubredditInfoLoadedEvent(error));
@@ -324,12 +339,12 @@ public class RedditServiceAPI implements RedditService {
         String fullname = String.format("%s_%s", event.getType(), listing.getId());
 
         mAPI.vote("", fullname, event.getDirection())
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         response -> {
-
                             try {
-                                InputStream in = response.getBody().in();
+                                InputStream in = response.raw().body().byteStream();
                                 if (!BaseUtils.getStringFromInputStream(in).contains("USER_REQUIRED")) {
                                     mBus.post(new VoteSubmittedEvent(listing, event.getDirection()));
                                 }
@@ -355,7 +370,7 @@ public class RedditServiceAPI implements RedditService {
 
         Action1<Response> onSaveSuccess = (response) -> {
             try {
-                InputStream in = response.getBody().in();
+                InputStream in = response.raw().body().byteStream();
                 if (!BaseUtils.getStringFromInputStream(in).contains("USER_REQUIRED")) {
                     mBus.post(new SaveSubmittedEvent(listing, category, toSave));
                 }
@@ -372,10 +387,12 @@ public class RedditServiceAPI implements RedditService {
 
         if (event.isToSave()) { // Save
             mAPI.save("", listing.getName(), event.getCategory())
+                    .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(onSaveSuccess, onSaveFailure);
         } else { // Unsave
             mAPI.unsave("", listing.getName())
+                    .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(onSaveSuccess, onSaveFailure);
         }
@@ -388,7 +405,7 @@ public class RedditServiceAPI implements RedditService {
 
         Action1<Response> onSuccess = (response) -> {
             try {
-                InputStream in = response.getBody().in();
+                InputStream in = response.raw().body().byteStream();
                 if (!BaseUtils.getStringFromInputStream(in).contains("USER_REQUIRED")) {
                     mBus.post(new HideSubmittedEvent(listing, toHide));
                 }
@@ -405,10 +422,12 @@ public class RedditServiceAPI implements RedditService {
 
         if (event.isToHide()) { // Hide
             mAPI.hide("", listing.getName())
+                    .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(onSuccess, onFailure);
         } else { // Unhide
             mAPI.unhide("", listing.getName())
+                    .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(onSuccess, onFailure);
         }
@@ -423,7 +442,8 @@ public class RedditServiceAPI implements RedditService {
     public void onAddFriend(FriendAddEvent event) {
         String username = event.getUsername();
         String json = "{}";
-        mAPI.addFriend(username, new TypedString(json))
+        mAPI.addFriend(username, json)
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         response -> mBus.post(new FriendAddedEvent(username, "")),
@@ -438,12 +458,12 @@ public class RedditServiceAPI implements RedditService {
         String username = event.getUsername();
         String note = event.getNote();
         if (note == null || note.equals("")) {
-            mBus.post(new FriendAddedEvent(RetrofitError.unexpectedError("",
-                    new RuntimeException("User note should be non-empty"))));
+            mBus.post(new FriendAddedEvent(new RuntimeException("User note should be non-empty")));
             return;
         }
         String json = new Gson().toJson(new Friend(note));
-        mAPI.addFriend(username, new TypedString(json))
+        mAPI.addFriend(username, json)
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         response -> mBus.post(new FriendAddedEvent(username, note)),
@@ -457,6 +477,7 @@ public class RedditServiceAPI implements RedditService {
     public void onDeleteFriend(FriendDeleteEvent event) {
         String username = event.getUsername();
         mAPI.deleteFriend(username)
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         response -> mBus.post(new FriendDeletedEvent(username)),

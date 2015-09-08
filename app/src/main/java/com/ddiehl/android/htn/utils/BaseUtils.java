@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
@@ -34,33 +35,22 @@ import java.util.UUID;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import retrofit.RetrofitError;
-
 
 public class BaseUtils {
     private static final String TAG = BaseUtils.class.getSimpleName();
 
-    public static void showError(Context context, RetrofitError error) {
-        Log.e(TAG, "RetrofitError: " + error.getKind().toString());
-        Log.d(TAG, Log.getStackTraceString(error));
-        retrofit.client.Response response = error.getResponse();
-        if (response != null) {
-            switch (response.getStatus()) {
-                default:
-                    Toast.makeText(context, "An error has occurred (" + response.getStatus() + ")",
-                            Toast.LENGTH_LONG).show();
-                    break;
-
-            }
-        }
+    public static void showError(Context context, @Nullable retrofit.Response error) {
+        String code = error == null ? "NULL" : String.valueOf(error.code());
+        Log.d(TAG, String.format("Retrofit error (STATUS %s)", code));
+        Toast.makeText(context,
+                String.format("An error has occurred (%s)", code), Toast.LENGTH_LONG).show();
     }
 
-    public static String getFriendlyError(Context c, RetrofitError error) {
-        retrofit.client.Response response = error.getResponse();
+    public static String getFriendlyError(Context c, @Nullable retrofit.Response response) {
         if (response == null) {
             return c.getString(R.string.error_network_unavailable);
         } else {
-            switch (response.getStatus()) {
+            switch (response.code()) {
                 case 404:
                     return c.getString(R.string.error_404);
                 case 500:
@@ -71,7 +61,7 @@ public class BaseUtils {
                     return c.getString(R.string.error_520);
                 default:
                     String errorMsg = c.getString(R.string.error_xxx);
-                    return String.format(errorMsg, response.getStatus());
+                    return String.format(errorMsg, response.code());
             }
         }
     }

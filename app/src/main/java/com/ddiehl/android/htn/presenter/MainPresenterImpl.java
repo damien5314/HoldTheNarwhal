@@ -7,8 +7,8 @@ package com.ddiehl.android.htn.presenter;
 import android.content.Context;
 import android.util.Log;
 
-import com.ddiehl.android.htn.BusProvider;
 import com.ddiehl.android.htn.Analytics;
+import com.ddiehl.android.htn.BusProvider;
 import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.events.requests.UserSignOutEvent;
@@ -19,7 +19,7 @@ import com.ddiehl.reddit.identity.UserIdentity;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
-import retrofit.RetrofitError;
+import retrofit.Response;
 
 public class MainPresenterImpl implements MainPresenter {
 
@@ -40,9 +40,9 @@ public class MainPresenterImpl implements MainPresenter {
     }
 
     @Subscribe
-    public void onNetworkError(RetrofitError error) {
-        Log.e("HTN", "RetrofitError: " + error.getKind().toString());
-        Log.e("HTN", Log.getStackTraceString(error));
+    public void onNetworkError(Response error) {
+        Log.e("HTN", "Retrofit Error: " + error.raw().message());
+//        Log.e("HTN", Log.getStackTraceString(error));
         mMainView.showToast(BaseUtils.getFriendlyError(mContext, error));
         Analytics.getInstance().logApiError(error);
     }

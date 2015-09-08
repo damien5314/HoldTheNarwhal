@@ -146,12 +146,12 @@ public class SettingsFragment extends PreferenceFragment
         dismissSpinner();
     }
 
-    @Subscribe
+    @Subscribe @SuppressWarnings("unused")
     public void onUserAuthorized(UserAuthorizedEvent event) {
         refresh(true);
     }
 
-    @Subscribe
+    @Subscribe @SuppressWarnings("unused")
     public void onUserSignOut(UserSignOutEvent event) {
         refresh(false);
     }

@@ -4,8 +4,8 @@
 
 package com.ddiehl.android.htn.events.responses;
 
-import retrofit.client.Response;
 
+import retrofit.Response;
 
 public class UserProfileSummaryLoadedEvent extends FailableEvent {
     private Response mResponse;

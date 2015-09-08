@@ -38,11 +38,13 @@
 -keep class com.squareup.okhttp.** { *; }
 -keep interface com.squareup.okhttp.** { *; }
 -dontwarn com.squareup.okhttp.**
+-dontwarn retrofit.**
 -keep class retrofit.** { *; }
--keepclasseswithmembers class * {
+-keepattributes Signature
+-keepattributes Exceptions
+-keepclasseswithmembers class * { # Do we need this one?
     @retrofit.http.* <methods>;
 }
--dontwarn retrofit.**
 
 ### Gson models ###
 -keep class com.ddiehl.reddit.** { *; }

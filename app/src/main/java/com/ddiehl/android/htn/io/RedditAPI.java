@@ -15,7 +15,7 @@ import com.ddiehl.reddit.listings.UserIdentityListing;
 
 import java.util.List;
 
-import retrofit.client.Response;
+import retrofit.Response;
 import retrofit.http.Body;
 import retrofit.http.DELETE;
 import retrofit.http.GET;
@@ -24,55 +24,54 @@ import retrofit.http.POST;
 import retrofit.http.PUT;
 import retrofit.http.Path;
 import retrofit.http.Query;
-import retrofit.mime.TypedString;
 import rx.Observable;
 
 public interface RedditAPI {
 
     @GET("/api/info")
-    Observable<ListingResponse> getInfo(
+    Observable<Response<ListingResponse>> getInfo(
             @Query("id") String id);
 
     @GET("/r/{subreddit}/api/info")
-    Observable<ListingResponse> getInfo(
-            @Query("id") String id,
-            @Path("subreddit") String subreddit);
+    Observable<Response<ListingResponse>> getInfo(
+            @Path("subreddit") String subreddit,
+            @Query("id") String id);
 
     @GET("/r/{subreddit}/about")
-    Observable<Subreddit> getSubredditInfo(
+    Observable<Response<Subreddit>> getSubredditInfo(
             @Path("subreddit") String subreddit);
 
     @GET("/api/v1/me")
-    Observable<UserIdentity> getUserIdentity();
+    Observable<Response<UserIdentity>> getUserIdentity();
 
     @GET("/api/v1/me/prefs")
-    Observable<UserSettings> getUserSettings();
+    Observable<Response<UserSettings>> getUserSettings();
 
     @PATCH("/api/v1/me/prefs")
-    Observable<Response> updateUserSettings(@Body TypedString json);
+    Observable<Response> updateUserSettings(@Body String json);
 
     @GET("/{sort}.json")
-    Observable<ListingResponse> getLinks(
-            @Query("r") String subreddit,
+    Observable<Response<ListingResponse>> getLinks(
             @Path("sort") String sort,
+            @Query("r") String subreddit,
             @Query("t") String timespan,
             @Query("after") String after);
 
     @GET("/r/{subreddit}/comments/{articleId}.json")
-    Observable<List<ListingResponse>> getComments(
+    Observable<Response<List<ListingResponse>>> getComments(
             @Path("subreddit") String subreddit,
             @Path("articleId") String articleId,
             @Query("sort") String sort,
             @Query("comment") String commentId);
 
     @GET("/api/morechildren?api_type=json")
-    Observable<MoreChildrenResponse> getMoreChildren(
+    Observable<Response<MoreChildrenResponse>> getMoreChildren(
             @Query("link_id") String linkId,
             @Query("children") String children,
             @Query("sort") String sort);
 
     @GET("/user/{username}/{show}")
-    Observable<ListingResponse> getUserProfile(
+    Observable<Response<ListingResponse>> getUserProfile(
             @Path("show") String show,
             @Path("username") String username,
             @Query("sort") String sort,
@@ -80,15 +79,15 @@ public interface RedditAPI {
             @Query("after") String after);
 
     @GET("/user/{username}/about")
-    Observable<UserIdentityListing> getUserInfo(
+    Observable<Response<UserIdentityListing>> getUserInfo(
             @Path("username") String username);
 
     @GET("/api/v1/me/friends/{username}")
-    Observable<FriendInfo> getFriendInfo(
+    Observable<Response<FriendInfo>> getFriendInfo(
             @Path("username") String username);
 
     @GET("/api/v1/user/{username}/trophies")
-    Observable<TrophyResponse> getUserTrophies(
+    Observable<Response<TrophyResponse>> getUserTrophies(
             @Path("username") String username);
 
     @POST("/api/vote")
@@ -128,7 +127,7 @@ public interface RedditAPI {
     @PUT("/api/v1/me/friends/{username}")
     Observable<Response> addFriend(
             @Path("username") String username,
-            @Body TypedString json);
+            @Body String json);
 
     @DELETE("/api/v1/me/friends/{username}")
     Observable<Response> deleteFriend(

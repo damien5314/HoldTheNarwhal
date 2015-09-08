@@ -104,8 +104,9 @@ public class WebViewFragment extends AbsRedditFragment {
                         && !url.equals(RedditServiceAuth.AUTHORIZATION_URL)) {
                     // Pass auth code back to the Activity, which will pop this fragment
                     String authCode = AuthUtils.getUserAuthCodeFromRedirectUri(url);
+                    // TODO Uncouple this from Activity
                     ((MainView) getActivity()).onUserAuthCodeReceived(authCode);
-                    return true; // Can we do this to prevent the page from loading at all?
+                    return true;
                 }
 
                 if (url.startsWith("mailto:")) {

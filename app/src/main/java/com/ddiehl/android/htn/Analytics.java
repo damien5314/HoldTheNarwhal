@@ -30,7 +30,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import retrofit.RetrofitError;
+import retrofit.Response;
 
 public class Analytics {
     private static final String TAG = Analytics.class.getSimpleName();
@@ -203,12 +203,12 @@ public class Analytics {
         FlurryAgent.logEvent("setting changed", params);
     }
 
-    public void logApiError(RetrofitError error) {
+    public void logApiError(Response error) {
         if (!mSettingsManager.areAnalyticsEnabled())
             return;
         Map<String, String> params = new HashMap<>();
-        params.put("url", error.getUrl());
-        params.put("kind", error.getKind().toString());
+        params.put("url", error.raw().request().url().toString());
+        params.put("code", String.valueOf(error.code()));
         FlurryAgent.logEvent("api error", params);
     }
 
