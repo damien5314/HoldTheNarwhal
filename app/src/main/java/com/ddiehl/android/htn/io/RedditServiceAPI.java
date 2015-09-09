@@ -134,7 +134,7 @@ public class RedditServiceAPI implements RedditService {
     @Override
     public void onGetUserIdentity(GetUserIdentityEvent event) {
         mAPI.getUserIdentity()
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         response -> mBus.post(new UserIdentityRetrievedEvent(response.body())),
@@ -147,7 +147,7 @@ public class RedditServiceAPI implements RedditService {
     @Override
     public void onGetUserSettings(GetUserSettingsEvent event) {
         mAPI.getUserSettings()
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         response -> mBus.post(new UserSettingsRetrievedEvent(response.body())),
@@ -161,7 +161,7 @@ public class RedditServiceAPI implements RedditService {
     public void onUpdateUserSettings(UpdateUserSettingsEvent event) {
         String json = new Gson().toJson(event.getPrefs());
         mAPI.updateUserSettings(json)
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         response -> mBus.post(new UserSettingsUpdatedEvent()),
@@ -182,7 +182,7 @@ public class RedditServiceAPI implements RedditService {
         String after = event.getAfter();
 
         mAPI.getLinks(sort, subreddit, timespan, after)
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         response -> mBus.post(new ListingsLoadedEvent(response.body())),
@@ -203,7 +203,7 @@ public class RedditServiceAPI implements RedditService {
         String commentId = event.getCommentId();
 
         mAPI.getComments(subreddit, article, sort, commentId)
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         response -> mBus.post(new LinkCommentsLoadedEvent(response.body())),
@@ -231,7 +231,7 @@ public class RedditServiceAPI implements RedditService {
         childrenString = childrenString.substring(0, Math.max(childrenString.length() - 1, 0));
 
         mAPI.getMoreChildren(link.getName(), childrenString, sort)
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         response -> mBus.post(new MoreChildrenLoadedEvent(parentStub, response.body())),
@@ -251,7 +251,7 @@ public class RedditServiceAPI implements RedditService {
     // getUserInfo for friend status, karma, create date
     private void getUserInfo(String username) {
         mAPI.getUserInfo(username)
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         response -> {
@@ -271,7 +271,7 @@ public class RedditServiceAPI implements RedditService {
     // getUserTrophies for user trophies
     private void getUserTrophies(String username) {
         mAPI.getUserTrophies(username)
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         response -> mBus.post(new TrophiesLoadedEvent(response.body())),
@@ -284,7 +284,7 @@ public class RedditServiceAPI implements RedditService {
 
     private void getFriendInfo(String username) {
         mAPI.getFriendInfo(username)
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         response -> mBus.post(new FriendInfoLoadedEvent(response.body())),
@@ -304,7 +304,7 @@ public class RedditServiceAPI implements RedditService {
         final String after = event.getAfter();
 
         mAPI.getUserProfile(show, userId, sort, timespan, after)
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         listing -> mBus.post(new ListingsLoadedEvent(listing.body())),
@@ -319,7 +319,7 @@ public class RedditServiceAPI implements RedditService {
         final String name = event.getSubredditName();
 
         mAPI.getSubredditInfo(name)
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         subreddit -> mBus.post(new SubredditInfoLoadedEvent(subreddit.body())),
@@ -339,7 +339,7 @@ public class RedditServiceAPI implements RedditService {
         String fullname = String.format("%s_%s", event.getType(), listing.getId());
 
         mAPI.vote("", fullname, event.getDirection())
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         response -> {
@@ -387,12 +387,12 @@ public class RedditServiceAPI implements RedditService {
 
         if (event.isToSave()) { // Save
             mAPI.save("", listing.getName(), event.getCategory())
-                    .subscribeOn(Schedulers.io())
+                    .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(onSaveSuccess, onSaveFailure);
         } else { // Unsave
             mAPI.unsave("", listing.getName())
-                    .subscribeOn(Schedulers.io())
+                    .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(onSaveSuccess, onSaveFailure);
         }
@@ -422,12 +422,12 @@ public class RedditServiceAPI implements RedditService {
 
         if (event.isToHide()) { // Hide
             mAPI.hide("", listing.getName())
-                    .subscribeOn(Schedulers.io())
+                    .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(onSuccess, onFailure);
         } else { // Unhide
             mAPI.unhide("", listing.getName())
-                    .subscribeOn(Schedulers.io())
+                    .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(onSuccess, onFailure);
         }
@@ -443,7 +443,7 @@ public class RedditServiceAPI implements RedditService {
         String username = event.getUsername();
         String json = "{}";
         mAPI.addFriend(username, json)
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         response -> mBus.post(new FriendAddedEvent(username, "")),
@@ -463,7 +463,7 @@ public class RedditServiceAPI implements RedditService {
         }
         String json = new Gson().toJson(new Friend(note));
         mAPI.addFriend(username, json)
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         response -> mBus.post(new FriendAddedEvent(username, note)),
@@ -477,7 +477,7 @@ public class RedditServiceAPI implements RedditService {
     public void onDeleteFriend(FriendDeleteEvent event) {
         String username = event.getUsername();
         mAPI.deleteFriend(username)
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         response -> mBus.post(new FriendDeletedEvent(username)),

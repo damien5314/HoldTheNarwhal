@@ -122,7 +122,7 @@ public class RedditServiceAuth implements RedditService {
         String deviceId = SettingsManager.getInstance(mContext).getDeviceId();
 
         mAuthAPI.getApplicationAuthToken(grantType, deviceId)
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         response -> mBus.post(new ApplicationAuthorizedEvent(response.body())),
@@ -175,7 +175,7 @@ public class RedditServiceAuth implements RedditService {
         String refreshToken = event.getRefreshToken();
 
         mAuthAPI.refreshUserAuthToken(grantType, refreshToken)
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         response -> mBus.post(new UserAuthorizationRefreshedEvent(response.body())),
@@ -193,11 +193,11 @@ public class RedditServiceAuth implements RedditService {
         AccessToken token = mAccessTokenManager.getUserAccessToken();
         if (token != null) {
             mAuthAPI.revokeUserAuthToken(token.getToken(), "access_token")
-                    .subscribeOn(Schedulers.io())
+                    .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(response -> {}, mBus::post);
             mAuthAPI.revokeUserAuthToken(token.getRefreshToken(), "refresh_token")
-                    .subscribeOn(Schedulers.io())
+                    .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(response -> {}, mBus::post);
         }
