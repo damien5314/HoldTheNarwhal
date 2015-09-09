@@ -32,7 +32,7 @@ public interface RedditAuthAPI {
             @Field("refresh_token") String refreshToken);
 
     @FormUrlEncoded @POST("/api/v1/revoke_token")
-    Observable<Response> revokeUserAuthToken(
+    Observable<Response<String>> revokeUserAuthToken(
             @Field("token") String token,
             @Field("token_type_hint") String tokenTypeHint);
 

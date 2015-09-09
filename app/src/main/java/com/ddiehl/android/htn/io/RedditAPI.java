@@ -48,7 +48,7 @@ public interface RedditAPI {
     Observable<Response<UserSettings>> getUserSettings();
 
     @PATCH("/api/v1/me/prefs")
-    Observable<Response> updateUserSettings(@Body String json);
+    Observable<Response<String>> updateUserSettings(@Body String json);
 
     @GET("/{sort}.json")
     Observable<Response<ListingResponse>> getLinks(
@@ -91,45 +91,45 @@ public interface RedditAPI {
             @Path("username") String username);
 
     @POST("/api/vote")
-    Observable<Response> vote(
+    Observable<Response<String>> vote(
             @Body String nullBody,
             @Query("id") String id,
             @Query("dir") int dir);
 
     @POST("/api/save")
-    Observable<Response> save(
+    Observable<Response<String>> save(
             @Body String nullBody,
             @Query("id") String id,
             @Query("category") String category);
 
     @POST("/api/unsave")
-    Observable<Response> unsave(
+    Observable<Response<String>> unsave(
             @Body String nullBody,
             @Query("id") String id);
 
     @POST("/api/hide")
-    Observable<Response> hide(
+    Observable<Response<String>> hide(
             @Body String nullBody,
             @Query("id") String id);
 
     @POST("/api/unhide")
-    Observable<Response> unhide(
+    Observable<Response<String>> unhide(
             @Body String nullBody,
             @Query("id") String id);
 
     @POST("/api/report?api_type=json")
-    Observable<Response> report(
+    Observable<Response<String>> report(
             @Body String nullBody,
             @Query("thing_id") String id,
             @Query("reason") String reason,
             @Query("otherReason") String otherReason);
 
     @PUT("/api/v1/me/friends/{username}")
-    Observable<Response> addFriend(
+    Observable<Response<String>> addFriend(
             @Path("username") String username,
             @Body String json);
 
     @DELETE("/api/v1/me/friends/{username}")
-    Observable<Response> deleteFriend(
+    Observable<Response<String>> deleteFriend(
             @Path("username") String username);
 }
