@@ -12,6 +12,8 @@ import com.ddiehl.reddit.listings.MoreChildrenResponse;
 import com.ddiehl.reddit.listings.Subreddit;
 import com.ddiehl.reddit.listings.TrophyResponse;
 import com.ddiehl.reddit.listings.UserIdentityListing;
+import com.squareup.okhttp.RequestBody;
+import com.squareup.okhttp.ResponseBody;
 
 import java.util.List;
 
@@ -48,7 +50,7 @@ public interface RedditAPI {
     Observable<Response<UserSettings>> getUserSettings();
 
     @PATCH("/api/v1/me/prefs")
-    Observable<Response<String>> updateUserSettings(@Body String json);
+    Observable<Response<ResponseBody>> updateUserSettings(@Body RequestBody json);
 
     @GET("/{sort}.json")
     Observable<Response<ListingResponse>> getLinks(
@@ -91,45 +93,45 @@ public interface RedditAPI {
             @Path("username") String username);
 
     @POST("/api/vote")
-    Observable<Response<String>> vote(
-            @Body String nullBody,
+    Observable<Response<ResponseBody>> vote(
+            @Body ResponseBody nullBody,
             @Query("id") String id,
             @Query("dir") int dir);
 
     @POST("/api/save")
-    Observable<Response<String>> save(
-            @Body String nullBody,
+    Observable<Response<ResponseBody>> save(
+            @Body ResponseBody nullBody,
             @Query("id") String id,
             @Query("category") String category);
 
     @POST("/api/unsave")
-    Observable<Response<String>> unsave(
-            @Body String nullBody,
+    Observable<Response<ResponseBody>> unsave(
+            @Body ResponseBody nullBody,
             @Query("id") String id);
 
     @POST("/api/hide")
-    Observable<Response<String>> hide(
-            @Body String nullBody,
+    Observable<Response<ResponseBody>> hide(
+            @Body ResponseBody nullBody,
             @Query("id") String id);
 
     @POST("/api/unhide")
-    Observable<Response<String>> unhide(
-            @Body String nullBody,
+    Observable<Response<ResponseBody>> unhide(
+            @Body ResponseBody nullBody,
             @Query("id") String id);
 
     @POST("/api/report?api_type=json")
-    Observable<Response<String>> report(
-            @Body String nullBody,
+    Observable<Response<ResponseBody>> report(
+            @Body ResponseBody nullBody,
             @Query("thing_id") String id,
             @Query("reason") String reason,
             @Query("otherReason") String otherReason);
 
     @PUT("/api/v1/me/friends/{username}")
-    Observable<Response<String>> addFriend(
+    Observable<Response<ResponseBody>> addFriend(
             @Path("username") String username,
-            @Body String json);
+            @Body ResponseBody json);
 
     @DELETE("/api/v1/me/friends/{username}")
-    Observable<Response<String>> deleteFriend(
+    Observable<Response<ResponseBody>> deleteFriend(
             @Path("username") String username);
 }

@@ -6,6 +6,7 @@ package com.ddiehl.android.htn.io;
 
 
 import com.ddiehl.reddit.identity.AuthorizationResponse;
+import com.squareup.okhttp.ResponseBody;
 
 import retrofit.Response;
 import retrofit.http.Field;
@@ -32,7 +33,7 @@ public interface RedditAuthAPI {
             @Field("refresh_token") String refreshToken);
 
     @FormUrlEncoded @POST("/api/v1/revoke_token")
-    Observable<Response<String>> revokeUserAuthToken(
+    Observable<Response<ResponseBody>> revokeUserAuthToken(
             @Field("token") String token,
             @Field("token_type_hint") String tokenTypeHint);
 
