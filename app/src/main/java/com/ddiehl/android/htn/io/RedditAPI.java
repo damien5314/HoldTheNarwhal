@@ -94,34 +94,28 @@ public interface RedditAPI {
 
     @POST("/api/vote")
     Observable<Response<ResponseBody>> vote(
-            @Body ResponseBody nullBody,
             @Query("id") String id,
             @Query("dir") int dir);
 
     @POST("/api/save")
     Observable<Response<ResponseBody>> save(
-            @Body ResponseBody nullBody,
             @Query("id") String id,
             @Query("category") String category);
 
     @POST("/api/unsave")
     Observable<Response<ResponseBody>> unsave(
-            @Body ResponseBody nullBody,
             @Query("id") String id);
 
     @POST("/api/hide")
     Observable<Response<ResponseBody>> hide(
-            @Body ResponseBody nullBody,
             @Query("id") String id);
 
     @POST("/api/unhide")
     Observable<Response<ResponseBody>> unhide(
-            @Body ResponseBody nullBody,
             @Query("id") String id);
 
     @POST("/api/report?api_type=json")
     Observable<Response<ResponseBody>> report(
-            @Body ResponseBody nullBody,
             @Query("thing_id") String id,
             @Query("reason") String reason,
             @Query("otherReason") String otherReason);
@@ -129,7 +123,7 @@ public interface RedditAPI {
     @PUT("/api/v1/me/friends/{username}")
     Observable<Response<ResponseBody>> addFriend(
             @Path("username") String username,
-            @Body ResponseBody json);
+            @Body RequestBody json);
 
     @DELETE("/api/v1/me/friends/{username}")
     Observable<Response<ResponseBody>> deleteFriend(

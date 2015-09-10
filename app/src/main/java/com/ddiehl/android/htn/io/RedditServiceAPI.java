@@ -62,7 +62,6 @@ import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
-import com.squareup.okhttp.ResponseBody;
 import com.squareup.otto.Bus;
 
 import java.io.File;
@@ -162,7 +161,7 @@ public class RedditServiceAPI implements RedditService {
     @Override
     public void onUpdateUserSettings(UpdateUserSettingsEvent event) {
         String json = new Gson().toJson(event.getPrefs());
-        mAPI.updateUserSettings(RequestBody.create(MediaType.parse("json"), json))
+        mAPI.updateUserSettings(RequestBody.create(MediaType.parse("application/json"), json))
                 .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
@@ -340,7 +339,7 @@ public class RedditServiceAPI implements RedditService {
         final Votable listing = event.getListing();
         String fullname = String.format("%s_%s", event.getType(), listing.getId());
 
-        mAPI.vote(ResponseBody.create(null, ""), fullname, event.getDirection())
+        mAPI.vote(fullname, event.getDirection())
                 .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
@@ -376,12 +375,12 @@ public class RedditServiceAPI implements RedditService {
         };
 
         if (event.isToSave()) { // Save
-            mAPI.save(ResponseBody.create(null, ""), listing.getName(), event.getCategory())
+            mAPI.save(listing.getName(), event.getCategory())
                     .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(onSaveSuccess, onSaveFailure);
         } else { // Unsave
-            mAPI.unsave(ResponseBody.create(null, ""), listing.getName())
+            mAPI.unsave(listing.getName())
                     .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(onSaveSuccess, onSaveFailure);
@@ -405,12 +404,12 @@ public class RedditServiceAPI implements RedditService {
         };
 
         if (event.isToHide()) { // Hide
-            mAPI.hide(ResponseBody.create(null, ""), listing.getName())
+            mAPI.hide(listing.getName())
                     .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(onSuccess, onFailure);
         } else { // Unhide
-            mAPI.unhide(ResponseBody.create(null, ""), listing.getName())
+            mAPI.unhide(listing.getName())
                     .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(onSuccess, onFailure);
@@ -426,7 +425,7 @@ public class RedditServiceAPI implements RedditService {
     public void onAddFriend(FriendAddEvent event) {
         String username = event.getUsername();
         String json = "{}";
-        mAPI.addFriend(username, ResponseBody.create(MediaType.parse("json"), json))
+        mAPI.addFriend(username, RequestBody.create(MediaType.parse("application/json"), json))
                 .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
@@ -446,7 +445,7 @@ public class RedditServiceAPI implements RedditService {
             return;
         }
         String json = new Gson().toJson(new Friend(note));
-        mAPI.addFriend(username, ResponseBody.create(MediaType.parse("json"), json))
+        mAPI.addFriend(username, RequestBody.create(MediaType.parse("application/json"), json))
                 .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
