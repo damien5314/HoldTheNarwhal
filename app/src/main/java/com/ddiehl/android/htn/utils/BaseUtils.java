@@ -72,11 +72,9 @@ public class BaseUtils {
         printResponseBody(response);
     }
 
-    public static void printResponseStatus(Response response) {
-        if (response != null) {
-            Log.d(TAG, "URL: " + response.request().urlString()
-                    + " (STATUS: " + response.code() + ")");
-        }
+    public static void printResponseStatus(@NonNull Response response) {
+        Log.d(TAG, String.format("URL: %s (STATUS: %s)",
+                response.request().urlString(), response.code()));
     }
 
     public static void printResponseHeaders(Response response) {

@@ -25,7 +25,7 @@ class LoggingInterceptor implements Interceptor {
         try {
             Request request = chain.request();
             Response response = chain.proceed(request);
-            BaseUtils.printResponseStatus(response);
+            if (response != null) BaseUtils.printResponseStatus(response);
             return response;
         } catch (Exception e) {
             Log.w(TAG, "Exception occurred while sending HTTP request");
