@@ -24,7 +24,7 @@ import retrofit.Response;
 
 public class MainPresenterImpl implements MainPresenter {
 
-    private Bus mBus;
+    private Bus mBus = BusProvider.getInstance();
     private Context mContext;
 
     private MainView mMainView;
@@ -34,7 +34,6 @@ public class MainPresenterImpl implements MainPresenter {
     private String mUsernameContext;
 
     public MainPresenterImpl(Context context, MainView view) {
-        mBus = BusProvider.getInstance();
         mContext = context.getApplicationContext();
 
         mMainView = view;
@@ -47,6 +46,7 @@ public class MainPresenterImpl implements MainPresenter {
 
     @Override
     public void onApplicationStart() {
+        mBus.register(this);
         UserIdentity user = getAuthorizedUser();
         mMainView.updateUserIdentity(user);
         mAnalytics.setUserIdentity(user == null ? null : user.getName());
@@ -63,6 +63,7 @@ public class MainPresenterImpl implements MainPresenter {
     @Override
     public void onApplicationStop() {
         mAnalytics.endSession();
+        mBus.unregister(this);
     }
 
     @Override

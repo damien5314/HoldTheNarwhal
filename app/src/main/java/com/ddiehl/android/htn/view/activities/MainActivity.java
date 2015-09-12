@@ -33,7 +33,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ddiehl.android.htn.Analytics;
-import com.ddiehl.android.htn.BusProvider;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.io.RedditServiceAuth;
 import com.ddiehl.android.htn.presenter.MainPresenter;
@@ -47,7 +46,6 @@ import com.ddiehl.android.htn.view.fragments.UserProfileFragment;
 import com.ddiehl.android.htn.view.fragments.WebViewFragment;
 import com.ddiehl.reddit.identity.UserIdentity;
 import com.ddiehl.reddit.listings.Subreddit;
-import com.squareup.otto.Bus;
 import com.squareup.picasso.Picasso;
 
 import butterknife.Bind;
@@ -55,9 +53,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import hugo.weaving.DebugLog;
 
-public class MainActivity extends AppCompatActivity
-        implements MainView, ConfirmSignOutDialog.Callbacks,
-        NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements MainView,
+        NavigationView.OnNavigationItemSelectedListener, ConfirmSignOutDialog.Callbacks {
     public static final String TAG = MainActivity.class.getSimpleName();
 
     public static final int REQUEST_NSFW_WARNING = 0x1;
@@ -75,7 +72,6 @@ public class MainActivity extends AppCompatActivity
     @Bind(R.id.sign_out_button) View mSignOutView;
     @Bind(R.id.navigation_drawer_header_image) ImageView mHeaderImage;
 
-    private Bus mBus = BusProvider.getInstance();
     private Analytics mAnalytics = Analytics.getInstance();
     private MainPresenter mMainPresenter;
 
@@ -108,31 +104,23 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onStart() {
         super.onStart();
-
-        mBus.register(this);
-        mBus.register(mMainPresenter);
-
         mMainPresenter.onApplicationStart();
     }
 
     @Override
     protected void onStop() {
         mMainPresenter.onApplicationStop();
-
-        mBus.unregister(this);
-        mBus.unregister(mMainPresenter);
-
         super.onStop();
     }
 
     @Override
     public void updateUserIdentity(UserIdentity identity) {
-//        UserIdentity identity = mMainPresenter.getAuthorizedUser();
         mCurrentUser = identity;
         mAccountNameView.setText(identity == null ?
                 getString(R.string.account_name_unauthorized) : identity.getName());
         mSignOutView.setVisibility(identity == null ? View.GONE : View.VISIBLE);
         mGoldIndicator.setVisibility(identity != null && identity.isGold() ? View.VISIBLE : View.GONE);
+        updateNavigationItems(identity != null);
     }
 
     @Override
@@ -233,8 +221,7 @@ public class MainActivity extends AppCompatActivity
 
     @OnClick(R.id.sign_out_button)
     void onSignOut() {
-        ConfirmSignOutDialog dialog = ConfirmSignOutDialog.newInstance();
-        dialog.show(getFragmentManager(), DIALOG_CONFIRM_SIGN_OUT);
+        new ConfirmSignOutDialog().show(getFragmentManager(), DIALOG_CONFIRM_SIGN_OUT);
         mAnalytics.logClickedSignOut();
     }
 
@@ -287,9 +274,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onSignOutCancel() {
-        // Do nothing
-    }
+    public void onSignOutCancel() { /* no-op */ }
 
     @Override
     public void onSubredditInfoLoaded(@NonNull Subreddit subredditInfo) {

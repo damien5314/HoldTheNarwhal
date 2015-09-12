@@ -4,6 +4,7 @@
 
 package com.ddiehl.android.htn.view.dialogs;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -19,14 +20,7 @@ public class ConfirmSignOutDialog extends DialogFragment {
         void onSignOutCancel();
     }
 
-    public ConfirmSignOutDialog() { }
-
-    public static ConfirmSignOutDialog newInstance() {
-        Bundle args = new Bundle();
-        ConfirmSignOutDialog dialog = new ConfirmSignOutDialog();
-        dialog.setArguments(args);
-        return dialog;
-    }
+    private Callbacks mListener;
 
     @NonNull @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -35,17 +29,28 @@ public class ConfirmSignOutDialog extends DialogFragment {
         builder.setTitle(R.string.dialog_sign_out_title)
                 .setMessage(R.string.dialog_sign_out_message)
                 .setPositiveButton(R.string.dialog_sign_out_ok, (dialog, which) -> {
-                    if (getActivity() instanceof Callbacks) {
-                        ((Callbacks) getActivity()).onSignOutConfirm();
+                    if (mListener != null) {
+                        mListener.onSignOutConfirm();
                     }
                 })
                 .setNegativeButton(R.string.dialog_sign_out_cancel, (dialog, which) -> {
-                    if (getActivity() instanceof Callbacks) {
-                        ((Callbacks) getActivity()).onSignOutCancel();
+                    if (mListener != null) {
+                        mListener.onSignOutCancel();
                     }
                 })
         .setCancelable(true);
 
         return builder.create();
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            mListener = (Callbacks) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement ConfirmSignOutDialog.Callbacks");
+        }
     }
 }
