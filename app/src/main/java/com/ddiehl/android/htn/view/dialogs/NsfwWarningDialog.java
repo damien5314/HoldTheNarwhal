@@ -14,9 +14,6 @@ import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.SettingsManager;
 
 public class NsfwWarningDialog extends DialogFragment {
-
-    public NsfwWarningDialog() { }
-
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         return new AlertDialog.Builder(getActivity())

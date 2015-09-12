@@ -14,6 +14,8 @@ import com.ddiehl.android.htn.R;
 
 public class AnalyticsDialog extends DialogFragment {
 
+    private Callbacks mListener;
+
     public interface Callbacks {
         void onAnalyticsAccepted();
         void onAnalyticsDeclined();
@@ -24,15 +26,21 @@ public class AnalyticsDialog extends DialogFragment {
         return new AlertDialog.Builder(getActivity())
                 .setTitle(R.string.dialog_analytics_title)
                 .setMessage(R.string.dialog_analytics_message)
-                .setNeutralButton(R.string.dialog_analytics_accept, (dialog, which) -> {
-                    getTargetFragment().onActivityResult(getTargetRequestCode(),
-                            Activity.RESULT_OK, null);
-                })
-                .setNegativeButton(R.string.dialog_analytics_decline, (dialog, which) -> {
-                    getTargetFragment().onActivityResult(getTargetRequestCode(),
-                            Activity.RESULT_CANCELED, null);
-                })
+                .setNeutralButton(R.string.dialog_analytics_accept,
+                        (dialog, which) -> mListener.onAnalyticsAccepted())
+                .setNegativeButton(R.string.dialog_analytics_decline,
+                        (dialog, which) -> mListener.onAnalyticsDeclined())
                 .create();
     }
 
+    @Override
+    public void onAttach(Activity a) {
+        super.onAttach(a);
+        try {
+            mListener = (Callbacks) a;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(a.getLocalClassName()
+                    + " must implement AnalyticsDialog.Callbacks");
+        }
+    }
 }

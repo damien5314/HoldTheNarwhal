@@ -9,10 +9,11 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 
 import com.ddiehl.android.htn.view.dialogs.AnalyticsDialog;
+import com.ddiehl.android.htn.view.dialogs.ConfirmSignOutDialog;
 import com.ddiehl.reddit.identity.UserIdentity;
 import com.ddiehl.reddit.listings.Subreddit;
 
-public interface MainView extends AnalyticsDialog.Callbacks {
+public interface MainView extends AnalyticsDialog.Callbacks, ConfirmSignOutDialog.Callbacks {
 
     void updateUserIdentity(@Nullable UserIdentity identity);
     void loadImageIntoDrawerHeader(@Nullable String url);

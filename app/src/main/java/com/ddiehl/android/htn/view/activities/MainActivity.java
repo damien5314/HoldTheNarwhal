@@ -4,7 +4,6 @@
 
 package com.ddiehl.android.htn.view.activities;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.Fragment;
@@ -38,6 +37,7 @@ import com.ddiehl.android.htn.io.RedditServiceAuth;
 import com.ddiehl.android.htn.presenter.MainPresenter;
 import com.ddiehl.android.htn.presenter.MainPresenterImpl;
 import com.ddiehl.android.htn.view.MainView;
+import com.ddiehl.android.htn.view.dialogs.AnalyticsDialog;
 import com.ddiehl.android.htn.view.dialogs.ConfirmSignOutDialog;
 import com.ddiehl.android.htn.view.dialogs.NsfwWarningDialog;
 import com.ddiehl.android.htn.view.fragments.SettingsFragment;
@@ -54,16 +54,16 @@ import butterknife.OnClick;
 import hugo.weaving.DebugLog;
 
 public class MainActivity extends AppCompatActivity implements MainView,
-        NavigationView.OnNavigationItemSelectedListener, ConfirmSignOutDialog.Callbacks {
+        NavigationView.OnNavigationItemSelectedListener {
     public static final String TAG = MainActivity.class.getSimpleName();
 
     public static final int REQUEST_NSFW_WARNING = 0x1;
     private static final String DIALOG_NSFW_WARNING = "dialog_nsfw_warning";
     private static final String DIALOG_CONFIRM_SIGN_OUT = "dialog_confirm_sign_out";
+    private static final String DIALOG_ANALYTICS = "dialog_analytics";
 
     private ProgressDialog mLoadingOverlay;
     private Dialog mSubredditNavigationDialog;
-    private Dialog mAnalyticsRequestDialog;
 
     @Bind(R.id.drawer_layout) DrawerLayout mDrawerLayout;
     @Bind(R.id.navigation_view) NavigationView mNavigationView;
@@ -348,17 +348,7 @@ public class MainActivity extends AppCompatActivity implements MainView,
 
     @Override
     public void showAnalyticsRequestDialog() {
-        if (mAnalyticsRequestDialog == null) {
-            mAnalyticsRequestDialog = new AlertDialog.Builder(this)
-                    .setTitle(R.string.dialog_analytics_title)
-                    .setMessage(R.string.dialog_analytics_message)
-                    .setNeutralButton(R.string.dialog_analytics_accept,
-                            (dialog, which) -> mMainPresenter.onAnalyticsAccepted())
-                    .setNegativeButton(R.string.dialog_analytics_decline,
-                            (dialog, which) -> mMainPresenter.onAnalyticsDeclined())
-                    .create();
-        }
-        mAnalyticsRequestDialog.show();
+        new AnalyticsDialog().show(getFragmentManager(), DIALOG_ANALYTICS);
     }
 
     @Override
@@ -374,12 +364,6 @@ public class MainActivity extends AppCompatActivity implements MainView,
     /////////////////
     // Private API //
     /////////////////
-
-    private void dismissAnalyticsRequestDialog() {
-        if (mAnalyticsRequestDialog != null && mAnalyticsRequestDialog.isShowing()) {
-            mAnalyticsRequestDialog.dismiss();
-        }
-    }
 
     private void setMirroredIcons() {
         if (Build.VERSION.SDK_INT >= 19) {
