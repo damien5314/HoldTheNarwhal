@@ -103,6 +103,7 @@ public class WebViewFragment extends Fragment {
                     // Pass auth code back to the Activity, which will pop this fragment
                     String authCode = AuthUtils.getUserAuthCodeFromRedirectUri(url);
                     mBus.post(new UserAuthCodeReceivedEvent(authCode));
+                    WebViewFragment.this.getFragmentManager().popBackStack();
                     return true; // Can we do this to prevent the page from loading at all?
                 }
 

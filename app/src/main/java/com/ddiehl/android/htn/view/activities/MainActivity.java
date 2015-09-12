@@ -35,7 +35,6 @@ import android.widget.TextView;
 import com.ddiehl.android.htn.Analytics;
 import com.ddiehl.android.htn.BusProvider;
 import com.ddiehl.android.htn.R;
-import com.ddiehl.android.htn.events.responses.UserAuthCodeReceivedEvent;
 import com.ddiehl.android.htn.io.RedditServiceAuth;
 import com.ddiehl.android.htn.presenter.MainPresenter;
 import com.ddiehl.android.htn.presenter.MainPresenterImpl;
@@ -49,7 +48,6 @@ import com.ddiehl.android.htn.view.fragments.WebViewFragment;
 import com.ddiehl.reddit.identity.UserIdentity;
 import com.ddiehl.reddit.listings.Subreddit;
 import com.squareup.otto.Bus;
-import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
 
 import butterknife.Bind;
@@ -281,11 +279,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void showToast(@NonNull String msg) {
         Snackbar.make(mDrawerLayout, msg, Snackbar.LENGTH_SHORT).show();
-    }
-
-    @Subscribe @SuppressWarnings("unused")
-    public void onUserAuthCodeReceived(UserAuthCodeReceivedEvent event) {
-        getFragmentManager().popBackStack();
     }
 
     @Override
