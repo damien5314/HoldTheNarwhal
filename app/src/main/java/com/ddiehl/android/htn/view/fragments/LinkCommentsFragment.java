@@ -10,6 +10,7 @@ import android.app.FragmentManager;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -186,12 +187,13 @@ public class LinkCommentsFragment extends Fragment
     }
 
     @Override
-    public void showCommentThread(String subreddit, String linkId, String commentId) {
+    public void showCommentThread(@Nullable String subreddit, @Nullable String linkId,
+                                  @NonNull String commentId) {
         mLinkCommentsPresenter.showCommentThread(subreddit, linkId, commentId);
     }
 
     @Override
-    public void openShareView(Comment comment) {
+    public void openShareView(@NonNull Comment comment) {
         Intent i = new Intent(Intent.ACTION_SEND);
         i.setType("text/plain");
         i.putExtra(Intent.EXTRA_TEXT, comment.getUrl());
@@ -200,7 +202,7 @@ public class LinkCommentsFragment extends Fragment
     }
 
     @Override
-    public void openCommentInBrowser(Comment comment) {
+    public void openCommentInBrowser(@NonNull Comment comment) {
         Uri uri = Uri.parse(comment.getUrl());
         Intent i = new Intent(Intent.ACTION_VIEW, uri);
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -208,7 +210,7 @@ public class LinkCommentsFragment extends Fragment
     }
 
     @Override
-    public void openShareView(Link link) {
+    public void openShareView(@NonNull Link link) {
         Intent i = new Intent(Intent.ACTION_SEND);
         i.setType("text/plain");
         i.putExtra(Intent.EXTRA_TEXT, "http://www.reddit.com" + link.getPermalink());
@@ -217,17 +219,17 @@ public class LinkCommentsFragment extends Fragment
     }
 
     @Override
-    public void openUserProfileView(Link link) {
+    public void openUserProfileView(@NonNull Link link) {
         ((MainView) getActivity()).showUserProfile("summary", link.getAuthor());
     }
 
     @Override
-    public void openUserProfileView(Comment comment) {
+    public void openUserProfileView(@NonNull Comment comment) {
         ((MainView) getActivity()).showUserProfile("summary", comment.getAuthor());
     }
 
     @Override
-    public void openLinkInBrowser(Link link) {
+    public void openLinkInBrowser(@NonNull Link link) {
         Uri uri = Uri.parse(link.getUrl());
         Intent i = new Intent(Intent.ACTION_VIEW, uri);
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -235,7 +237,7 @@ public class LinkCommentsFragment extends Fragment
     }
 
     @Override
-    public void openCommentsInBrowser(Link link) {
+    public void openCommentsInBrowser(@NonNull Link link) {
         Uri uri = Uri.parse("http://www.reddit.com" + link.getPermalink());
         Intent i = new Intent(Intent.ACTION_VIEW, uri);
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -365,12 +367,13 @@ public class LinkCommentsFragment extends Fragment
     }
 
     @Override
-    public void openLinkInWebView(Link link) {
+    public void openLinkInWebView(@NonNull Link link) {
         ((MainActivity) getActivity()).showWebViewForURL(link.getUrl());
     }
 
     @Override
-    public void showCommentsForLink(String subreddit, String linkId, String commentId) {
+    public void showCommentsForLink(@Nullable String subreddit, @Nullable String linkId,
+                                    @Nullable String commentId) {
         Fragment f = LinkCommentsFragment.newInstance(subreddit, linkId, commentId);
         getFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, f)
@@ -379,7 +382,7 @@ public class LinkCommentsFragment extends Fragment
     }
 
     @Override
-    public void openReplyView(Comment comment) {
+    public void openReplyView(@NonNull Comment comment) {
         mMainView.showToast(R.string.implementation_pending);
     }
 

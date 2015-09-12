@@ -5,6 +5,8 @@
 package com.ddiehl.android.htn.presenter;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.ContextMenu;
 import android.view.View;
 
@@ -85,7 +87,7 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
         mBus.post(new LoadLinkCommentsEvent(mSubreddit, mLinkId, mSort, mCommentId));
     }
 
-    @Subscribe
+    @Subscribe @SuppressWarnings("unused")
     public void onCommentsLoaded(LinkCommentsLoadedEvent event) {
         mMainView.dismissSpinner();
         if (event.isFailed()) {
@@ -104,7 +106,7 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
     }
 
     @Override
-    public void getMoreChildren(CommentStub comment) {
+    public void getMoreChildren(@NonNull CommentStub comment) {
         mMainView.showSpinner(null);
         List<String> children = comment.getChildren();
         // Truncate list of children to 20
@@ -112,7 +114,7 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
         mBus.post(new LoadMoreChildrenEvent(mLinkContext, comment, children, mSort));
     }
 
-    @Subscribe
+    @Subscribe @SuppressWarnings("unused")
     public void onMoreChildrenLoaded(MoreChildrenLoadedEvent event) {
         mMainView.dismissSpinner();
         if (event.isFailed()) {
@@ -146,13 +148,7 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
     }
 
     @Override
-    public void updateSort() {
-        String sort = mSettingsManager.getCommentSort();
-        updateSort(sort);
-    }
-
-    @Override
-    public void updateSort(String sort) {
+    public void updateSort(@NonNull String sort) {
         if (!mSort.equals(sort)) {
             mSort = sort;
             mSettingsManager.saveCommentSort(mSort);
@@ -166,7 +162,7 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
     }
 
     @Override
-    public void toggleThreadVisible(AbsComment comment) {
+    public void toggleThreadVisible(@NonNull AbsComment comment) {
         mCommentBank.toggleThreadVisible(comment);
         mLinkCommentsView.commentsUpdated();
     }
@@ -195,10 +191,7 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
     }
 
     @Override
-    public void openLink(Link link) {
-        if (link == null)
-            return;
-
+    public void openLink(@NonNull Link link) {
         if (link.isSelf()) {
             mLinkCommentsView.showCommentsForLink(link.getSubreddit(), link.getId(), null);
         } else {
@@ -212,7 +205,7 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
     }
 
     @Override
-    public void showCommentsForLink(Link link) {
+    public void showCommentsForLink(@NonNull Link link) {
         mLinkCommentsView.showCommentsForLink(link.getSubreddit(), link.getId(), null);
     }
 
@@ -259,7 +252,7 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
     }
 
     @Override
-    public void openLinkUserProfile(Link link) {
+    public void openLinkUserProfile(@NonNull Link link) {
         mLinkCommentsView.openUserProfileView(link);
     }
 
@@ -312,7 +305,7 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
     }
 
     @Override
-    public void showCommentThread(String subreddit, String linkId, String commentId) {
+    public void showCommentThread(@Nullable String subreddit, @Nullable String linkId, @NonNull String commentId) {
         // Calls from a ThreadStubViewHolder will not have subreddit or linkId
         // so only set if it's not null
         mSubreddit = subreddit == null ? mSubreddit : subreddit;
@@ -321,12 +314,12 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
         mLinkCommentsView.showCommentsForLink(mSubreddit, mLinkId, mCommentId);
     }
 
-    @Subscribe
+    @Subscribe  @SuppressWarnings("unused")
     public void onUserIdentitySaved(UserIdentitySavedEvent event) {
         getComments();
     }
 
-    @Subscribe
+    @Subscribe @SuppressWarnings("unused")
     public void onVoteSubmitted(VoteSubmittedEvent event) {
         Votable listing = event.getListing();
 
@@ -343,7 +336,7 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
         }
     }
 
-    @Subscribe
+    @Subscribe @SuppressWarnings("unused")
     public void onSaveSubmitted(SaveSubmittedEvent event) {
         Savable listing = event.getListing();
 
@@ -425,7 +418,7 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
     }
 
     @Override
-    public void openCommentUserProfile(Comment comment) {
+    public void openCommentUserProfile(@NonNull Comment comment) {
         mLinkCommentsView.openUserProfileView(comment);
     }
 
@@ -447,7 +440,7 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
     }
 
     @Override
-    public void openCommentLink(Comment comment) {
+    public void openCommentLink(@NonNull Comment comment) {
         // Link is already being displayed with this presenter
     }
 

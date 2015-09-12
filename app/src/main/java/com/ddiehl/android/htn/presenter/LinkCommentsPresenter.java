@@ -4,6 +4,8 @@
 
 package com.ddiehl.android.htn.presenter;
 
+import android.support.annotation.NonNull;
+
 import com.ddiehl.reddit.listings.AbsComment;
 import com.ddiehl.reddit.listings.CommentStub;
 import com.ddiehl.reddit.listings.Link;
@@ -12,15 +14,14 @@ public interface LinkCommentsPresenter extends LinkPresenter, CommentPresenter {
 
     Link getLinkContext();
     void getComments();
-    void getMoreChildren(CommentStub comment);
-    void toggleThreadVisible(AbsComment comment);
+    void getMoreChildren(@NonNull CommentStub comment);
+    void toggleThreadVisible(@NonNull AbsComment comment);
 
     int getNumComments();
     AbsComment getComment(int position);
 
     String getSort();
     boolean getShowControversiality();
-    void updateSort();
-    void updateSort(String sort);
+    void updateSort(@NonNull String sort);
 
 }

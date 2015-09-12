@@ -33,7 +33,7 @@ public interface MainView extends AnalyticsDialog.Callbacks, ConfirmSignOutDialo
 
     // Methods formerly from BaseView
     void setTitle(@NonNull CharSequence title);
-    void showSpinner(@NonNull String msg);
+    void showSpinner(@Nullable String msg);
     void showSpinner(@StringRes int resId);
     void dismissSpinner();
     void showToast(@NonNull String msg);

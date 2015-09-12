@@ -10,6 +10,8 @@ import android.app.FragmentManager;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -55,9 +57,6 @@ public abstract class AbsListingsFragment extends Fragment
     private int mFirstVisibleItem, mVisibleItemCount, mTotalItemCount;
     String mSelectedSort, mSelectedTimespan;
 
-//    MoPubAdRecycleAdapter mAdAdapter;
-//    RequestParameters mAdRequestParameters;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,27 +92,7 @@ public abstract class AbsListingsFragment extends Fragment
                 }
             }
         });
-
-        // Set up ViewBinder and MoPubAdRecycleAdapter for MoPub ads
-//        ViewBinder vb = new ViewBinder.Builder(R.layout.listings_banner_ad)
-//                .iconImageId(R.id.ad_icon)
-//                .titleId(R.id.ad_title)
-//                .textId(R.id.ad_text)
-//                .build();
-//        MoPubNativeAdRenderer renderer = new MoPubNativeAdRenderer(vb);
-//        mAdAdapter = new MoPubAdRecycleAdapter(getActivity(), mListingsAdapter);
-//        mAdAdapter.registerAdRenderer(renderer);
-//        rv.setAdapter(mAdAdapter);
         rv.setAdapter(mListingsAdapter);
-
-        // Set configuration for MoPub ads
-//        mAdRequestParameters = new RequestParameters.Builder()
-//                .desiredAssets(EnumSet.of(
-//                        RequestParameters.NativeAdAsset.ICON_IMAGE,
-//                        RequestParameters.NativeAdAsset.TITLE,
-//                        RequestParameters.NativeAdAsset.TEXT
-//                ))
-//                .build();
     }
 
     @Override
@@ -124,19 +103,7 @@ public abstract class AbsListingsFragment extends Fragment
         if (mListingsAdapter.getItemCount() == 0) {
             mListingsPresenter.refreshData();
         }
-
-//        loadAdsIfEnabled();
     }
-
-//    private void loadAdsIfEnabled() {
-//        boolean adsEnabled = SettingsManager.getInstance(getActivity()).getAdsEnabled();
-//        if (adsEnabled) {
-//            String key = NUtils.getMoPubApiKey(BuildConfig.DEBUG);
-//            mAdAdapter.loadAds(key, mAdRequestParameters);
-//        } else {
-//            mAdAdapter.clearAds();
-//        }
-//    }
 
     @Override
     public void onPause() {
@@ -146,9 +113,6 @@ public abstract class AbsListingsFragment extends Fragment
 
     @Override
     public void onDestroy() {
-//        if (mAdAdapter != null) {
-//            mAdAdapter.destroy();
-//        }
         super.onDestroy();
     }
 
@@ -333,7 +297,7 @@ public abstract class AbsListingsFragment extends Fragment
     }
 
     @Override
-    public void openShareView(Link link) {
+    public void openShareView(@NonNull Link link) {
         Intent i = new Intent(Intent.ACTION_SEND);
         i.setType("text/plain");
         i.putExtra(Intent.EXTRA_TEXT, "http://www.reddit.com" + link.getPermalink());
@@ -342,7 +306,7 @@ public abstract class AbsListingsFragment extends Fragment
     }
 
     @Override
-    public void openLinkInBrowser(Link link) {
+    public void openLinkInBrowser(@NonNull Link link) {
         Uri uri = Uri.parse(link.getUrl());
         Intent i = new Intent(Intent.ACTION_VIEW, uri);
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -350,7 +314,7 @@ public abstract class AbsListingsFragment extends Fragment
     }
 
     @Override
-    public void openCommentsInBrowser(Link link) {
+    public void openCommentsInBrowser(@NonNull Link link) {
         Uri uri = Uri.parse("http://www.reddit.com" + link.getPermalink());
         Intent i = new Intent(Intent.ACTION_VIEW, uri);
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -358,13 +322,14 @@ public abstract class AbsListingsFragment extends Fragment
     }
 
     @Override
-    public void openLinkInWebView(Link link) {
+    public void openLinkInWebView(@NonNull Link link) {
         mAnalytics.logOpenLink(link);
         ((MainActivity) getActivity()).showWebViewForURL(link.getUrl());
     }
 
     @Override
-    public void showCommentsForLink(String subreddit, String linkId, String commentId) {
+    public void showCommentsForLink(@Nullable String subreddit, @Nullable String linkId,
+                                    @NonNull String commentId) {
         Fragment fragment = LinkCommentsFragment.newInstance(subreddit, linkId, commentId);
         FragmentManager fm = getActivity().getFragmentManager();
         fm.beginTransaction()
@@ -374,17 +339,18 @@ public abstract class AbsListingsFragment extends Fragment
     }
 
     @Override
-    public void showCommentThread(String subreddit, String linkId, String commentId) {
+    public void showCommentThread(@Nullable String subreddit, @Nullable String linkId,
+                                  @NonNull String commentId) {
         showCommentsForLink(subreddit, linkId, commentId);
     }
 
     @Override
-    public void openReplyView(Comment comment) {
+    public void openReplyView(@NonNull Comment comment) {
         mMainView.showToast(R.string.implementation_pending);
     }
 
     @Override
-    public void openShareView(Comment comment) {
+    public void openShareView(@NonNull Comment comment) {
         Intent i = new Intent(Intent.ACTION_SEND);
         i.setType("text/plain");
         i.putExtra(Intent.EXTRA_TEXT, comment.getUrl());
@@ -393,17 +359,17 @@ public abstract class AbsListingsFragment extends Fragment
     }
 
     @Override
-    public void openUserProfileView(Link link) {
+    public void openUserProfileView(@NonNull Link link) {
         ((MainView) getActivity()).showUserProfile("summary", link.getAuthor());
     }
 
     @Override
-    public void openUserProfileView(Comment comment) {
+    public void openUserProfileView(@NonNull Comment comment) {
         ((MainView) getActivity()).showUserProfile("summary", comment.getAuthor());
     }
 
     @Override
-    public void openCommentInBrowser(Comment comment) {
+    public void openCommentInBrowser(@NonNull Comment comment) {
         Uri uri = Uri.parse(comment.getUrl());
         Intent i = new Intent(Intent.ACTION_VIEW, uri);
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

@@ -4,6 +4,9 @@
 
 package com.ddiehl.android.htn.model;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 import com.ddiehl.reddit.listings.AbsComment;
 import com.ddiehl.reddit.listings.Listing;
 
@@ -25,6 +28,6 @@ public interface CommentBank {
     boolean isVisible(int position);
     int getNumVisible();
     AbsComment getVisibleComment(int position);
-    void toggleThreadVisible(AbsComment comment);
-    void collapseAllThreadsUnder(Integer score);
+    void toggleThreadVisible(@NonNull AbsComment comment);
+    void collapseAllThreadsUnder(@Nullable Integer score);
 }

@@ -6,6 +6,7 @@ package com.ddiehl.android.htn.io;
 
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import com.ddiehl.android.htn.AccessTokenManager;
 import com.ddiehl.android.htn.BusProvider;
@@ -147,9 +148,6 @@ public class RedditServiceAuth implements RedditService {
         }
     }
 
-    /**
-     * Retrieves access token when an authorization code is received
-     */
     @Subscribe @SuppressWarnings("unused")
     public void onUserAuthCodeReceived(UserAuthCodeReceivedEvent event) {
         String grantType = "authorization_code";
@@ -166,9 +164,6 @@ public class RedditServiceAuth implements RedditService {
                         });
     }
 
-    /**
-     * Retrieves access token when application has a refresh token available
-     */
     @Subscribe @SuppressWarnings("unused")
     public void onRefreshUserAccessToken(RefreshUserAccessTokenEvent event) {
         String grantType = "refresh_token";
@@ -185,9 +180,6 @@ public class RedditServiceAuth implements RedditService {
                         });
     }
 
-    /**
-     * Invalidates an access token when a user requests sign out
-     */
     @Subscribe @SuppressWarnings("unused")
     public void onUserSignOut(UserSignOutEvent event) {
         AccessToken token = mAccessTokenManager.getUserAccessToken();
@@ -247,7 +239,7 @@ public class RedditServiceAuth implements RedditService {
     /////////////////////////////////////
 
     @Subscribe @SuppressWarnings("unused") @Override
-    public void onLoadLinks(LoadSubredditEvent event) {
+    public void onLoadLinks(@NonNull LoadSubredditEvent event) {
         if (!mAccessTokenManager.hasValidAccessToken()) {
             mQueuedEvent = event;
             AccessToken userAccessToken = mAccessTokenManager.getUserAccessToken();
@@ -266,7 +258,7 @@ public class RedditServiceAuth implements RedditService {
     }
 
     @Subscribe @SuppressWarnings("unused") @Override
-    public void onLoadLinkComments(LoadLinkCommentsEvent event) {
+    public void onLoadLinkComments(@NonNull LoadLinkCommentsEvent event) {
         if (!mAccessTokenManager.hasValidAccessToken()) {
             mQueuedEvent = event;
             AccessToken userAccessToken = mAccessTokenManager.getUserAccessToken();
@@ -285,7 +277,7 @@ public class RedditServiceAuth implements RedditService {
     }
 
     @Subscribe @SuppressWarnings("unused") @Override
-    public void onLoadMoreChildren(LoadMoreChildrenEvent event) {
+    public void onLoadMoreChildren(@NonNull LoadMoreChildrenEvent event) {
         if (!mAccessTokenManager.hasValidAccessToken()) {
             mQueuedEvent = event;
             AccessToken userAccessToken = mAccessTokenManager.getUserAccessToken();
@@ -304,7 +296,7 @@ public class RedditServiceAuth implements RedditService {
     }
 
     @Subscribe @SuppressWarnings("unused") @Override
-    public void onLoadUserProfileSummary(LoadUserProfileSummaryEvent event) {
+    public void onLoadUserProfileSummary(@NonNull LoadUserProfileSummaryEvent event) {
         if (!mAccessTokenManager.hasValidAccessToken()) {
             mQueuedEvent = event;
             AccessToken userAccessToken = mAccessTokenManager.getUserAccessToken();
@@ -323,7 +315,7 @@ public class RedditServiceAuth implements RedditService {
     }
 
     @Subscribe @SuppressWarnings("unused") @Override
-    public void onLoadUserProfile(LoadUserProfileListingEvent event) {
+    public void onLoadUserProfile(@NonNull LoadUserProfileListingEvent event) {
         if (!mAccessTokenManager.hasValidAccessToken()) {
             mQueuedEvent = event;
             AccessToken userAccessToken = mAccessTokenManager.getUserAccessToken();
@@ -342,7 +334,7 @@ public class RedditServiceAuth implements RedditService {
     }
 
     @Subscribe @SuppressWarnings("unused") @Override
-    public void onGetSubredditInfo(GetSubredditInfoEvent event) {
+    public void onGetSubredditInfo(@NonNull GetSubredditInfoEvent event) {
         if (!mAccessTokenManager.hasValidAccessToken()) {
             mQueuedEvent = event;
             AccessToken userAccessToken = mAccessTokenManager.getUserAccessToken();
@@ -365,7 +357,7 @@ public class RedditServiceAuth implements RedditService {
     /////////////////////////////////////
 
     @Subscribe @SuppressWarnings("unused") @Override
-    public void onGetUserIdentity(GetUserIdentityEvent event) {
+    public void onGetUserIdentity(@NonNull GetUserIdentityEvent event) {
         if (mAccessTokenManager.hasValidUserAccessToken()) {
             mServiceAPI.onGetUserIdentity(event);
             return;
@@ -381,7 +373,7 @@ public class RedditServiceAuth implements RedditService {
     }
 
     @Subscribe @SuppressWarnings("unused") @Override
-    public void onGetUserSettings(GetUserSettingsEvent event) {
+    public void onGetUserSettings(@NonNull GetUserSettingsEvent event) {
         if (mAccessTokenManager.hasValidUserAccessToken()) {
             mServiceAPI.onGetUserSettings(event);
             return;
@@ -397,7 +389,7 @@ public class RedditServiceAuth implements RedditService {
     }
 
     @Subscribe @SuppressWarnings("unused") @Override
-    public void onUpdateUserSettings(UpdateUserSettingsEvent event) {
+    public void onUpdateUserSettings(@NonNull UpdateUserSettingsEvent event) {
         if (mAccessTokenManager.hasValidUserAccessToken()) {
             mServiceAPI.onUpdateUserSettings(event);
             return;
@@ -413,7 +405,7 @@ public class RedditServiceAuth implements RedditService {
     }
 
     @Subscribe @SuppressWarnings("unused") @Override
-    public void onVote(VoteEvent event) {
+    public void onVote(@NonNull VoteEvent event) {
         if (mAccessTokenManager.hasValidUserAccessToken()) {
             mServiceAPI.onVote(event);
             return;
@@ -429,7 +421,7 @@ public class RedditServiceAuth implements RedditService {
     }
 
     @Subscribe @SuppressWarnings("unused") @Override
-    public void onSave(SaveEvent event) {
+    public void onSave(@NonNull SaveEvent event) {
         if (mAccessTokenManager.hasValidUserAccessToken()) {
             mServiceAPI.onSave(event);
             return;
@@ -445,7 +437,7 @@ public class RedditServiceAuth implements RedditService {
     }
 
     @Subscribe @SuppressWarnings("unused") @Override
-    public void onHide(HideEvent event) {
+    public void onHide(@NonNull HideEvent event) {
         if (mAccessTokenManager.hasValidUserAccessToken()) {
             mServiceAPI.onHide(event);
             return;
@@ -461,7 +453,7 @@ public class RedditServiceAuth implements RedditService {
     }
 
     @Subscribe @SuppressWarnings("unused") @Override
-    public void onReport(ReportEvent event) {
+    public void onReport(@NonNull ReportEvent event) {
         if (mAccessTokenManager.hasValidUserAccessToken()) {
             mServiceAPI.onReport(event);
             return;
@@ -477,7 +469,7 @@ public class RedditServiceAuth implements RedditService {
     }
 
     @Subscribe @SuppressWarnings("unused") @Override
-    public void onAddFriend(FriendAddEvent event) {
+    public void onAddFriend(@NonNull FriendAddEvent event) {
         if (mAccessTokenManager.hasValidUserAccessToken()) {
             mServiceAPI.onAddFriend(event);
             return;
@@ -493,7 +485,7 @@ public class RedditServiceAuth implements RedditService {
     }
 
     @Subscribe @SuppressWarnings("unused") @Override
-    public void onDeleteFriend(FriendDeleteEvent event) {
+    public void onDeleteFriend(@NonNull FriendDeleteEvent event) {
         if (mAccessTokenManager.hasValidUserAccessToken()) {
             mServiceAPI.onDeleteFriend(event);
             return;
@@ -509,7 +501,7 @@ public class RedditServiceAuth implements RedditService {
     }
 
     @Subscribe @SuppressWarnings("unused") @Override
-    public void onSaveFriendNote(FriendNoteSaveEvent event) {
+    public void onSaveFriendNote(@NonNull FriendNoteSaveEvent event) {
         if (mAccessTokenManager.hasValidUserAccessToken()) {
             mServiceAPI.onSaveFriendNote(event);
             return;

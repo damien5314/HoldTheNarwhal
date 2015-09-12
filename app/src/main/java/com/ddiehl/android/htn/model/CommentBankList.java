@@ -4,6 +4,9 @@
 
 package com.ddiehl.android.htn.model;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 import com.ddiehl.reddit.listings.AbsComment;
 import com.ddiehl.reddit.listings.Comment;
 import com.ddiehl.reddit.listings.Listing;
@@ -109,7 +112,7 @@ public class CommentBankList implements CommentBank {
     }
 
     @Override
-    public void toggleThreadVisible(AbsComment comment) {
+    public void toggleThreadVisible(@NonNull AbsComment comment) {
         setThreadVisible(indexOf(comment), comment.isCollapsed());
     }
 
@@ -171,9 +174,8 @@ public class CommentBankList implements CommentBank {
     }
 
     @Override
-    public void collapseAllThreadsUnder(Integer score) {
-        if (score == null)
-            return;
+    public void collapseAllThreadsUnder(@Nullable Integer score) {
+        if (score == null) return;
         Listing current;
         Comment comment;
         for (int i = 0; i < mData.size(); i++) {

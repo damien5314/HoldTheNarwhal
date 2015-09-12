@@ -66,7 +66,7 @@ public class ThreadStubViewHolder extends RecyclerView.ViewHolder {
         }
     }
 
-    @OnClick(R.id.comment_more)
+    @OnClick(R.id.comment_more) @SuppressWarnings("unused")
     void onClick() {
         if (mCommentStub.getCount() == 0) {
             mCommentPresenter.showCommentThread(null, null, mCommentStub.getParentId());

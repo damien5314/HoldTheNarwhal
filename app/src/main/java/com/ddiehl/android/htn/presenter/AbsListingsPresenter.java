@@ -5,6 +5,8 @@
 package com.ddiehl.android.htn.presenter;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.ContextMenu;
 import android.view.View;
 
@@ -103,7 +105,7 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
     abstract void requestData();
 
     @Override
-    public void setData(List<Listing> data) {
+    public void setData(@NonNull List<Listing> data) {
         mListings.clear();
         mListings.addAll(data);
     }
@@ -154,7 +156,7 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
     }
 
     @Override
-    public void updateSubreddit(String subreddit) {
+    public void updateSubreddit(@Nullable String subreddit) {
         mSubreddit = subreddit;
         mSort = "hot";
         mTimespan = "all";
@@ -169,7 +171,7 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
     }
 
     @Override
-    public void updateSort(String sort) {
+    public void updateSort(@Nullable String sort) {
         if (!mSort.equals(sort)) {
             mSort = sort;
             mSettingsManager.saveCommentSort(mSort);
@@ -178,7 +180,7 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
     }
 
     @Override
-    public void updateSort(String sort, String timespan) {
+    public void updateSort(@Nullable String sort, @Nullable String timespan) {
         if (mSort.equals(sort) && mTimespan.equals(timespan)) {
             return;
         }
@@ -275,7 +277,7 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
     }
 
     @Override
-    public void openLink(Link link) {
+    public void openLink(@NonNull Link link) {
         if (link == null)
             return;
 
@@ -293,7 +295,7 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
     }
 
     @Override
-    public void showCommentsForLink(Link link) {
+    public void showCommentsForLink(@NonNull Link link) {
         mListingsView.showCommentsForLink(link.getSubreddit(), link.getId(), null);
     }
 
@@ -346,7 +348,7 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
     }
 
     @Override
-    public void openLinkUserProfile(Link link) {
+    public void openLinkUserProfile(@NonNull Link link) {
 //        String username = link.getAuthor();
         mListingsView.openUserProfileView(link);
     }
@@ -407,13 +409,13 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
     }
 
     @Override
-    public void showCommentThread(String subreddit, String linkId, String commentId) {
+    public void showCommentThread(@Nullable String subreddit, @Nullable String linkId, @NonNull String commentId) {
         linkId = linkId.substring(3); // Trim type prefix
         mListingsView.showCommentThread(subreddit, linkId, commentId);
     }
 
     @Override
-    public void getMoreChildren(CommentStub comment) {
+    public void getMoreChildren(@NonNull CommentStub comment) {
         // Comment stubs cannot appear in a listing view
     }
 
@@ -482,7 +484,7 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
     }
 
     @Override
-    public void openCommentUserProfile(Comment comment) {
+    public void openCommentUserProfile(@NonNull Comment comment) {
         mListingsView.openUserProfileView(comment);
     }
 
@@ -504,7 +506,7 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
     }
 
     @Override
-    public void openCommentLink(Comment comment) {
+    public void openCommentLink(@NonNull Comment comment) {
 //        Comment comment = (Comment) mListingSelected;
         mListingsView.showCommentsForLink(comment.getSubreddit(), comment.getLinkId().substring(3), null);
     }

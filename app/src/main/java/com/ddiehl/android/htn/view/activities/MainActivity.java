@@ -15,6 +15,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
@@ -114,7 +115,7 @@ public class MainActivity extends AppCompatActivity implements MainView,
     }
 
     @Override
-    public void updateUserIdentity(UserIdentity identity) {
+    public void updateUserIdentity(@Nullable UserIdentity identity) {
         mCurrentUser = identity;
         mAccountNameView.setText(identity == null ?
                 getString(R.string.account_name_unauthorized) : identity.getName());
@@ -181,15 +182,6 @@ public class MainActivity extends AppCompatActivity implements MainView,
     @Override
     public void showUserProfile(@NonNull String username) {
         showUserProfile("summary", username);
-
-        // This is not view logic
-//        UserIdentity user = mMainPresenter.getAuthorizedUser();
-//        if (user != null) {
-//            String username = user.getName();
-//            showUserProfile("summary", username);
-//        } else {
-//            mBus.post(new UserSignOutEvent());
-//        }
     }
 
     @Override
@@ -201,7 +193,7 @@ public class MainActivity extends AppCompatActivity implements MainView,
     }
 
     @Override
-    public void showSubreddit(String subreddit) {
+    public void showSubreddit(@Nullable String subreddit) {
         closeNavigationDrawer();
         Fragment f = SubredditFragment.newInstance(subreddit);
         showFragment(f);
@@ -219,7 +211,7 @@ public class MainActivity extends AppCompatActivity implements MainView,
         showToast(R.string.implementation_pending);
     }
 
-    @OnClick(R.id.sign_out_button)
+    @OnClick(R.id.sign_out_button) @SuppressWarnings("unused")
     void onSignOut() {
         new ConfirmSignOutDialog().show(getFragmentManager(), DIALOG_CONFIRM_SIGN_OUT);
         mAnalytics.logClickedSignOut();
@@ -236,7 +228,7 @@ public class MainActivity extends AppCompatActivity implements MainView,
     }
 
     @Override
-    public void showSpinner(@NonNull String message) {
+    public void showSpinner(@Nullable String message) {
         if (mLoadingOverlay == null) {
             mLoadingOverlay = new ProgressDialog(this, R.style.ProgressDialog);
             mLoadingOverlay.setCancelable(true);
@@ -247,7 +239,7 @@ public class MainActivity extends AppCompatActivity implements MainView,
     }
 
     @Override
-    public void showSpinner(int resId) {
+    public void showSpinner(@StringRes int resId) {
         showSpinner(getString(resId));
     }
 
@@ -259,7 +251,7 @@ public class MainActivity extends AppCompatActivity implements MainView,
     }
 
     @Override
-    public void showToast(int resId) {
+    public void showToast(@StringRes int resId) {
         showToast(getString(resId));
     }
 
@@ -282,7 +274,7 @@ public class MainActivity extends AppCompatActivity implements MainView,
     }
 
     @Override
-    public void loadImageIntoDrawerHeader(String url) {
+    public void loadImageIntoDrawerHeader(@Nullable String url) {
         Picasso.with(this)
                 .load(url)
                 .into(mHeaderImage);
@@ -394,7 +386,7 @@ public class MainActivity extends AppCompatActivity implements MainView,
         return getFragmentManager().findFragmentById(R.id.fragment_container);
     }
 
-    private void showFragment(Fragment f) {
+    private void showFragment(@NonNull Fragment f) {
         FragmentManager fm = getFragmentManager();
         FragmentTransaction ft = fm.beginTransaction().replace(R.id.fragment_container, f);
 

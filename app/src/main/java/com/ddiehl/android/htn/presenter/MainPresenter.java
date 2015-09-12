@@ -4,13 +4,15 @@
 
 package com.ddiehl.android.htn.presenter;
 
+import android.support.annotation.Nullable;
+
 public interface MainPresenter {
 
     void onApplicationStart();
     void onApplicationStop();
     void signOutUser();
     String getUsernameContext();
-    void setUsernameContext(String username);
+    void setUsernameContext(@Nullable String username);
     void onAnalyticsAccepted();
     void onAnalyticsDeclined();
 }

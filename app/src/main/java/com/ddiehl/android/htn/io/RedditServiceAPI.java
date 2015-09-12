@@ -5,6 +5,7 @@
 package com.ddiehl.android.htn.io;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.ddiehl.android.htn.AccessTokenManager;
@@ -90,7 +91,7 @@ public class RedditServiceAPI implements RedditService {
     }
 
     private RedditAPI buildApi() {
-        int cacheSize = 10 * 1024 * 1024; // 10 MiB
+        final int cacheSize = 10 * 1024 * 1024; // 10 MiB
         OkHttpClient client = new OkHttpClient();
         File cache = new File(mContext.getCacheDir().getAbsolutePath(), "htn-http-cache");
         client.setCache(new Cache(cache, cacheSize));
@@ -133,7 +134,7 @@ public class RedditServiceAPI implements RedditService {
     }
 
     @Override
-    public void onGetUserIdentity(GetUserIdentityEvent event) {
+    public void onGetUserIdentity(@NonNull GetUserIdentityEvent event) {
         mAPI.getUserIdentity()
                 .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -146,7 +147,7 @@ public class RedditServiceAPI implements RedditService {
     }
 
     @Override
-    public void onGetUserSettings(GetUserSettingsEvent event) {
+    public void onGetUserSettings(@NonNull GetUserSettingsEvent event) {
         mAPI.getUserSettings()
                 .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -159,7 +160,7 @@ public class RedditServiceAPI implements RedditService {
     }
 
     @Override
-    public void onUpdateUserSettings(UpdateUserSettingsEvent event) {
+    public void onUpdateUserSettings(@NonNull UpdateUserSettingsEvent event) {
         String json = new Gson().toJson(event.getPrefs());
         mAPI.updateUserSettings(RequestBody.create(MediaType.parse("application/json"), json))
                 .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
@@ -176,7 +177,7 @@ public class RedditServiceAPI implements RedditService {
      * Retrieves link listings for subreddit
      */
     @Override
-    public void onLoadLinks(LoadSubredditEvent event) {
+    public void onLoadLinks(@NonNull LoadSubredditEvent event) {
         String subreddit = event.getSubreddit();
         String sort = event.getSort();
         String timespan = event.getTimeSpan();
@@ -197,7 +198,7 @@ public class RedditServiceAPI implements RedditService {
      * Retrieves comment listings for link passed as parameter
      */
     @Override
-    public void onLoadLinkComments(LoadLinkCommentsEvent event) {
+    public void onLoadLinkComments(@NonNull LoadLinkCommentsEvent event) {
         String subreddit = event.getSubreddit();
         String article = event.getArticle();
         String sort = event.getSort();
@@ -218,7 +219,7 @@ public class RedditServiceAPI implements RedditService {
      * Retrieves more comments for link, with comment stub passed as parameter
      */
     @Override
-    public void onLoadMoreChildren(LoadMoreChildrenEvent event) {
+    public void onLoadMoreChildren(@NonNull LoadMoreChildrenEvent event) {
         Link link = event.getLink();
         final CommentStub parentStub = event.getParentCommentStub();
         List<String> children = event.getChildren();
@@ -243,7 +244,7 @@ public class RedditServiceAPI implements RedditService {
     }
 
     @Override
-    public void onLoadUserProfileSummary(LoadUserProfileSummaryEvent event) {
+    public void onLoadUserProfileSummary(@NonNull LoadUserProfileSummaryEvent event) {
         final String username = event.getUsername();
         getUserInfo(username);
         getUserTrophies(username);
@@ -297,7 +298,7 @@ public class RedditServiceAPI implements RedditService {
     }
 
     @Override
-    public void onLoadUserProfile(LoadUserProfileListingEvent event) {
+    public void onLoadUserProfile(@NonNull LoadUserProfileListingEvent event) {
         final String show = event.getShow();
         final String userId = event.getUsername();
         final String sort = event.getSort();
@@ -316,7 +317,7 @@ public class RedditServiceAPI implements RedditService {
     }
 
     @Override
-    public void onGetSubredditInfo(GetSubredditInfoEvent event) {
+    public void onGetSubredditInfo(@NonNull GetSubredditInfoEvent event) {
         final String name = event.getSubredditName();
 
         mAPI.getSubredditInfo(name)
@@ -335,7 +336,7 @@ public class RedditServiceAPI implements RedditService {
      * Submits a vote on a link or comment
      */
     @Override
-    public void onVote(final VoteEvent event) {
+    public void onVote(@NonNull final VoteEvent event) {
         final Votable listing = event.getListing();
         String fullname = String.format("%s_%s", event.getType(), listing.getId());
 
@@ -358,7 +359,7 @@ public class RedditServiceAPI implements RedditService {
      * (un)Saves a link or comment
      */
     @Override
-    public void onSave(final SaveEvent event) {
+    public void onSave(@NonNull final SaveEvent event) {
         final Savable listing = event.getListing();
         final String category = event.getCategory();
         final boolean toSave = event.isToSave();
@@ -388,7 +389,7 @@ public class RedditServiceAPI implements RedditService {
     }
 
     @Override
-    public void onHide(final HideEvent event) {
+    public void onHide(@NonNull final HideEvent event) {
         final Hideable listing = event.getListing();
         final boolean toHide = event.isToHide();
 
@@ -417,12 +418,12 @@ public class RedditServiceAPI implements RedditService {
     }
 
     @Override
-    public void onReport(final ReportEvent event) {
+    public void onReport(@NonNull final ReportEvent event) {
 
     }
 
     @Override
-    public void onAddFriend(FriendAddEvent event) {
+    public void onAddFriend(@NonNull FriendAddEvent event) {
         String username = event.getUsername();
         String json = "{}";
         mAPI.addFriend(username, RequestBody.create(MediaType.parse("application/json"), json))
@@ -437,7 +438,7 @@ public class RedditServiceAPI implements RedditService {
     }
 
     @Override
-    public void onSaveFriendNote(FriendNoteSaveEvent event) {
+    public void onSaveFriendNote(@NonNull FriendNoteSaveEvent event) {
         String username = event.getUsername();
         String note = event.getNote();
         if (TextUtils.isEmpty(note)) {
@@ -457,7 +458,7 @@ public class RedditServiceAPI implements RedditService {
     }
 
     @Override
-    public void onDeleteFriend(FriendDeleteEvent event) {
+    public void onDeleteFriend(@NonNull FriendDeleteEvent event) {
         String username = event.getUsername();
         mAPI.deleteFriend(username)
                 .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())

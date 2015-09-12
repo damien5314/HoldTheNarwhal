@@ -49,17 +49,17 @@ public class ListingsCommentViewHolder extends RecyclerView.ViewHolder
         itemView.setOnCreateContextMenuListener(this);
     }
 
-    @OnClick(R.id.comment_metadata)
+    @OnClick(R.id.comment_metadata) @SuppressWarnings("unused")
     void onClickMetadata(View v) {
         v.showContextMenu();
     }
 
-    @OnClick(R.id.comment_body)
+    @OnClick(R.id.comment_body) @SuppressWarnings("unused")
     void onClickBody(View v) {
         v.showContextMenu();
     }
 
-    @OnClick(R.id.comment_link_title)
+    @OnClick(R.id.comment_link_title) @SuppressWarnings("unused")
     void onClickTitle() {
         mCommentPresenter.openCommentLink(mComment);
     }
