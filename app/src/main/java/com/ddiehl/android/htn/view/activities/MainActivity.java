@@ -331,9 +331,7 @@ public class MainActivity extends AppCompatActivity implements MainView,
 
     @Override
     public void showSubredditIfEmpty(@Nullable String subreddit) {
-        FragmentManager fm = getFragmentManager();
-        Fragment f = getCurrentDisplayedFragment();
-        if (f == null) {
+        if (getCurrentDisplayedFragment() == null) {
             showSubreddit(subreddit);
         }
     }
