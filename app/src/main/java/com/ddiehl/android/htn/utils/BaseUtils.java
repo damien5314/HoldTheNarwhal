@@ -11,12 +11,12 @@ import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.ddiehl.android.htn.R;
+import com.orhanobut.logger.Logger;
 import com.squareup.okhttp.Headers;
 import com.squareup.okhttp.Response;
 import com.squareup.okhttp.ResponseBody;
@@ -41,7 +41,7 @@ public class BaseUtils {
 
     public static void showError(Context context, @Nullable retrofit.Response error) {
         String code = error == null ? "NULL" : String.valueOf(error.code());
-        Log.d(TAG, String.format("Retrofit error (STATUS %s)", code));
+        Logger.d(String.format("Retrofit error (STATUS %s)", code));
         Toast.makeText(context,
                 String.format("An error has occurred (%s)", code), Toast.LENGTH_LONG).show();
     }
@@ -73,15 +73,15 @@ public class BaseUtils {
     }
 
     public static void printResponseStatus(@NonNull Response response) {
-        Log.d(TAG, String.format("URL: %s (STATUS: %s)",
+        Logger.d(String.format("URL: %s (STATUS: %s)",
                 response.request().urlString(), response.code()));
     }
 
     public static void printResponseHeaders(Response response) {
         if (response != null) {
-            Log.d(TAG, "--HEADERS--");
+            Logger.d("--HEADERS--");
             Headers headers = response.headers();
-            Log.d(TAG, headers.toString());
+            Logger.d(headers.toString());
         }
     }
 
@@ -89,9 +89,9 @@ public class BaseUtils {
         if (response != null) {
             try {
                 ResponseBody body = response.body();
-                Log.d(TAG, "--BODY-- LENGTH: " + body.bytes().length);
+                Logger.d("--BODY-- LENGTH: " + body.bytes().length);
                 InputStream in_s = body.byteStream();
-                Log.d(TAG, getStringFromInputStream(in_s));
+                Logger.d(getStringFromInputStream(in_s));
                 in_s.close();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -121,7 +121,7 @@ public class BaseUtils {
                 br.close();
             }
         } catch (FileNotFoundException e) {
-            Log.e(TAG, "Unable to find file: " + file.getAbsolutePath());
+            Logger.e("Unable to find file: " + file.getAbsolutePath());
             e.printStackTrace();
         }
         return null;
@@ -146,7 +146,7 @@ public class BaseUtils {
 
             return sb.toString();
         } catch (NoSuchAlgorithmException e) {
-            Log.w(TAG, "Unable to obtain MD5 hash");
+            Logger.w("Unable to obtain MD5 hash");
             e.printStackTrace();
         }
 
@@ -171,16 +171,16 @@ public class BaseUtils {
             ZipEntry ze = zf.getEntry("classes.dex");
             return ze.getTime();
         } catch (IOException e) {
-            Log.e(TAG, "Exception while getting build time", e);
+            Logger.e("Exception while getting build time", e);
         } catch (PackageManager.NameNotFoundException e) {
-            Log.e(TAG, "Unable to find package name: " + c.getPackageName(), e);
+            Logger.e("Unable to find package name: " + c.getPackageName(), e);
         } finally {
             try {
                 if (zf != null) {
                     zf.close();
                 }
             } catch (Exception e) {
-                Log.e(TAG, "Error while closing ZipFile", e);
+                Logger.e("Error while closing ZipFile", e);
             }
         }
         return -1;

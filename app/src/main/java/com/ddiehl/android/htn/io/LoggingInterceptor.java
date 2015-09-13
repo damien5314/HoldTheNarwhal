@@ -4,10 +4,9 @@
 
 package com.ddiehl.android.htn.io;
 
-import android.util.Log;
-
 import com.ddiehl.android.htn.BusProvider;
 import com.ddiehl.android.htn.utils.BaseUtils;
+import com.orhanobut.logger.Logger;
 import com.squareup.okhttp.Interceptor;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
@@ -28,7 +27,7 @@ class LoggingInterceptor implements Interceptor {
             if (response != null) BaseUtils.printResponseStatus(response);
             return response;
         } catch (Exception e) {
-            Log.w(TAG, "Exception occurred while sending HTTP request");
+            Logger.w("Exception occurred while sending HTTP request");
             Observable.just(null)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe((action) -> {

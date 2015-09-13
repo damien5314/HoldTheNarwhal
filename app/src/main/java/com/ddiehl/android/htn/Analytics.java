@@ -6,7 +6,6 @@ package com.ddiehl.android.htn;
 
 import android.content.Context;
 import android.os.Build;
-import android.util.Log;
 
 import com.ddiehl.android.htn.events.requests.HideEvent;
 import com.ddiehl.android.htn.events.requests.LoadLinkCommentsEvent;
@@ -24,6 +23,7 @@ import com.ddiehl.reddit.identity.UserIdentity;
 import com.ddiehl.reddit.listings.Link;
 import com.ddiehl.reddit.listings.Listing;
 import com.flurry.android.FlurryAgent;
+import com.orhanobut.logger.Logger;
 import com.squareup.otto.Subscribe;
 
 import java.util.Date;
@@ -43,7 +43,7 @@ public class Analytics {
 
     public void initializeFlurry(Context context) {
         if (mInitialized) {
-            Log.e(TAG, "Analytics already initialized");
+            Logger.e("Analytics already initialized");
             return;
         }
 

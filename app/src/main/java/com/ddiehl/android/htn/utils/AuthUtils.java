@@ -5,9 +5,9 @@
 package com.ddiehl.android.htn.utils;
 
 import android.net.Uri;
-import android.util.Log;
 
 import com.ddiehl.android.htn.io.RedditServiceAuth;
+import com.orhanobut.logger.Logger;
 
 public class AuthUtils {
     private static final String TAG = AuthUtils.class.getSimpleName();
@@ -20,7 +20,7 @@ public class AuthUtils {
         // Verify state parameter is correct
         String returnedState = getValueFromQuery(params[0]);
         if (!returnedState.equals(RedditServiceAuth.STATE)) {
-            Log.e(TAG, "STATE does not match: " + returnedState + " (EXPECTED: " + RedditServiceAuth.STATE + ")");
+            Logger.e("STATE does not match: " + returnedState + " (EXPECTED: " + RedditServiceAuth.STATE + ")");
             return null;
         }
 
@@ -31,7 +31,7 @@ public class AuthUtils {
             return getValueFromQuery(params[1]);
         } else { // User declined to authorize application, or an error occurred
             String error = getValueFromQuery(params[1]);
-            Log.e(TAG, "Error during authorization flow: " + error);
+            Logger.e("Error during authorization flow: " + error);
             return null;
         }
     }

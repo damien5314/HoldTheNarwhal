@@ -5,7 +5,6 @@
 package com.ddiehl.android.htn.presenter;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.ddiehl.android.htn.Analytics;
 import com.ddiehl.android.htn.BusProvider;
@@ -17,6 +16,7 @@ import com.ddiehl.android.htn.events.responses.UserIdentitySavedEvent;
 import com.ddiehl.android.htn.utils.BaseUtils;
 import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.reddit.identity.UserIdentity;
+import com.orhanobut.logger.Logger;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -108,7 +108,7 @@ public class MainPresenterImpl implements MainPresenter {
 
     @Subscribe @SuppressWarnings("unused")
     public void onNetworkError(Response error) {
-        Log.e("HTN", "Retrofit Error: " + error.raw().message());
+        Logger.e("Retrofit Error: " + error.raw().message());
 //        Log.e("HTN", Log.getStackTraceString(error));
         mMainView.showToast(BaseUtils.getFriendlyError(mContext, error));
         Analytics.getInstance().logApiError(error);

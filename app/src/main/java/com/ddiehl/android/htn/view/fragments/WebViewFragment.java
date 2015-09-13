@@ -11,7 +11,6 @@ import android.net.MailTo;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -33,6 +32,7 @@ import com.ddiehl.android.htn.events.responses.UserAuthCodeReceivedEvent;
 import com.ddiehl.android.htn.io.RedditServiceAuth;
 import com.ddiehl.android.htn.utils.AuthUtils;
 import com.ddiehl.android.htn.utils.BaseUtils;
+import com.orhanobut.logger.Logger;
 import com.squareup.otto.Bus;
 
 import butterknife.Bind;
@@ -96,7 +96,7 @@ public class WebViewFragment extends Fragment {
         mWebView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                Log.d(TAG, "Loading URL: " + url);
+                Logger.d("Loading URL: " + url);
 
                 if (url.contains(RedditServiceAuth.REDIRECT_URI)
                         && !url.equals(RedditServiceAuth.AUTHORIZATION_URL)) {
