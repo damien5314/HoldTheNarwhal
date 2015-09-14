@@ -173,9 +173,6 @@ public class RedditServiceAPI implements RedditService {
                         });
     }
 
-    /**
-     * Retrieves link listings for subreddit
-     */
     @Override
     public void onLoadLinks(@NonNull LoadSubredditEvent event) {
         String subreddit = event.getSubreddit();
@@ -194,9 +191,6 @@ public class RedditServiceAPI implements RedditService {
                         });
     }
 
-    /**
-     * Retrieves comment listings for link passed as parameter
-     */
     @Override
     public void onLoadLinkComments(@NonNull LoadLinkCommentsEvent event) {
         String subreddit = event.getSubreddit();
@@ -215,15 +209,11 @@ public class RedditServiceAPI implements RedditService {
                         });
     }
 
-    /**
-     * Retrieves more comments for link, with comment stub passed as parameter
-     */
     @Override
     public void onLoadMoreChildren(@NonNull LoadMoreChildrenEvent event) {
         Link link = event.getLink();
         final CommentStub parentStub = event.getParentCommentStub();
         List<String> children = event.getChildren();
-//        children = children.subList(0, Math.min(children.size(), 20));
         String sort = event.getSort();
 
         StringBuilder b = new StringBuilder();
@@ -250,7 +240,6 @@ public class RedditServiceAPI implements RedditService {
         getUserTrophies(username);
     }
 
-    // getUserInfo for friend status, karma, create date
     private void getUserInfo(String username) {
         mAPI.getUserInfo(username)
                 .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
@@ -270,7 +259,6 @@ public class RedditServiceAPI implements RedditService {
                 );
     }
 
-    // getUserTrophies for user trophies
     private void getUserTrophies(String username) {
         mAPI.getUserTrophies(username)
                 .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
@@ -332,9 +320,6 @@ public class RedditServiceAPI implements RedditService {
                 );
     }
 
-    /**
-     * Submits a vote on a link or comment
-     */
     @Override
     public void onVote(@NonNull final VoteEvent event) {
         final Votable listing = event.getListing();
@@ -355,9 +340,6 @@ public class RedditServiceAPI implements RedditService {
                         });
     }
 
-    /**
-     * (un)Saves a link or comment
-     */
     @Override
     public void onSave(@NonNull final SaveEvent event) {
         final Savable listing = event.getListing();
