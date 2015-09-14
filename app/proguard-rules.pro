@@ -76,9 +76,6 @@
 ### Retrolambda and RxAndroid ###
 -dontwarn java.lang.invoke.*
 
-### Bypass ###
--keep class in.uncod.** { *; }
-
 ### InMobi ###
 -keep class com.google.android.gms.ads.identifier.AdvertisingIdClient {
      public *;

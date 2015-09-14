@@ -64,6 +64,7 @@ dependencies {
     // Main dependencies
     compile fileTree(include: '*.jar', dir: 'libs')
     compile project(':reddit')
+    compile project(':bypass')
     compile 'com.android.support:appcompat-v7:23.0.0'
     compile 'com.android.support:support-v4:23.0.0'
     compile 'com.android.support:design:23.0.0'

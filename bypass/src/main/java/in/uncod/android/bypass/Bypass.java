@@ -29,6 +29,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import in.uncod.android.bypass.Element.Type;
 import in.uncod.android.bypass.style.HorizontalLineSpan;
 
+
 public class Bypass {
 	static {
 		System.loadLibrary("bypass");

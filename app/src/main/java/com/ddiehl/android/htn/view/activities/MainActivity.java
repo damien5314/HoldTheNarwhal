@@ -388,8 +388,7 @@ public class MainActivity extends AppCompatActivity implements MainView,
         FragmentManager fm = getFragmentManager();
         FragmentTransaction ft = fm.beginTransaction().replace(R.id.fragment_container, f);
 
-        Fragment cf = getCurrentDisplayedFragment();
-        if (cf != null) {
+        if (getCurrentDisplayedFragment() != null) {
             ft.addToBackStack(null);
         }
 
