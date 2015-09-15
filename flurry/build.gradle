@@ -1,2 +1,0 @@
-configurations.create("default")
-artifacts.add("default", file('FlurryAnalytics-5.5.0.jar'))
