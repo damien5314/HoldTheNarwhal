@@ -18,7 +18,6 @@ import com.ddiehl.android.htn.events.requests.UserSignOutEvent;
 import com.ddiehl.android.htn.events.requests.VoteEvent;
 import com.ddiehl.android.htn.events.responses.UserIdentityRetrievedEvent;
 import com.ddiehl.android.htn.utils.BaseUtils;
-import com.ddiehl.android.htn.utils.NUtils;
 import com.ddiehl.reddit.identity.UserIdentity;
 import com.ddiehl.reddit.listings.Link;
 import com.ddiehl.reddit.listings.Listing;
@@ -49,7 +48,7 @@ public class Analytics {
 
         mContext = context.getApplicationContext();
         mSettingsManager = SettingsManager.getInstance(mContext);
-        String apiKey = NUtils.getFlurryApiKey(BuildConfig.DEBUG);
+        String apiKey = BuildConfig.FLURRY_API_KEY;
         FlurryAgent.init(mContext, apiKey);
         FlurryAgent.setContinueSessionMillis(FLURRY_SESSION_TIMEOUT_SECONDS * 1000);
         FlurryAgent.setCaptureUncaughtExceptions(true);

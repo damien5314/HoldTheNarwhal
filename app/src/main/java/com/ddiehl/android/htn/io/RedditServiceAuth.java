@@ -9,6 +9,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.ddiehl.android.htn.AccessTokenManager;
+import com.ddiehl.android.htn.BuildConfig;
 import com.ddiehl.android.htn.BusProvider;
 import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.SettingsManager;
@@ -37,7 +38,6 @@ import com.ddiehl.android.htn.events.responses.UserAuthorizationRefreshedEvent;
 import com.ddiehl.android.htn.events.responses.UserAuthorizedEvent;
 import com.ddiehl.android.htn.events.responses.UserIdentitySavedEvent;
 import com.ddiehl.android.htn.utils.BaseUtils;
-import com.ddiehl.android.htn.utils.NUtils;
 import com.ddiehl.reddit.identity.AccessToken;
 import com.facebook.stetho.okhttp.StethoInterceptor;
 import com.google.gson.FieldNamingPolicy;
@@ -57,7 +57,7 @@ import rx.schedulers.Schedulers;
 
 public class RedditServiceAuth implements RedditService {
 
-    public static final String CLIENT_ID = NUtils.getRedditClientId();
+    public static final String CLIENT_ID = BuildConfig.REDDIT_APP_ID;
     public static final String RESPONSE_TYPE = "code";
     public static final String DURATION = "permanent";
     public static final String STATE = BaseUtils.getRandomString();
