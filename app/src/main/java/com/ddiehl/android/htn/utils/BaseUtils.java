@@ -39,14 +39,15 @@ import java.util.zip.ZipFile;
 public class BaseUtils {
     private static final String TAG = BaseUtils.class.getSimpleName();
 
-    public static void showError(Context context, @Nullable retrofit.Response error) {
+    public static void showError(@NonNull Context context, @Nullable retrofit.Response error) {
         String code = error == null ? "NULL" : String.valueOf(error.code());
         Logger.d(String.format("Retrofit error (STATUS %s)", code));
         Toast.makeText(context,
                 String.format("An error has occurred (%s)", code), Toast.LENGTH_LONG).show();
     }
 
-    public static String getFriendlyError(Context c, @Nullable retrofit.Response response) {
+    @NonNull
+    public static String getFriendlyError(@NonNull Context c, @Nullable retrofit.Response response) {
         if (response == null) {
             return c.getString(R.string.error_network_unavailable);
         } else {
@@ -66,18 +67,20 @@ public class BaseUtils {
         }
     }
 
-    public static void printResponse(Response response) {
+    public static void printResponse(@Nullable Response response) {
         printResponseStatus(response);
         printResponseHeaders(response);
         printResponseBody(response);
     }
 
-    public static void printResponseStatus(@NonNull Response response) {
-        Logger.d(String.format("URL: %s (STATUS: %s)",
-                response.request().urlString(), response.code()));
+    public static void printResponseStatus(@Nullable Response response) {
+        if (response != null) {
+            Logger.d(String.format("URL: %s (STATUS: %s)",
+                    response.request().urlString(), response.code()));
+        }
     }
 
-    public static void printResponseHeaders(Response response) {
+    public static void printResponseHeaders(@Nullable Response response) {
         if (response != null) {
             Logger.d("--HEADERS--");
             Headers headers = response.headers();
@@ -85,7 +88,7 @@ public class BaseUtils {
         }
     }
 
-    public static void printResponseBody(Response response) {
+    public static void printResponseBody(@Nullable Response response) {
         if (response != null) {
             try {
                 ResponseBody body = response.body();
@@ -99,12 +102,14 @@ public class BaseUtils {
         }
     }
 
-    public static String getStringFromInputStream(InputStream i) {
+    @NonNull
+    public static String getStringFromInputStream(@NonNull InputStream i) {
         Scanner s = new Scanner(i).useDelimiter("\\A");
         return s.hasNext() ? s.next() : "";
     }
 
-    public static String getTextFromFile(File file) throws IOException {
+    @Nullable
+    public static String getTextFromFile(@NonNull File file) throws IOException {
         try {
             BufferedReader br = new BufferedReader(new FileReader(file));
             try {
@@ -127,11 +132,13 @@ public class BaseUtils {
         return null;
     }
 
+    @NonNull
     public static String getRandomString() {
         return UUID.randomUUID().toString();
     }
 
     // http://www.mkyong.com/java/java-md5-hashing-example/
+    @Nullable
     public static String getMd5HexString(@NonNull String s) {
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
@@ -153,7 +160,9 @@ public class BaseUtils {
         return null;
     }
 
-    public static Intent getNewEmailIntent(String address, String subject, String body, String cc) {
+    @NonNull
+    public static Intent getNewEmailIntent(@Nullable String address, @Nullable String subject,
+                                           @Nullable String body, @Nullable String cc) {
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.putExtra(Intent.EXTRA_EMAIL, new String[] { address });
         intent.putExtra(Intent.EXTRA_TEXT, body);
@@ -163,7 +172,7 @@ public class BaseUtils {
         return intent;
     }
 
-    public static long getBuildTime(Context c) {
+    public static long getBuildTime(@NonNull Context c) {
         ZipFile zf = null;
         try {
             ApplicationInfo ai = c.getPackageManager().getApplicationInfo(c.getPackageName(), 0);
@@ -186,13 +195,15 @@ public class BaseUtils {
         return -1;
     }
 
-    public static String getBuildTimeFormatted(Context c) {
+    @NonNull
+    public static String getBuildTimeFormatted(@NonNull Context c) {
         long t = getBuildTime(c);
         return SimpleDateFormat.getDateInstance().format(new java.util.Date(t));
     }
 
-    public static float getScreenWidth(Context c) {
-        Display display = ((WindowManager) c.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+    public static float getScreenWidth(@NonNull Context c) {
+        WindowManager wm = ((WindowManager) c.getSystemService(Context.WINDOW_SERVICE));
+        Display display = wm.getDefaultDisplay();
         DisplayMetrics outMetrics = new DisplayMetrics ();
         display.getMetrics(outMetrics);
 
