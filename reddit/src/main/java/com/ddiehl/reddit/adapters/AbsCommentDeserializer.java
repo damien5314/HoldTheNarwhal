@@ -16,7 +16,6 @@ import com.google.gson.JsonParseException;
 import java.lang.reflect.Type;
 
 public class AbsCommentDeserializer implements JsonDeserializer<Listing> {
-    private static final String TAG = AbsCommentDeserializer.class.getSimpleName();
 
     @Override
     public Listing deserialize(

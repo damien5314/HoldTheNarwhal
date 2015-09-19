@@ -32,7 +32,6 @@ import java.util.Map;
 import retrofit.Response;
 
 public class Analytics {
-    private static final String TAG = Analytics.class.getSimpleName();
 
     private static final int FLURRY_SESSION_TIMEOUT_SECONDS = 30;
 

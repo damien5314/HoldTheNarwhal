@@ -77,7 +77,6 @@ import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
 public class RedditServiceAPI implements RedditService {
-    private static final String TAG = RedditServiceAPI.class.getSimpleName();
 
     private Context mContext;
     private Bus mBus = BusProvider.getInstance();

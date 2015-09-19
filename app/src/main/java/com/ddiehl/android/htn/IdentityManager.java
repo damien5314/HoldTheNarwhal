@@ -16,7 +16,6 @@ import com.squareup.otto.Subscribe;
 import java.util.Date;
 
 public class IdentityManager {
-    private static final String TAG = IdentityManager.class.getSimpleName();
 
     private static final String PREFS_USER_IDENTITY = "prefs_user_identity";
     private static final String PREF_HAS_MAIL = "pref_has_mail";

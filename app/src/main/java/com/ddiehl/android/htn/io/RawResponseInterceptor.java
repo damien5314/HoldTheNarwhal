@@ -12,7 +12,6 @@ import com.squareup.okhttp.Response;
 import java.io.IOException;
 
 public class RawResponseInterceptor implements Interceptor {
-    private static final String TAG = LoggingInterceptor.class.getSimpleName();
 
     @Override
     public Response intercept(Chain chain) throws IOException {

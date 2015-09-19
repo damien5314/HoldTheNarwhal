@@ -10,7 +10,6 @@ import com.ddiehl.android.htn.io.RedditServiceAuth;
 import com.orhanobut.logger.Logger;
 
 public class AuthUtils {
-    private static final String TAG = AuthUtils.class.getSimpleName();
 
     public static String getUserAuthCodeFromRedirectUri(String url) {
         Uri uri = Uri.parse(url);

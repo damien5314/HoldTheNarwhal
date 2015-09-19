@@ -19,7 +19,6 @@ import com.ddiehl.android.htn.utils.BaseUtils;
 import java.io.InputStream;
 
 public class MarkdownTextFragment extends Fragment {
-    private static final String TAG = MarkdownTextFragment.class.getSimpleName();
 
     public static final String ARG_TEXT = "arg_text";
 

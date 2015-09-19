@@ -19,7 +19,6 @@ import java.lang.reflect.Type;
  * where there are no replies and the json is ""
  */
 public class ListingResponseDeserializer implements JsonDeserializer<ListingResponse> {
-    private static final String TAG = ListingResponseDeserializer.class.getSimpleName();
 
     @Override
     public ListingResponse deserialize(

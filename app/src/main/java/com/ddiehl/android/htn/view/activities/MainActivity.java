@@ -56,7 +56,6 @@ import hugo.weaving.DebugLog;
 
 public class MainActivity extends AppCompatActivity implements MainView,
         NavigationView.OnNavigationItemSelectedListener {
-    public static final String TAG = MainActivity.class.getSimpleName();
 
     public static final int REQUEST_NSFW_WARNING = 0x1;
     private static final String DIALOG_NSFW_WARNING = "dialog_nsfw_warning";

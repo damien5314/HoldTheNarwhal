@@ -16,7 +16,6 @@ import java.util.Collection;
 import java.util.List;
 
 public class CommentBankList implements CommentBank {
-    private static final String TAG = CommentBankList.class.getSimpleName();
 
     private List<Listing> mData;
     private List<Listing> mVisibleData;

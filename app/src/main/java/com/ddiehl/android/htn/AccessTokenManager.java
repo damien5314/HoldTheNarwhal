@@ -16,7 +16,6 @@ import com.orhanobut.logger.Logger;
 import java.util.Date;
 
 public class AccessTokenManager {
-    private static final String TAG = AccessTokenManager.class.getSimpleName();
 
     private static final String PREFS_USER_ACCESS_TOKEN = "prefs_user_access_token";
     private static final String PREFS_APPLICATION_ACCESS_TOKEN = "prefs_application_access_token";

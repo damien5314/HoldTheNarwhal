@@ -37,7 +37,6 @@ import java.util.zip.ZipFile;
 
 
 public class BaseUtils {
-    private static final String TAG = BaseUtils.class.getSimpleName();
 
     public static void showError(@NonNull Context context, @Nullable retrofit.Response error) {
         String code = error == null ? "NULL" : String.valueOf(error.code());

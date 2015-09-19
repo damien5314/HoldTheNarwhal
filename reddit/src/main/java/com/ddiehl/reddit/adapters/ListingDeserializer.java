@@ -19,7 +19,6 @@ import com.google.gson.JsonParseException;
 import java.lang.reflect.Type;
 
 public class ListingDeserializer implements JsonDeserializer<Listing> {
-    private static final String TAG = ListingDeserializer.class.getSimpleName();
 
     @Override
     public Listing deserialize(

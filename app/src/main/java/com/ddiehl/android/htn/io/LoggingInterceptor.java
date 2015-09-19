@@ -17,7 +17,6 @@ import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
 class LoggingInterceptor implements Interceptor {
-    private static final String TAG = LoggingInterceptor.class.getSimpleName();
 
     @Override
     public Response intercept(Chain chain) throws IOException {

@@ -40,7 +40,6 @@ import butterknife.ButterKnife;
 
 
 public class WebViewFragment extends Fragment {
-    public static final String TAG = WebViewFragment.class.getSimpleName();
 
     private static final String ARG_URL = "url";
 
