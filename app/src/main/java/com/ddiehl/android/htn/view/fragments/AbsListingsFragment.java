@@ -55,8 +55,6 @@ public abstract class AbsListingsFragment extends Fragment
 
     String mSelectedSort, mSelectedTimespan;
 
-    private int mFirstVisibleItem, mVisibleItemCount, mTotalItemCount;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,6 +77,7 @@ public abstract class AbsListingsFragment extends Fragment
         rv.setLayoutManager(mgr);
         rv.clearOnScrollListeners();
         rv.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            int mFirstVisibleItem, mVisibleItemCount, mTotalItemCount;
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 mVisibleItemCount = mgr.getChildCount();
