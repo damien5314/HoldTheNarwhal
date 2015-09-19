@@ -12,7 +12,7 @@ import com.ddiehl.reddit.listings.Listing;
 
 import java.util.List;
 
-public interface ListingsPresenter extends LinkPresenter, CommentPresenter {
+public interface ListingsPresenter extends BasePresenter, LinkPresenter, CommentPresenter {
 
     void refreshData();
     void setData(@NonNull List<Listing> data);
@@ -34,4 +34,5 @@ public interface ListingsPresenter extends LinkPresenter, CommentPresenter {
     void updateSort(@Nullable String sort, @Nullable String timespan);
 
     UserIdentity getAuthorizedUser();
+    boolean dataRequested();
 }

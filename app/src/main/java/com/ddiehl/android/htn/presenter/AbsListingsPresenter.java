@@ -82,10 +82,21 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
     }
 
     @Override
-    public void refreshData() {
-        if (mListingsRequested)
-            return;
+    public void onResume() {
+        mBus.register(this);
 
+        if (!mListingsRequested && mListings.size() == 0) {
+            refreshData();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        mBus.unregister(this);
+    }
+
+    @Override
+    public void refreshData() {
         mListings.clear();
         mListingsView.listingsUpdated();
         mNextPageListingId = null;
@@ -94,12 +105,11 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
 
     @Override
     public void getMoreData() {
-        if (mListingsRequested)
-            return;
-
-        mListingsRequested = true;
-        mMainView.showSpinner(null);
-        requestData();
+        if (!mListingsRequested) {
+            mListingsRequested = true;
+            mMainView.showSpinner(null);
+            requestData();
+        }
     }
 
     abstract void requestData();
@@ -514,6 +524,11 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
     @Override
     public UserIdentity getAuthorizedUser() {
         return mIdentityManager.getUserIdentity();
+    }
+
+    @Override
+    public boolean dataRequested() {
+        return mListingsRequested;
     }
 
     private void vote(int dir) {

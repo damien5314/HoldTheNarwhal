@@ -45,7 +45,7 @@ public class MainPresenterImpl implements MainPresenter {
     }
 
     @Override
-    public void onApplicationStart() {
+    public void onResume() {
         mBus.register(this);
         UserIdentity user = getAuthorizedUser();
         mMainView.updateUserIdentity(user);
@@ -61,7 +61,7 @@ public class MainPresenterImpl implements MainPresenter {
     }
 
     @Override
-    public void onApplicationStop() {
+    public void onPause() {
         mAnalytics.endSession();
         mBus.unregister(this);
     }

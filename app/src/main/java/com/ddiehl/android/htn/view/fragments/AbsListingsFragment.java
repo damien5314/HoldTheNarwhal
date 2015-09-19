@@ -39,7 +39,6 @@ import butterknife.ButterKnife;
 
 public abstract class AbsListingsFragment extends Fragment
         implements ListingsView, SwipeRefreshLayout.OnRefreshListener {
-    private static final String TAG = AbsListingsFragment.class.getSimpleName();
 
     private static final int REQUEST_CHOOSE_SORT = 0x2;
     private static final int REQUEST_CHOOSE_TIMESPAN = 0x3;
@@ -54,8 +53,9 @@ public abstract class AbsListingsFragment extends Fragment
     ListingsAdapter mListingsAdapter;
     SwipeRefreshLayout mSwipeRefreshLayout;
 
-    private int mFirstVisibleItem, mVisibleItemCount, mTotalItemCount;
     String mSelectedSort, mSelectedTimespan;
+
+    private int mFirstVisibleItem, mVisibleItemCount, mTotalItemCount;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -98,16 +98,12 @@ public abstract class AbsListingsFragment extends Fragment
     @Override
     public void onResume() {
         super.onResume();
-        mBus.register(mListingsPresenter);
-
-        if (mListingsAdapter.getItemCount() == 0) {
-            mListingsPresenter.refreshData();
-        }
+        mListingsPresenter.onResume();
     }
 
     @Override
     public void onPause() {
-        mBus.unregister(mListingsPresenter);
+        mListingsPresenter.onPause();
         super.onPause();
     }
 

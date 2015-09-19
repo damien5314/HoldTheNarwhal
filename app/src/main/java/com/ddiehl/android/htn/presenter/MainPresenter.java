@@ -6,10 +6,8 @@ package com.ddiehl.android.htn.presenter;
 
 import android.support.annotation.Nullable;
 
-public interface MainPresenter {
+public interface MainPresenter extends BasePresenter {
 
-    void onApplicationStart();
-    void onApplicationStop();
     void signOutUser();
     String getUsernameContext();
     void setUsernameContext(@Nullable String username);

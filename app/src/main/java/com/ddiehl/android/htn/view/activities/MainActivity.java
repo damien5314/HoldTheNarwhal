@@ -102,15 +102,17 @@ public class MainActivity extends AppCompatActivity implements MainView,
         mMainPresenter = new MainPresenterImpl(this, this);
     }
 
+    // FIXME Can we change this to onResume()?
     @Override
     protected void onStart() {
         super.onStart();
-        mMainPresenter.onApplicationStart();
+        mMainPresenter.onResume();
     }
 
+    // FIXME Can we change this to onPause()?
     @Override
     protected void onStop() {
-        mMainPresenter.onApplicationStop();
+        mMainPresenter.onPause();
         super.onStop();
     }
 

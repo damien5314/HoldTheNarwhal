@@ -82,6 +82,16 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
     }
 
     @Override
+    public void onResume() {
+
+    }
+
+    @Override
+    public void onPause() {
+
+    }
+
+    @Override
     public void getComments() {
         mMainView.showSpinner(null);
         mBus.post(new LoadLinkCommentsEvent(mSubreddit, mLinkId, mSort, mCommentId));

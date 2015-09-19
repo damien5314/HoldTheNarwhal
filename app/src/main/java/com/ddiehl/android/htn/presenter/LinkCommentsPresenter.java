@@ -10,7 +10,7 @@ import com.ddiehl.reddit.listings.AbsComment;
 import com.ddiehl.reddit.listings.CommentStub;
 import com.ddiehl.reddit.listings.Link;
 
-public interface LinkCommentsPresenter extends LinkPresenter, CommentPresenter {
+public interface LinkCommentsPresenter extends BasePresenter, LinkPresenter, CommentPresenter {
 
     Link getLinkContext();
     void getComments();

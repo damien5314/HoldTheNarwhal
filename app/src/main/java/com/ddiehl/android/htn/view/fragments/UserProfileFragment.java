@@ -132,7 +132,7 @@ public class UserProfileFragment extends AbsListingsFragment {
         super.onStop();
     }
 
-    @Subscribe
+    @Subscribe @SuppressWarnings("unused")
     public void onUserInfoLoaded(UserInfoLoadedEvent event) {
         mMainView.dismissSpinner();
         if (event.isFailed()) {

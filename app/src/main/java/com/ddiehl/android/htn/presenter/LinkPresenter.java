@@ -10,7 +10,7 @@ import android.view.View;
 
 import com.ddiehl.reddit.listings.Link;
 
-public interface LinkPresenter {
+public interface LinkPresenter extends BasePresenter {
 
     void showLinkContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, Link link);
     void openLink(@NonNull Link link);
