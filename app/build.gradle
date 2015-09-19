@@ -31,16 +31,16 @@ android {
             minifyEnabled false
             applicationIdSuffix ".debug"
             versionNameSuffix '-dev'
-            buildConfigField "String", "REDDIT_APP_ID", REDDIT_APP_ID
-            buildConfigField "String", "FLURRY_API_KEY", FLURRY_API_KEY_DEBUG
+            buildConfigField "String", "REDDIT_APP_ID", "\"" + REDDIT_APP_ID + "\""
+            buildConfigField "String", "FLURRY_API_KEY", "\"" + FLURRY_API_KEY_DEBUG + "\""
         }
         release {
             debuggable false
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
-            buildConfigField "String", "REDDIT_APP_ID", REDDIT_APP_ID
-            buildConfigField "String", "FLURRY_API_KEY", FLURRY_API_KEY_PROD
+            buildConfigField "String", "REDDIT_APP_ID", "\"" + REDDIT_APP_ID + "\""
+            buildConfigField "String", "FLURRY_API_KEY", "\"" + FLURRY_API_KEY_PROD + "\""
         }
     }
     compileOptions {
