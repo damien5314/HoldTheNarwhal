@@ -570,4 +570,15 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
             mBus.post(new VoteEvent(votable, listing.getKind(), dir));
         }
     }
+
+    @Override
+    public void onNsfwSelected(boolean nsfwAllowed) {
+        if (nsfwAllowed) {
+            mSettingsManager.setOver18(true);
+            refreshData();
+        } else {
+            mMainView.dismissSpinner();
+            mListingsView.goBack();
+        }
+    }
 }

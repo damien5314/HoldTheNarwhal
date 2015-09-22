@@ -37,4 +37,6 @@ public interface ListingsPresenter extends BasePresenter, LinkPresenter, Comment
 
     void onSortSelected(@Nullable String sort);
     void onTimespanSelected(@Nullable String timespan);
+
+    void onNsfwSelected(boolean nsfwAllowed);
 }

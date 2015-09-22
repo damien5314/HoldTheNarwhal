@@ -117,9 +117,8 @@ public abstract class AbsListingsFragment extends Fragment
                 mListingsPresenter.onTimespanSelected(timespan);
                 break;
             case MainActivity.REQUEST_NSFW_WARNING:
-                if (resultCode == Activity.RESULT_OK) {
-                    mListingsPresenter.refreshData();
-                }
+                boolean result = resultCode == Activity.RESULT_OK;
+                mListingsPresenter.onNsfwSelected(result);
                 break;
         }
     }
@@ -185,6 +184,14 @@ public abstract class AbsListingsFragment extends Fragment
     @Override
     public void onTimespanChanged() {
         getActivity().invalidateOptionsMenu();
+    }
+
+    @Override
+    public void goBack() {
+        FragmentManager fm = getFragmentManager();
+        if (fm.getBackStackEntryCount() > 0) {
+            fm.popBackStack();
+        }
     }
 
     @Override

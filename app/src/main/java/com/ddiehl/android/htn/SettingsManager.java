@@ -111,7 +111,7 @@ public class SettingsManager implements SharedPreferences.OnSharedPreferenceChan
         return mSharedPreferences.getBoolean(PREF_HAS_FROM_REMOTE, false);
     }
 
-    @Subscribe
+    @Subscribe @SuppressWarnings("unused")
     public void onUserSettingsRetrieved(UserSettingsRetrievedEvent event) {
         UserSettings settings = event.getSettings();
         saveUserSettings(settings);
@@ -128,12 +128,6 @@ public class SettingsManager implements SharedPreferences.OnSharedPreferenceChan
         Map<String, String> changedSettings = new HashMap<>(); // Track changed keys and values
 
         switch (key) {
-            case SettingsManager.PREF_ENABLE_ADS:
-                if (sp.getBoolean(SettingsManager.PREF_ENABLE_ADS, false)) {
-                    // Show appreciation for users enabling ads
-//                    showToast(R.string.pref_enable_ads_thanks);
-                }
-                break;
             case SettingsManager.PREF_ALLOW_ANALYTICS:
                 boolean allowed = sp.getBoolean(PREF_ALLOW_ANALYTICS, false);
                 if (allowed) {

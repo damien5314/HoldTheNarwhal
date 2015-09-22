@@ -35,6 +35,7 @@ public class SubredditPresenter extends AbsListingsPresenter {
         if (mSubreddit == null || mSubreddit.equals("all") || mSubredditInfo != null) {
             mBus.post(new LoadSubredditEvent(mSubreddit, mSort, mTimespan, mNextPageListingId));
         } else {
+            mListingsRequested = false;
             mBus.post(new GetSubredditInfoEvent(mSubreddit));
         }
     }

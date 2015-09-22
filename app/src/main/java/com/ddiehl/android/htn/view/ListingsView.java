@@ -14,4 +14,5 @@ public interface ListingsView extends LinkView, CommentView {
     void showTimespanOptionsMenu();
     void onSortChanged();
     void onTimespanChanged();
+    void goBack();
 }
