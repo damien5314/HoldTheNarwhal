@@ -7,10 +7,12 @@ package com.ddiehl.android.htn.presenter;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.ContextMenu;
 import android.view.View;
 
 import com.ddiehl.android.htn.AccessTokenManager;
+import com.ddiehl.android.htn.Analytics;
 import com.ddiehl.android.htn.BusProvider;
 import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
@@ -48,6 +50,7 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
     AccessTokenManager mAccessTokenManager;
     IdentityManager mIdentityManager;
     SettingsManager mSettingsManager;
+    Analytics mAnalytics = Analytics.getInstance();
 
     List<Listing> mListings;
     ListingsView mListingsView;
@@ -173,32 +176,21 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
         refreshData();
     }
 
-    @Override
-    public void updateSort() {
-        String sort = "hot";
-        String timespan = "all";
-        updateSort(sort, timespan);
-    }
-
-    @Override
-    public void updateSort(@Nullable String sort) {
-        if (!mSort.equals(sort)) {
-            mSort = sort;
-            mSettingsManager.saveCommentSort(mSort);
-            refreshData();
-        }
-    }
-
-    @Override
-    public void updateSort(@Nullable String sort, @Nullable String timespan) {
-        if (mSort.equals(sort) && mTimespan.equals(timespan)) {
-            return;
-        }
-
-        mSort = sort;
-        mTimespan = timespan;
-        refreshData();
-    }
+//    @Override
+//    public void updateSort() {
+//        String sort = "hot";
+//        String timespan = "all";
+//        updateSort(sort, timespan);
+//    }
+//
+//    @Override
+//    public void updateSort(@Nullable String sort) {
+//        if (!mSort.equals(sort)) {
+//            mSort = sort;
+//            mSettingsManager.saveCommentSort(mSort);
+//            refreshData();
+//        }
+//    }
 
     @Subscribe
     public void onUserIdentitySaved(UserIdentitySavedEvent event) {
@@ -529,6 +521,42 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
     @Override
     public boolean dataRequested() {
         return mListingsRequested;
+    }
+
+    @Override
+    public void onSortSelected(@Nullable String sort) {
+        if (sort == null) return; // Nothing happened
+        boolean changed = false;
+        if (!mSort.equals(sort)) {
+            mAnalytics.logOptionChangeSort(sort);
+            mSort = sort;
+            changed = true;
+        }
+        if (sort.equals("top") || sort.equals("controversial")) {
+            mListingsView.showTimespanOptionsMenu();
+        } else if (changed) {
+            mListingsView.onSortChanged();
+            onSortChanged();
+        }
+    }
+
+    @Override
+    public void onSortChanged() {
+        if ((mSort.equals("top") || mSort.equals("controversial"))
+                && mTimespan == null){
+            mTimespan = "all";
+        }
+        refreshData();
+    }
+
+    @Override
+    public void onTimespanSelected(@Nullable String timespan) {
+        if (!TextUtils.equals(mTimespan, timespan) && timespan != null) {
+            mTimespan = timespan;
+            mAnalytics.logOptionChangeTimespan(timespan);
+            mListingsView.onTimespanChanged();
+        }
+        onSortChanged(); // Sort was still changed to bring up this prompt, fire the callback
     }
 
     private void vote(int dir) {

@@ -53,8 +53,6 @@ public abstract class AbsListingsFragment extends Fragment
     ListingsAdapter mListingsAdapter;
     SwipeRefreshLayout mSwipeRefreshLayout;
 
-    String mSelectedSort, mSelectedTimespan;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,6 +76,7 @@ public abstract class AbsListingsFragment extends Fragment
         rv.clearOnScrollListeners();
         rv.addOnScrollListener(new RecyclerView.OnScrollListener() {
             int mFirstVisibleItem, mVisibleItemCount, mTotalItemCount;
+
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 mVisibleItemCount = mgr.getChildCount();
@@ -107,32 +106,15 @@ public abstract class AbsListingsFragment extends Fragment
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
-
-    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case REQUEST_CHOOSE_SORT:
-                if (resultCode == Activity.RESULT_OK) {
-                    mSelectedSort = data.getStringExtra(ChooseLinkSortDialog.EXTRA_SORT);
-                    mAnalytics.logOptionChangeSort(mSelectedSort);
-                    if (mSelectedSort.equals("top") || mSelectedSort.equals("controversial")) {
-                        showTimespanOptionsMenu();
-                    } else {
-                        mListingsPresenter.updateSort(mSelectedSort, mSelectedTimespan);
-                        getActivity().invalidateOptionsMenu();
-                    }
-                }
+                String sort = data.getStringExtra(ChooseLinkSortDialog.EXTRA_SORT);
+                mListingsPresenter.onSortSelected(sort);
                 break;
             case REQUEST_CHOOSE_TIMESPAN:
-                if (resultCode == Activity.RESULT_OK) {
-                    mSelectedTimespan = data.getStringExtra(ChooseTimespanDialog.EXTRA_TIMESPAN);
-                    mAnalytics.logOptionChangeTimespan(mSelectedTimespan);
-                    mListingsPresenter.updateSort(mSelectedSort, mSelectedTimespan);
-                    getActivity().invalidateOptionsMenu();
-                }
+                String timespan = data.getStringExtra(ChooseTimespanDialog.EXTRA_TIMESPAN);
+                mListingsPresenter.onTimespanSelected(timespan);
                 break;
             case MainActivity.REQUEST_NSFW_WARNING:
                 if (resultCode == Activity.RESULT_OK) {
@@ -179,18 +161,30 @@ public abstract class AbsListingsFragment extends Fragment
         return super.onOptionsItemSelected(item);
     }
 
-    void showSortOptionsMenu() {
+    @Override
+    public void showSortOptionsMenu() {
         FragmentManager fm = getActivity().getFragmentManager();
         ChooseLinkSortDialog chooseLinkSortDialog = ChooseLinkSortDialog.newInstance(mListingsPresenter.getSort());
         chooseLinkSortDialog.setTargetFragment(this, REQUEST_CHOOSE_SORT);
         chooseLinkSortDialog.show(fm, DIALOG_CHOOSE_SORT);
     }
 
-    void showTimespanOptionsMenu() {
+    @Override
+    public void showTimespanOptionsMenu() {
         FragmentManager fm = getActivity().getFragmentManager();
         ChooseTimespanDialog chooseTimespanDialog = ChooseTimespanDialog.newInstance(mListingsPresenter.getTimespan());
         chooseTimespanDialog.setTargetFragment(this, REQUEST_CHOOSE_TIMESPAN);
         chooseTimespanDialog.show(fm, DIALOG_CHOOSE_TIMESPAN);
+    }
+
+    @Override
+    public void onSortChanged() {
+        getActivity().invalidateOptionsMenu();
+    }
+
+    @Override
+    public void onTimespanChanged() {
+        getActivity().invalidateOptionsMenu();
     }
 
     @Override

@@ -57,4 +57,10 @@ public class ChooseTimespanDialog extends DialogFragment {
                 });
         return builder.create();
     }
+
+    @Override
+    public void onCancel(DialogInterface dialog) {
+        getTargetFragment().onActivityResult(
+                getTargetRequestCode(), Activity.RESULT_CANCELED, new Intent());
+    }
 }

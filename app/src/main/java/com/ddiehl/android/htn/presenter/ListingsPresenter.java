@@ -29,10 +29,12 @@ public interface ListingsPresenter extends BasePresenter, LinkPresenter, Comment
     String getShow();
     boolean getShowControversiality();
     void updateSubreddit(@Nullable String subreddit);
-    void updateSort();
-    void updateSort(@Nullable String sort);
-    void updateSort(@Nullable String sort, @Nullable String timespan);
+    void onSortChanged();
+//    void updateSort(@Nullable String sort, @Nullable String timespan);
 
     UserIdentity getAuthorizedUser();
     boolean dataRequested();
+
+    void onSortSelected(@Nullable String sort);
+    void onTimespanSelected(@Nullable String timespan);
 }

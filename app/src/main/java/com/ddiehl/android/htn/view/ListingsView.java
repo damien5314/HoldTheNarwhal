@@ -10,4 +10,8 @@ public interface ListingsView extends LinkView, CommentView {
     void listingUpdatedAt(int position);
     void listingRemovedAt(int position);
 
+    void showSortOptionsMenu();
+    void showTimespanOptionsMenu();
+    void onSortChanged();
+    void onTimespanChanged();
 }

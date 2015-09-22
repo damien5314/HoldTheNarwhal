@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -55,5 +56,11 @@ public class ChooseLinkSortDialog extends DialogFragment {
                     dismiss();
                 });
         return builder.create();
+    }
+
+    @Override
+    public void onCancel(DialogInterface dialog) {
+        getTargetFragment().onActivityResult(
+                getTargetRequestCode(), Activity.RESULT_CANCELED, new Intent());
     }
 }
