@@ -234,6 +234,7 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
         }
 
         listing.applyVote(event.getDirection());
+        //noinspection SuspiciousMethodCalls
         mListingsView.listingUpdatedAt(mListings.indexOf(listing));
     }
 
@@ -247,6 +248,7 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
         }
 
         listing.isSaved(event.isToSave());
+        //noinspection SuspiciousMethodCalls
         mListingsView.listingUpdatedAt(mListings.indexOf(listing));
     }
 
@@ -259,6 +261,7 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
             return;
         }
 
+        //noinspection SuspiciousMethodCalls
         int pos = mListings.indexOf(listing);
         if (event.isToHide()) {
             mMainView.showToast(R.string.link_hidden);
@@ -280,9 +283,6 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
 
     @Override
     public void openLink(@NonNull Link link) {
-        if (link == null)
-            return;
-
         if (link.isSelf()) {
             mListingsView.showCommentsForLink(link.getSubreddit(), link.getId(), null);
         } else {
@@ -412,7 +412,7 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
 
     @Override
     public void showCommentThread(@Nullable String subreddit, @Nullable String linkId, @NonNull String commentId) {
-        linkId = linkId.substring(3); // Trim type prefix
+        linkId = linkId == null ? null : linkId.substring(3); // Trim type prefix
         mListingsView.showCommentThread(subreddit, linkId, commentId);
     }
 
