@@ -1,7 +1,3 @@
-<!--
-  ~ Copyright (c) 2015 Damien Diehl. All rights reserved.
-  -->
-
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.ddiehl.android.sampleapp.bypass">
 

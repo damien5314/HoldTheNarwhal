@@ -1,7 +1,3 @@
-/*
- * Copyright (c) 2015 Damien Diehl. All rights reserved.
- */
-
 package com.ddiehl.android.htn.io;
 
 import android.support.annotation.NonNull;

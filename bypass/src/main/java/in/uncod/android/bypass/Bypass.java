@@ -1,7 +1,3 @@
-/*
- * Copyright (c) 2015 Damien Diehl. All rights reserved.
- */
-
 package in.uncod.android.bypass;
 
 import android.content.Context;

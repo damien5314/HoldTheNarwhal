@@ -1,8 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  ~ Copyright (c) 2015 Damien Diehl. All rights reserved.
-  -->
-
 <resources>
 
     <!-- Icon height in navigation drawer is 20dp w/ 6dp padding -->

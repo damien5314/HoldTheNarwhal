@@ -1,7 +1,3 @@
-/*
- * Copyright (c) 2015 Damien Diehl. All rights reserved.
- */
-
 package com.ddiehl.android.htn.view.dialogs;
 
 import android.app.Activity;
@@ -12,7 +8,6 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 
 import com.ddiehl.android.htn.R;
-import com.ddiehl.android.htn.SettingsManager;
 
 public class NsfwWarningDialog extends DialogFragment {
     @Override
