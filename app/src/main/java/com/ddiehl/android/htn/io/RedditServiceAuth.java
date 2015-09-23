@@ -64,7 +64,7 @@ public class RedditServiceAuth implements RedditService {
 
     public static final String AUTHORIZATION_URL =
             String.format("https://www.reddit.com/api/v1/authorize.compact" +
-                    "?client_id=%s&response_type=%s&duration=%s&state=%s&redirect_uri=%s&scope=%s",
+                            "?client_id=%s&response_type=%s&duration=%s&state=%s&redirect_uri=%s&scope=%s",
                     CLIENT_ID, RESPONSE_TYPE, DURATION, STATE, REDIRECT_URI, SCOPE);
 
     private Context mContext;
@@ -238,16 +238,7 @@ public class RedditServiceAuth implements RedditService {
     public void onLoadLinks(@NonNull LoadSubredditEvent event) {
         if (!mAccessTokenManager.hasValidAccessToken()) {
             mQueuedEvent = event;
-            AccessToken userAccessToken = mAccessTokenManager.getUserAccessToken();
-            String refreshToken = null;
-            if (userAccessToken != null) {
-                refreshToken = userAccessToken.getRefreshToken();
-            }
-            if (refreshToken != null) {
-                mBus.post(new RefreshUserAccessTokenEvent(refreshToken));
-            } else {
-                mBus.post(new AuthorizeApplicationEvent());
-            }
+            authorizeApp();
         } else {
             mServiceAPI.onLoadLinks(event);
         }
@@ -257,16 +248,7 @@ public class RedditServiceAuth implements RedditService {
     public void onLoadLinkComments(@NonNull LoadLinkCommentsEvent event) {
         if (!mAccessTokenManager.hasValidAccessToken()) {
             mQueuedEvent = event;
-            AccessToken userAccessToken = mAccessTokenManager.getUserAccessToken();
-            String refreshToken = null;
-            if (userAccessToken != null) {
-                refreshToken = userAccessToken.getRefreshToken();
-            }
-            if (refreshToken != null) {
-                mBus.post(new RefreshUserAccessTokenEvent(refreshToken));
-            } else {
-                mBus.post(new AuthorizeApplicationEvent());
-            }
+            authorizeApp();
         } else {
             mServiceAPI.onLoadLinkComments(event);
         }
@@ -276,16 +258,7 @@ public class RedditServiceAuth implements RedditService {
     public void onLoadMoreChildren(@NonNull LoadMoreChildrenEvent event) {
         if (!mAccessTokenManager.hasValidAccessToken()) {
             mQueuedEvent = event;
-            AccessToken userAccessToken = mAccessTokenManager.getUserAccessToken();
-            String refreshToken = null;
-            if (userAccessToken != null) {
-                refreshToken = userAccessToken.getRefreshToken();
-            }
-            if (refreshToken != null) {
-                mBus.post(new RefreshUserAccessTokenEvent(refreshToken));
-            } else {
-                mBus.post(new AuthorizeApplicationEvent());
-            }
+            authorizeApp();
         } else {
             mServiceAPI.onLoadMoreChildren(event);
         }
@@ -295,16 +268,7 @@ public class RedditServiceAuth implements RedditService {
     public void onLoadUserProfileSummary(@NonNull LoadUserProfileSummaryEvent event) {
         if (!mAccessTokenManager.hasValidAccessToken()) {
             mQueuedEvent = event;
-            AccessToken userAccessToken = mAccessTokenManager.getUserAccessToken();
-            String refreshToken = null;
-            if (userAccessToken != null) {
-                refreshToken = userAccessToken.getRefreshToken();
-            }
-            if (refreshToken != null) {
-                mBus.post(new RefreshUserAccessTokenEvent(refreshToken));
-            } else {
-                mBus.post(new AuthorizeApplicationEvent());
-            }
+            authorizeApp();
         } else {
             mServiceAPI.onLoadUserProfileSummary(event);
         }
@@ -314,16 +278,7 @@ public class RedditServiceAuth implements RedditService {
     public void onLoadUserProfile(@NonNull LoadUserProfileListingEvent event) {
         if (!mAccessTokenManager.hasValidAccessToken()) {
             mQueuedEvent = event;
-            AccessToken userAccessToken = mAccessTokenManager.getUserAccessToken();
-            String refreshToken = null;
-            if (userAccessToken != null) {
-                refreshToken = userAccessToken.getRefreshToken();
-            }
-            if (refreshToken != null) {
-                mBus.post(new RefreshUserAccessTokenEvent(refreshToken));
-            } else {
-                mBus.post(new AuthorizeApplicationEvent());
-            }
+            authorizeApp();
         } else {
             mServiceAPI.onLoadUserProfile(event);
         }
@@ -333,16 +288,7 @@ public class RedditServiceAuth implements RedditService {
     public void onGetSubredditInfo(@NonNull GetSubredditInfoEvent event) {
         if (!mAccessTokenManager.hasValidAccessToken()) {
             mQueuedEvent = event;
-            AccessToken userAccessToken = mAccessTokenManager.getUserAccessToken();
-            String refreshToken = null;
-            if (userAccessToken != null) {
-                refreshToken = userAccessToken.getRefreshToken();
-            }
-            if (refreshToken != null) {
-                mBus.post(new RefreshUserAccessTokenEvent(refreshToken));
-            } else {
-                mBus.post(new AuthorizeApplicationEvent());
-            }
+            authorizeApp();
         } else {
             mServiceAPI.onGetSubredditInfo(event);
         }
@@ -354,158 +300,124 @@ public class RedditServiceAuth implements RedditService {
 
     @Subscribe @SuppressWarnings("unused") @Override
     public void onGetUserIdentity(@NonNull GetUserIdentityEvent event) {
-        if (mAccessTokenManager.hasValidUserAccessToken()) {
-            mServiceAPI.onGetUserIdentity(event);
-            return;
-        }
-
-        AccessToken token = mAccessTokenManager.getUserAccessToken();
-        if (token != null && token.hasRefreshToken()) {
+        if (!mAccessTokenManager.hasValidUserAccessToken()) {
             mQueuedEvent = event;
-            mBus.post(new RefreshUserAccessTokenEvent(token.getRefreshToken()));
+            authorizeUser();
         } else {
-            mQueuedEvent = null;
+            mServiceAPI.onGetUserIdentity(event);
         }
     }
 
     @Subscribe @SuppressWarnings("unused") @Override
     public void onGetUserSettings(@NonNull GetUserSettingsEvent event) {
-        if (mAccessTokenManager.hasValidUserAccessToken()) {
-            mServiceAPI.onGetUserSettings(event);
-            return;
-        }
-
-        AccessToken token = mAccessTokenManager.getUserAccessToken();
-        if (token != null && token.hasRefreshToken()) {
+        if (!mAccessTokenManager.hasValidUserAccessToken()) {
             mQueuedEvent = event;
-            mBus.post(new RefreshUserAccessTokenEvent(token.getRefreshToken()));
+            authorizeUser();
         } else {
-            mQueuedEvent = null;
+            mServiceAPI.onGetUserSettings(event);
         }
     }
 
     @Subscribe @SuppressWarnings("unused") @Override
     public void onUpdateUserSettings(@NonNull UpdateUserSettingsEvent event) {
-        if (mAccessTokenManager.hasValidUserAccessToken()) {
-            mServiceAPI.onUpdateUserSettings(event);
-            return;
-        }
-
-        AccessToken token = mAccessTokenManager.getUserAccessToken();
-        if (token != null && token.hasRefreshToken()) {
+        if (!mAccessTokenManager.hasValidUserAccessToken()) {
             mQueuedEvent = event;
-            mBus.post(new RefreshUserAccessTokenEvent(token.getRefreshToken()));
+            authorizeUser();
         } else {
-            mQueuedEvent = null;
+            mServiceAPI.onUpdateUserSettings(event);
         }
     }
 
     @Subscribe @SuppressWarnings("unused") @Override
     public void onVote(@NonNull VoteEvent event) {
-        if (mAccessTokenManager.hasValidUserAccessToken()) {
-            mServiceAPI.onVote(event);
-            return;
-        }
-
-        AccessToken token = mAccessTokenManager.getUserAccessToken();
-        if (token != null && token.hasRefreshToken()) {
+        if (!mAccessTokenManager.hasValidUserAccessToken()) {
             mQueuedEvent = event;
-            mBus.post(new RefreshUserAccessTokenEvent(token.getRefreshToken()));
+            authorizeUser();
         } else {
-            mQueuedEvent = null;
+            mServiceAPI.onVote(event);
         }
     }
 
     @Subscribe @SuppressWarnings("unused") @Override
     public void onSave(@NonNull SaveEvent event) {
-        if (mAccessTokenManager.hasValidUserAccessToken()) {
-            mServiceAPI.onSave(event);
-            return;
-        }
-
-        AccessToken token = mAccessTokenManager.getUserAccessToken();
-        if (token != null && token.hasRefreshToken()) {
+        if (!mAccessTokenManager.hasValidUserAccessToken()) {
             mQueuedEvent = event;
-            mBus.post(new RefreshUserAccessTokenEvent(token.getRefreshToken()));
+            authorizeUser();
         } else {
-            mQueuedEvent = null;
+            mServiceAPI.onSave(event);
         }
     }
 
     @Subscribe @SuppressWarnings("unused") @Override
     public void onHide(@NonNull HideEvent event) {
-        if (mAccessTokenManager.hasValidUserAccessToken()) {
-            mServiceAPI.onHide(event);
-            return;
-        }
-
-        AccessToken token = mAccessTokenManager.getUserAccessToken();
-        if (token != null && token.hasRefreshToken()) {
+        if (!mAccessTokenManager.hasValidUserAccessToken()) {
             mQueuedEvent = event;
-            mBus.post(new RefreshUserAccessTokenEvent(token.getRefreshToken()));
+            authorizeUser();
         } else {
-            mQueuedEvent = null;
+            mServiceAPI.onHide(event);
         }
     }
 
     @Subscribe @SuppressWarnings("unused") @Override
     public void onReport(@NonNull ReportEvent event) {
-        if (mAccessTokenManager.hasValidUserAccessToken()) {
-            mServiceAPI.onReport(event);
-            return;
-        }
-
-        AccessToken token = mAccessTokenManager.getUserAccessToken();
-        if (token != null && token.hasRefreshToken()) {
+        if (!mAccessTokenManager.hasValidUserAccessToken()) {
             mQueuedEvent = event;
-            mBus.post(new RefreshUserAccessTokenEvent(token.getRefreshToken()));
+            authorizeUser();
         } else {
-            mQueuedEvent = null;
+            mServiceAPI.onReport(event);
         }
     }
 
     @Subscribe @SuppressWarnings("unused") @Override
     public void onAddFriend(@NonNull FriendAddEvent event) {
-        if (mAccessTokenManager.hasValidUserAccessToken()) {
-            mServiceAPI.onAddFriend(event);
-            return;
-        }
-
-        AccessToken token = mAccessTokenManager.getUserAccessToken();
-        if (token != null && token.hasRefreshToken()) {
+        if (!mAccessTokenManager.hasValidUserAccessToken()) {
             mQueuedEvent = event;
-            mBus.post(new RefreshUserAccessTokenEvent(token.getRefreshToken()));
+            authorizeUser();
         } else {
-            mQueuedEvent = null;
+            mServiceAPI.onAddFriend(event);
         }
     }
 
     @Subscribe @SuppressWarnings("unused") @Override
     public void onDeleteFriend(@NonNull FriendDeleteEvent event) {
-        if (mAccessTokenManager.hasValidUserAccessToken()) {
-            mServiceAPI.onDeleteFriend(event);
-            return;
-        }
-
-        AccessToken token = mAccessTokenManager.getUserAccessToken();
-        if (token != null && token.hasRefreshToken()) {
+        if (!mAccessTokenManager.hasValidUserAccessToken()) {
             mQueuedEvent = event;
-            mBus.post(new RefreshUserAccessTokenEvent(token.getRefreshToken()));
+            authorizeUser();
         } else {
-            mQueuedEvent = null;
+            mServiceAPI.onDeleteFriend(event);
         }
     }
 
     @Subscribe @SuppressWarnings("unused") @Override
     public void onSaveFriendNote(@NonNull FriendNoteSaveEvent event) {
-        if (mAccessTokenManager.hasValidUserAccessToken()) {
+        if (!mAccessTokenManager.hasValidUserAccessToken()) {
+            mQueuedEvent = event;
+            authorizeUser();
+        } else {
             mServiceAPI.onSaveFriendNote(event);
-            return;
         }
+    }
 
+    /////////////////
+    // Private API //
+    /////////////////
+
+    private void authorizeApp() {
+        AccessToken userAccessToken = mAccessTokenManager.getUserAccessToken();
+        String refreshToken = null;
+        if (userAccessToken != null) {
+            refreshToken = userAccessToken.getRefreshToken();
+        }
+        if (refreshToken != null) {
+            mBus.post(new RefreshUserAccessTokenEvent(refreshToken));
+        } else {
+            mBus.post(new AuthorizeApplicationEvent());
+        }
+    }
+
+    private void authorizeUser() {
         AccessToken token = mAccessTokenManager.getUserAccessToken();
         if (token != null && token.hasRefreshToken()) {
-            mQueuedEvent = event;
             mBus.post(new RefreshUserAccessTokenEvent(token.getRefreshToken()));
         } else {
             mQueuedEvent = null;
