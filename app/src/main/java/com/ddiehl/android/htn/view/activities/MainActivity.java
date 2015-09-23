@@ -284,6 +284,7 @@ public class MainActivity extends AppCompatActivity implements MainView,
         dialog.show(getFragmentManager(), DIALOG_NSFW_WARNING);
     }
 
+    @Override
     public void showSettings() {
         showFragment(new SettingsFragment());
     }

@@ -346,7 +346,7 @@ public class LinkCommentsFragment extends Fragment
                 mAnalytics.logOptionRefresh();
                 return true;
             case R.id.action_settings:
-                ((MainActivity) getActivity()).showSettings();
+                mMainView.showSettings();
                 mAnalytics.logOptionSettings();
                 return true;
         }

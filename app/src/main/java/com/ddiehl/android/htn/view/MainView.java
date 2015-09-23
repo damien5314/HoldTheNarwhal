@@ -17,6 +17,7 @@ public interface MainView extends AnalyticsDialog.Callbacks, ConfirmSignOutDialo
     void loadImageIntoDrawerHeader(@Nullable String url);
     void showAnalyticsRequestDialog();
     void showNsfwWarningDialog();
+    void showSettings();
 
     void updateNavigationItems(boolean isLoggedIn);
 
