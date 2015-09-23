@@ -23,8 +23,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -37,6 +35,7 @@ import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.android.htn.view.dialogs.AnalyticsDialog;
 import com.ddiehl.android.htn.view.dialogs.ConfirmSignOutDialog;
 import com.ddiehl.android.htn.view.dialogs.NsfwWarningDialog;
+import com.ddiehl.android.htn.view.dialogs.SubredditNavigationDialog;
 import com.ddiehl.android.htn.view.fragments.SettingsFragment;
 import com.ddiehl.android.htn.view.fragments.SubredditFragment;
 import com.ddiehl.android.htn.view.fragments.UserProfileFragment;
@@ -57,6 +56,7 @@ public class MainActivity extends AppCompatActivity implements MainView,
     private static final String DIALOG_NSFW_WARNING = "dialog_nsfw_warning";
     private static final String DIALOG_CONFIRM_SIGN_OUT = "dialog_confirm_sign_out";
     private static final String DIALOG_ANALYTICS = "dialog_analytics";
+    private static final String DIALOG_SUBREDDIT_NAVIGATION = "dialog_subreddit_navigation";
 
     private ProgressDialog mLoadingOverlay;
     private Dialog mSubredditNavigationDialog;
@@ -303,29 +303,6 @@ public class MainActivity extends AppCompatActivity implements MainView,
         }
     }
 
-    private void showSubredditNavigationDialog() {
-        if (mSubredditNavigationDialog == null) {
-            mSubredditNavigationDialog = new Dialog(this);
-            mSubredditNavigationDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            mSubredditNavigationDialog.setContentView(R.layout.navigate_to_subreddit_edit_text);
-            ButterKnife.findById(mSubredditNavigationDialog, R.id.drawer_navigate_to_subreddit_go)
-                    .setOnClickListener((v) -> {
-                        EditText vInput = ButterKnife.findById(mSubredditNavigationDialog,
-                                R.id.drawer_navigate_to_subreddit_text);
-                        String inputSubreddit = vInput.getText().toString();
-                        if (inputSubreddit.equals("")) return;
-
-                        inputSubreddit = inputSubreddit.substring(3);
-                        inputSubreddit = inputSubreddit.trim();
-                        vInput.setText("");
-                        mSubredditNavigationDialog.dismiss();
-                        showSubreddit(inputSubreddit);
-                    });
-        }
-        mDrawerLayout.closeDrawer(GravityCompat.START);
-        mSubredditNavigationDialog.show();
-    }
-
     @Override
     public void showSubredditIfEmpty(@Nullable String subreddit) {
         if (getCurrentDisplayedFragment() == null) {
@@ -348,9 +325,24 @@ public class MainActivity extends AppCompatActivity implements MainView,
         mMainPresenter.onAnalyticsDeclined();
     }
 
+    @Override
+    public void onSubredditNavigationConfirmed(String subreddit) {
+        showSubreddit(subreddit);
+    }
+
+    @Override
+    public void onSubredditNavigationCancelled() {
+        /* no-op */
+    }
+
     /////////////////
     // Private API //
     /////////////////
+
+    private void showSubredditNavigationDialog() {
+        mDrawerLayout.closeDrawer(GravityCompat.START);
+        new SubredditNavigationDialog().show(getFragmentManager(), DIALOG_SUBREDDIT_NAVIGATION);
+    }
 
     private void setMirroredIcons() {
         if (Build.VERSION.SDK_INT >= 19) {
