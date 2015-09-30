@@ -30,12 +30,13 @@ public class AboutAppFragment extends MarkdownTextFragment {
 
     public static Fragment newInstance(@NonNull InputStream in_s) {
         String text = BaseUtils.getStringFromInputStream(in_s);
-        return newInstance(text == null ? "" : text);
+        return newInstance(text);
     }
 
     @Nullable @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = super.onCreateView(inflater, container, savedInstanceState);
+        if (v == null) return null;
         CharSequence ins = String.format("Version %1$s\n\nReleased %2$s\n\n",
                 BuildConfig.VERSION_NAME,
                 BaseUtils.getBuildTimeFormatted(v.getContext()));

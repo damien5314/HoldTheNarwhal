@@ -32,7 +32,7 @@ public class MarkdownTextFragment extends Fragment {
 
     public static Fragment newInstance(@NonNull InputStream in_s) {
         String text = BaseUtils.getStringFromInputStream(in_s);
-        return newInstance(text == null ? "" : text);
+        return newInstance(text);
     }
 
     @Override

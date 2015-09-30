@@ -63,8 +63,8 @@ public class RedditServiceAuth implements RedditService {
     public static final String HTTP_AUTH_HEADER = Credentials.basic(CLIENT_ID, "");
 
     public static final String AUTHORIZATION_URL =
-            String.format("https://www.reddit.com/api/v1/authorize.compact" +
-                            "?client_id=%s&response_type=%s&duration=%s&state=%s&redirect_uri=%s&scope=%s",
+            String.format("https://www.reddit.com/api/v1/authorize.compact?client_id=%s" +
+                            "&response_type=%s&duration=%s&state=%s&redirect_uri=%s&scope=%s",
                     CLIENT_ID, RESPONSE_TYPE, DURATION, STATE, REDIRECT_URI, SCOPE);
 
     private Context mContext;
@@ -230,9 +230,9 @@ public class RedditServiceAuth implements RedditService {
         }
     }
 
-    /////////////////////////////////////
-    /////////// NO OAUTH SCOPE //////////
-    /////////////////////////////////////
+    /////////////////////
+    // No OAuth Scope //
+    ////////////////////
 
     @Subscribe @SuppressWarnings("unused") @Override
     public void onLoadLinks(@NonNull LoadSubredditEvent event) {
@@ -294,9 +294,9 @@ public class RedditServiceAuth implements RedditService {
         }
     }
 
-    /////////////////////////////////////
-    //////// REQUIRES OAUTH SCOPE ///////
-    /////////////////////////////////////
+    //////////////////////////
+    // Requires OAuth Scope //
+    //////////////////////////
 
     @Subscribe @SuppressWarnings("unused") @Override
     public void onGetUserIdentity(@NonNull GetUserIdentityEvent event) {
