@@ -1,5 +1,7 @@
 package com.ddiehl.android.htn.events.requests;
 
+import android.support.annotation.NonNull;
+
 import com.ddiehl.reddit.Hideable;
 
 public class HideEvent {
@@ -11,6 +13,7 @@ public class HideEvent {
         mToHide = save;
     }
 
+    @NonNull
     public Hideable getListing() {
         return mListing;
     }

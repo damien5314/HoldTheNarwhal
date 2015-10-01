@@ -1,5 +1,8 @@
 package com.ddiehl.android.htn.events.responses;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 public abstract class FailableEvent {
 
     private Throwable mError;
@@ -7,11 +10,12 @@ public abstract class FailableEvent {
 
     public FailableEvent() { }
 
-    public FailableEvent(Throwable error) {
+    public FailableEvent(@NonNull Throwable error) {
         mError = error;
         mFailed = true;
     }
 
+    @Nullable
     public Throwable getError() {
         return mError;
     }

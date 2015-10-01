@@ -1,5 +1,7 @@
 package com.ddiehl.android.htn.events.requests;
 
+import android.support.annotation.NonNull;
+
 import com.ddiehl.reddit.Votable;
 
 public class VoteEvent {
@@ -7,16 +9,18 @@ public class VoteEvent {
     private String mType;
     private int mDirection;
 
-    public VoteEvent(Votable v, String type, int dir) {
+    public VoteEvent(@NonNull Votable v, @NonNull String type, int dir) {
         mListing = v;
         mType = type;
         mDirection = dir;
     }
 
+    @NonNull
     public Votable getListing() {
         return mListing;
     }
 
+    @NonNull
     public String getType() {
         return mType;
     }

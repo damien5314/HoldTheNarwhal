@@ -1,5 +1,8 @@
 package com.ddiehl.android.htn.events.responses;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 import com.ddiehl.reddit.Savable;
 
 public class SaveSubmittedEvent extends FailableEvent {
@@ -7,20 +10,22 @@ public class SaveSubmittedEvent extends FailableEvent {
     private String mCategory;
     private boolean mToSave;
 
-    public SaveSubmittedEvent(Savable s, String category, boolean b) {
+    public SaveSubmittedEvent(@NonNull Savable s, @Nullable String category, boolean b) {
         mListing = s;
         mCategory = category;
         mToSave = b;
     }
 
-    public SaveSubmittedEvent(Throwable e) {
+    public SaveSubmittedEvent(@NonNull Throwable e) {
         super(e);
     }
 
+    @Nullable
     public Savable getListing() {
         return mListing;
     }
 
+    @Nullable
     public String getCategory() {
         return mCategory;
     }

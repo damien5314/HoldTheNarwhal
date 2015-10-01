@@ -1,9 +1,12 @@
 package com.ddiehl.android.htn.events.responses;
 
 
+import android.support.annotation.Nullable;
+
 import com.ddiehl.reddit.identity.UserIdentity;
 
 public class UserIdentityRetrievedEvent extends FailableEvent {
+
     private UserIdentity mUserIdentity;
 
     public UserIdentityRetrievedEvent(UserIdentity response) {
@@ -14,6 +17,7 @@ public class UserIdentityRetrievedEvent extends FailableEvent {
         super(error);
     }
 
+    @Nullable
     public UserIdentity getUserIdentity() {
         return mUserIdentity;
     }
