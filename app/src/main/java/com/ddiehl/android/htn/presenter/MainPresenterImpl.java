@@ -3,6 +3,7 @@ package com.ddiehl.android.htn.presenter;
 import android.content.Context;
 
 import com.ddiehl.android.htn.Analytics;
+import com.ddiehl.android.htn.FlurryAnalytics;
 import com.ddiehl.android.htn.BusProvider;
 import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
@@ -26,7 +27,7 @@ public class MainPresenterImpl implements MainPresenter {
     private MainView mMainView;
     private IdentityManager mIdentityManager;
     private SettingsManager mSettingsManager;
-    private Analytics mAnalytics = Analytics.getInstance();
+    private Analytics mAnalytics = FlurryAnalytics.getInstance();
     private String mUsernameContext;
 
     public MainPresenterImpl(Context context, MainView view) {
@@ -37,7 +38,7 @@ public class MainPresenterImpl implements MainPresenter {
         mSettingsManager = SettingsManager.getInstance(mContext);
 
         // Configure analytics
-        mAnalytics.initializeFlurry(mContext);
+        mAnalytics.initialize(mContext);
     }
 
     @Override
@@ -107,7 +108,7 @@ public class MainPresenterImpl implements MainPresenter {
         Logger.e("Retrofit Error: " + error.raw().message());
 //        Log.e("HTN", Log.getStackTraceString(error));
         mMainView.showToast(BaseUtils.getFriendlyError(mContext, error));
-        Analytics.getInstance().logApiError(error);
+        FlurryAnalytics.getInstance().logApiError(error);
     }
 
     @Subscribe @SuppressWarnings("unused")

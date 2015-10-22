@@ -81,7 +81,7 @@ public class SettingsManager implements SharedPreferences.OnSharedPreferenceChan
 
     private Context mContext;
     private Bus mBus = BusProvider.getInstance();
-    private Analytics mAnalytics = Analytics.getInstance();
+    private Analytics mAnalytics = FlurryAnalytics.getInstance();
     private SharedPreferences mSharedPreferences;
 
     private boolean mIsChanging = false;

@@ -9,6 +9,7 @@ import android.view.View;
 
 import com.ddiehl.android.htn.AccessTokenManager;
 import com.ddiehl.android.htn.Analytics;
+import com.ddiehl.android.htn.FlurryAnalytics;
 import com.ddiehl.android.htn.BusProvider;
 import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
@@ -46,7 +47,7 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
     AccessTokenManager mAccessTokenManager;
     IdentityManager mIdentityManager;
     SettingsManager mSettingsManager;
-    Analytics mAnalytics = Analytics.getInstance();
+    Analytics mAnalytics = FlurryAnalytics.getInstance();
 
     List<Listing> mListings;
     ListingsView mListingsView;

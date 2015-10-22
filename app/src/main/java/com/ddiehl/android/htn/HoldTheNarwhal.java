@@ -31,7 +31,7 @@ public class HoldTheNarwhal extends Application {
                         .build());
 
         // Initialize static dependencies
-        Analytics analytics = Analytics.getInstance();
+        Analytics analytics = FlurryAnalytics.getInstance();
         AccessTokenManager accessTokenManager = AccessTokenManager.getInstance(this);
         IdentityManager identityManager = IdentityManager.getInstance(this);
         SettingsManager settingsManager = SettingsManager.getInstance(this);

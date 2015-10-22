@@ -27,6 +27,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ddiehl.android.htn.Analytics;
+import com.ddiehl.android.htn.FlurryAnalytics;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.io.RedditServiceAuth;
 import com.ddiehl.android.htn.presenter.MainPresenter;
@@ -68,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements MainView,
     @Bind(R.id.sign_out_button) View mSignOutView;
     @Bind(R.id.navigation_drawer_header_image) ImageView mHeaderImage;
 
-    private Analytics mAnalytics = Analytics.getInstance();
+    private Analytics mAnalytics = FlurryAnalytics.getInstance();
     private MainPresenter mMainPresenter;
 
     private UserIdentity mCurrentUser;

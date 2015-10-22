@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.ddiehl.android.htn.Analytics;
+import com.ddiehl.android.htn.FlurryAnalytics;
 import com.ddiehl.android.htn.BusProvider;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.presenter.ListingsPresenter;
@@ -42,7 +43,7 @@ public abstract class AbsListingsFragment extends Fragment
     private static final String DIALOG_CHOOSE_TIMESPAN = "dialog_choose_timespan";
 
     Bus mBus = BusProvider.getInstance();
-    Analytics mAnalytics = Analytics.getInstance();
+    Analytics mAnalytics = FlurryAnalytics.getInstance();
 
     MainView mMainView;
     ListingsPresenter mListingsPresenter;
