@@ -5,7 +5,7 @@ apply plugin: 'me.tatarka.retrolambda'
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23"
+    buildToolsVersion "23.0.1"
     useLibrary 'org.apache.http.legacy'
     defaultConfig {
         applicationId "com.ddiehl.android.htn"
@@ -45,7 +45,7 @@ android {
     }
 }
 
-def getLocalProperty(s) {
+def getLocalProperty(String s) {
     Properties properties = new Properties()
     properties.load(project.rootProject.file('local.properties').newDataInputStream())
     return properties.getProperty(s)
