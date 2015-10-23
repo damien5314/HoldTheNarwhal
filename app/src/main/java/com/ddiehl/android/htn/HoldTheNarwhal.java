@@ -2,6 +2,8 @@ package com.ddiehl.android.htn;
 
 import android.app.Application;
 
+import com.ddiehl.android.htn.analytics.Analytics;
+import com.ddiehl.android.htn.analytics.FlurryAnalytics;
 import com.ddiehl.android.htn.io.RedditService;
 import com.ddiehl.android.htn.io.RedditServiceAuth;
 import com.facebook.stetho.Stetho;
@@ -30,18 +32,26 @@ public class HoldTheNarwhal extends Application {
                         .enableWebKitInspector(Stetho.defaultInspectorModulesProvider(this))
                         .build());
 
-        // Initialize static dependencies
-        Analytics analytics = FlurryAnalytics.getInstance();
-        AccessTokenManager accessTokenManager = AccessTokenManager.getInstance(this);
-        IdentityManager identityManager = IdentityManager.getInstance(this);
-        SettingsManager settingsManager = SettingsManager.getInstance(this);
-        RedditService authProxy = RedditServiceAuth.getInstance(this);
-
         Bus bus = BusProvider.getInstance();
+
+        // Initialize static dependencies
+        Analytics analytics = HoldTheNarwhal.getAnalytics();
         bus.register(analytics);
+        AccessTokenManager accessTokenManager = AccessTokenManager.getInstance(this);
         bus.register(accessTokenManager);
+        IdentityManager identityManager = IdentityManager.getInstance(this);
         bus.register(identityManager);
+        SettingsManager settingsManager = SettingsManager.getInstance(this);
         bus.register(settingsManager);
+        RedditService authProxy = RedditServiceAuth.getInstance(this);
         bus.register(authProxy);
+    }
+
+    /**
+     * Provides an instance of Analytics to which to log application events
+     * @return Instance of Analytics
+     */
+    public static Analytics getAnalytics() {
+        return FlurryAnalytics.getInstance();
     }
 }

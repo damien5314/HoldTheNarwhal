@@ -2,12 +2,12 @@ package com.ddiehl.android.htn.presenter;
 
 import android.content.Context;
 
-import com.ddiehl.android.htn.Analytics;
-import com.ddiehl.android.htn.FlurryAnalytics;
 import com.ddiehl.android.htn.BusProvider;
+import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.SettingsManager;
+import com.ddiehl.android.htn.analytics.Analytics;
 import com.ddiehl.android.htn.events.requests.UserSignOutEvent;
 import com.ddiehl.android.htn.events.responses.UserIdentitySavedEvent;
 import com.ddiehl.android.htn.utils.BaseUtils;
@@ -27,7 +27,7 @@ public class MainPresenterImpl implements MainPresenter {
     private MainView mMainView;
     private IdentityManager mIdentityManager;
     private SettingsManager mSettingsManager;
-    private Analytics mAnalytics = FlurryAnalytics.getInstance();
+    private Analytics mAnalytics = HoldTheNarwhal.getAnalytics();
     private String mUsernameContext;
 
     public MainPresenterImpl(Context context, MainView view) {
@@ -108,7 +108,7 @@ public class MainPresenterImpl implements MainPresenter {
         Logger.e("Retrofit Error: " + error.raw().message());
 //        Log.e("HTN", Log.getStackTraceString(error));
         mMainView.showToast(BaseUtils.getFriendlyError(mContext, error));
-        FlurryAnalytics.getInstance().logApiError(error);
+        mAnalytics.logApiError(error);
     }
 
     @Subscribe @SuppressWarnings("unused")

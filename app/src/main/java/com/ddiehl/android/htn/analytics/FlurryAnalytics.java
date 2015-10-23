@@ -1,8 +1,11 @@
-package com.ddiehl.android.htn;
+package com.ddiehl.android.htn.analytics;
 
 import android.content.Context;
 import android.os.Build;
 
+import com.ddiehl.android.htn.BuildConfig;
+import com.ddiehl.android.htn.IdentityManager;
+import com.ddiehl.android.htn.SettingsManager;
 import com.ddiehl.android.htn.events.requests.HideEvent;
 import com.ddiehl.android.htn.events.requests.LoadLinkCommentsEvent;
 import com.ddiehl.android.htn.events.requests.LoadMoreChildrenEvent;
@@ -205,7 +208,7 @@ public class FlurryAnalytics implements Analytics {
 
     @Override
     @Subscribe
-    public void onSignIn(UserIdentityRetrievedEvent event) {
+    public void logSignIn(UserIdentityRetrievedEvent event) {
         if (!mSettingsManager.areAnalyticsEnabled()) return;
         UserIdentity identity = event.getUserIdentity();
         Map<String, String> params = new HashMap<>();
@@ -221,7 +224,7 @@ public class FlurryAnalytics implements Analytics {
 
     @Override
     @Subscribe
-    public void onSignOut(UserSignOutEvent event) {
+    public void logSignOut(UserSignOutEvent event) {
         if (!mSettingsManager.areAnalyticsEnabled()) return;
         FlurryAgent.logEvent("user signed out");
         FlurryAgent.setUserId(null);
@@ -229,7 +232,7 @@ public class FlurryAnalytics implements Analytics {
 
     @Override
     @Subscribe
-    public void onLoadSubreddit(LoadSubredditEvent event) {
+    public void logLoadSubreddit(LoadSubredditEvent event) {
         if (!mSettingsManager.areAnalyticsEnabled()) return;
         Map<String, String> params = new HashMap<>();
         params.put("subreddit", event.getSubreddit());
@@ -240,7 +243,7 @@ public class FlurryAnalytics implements Analytics {
 
     @Override
     @Subscribe
-    public void onLoadUserProfile(LoadUserProfileListingEvent event) {
+    public void logLoadUserProfile(LoadUserProfileListingEvent event) {
         if (!mSettingsManager.areAnalyticsEnabled()) return;
         Map<String, String> params = new HashMap<>();
         params.put("show", event.getShow());
@@ -252,7 +255,7 @@ public class FlurryAnalytics implements Analytics {
 
     @Override
     @Subscribe
-    public void onLoadLinkComments(LoadLinkCommentsEvent event) {
+    public void logLoadLinkComments(LoadLinkCommentsEvent event) {
         if (!mSettingsManager.areAnalyticsEnabled()) return;
         Map<String, String> params = new HashMap<>();
         params.put("subreddit", event.getSubreddit());
@@ -264,7 +267,7 @@ public class FlurryAnalytics implements Analytics {
 
     @Override
     @Subscribe
-    public void onLoadMoreChildren(LoadMoreChildrenEvent event) {
+    public void logLoadMoreChildren(LoadMoreChildrenEvent event) {
         if (!mSettingsManager.areAnalyticsEnabled()) return;
         Map<String, String> params = new HashMap<>();
         params.put("subreddit", event.getLink().getSubreddit());
@@ -275,7 +278,7 @@ public class FlurryAnalytics implements Analytics {
 
     @Override
     @Subscribe
-    public void onVote(VoteEvent event) {
+    public void logVote(VoteEvent event) {
         if (!mSettingsManager.areAnalyticsEnabled()) return;
         Map<String, String> params = new HashMap<>();
         params.put("type", event.getType());
@@ -286,7 +289,7 @@ public class FlurryAnalytics implements Analytics {
 
     @Override
     @Subscribe
-    public void onSave(SaveEvent event) {
+    public void logSave(SaveEvent event) {
         if (!mSettingsManager.areAnalyticsEnabled()) return;
         Map<String, String> params = new HashMap<>();
         params.put("type", ((Listing) event.getListing()).getKind());
@@ -298,7 +301,7 @@ public class FlurryAnalytics implements Analytics {
 
     @Override
     @Subscribe
-    public void onHide(HideEvent event) {
+    public void logHide(HideEvent event) {
         if (!mSettingsManager.areAnalyticsEnabled()) return;
         Map<String, String> params = new HashMap<>();
         params.put("type", ((Listing) event.getListing()).getKind());
@@ -309,7 +312,7 @@ public class FlurryAnalytics implements Analytics {
 
     @Override
     @Subscribe
-    public void onReport(ReportEvent event) {
+    public void logReport(ReportEvent event) {
         if (!mSettingsManager.areAnalyticsEnabled()) return;
         // TODO: Implement analytics event once feature is implemented
     }

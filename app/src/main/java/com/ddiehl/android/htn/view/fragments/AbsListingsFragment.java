@@ -17,10 +17,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.ddiehl.android.htn.Analytics;
-import com.ddiehl.android.htn.FlurryAnalytics;
 import com.ddiehl.android.htn.BusProvider;
+import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
+import com.ddiehl.android.htn.analytics.Analytics;
 import com.ddiehl.android.htn.presenter.ListingsPresenter;
 import com.ddiehl.android.htn.view.ListingsView;
 import com.ddiehl.android.htn.view.MainView;
@@ -43,7 +43,7 @@ public abstract class AbsListingsFragment extends Fragment
     private static final String DIALOG_CHOOSE_TIMESPAN = "dialog_choose_timespan";
 
     Bus mBus = BusProvider.getInstance();
-    Analytics mAnalytics = FlurryAnalytics.getInstance();
+    Analytics mAnalytics = HoldTheNarwhal.getAnalytics();
 
     MainView mMainView;
     ListingsPresenter mListingsPresenter;

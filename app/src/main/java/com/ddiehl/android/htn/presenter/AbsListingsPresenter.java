@@ -8,12 +8,12 @@ import android.view.ContextMenu;
 import android.view.View;
 
 import com.ddiehl.android.htn.AccessTokenManager;
-import com.ddiehl.android.htn.Analytics;
-import com.ddiehl.android.htn.FlurryAnalytics;
 import com.ddiehl.android.htn.BusProvider;
+import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.SettingsManager;
+import com.ddiehl.android.htn.analytics.Analytics;
 import com.ddiehl.android.htn.events.requests.HideEvent;
 import com.ddiehl.android.htn.events.requests.SaveEvent;
 import com.ddiehl.android.htn.events.requests.VoteEvent;
@@ -47,7 +47,7 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
     AccessTokenManager mAccessTokenManager;
     IdentityManager mIdentityManager;
     SettingsManager mSettingsManager;
-    Analytics mAnalytics = FlurryAnalytics.getInstance();
+    Analytics mAnalytics = HoldTheNarwhal.getAnalytics();
 
     List<Listing> mListings;
     ListingsView mListingsView;

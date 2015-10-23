@@ -1,4 +1,4 @@
-package com.ddiehl.android.htn;
+package com.ddiehl.android.htn.analytics;
 
 import android.content.Context;
 
@@ -60,33 +60,33 @@ public interface Analytics {
 
     void logApiError(Response error);
 
-    @Subscribe
-    void onSignIn(UserIdentityRetrievedEvent event);
+    @Subscribe @SuppressWarnings("unused")
+    void logSignIn(UserIdentityRetrievedEvent event);
 
-    @Subscribe
-    void onSignOut(UserSignOutEvent event);
+    @Subscribe @SuppressWarnings("unused")
+    void logSignOut(UserSignOutEvent event);
 
-    @Subscribe
-    void onLoadSubreddit(LoadSubredditEvent event);
+    @Subscribe @SuppressWarnings("unused")
+    void logLoadSubreddit(LoadSubredditEvent event);
 
-    @Subscribe
-    void onLoadUserProfile(LoadUserProfileListingEvent event);
+    @Subscribe @SuppressWarnings("unused")
+    void logLoadUserProfile(LoadUserProfileListingEvent event);
 
-    @Subscribe
-    void onLoadLinkComments(LoadLinkCommentsEvent event);
+    @Subscribe @SuppressWarnings("unused")
+    void logLoadLinkComments(LoadLinkCommentsEvent event);
 
-    @Subscribe
-    void onLoadMoreChildren(LoadMoreChildrenEvent event);
+    @Subscribe @SuppressWarnings("unused")
+    void logLoadMoreChildren(LoadMoreChildrenEvent event);
 
-    @Subscribe
-    void onVote(VoteEvent event);
+    @Subscribe @SuppressWarnings("unused")
+    void logVote(VoteEvent event);
 
-    @Subscribe
-    void onSave(SaveEvent event);
+    @Subscribe @SuppressWarnings("unused")
+    void logSave(SaveEvent event);
 
-    @Subscribe
-    void onHide(HideEvent event);
+    @Subscribe @SuppressWarnings("unused")
+    void logHide(HideEvent event);
 
-    @Subscribe
-    void onReport(ReportEvent event);
+    @Subscribe @SuppressWarnings("unused")
+    void logReport(ReportEvent event);
 }

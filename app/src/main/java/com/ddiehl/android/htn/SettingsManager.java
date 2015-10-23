@@ -3,6 +3,7 @@ package com.ddiehl.android.htn;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.ddiehl.android.htn.analytics.Analytics;
 import com.ddiehl.android.htn.events.requests.UpdateUserSettingsEvent;
 import com.ddiehl.android.htn.events.responses.UserSettingsRetrievedEvent;
 import com.ddiehl.reddit.identity.UserSettings;
@@ -81,7 +82,7 @@ public class SettingsManager implements SharedPreferences.OnSharedPreferenceChan
 
     private Context mContext;
     private Bus mBus = BusProvider.getInstance();
-    private Analytics mAnalytics = FlurryAnalytics.getInstance();
+    private Analytics mAnalytics = HoldTheNarwhal.getAnalytics();
     private SharedPreferences mSharedPreferences;
 
     private boolean mIsChanging = false;
