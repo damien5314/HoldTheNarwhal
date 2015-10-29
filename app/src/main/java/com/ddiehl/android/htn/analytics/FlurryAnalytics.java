@@ -2,27 +2,17 @@ package com.ddiehl.android.htn.analytics;
 
 import android.content.Context;
 import android.os.Build;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.ddiehl.android.htn.BuildConfig;
 import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.SettingsManager;
-import com.ddiehl.android.htn.events.requests.HideEvent;
-import com.ddiehl.android.htn.events.requests.LoadLinkCommentsEvent;
-import com.ddiehl.android.htn.events.requests.LoadMoreChildrenEvent;
-import com.ddiehl.android.htn.events.requests.LoadSubredditEvent;
-import com.ddiehl.android.htn.events.requests.LoadUserProfileListingEvent;
-import com.ddiehl.android.htn.events.requests.ReportEvent;
-import com.ddiehl.android.htn.events.requests.SaveEvent;
-import com.ddiehl.android.htn.events.requests.UserSignOutEvent;
-import com.ddiehl.android.htn.events.requests.VoteEvent;
-import com.ddiehl.android.htn.events.responses.UserIdentityRetrievedEvent;
 import com.ddiehl.android.htn.utils.BaseUtils;
 import com.ddiehl.reddit.identity.UserIdentity;
 import com.ddiehl.reddit.listings.Link;
-import com.ddiehl.reddit.listings.Listing;
 import com.flurry.android.FlurryAgent;
 import com.orhanobut.logger.Logger;
-import com.squareup.otto.Subscribe;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -87,7 +77,7 @@ public class FlurryAnalytics implements Analytics {
     }
 
     @Override
-    public void logOpenLink(Link link) {
+    public void logOpenLink(@NonNull Link link) {
         if (!mSettingsManager.areAnalyticsEnabled()) return;
         Map<String, String> params = new HashMap<>();
         params.put("subreddit", link.getSubreddit());
@@ -107,7 +97,7 @@ public class FlurryAnalytics implements Analytics {
     }
 
     @Override
-    public void logOptionChangeSort(String sort) {
+    public void logOptionChangeSort(@NonNull String sort) {
         if (!mSettingsManager.areAnalyticsEnabled()) return;
         FlurryAgent.logEvent("option - change sort - " + sort);
     }
@@ -119,7 +109,7 @@ public class FlurryAnalytics implements Analytics {
     }
 
     @Override
-    public void logOptionChangeTimespan(String timespan) {
+    public void logOptionChangeTimespan(@NonNull String timespan) {
         if (!mSettingsManager.areAnalyticsEnabled()) return;
         FlurryAgent.logEvent("option - change timespan - " + timespan);
     }
@@ -185,7 +175,7 @@ public class FlurryAnalytics implements Analytics {
     }
 
     @Override
-    public void logSettingChanged(String key, String value) {
+    public void logSettingChanged(@NonNull String key, @NonNull String value) {
         if (!mSettingsManager.areAnalyticsEnabled()) return;
         Map<String, String> params = new HashMap<>();
         params.put("key", key);
@@ -207,13 +197,12 @@ public class FlurryAnalytics implements Analytics {
     ////////////////
 
     @Override
-    @Subscribe
-    public void logSignIn(UserIdentityRetrievedEvent event) {
+    public void logSignIn(@NonNull UserIdentity identity) {
         if (!mSettingsManager.areAnalyticsEnabled()) return;
-        UserIdentity identity = event.getUserIdentity();
         Map<String, String> params = new HashMap<>();
         params.put("user", BaseUtils.getMd5HexString(identity.getName()));
-        params.put("created", new Date(Double.valueOf(identity.getCreatedUTC() * 1000).longValue()).toString());
+        Date date = new Date(Double.valueOf(identity.getCreatedUTC() * 1000).longValue());
+        params.put("created", date.toString());
         params.put("gold", String.valueOf(identity.isGold()));
         params.put("link karma", String.valueOf(identity.getLinkKarma()));
         params.put("comment karma", String.valueOf(identity.getCommentKarma()));
@@ -223,96 +212,80 @@ public class FlurryAnalytics implements Analytics {
     }
 
     @Override
-    @Subscribe
-    public void logSignOut(UserSignOutEvent event) {
+    public void logSignOut() {
         if (!mSettingsManager.areAnalyticsEnabled()) return;
         FlurryAgent.logEvent("user signed out");
         FlurryAgent.setUserId(null);
     }
 
     @Override
-    @Subscribe
-    public void logLoadSubreddit(LoadSubredditEvent event) {
+    public void logLoadSubreddit(
+            @Nullable String subreddit, @NonNull String sort, @NonNull String timespan) {
         if (!mSettingsManager.areAnalyticsEnabled()) return;
         Map<String, String> params = new HashMap<>();
-        params.put("subreddit", event.getSubreddit());
-        params.put("sort", event.getSort());
-        params.put("timespan", event.getTimeSpan());
+        params.put("subreddit", subreddit);
+        params.put("sort", sort);
+        params.put("timespan", timespan);
         FlurryAgent.logEvent("view subreddit", params);
     }
 
     @Override
-    @Subscribe
-    public void logLoadUserProfile(LoadUserProfileListingEvent event) {
+    public void logLoadUserProfile(
+            @NonNull String show, @NonNull String sort, @NonNull String timespan) {
         if (!mSettingsManager.areAnalyticsEnabled()) return;
         Map<String, String> params = new HashMap<>();
-        params.put("show", event.getShow());
-        params.put("user", BaseUtils.getMd5HexString(event.getUsername()));
-        params.put("sort", event.getSort());
-        params.put("timespan", event.getTimeSpan());
+        params.put("show", show);
+        params.put("sort", sort);
+        params.put("timespan", timespan);
         FlurryAgent.logEvent("view user profile", params);
     }
 
     @Override
-    @Subscribe
-    public void logLoadLinkComments(LoadLinkCommentsEvent event) {
+    public void logLoadLinkComments(@NonNull String sort) {
         if (!mSettingsManager.areAnalyticsEnabled()) return;
         Map<String, String> params = new HashMap<>();
-        params.put("subreddit", event.getSubreddit());
-        params.put("article", event.getArticle());
-        params.put("sort", event.getSort());
-        params.put("comment", event.getCommentId());
+        params.put("sort", sort);
         FlurryAgent.logEvent("load link comments", params);
     }
 
     @Override
-    @Subscribe
-    public void logLoadMoreChildren(LoadMoreChildrenEvent event) {
+    public void logLoadMoreChildren(@NonNull String sort) {
         if (!mSettingsManager.areAnalyticsEnabled()) return;
         Map<String, String> params = new HashMap<>();
-        params.put("subreddit", event.getLink().getSubreddit());
-        params.put("article", event.getLink().getId());
-        params.put("sort", event.getSort());
+        params.put("sort", sort);
         FlurryAgent.logEvent("load more comment children", params);
     }
 
     @Override
-    @Subscribe
-    public void logVote(VoteEvent event) {
+    public void logVote(@NonNull String type, int direction) {
         if (!mSettingsManager.areAnalyticsEnabled()) return;
         Map<String, String> params = new HashMap<>();
-        params.put("type", event.getType());
-        params.put("id", event.getListing().getId());
-        params.put("direction", String.valueOf(event.getDirection()));
+        params.put("type", type);
+        params.put("direction", String.valueOf(direction));
         FlurryAgent.logEvent("vote", params);
     }
 
     @Override
-    @Subscribe
-    public void logSave(SaveEvent event) {
+    public void logSave(@NonNull String type, @Nullable String category, boolean isSaving) {
         if (!mSettingsManager.areAnalyticsEnabled()) return;
         Map<String, String> params = new HashMap<>();
-        params.put("type", ((Listing) event.getListing()).getKind());
-        params.put("id", ((Listing) event.getListing()).getId());
-        params.put("category", event.getCategory());
-        params.put("b", String.valueOf(event.isToSave()));
+        params.put("type", type);
+        params.put("category", category);
+        params.put("b", String.valueOf(isSaving));
         FlurryAgent.logEvent("save", params);
     }
 
     @Override
-    @Subscribe
-    public void logHide(HideEvent event) {
+    public void logHide(@NonNull String type, boolean isHiding) {
         if (!mSettingsManager.areAnalyticsEnabled()) return;
         Map<String, String> params = new HashMap<>();
-        params.put("type", ((Listing) event.getListing()).getKind());
-        params.put("id", ((Listing) event.getListing()).getId());
-        params.put("b", String.valueOf(event.isToHide()));
+        params.put("type", type);
+        params.put("b", String.valueOf(isHiding));
         FlurryAgent.logEvent("hide", params);
     }
 
     @Override
-    @Subscribe
-    public void logReport(ReportEvent event) {
+    public void logReport() {
         if (!mSettingsManager.areAnalyticsEnabled()) return;
         // TODO: Implement analytics event once feature is implemented
     }

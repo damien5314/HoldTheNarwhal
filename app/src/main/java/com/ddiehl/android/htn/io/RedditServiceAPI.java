@@ -6,6 +6,8 @@ import android.text.TextUtils;
 
 import com.ddiehl.android.htn.AccessTokenManager;
 import com.ddiehl.android.htn.BusProvider;
+import com.ddiehl.android.htn.HoldTheNarwhal;
+import com.ddiehl.android.htn.analytics.Analytics;
 import com.ddiehl.android.htn.events.requests.FriendAddEvent;
 import com.ddiehl.android.htn.events.requests.FriendDeleteEvent;
 import com.ddiehl.android.htn.events.requests.FriendNoteSaveEvent;
@@ -78,6 +80,7 @@ public class RedditServiceAPI implements RedditService {
     private Bus mBus = BusProvider.getInstance();
     private RedditAPI mAPI;
     private AccessTokenManager mAccessTokenManager;
+    private Analytics mAnalytics = HoldTheNarwhal.getAnalytics();
 
     RedditServiceAPI(Context c) {
         mContext = c.getApplicationContext();
@@ -134,7 +137,10 @@ public class RedditServiceAPI implements RedditService {
                 .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        response -> mBus.post(new UserIdentityRetrievedEvent(response.body())),
+                        response -> {
+                            mBus.post(new UserIdentityRetrievedEvent(response.body()));
+                            mAnalytics.logSignIn(response.body());
+                        },
                         error -> {
                             mBus.post(error);
                             mBus.post(new UserIdentityRetrievedEvent(error));

@@ -8,9 +8,11 @@ import android.view.View;
 
 import com.ddiehl.android.htn.AccessTokenManager;
 import com.ddiehl.android.htn.BusProvider;
+import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.SettingsManager;
+import com.ddiehl.android.htn.analytics.Analytics;
 import com.ddiehl.android.htn.events.requests.HideEvent;
 import com.ddiehl.android.htn.events.requests.LoadLinkCommentsEvent;
 import com.ddiehl.android.htn.events.requests.LoadMoreChildrenEvent;
@@ -42,8 +44,6 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
 
     private static final int MAX_CHILDREN_PER_REQUEST = 20;
 
-    private Context mContext;
-
     private MainView mMainView;
     private LinkCommentsView mLinkCommentsView;
     private Link mLinkContext;
@@ -53,6 +53,7 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
     private AccessTokenManager mAccessTokenManager;
     private IdentityManager mIdentityManager;
     private SettingsManager mSettingsManager;
+    private Analytics mAnalytics = HoldTheNarwhal.getAnalytics();
 
     private String mSubreddit;
     private String mLinkId;
@@ -63,14 +64,13 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
 
     public LinkCommentsPresenterImpl(Context context, MainView main, LinkCommentsView view,
                                      String subreddit, String linkId, String commentId) {
-        mContext = context.getApplicationContext();
         mMainView = main;
         mLinkCommentsView = view;
         mCommentBank = new CommentBankList();
         mBus = BusProvider.getInstance();
-        mAccessTokenManager = AccessTokenManager.getInstance(mContext);
-        mIdentityManager = IdentityManager.getInstance(mContext);
-        mSettingsManager = SettingsManager.getInstance(mContext);
+        mAccessTokenManager = AccessTokenManager.getInstance(context);
+        mIdentityManager = IdentityManager.getInstance(context);
+        mSettingsManager = SettingsManager.getInstance(context);
         mSubreddit = subreddit;
         mLinkId = linkId;
         mCommentId = commentId;
@@ -91,6 +91,7 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
     public void getComments() {
         mMainView.showSpinner(null);
         mBus.post(new LoadLinkCommentsEvent(mSubreddit, mLinkId, mSort, mCommentId));
+        mAnalytics.logLoadLinkComments(mSort);
     }
 
     @Subscribe @SuppressWarnings("unused")
@@ -101,7 +102,7 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
         }
 
         mLinkContext = event.getLink();
-        mMainView.setTitle(mLinkContext.getTitle());
+        if (mLinkContext != null) mMainView.setTitle(mLinkContext.getTitle());
         List<Listing> comments = event.getComments();
         AbsComment.Utils.flattenCommentList(comments);
         mCommentBank.clear();
@@ -118,6 +119,7 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
         // Truncate list of children to 20
         children = children.subList(0, Math.min(MAX_CHILDREN_PER_REQUEST, children.size()));
         mBus.post(new LoadMoreChildrenEvent(mLinkContext, comment, children, mSort));
+        mAnalytics.logLoadMoreChildren(mSort);
     }
 
     @Subscribe @SuppressWarnings("unused")
@@ -133,14 +135,15 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
         if (comments == null || comments.size() == 0) {
             mCommentBank.remove(parentStub);
         } else {
-            AbsComment.Utils.setDepthForCommentsList(comments, parentStub.getDepth());
-
-            int stubIndex = mCommentBank.indexOf(parentStub);
-            parentStub.removeChildren(comments);
-            parentStub.setCount(parentStub.getChildren().size());
-            if (parentStub.getCount() == 0)
-                mCommentBank.remove(stubIndex);
-            mCommentBank.addAll(stubIndex, comments);
+            if (parentStub != null) {
+                AbsComment.Utils.setDepthForCommentsList(comments, parentStub.getDepth());
+                int stubIndex = mCommentBank.indexOf(parentStub);
+                parentStub.removeChildren(comments);
+                parentStub.setCount(parentStub.getChildren().size());
+                if (parentStub.getCount() == 0)
+                    mCommentBank.remove(stubIndex);
+                mCommentBank.addAll(stubIndex, comments);
+            }
         }
 
         Integer minScore = mSettingsManager.getMinCommentScore();
@@ -235,6 +238,7 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
         }
 
         mBus.post(new SaveEvent(mLinkContext, null, true));
+        mAnalytics.logSave(mLinkContext.getKind(), null, true);
     }
 
     @Override
@@ -245,6 +249,7 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
         }
 
         mBus.post(new SaveEvent(mLinkContext, null, false));
+        mAnalytics.logSave(mLinkContext.getKind(), null, false);
     }
 
     @Override
@@ -280,6 +285,7 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
         }
 
         mBus.post(new HideEvent(mLinkContext, true));
+        mAnalytics.logHide(mLinkContext.getKind(), true);
     }
 
     @Override
@@ -290,6 +296,7 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
         }
 
         mBus.post(new HideEvent(mLinkContext, false));
+        mAnalytics.logHide(mLinkContext.getKind(), false);
     }
 
     @Override
@@ -334,7 +341,7 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
             return;
         }
 
-        listing.applyVote(event.getDirection());
+        if (listing != null) listing.applyVote(event.getDirection());
         if (listing instanceof Link) {
             mLinkCommentsView.linkUpdated();
         } else {
@@ -351,7 +358,7 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
             return;
         }
 
-        listing.isSaved(event.isToSave());
+        if (listing != null) listing.isSaved(event.isToSave());
         if (listing instanceof Link) {
             mLinkCommentsView.linkUpdated();
         } else {
@@ -398,6 +405,7 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
 
         Comment comment = (Comment) mListingSelected;
         mBus.post(new SaveEvent(comment, null, true));
+        mAnalytics.logSave(comment.getKind(), null, true);
     }
 
     @Override
@@ -409,6 +417,7 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
 
         Comment comment = (Comment) mListingSelected;
         mBus.post(new SaveEvent(comment, null, false));
+        mAnalytics.logSave(comment.getKind(), null, false);
     }
 
     @Override
@@ -459,6 +468,7 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
         } else {
             Votable votable = (Votable) listing;
             mBus.post(new VoteEvent(votable, listing.getKind(), dir));
+            mAnalytics.logVote(votable.getKind(), dir);
         }
     }
 }

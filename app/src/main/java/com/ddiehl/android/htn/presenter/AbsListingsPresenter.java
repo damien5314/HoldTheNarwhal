@@ -321,6 +321,7 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
 
         Link link = (Link) mListingSelected;
         mBus.post(new SaveEvent(link, null, true));
+        mAnalytics.logSave(link.getKind(), null, true);
     }
 
     @Override
@@ -332,6 +333,7 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
 
         Link link = (Link) mListingSelected;
         mBus.post(new SaveEvent(link, null, false));
+        mAnalytics.logSave(link.getKind(), null, false);
     }
 
     @Override
@@ -373,6 +375,7 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
 
         Link link = (Link) mListingSelected;
         mBus.post(new HideEvent(link, true));
+        mAnalytics.logHide(link.getKind(), true);
     }
 
     @Override
@@ -384,6 +387,7 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
 
         Link link = (Link) mListingSelected;
         mBus.post(new HideEvent(link, false));
+        mAnalytics.logHide(link.getKind(), false);
     }
 
     @Override
@@ -457,6 +461,7 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
 
         Comment comment = (Comment) mListingSelected;
         mBus.post(new SaveEvent(comment, null, true));
+        mAnalytics.logSave(comment.getKind(), null, true);
     }
 
     @Override
@@ -468,6 +473,7 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
 
         Comment comment = (Comment) mListingSelected;
         mBus.post(new SaveEvent(comment, null, false));
+        mAnalytics.logSave(comment.getKind(), null, false);
     }
 
     @Override
@@ -565,6 +571,7 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
         } else {
             Votable votable = (Votable) listing;
             mBus.post(new VoteEvent(votable, listing.getKind(), dir));
+            mAnalytics.logVote(votable.getKind(), dir);
         }
     }
 

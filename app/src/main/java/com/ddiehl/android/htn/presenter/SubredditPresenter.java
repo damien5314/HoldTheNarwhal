@@ -30,6 +30,7 @@ public class SubredditPresenter extends AbsListingsPresenter {
     public void requestData() {
         if (mSubreddit == null || mSubreddit.equals("all") || mSubredditInfo != null) {
             mBus.post(new LoadSubredditEvent(mSubreddit, mSort, mTimespan, mNextPageListingId));
+            mAnalytics.logLoadSubreddit(mSubreddit, mSort, mTimespan);
         } else {
             mListingsRequested = false;
             mBus.post(new GetSubredditInfoEvent(mSubreddit));
@@ -43,7 +44,8 @@ public class SubredditPresenter extends AbsListingsPresenter {
 
         mSubredditInfo = event.getSubreddit();
         UserIdentity user = getAuthorizedUser();
-        if (mSubredditInfo.isOver18() && (user == null || !user.isOver18())) {
+        if ((mSubredditInfo != null && mSubredditInfo.isOver18())
+                && (user == null || !user.isOver18())) {
             mMainView.showNsfwWarningDialog();
         } else {
             requestData();

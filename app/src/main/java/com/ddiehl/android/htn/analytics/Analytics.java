@@ -1,19 +1,11 @@
 package com.ddiehl.android.htn.analytics;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
-import com.ddiehl.android.htn.events.requests.HideEvent;
-import com.ddiehl.android.htn.events.requests.LoadLinkCommentsEvent;
-import com.ddiehl.android.htn.events.requests.LoadMoreChildrenEvent;
-import com.ddiehl.android.htn.events.requests.LoadSubredditEvent;
-import com.ddiehl.android.htn.events.requests.LoadUserProfileListingEvent;
-import com.ddiehl.android.htn.events.requests.ReportEvent;
-import com.ddiehl.android.htn.events.requests.SaveEvent;
-import com.ddiehl.android.htn.events.requests.UserSignOutEvent;
-import com.ddiehl.android.htn.events.requests.VoteEvent;
-import com.ddiehl.android.htn.events.responses.UserIdentityRetrievedEvent;
+import com.ddiehl.reddit.identity.UserIdentity;
 import com.ddiehl.reddit.listings.Link;
-import com.squareup.otto.Subscribe;
 
 import retrofit.Response;
 
@@ -24,17 +16,17 @@ public interface Analytics {
 
     void endSession();
 
-    void setUserIdentity(String name);
+    void setUserIdentity(@Nullable String name);
 
-    void logOpenLink(Link link);
+    void logOpenLink(@NonNull Link link);
 
     void logOptionChangeSort();
 
-    void logOptionChangeSort(String sort);
+    void logOptionChangeSort(@NonNull String sort);
 
     void logOptionChangeTimespan();
 
-    void logOptionChangeTimespan(String timespan);
+    void logOptionChangeTimespan(@NonNull String timespan);
 
     void logOptionRefresh();
 
@@ -56,37 +48,27 @@ public interface Analytics {
 
     void logClickedSignOut();
 
-    void logSettingChanged(String key, String value);
+    void logSettingChanged(@NonNull String key, @NonNull String value);
 
-    void logApiError(Response error);
+    void logApiError(@Nullable Response error);
 
-    @Subscribe @SuppressWarnings("unused")
-    void logSignIn(UserIdentityRetrievedEvent event);
+    void logSignIn(@NonNull UserIdentity identity);
 
-    @Subscribe @SuppressWarnings("unused")
-    void logSignOut(UserSignOutEvent event);
+    void logSignOut();
 
-    @Subscribe @SuppressWarnings("unused")
-    void logLoadSubreddit(LoadSubredditEvent event);
+    void logLoadSubreddit(@Nullable String subreddit, @NonNull String sort, @NonNull String timespan);
 
-    @Subscribe @SuppressWarnings("unused")
-    void logLoadUserProfile(LoadUserProfileListingEvent event);
+    void logLoadUserProfile(@NonNull String show, @NonNull String sort, @NonNull String timespan);
 
-    @Subscribe @SuppressWarnings("unused")
-    void logLoadLinkComments(LoadLinkCommentsEvent event);
+    void logLoadLinkComments(@NonNull String sort);
 
-    @Subscribe @SuppressWarnings("unused")
-    void logLoadMoreChildren(LoadMoreChildrenEvent event);
+    void logLoadMoreChildren(@NonNull String sort);
 
-    @Subscribe @SuppressWarnings("unused")
-    void logVote(VoteEvent event);
+    void logVote(@NonNull String type, int direction);
 
-    @Subscribe @SuppressWarnings("unused")
-    void logSave(SaveEvent event);
+    void logSave(@NonNull String type, @Nullable String category, boolean isSaving);
 
-    @Subscribe @SuppressWarnings("unused")
-    void logHide(HideEvent event);
+    void logHide(@NonNull String type, boolean isHiding);
 
-    @Subscribe @SuppressWarnings("unused")
-    void logReport(ReportEvent event);
+    void logReport();
 }

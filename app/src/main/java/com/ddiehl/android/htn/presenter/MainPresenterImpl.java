@@ -67,6 +67,7 @@ public class MainPresenterImpl implements MainPresenter {
     public void signOutUser() {
         mMainView.closeNavigationDrawer();
         mBus.post(new UserSignOutEvent());
+        mAnalytics.logSignOut();
     }
 
     @Override

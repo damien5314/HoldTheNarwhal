@@ -26,8 +26,10 @@ public class UserProfilePresenter extends AbsListingsPresenter {
     public void requestData() {
         if (mShow.equals("summary")) {
             mBus.post(new LoadUserProfileSummaryEvent(mUsernameContext));
+            // TODO: Analytics event for user profile summary screen
         } else {
             mBus.post(new LoadUserProfileListingEvent(mShow, mUsernameContext, mSort, mTimespan, mNextPageListingId));
+            mAnalytics.logLoadUserProfile(mShow, mSort, mTimespan);
         }
     }
 
