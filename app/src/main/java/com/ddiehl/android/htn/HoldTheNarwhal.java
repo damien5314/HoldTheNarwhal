@@ -43,7 +43,7 @@ public class HoldTheNarwhal extends Application {
         bus.register(identityManager);
         SettingsManager settingsManager = getSettingsManager();
         bus.register(settingsManager);
-        RedditService api = RedditServiceAuth.getInstance(this);
+        RedditService api = getRedditAPI();
         bus.register(api);
     }
 
@@ -69,6 +69,14 @@ public class HoldTheNarwhal extends Application {
      */
     public static SettingsManager getSettingsManager() {
         return SettingsManagerImpl.getInstance();
+    }
+
+    /**
+     * Provides an instance of RedditService with which to call the reddit API
+     * @return Instance of RedditService
+     */
+    public static RedditService getRedditAPI() {
+        return RedditServiceAuth.getInstance();
     }
 
     /**

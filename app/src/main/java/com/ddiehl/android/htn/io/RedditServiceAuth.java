@@ -5,6 +5,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.ddiehl.android.htn.AccessTokenManager;
+import com.ddiehl.android.htn.AndroidContextProvider;
 import com.ddiehl.android.htn.BuildConfig;
 import com.ddiehl.android.htn.BusProvider;
 import com.ddiehl.android.htn.HoldTheNarwhal;
@@ -76,8 +77,8 @@ public class RedditServiceAuth implements RedditService {
 
     private Object mQueuedEvent;
 
-    private RedditServiceAuth(Context context) {
-        mContext = context.getApplicationContext();
+    private RedditServiceAuth() {
+        mContext = AndroidContextProvider.getContext();
         mBus = BusProvider.getInstance();
         mAccessTokenManager = HoldTheNarwhal.getAccessTokenManager();
         mIdentityManager = HoldTheNarwhal.getIdentityManager();
@@ -430,11 +431,11 @@ public class RedditServiceAuth implements RedditService {
 
     private static RedditServiceAuth _instance;
 
-    public static RedditServiceAuth getInstance(Context context) {
+    public static RedditServiceAuth getInstance() {
         if (_instance == null) {
             synchronized (RedditServiceAuth.class) {
                 if (_instance == null) {
-                    _instance = new RedditServiceAuth(context);
+                    _instance = new RedditServiceAuth();
                 }
             }
         }
