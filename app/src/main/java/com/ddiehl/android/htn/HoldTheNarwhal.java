@@ -48,40 +48,42 @@ public class HoldTheNarwhal extends Application {
     }
 
     /**
-     * Provides an instance of AccessTokenManager with which to manage OAuth tokens
-     * @return Instance of AccessTokenManager
+     * Provides an instance of {@link AccessTokenManager} with which to manage OAuth tokens.
+     * @return Instance of {@link AccessTokenManager}
      */
     public static AccessTokenManager getAccessTokenManager() {
         return AccessTokenManagerImpl.getInstance();
     }
 
     /**
-     * Provides an instance of IdentityManager with which to track logged in reddit user identity
-     * @return Instance of IdentityManager
+     * Provides an instance of {@link IdentityManager} with which to track logged in reddit user
+     * identity.
+     * @return Instance of {@link IdentityManager}
      */
     public static IdentityManager getIdentityManager() {
         return IdentityManagerImpl.getInstance();
     }
 
     /**
-     * Provides an instance of SettingsManager with which to track user's reddit and app settings
-     * @return Instance of SettingsManager
+     * Provides an instance of {@link SettingsManager} with which to track user's reddit and app
+     * settings.
+     * @return Instance of {@link SettingsManager}
      */
     public static SettingsManager getSettingsManager() {
         return SettingsManagerImpl.getInstance();
     }
 
     /**
-     * Provides an instance of RedditService with which to call the reddit API
-     * @return Instance of RedditService
+     * Provides an instance of {@link RedditService} with which to call the reddit API
+     * @return Instance of {@link RedditService}
      */
     public static RedditService getRedditAPI() {
         return RedditServiceAuth.getInstance();
     }
 
     /**
-     * Provides an instance of Analytics to which to log application events
-     * @return Instance of Analytics
+     * Provides an instance of {@link Analytics} to which to log application events
+     * @return Instance of {@link Analytics}
      */
     public static Analytics getAnalytics() {
         return FlurryAnalytics.getInstance();
