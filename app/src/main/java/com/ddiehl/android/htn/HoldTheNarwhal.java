@@ -39,7 +39,7 @@ public class HoldTheNarwhal extends Application {
         bus.register(analytics);
         AccessTokenManager accessTokenManager = getAccessTokenManager();
         bus.register(accessTokenManager);
-        IdentityManager identityManager = IdentityManager.getInstance(this);
+        IdentityManager identityManager = getIdentityManager();
         bus.register(identityManager);
         SettingsManager settingsManager = SettingsManager.getInstance(this);
         bus.register(settingsManager);
@@ -53,6 +53,14 @@ public class HoldTheNarwhal extends Application {
      */
     public static AccessTokenManager getAccessTokenManager() {
         return AccessTokenManagerImpl.getInstance();
+    }
+
+    /**
+     * Provides an instance of IdentityManager with which to track logged in reddit user identity
+     * @return Instance of IdentityManager
+     */
+    public static IdentityManager getIdentityManager() {
+        return IdentityManagerImpl.getInstance();
     }
 
     /**

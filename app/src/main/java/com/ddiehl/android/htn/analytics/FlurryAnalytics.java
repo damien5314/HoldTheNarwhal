@@ -6,7 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.ddiehl.android.htn.BuildConfig;
-import com.ddiehl.android.htn.IdentityManager;
+import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.SettingsManager;
 import com.ddiehl.android.htn.utils.BaseUtils;
 import com.ddiehl.reddit.identity.UserIdentity;
@@ -54,7 +54,7 @@ public class FlurryAnalytics implements Analytics {
         if (!mSettingsManager.areAnalyticsEnabled()) return;
         // Log initial Flurry event
         Map<String, String> params = new HashMap<>();
-        UserIdentity identity = IdentityManager.getInstance(mContext).getUserIdentity();
+        UserIdentity identity = HoldTheNarwhal.getIdentityManager().getUserIdentity();
         String userId = identity == null ?
                 "unauthorized" : BaseUtils.getMd5HexString(identity.getName());
         params.put("user", userId);

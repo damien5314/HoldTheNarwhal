@@ -16,7 +16,6 @@ import android.view.MenuItem;
 import com.ddiehl.android.htn.AccessTokenManager;
 import com.ddiehl.android.htn.BusProvider;
 import com.ddiehl.android.htn.HoldTheNarwhal;
-import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.SettingsManager;
 import com.ddiehl.android.htn.events.requests.GetUserSettingsEvent;
@@ -117,7 +116,7 @@ public class SettingsFragment extends PreferenceFragment
 
     private void addUserPreferences() {
         addPreferencesFromResource(R.xml.preferences_user);
-        UserIdentity user = IdentityManager.getInstance(getActivity()).getUserIdentity();
+        UserIdentity user = HoldTheNarwhal.getIdentityManager().getUserIdentity();
         if (user != null && user.isGold()) {
             addPreferencesFromResource(R.xml.preferences_user_gold);
         }

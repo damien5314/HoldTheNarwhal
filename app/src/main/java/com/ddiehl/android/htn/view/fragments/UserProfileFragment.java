@@ -14,7 +14,7 @@ import android.widget.TableLayout;
 import android.widget.TextView;
 
 import com.ddiehl.android.htn.BusProvider;
-import com.ddiehl.android.htn.IdentityManager;
+import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.events.requests.FriendAddEvent;
 import com.ddiehl.android.htn.events.requests.FriendDeleteEvent;
@@ -144,7 +144,7 @@ public class UserProfileFragment extends AbsListingsFragment {
         mCommentKarma.setText(NumberFormat.getInstance().format(user.getCommentKarma()));
 
         // If user is not self, show friend button
-        UserIdentity self = IdentityManager.getInstance(mContext).getUserIdentity();
+        UserIdentity self = HoldTheNarwhal.getIdentityManager().getUserIdentity();
         if (!user.getName().equals(self.getName())) {
             mFriendButtonLayout.setVisibility(View.VISIBLE);
             if (user.isFriend()) {
@@ -162,7 +162,7 @@ public class UserProfileFragment extends AbsListingsFragment {
             return;
         }
 
-        UserIdentity self = IdentityManager.getInstance(mContext).getUserIdentity();
+        UserIdentity self = HoldTheNarwhal.getIdentityManager().getUserIdentity();
         if (self != null && self.isGold()) {
             mFriendNoteLayout.setVisibility(View.VISIBLE);
             FriendInfo friend = event.getFriendInfo();
@@ -220,7 +220,7 @@ public class UserProfileFragment extends AbsListingsFragment {
         }
         setFriendButtonState(true);
 
-        UserIdentity self = IdentityManager.getInstance(mContext).getUserIdentity();
+        UserIdentity self = HoldTheNarwhal.getIdentityManager().getUserIdentity();
         if (self != null && self.isGold()) {
             mFriendNote.setText(event.getNote());
             mFriendNoteLayout.setVisibility(View.VISIBLE);

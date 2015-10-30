@@ -34,7 +34,7 @@ public class MainPresenterImpl implements MainPresenter {
         mContext = context.getApplicationContext();
 
         mMainView = view;
-        mIdentityManager = IdentityManager.getInstance(mContext);
+        mIdentityManager = HoldTheNarwhal.getIdentityManager();
         mSettingsManager = SettingsManager.getInstance(mContext);
 
         // Configure analytics
