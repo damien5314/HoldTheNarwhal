@@ -159,7 +159,8 @@ public class SettingsManager implements SharedPreferences.OnSharedPreferenceChan
             }
         }
 
-        if (changedSettings.size() > 0 && AccessTokenManager.getInstance(mContext).hasUserAccessToken()) {
+        if (changedSettings.size() > 0 &&
+                HoldTheNarwhal.getAccessTokenManager().hasUserAccessToken()) {
             // Post SettingsUpdate event with changed keys and values
             mBus.post(new UpdateUserSettingsEvent(changedSettings));
         }

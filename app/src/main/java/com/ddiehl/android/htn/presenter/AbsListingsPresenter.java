@@ -67,7 +67,7 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
                                 String show, String username, String subreddit, String sort, String timespan) {
         mContext = context.getApplicationContext();
         mBus = BusProvider.getInstance();
-        mAccessTokenManager = AccessTokenManager.getInstance(context);
+        mAccessTokenManager = HoldTheNarwhal.getAccessTokenManager();
         mIdentityManager = IdentityManager.getInstance(mContext);
         mSettingsManager = SettingsManager.getInstance(mContext);
         mListingsView = view;

@@ -14,7 +14,6 @@ import com.squareup.otto.Bus;
 
 
 public class HoldTheNarwhal extends Application {
-
     public static final String TAG = "HTN";
 
     @Override
@@ -33,18 +32,27 @@ public class HoldTheNarwhal extends Application {
                         .build());
 
         Bus bus = BusProvider.getInstance();
+        AndroidContextProvider.setContext(this);
 
         // Initialize static dependencies
-        Analytics analytics = HoldTheNarwhal.getAnalytics();
+        Analytics analytics = getAnalytics();
         bus.register(analytics);
-        AccessTokenManager accessTokenManager = AccessTokenManager.getInstance(this);
+        AccessTokenManager accessTokenManager = getAccessTokenManager();
         bus.register(accessTokenManager);
         IdentityManager identityManager = IdentityManager.getInstance(this);
         bus.register(identityManager);
         SettingsManager settingsManager = SettingsManager.getInstance(this);
         bus.register(settingsManager);
-        RedditService authProxy = RedditServiceAuth.getInstance(this);
-        bus.register(authProxy);
+        RedditService api = RedditServiceAuth.getInstance(this);
+        bus.register(api);
+    }
+
+    /**
+     * Provides an instance of AccessTokenManager with which to manage OAuth tokens
+     * @return Instance of AccessTokenManager
+     */
+    public static AccessTokenManager getAccessTokenManager() {
+        return AccessTokenManagerImpl.getInstance();
     }
 
     /**

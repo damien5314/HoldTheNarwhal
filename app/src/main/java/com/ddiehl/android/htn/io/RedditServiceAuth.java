@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import com.ddiehl.android.htn.AccessTokenManager;
 import com.ddiehl.android.htn.BuildConfig;
 import com.ddiehl.android.htn.BusProvider;
+import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.SettingsManager;
 import com.ddiehl.android.htn.events.requests.AuthorizeApplicationEvent;
@@ -79,7 +80,7 @@ public class RedditServiceAuth implements RedditService {
     private RedditServiceAuth(Context context) {
         mContext = context.getApplicationContext();
         mBus = BusProvider.getInstance();
-        mAccessTokenManager = AccessTokenManager.getInstance(mContext);
+        mAccessTokenManager = HoldTheNarwhal.getAccessTokenManager();
         mIdentityManager = IdentityManager.getInstance(mContext);
         mAuthAPI = buildApi();
         mServiceAPI = new RedditServiceAPI(mContext);

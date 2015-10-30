@@ -68,7 +68,7 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
         mLinkCommentsView = view;
         mCommentBank = new CommentBankList();
         mBus = BusProvider.getInstance();
-        mAccessTokenManager = AccessTokenManager.getInstance(context);
+        mAccessTokenManager = HoldTheNarwhal.getAccessTokenManager();
         mIdentityManager = IdentityManager.getInstance(context);
         mSettingsManager = SettingsManager.getInstance(context);
         mSubreddit = subreddit;

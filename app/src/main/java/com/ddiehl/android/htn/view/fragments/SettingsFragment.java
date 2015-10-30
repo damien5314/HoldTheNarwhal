@@ -15,6 +15,7 @@ import android.view.MenuItem;
 
 import com.ddiehl.android.htn.AccessTokenManager;
 import com.ddiehl.android.htn.BusProvider;
+import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.SettingsManager;
@@ -33,10 +34,8 @@ import java.io.InputStream;
 
 public class SettingsFragment extends PreferenceFragment
         implements SharedPreferences.OnSharedPreferenceChangeListener {
-
     private Bus mBus = BusProvider.getInstance();
     private AccessTokenManager mAccessTokenManager;
-//    private IdentityManager mIdentityManager;
     private SettingsManager mSettingsManager;
     private MainView mMainView;
 
@@ -45,7 +44,7 @@ public class SettingsFragment extends PreferenceFragment
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
         setHasOptionsMenu(true);
-        mAccessTokenManager = AccessTokenManager.getInstance(getActivity());
+        mAccessTokenManager = HoldTheNarwhal.getAccessTokenManager();
         mSettingsManager = SettingsManager.getInstance(getActivity());
         mMainView = (MainView) getActivity();
 

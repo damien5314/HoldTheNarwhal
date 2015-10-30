@@ -85,7 +85,7 @@ public class RedditServiceAPI implements RedditService {
     RedditServiceAPI(Context c) {
         mContext = c.getApplicationContext();
         mAPI = buildApi();
-        mAccessTokenManager = AccessTokenManager.getInstance(mContext);
+        mAccessTokenManager = HoldTheNarwhal.getAccessTokenManager();
     }
 
     private RedditAPI buildApi() {
