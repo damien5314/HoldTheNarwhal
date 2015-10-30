@@ -129,7 +129,7 @@ public class IdentityManagerImpl implements IdentityManager {
         mUserIdentity = null;
         mContext.getSharedPreferences(PREFS_USER_IDENTITY, Context.MODE_PRIVATE)
                 .edit().clear().apply();
-        SettingsManager.getInstance(mContext).clearUserSettings();
+        HoldTheNarwhal.getSettingsManager().clearUserSettings();
     }
 
     ///////////////

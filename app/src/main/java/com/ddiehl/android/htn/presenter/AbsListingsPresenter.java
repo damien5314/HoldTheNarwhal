@@ -69,7 +69,7 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
         mBus = BusProvider.getInstance();
         mAccessTokenManager = HoldTheNarwhal.getAccessTokenManager();
         mIdentityManager = HoldTheNarwhal.getIdentityManager();
-        mSettingsManager = SettingsManager.getInstance(mContext);
+        mSettingsManager = HoldTheNarwhal.getSettingsManager();
         mListingsView = view;
         mMainView = main;
         mShow = show;

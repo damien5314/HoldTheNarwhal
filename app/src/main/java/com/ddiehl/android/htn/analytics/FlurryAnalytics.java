@@ -34,7 +34,7 @@ public class FlurryAnalytics implements Analytics {
             return;
         }
         mContext = context.getApplicationContext();
-        mSettingsManager = SettingsManager.getInstance(mContext);
+        mSettingsManager = HoldTheNarwhal.getSettingsManager();
         String apiKey = BuildConfig.FLURRY_API_KEY;
         FlurryAgent.init(mContext, apiKey);
         FlurryAgent.setContinueSessionMillis(FLURRY_SESSION_TIMEOUT_SECONDS * 1000);

@@ -41,7 +41,7 @@ public class HoldTheNarwhal extends Application {
         bus.register(accessTokenManager);
         IdentityManager identityManager = getIdentityManager();
         bus.register(identityManager);
-        SettingsManager settingsManager = SettingsManager.getInstance(this);
+        SettingsManager settingsManager = getSettingsManager();
         bus.register(settingsManager);
         RedditService api = RedditServiceAuth.getInstance(this);
         bus.register(api);
@@ -61,6 +61,14 @@ public class HoldTheNarwhal extends Application {
      */
     public static IdentityManager getIdentityManager() {
         return IdentityManagerImpl.getInstance();
+    }
+
+    /**
+     * Provides an instance of SettingsManager with which to track user's reddit and app settings
+     * @return Instance of SettingsManager
+     */
+    public static SettingsManager getSettingsManager() {
+        return SettingsManagerImpl.getInstance();
     }
 
     /**

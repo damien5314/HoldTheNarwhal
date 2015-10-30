@@ -18,6 +18,7 @@ import com.ddiehl.android.htn.BusProvider;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.SettingsManager;
+import com.ddiehl.android.htn.SettingsManagerImpl;
 import com.ddiehl.android.htn.events.requests.GetUserSettingsEvent;
 import com.ddiehl.android.htn.events.requests.UserSignOutEvent;
 import com.ddiehl.android.htn.events.responses.UserAuthorizedEvent;
@@ -44,10 +45,10 @@ public class SettingsFragment extends PreferenceFragment
         setRetainInstance(true);
         setHasOptionsMenu(true);
         mAccessTokenManager = HoldTheNarwhal.getAccessTokenManager();
-        mSettingsManager = SettingsManager.getInstance(getActivity());
+        mSettingsManager = HoldTheNarwhal.getSettingsManager();
         mMainView = (MainView) getActivity();
 
-        getPreferenceManager().setSharedPreferencesName(SettingsManager.PREFS_USER);
+        getPreferenceManager().setSharedPreferencesName(SettingsManagerImpl.PREFS_USER);
         addDefaultPreferences();
     }
 
@@ -62,7 +63,7 @@ public class SettingsFragment extends PreferenceFragment
     @Override
     public void onResume() {
         super.onResume();
-        getActivity().getSharedPreferences(SettingsManager.PREFS_USER, Context.MODE_PRIVATE)
+        getActivity().getSharedPreferences(SettingsManagerImpl.PREFS_USER, Context.MODE_PRIVATE)
                 .registerOnSharedPreferenceChangeListener(this);
 
         if (mAccessTokenManager.hasUserAccessToken()) {
@@ -72,7 +73,7 @@ public class SettingsFragment extends PreferenceFragment
 
     @Override
     public void onPause() {
-        getActivity().getSharedPreferences(SettingsManager.PREFS_USER, Context.MODE_PRIVATE)
+        getActivity().getSharedPreferences(SettingsManagerImpl.PREFS_USER, Context.MODE_PRIVATE)
                 .unregisterOnSharedPreferenceChangeListener(this);
         super.onPause();
     }

@@ -9,7 +9,6 @@ import com.ddiehl.android.htn.BuildConfig;
 import com.ddiehl.android.htn.BusProvider;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.IdentityManager;
-import com.ddiehl.android.htn.SettingsManager;
 import com.ddiehl.android.htn.events.requests.AuthorizeApplicationEvent;
 import com.ddiehl.android.htn.events.requests.FriendAddEvent;
 import com.ddiehl.android.htn.events.requests.FriendDeleteEvent;
@@ -117,7 +116,7 @@ public class RedditServiceAuth implements RedditService {
     @Subscribe @SuppressWarnings("unused")
     public void onAuthorizeApplication(AuthorizeApplicationEvent event) {
         String grantType = "https://oauth.reddit.com/grants/installed_client";
-        String deviceId = SettingsManager.getInstance(mContext).getDeviceId();
+        String deviceId = HoldTheNarwhal.getSettingsManager().getDeviceId();
 
         mAuthAPI.getApplicationAuthToken(grantType, deviceId)
                 .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())

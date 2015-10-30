@@ -70,7 +70,7 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
         mBus = BusProvider.getInstance();
         mAccessTokenManager = HoldTheNarwhal.getAccessTokenManager();
         mIdentityManager = HoldTheNarwhal.getIdentityManager();
-        mSettingsManager = SettingsManager.getInstance(context);
+        mSettingsManager = HoldTheNarwhal.getSettingsManager();
         mSubreddit = subreddit;
         mLinkId = linkId;
         mCommentId = commentId;
