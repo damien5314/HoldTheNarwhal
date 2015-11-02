@@ -8,11 +8,11 @@ import android.support.annotation.Nullable;
 import com.ddiehl.android.htn.BuildConfig;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.SettingsManager;
+import com.ddiehl.android.htn.logging.Logger;
 import com.ddiehl.android.htn.utils.BaseUtils;
 import com.ddiehl.reddit.identity.UserIdentity;
 import com.ddiehl.reddit.listings.Link;
 import com.flurry.android.FlurryAgent;
-import com.orhanobut.logger.Logger;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -23,6 +23,7 @@ import retrofit.Response;
 public class FlurryAnalytics implements Analytics {
     private static final int FLURRY_SESSION_TIMEOUT_SECONDS = 30;
 
+    private Logger mLogger = HoldTheNarwhal.getLogger();
     private Context mContext;
     private SettingsManager mSettingsManager;
     private boolean mInitialized = false;
@@ -30,7 +31,7 @@ public class FlurryAnalytics implements Analytics {
     @Override
     public void initialize(Context context) {
         if (mInitialized) {
-            Logger.e("Analytics already initialized");
+            mLogger.e("Analytics already initialized");
             return;
         }
         mContext = context.getApplicationContext();

@@ -3,11 +3,11 @@ package com.ddiehl.android.htn;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.ddiehl.android.htn.logging.Logger;
 import com.ddiehl.reddit.identity.AccessToken;
 import com.ddiehl.reddit.identity.ApplicationAccessToken;
 import com.ddiehl.reddit.identity.AuthorizationResponse;
 import com.ddiehl.reddit.identity.UserAccessToken;
-import com.orhanobut.logger.Logger;
 
 import java.util.Date;
 
@@ -23,6 +23,7 @@ public class AccessTokenManagerImpl implements AccessTokenManager {
     // Seconds within expiration we should try to retrieve a new auth token
     private static final int EXPIRATION_THRESHOLD = 60;
 
+    private Logger mLogger = HoldTheNarwhal.getLogger();
     private Context mContext;
     private AccessToken mUserAccessToken;
     private AccessToken mApplicationAccessToken;
@@ -129,9 +130,9 @@ public class AccessTokenManagerImpl implements AccessTokenManager {
             mUserAccessToken.setRefreshToken(response.getRefreshToken());
         }
 
-        Logger.d("--ACCESS TOKEN RESPONSE--");
-        Logger.d("Access Token: " + mUserAccessToken.getToken());
-        Logger.d("Refresh Token: " + mUserAccessToken.getRefreshToken());
+        mLogger.d("--ACCESS TOKEN RESPONSE--");
+        mLogger.d("Access Token: " + mUserAccessToken.getToken());
+        mLogger.d("Refresh Token: " + mUserAccessToken.getRefreshToken());
 
         SharedPreferences sp = mContext.getSharedPreferences(PREFS_USER_ACCESS_TOKEN, Context.MODE_PRIVATE);
         sp.edit()
@@ -152,7 +153,7 @@ public class AccessTokenManagerImpl implements AccessTokenManager {
         mApplicationAccessToken.setScope(response.getScope());
         mApplicationAccessToken.setRefreshToken(response.getRefreshToken());
 
-        Logger.d(String.format("--ACCESS TOKEN RESPONSE--\nAccess Token: %s\nRefresh Token: %s",
+        mLogger.d(String.format("--ACCESS TOKEN RESPONSE--\nAccess Token: %s\nRefresh Token: %s",
                 mApplicationAccessToken.getToken(), mApplicationAccessToken.getRefreshToken()));
 
         SharedPreferences sp = mContext.getSharedPreferences(PREFS_APPLICATION_ACCESS_TOKEN, Context.MODE_PRIVATE);

@@ -11,8 +11,8 @@ import android.view.Display;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
-import com.orhanobut.logger.Logger;
 import com.squareup.okhttp.Headers;
 import com.squareup.okhttp.Response;
 import com.squareup.okhttp.ResponseBody;
@@ -36,7 +36,7 @@ public class BaseUtils {
 
     public static void showError(@NonNull Context context, @Nullable retrofit.Response error) {
         String code = error == null ? "NULL" : String.valueOf(error.code());
-        Logger.d(String.format("Retrofit error (STATUS %s)", code));
+        HoldTheNarwhal.getLogger().d(String.format("Retrofit error (STATUS %s)", code));
         Toast.makeText(context,
                 String.format("An error has occurred (%s)", code), Toast.LENGTH_LONG).show();
     }
@@ -70,16 +70,16 @@ public class BaseUtils {
 
     public static void printResponseStatus(@Nullable Response response) {
         if (response != null) {
-            Logger.d(String.format("URL: %s (STATUS: %s)",
+            HoldTheNarwhal.getLogger().d(String.format("URL: %s (STATUS: %s)",
                     response.request().urlString(), response.code()));
         }
     }
 
     public static void printResponseHeaders(@Nullable Response response) {
         if (response != null) {
-            Logger.d("--HEADERS--");
+            HoldTheNarwhal.getLogger().d("--HEADERS--");
             Headers headers = response.headers();
-            Logger.d(headers.toString());
+            HoldTheNarwhal.getLogger().d(headers.toString());
         }
     }
 
@@ -87,9 +87,9 @@ public class BaseUtils {
         if (response != null) {
             try {
                 ResponseBody body = response.body();
-                Logger.d("--BODY-- LENGTH: " + body.bytes().length);
+                HoldTheNarwhal.getLogger().d("--BODY-- LENGTH: " + body.bytes().length);
                 InputStream in_s = body.byteStream();
-                Logger.d(getStringFromInputStream(in_s));
+                HoldTheNarwhal.getLogger().d(getStringFromInputStream(in_s));
                 in_s.close();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -121,7 +121,7 @@ public class BaseUtils {
                 br.close();
             }
         } catch (FileNotFoundException e) {
-            Logger.e("Unable to find file: " + file.getAbsolutePath());
+            HoldTheNarwhal.getLogger().e("Unable to find file: " + file.getAbsolutePath());
             e.printStackTrace();
         }
         return null;
@@ -148,7 +148,7 @@ public class BaseUtils {
 
             return sb.toString();
         } catch (NoSuchAlgorithmException e) {
-            Logger.w("Unable to obtain MD5 hash");
+            HoldTheNarwhal.getLogger().w("Unable to obtain MD5 hash");
             e.printStackTrace();
         }
 
@@ -175,16 +175,16 @@ public class BaseUtils {
             ZipEntry ze = zf.getEntry("classes.dex");
             return ze.getTime();
         } catch (IOException e) {
-            Logger.e("Exception while getting build time", e);
+            HoldTheNarwhal.getLogger().e("Exception while getting build time", e);
         } catch (PackageManager.NameNotFoundException e) {
-            Logger.e("Unable to find package name: " + c.getPackageName(), e);
+            HoldTheNarwhal.getLogger().e("Unable to find package name: " + c.getPackageName(), e);
         } finally {
             try {
                 if (zf != null) {
                     zf.close();
                 }
             } catch (Exception e) {
-                Logger.e("Error while closing ZipFile", e);
+                HoldTheNarwhal.getLogger().e("Error while closing ZipFile", e);
             }
         }
         return -1;

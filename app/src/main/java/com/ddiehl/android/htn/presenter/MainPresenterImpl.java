@@ -10,17 +10,17 @@ import com.ddiehl.android.htn.SettingsManager;
 import com.ddiehl.android.htn.analytics.Analytics;
 import com.ddiehl.android.htn.events.requests.UserSignOutEvent;
 import com.ddiehl.android.htn.events.responses.UserIdentitySavedEvent;
+import com.ddiehl.android.htn.logging.Logger;
 import com.ddiehl.android.htn.utils.BaseUtils;
 import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.reddit.identity.UserIdentity;
-import com.orhanobut.logger.Logger;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import retrofit.Response;
 
 public class MainPresenterImpl implements MainPresenter {
-
+    private Logger mLogger = HoldTheNarwhal.getLogger();
     private Bus mBus = BusProvider.getInstance();
     private Context mContext;
 
@@ -106,7 +106,7 @@ public class MainPresenterImpl implements MainPresenter {
 
     @Subscribe @SuppressWarnings("unused")
     public void onNetworkError(Response error) {
-        Logger.e("Retrofit Error: " + error.raw().message());
+        mLogger.e("Retrofit Error: " + error.raw().message());
 //        Log.e("HTN", Log.getStackTraceString(error));
         mMainView.showToast(BaseUtils.getFriendlyError(mContext, error));
         mAnalytics.logApiError(error);

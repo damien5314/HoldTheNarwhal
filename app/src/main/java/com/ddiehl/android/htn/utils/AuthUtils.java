@@ -2,11 +2,10 @@ package com.ddiehl.android.htn.utils;
 
 import android.net.Uri;
 
+import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.io.RedditServiceAuth;
-import com.orhanobut.logger.Logger;
 
 public class AuthUtils {
-
     public static String getUserAuthCodeFromRedirectUri(String url) {
         Uri uri = Uri.parse(url);
         String query = uri.getQuery();
@@ -15,7 +14,8 @@ public class AuthUtils {
         // Verify state parameter is correct
         String returnedState = getValueFromQuery(params[0]);
         if (!returnedState.equals(RedditServiceAuth.STATE)) {
-            Logger.e("STATE does not match: " + returnedState + " (EXPECTED: " + RedditServiceAuth.STATE + ")");
+            HoldTheNarwhal.getLogger().e("STATE does not match: %s (EXPECTED: %s)",
+                    returnedState, RedditServiceAuth.STATE);
             return null;
         }
 
@@ -26,7 +26,7 @@ public class AuthUtils {
             return getValueFromQuery(params[1]);
         } else { // User declined to authorize application, or an error occurred
             String error = getValueFromQuery(params[1]);
-            Logger.e("Error during authorization flow: " + error);
+            HoldTheNarwhal.getLogger().e("Error during authorization flow: " + error);
             return null;
         }
     }

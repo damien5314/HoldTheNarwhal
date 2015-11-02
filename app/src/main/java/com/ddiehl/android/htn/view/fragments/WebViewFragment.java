@@ -23,12 +23,13 @@ import android.widget.ZoomButtonsController;
 
 import com.ddiehl.android.htn.BuildConfig;
 import com.ddiehl.android.htn.BusProvider;
+import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.events.responses.UserAuthCodeReceivedEvent;
 import com.ddiehl.android.htn.io.RedditServiceAuth;
+import com.ddiehl.android.htn.logging.Logger;
 import com.ddiehl.android.htn.utils.AuthUtils;
 import com.ddiehl.android.htn.utils.BaseUtils;
-import com.orhanobut.logger.Logger;
 import com.squareup.otto.Bus;
 
 import butterknife.Bind;
@@ -39,6 +40,7 @@ public class WebViewFragment extends Fragment {
 
     private static final String ARG_URL = "url";
 
+    private Logger mLogger = HoldTheNarwhal.getLogger();
     private Bus mBus = BusProvider.getInstance();
     private String mUrl;
     @Bind(R.id.web_view) WebView mWebView;
@@ -73,7 +75,9 @@ public class WebViewFragment extends Fragment {
     }
 
     @Override @SuppressWarnings("SetJavaScriptEnabled")
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(
+            LayoutInflater inflater, @Nullable ViewGroup container,
+            @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.web_view_fragment, container, false);
 
         final ProgressBar progressBar = ButterKnife.findById(v, R.id.progress_bar);
@@ -91,7 +95,7 @@ public class WebViewFragment extends Fragment {
         mWebView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                Logger.d("Loading URL: " + url);
+                mLogger.d("Loading URL: " + url);
 
                 if (url.contains(RedditServiceAuth.REDIRECT_URI)
                         && !url.equals(RedditServiceAuth.AUTHORIZATION_URL)) {
@@ -104,7 +108,8 @@ public class WebViewFragment extends Fragment {
 
                 if (url.startsWith("mailto:")) {
                     MailTo mt = MailTo.parse(url);
-                    Intent i = BaseUtils.getNewEmailIntent(mt.getTo(), mt.getSubject(), mt.getBody(), mt.getCc());
+                    Intent i = BaseUtils.getNewEmailIntent(
+                            mt.getTo(), mt.getSubject(), mt.getBody(), mt.getCc());
                     getActivity().startActivity(i);
                     return true;
                 }

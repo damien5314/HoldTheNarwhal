@@ -6,24 +6,18 @@ import com.ddiehl.android.htn.analytics.Analytics;
 import com.ddiehl.android.htn.analytics.FlurryAnalytics;
 import com.ddiehl.android.htn.io.RedditService;
 import com.ddiehl.android.htn.io.RedditServiceAuth;
+import com.ddiehl.android.htn.logging.Logger;
+import com.ddiehl.android.htn.logging.OrhanobutLogger;
 import com.facebook.stetho.Stetho;
-import com.orhanobut.logger.LogLevel;
-import com.orhanobut.logger.Logger;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.otto.Bus;
 
 
 public class HoldTheNarwhal extends Application {
-    public static final String TAG = "HTN";
-
     @Override
     public void onCreate() {
         super.onCreate();
         LeakCanary.install(this);
-        Logger.init(TAG)
-                .hideThreadInfo()
-                .setMethodCount(0)
-                .setLogLevel(BuildConfig.DEBUG ? LogLevel.FULL : LogLevel.NONE);
 
         Stetho.initialize(
                 Stetho.newInitializerBuilder(this)
@@ -45,6 +39,10 @@ public class HoldTheNarwhal extends Application {
         bus.register(settingsManager);
         RedditService api = getRedditAPI();
         bus.register(api);
+    }
+
+    public static Logger getLogger() {
+        return OrhanobutLogger.getInstance();
     }
 
     /**
