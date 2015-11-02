@@ -7,7 +7,7 @@ import com.ddiehl.android.htn.analytics.FlurryAnalytics;
 import com.ddiehl.android.htn.io.RedditService;
 import com.ddiehl.android.htn.io.RedditServiceAuth;
 import com.ddiehl.android.htn.logging.Logger;
-import com.ddiehl.android.htn.logging.OrhanobutLogger;
+import com.ddiehl.android.htn.logging.TimberLogger;
 import com.facebook.stetho.Stetho;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.otto.Bus;
@@ -18,6 +18,7 @@ public class HoldTheNarwhal extends Application {
     public void onCreate() {
         super.onCreate();
         LeakCanary.install(this);
+        Logger logger = getLogger(); // Ensure the logger is loaded on application start
 
         Stetho.initialize(
                 Stetho.newInitializerBuilder(this)
@@ -42,7 +43,7 @@ public class HoldTheNarwhal extends Application {
     }
 
     public static Logger getLogger() {
-        return OrhanobutLogger.getInstance();
+        return TimberLogger.getInstance();
     }
 
     /**
