@@ -42,6 +42,10 @@ public class HoldTheNarwhal extends Application {
         bus.register(api);
     }
 
+    /**
+     * Provides an instance of {@link Logger} with which to log debug messages.
+     * @return Instance of {@link Logger}
+     */
     public static Logger getLogger() {
         return TimberLogger.getInstance();
     }

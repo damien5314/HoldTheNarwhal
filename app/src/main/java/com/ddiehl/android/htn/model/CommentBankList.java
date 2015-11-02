@@ -127,8 +127,8 @@ public class CommentBankList implements CommentBank {
             int currentChildCommentPosition = position + 1;
             AbsComment currentChildComment = (AbsComment) mData.get(currentChildCommentPosition);
             int currentChildCommentDepth = currentChildComment.getDepth();
-            // Loop through remaining comments until we reach another comment at same depth
-            // as the parent, or we reach the end of the comment list
+            // Loop through remaining comments until we reach another comment at same or lesser
+            // depth as the parent, or we reach the end of the comment list
             while (currentChildCommentDepth > parentCommentDepth
                     && currentChildCommentPosition < totalItemCount) {
                 // Loop through list of collapsed depths
