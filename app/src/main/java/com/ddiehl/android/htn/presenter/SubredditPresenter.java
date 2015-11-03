@@ -1,7 +1,5 @@
 package com.ddiehl.android.htn.presenter;
 
-import android.content.Context;
-
 import com.ddiehl.android.htn.events.requests.GetSubredditInfoEvent;
 import com.ddiehl.android.htn.events.requests.LoadSubredditEvent;
 import com.ddiehl.android.htn.events.responses.HideSubmittedEvent;
@@ -18,12 +16,11 @@ import com.ddiehl.reddit.listings.Subreddit;
 import com.squareup.otto.Subscribe;
 
 public class SubredditPresenter extends AbsListingsPresenter {
-
     private Subreddit mSubredditInfo;
 
-    public SubredditPresenter(Context context, MainView main, ListingsView view, String subreddit,
-                              String sort, String timespan) {
-        super(context, main, view, null, null, subreddit, sort, timespan);
+    public SubredditPresenter(
+            MainView main, ListingsView view, String subreddit, String sort, String timespan) {
+        super(main, view, null, null, subreddit, sort, timespan);
     }
 
     @Override

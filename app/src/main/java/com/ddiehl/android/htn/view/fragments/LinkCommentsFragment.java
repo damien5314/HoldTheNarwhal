@@ -38,7 +38,6 @@ import butterknife.ButterKnife;
 
 public class LinkCommentsFragment extends Fragment
         implements LinkCommentsView, SwipeRefreshLayout.OnRefreshListener {
-
     private static final String ARG_SUBREDDIT = "subreddit";
     private static final String ARG_ARTICLE = "article";
     private static final String ARG_COMMENT_ID = "comment_id";
@@ -78,8 +77,8 @@ public class LinkCommentsFragment extends Fragment
         String commentId = args.getString(ARG_COMMENT_ID);
 
         mMainView = (MainView) getActivity();
-        mLinkCommentsPresenter = new LinkCommentsPresenterImpl(getActivity(), mMainView, this,
-                subreddit, articleId, commentId);
+        mLinkCommentsPresenter = new LinkCommentsPresenterImpl(
+                mMainView, this, subreddit, articleId, commentId);
         mLinkCommentsAdapter = new LinkCommentsAdapter(mLinkCommentsPresenter);
 
         updateTitle();

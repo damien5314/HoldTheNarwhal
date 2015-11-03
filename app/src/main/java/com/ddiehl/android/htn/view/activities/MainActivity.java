@@ -1,6 +1,5 @@
 package com.ddiehl.android.htn.view.activities;
 
-import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -52,7 +51,6 @@ import hugo.weaving.DebugLog;
 
 public class MainActivity extends AppCompatActivity implements MainView,
         NavigationView.OnNavigationItemSelectedListener {
-
     public static final int REQUEST_NSFW_WARNING = 0x1;
     private static final String DIALOG_NSFW_WARNING = "dialog_nsfw_warning";
     private static final String DIALOG_CONFIRM_SIGN_OUT = "dialog_confirm_sign_out";
@@ -60,7 +58,6 @@ public class MainActivity extends AppCompatActivity implements MainView,
     private static final String DIALOG_SUBREDDIT_NAVIGATION = "dialog_subreddit_navigation";
 
     private ProgressDialog mLoadingOverlay;
-    private Dialog mSubredditNavigationDialog;
 
     @Bind(R.id.drawer_layout) DrawerLayout mDrawerLayout;
     @Bind(R.id.navigation_view) NavigationView mNavigationView;
@@ -95,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements MainView,
         }
 
         // Initialize dependencies
-        mMainPresenter = new MainPresenterImpl(this, this);
+        mMainPresenter = new MainPresenterImpl(this);
     }
 
     // FIXME Can we change this to onResume()?

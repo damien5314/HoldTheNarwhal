@@ -1,6 +1,5 @@
 package com.ddiehl.android.htn.presenter;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -41,35 +40,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class AbsListingsPresenter implements ListingsPresenter {
+    protected Bus mBus = BusProvider.getInstance();
+    protected AccessTokenManager mAccessTokenManager = HoldTheNarwhal.getAccessTokenManager();
+    protected IdentityManager mIdentityManager = HoldTheNarwhal.getIdentityManager();
+    protected SettingsManager mSettingsManager = HoldTheNarwhal.getSettingsManager();
+    protected Analytics mAnalytics = HoldTheNarwhal.getAnalytics();
 
-    Context mContext;
-    Bus mBus;
-    AccessTokenManager mAccessTokenManager;
-    IdentityManager mIdentityManager;
-    SettingsManager mSettingsManager;
-    Analytics mAnalytics = HoldTheNarwhal.getAnalytics();
+    protected List<Listing> mListings;
+    protected ListingsView mListingsView;
+    protected MainView mMainView;
 
-    List<Listing> mListings;
-    ListingsView mListingsView;
-    MainView mMainView;
+    protected String mShow;
+    protected String mUsernameContext;
+    protected String mSubreddit;
+    protected String mSort;
+    protected String mTimespan;
 
-    String mShow;
-    String mUsernameContext;
-    String mSubreddit;
-    String mSort;
-    String mTimespan;
+    protected Listing mListingSelected;
+    protected boolean mListingsRequested = false;
+    protected String mNextPageListingId;
 
-    Listing mListingSelected;
-    boolean mListingsRequested = false;
-    String mNextPageListingId;
-
-    public AbsListingsPresenter(Context context, MainView main, ListingsView view,
-                                String show, String username, String subreddit, String sort, String timespan) {
-        mContext = context.getApplicationContext();
-        mBus = BusProvider.getInstance();
-        mAccessTokenManager = HoldTheNarwhal.getAccessTokenManager();
-        mIdentityManager = HoldTheNarwhal.getIdentityManager();
-        mSettingsManager = HoldTheNarwhal.getSettingsManager();
+    public AbsListingsPresenter(
+            MainView main, ListingsView view, String show, String username, String subreddit,
+            String sort, String timespan) {
         mListingsView = view;
         mMainView = main;
         mShow = show;
@@ -84,7 +77,6 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
     @Override
     public void onResume() {
         mBus.register(this);
-
         if (!mListingsRequested && mListings.size() == 0) {
             refreshData();
         }

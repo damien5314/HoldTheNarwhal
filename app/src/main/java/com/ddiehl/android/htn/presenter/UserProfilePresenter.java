@@ -1,7 +1,5 @@
 package com.ddiehl.android.htn.presenter;
 
-import android.content.Context;
-
 import com.ddiehl.android.htn.events.requests.LoadUserProfileListingEvent;
 import com.ddiehl.android.htn.events.requests.LoadUserProfileSummaryEvent;
 import com.ddiehl.android.htn.events.responses.HideSubmittedEvent;
@@ -17,9 +15,10 @@ import com.squareup.otto.Subscribe;
 
 public class UserProfilePresenter extends AbsListingsPresenter {
 
-    public UserProfilePresenter(Context context, MainView main, ListingsView view, String show,
-                                String username, String sort, String timespan) {
-        super(context, main, view, show, username, null, sort, timespan);
+    public UserProfilePresenter(
+            MainView main, ListingsView view, String show, String username,
+            String sort, String timespan) {
+        super(main, view, show, username, null, sort, timespan);
     }
 
     @Override

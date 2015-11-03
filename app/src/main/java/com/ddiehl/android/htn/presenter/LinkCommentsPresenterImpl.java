@@ -1,6 +1,5 @@
 package com.ddiehl.android.htn.presenter;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.ContextMenu;
@@ -9,7 +8,6 @@ import android.view.View;
 import com.ddiehl.android.htn.AccessTokenManager;
 import com.ddiehl.android.htn.BusProvider;
 import com.ddiehl.android.htn.HoldTheNarwhal;
-import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.SettingsManager;
 import com.ddiehl.android.htn.analytics.Analytics;
@@ -41,18 +39,16 @@ import com.squareup.otto.Subscribe;
 import java.util.List;
 
 public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
-
     private static final int MAX_CHILDREN_PER_REQUEST = 20;
 
     private MainView mMainView;
     private LinkCommentsView mLinkCommentsView;
     private Link mLinkContext;
     private CommentBank mCommentBank;
-    private Bus mBus;
 
-    private AccessTokenManager mAccessTokenManager;
-    private IdentityManager mIdentityManager;
-    private SettingsManager mSettingsManager;
+    private Bus mBus = BusProvider.getInstance();
+    private AccessTokenManager mAccessTokenManager = HoldTheNarwhal.getAccessTokenManager();
+    private SettingsManager mSettingsManager = HoldTheNarwhal.getSettingsManager();
     private Analytics mAnalytics = HoldTheNarwhal.getAnalytics();
 
     private String mSubreddit;
@@ -62,15 +58,11 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
 
     private Listing mListingSelected;
 
-    public LinkCommentsPresenterImpl(Context context, MainView main, LinkCommentsView view,
-                                     String subreddit, String linkId, String commentId) {
+    public LinkCommentsPresenterImpl(
+            MainView main, LinkCommentsView view, String subreddit, String linkId, String commentId) {
         mMainView = main;
         mLinkCommentsView = view;
         mCommentBank = new CommentBankList();
-        mBus = BusProvider.getInstance();
-        mAccessTokenManager = HoldTheNarwhal.getAccessTokenManager();
-        mIdentityManager = HoldTheNarwhal.getIdentityManager();
-        mSettingsManager = HoldTheNarwhal.getSettingsManager();
         mSubreddit = subreddit;
         mLinkId = linkId;
         mCommentId = commentId;

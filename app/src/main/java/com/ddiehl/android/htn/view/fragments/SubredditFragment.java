@@ -31,8 +31,7 @@ public class SubredditFragment extends AbsListingsFragment {
 
         Bundle args = getArguments();
         String subreddit = args.getString(ARG_SUBREDDIT);
-        mListingsPresenter = new SubredditPresenter(getActivity(), mMainView, this,
-                subreddit, "hot", "all");
+        mListingsPresenter = new SubredditPresenter(mMainView, this, subreddit, "hot", "all");
         mListingsAdapter = new ListingsAdapter(mListingsPresenter);
     }
 

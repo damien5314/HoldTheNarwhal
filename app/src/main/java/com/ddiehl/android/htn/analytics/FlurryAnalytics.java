@@ -5,6 +5,7 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.ddiehl.android.htn.AndroidContextProvider;
 import com.ddiehl.android.htn.BuildConfig;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.SettingsManager;
@@ -24,17 +25,17 @@ public class FlurryAnalytics implements Analytics {
     private static final int FLURRY_SESSION_TIMEOUT_SECONDS = 30;
 
     private Logger mLogger = HoldTheNarwhal.getLogger();
-    private Context mContext;
+    private Context mContext = AndroidContextProvider.getContext();
     private SettingsManager mSettingsManager;
     private boolean mInitialized = false;
 
     @Override
-    public void initialize(Context context) {
+    public void initialize() {
         if (mInitialized) {
             mLogger.e("Analytics already initialized");
             return;
         }
-        mContext = context.getApplicationContext();
+        // Set this in init to avoid circular dependency
         mSettingsManager = HoldTheNarwhal.getSettingsManager();
         String apiKey = BuildConfig.FLURRY_API_KEY;
         FlurryAgent.init(mContext, apiKey);

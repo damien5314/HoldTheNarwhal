@@ -1,7 +1,6 @@
 package com.ddiehl.android.htn.presenter;
 
-import android.content.Context;
-
+import com.ddiehl.android.htn.AndroidContextProvider;
 import com.ddiehl.android.htn.BusProvider;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.IdentityManager;
@@ -22,23 +21,15 @@ import retrofit.Response;
 public class MainPresenterImpl implements MainPresenter {
     private Logger mLogger = HoldTheNarwhal.getLogger();
     private Bus mBus = BusProvider.getInstance();
-    private Context mContext;
+    private IdentityManager mIdentityManager = HoldTheNarwhal.getIdentityManager();
+    private SettingsManager mSettingsManager = HoldTheNarwhal.getSettingsManager();
+    private Analytics mAnalytics = HoldTheNarwhal.getAnalytics();
 
     private MainView mMainView;
-    private IdentityManager mIdentityManager;
-    private SettingsManager mSettingsManager;
-    private Analytics mAnalytics = HoldTheNarwhal.getAnalytics();
     private String mUsernameContext;
 
-    public MainPresenterImpl(Context context, MainView view) {
-        mContext = context.getApplicationContext();
-
+    public MainPresenterImpl(MainView view) {
         mMainView = view;
-        mIdentityManager = HoldTheNarwhal.getIdentityManager();
-        mSettingsManager = HoldTheNarwhal.getSettingsManager();
-
-        // Configure analytics
-        mAnalytics.initialize(mContext);
     }
 
     @Override
@@ -108,7 +99,7 @@ public class MainPresenterImpl implements MainPresenter {
     public void onNetworkError(Response error) {
         mLogger.e("Retrofit Error: " + error.raw().message());
 //        Log.e("HTN", Log.getStackTraceString(error));
-        mMainView.showToast(BaseUtils.getFriendlyError(mContext, error));
+        mMainView.showToast(BaseUtils.getFriendlyError(error));
         mAnalytics.logApiError(error);
     }
 
@@ -119,7 +110,9 @@ public class MainPresenterImpl implements MainPresenter {
         if (user != null) {
             // FIXME Ensure we only show this when the user changes
             String name = user.getName();
-            mMainView.showToast(String.format(mContext.getString(R.string.welcome_user), name));
+            String toast = String.format(
+                    AndroidContextProvider.getContext().getString(R.string.welcome_user), name);
+            mMainView.showToast(toast);
         }
     }
 

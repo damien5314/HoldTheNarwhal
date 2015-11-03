@@ -11,6 +11,7 @@ import android.view.Display;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.ddiehl.android.htn.AndroidContextProvider;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.squareup.okhttp.Headers;
@@ -42,21 +43,22 @@ public class BaseUtils {
     }
 
     @NonNull
-    public static String getFriendlyError(@NonNull Context c, @Nullable retrofit.Response response) {
+    public static String getFriendlyError(@Nullable retrofit.Response response) {
+        Context context = AndroidContextProvider.getContext();
         if (response == null) {
-            return c.getString(R.string.error_network_unavailable);
+            return context.getString(R.string.error_network_unavailable);
         } else {
             switch (response.code()) {
                 case 404:
-                    return c.getString(R.string.error_404);
+                    return context.getString(R.string.error_404);
                 case 500:
-                    return c.getString(R.string.error_500);
+                    return context.getString(R.string.error_500);
                 case 503:
-                    return c.getString(R.string.error_503);
+                    return context.getString(R.string.error_503);
                 case 520:
-                    return c.getString(R.string.error_520);
+                    return context.getString(R.string.error_520);
                 default:
-                    String errorMsg = c.getString(R.string.error_xxx);
+                    String errorMsg = context.getString(R.string.error_xxx);
                     return String.format(errorMsg, response.code());
             }
         }

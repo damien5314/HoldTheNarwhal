@@ -31,13 +31,18 @@ public class HoldTheNarwhal extends Application {
 
         // Initialize static dependencies
         Analytics analytics = getAnalytics();
+        analytics.initialize();
         bus.register(analytics);
+
         AccessTokenManager accessTokenManager = getAccessTokenManager();
         bus.register(accessTokenManager);
+
         IdentityManager identityManager = getIdentityManager();
         bus.register(identityManager);
+
         SettingsManager settingsManager = getSettingsManager();
         bus.register(settingsManager);
+
         RedditService api = getRedditAPI();
         bus.register(api);
     }

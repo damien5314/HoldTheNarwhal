@@ -70,16 +70,17 @@ public class SettingsManagerImpl implements SettingsManager {
     public static final String PREF_THREADED_MESSAGES = "threaded_messages";
     public static final String PREF_USE_GLOBAL_DEFAULTS = "use_global_defaults";
 
-    public static final String PREFS_REDDIT = "threaded_messages, hide_downs, email_messages, show_link_flair, " +
-            "creddit_autorenew, show_trending, private_feeds, monitor_mentions, research, ignore_suggested_sort, " +
-            "media, clickgadget, use_global_defaults, label_nsfw, domain_details, show_stylesheets, " +
-            "highlight_controversial, no_profanity, default_theme_sr, lang, hide_ups, hide_from_robots, " +
-            "compress, store_visits, beta, show_gold_expiration, over_18, enable_default_themes, show_promote, " +
-            "min_comment_score, public_votes, organic, collapse_read_messages, show_flair, mark_messages_read, " +
-            "hide_ads, min_link_score, newwindow, numsites, num_comments, highlight_new_comments, " +
-            "default_comment_sort, hide_locationbar";
+    public static final String PREFS_REDDIT = "threaded_messages, hide_downs, email_messages, " +
+            "show_link_flair, creddit_autorenew, show_trending, private_feeds, monitor_mentions, " +
+            "research, ignore_suggested_sort, media, clickgadget, use_global_defaults, " +
+            "label_nsfw, domain_details, show_stylesheets, highlight_controversial, no_profanity, " +
+            "default_theme_sr, lang, hide_ups, hide_from_robots, compress, store_visits, beta, " +
+            "show_gold_expiration, over_18, enable_default_themes, show_promote, " +
+            "min_comment_score, public_votes, organic, collapse_read_messages, show_flair, " +
+            "mark_messages_read, hide_ads, min_link_score, newwindow, numsites, num_comments, " +
+            "highlight_new_comments, default_comment_sort, hide_locationbar";
 
-    private Context mContext;
+    private Context mContext = AndroidContextProvider.getContext();
     private Bus mBus = BusProvider.getInstance();
     private Analytics mAnalytics = HoldTheNarwhal.getAnalytics();
     private SharedPreferences mSharedPreferences;
@@ -87,7 +88,6 @@ public class SettingsManagerImpl implements SettingsManager {
     private boolean mIsChanging = false;
 
     private SettingsManagerImpl() {
-        mContext = AndroidContextProvider.getContext();
         mSharedPreferences = mContext.getSharedPreferences(PREFS_USER, Context.MODE_PRIVATE);
         mSharedPreferences.registerOnSharedPreferenceChangeListener(this);
     }
