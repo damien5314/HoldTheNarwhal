@@ -30,13 +30,11 @@ public class IdentityManagerImpl implements IdentityManager {
     private static final String PREF_ID = "pref_id";
     private static final String PREF_INBOX_COUNT = "pref_inbox_count";
 
-    private Bus mBus;
-    private Context mContext;
+    private Bus mBus = BusProvider.getInstance();
+    private Context mContext = AndroidContextProvider.getContext();
     private UserIdentity mUserIdentity;
 
     private IdentityManagerImpl() {
-        mBus = BusProvider.getInstance();
-        mContext = AndroidContextProvider.getContext();
         mUserIdentity = getSavedUserIdentity();
     }
 

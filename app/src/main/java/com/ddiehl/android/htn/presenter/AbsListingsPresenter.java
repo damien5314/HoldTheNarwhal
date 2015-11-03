@@ -33,6 +33,8 @@ import com.ddiehl.reddit.listings.Comment;
 import com.ddiehl.reddit.listings.CommentStub;
 import com.ddiehl.reddit.listings.Link;
 import com.ddiehl.reddit.listings.Listing;
+import com.ddiehl.reddit.listings.ListingResponse;
+import com.ddiehl.reddit.listings.ListingResponseData;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -165,22 +167,6 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
         refreshData();
     }
 
-//    @Override
-//    public void updateSort() {
-//        String sort = "hot";
-//        String timespan = "all";
-//        updateSort(sort, timespan);
-//    }
-//
-//    @Override
-//    public void updateSort(@Nullable String sort) {
-//        if (!mSort.equals(sort)) {
-//            mSort = sort;
-//            mSettingsManager.saveCommentSort(mSort);
-//            refreshData();
-//        }
-//    }
-
     @Subscribe
     public void onUserIdentitySaved(UserIdentitySavedEvent event) {
         refreshData();
@@ -195,9 +181,13 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
         }
 
         List<Listing> listings = event.getListings();
+        if (listings == null) throw new RuntimeException("Event data is null, but event is not failed");
         mListings.addAll(listings);
         mListingsView.listingsUpdated();
-        mNextPageListingId = event.getResponse().getData().getAfter();
+        ListingResponse response = event.getResponse();
+        if (response == null) throw new RuntimeException("Response data is null, but event is not failed");
+        ListingResponseData data = response.getData();
+        mNextPageListingId = data.getAfter();
         mListingsRequested = false;
     }
 
@@ -222,6 +212,7 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
             return;
         }
 
+        if (listing == null) throw new RuntimeException("Event data is null, but event is not failed");
         listing.applyVote(event.getDirection());
         //noinspection SuspiciousMethodCalls
         mListingsView.listingUpdatedAt(mListings.indexOf(listing));
@@ -236,6 +227,7 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
             return;
         }
 
+        if (listing == null) throw new RuntimeException("Event data is null, but event is not failed");
         listing.isSaved(event.isToSave());
         //noinspection SuspiciousMethodCalls
         mListingsView.listingUpdatedAt(mListings.indexOf(listing));

@@ -24,12 +24,11 @@ public class AccessTokenManagerImpl implements AccessTokenManager {
     private static final int EXPIRATION_THRESHOLD = 60;
 
     private Logger mLogger = HoldTheNarwhal.getLogger();
-    private Context mContext;
+    private Context mContext = AndroidContextProvider.getContext();
     private AccessToken mUserAccessToken;
     private AccessToken mApplicationAccessToken;
 
     private AccessTokenManagerImpl() {
-        mContext = AndroidContextProvider.getContext();
         mUserAccessToken = getSavedUserAccessToken();
         mApplicationAccessToken = getSavedApplicationAccessToken();
     }
