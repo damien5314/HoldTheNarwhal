@@ -11,6 +11,11 @@
             android:title="@string/pref_allow_analytics"
             android:defaultValue="true"/>
 
+        <CheckBoxPreference
+            android:key="pref_use_chrome_tabs"
+            android:title="@string/pref_use_custom_tabs"
+            android:defaultValue="true"/>
+
         <!--<CheckBoxPreference
             android:key="pref_enable_ads"
             android:title="@string/pref_enable_ads"

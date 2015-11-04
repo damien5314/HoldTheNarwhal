@@ -1,11 +1,14 @@
 package com.ddiehl.android.htn.view.activities;
 
+import android.annotation.SuppressLint;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -194,11 +197,31 @@ public class MainActivity extends AppCompatActivity implements MainView,
         showFragment(f);
     }
 
-    @Override
+    private static final String EXTRA_CUSTOM_TABS_SESSION =
+            "android.support.customtabs.extra.SESSION";
+    private static final String EXTRA_CUSTOM_TABS_TOOLBAR_COLOR =
+            "android.support.customtabs.extra.TOOLBAR_COLOR";
+
+    @Override @SuppressLint("NewApi")
     public void showWebViewForURL(@NonNull String url) {
         closeNavigationDrawer();
-        Fragment f = WebViewFragment.newInstance(url);
-        showFragment(f);
+        if (canUseCustomTabs()) {
+            // If so, present URL in custom tabs instead of WebView
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+            Bundle extras = new Bundle();
+            // Pass IBinder instead of null for a custom tabs session
+            extras.putBinder(EXTRA_CUSTOM_TABS_SESSION, null);
+            extras.putInt(EXTRA_CUSTOM_TABS_TOOLBAR_COLOR, ContextCompat.getColor(this, R.color.primary));
+            intent.putExtras(extras);
+            startActivity(intent);
+        } else {
+            Fragment f = WebViewFragment.newInstance(url);
+            showFragment(f);
+        }
+    }
+
+    private boolean canUseCustomTabs() {
+        return Build.VERSION.SDK_INT >= 18 && mMainPresenter.customTabsEnabled();
     }
 
     @Override

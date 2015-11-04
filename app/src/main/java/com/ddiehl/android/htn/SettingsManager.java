@@ -26,6 +26,8 @@ public interface SettingsManager extends SharedPreferences.OnSharedPreferenceCha
 
     void setAnalyticsEnabled(boolean b);
 
+    boolean customTabsEnabled();
+
     boolean askedForAnalytics();
 
     void setAskedForAnalytics(boolean b);

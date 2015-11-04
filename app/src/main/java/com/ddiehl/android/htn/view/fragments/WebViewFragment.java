@@ -37,7 +37,6 @@ import butterknife.ButterKnife;
 
 
 public class WebViewFragment extends Fragment {
-
     private static final String ARG_URL = "url";
 
     private Logger mLogger = HoldTheNarwhal.getLogger();

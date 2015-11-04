@@ -23,6 +23,7 @@ public class SettingsManagerImpl implements SettingsManager {
     public static final String PREF_DEVICE_ID = "pref_device_id";
     public static final String PREF_ALLOW_ANALYTICS = "pref_allow_analytics";
     public static final String PREF_ALLOW_ANALYTICS_ASKED = "pref_allow_analytics_asked";
+    public static final String PREF_USE_CHROME_TABS = "pref_use_chrome_tabs";
 
     // reddit settings
     public static final String PREF_HAS_FROM_REMOTE = "pref_flag_for_user";
@@ -96,20 +97,12 @@ public class SettingsManagerImpl implements SettingsManager {
         return sp.getAll().get(key);
     }
 
-    private String generateDeviceId() {
-        SharedPreferences sp = mContext.getSharedPreferences(PREFS_DEVICE_ID, Context.MODE_PRIVATE);
-        String deviceId = UUID.randomUUID().toString();
-        sp.edit().putString(PREF_DEVICE_ID, deviceId).apply();
-        return deviceId;
-    }
-
     @Override
     public boolean hasFromRemote() {
         return mSharedPreferences.getBoolean(PREF_HAS_FROM_REMOTE, false);
     }
 
-    @Override
-    @Subscribe @SuppressWarnings("unused")
+    @Override @Subscribe @SuppressWarnings("unused")
     public void onUserSettingsRetrieved(UserSettingsRetrievedEvent event) {
         UserSettings settings = event.getSettings();
         saveUserSettings(settings);
@@ -287,7 +280,8 @@ public class SettingsManagerImpl implements SettingsManager {
         SharedPreferences sp = mContext.getSharedPreferences(PREFS_DEVICE_ID, Context.MODE_PRIVATE);
         String deviceId = sp.getString(PREF_DEVICE_ID, null);
         if (deviceId == null) {
-            deviceId = generateDeviceId();
+            deviceId = UUID.randomUUID().toString();
+            sp.edit().putString(PREF_DEVICE_ID, deviceId).apply();
         }
         return deviceId;
     }
@@ -321,6 +315,11 @@ public class SettingsManagerImpl implements SettingsManager {
     @Override
     public boolean getAdsEnabled() {
         return mSharedPreferences.getBoolean(PREF_ENABLE_ADS, false);
+    }
+
+    @Override
+    public boolean customTabsEnabled() {
+        return mSharedPreferences.getBoolean(PREF_USE_CHROME_TABS, true);
     }
 
     /////////////////////

@@ -95,6 +95,11 @@ public class MainPresenterImpl implements MainPresenter {
         mMainView.showSubredditIfEmpty(null);
     }
 
+    @Override
+    public boolean customTabsEnabled() {
+        return mSettingsManager.customTabsEnabled();
+    }
+
     @Subscribe @SuppressWarnings("unused")
     public void onNetworkError(Response error) {
         mLogger.e("Retrofit Error: " + error.raw().message());
