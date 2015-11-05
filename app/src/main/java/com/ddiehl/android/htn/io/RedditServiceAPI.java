@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.ddiehl.android.htn.AccessTokenManager;
+import com.ddiehl.android.htn.AndroidContextProvider;
 import com.ddiehl.android.htn.BusProvider;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.analytics.Analytics;
@@ -75,23 +76,20 @@ import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
 public class RedditServiceAPI implements RedditService {
-
-    private Context mContext;
     private Bus mBus = BusProvider.getInstance();
-    private RedditAPI mAPI;
-    private AccessTokenManager mAccessTokenManager;
+    private AccessTokenManager mAccessTokenManager = HoldTheNarwhal.getAccessTokenManager();
     private Analytics mAnalytics = HoldTheNarwhal.getAnalytics();
+    private RedditAPI mAPI;
 
-    RedditServiceAPI(Context c) {
-        mContext = c.getApplicationContext();
+    RedditServiceAPI() {
         mAPI = buildApi();
-        mAccessTokenManager = HoldTheNarwhal.getAccessTokenManager();
     }
 
     private RedditAPI buildApi() {
         final int cacheSize = 10 * 1024 * 1024; // 10 MiB
         OkHttpClient client = new OkHttpClient();
-        File cache = new File(mContext.getCacheDir().getAbsolutePath(), "htn-http-cache");
+        Context context = AndroidContextProvider.getContext();
+        File cache = new File(context.getCacheDir().getAbsolutePath(), "htn-http-cache");
         client.setCache(new Cache(cache, cacheSize));
         client.networkInterceptors().add(new RawResponseInterceptor());
         client.networkInterceptors().add((chain) -> {
@@ -460,11 +458,11 @@ public class RedditServiceAPI implements RedditService {
 
     private static RedditServiceAPI _instance;
 
-    public static RedditServiceAPI getInstance(Context context) {
+    public static RedditServiceAPI getInstance() {
         if (_instance == null) {
             synchronized (RedditServiceAPI.class) {
                 if (_instance == null) {
-                    _instance = new RedditServiceAPI(context);
+                    _instance = new RedditServiceAPI();
                 }
             }
         }

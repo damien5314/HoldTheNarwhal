@@ -67,8 +67,6 @@ public class RedditServiceAuth implements RedditService {
             String.format("https://www.reddit.com/api/v1/authorize.compact?client_id=%s" +
                             "&response_type=%s&duration=%s&state=%s&redirect_uri=%s&scope=%s",
                     CLIENT_ID, RESPONSE_TYPE, DURATION, STATE, REDIRECT_URI, SCOPE);
-
-    private Context mContext;
     private Bus mBus;
     private RedditAuthAPI mAuthAPI;
     private RedditServiceAPI mServiceAPI;
@@ -78,12 +76,11 @@ public class RedditServiceAuth implements RedditService {
     private Object mQueuedEvent;
 
     private RedditServiceAuth() {
-        mContext = AndroidContextProvider.getContext();
         mBus = BusProvider.getInstance();
         mAccessTokenManager = HoldTheNarwhal.getAccessTokenManager();
         mIdentityManager = HoldTheNarwhal.getIdentityManager();
         mAuthAPI = buildApi();
-        mServiceAPI = new RedditServiceAPI(mContext);
+        mServiceAPI = new RedditServiceAPI();
     }
 
     private RedditAuthAPI buildApi() {
