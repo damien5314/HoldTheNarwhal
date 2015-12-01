@@ -3,6 +3,8 @@ package com.ddiehl.android.htn;
 import com.ddiehl.reddit.identity.AccessToken;
 import com.ddiehl.reddit.identity.AuthorizationResponse;
 
+import rx.Observable;
+
 public interface AccessTokenManager {
     boolean isUserAuthorized();
 
@@ -16,9 +18,13 @@ public interface AccessTokenManager {
 
     boolean hasValidAccessToken();
 
-    AccessToken getUserAccessToken();
+    Observable<AccessToken> getUserAccessToken();
 
-    AccessToken getApplicationAccessToken();
+    Observable<AccessToken> getApplicationAccessToken();
+
+    AccessToken getSavedUserAccessToken();
+
+    AccessToken getSavedApplicationAccessToken();
 
     void saveUserAccessTokenResponse(AuthorizationResponse response);
 

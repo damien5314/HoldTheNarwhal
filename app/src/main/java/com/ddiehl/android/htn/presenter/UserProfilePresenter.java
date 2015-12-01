@@ -3,7 +3,6 @@ package com.ddiehl.android.htn.presenter;
 import com.ddiehl.android.htn.events.requests.LoadUserProfileListingEvent;
 import com.ddiehl.android.htn.events.requests.LoadUserProfileSummaryEvent;
 import com.ddiehl.android.htn.events.responses.HideSubmittedEvent;
-import com.ddiehl.android.htn.events.responses.ListingsLoadedEvent;
 import com.ddiehl.android.htn.events.responses.SaveSubmittedEvent;
 import com.ddiehl.android.htn.events.responses.UserIdentitySavedEvent;
 import com.ddiehl.android.htn.events.responses.UserInfoLoadedEvent;
@@ -48,10 +47,10 @@ public class UserProfilePresenter extends AbsListingsPresenter {
         ((UserProfileFragment) mListingsView).updateUserProfileTabs();
     }
 
-    @Subscribe @Override
-    public void onListingsLoaded(ListingsLoadedEvent event) {
-        super.onListingsLoaded(event);
-    }
+//    @Override
+//    public Action1<ListingResponse> onListingsLoaded() {
+//        return super.onListingsLoaded();
+//    }
 
     @Subscribe @Override
     public void onVoteSubmitted(VoteSubmittedEvent event) {

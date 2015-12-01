@@ -3,13 +3,21 @@ package com.ddiehl.android.htn;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.ddiehl.android.htn.events.requests.UserSignOutEvent;
+import com.ddiehl.android.htn.events.responses.UserAuthCodeReceivedEvent;
+import com.ddiehl.android.htn.io.RedditServiceAuth;
 import com.ddiehl.android.htn.logging.Logger;
 import com.ddiehl.reddit.identity.AccessToken;
 import com.ddiehl.reddit.identity.ApplicationAccessToken;
 import com.ddiehl.reddit.identity.AuthorizationResponse;
 import com.ddiehl.reddit.identity.UserAccessToken;
+import com.squareup.otto.Subscribe;
 
 import java.util.Date;
+
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class AccessTokenManagerImpl implements AccessTokenManager {
     private static final String PREFS_USER_ACCESS_TOKEN = "prefs_user_access_token";
@@ -25,6 +33,8 @@ public class AccessTokenManagerImpl implements AccessTokenManager {
 
     private Logger mLogger = HoldTheNarwhal.getLogger();
     private Context mContext = AndroidContextProvider.getContext();
+    private RedditServiceAuth mServiceAuth = RedditServiceAuth.getInstance();
+    private IdentityManager mIdentityManager = HoldTheNarwhal.getIdentityManager();
     private AccessToken mUserAccessToken;
     private AccessToken mApplicationAccessToken;
 
@@ -40,24 +50,24 @@ public class AccessTokenManagerImpl implements AccessTokenManager {
 
     @Override
     public boolean hasUserAccessToken() {
-        return getUserAccessToken() != null;
+        return getSavedUserAccessToken() != null;
     }
 
     @Override
     public boolean hasValidUserAccessToken() {
-        AccessToken token = getUserAccessToken();
+        AccessToken token = getSavedUserAccessToken();
         return token != null && token.secondsUntilExpiration() > EXPIRATION_THRESHOLD;
     }
 
     @Override
     public boolean hasUserAccessRefreshToken() {
-        AccessToken token = getUserAccessToken();
+        AccessToken token = getSavedUserAccessToken();
         return token != null && token.hasRefreshToken();
     }
 
     @Override
     public boolean hasValidApplicationAccessToken() {
-        AccessToken token = getApplicationAccessToken();
+        AccessToken token = getSavedApplicationAccessToken();
         return token != null && token.secondsUntilExpiration() > EXPIRATION_THRESHOLD;
     }
 
@@ -66,26 +76,98 @@ public class AccessTokenManagerImpl implements AccessTokenManager {
         return hasValidUserAccessToken() || hasValidApplicationAccessToken();
     }
 
-    @Override
-    public AccessToken getUserAccessToken() {
-        if (mUserAccessToken == null) {
-            mUserAccessToken = getSavedUserAccessToken();
-        }
-        return mUserAccessToken;
+    @Subscribe @SuppressWarnings("unused")
+    public void onUserAuthCodeReceived(UserAuthCodeReceivedEvent event) {
+        String grantType = "authorization_code";
+        String authCode = event.getCode();
+        mServiceAuth.getUserAuthToken(grantType, authCode, RedditServiceAuth.REDIRECT_URI)
+                .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        response -> {
+                            saveUserAccessTokenResponse(response.body());
+                            mIdentityManager.clearSavedUserIdentity();
+                        },
+                        error -> {
+                            mIdentityManager.clearSavedUserIdentity();
+                        });
     }
 
     @Override
-    public AccessToken getApplicationAccessToken() {
-        if (mApplicationAccessToken == null) {
-            mApplicationAccessToken = getSavedApplicationAccessToken();
-        }
-        return mApplicationAccessToken;
+    public Observable<AccessToken> getUserAccessToken() {
+        return Observable.create(subscriber -> {
+            if (mUserAccessToken == null) {
+                // Attempt to retrieve saved user access token
+                mUserAccessToken = getSavedUserAccessToken();
+            }
+            if (mUserAccessToken != null) {
+                // If we have one, check if the access token is expired
+                if (mUserAccessToken.secondsUntilExpiration() > EXPIRATION_THRESHOLD) {
+                    // If not, return it
+                    subscriber.onNext(mUserAccessToken);
+                    subscriber.onCompleted();
+                } else {
+                    // Otherwise, check if we have a refresh token
+                    final String refreshToken = mUserAccessToken.getRefreshToken();
+                    if (refreshToken != null) {
+                        // If so, ask RedditServiceAuth to refresh it
+                        mServiceAuth.refreshUserAccessToken(refreshToken).subscribe(
+                                authorizationResponse -> {
+                                    // Save token and return it
+                                    saveUserAccessTokenResponse(authorizationResponse);
+                                    subscriber.onNext(mUserAccessToken);
+                                }, error -> {
+                                    // Clear token and trigger onError
+                                    clearSavedUserAccessToken();
+                                    mIdentityManager.clearSavedUserIdentity();
+                                    subscriber.onError(error);
+                                }, subscriber::onCompleted);
+                    } else {
+                        // Otherwise, clear the token and trigger onError
+                        clearSavedUserAccessToken();
+                        subscriber.onError(new RuntimeException("No refresh token available"));
+                    }
+                }
+            } else {
+                // If we don't have a saved access token, trigger onError
+                subscriber.onError(new RuntimeException("No user access token available"));
+            }
+        });
+    }
+
+    @Override
+    public Observable<AccessToken> getApplicationAccessToken() {
+        return Observable.create(subscriber -> getUserAccessToken().subscribe(accessToken -> {
+            // User access token should be used instead, if we have one available
+            subscriber.onNext(accessToken);
+            subscriber.onCompleted();
+        }, error -> {
+            // If there was an error from retrieving the user access token, we should
+            // try to retrieve the application access token
+            if (mApplicationAccessToken == null) {
+                mApplicationAccessToken = getSavedApplicationAccessToken();
+            }
+            if (mApplicationAccessToken != null &&
+                    mApplicationAccessToken.secondsUntilExpiration() > EXPIRATION_THRESHOLD) {
+                // If saved application access token is valid, return it
+                subscriber.onNext(mApplicationAccessToken);
+                subscriber.onCompleted();
+            } else {
+                // Otherwise, request RedditServiceAuth to retrieve a new one
+                mServiceAuth.authorizeApplication()
+                        .subscribe(authorizationResponse -> {
+                            saveApplicationAccessTokenResponse(authorizationResponse);
+                            subscriber.onNext(mApplicationAccessToken);
+                        }, subscriber::onError, subscriber::onCompleted);
+            }
+        }));
     }
 
     // /data/data/com.ddiehl.android.htn.debug/shared_prefs/prefs_user_access_token.xml
-    private AccessToken getSavedUserAccessToken() {
-        SharedPreferences sp =  mContext.getSharedPreferences(PREFS_USER_ACCESS_TOKEN, Context.MODE_PRIVATE);
-
+    @Override
+    public AccessToken getSavedUserAccessToken() {
+        SharedPreferences sp =  mContext.getSharedPreferences(
+                PREFS_USER_ACCESS_TOKEN, Context.MODE_PRIVATE);
         if (sp.contains(PREF_ACCESS_TOKEN)) {
             AccessToken token = new UserAccessToken();
             token.setToken(sp.getString(PREF_ACCESS_TOKEN, null));
@@ -95,13 +177,13 @@ public class AccessTokenManagerImpl implements AccessTokenManager {
             token.setRefreshToken(sp.getString(PREF_REFRESH_TOKEN, null));
             return token;
         }
-
         return null;
     }
 
-    private AccessToken getSavedApplicationAccessToken() {
-        SharedPreferences sp =  mContext.getSharedPreferences(PREFS_APPLICATION_ACCESS_TOKEN, Context.MODE_PRIVATE);
-
+    @Override
+    public AccessToken getSavedApplicationAccessToken() {
+        SharedPreferences sp =  mContext.getSharedPreferences(
+                PREFS_APPLICATION_ACCESS_TOKEN, Context.MODE_PRIVATE);
         if (sp.contains(PREF_ACCESS_TOKEN)) {
             AccessToken token = new ApplicationAccessToken();
             token.setToken(sp.getString(PREF_ACCESS_TOKEN, null));
@@ -111,7 +193,6 @@ public class AccessTokenManagerImpl implements AccessTokenManager {
             token.setRefreshToken(sp.getString(PREF_REFRESH_TOKEN, null));
             return token;
         }
-
         return null;
     }
 
@@ -129,11 +210,11 @@ public class AccessTokenManagerImpl implements AccessTokenManager {
             mUserAccessToken.setRefreshToken(response.getRefreshToken());
         }
 
-        mLogger.d("--ACCESS TOKEN RESPONSE--");
-        mLogger.d("Access Token: " + mUserAccessToken.getToken());
-        mLogger.d("Refresh Token: " + mUserAccessToken.getRefreshToken());
+        mLogger.d(String.format("--ACCESS TOKEN RESPONSE--\nAccess Token: %s\nRefresh Token: %s",
+                mUserAccessToken.getToken(), mUserAccessToken.getRefreshToken()));
 
-        SharedPreferences sp = mContext.getSharedPreferences(PREFS_USER_ACCESS_TOKEN, Context.MODE_PRIVATE);
+        SharedPreferences sp = mContext.getSharedPreferences(
+                PREFS_USER_ACCESS_TOKEN, Context.MODE_PRIVATE);
         sp.edit()
                 .putString(PREF_ACCESS_TOKEN, mUserAccessToken.getToken())
                 .putString(PREF_TOKEN_TYPE, mUserAccessToken.getTokenType())
@@ -155,7 +236,8 @@ public class AccessTokenManagerImpl implements AccessTokenManager {
         mLogger.d(String.format("--ACCESS TOKEN RESPONSE--\nAccess Token: %s\nRefresh Token: %s",
                 mApplicationAccessToken.getToken(), mApplicationAccessToken.getRefreshToken()));
 
-        SharedPreferences sp = mContext.getSharedPreferences(PREFS_APPLICATION_ACCESS_TOKEN, Context.MODE_PRIVATE);
+        SharedPreferences sp = mContext.getSharedPreferences(
+                PREFS_APPLICATION_ACCESS_TOKEN, Context.MODE_PRIVATE);
         sp.edit()
                 .putString(PREF_ACCESS_TOKEN, mApplicationAccessToken.getToken())
                 .putString(PREF_TOKEN_TYPE, mApplicationAccessToken.getTokenType())
@@ -177,6 +259,19 @@ public class AccessTokenManagerImpl implements AccessTokenManager {
         mApplicationAccessToken = null;
         mContext.getSharedPreferences(PREFS_APPLICATION_ACCESS_TOKEN, Context.MODE_PRIVATE)
                 .edit().clear().apply();
+    }
+
+    @Subscribe @SuppressWarnings("unused")
+    public void onUserSignOut(UserSignOutEvent event) {
+        AccessToken token = getSavedUserAccessToken();
+        if (token != null) {
+            mServiceAuth.revokeAuthToken(token.getToken(), "access_token").call();
+            mServiceAuth.revokeAuthToken(token.getRefreshToken(), "refresh_token").call();
+        }
+
+        clearSavedUserAccessToken();
+        mIdentityManager.clearSavedUserIdentity();
+//        mBus.post(new UserIdentitySavedEvent(null));
     }
 
     ///////////////

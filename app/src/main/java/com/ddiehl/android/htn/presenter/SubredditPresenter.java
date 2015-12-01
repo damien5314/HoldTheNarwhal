@@ -1,9 +1,7 @@
 package com.ddiehl.android.htn.presenter;
 
 import com.ddiehl.android.htn.events.requests.GetSubredditInfoEvent;
-import com.ddiehl.android.htn.events.requests.LoadSubredditEvent;
 import com.ddiehl.android.htn.events.responses.HideSubmittedEvent;
-import com.ddiehl.android.htn.events.responses.ListingsLoadedEvent;
 import com.ddiehl.android.htn.events.responses.SaveSubmittedEvent;
 import com.ddiehl.android.htn.events.responses.SubredditInfoLoadedEvent;
 import com.ddiehl.android.htn.events.responses.UserIdentitySavedEvent;
@@ -12,8 +10,11 @@ import com.ddiehl.android.htn.view.ListingsView;
 import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.reddit.identity.UserIdentity;
 import com.ddiehl.reddit.listings.Link;
+import com.ddiehl.reddit.listings.ListingResponse;
 import com.ddiehl.reddit.listings.Subreddit;
 import com.squareup.otto.Subscribe;
+
+import rx.functions.Action1;
 
 public class SubredditPresenter extends AbsListingsPresenter {
     private Subreddit mSubredditInfo;
@@ -26,8 +27,9 @@ public class SubredditPresenter extends AbsListingsPresenter {
     @Override
     public void requestData() {
         if (mSubreddit == null || mSubreddit.equals("all") || mSubredditInfo != null) {
-            mBus.post(new LoadSubredditEvent(mSubreddit, mSort, mTimespan, mNextPageListingId));
             mAnalytics.logLoadSubreddit(mSubreddit, mSort, mTimespan);
+            mRedditService.onLoadLinks(mSubreddit, mSort, mTimespan, mNextPageListingId)
+                    .subscribe(onListingsLoaded());
         } else {
             mListingsRequested = false;
             mBus.post(new GetSubredditInfoEvent(mSubreddit));
@@ -56,13 +58,14 @@ public class SubredditPresenter extends AbsListingsPresenter {
         super.onUserIdentitySaved(event);
     }
 
-    @Subscribe @Override
-    public void onListingsLoaded(ListingsLoadedEvent event) {
-        super.onListingsLoaded(event);
-
-        if (mSubreddit != null && mSubreddit.equals("random")) {
-            mSubreddit = ((Link) mListings.get(0)).getSubreddit();
-        }
+    @Override
+    public Action1<ListingResponse> onListingsLoaded() {
+        return (response) -> {
+            super.onListingsLoaded().call(response);
+            if (mSubreddit != null && mSubreddit.equals("random")) {
+                mSubreddit = ((Link) mListings.get(0)).getSubreddit();
+            }
+        };
     }
 
     @Subscribe @Override

@@ -17,11 +17,12 @@ import com.ddiehl.android.htn.events.requests.HideEvent;
 import com.ddiehl.android.htn.events.requests.SaveEvent;
 import com.ddiehl.android.htn.events.requests.VoteEvent;
 import com.ddiehl.android.htn.events.responses.HideSubmittedEvent;
-import com.ddiehl.android.htn.events.responses.ListingsLoadedEvent;
 import com.ddiehl.android.htn.events.responses.SaveSubmittedEvent;
 import com.ddiehl.android.htn.events.responses.UserIdentitySavedEvent;
 import com.ddiehl.android.htn.events.responses.UserInfoLoadedEvent;
 import com.ddiehl.android.htn.events.responses.VoteSubmittedEvent;
+import com.ddiehl.android.htn.io.RedditService;
+import com.ddiehl.android.htn.logging.Logger;
 import com.ddiehl.android.htn.view.ListingsView;
 import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.reddit.Archivable;
@@ -41,11 +42,15 @@ import com.squareup.otto.Subscribe;
 import java.util.ArrayList;
 import java.util.List;
 
+import rx.functions.Action1;
+
 public abstract class AbsListingsPresenter implements ListingsPresenter {
+    protected Logger mLogger = HoldTheNarwhal.getLogger();
     protected Bus mBus = BusProvider.getInstance();
     protected AccessTokenManager mAccessTokenManager = HoldTheNarwhal.getAccessTokenManager();
     protected IdentityManager mIdentityManager = HoldTheNarwhal.getIdentityManager();
     protected SettingsManager mSettingsManager = HoldTheNarwhal.getSettingsManager();
+    protected RedditService mRedditService = HoldTheNarwhal.getRedditService();
     protected Analytics mAnalytics = HoldTheNarwhal.getAnalytics();
 
     protected List<Listing> mListings;
@@ -173,22 +178,17 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
     }
 
     @Subscribe
-    public void onListingsLoaded(ListingsLoadedEvent event) {
-        mMainView.dismissSpinner();
-        if (event.isFailed()) {
+    public Action1<ListingResponse> onListingsLoaded() {
+        return (response) -> {
+            mMainView.dismissSpinner();
+            List<Listing> listings = response.getData().getChildren();
+            if (listings == null) throw new RuntimeException("Event data is null, but event is not failed");
+            mListings.addAll(listings);
+            mListingsView.listingsUpdated();
+            ListingResponseData data = response.getData();
+            mNextPageListingId = data.getAfter();
             mListingsRequested = false;
-            return;
-        }
-
-        List<Listing> listings = event.getListings();
-        if (listings == null) throw new RuntimeException("Event data is null, but event is not failed");
-        mListings.addAll(listings);
-        mListingsView.listingsUpdated();
-        ListingResponse response = event.getResponse();
-        if (response == null) throw new RuntimeException("Response data is null, but event is not failed");
-        ListingResponseData data = response.getData();
-        mNextPageListingId = data.getAfter();
-        mListingsRequested = false;
+        };
     }
 
     @Subscribe

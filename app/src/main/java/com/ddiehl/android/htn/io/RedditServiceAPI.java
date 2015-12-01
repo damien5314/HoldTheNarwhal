@@ -2,6 +2,7 @@ package com.ddiehl.android.htn.io;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.ddiehl.android.htn.AccessTokenManager;
@@ -18,7 +19,6 @@ import com.ddiehl.android.htn.events.requests.GetUserSettingsEvent;
 import com.ddiehl.android.htn.events.requests.HideEvent;
 import com.ddiehl.android.htn.events.requests.LoadLinkCommentsEvent;
 import com.ddiehl.android.htn.events.requests.LoadMoreChildrenEvent;
-import com.ddiehl.android.htn.events.requests.LoadSubredditEvent;
 import com.ddiehl.android.htn.events.requests.LoadUserProfileListingEvent;
 import com.ddiehl.android.htn.events.requests.LoadUserProfileSummaryEvent;
 import com.ddiehl.android.htn.events.requests.ReportEvent;
@@ -46,6 +46,7 @@ import com.ddiehl.reddit.Votable;
 import com.ddiehl.reddit.adapters.AbsCommentDeserializer;
 import com.ddiehl.reddit.adapters.ListingDeserializer;
 import com.ddiehl.reddit.adapters.ListingResponseDeserializer;
+import com.ddiehl.reddit.identity.AccessToken;
 import com.ddiehl.reddit.identity.Friend;
 import com.ddiehl.reddit.identity.UserIdentity;
 import com.ddiehl.reddit.listings.AbsComment;
@@ -71,6 +72,7 @@ import retrofit.GsonConverterFactory;
 import retrofit.Response;
 import retrofit.Retrofit;
 import retrofit.RxJavaCallAdapterFactory;
+import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
@@ -122,9 +124,9 @@ public class RedditServiceAPI implements RedditService {
 
     private String getAccessToken() {
         if (mAccessTokenManager.hasValidUserAccessToken()) {
-            return mAccessTokenManager.getUserAccessToken().getToken();
+            return mAccessTokenManager.getSavedUserAccessToken().getToken();
         } else if (mAccessTokenManager.hasValidApplicationAccessToken()) {
-            return mAccessTokenManager.getApplicationAccessToken().getToken();
+            return mAccessTokenManager.getSavedApplicationAccessToken().getToken();
         }
         return null;
     }
@@ -172,22 +174,20 @@ public class RedditServiceAPI implements RedditService {
                         });
     }
 
-    @Override
-    public void onLoadLinks(@NonNull LoadSubredditEvent event) {
-        String subreddit = event.getSubreddit();
-        String sort = event.getSort();
-        String timespan = event.getTimeSpan();
-        String after = event.getAfter();
+    private Observable<AccessToken> requireAccessToken() {
+        return mAccessTokenManager.getApplicationAccessToken();
+    }
 
-        mAPI.getLinks(sort, subreddit, timespan, after)
-                .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        response -> mBus.post(new ListingsLoadedEvent(response.body())),
-                        error -> {
-                            mBus.post(error);
-                            mBus.post(new ListingsLoadedEvent(error));
-                        });
+    @Override
+    public Observable<ListingResponse> onLoadLinks(
+            @Nullable String subreddit, @Nullable String sort,
+            @Nullable String timespan, @Nullable String after) {
+        return requireAccessToken().flatMap(accessToken -> Observable.create(
+                subscriber -> mAPI.getLinks(sort, subreddit, timespan, after)
+                        .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(response -> subscriber.onNext(response.body()),
+                                subscriber::onError)));
     }
 
     @Override
@@ -196,7 +196,6 @@ public class RedditServiceAPI implements RedditService {
         String article = event.getArticle();
         String sort = event.getSort();
         String commentId = event.getCommentId();
-
         mAPI.getComments(subreddit, article, sort, commentId)
                 .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

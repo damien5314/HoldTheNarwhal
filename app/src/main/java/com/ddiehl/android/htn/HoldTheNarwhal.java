@@ -5,7 +5,7 @@ import android.app.Application;
 import com.ddiehl.android.htn.analytics.Analytics;
 import com.ddiehl.android.htn.analytics.FlurryAnalytics;
 import com.ddiehl.android.htn.io.RedditService;
-import com.ddiehl.android.htn.io.RedditServiceAuth;
+import com.ddiehl.android.htn.io.RedditServiceAPI;
 import com.ddiehl.android.htn.logging.Logger;
 import com.ddiehl.android.htn.logging.TimberLogger;
 import com.facebook.stetho.Stetho;
@@ -43,7 +43,7 @@ public class HoldTheNarwhal extends Application {
         SettingsManager settingsManager = getSettingsManager();
         bus.register(settingsManager);
 
-        RedditService api = getRedditAPI();
+        RedditService api = getRedditService();
         bus.register(api);
     }
 
@@ -85,8 +85,8 @@ public class HoldTheNarwhal extends Application {
      * Provides an instance of {@link RedditService} with which to call the reddit API
      * @return Instance of {@link RedditService}
      */
-    public static RedditService getRedditAPI() {
-        return RedditServiceAuth.getInstance();
+    public static RedditService getRedditService() {
+        return RedditServiceAPI.getInstance();
     }
 
     /**

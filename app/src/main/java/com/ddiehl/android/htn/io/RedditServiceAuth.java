@@ -1,41 +1,10 @@
 package com.ddiehl.android.htn.io;
 
 
-import android.content.Context;
-import android.support.annotation.NonNull;
-
-import com.ddiehl.android.htn.AccessTokenManager;
-import com.ddiehl.android.htn.AndroidContextProvider;
 import com.ddiehl.android.htn.BuildConfig;
-import com.ddiehl.android.htn.BusProvider;
 import com.ddiehl.android.htn.HoldTheNarwhal;
-import com.ddiehl.android.htn.IdentityManager;
-import com.ddiehl.android.htn.events.requests.AuthorizeApplicationEvent;
-import com.ddiehl.android.htn.events.requests.FriendAddEvent;
-import com.ddiehl.android.htn.events.requests.FriendDeleteEvent;
-import com.ddiehl.android.htn.events.requests.FriendNoteSaveEvent;
-import com.ddiehl.android.htn.events.requests.GetSubredditInfoEvent;
-import com.ddiehl.android.htn.events.requests.GetUserIdentityEvent;
-import com.ddiehl.android.htn.events.requests.GetUserSettingsEvent;
-import com.ddiehl.android.htn.events.requests.HideEvent;
-import com.ddiehl.android.htn.events.requests.LoadLinkCommentsEvent;
-import com.ddiehl.android.htn.events.requests.LoadMoreChildrenEvent;
-import com.ddiehl.android.htn.events.requests.LoadSubredditEvent;
-import com.ddiehl.android.htn.events.requests.LoadUserProfileListingEvent;
-import com.ddiehl.android.htn.events.requests.LoadUserProfileSummaryEvent;
-import com.ddiehl.android.htn.events.requests.RefreshUserAccessTokenEvent;
-import com.ddiehl.android.htn.events.requests.ReportEvent;
-import com.ddiehl.android.htn.events.requests.SaveEvent;
-import com.ddiehl.android.htn.events.requests.UpdateUserSettingsEvent;
-import com.ddiehl.android.htn.events.requests.UserSignOutEvent;
-import com.ddiehl.android.htn.events.requests.VoteEvent;
-import com.ddiehl.android.htn.events.responses.ApplicationAuthorizedEvent;
-import com.ddiehl.android.htn.events.responses.UserAuthCodeReceivedEvent;
-import com.ddiehl.android.htn.events.responses.UserAuthorizationRefreshedEvent;
-import com.ddiehl.android.htn.events.responses.UserAuthorizedEvent;
-import com.ddiehl.android.htn.events.responses.UserIdentitySavedEvent;
 import com.ddiehl.android.htn.utils.BaseUtils;
-import com.ddiehl.reddit.identity.AccessToken;
+import com.ddiehl.reddit.identity.AuthorizationResponse;
 import com.facebook.stetho.okhttp.StethoInterceptor;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
@@ -43,17 +12,18 @@ import com.google.gson.GsonBuilder;
 import com.squareup.okhttp.Credentials;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
-import com.squareup.otto.Bus;
-import com.squareup.otto.Subscribe;
 
 import retrofit.GsonConverterFactory;
+import retrofit.Response;
 import retrofit.Retrofit;
 import retrofit.RxJavaCallAdapterFactory;
+import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action0;
 import rx.schedulers.Schedulers;
 
-public class RedditServiceAuth implements RedditService {
-
+public class RedditServiceAuth {
+    public static final String ENDPOINT_NORMAL = "https://www.reddit.com";
     public static final String CLIENT_ID = BuildConfig.REDDIT_APP_ID;
     public static final String RESPONSE_TYPE = "code";
     public static final String DURATION = "permanent";
@@ -67,21 +37,8 @@ public class RedditServiceAuth implements RedditService {
             String.format("https://www.reddit.com/api/v1/authorize.compact?client_id=%s" +
                             "&response_type=%s&duration=%s&state=%s&redirect_uri=%s&scope=%s",
                     CLIENT_ID, RESPONSE_TYPE, DURATION, STATE, REDIRECT_URI, SCOPE);
-    private Bus mBus;
-    private RedditAuthAPI mAuthAPI;
-    private RedditServiceAPI mServiceAPI;
-    private AccessTokenManager mAccessTokenManager;
-    private IdentityManager mIdentityManager;
 
-    private Object mQueuedEvent;
-
-    private RedditServiceAuth() {
-        mBus = BusProvider.getInstance();
-        mAccessTokenManager = HoldTheNarwhal.getAccessTokenManager();
-        mIdentityManager = HoldTheNarwhal.getIdentityManager();
-        mAuthAPI = buildApi();
-        mServiceAPI = new RedditServiceAPI();
-    }
+    private RedditAuthAPI mAuthAPI = buildApi();
 
     private RedditAuthAPI buildApi() {
         OkHttpClient client = new OkHttpClient();
@@ -111,315 +68,37 @@ public class RedditServiceAuth implements RedditService {
         return restAdapter.create(RedditAuthAPI.class);
     }
 
-    @Subscribe @SuppressWarnings("unused")
-    public void onAuthorizeApplication(AuthorizeApplicationEvent event) {
+    public Observable<AuthorizationResponse> authorizeApplication() {
         String grantType = "https://oauth.reddit.com/grants/installed_client";
         String deviceId = HoldTheNarwhal.getSettingsManager().getDeviceId();
-
-        mAuthAPI.getApplicationAuthToken(grantType, deviceId)
-                .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        response -> mBus.post(new ApplicationAuthorizedEvent(response.body())),
-                        error -> {
-                            mBus.post(error);
-                            mBus.post(new ApplicationAuthorizedEvent(error));
-                        });
+        return Observable.create(
+                subscriber -> mAuthAPI.getApplicationAuthToken(grantType, deviceId)
+                        .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                                response -> subscriber.onNext(response.body()),
+                                subscriber::onError, subscriber::onCompleted));
     }
 
-    @Subscribe @SuppressWarnings("unused")
-    public void onApplicationAuthorized(ApplicationAuthorizedEvent event) {
-        if (event.isFailed()) {
-            mQueuedEvent = null;
-            return;
-        }
-
-        mAccessTokenManager.saveApplicationAccessTokenResponse(event.getResponse());
-        if (mQueuedEvent != null) {
-            Object e = mQueuedEvent;
-            mQueuedEvent = null;
-            mBus.post(e);
-        }
+    public Observable<Response<AuthorizationResponse>> getUserAuthToken(
+            String grantType, String authCode, String redirectUri) {
+        return mAuthAPI.getUserAuthToken(grantType, authCode, redirectUri);
     }
 
-    @Subscribe @SuppressWarnings("unused")
-    public void onUserAuthCodeReceived(UserAuthCodeReceivedEvent event) {
-        String grantType = "authorization_code";
-        String authCode = event.getCode();
-
-        mAuthAPI.getUserAuthToken(grantType, authCode, RedditServiceAuth.REDIRECT_URI)
-                .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        response -> mBus.post(new UserAuthorizedEvent(response.body())),
-                        error -> {
-                            mBus.post(error);
-                            mBus.post(new UserAuthorizedEvent(error));
-                        });
-    }
-
-    @Subscribe @SuppressWarnings("unused")
-    public void onRefreshUserAccessToken(RefreshUserAccessTokenEvent event) {
+    public Observable<AuthorizationResponse> refreshUserAccessToken(String refreshToken) {
         String grantType = "refresh_token";
-        String refreshToken = event.getRefreshToken();
-
-        mAuthAPI.refreshUserAuthToken(grantType, refreshToken)
+        return Observable.create(subscriber -> mAuthAPI.refreshUserAuthToken(grantType, refreshToken)
                 .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        response -> mBus.post(new UserAuthorizationRefreshedEvent(response.body())),
-                        error -> {
-                            mBus.post(error);
-                            mBus.post(new UserAuthorizationRefreshedEvent(error));
-                        });
+                .doOnNext(response -> subscriber.onNext(response.body()))
+                .doOnError(subscriber::onError));
     }
 
-    @Subscribe @SuppressWarnings("unused")
-    public void onUserSignOut(UserSignOutEvent event) {
-        AccessToken token = mAccessTokenManager.getUserAccessToken();
-        if (token != null) {
-            mAuthAPI.revokeUserAuthToken(token.getToken(), "access_token")
-                    .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(response -> {}, mBus::post);
-            mAuthAPI.revokeUserAuthToken(token.getRefreshToken(), "refresh_token")
-                    .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(response -> {}, mBus::post);
-        }
-
-        mAccessTokenManager.clearSavedUserAccessToken();
-        mIdentityManager.clearSavedUserIdentity();
-        mBus.post(new UserIdentitySavedEvent(null));
-    }
-
-    @Subscribe @SuppressWarnings("unused")
-    public void onUserAuthorized(UserAuthorizedEvent event) {
-        if (event.isFailed()) {
-            mQueuedEvent = null;
-            return;
-        }
-
-        mAccessTokenManager.saveUserAccessTokenResponse(event.getResponse());
-        mIdentityManager.clearSavedUserIdentity();
-        mBus.post(new GetUserIdentityEvent());
-        if (mQueuedEvent != null) {
-            Object e = mQueuedEvent;
-            mQueuedEvent = null;
-            mBus.post(e);
-        }
-    }
-
-    @Subscribe @SuppressWarnings("unused")
-    public void onUserAuthorizationRefreshed(UserAuthorizationRefreshedEvent event) {
-        if (event.isFailed()) {
-            mQueuedEvent = null;
-            mAccessTokenManager.clearSavedUserAccessToken();
-            mIdentityManager.clearSavedUserIdentity();
-            return;
-        }
-
-        mAccessTokenManager.saveUserAccessTokenResponse(event.getResponse());
-        mBus.post(new GetUserIdentityEvent()); // Refresh user identity in case it's out of date
-        if (mQueuedEvent != null) {
-            Object e = mQueuedEvent;
-            mQueuedEvent = null;
-            mBus.post(e);
-        }
-    }
-
-    /////////////////////
-    // No OAuth Scope //
-    ////////////////////
-
-    @Subscribe @SuppressWarnings("unused") @Override
-    public void onLoadLinks(@NonNull LoadSubredditEvent event) {
-        if (!mAccessTokenManager.hasValidAccessToken()) {
-            mQueuedEvent = event;
-            authorizeApp();
-        } else {
-            mServiceAPI.onLoadLinks(event);
-        }
-    }
-
-    @Subscribe @SuppressWarnings("unused") @Override
-    public void onLoadLinkComments(@NonNull LoadLinkCommentsEvent event) {
-        if (!mAccessTokenManager.hasValidAccessToken()) {
-            mQueuedEvent = event;
-            authorizeApp();
-        } else {
-            mServiceAPI.onLoadLinkComments(event);
-        }
-    }
-
-    @Subscribe @SuppressWarnings("unused") @Override
-    public void onLoadMoreChildren(@NonNull LoadMoreChildrenEvent event) {
-        if (!mAccessTokenManager.hasValidAccessToken()) {
-            mQueuedEvent = event;
-            authorizeApp();
-        } else {
-            mServiceAPI.onLoadMoreChildren(event);
-        }
-    }
-
-    @Subscribe @SuppressWarnings("unused") @Override
-    public void onLoadUserProfileSummary(@NonNull LoadUserProfileSummaryEvent event) {
-        if (!mAccessTokenManager.hasValidAccessToken()) {
-            mQueuedEvent = event;
-            authorizeApp();
-        } else {
-            mServiceAPI.onLoadUserProfileSummary(event);
-        }
-    }
-
-    @Subscribe @SuppressWarnings("unused") @Override
-    public void onLoadUserProfile(@NonNull LoadUserProfileListingEvent event) {
-        if (!mAccessTokenManager.hasValidAccessToken()) {
-            mQueuedEvent = event;
-            authorizeApp();
-        } else {
-            mServiceAPI.onLoadUserProfile(event);
-        }
-    }
-
-    @Subscribe @SuppressWarnings("unused") @Override
-    public void onGetSubredditInfo(@NonNull GetSubredditInfoEvent event) {
-        if (!mAccessTokenManager.hasValidAccessToken()) {
-            mQueuedEvent = event;
-            authorizeApp();
-        } else {
-            mServiceAPI.onGetSubredditInfo(event);
-        }
-    }
-
-    //////////////////////////
-    // Requires OAuth Scope //
-    //////////////////////////
-
-    @Subscribe @SuppressWarnings("unused") @Override
-    public void onGetUserIdentity(@NonNull GetUserIdentityEvent event) {
-        if (!mAccessTokenManager.hasValidUserAccessToken()) {
-            mQueuedEvent = event;
-            authorizeUser();
-        } else {
-            mServiceAPI.onGetUserIdentity(event);
-        }
-    }
-
-    @Subscribe @SuppressWarnings("unused") @Override
-    public void onGetUserSettings(@NonNull GetUserSettingsEvent event) {
-        if (!mAccessTokenManager.hasValidUserAccessToken()) {
-            mQueuedEvent = event;
-            authorizeUser();
-        } else {
-            mServiceAPI.onGetUserSettings(event);
-        }
-    }
-
-    @Subscribe @SuppressWarnings("unused") @Override
-    public void onUpdateUserSettings(@NonNull UpdateUserSettingsEvent event) {
-        if (!mAccessTokenManager.hasValidUserAccessToken()) {
-            mQueuedEvent = event;
-            authorizeUser();
-        } else {
-            mServiceAPI.onUpdateUserSettings(event);
-        }
-    }
-
-    @Subscribe @SuppressWarnings("unused") @Override
-    public void onVote(@NonNull VoteEvent event) {
-        if (!mAccessTokenManager.hasValidUserAccessToken()) {
-            mQueuedEvent = event;
-            authorizeUser();
-        } else {
-            mServiceAPI.onVote(event);
-        }
-    }
-
-    @Subscribe @SuppressWarnings("unused") @Override
-    public void onSave(@NonNull SaveEvent event) {
-        if (!mAccessTokenManager.hasValidUserAccessToken()) {
-            mQueuedEvent = event;
-            authorizeUser();
-        } else {
-            mServiceAPI.onSave(event);
-        }
-    }
-
-    @Subscribe @SuppressWarnings("unused") @Override
-    public void onHide(@NonNull HideEvent event) {
-        if (!mAccessTokenManager.hasValidUserAccessToken()) {
-            mQueuedEvent = event;
-            authorizeUser();
-        } else {
-            mServiceAPI.onHide(event);
-        }
-    }
-
-    @Subscribe @SuppressWarnings("unused") @Override
-    public void onReport(@NonNull ReportEvent event) {
-        if (!mAccessTokenManager.hasValidUserAccessToken()) {
-            mQueuedEvent = event;
-            authorizeUser();
-        } else {
-            mServiceAPI.onReport(event);
-        }
-    }
-
-    @Subscribe @SuppressWarnings("unused") @Override
-    public void onAddFriend(@NonNull FriendAddEvent event) {
-        if (!mAccessTokenManager.hasValidUserAccessToken()) {
-            mQueuedEvent = event;
-            authorizeUser();
-        } else {
-            mServiceAPI.onAddFriend(event);
-        }
-    }
-
-    @Subscribe @SuppressWarnings("unused") @Override
-    public void onDeleteFriend(@NonNull FriendDeleteEvent event) {
-        if (!mAccessTokenManager.hasValidUserAccessToken()) {
-            mQueuedEvent = event;
-            authorizeUser();
-        } else {
-            mServiceAPI.onDeleteFriend(event);
-        }
-    }
-
-    @Subscribe @SuppressWarnings("unused") @Override
-    public void onSaveFriendNote(@NonNull FriendNoteSaveEvent event) {
-        if (!mAccessTokenManager.hasValidUserAccessToken()) {
-            mQueuedEvent = event;
-            authorizeUser();
-        } else {
-            mServiceAPI.onSaveFriendNote(event);
-        }
-    }
-
-    /////////////////
-    // Private API //
-    /////////////////
-
-    private void authorizeApp() {
-        AccessToken userAccessToken = mAccessTokenManager.getUserAccessToken();
-        String refreshToken = null;
-        if (userAccessToken != null) {
-            refreshToken = userAccessToken.getRefreshToken();
-        }
-        if (refreshToken != null) {
-            mBus.post(new RefreshUserAccessTokenEvent(refreshToken));
-        } else {
-            mBus.post(new AuthorizeApplicationEvent());
-        }
-    }
-
-    private void authorizeUser() {
-        AccessToken token = mAccessTokenManager.getUserAccessToken();
-        if (token != null && token.hasRefreshToken()) {
-            mBus.post(new RefreshUserAccessTokenEvent(token.getRefreshToken()));
-        } else {
-            mQueuedEvent = null;
-        }
+    public Action0 revokeAuthToken(String token, String tokenType) {
+        return () -> mAuthAPI.revokeUserAuthToken(token, tokenType)
+                .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe();
     }
 
     ///////////////

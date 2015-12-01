@@ -1,24 +1,27 @@
 package com.ddiehl.android.htn.io;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.ddiehl.android.htn.BuildConfig;
 import com.ddiehl.android.htn.events.requests.FriendAddEvent;
 import com.ddiehl.android.htn.events.requests.FriendDeleteEvent;
 import com.ddiehl.android.htn.events.requests.FriendNoteSaveEvent;
+import com.ddiehl.android.htn.events.requests.GetSubredditInfoEvent;
 import com.ddiehl.android.htn.events.requests.GetUserIdentityEvent;
 import com.ddiehl.android.htn.events.requests.GetUserSettingsEvent;
 import com.ddiehl.android.htn.events.requests.HideEvent;
 import com.ddiehl.android.htn.events.requests.LoadLinkCommentsEvent;
 import com.ddiehl.android.htn.events.requests.LoadMoreChildrenEvent;
-import com.ddiehl.android.htn.events.requests.LoadSubredditEvent;
 import com.ddiehl.android.htn.events.requests.LoadUserProfileListingEvent;
 import com.ddiehl.android.htn.events.requests.LoadUserProfileSummaryEvent;
 import com.ddiehl.android.htn.events.requests.ReportEvent;
 import com.ddiehl.android.htn.events.requests.SaveEvent;
 import com.ddiehl.android.htn.events.requests.UpdateUserSettingsEvent;
-import com.ddiehl.android.htn.events.requests.GetSubredditInfoEvent;
 import com.ddiehl.android.htn.events.requests.VoteEvent;
+import com.ddiehl.reddit.listings.ListingResponse;
+
+import rx.Observable;
 
 
 public interface RedditService {
@@ -27,7 +30,10 @@ public interface RedditService {
     String ENDPOINT_NORMAL = "https://www.reddit.com";
     String ENDPOINT_AUTHORIZED = "https://oauth.reddit.com";
 
-    void onLoadLinks(@NonNull LoadSubredditEvent event);
+    Observable<ListingResponse> onLoadLinks(
+            @Nullable String subreddit, @Nullable String sort,
+            @Nullable String timespan, @Nullable String after);
+
     void onLoadLinkComments(@NonNull LoadLinkCommentsEvent event);
     void onLoadMoreChildren(@NonNull LoadMoreChildrenEvent event);
     void onLoadUserProfileSummary(@NonNull LoadUserProfileSummaryEvent event);
