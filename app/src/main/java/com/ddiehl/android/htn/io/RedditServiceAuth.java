@@ -19,7 +19,7 @@ import retrofit.Retrofit;
 import retrofit.RxJavaCallAdapterFactory;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action0;
+import rx.functions.Action2;
 import rx.schedulers.Schedulers;
 
 public class RedditServiceAuth {
@@ -38,7 +38,7 @@ public class RedditServiceAuth {
                             "&response_type=%s&duration=%s&state=%s&redirect_uri=%s&scope=%s",
                     CLIENT_ID, RESPONSE_TYPE, DURATION, STATE, REDIRECT_URI, SCOPE);
 
-    private RedditAuthAPI mAuthAPI = buildApi();
+    private RedditAuthAPI mAuthService = buildApi();
 
     private RedditAuthAPI buildApi() {
         OkHttpClient client = new OkHttpClient();
@@ -71,50 +71,29 @@ public class RedditServiceAuth {
     public Observable<AuthorizationResponse> authorizeApplication() {
         String grantType = "https://oauth.reddit.com/grants/installed_client";
         String deviceId = HoldTheNarwhal.getSettingsManager().getDeviceId();
-        return Observable.create(
-                subscriber -> mAuthAPI.getApplicationAuthToken(grantType, deviceId)
-                        .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(
-                                response -> subscriber.onNext(response.body()),
-                                subscriber::onError, subscriber::onCompleted));
+        return mAuthService.getApplicationAuthToken(grantType, deviceId)
+                .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
+                .map(Response::body);
     }
 
-    public Observable<Response<AuthorizationResponse>> getUserAuthToken(
+    public Observable<AuthorizationResponse> getUserAuthToken(
             String grantType, String authCode, String redirectUri) {
-        return mAuthAPI.getUserAuthToken(grantType, authCode, redirectUri);
+        return mAuthService.getUserAuthToken(grantType, authCode, redirectUri)
+                .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
+                .map(Response::body);
     }
 
     public Observable<AuthorizationResponse> refreshUserAccessToken(String refreshToken) {
         String grantType = "refresh_token";
-        return Observable.create(subscriber -> mAuthAPI.refreshUserAuthToken(grantType, refreshToken)
+        return mAuthService.refreshUserAuthToken(grantType, refreshToken)
                 .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext(response -> subscriber.onNext(response.body()))
-                .doOnError(subscriber::onError));
+                .map(Response::body);
     }
 
-    public Action0 revokeAuthToken(String token, String tokenType) {
-        return () -> mAuthAPI.revokeUserAuthToken(token, tokenType)
+    public Action2<String, String> revokeAuthToken() {
+        return (token, tokenType) -> mAuthService.revokeUserAuthToken(token, tokenType)
                 .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe();
-    }
-
-    ///////////////
-    // Singleton //
-    ///////////////
-
-    private static RedditServiceAuth _instance;
-
-    public static RedditServiceAuth getInstance() {
-        if (_instance == null) {
-            synchronized (RedditServiceAuth.class) {
-                if (_instance == null) {
-                    _instance = new RedditServiceAuth();
-                }
-            }
-        }
-        return _instance;
     }
 }
