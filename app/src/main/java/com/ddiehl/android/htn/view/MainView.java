@@ -7,11 +7,12 @@ import android.support.annotation.StringRes;
 import com.ddiehl.android.htn.view.dialogs.AnalyticsDialog;
 import com.ddiehl.android.htn.view.dialogs.ConfirmSignOutDialog;
 import com.ddiehl.android.htn.view.dialogs.SubredditNavigationDialog;
+import com.ddiehl.android.htn.view.fragments.WebViewFragment;
 import com.ddiehl.reddit.identity.UserIdentity;
 import com.ddiehl.reddit.listings.Subreddit;
 
 public interface MainView extends AnalyticsDialog.Callbacks, ConfirmSignOutDialog.Callbacks,
-        SubredditNavigationDialog.Callbacks {
+        SubredditNavigationDialog.Callbacks, WebViewFragment.Callbacks {
 
     void updateUserIdentity(@Nullable UserIdentity identity);
     void loadImageIntoDrawerHeader(@Nullable String url);

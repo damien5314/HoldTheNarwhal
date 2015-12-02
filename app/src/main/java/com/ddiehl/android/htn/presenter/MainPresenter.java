@@ -9,4 +9,5 @@ public interface MainPresenter extends BasePresenter {
     void onAnalyticsAccepted();
     void onAnalyticsDeclined();
     boolean customTabsEnabled();
+    void onAuthCodeReceived(String authCode);
 }

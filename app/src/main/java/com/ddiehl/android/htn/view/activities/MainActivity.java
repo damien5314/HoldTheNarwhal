@@ -405,4 +405,9 @@ public class MainActivity extends AppCompatActivity implements MainView,
 
         ft.commit();
     }
+
+    @Override
+    public void onAuthCodeReceived(String authCode) {
+        mMainPresenter.onAuthCodeReceived(authCode);
+    }
 }

@@ -1,5 +1,6 @@
 package com.ddiehl.android.htn.presenter;
 
+import com.ddiehl.android.htn.AccessTokenManager;
 import com.ddiehl.android.htn.AndroidContextProvider;
 import com.ddiehl.android.htn.BusProvider;
 import com.ddiehl.android.htn.HoldTheNarwhal;
@@ -21,6 +22,7 @@ import retrofit.Response;
 public class MainPresenterImpl implements MainPresenter {
     private Logger mLogger = HoldTheNarwhal.getLogger();
     private Bus mBus = BusProvider.getInstance();
+    private AccessTokenManager mAccessTokenManager = HoldTheNarwhal.getAccessTokenManager();
     private IdentityManager mIdentityManager = HoldTheNarwhal.getIdentityManager();
     private SettingsManager mSettingsManager = HoldTheNarwhal.getSettingsManager();
     private Analytics mAnalytics = HoldTheNarwhal.getAnalytics();
@@ -98,6 +100,11 @@ public class MainPresenterImpl implements MainPresenter {
     @Override
     public boolean customTabsEnabled() {
         return mSettingsManager.customTabsEnabled();
+    }
+
+    @Override
+    public void onAuthCodeReceived(String authCode) {
+        mAccessTokenManager.onUserAuthCodeReceived(authCode);
     }
 
     @Subscribe @SuppressWarnings("unused")

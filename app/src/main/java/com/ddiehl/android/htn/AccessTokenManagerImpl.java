@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.ddiehl.android.htn.events.requests.UserSignOutEvent;
-import com.ddiehl.android.htn.events.responses.UserAuthCodeReceivedEvent;
 import com.ddiehl.android.htn.io.RedditServiceAuth;
 import com.ddiehl.android.htn.logging.Logger;
 import com.ddiehl.reddit.identity.AccessToken;
@@ -76,10 +75,9 @@ public class AccessTokenManagerImpl implements AccessTokenManager {
         return hasValidUserAccessToken() || hasValidApplicationAccessToken();
     }
 
-    @Subscribe @SuppressWarnings("unused")
-    public void onUserAuthCodeReceived(UserAuthCodeReceivedEvent event) {
+    @Override
+    public void onUserAuthCodeReceived(String authCode) {
         String grantType = "authorization_code";
-        String authCode = event.getCode();
         mServiceAuth.getUserAuthToken(grantType, authCode, RedditServiceAuth.REDIRECT_URI)
                 .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

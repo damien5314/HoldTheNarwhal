@@ -22,15 +22,13 @@ import android.widget.ProgressBar;
 import android.widget.ZoomButtonsController;
 
 import com.ddiehl.android.htn.BuildConfig;
-import com.ddiehl.android.htn.BusProvider;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
-import com.ddiehl.android.htn.events.responses.UserAuthCodeReceivedEvent;
 import com.ddiehl.android.htn.io.RedditServiceAuth;
 import com.ddiehl.android.htn.logging.Logger;
 import com.ddiehl.android.htn.utils.AuthUtils;
 import com.ddiehl.android.htn.utils.BaseUtils;
-import com.squareup.otto.Bus;
+import com.ddiehl.android.htn.view.MainView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -40,14 +38,20 @@ public class WebViewFragment extends Fragment {
     private static final String ARG_URL = "url";
 
     private Logger mLogger = HoldTheNarwhal.getLogger();
-    private Bus mBus = BusProvider.getInstance();
+//    private Bus mBus = BusProvider.getInstance();
+    private MainView mMainView;
     private String mUrl;
+
     @Bind(R.id.web_view) WebView mWebView;
 
     static {
         if (BuildConfig.DEBUG && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             WebView.setWebContentsDebuggingEnabled(true);
         }
+    }
+
+    public interface Callbacks {
+        void onAuthCodeReceived(String authCode);
     }
 
     public WebViewFragment() { }
@@ -57,7 +61,6 @@ public class WebViewFragment extends Fragment {
         args.putString(ARG_URL, url);
         Fragment fragment = new WebViewFragment();
         fragment.setArguments(args);
-
         return fragment;
     }
 
@@ -67,6 +70,7 @@ public class WebViewFragment extends Fragment {
         setRetainInstance(true);
         setHasOptionsMenu(true);
 
+        mMainView = (MainView) getActivity();
         Bundle args = getArguments();
 
         mUrl = args.getString(ARG_URL);
@@ -100,7 +104,8 @@ public class WebViewFragment extends Fragment {
                         && !url.equals(RedditServiceAuth.AUTHORIZATION_URL)) {
                     // Pass auth code back to the Activity, which will pop this fragment
                     String authCode = AuthUtils.getUserAuthCodeFromRedirectUri(url);
-                    mBus.post(new UserAuthCodeReceivedEvent(authCode));
+//                    mBus.post(new UserAuthCodeReceivedEvent(authCode));
+                    mMainView.onAuthCodeReceived(authCode);
                     getFragmentManager().popBackStack();
                     return true; // Can we do this to prevent the page from loading at all?
                 }
