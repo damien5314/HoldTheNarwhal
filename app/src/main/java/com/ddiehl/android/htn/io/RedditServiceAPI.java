@@ -166,7 +166,7 @@ public class RedditServiceAPI implements RedditService {
     }
 
     private Observable<AccessToken> requireAccessToken() {
-        return mAccessTokenManager.getApplicationAccessToken();
+        return mAccessTokenManager.getAccessToken();
     }
 
     @Override

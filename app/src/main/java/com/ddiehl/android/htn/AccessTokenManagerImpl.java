@@ -70,7 +70,7 @@ public class AccessTokenManagerImpl implements AccessTokenManager {
         mServiceAuth.getUserAuthToken(grantType, authCode, RedditServiceAuth.REDIRECT_URI)
                 .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .map(getUserAccessTokenFromResponse())
+                .map(responseToAccessToken())
                 .subscribe(saveUserAccessToken());
     }
 
@@ -94,7 +94,7 @@ public class AccessTokenManagerImpl implements AccessTokenManager {
             return Observable.error(new RuntimeException("No refresh token available"));
         }
         return mServiceAuth.refreshUserAccessToken(refreshToken)
-                .map(getUserAccessTokenFromResponse())
+                .map(responseToAccessToken())
                 .doOnNext(saveUserAccessToken())
                 .doOnError(error -> {
                     clearSavedUserAccessToken();
@@ -102,7 +102,30 @@ public class AccessTokenManagerImpl implements AccessTokenManager {
                 });
     }
 
-    private Func1<AuthorizationResponse, AccessToken> getUserAccessTokenFromResponse() {
+    private Func1<AccessToken, Observable<AccessToken>> refreshApplicationAccessToken() {
+        return accessToken -> {
+            if (accessToken != null && accessToken.secondsUntilExpiration() > EXPIRATION_THRESHOLD) {
+                return Observable.just(accessToken);
+            } else {
+                return mServiceAuth.authorizeApplication()
+                        .map(responseToAccessToken())
+                        .doOnNext(saveApplicationAccessToken());
+            }
+        };
+    }
+
+    private Observable<AccessToken> getApplicationAccessToken() {
+        return Observable.just(getSavedApplicationAccessToken());
+    }
+
+    @Override
+    public Observable<AccessToken> getAccessToken() {
+        return getUserAccessToken()
+                .onErrorResumeNext(getApplicationAccessToken())
+                .flatMap(refreshApplicationAccessToken());
+    }
+
+    private Func1<AuthorizationResponse, AccessToken> responseToAccessToken() {
         return response -> {
             AccessToken token = new UserAccessToken();
             token.setToken(response.getToken());
@@ -112,32 +135,6 @@ public class AccessTokenManagerImpl implements AccessTokenManager {
             token.setRefreshToken(response.getRefreshToken());
             return token;
         };
-    }
-
-    @Override
-    public Observable<AccessToken> getApplicationAccessToken() {
-        return Observable.create(subscriber -> getUserAccessToken().subscribe(accessToken -> {
-            // User access token should be used instead, if we have one available
-            subscriber.onNext(accessToken);
-            subscriber.onCompleted();
-        }, error -> {
-            // If there was an error from retrieving the user access token, we should
-            // try to retrieve the application access token
-            AccessToken token = getSavedApplicationAccessToken();
-            if (token != null &&
-                    token.secondsUntilExpiration() > EXPIRATION_THRESHOLD) {
-                // If saved application access token is valid, return it
-                subscriber.onNext(token);
-                subscriber.onCompleted();
-            } else {
-                // Otherwise, request RedditServiceAuth to retrieve a new one
-                mServiceAuth.authorizeApplication()
-                        .subscribe(authorizationResponse -> {
-                            saveApplicationAccessTokenResponse(authorizationResponse);
-                            subscriber.onNext(token);
-                        }, subscriber::onError, subscriber::onCompleted);
-            }
-        }));
     }
 
     // /data/data/com.ddiehl.android.htn.debug/shared_prefs/prefs_user_access_token.xml
@@ -170,7 +167,7 @@ public class AccessTokenManagerImpl implements AccessTokenManager {
     }
 
     private Action1<AccessToken> saveUserAccessToken() {
-        return (token) -> {
+        return token -> {
             mLogger.d(String.format("--ACCESS TOKEN RESPONSE--\nAccess Token: %s\nRefresh Token: %s",
                     token.getToken(), token.getRefreshToken()));
             SharedPreferences sp =
@@ -188,27 +185,20 @@ public class AccessTokenManagerImpl implements AccessTokenManager {
         };
     }
 
-    @Override
-    public void saveApplicationAccessTokenResponse(AuthorizationResponse response) {
-        AccessToken token = new ApplicationAccessToken();
-        token.setToken(response.getToken());
-        token.setTokenType(response.getTokenType());
-        token.setExpiration(response.getExpiresIn() * 1000 + new Date().getTime());
-        token.setScope(response.getScope());
-        token.setRefreshToken(response.getRefreshToken());
-
-        mLogger.d(String.format("--ACCESS TOKEN RESPONSE--\nAccess Token: %s\nRefresh Token: %s",
-                token.getToken(), token.getRefreshToken()));
-
-        SharedPreferences sp = mContext.getSharedPreferences(
-                PREFS_APPLICATION_ACCESS_TOKEN, Context.MODE_PRIVATE);
-        sp.edit()
-                .putString(PREF_ACCESS_TOKEN, token.getToken())
-                .putString(PREF_TOKEN_TYPE, token.getTokenType())
-                .putLong(PREF_EXPIRATION, token.getExpiration())
-                .putString(PREF_SCOPE, token.getScope())
-                .putString(PREF_REFRESH_TOKEN, token.getRefreshToken())
-                .apply();
+    private Action1<AccessToken> saveApplicationAccessToken() {
+        return token -> {
+            mLogger.d(String.format("--ACCESS TOKEN RESPONSE--\nAccess Token: %s\nRefresh Token: %s",
+                    token.getToken(), token.getRefreshToken()));
+            SharedPreferences sp = mContext.getSharedPreferences(
+                    PREFS_APPLICATION_ACCESS_TOKEN, Context.MODE_PRIVATE);
+            sp.edit()
+                    .putString(PREF_ACCESS_TOKEN, token.getToken())
+                    .putString(PREF_TOKEN_TYPE, token.getTokenType())
+                    .putLong(PREF_EXPIRATION, token.getExpiration())
+                    .putString(PREF_SCOPE, token.getScope())
+                    .putString(PREF_REFRESH_TOKEN, token.getRefreshToken())
+                    .apply();
+        };
     }
 
     @Override
