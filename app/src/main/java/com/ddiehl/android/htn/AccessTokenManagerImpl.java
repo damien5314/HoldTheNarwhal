@@ -15,7 +15,6 @@ import com.squareup.otto.Subscribe;
 import java.util.Date;
 
 import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
@@ -69,7 +68,6 @@ public class AccessTokenManagerImpl implements AccessTokenManager {
         String grantType = "authorization_code";
         mServiceAuth.getUserAuthToken(grantType, authCode, RedditServiceAuth.REDIRECT_URI)
                 .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
                 .map(responseToAccessToken())
                 .subscribe(saveUserAccessToken());
     }
@@ -115,14 +113,14 @@ public class AccessTokenManagerImpl implements AccessTokenManager {
     }
 
     private Observable<AccessToken> getApplicationAccessToken() {
-        return Observable.just(getSavedApplicationAccessToken());
+        return Observable.just(getSavedApplicationAccessToken())
+                .flatMap(refreshApplicationAccessToken());
     }
 
     @Override
     public Observable<AccessToken> getAccessToken() {
         return getUserAccessToken()
-                .onErrorResumeNext(getApplicationAccessToken())
-                .flatMap(refreshApplicationAccessToken());
+                .onErrorResumeNext(getApplicationAccessToken());
     }
 
     private Func1<AuthorizationResponse, AccessToken> responseToAccessToken() {
@@ -217,10 +215,10 @@ public class AccessTokenManagerImpl implements AccessTokenManager {
     public void onUserSignOut(UserSignOutEvent event) {
         AccessToken token = getSavedUserAccessToken();
         if (token != null) {
-            mServiceAuth.revokeAuthToken().call(token.getToken(), "access_token");
-            mServiceAuth.revokeAuthToken().call(token.getRefreshToken(), "refresh_token");
-            clearSavedUserAccessToken();
-            mIdentityManager.clearSavedUserIdentity();
+            mServiceAuth.revokeAuthToken(token).doOnRequest(response -> {
+                clearSavedUserAccessToken();
+                mIdentityManager.clearSavedUserIdentity();
+            }).subscribe();
         }
     }
 

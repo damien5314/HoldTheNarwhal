@@ -4,6 +4,7 @@ package com.ddiehl.android.htn.io;
 import com.ddiehl.android.htn.BuildConfig;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.utils.BaseUtils;
+import com.ddiehl.reddit.identity.AccessToken;
 import com.ddiehl.reddit.identity.AuthorizationResponse;
 import com.facebook.stetho.okhttp.StethoInterceptor;
 import com.google.gson.FieldNamingPolicy;
@@ -12,14 +13,13 @@ import com.google.gson.GsonBuilder;
 import com.squareup.okhttp.Credentials;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
+import com.squareup.okhttp.ResponseBody;
 
 import retrofit.GsonConverterFactory;
 import retrofit.Response;
 import retrofit.Retrofit;
 import retrofit.RxJavaCallAdapterFactory;
 import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action2;
 import rx.schedulers.Schedulers;
 
 public class RedditServiceAuth {
@@ -90,10 +90,11 @@ public class RedditServiceAuth {
                 .map(Response::body);
     }
 
-    public Action2<String, String> revokeAuthToken() {
-        return (token, tokenType) -> mAuthService.revokeUserAuthToken(token, tokenType)
+    public Observable<ResponseBody> revokeAuthToken(AccessToken token) {
+        return Observable.merge(
+                mAuthService.revokeUserAuthToken(token.getToken(), "access_token"),
+                mAuthService.revokeUserAuthToken(token.getRefreshToken(), "refresh_token"))
                 .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe();
+                .map(Response::body);
     }
 }
