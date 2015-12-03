@@ -98,7 +98,7 @@ public class RedditServiceAPI implements RedditService {
             Request originalRequest = chain.request();
             Request newRequest = originalRequest.newBuilder()
                     .removeHeader("Authorization")
-                    .addHeader("Authorization", "bearer " + getAccessToken())
+                    .addHeader("Authorization", "bearer " + mAccessTokenManager.getValidAccessToken())
                     .build();
             return chain.proceed(newRequest);
         });
@@ -120,15 +120,6 @@ public class RedditServiceAPI implements RedditService {
                 .build();
 
         return restAdapter.create(RedditAPI.class);
-    }
-
-    private String getAccessToken() {
-        if (mAccessTokenManager.hasValidUserAccessToken()) {
-            return mAccessTokenManager.getSavedUserAccessToken().getToken();
-        } else if (mAccessTokenManager.hasValidApplicationAccessToken()) {
-            return mAccessTokenManager.getSavedApplicationAccessToken().getToken();
-        }
-        return null;
     }
 
     @Override

@@ -66,7 +66,7 @@ public class SettingsFragment extends PreferenceFragment
         getActivity().getSharedPreferences(SettingsManagerImpl.PREFS_USER, Context.MODE_PRIVATE)
                 .registerOnSharedPreferenceChangeListener(this);
 
-        if (mAccessTokenManager.hasUserAccessToken()) {
+        if (mAccessTokenManager.isUserAuthorized()) {
             refresh(true);
         }
     }

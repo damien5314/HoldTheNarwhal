@@ -39,35 +39,28 @@ public class AccessTokenManagerImpl implements AccessTokenManager {
 
     @Override
     public boolean isUserAuthorized() {
-        return hasUserAccessToken();
-    }
-
-    @Override
-    public boolean hasUserAccessToken() {
         return getSavedUserAccessToken() != null;
     }
 
     @Override
-    public boolean hasValidUserAccessToken() {
-        AccessToken token = getSavedUserAccessToken();
-        return token != null && token.secondsUntilExpiration() > EXPIRATION_THRESHOLD;
-    }
+    public String getValidAccessToken() {
+        AccessToken token;
+        token = getSavedUserAccessToken();
+        if (token != null && token.secondsUntilExpiration() > EXPIRATION_THRESHOLD) {
+            return token.getToken();
+        }
 
-    @Override
-    public boolean hasUserAccessRefreshToken() {
-        AccessToken token = getSavedUserAccessToken();
-        return token != null && token.hasRefreshToken();
-    }
+        token = getSavedApplicationAccessToken();
+        if (token != null && token.secondsUntilExpiration() > EXPIRATION_THRESHOLD) {
+            return token.getToken();
+        }
 
-    @Override
-    public boolean hasValidApplicationAccessToken() {
-        AccessToken token = getSavedApplicationAccessToken();
-        return token != null && token.secondsUntilExpiration() > EXPIRATION_THRESHOLD;
+        return null;
     }
 
     @Override
     public boolean hasValidAccessToken() {
-        return hasValidUserAccessToken() || hasValidApplicationAccessToken();
+        return getValidAccessToken() != null;
     }
 
     @Override
@@ -77,7 +70,7 @@ public class AccessTokenManagerImpl implements AccessTokenManager {
         mServiceAuth.getUserAuthToken(grantType, authCode, RedditServiceAuth.REDIRECT_URI)
                 .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .map(getUserAccessTokenFromResponse)
+                .map(getUserAccessTokenFromResponse())
                 .subscribe(saveUserAccessToken());
     }
 
@@ -101,7 +94,7 @@ public class AccessTokenManagerImpl implements AccessTokenManager {
             return Observable.error(new RuntimeException("No refresh token available"));
         }
         return mServiceAuth.refreshUserAccessToken(refreshToken)
-                .map(getUserAccessTokenFromResponse)
+                .map(getUserAccessTokenFromResponse())
                 .doOnNext(saveUserAccessToken())
                 .doOnError(error -> {
                     clearSavedUserAccessToken();
@@ -109,16 +102,17 @@ public class AccessTokenManagerImpl implements AccessTokenManager {
                 });
     }
 
-    private Func1<AuthorizationResponse, AccessToken> getUserAccessTokenFromResponse =
-            response -> {
-                AccessToken token = new UserAccessToken();
-                token.setToken(response.getToken());
-                token.setTokenType(response.getToken());
-                token.setExpiration(response.getExpiresIn() * 1000 + new Date().getTime());
-                token.setScope(response.getScope());
-                token.setRefreshToken(response.getRefreshToken());
-                return token;
-            };
+    private Func1<AuthorizationResponse, AccessToken> getUserAccessTokenFromResponse() {
+        return response -> {
+            AccessToken token = new UserAccessToken();
+            token.setToken(response.getToken());
+            token.setTokenType(response.getToken());
+            token.setExpiration(response.getExpiresIn() * 1000 + new Date().getTime());
+            token.setScope(response.getScope());
+            token.setRefreshToken(response.getRefreshToken());
+            return token;
+        };
+    }
 
     @Override
     public Observable<AccessToken> getApplicationAccessToken() {
@@ -175,7 +169,7 @@ public class AccessTokenManagerImpl implements AccessTokenManager {
         return token;
     }
 
-    public Action1<AccessToken> saveUserAccessToken() {
+    private Action1<AccessToken> saveUserAccessToken() {
         return (token) -> {
             mLogger.d(String.format("--ACCESS TOKEN RESPONSE--\nAccess Token: %s\nRefresh Token: %s",
                     token.getToken(), token.getRefreshToken()));

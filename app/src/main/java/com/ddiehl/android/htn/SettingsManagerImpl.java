@@ -154,7 +154,7 @@ public class SettingsManagerImpl implements SettingsManager {
         }
 
         if (changedSettings.size() > 0 &&
-                HoldTheNarwhal.getAccessTokenManager().hasUserAccessToken()) {
+                HoldTheNarwhal.getAccessTokenManager().isUserAuthorized()) {
             // Post SettingsUpdate event with changed keys and values
             mBus.post(new UpdateUserSettingsEvent(changedSettings));
         }
