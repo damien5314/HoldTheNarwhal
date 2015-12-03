@@ -36,15 +36,6 @@ public class AccessTokenManagerImpl implements AccessTokenManager {
     private Context mContext = AndroidContextProvider.getContext();
     private RedditServiceAuth mServiceAuth = new RedditServiceAuth();
     private IdentityManager mIdentityManager = HoldTheNarwhal.getIdentityManager();
-    private AccessToken mUserAccessToken;
-    private AccessToken mApplicationAccessToken;
-
-    private AccessTokenManagerImpl() {
-        // FIXME Let's get rid of the cached AccessTokens, this looks weird
-//        getSavedUserAccessToken().subscribe(token -> mUserAccessToken = token);
-        mUserAccessToken = getSavedUserAccessToken();
-        mApplicationAccessToken = getSavedApplicationAccessToken();
-    }
 
     @Override
     public boolean isUserAuthorized() {
@@ -138,20 +129,18 @@ public class AccessTokenManagerImpl implements AccessTokenManager {
         }, error -> {
             // If there was an error from retrieving the user access token, we should
             // try to retrieve the application access token
-            if (mApplicationAccessToken == null) {
-                mApplicationAccessToken = getSavedApplicationAccessToken();
-            }
-            if (mApplicationAccessToken != null &&
-                    mApplicationAccessToken.secondsUntilExpiration() > EXPIRATION_THRESHOLD) {
+            AccessToken token = getSavedApplicationAccessToken();
+            if (token != null &&
+                    token.secondsUntilExpiration() > EXPIRATION_THRESHOLD) {
                 // If saved application access token is valid, return it
-                subscriber.onNext(mApplicationAccessToken);
+                subscriber.onNext(token);
                 subscriber.onCompleted();
             } else {
                 // Otherwise, request RedditServiceAuth to retrieve a new one
                 mServiceAuth.authorizeApplication()
                         .subscribe(authorizationResponse -> {
                             saveApplicationAccessTokenResponse(authorizationResponse);
-                            subscriber.onNext(mApplicationAccessToken);
+                            subscriber.onNext(token);
                         }, subscriber::onError, subscriber::onCompleted);
             }
         }));
@@ -160,101 +149,92 @@ public class AccessTokenManagerImpl implements AccessTokenManager {
     // /data/data/com.ddiehl.android.htn.debug/shared_prefs/prefs_user_access_token.xml
     @Override
     public AccessToken getSavedUserAccessToken() {
-        if (mUserAccessToken != null) return mUserAccessToken;
         SharedPreferences sp =  mContext.getSharedPreferences(
                 PREFS_USER_ACCESS_TOKEN, Context.MODE_PRIVATE);
         if (!sp.contains(PREF_ACCESS_TOKEN)) return null;
-        mUserAccessToken = new UserAccessToken();
-        mUserAccessToken.setToken(sp.getString(PREF_ACCESS_TOKEN, null));
-        mUserAccessToken.setTokenType(sp.getString(PREF_TOKEN_TYPE, null));
-        mUserAccessToken.setExpiration(sp.getLong(PREF_EXPIRATION, 0));
-        mUserAccessToken.setScope(sp.getString(PREF_SCOPE, null));
-        mUserAccessToken.setRefreshToken(sp.getString(PREF_REFRESH_TOKEN, null));
-        return mUserAccessToken;
+        AccessToken token = new UserAccessToken();
+        token.setToken(sp.getString(PREF_ACCESS_TOKEN, null));
+        token.setTokenType(sp.getString(PREF_TOKEN_TYPE, null));
+        token.setExpiration(sp.getLong(PREF_EXPIRATION, 0));
+        token.setScope(sp.getString(PREF_SCOPE, null));
+        token.setRefreshToken(sp.getString(PREF_REFRESH_TOKEN, null));
+        return token;
     }
 
     @Override
     public AccessToken getSavedApplicationAccessToken() {
         SharedPreferences sp =  mContext.getSharedPreferences(
                 PREFS_APPLICATION_ACCESS_TOKEN, Context.MODE_PRIVATE);
-        if (mApplicationAccessToken != null) return mApplicationAccessToken;
-        if (sp.contains(PREF_ACCESS_TOKEN)) {
-            mApplicationAccessToken = new ApplicationAccessToken();
-            mApplicationAccessToken.setToken(sp.getString(PREF_ACCESS_TOKEN, null));
-            mApplicationAccessToken.setTokenType(sp.getString(PREF_TOKEN_TYPE, null));
-            mApplicationAccessToken.setExpiration(sp.getLong(PREF_EXPIRATION, 0));
-            mApplicationAccessToken.setScope(sp.getString(PREF_SCOPE, null));
-            mApplicationAccessToken.setRefreshToken(sp.getString(PREF_REFRESH_TOKEN, null));
-        }
-        return mApplicationAccessToken;
+        if (!sp.contains(PREF_ACCESS_TOKEN)) return null;
+        AccessToken token = new ApplicationAccessToken();
+        token.setToken(sp.getString(PREF_ACCESS_TOKEN, null));
+        token.setTokenType(sp.getString(PREF_TOKEN_TYPE, null));
+        token.setExpiration(sp.getLong(PREF_EXPIRATION, 0));
+        token.setScope(sp.getString(PREF_SCOPE, null));
+        token.setRefreshToken(sp.getString(PREF_REFRESH_TOKEN, null));
+        return token;
     }
 
     public Action1<AccessToken> saveUserAccessToken() {
         return (token) -> {
             mLogger.d(String.format("--ACCESS TOKEN RESPONSE--\nAccess Token: %s\nRefresh Token: %s",
                     token.getToken(), token.getRefreshToken()));
-
-            // Save the previous refresh token if we didn't get a fresh one
-            if (token.getRefreshToken() == null) {
-                token.setRefreshToken(mUserAccessToken.getRefreshToken());
-            }
-            mUserAccessToken = token;
-
             SharedPreferences sp =
                     mContext.getSharedPreferences(PREFS_USER_ACCESS_TOKEN, Context.MODE_PRIVATE);
             sp.edit()
-                    .putString(PREF_ACCESS_TOKEN, mUserAccessToken.getToken())
-                    .putString(PREF_TOKEN_TYPE, mUserAccessToken.getTokenType())
-                    .putLong(PREF_EXPIRATION, mUserAccessToken.getExpiration())
-                    .putString(PREF_SCOPE, mUserAccessToken.getScope())
-                    .putString(PREF_REFRESH_TOKEN, mUserAccessToken.getRefreshToken())
+                    .putString(PREF_ACCESS_TOKEN, token.getToken())
+                    .putString(PREF_TOKEN_TYPE, token.getTokenType())
+                    .putLong(PREF_EXPIRATION, token.getExpiration())
+                    .putString(PREF_SCOPE, token.getScope())
                     .apply();
+            // Don't overwrite the refresh token if we didn't get a fresh one
+            if (token.getRefreshToken() != null) {
+                sp.edit().putString(PREF_REFRESH_TOKEN, token.getRefreshToken()).apply();
+            }
         };
     }
 
     @Override
     public void saveApplicationAccessTokenResponse(AuthorizationResponse response) {
-        mApplicationAccessToken = new ApplicationAccessToken();
-        mApplicationAccessToken.setToken(response.getToken());
-        mApplicationAccessToken.setTokenType(response.getTokenType());
-        mApplicationAccessToken.setExpiration(response.getExpiresIn() * 1000 + new Date().getTime());
-        mApplicationAccessToken.setScope(response.getScope());
-        mApplicationAccessToken.setRefreshToken(response.getRefreshToken());
+        AccessToken token = new ApplicationAccessToken();
+        token.setToken(response.getToken());
+        token.setTokenType(response.getTokenType());
+        token.setExpiration(response.getExpiresIn() * 1000 + new Date().getTime());
+        token.setScope(response.getScope());
+        token.setRefreshToken(response.getRefreshToken());
 
         mLogger.d(String.format("--ACCESS TOKEN RESPONSE--\nAccess Token: %s\nRefresh Token: %s",
-                mApplicationAccessToken.getToken(), mApplicationAccessToken.getRefreshToken()));
+                token.getToken(), token.getRefreshToken()));
 
         SharedPreferences sp = mContext.getSharedPreferences(
                 PREFS_APPLICATION_ACCESS_TOKEN, Context.MODE_PRIVATE);
         sp.edit()
-                .putString(PREF_ACCESS_TOKEN, mApplicationAccessToken.getToken())
-                .putString(PREF_TOKEN_TYPE, mApplicationAccessToken.getTokenType())
-                .putLong(PREF_EXPIRATION, mApplicationAccessToken.getExpiration())
-                .putString(PREF_SCOPE, mApplicationAccessToken.getScope())
-                .putString(PREF_REFRESH_TOKEN, mApplicationAccessToken.getRefreshToken())
+                .putString(PREF_ACCESS_TOKEN, token.getToken())
+                .putString(PREF_TOKEN_TYPE, token.getTokenType())
+                .putLong(PREF_EXPIRATION, token.getExpiration())
+                .putString(PREF_SCOPE, token.getScope())
+                .putString(PREF_REFRESH_TOKEN, token.getRefreshToken())
                 .apply();
     }
 
     @Override
     public void clearSavedUserAccessToken() {
-        mUserAccessToken = null;
         mContext.getSharedPreferences(PREFS_USER_ACCESS_TOKEN, Context.MODE_PRIVATE)
                 .edit().clear().apply();
     }
 
     @Override
     public void clearSavedApplicationAccessToken() {
-        mApplicationAccessToken = null;
         mContext.getSharedPreferences(PREFS_APPLICATION_ACCESS_TOKEN, Context.MODE_PRIVATE)
                 .edit().clear().apply();
     }
 
     @Subscribe @SuppressWarnings("unused")
     public void onUserSignOut(UserSignOutEvent event) {
-        mUserAccessToken = getSavedUserAccessToken();
-        if (mUserAccessToken != null) {
-            mServiceAuth.revokeAuthToken().call(mUserAccessToken.getToken(), "access_token");
-            mServiceAuth.revokeAuthToken().call(mUserAccessToken.getRefreshToken(), "refresh_token");
+        AccessToken token = getSavedUserAccessToken();
+        if (token != null) {
+            mServiceAuth.revokeAuthToken().call(token.getToken(), "access_token");
+            mServiceAuth.revokeAuthToken().call(token.getRefreshToken(), "refresh_token");
             clearSavedUserAccessToken();
             mIdentityManager.clearSavedUserIdentity();
         }
