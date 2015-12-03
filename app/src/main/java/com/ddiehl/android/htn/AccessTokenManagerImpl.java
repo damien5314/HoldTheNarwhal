@@ -16,6 +16,8 @@ import java.util.Date;
 
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 public class AccessTokenManagerImpl implements AccessTokenManager {
@@ -38,6 +40,8 @@ public class AccessTokenManagerImpl implements AccessTokenManager {
     private AccessToken mApplicationAccessToken;
 
     private AccessTokenManagerImpl() {
+        // FIXME Let's get rid of the cached AccessTokens, this looks weird
+//        getSavedUserAccessToken().subscribe(token -> mUserAccessToken = token);
         mUserAccessToken = getSavedUserAccessToken();
         mApplicationAccessToken = getSavedApplicationAccessToken();
     }
@@ -77,61 +81,53 @@ public class AccessTokenManagerImpl implements AccessTokenManager {
 
     @Override
     public void onUserAuthCodeReceived(String authCode) {
+        mIdentityManager.clearSavedUserIdentity();
         String grantType = "authorization_code";
         mServiceAuth.getUserAuthToken(grantType, authCode, RedditServiceAuth.REDIRECT_URI)
                 .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        response -> {
-                            saveUserAccessTokenResponse(response);
-                            mIdentityManager.clearSavedUserIdentity();
-                        },
-                        error -> {
-                            mIdentityManager.clearSavedUserIdentity();
-                        });
+                .map(getUserAccessTokenFromResponse)
+                .subscribe(saveUserAccessToken());
     }
 
     @Override
     public Observable<AccessToken> getUserAccessToken() {
-        return Observable.create(subscriber -> {
-            if (mUserAccessToken == null) {
-                // Attempt to retrieve saved user access token
-                mUserAccessToken = getSavedUserAccessToken();
-            }
-            if (mUserAccessToken != null) {
-                // If we have one, check if the access token is expired
-                if (mUserAccessToken.secondsUntilExpiration() > EXPIRATION_THRESHOLD) {
-                    // If not, return it
-                    subscriber.onNext(mUserAccessToken);
-                    subscriber.onCompleted();
-                } else {
-                    // Otherwise, check if we have a refresh token
-                    final String refreshToken = mUserAccessToken.getRefreshToken();
-                    if (refreshToken != null) {
-                        // If so, ask RedditServiceAuth to refresh it
-                        mServiceAuth.refreshUserAccessToken(refreshToken).subscribe(
-                                authorizationResponse -> {
-                                    // Save token and return it
-                                    saveUserAccessTokenResponse(authorizationResponse);
-                                    subscriber.onNext(mUserAccessToken);
-                                }, error -> {
-                                    // Clear token and trigger onError
-                                    clearSavedUserAccessToken();
-                                    mIdentityManager.clearSavedUserIdentity();
-                                    subscriber.onError(error);
-                                }, subscriber::onCompleted);
-                    } else {
-                        // Otherwise, clear the token and trigger onError
-                        clearSavedUserAccessToken();
-                        subscriber.onError(new RuntimeException("No refresh token available"));
-                    }
-                }
-            } else {
-                // If we don't have a saved access token, trigger onError
-                subscriber.onError(new RuntimeException("No user access token available"));
-            }
-        });
+        return Observable.just(getSavedUserAccessToken())
+                .flatMap(refreshUserAccessToken());
     }
+
+    private Func1<AccessToken, Observable<AccessToken>> refreshUserAccessToken() {
+        return (accessToken) -> {
+            if (accessToken.secondsUntilExpiration() > EXPIRATION_THRESHOLD) {
+                return Observable.just(accessToken);
+            } else return refreshUserAccessToken(accessToken);
+        };
+    }
+
+    private Observable<AccessToken> refreshUserAccessToken(AccessToken accessToken) {
+        String refreshToken = accessToken.getRefreshToken();
+        if (refreshToken == null) {
+            return Observable.error(new RuntimeException("No refresh token available"));
+        }
+        return mServiceAuth.refreshUserAccessToken(refreshToken)
+                .map(getUserAccessTokenFromResponse)
+                .doOnNext(saveUserAccessToken())
+                .doOnError(error -> {
+                    clearSavedUserAccessToken();
+                    mIdentityManager.clearSavedUserIdentity();
+                });
+    }
+
+    private Func1<AuthorizationResponse, AccessToken> getUserAccessTokenFromResponse =
+            response -> {
+                AccessToken token = new UserAccessToken();
+                token.setToken(response.getToken());
+                token.setTokenType(response.getToken());
+                token.setExpiration(response.getExpiresIn() * 1000 + new Date().getTime());
+                token.setScope(response.getScope());
+                token.setRefreshToken(response.getRefreshToken());
+                return token;
+            };
 
     @Override
     public Observable<AccessToken> getApplicationAccessToken() {
@@ -164,17 +160,16 @@ public class AccessTokenManagerImpl implements AccessTokenManager {
     // /data/data/com.ddiehl.android.htn.debug/shared_prefs/prefs_user_access_token.xml
     @Override
     public AccessToken getSavedUserAccessToken() {
+        if (mUserAccessToken != null) return mUserAccessToken;
         SharedPreferences sp =  mContext.getSharedPreferences(
                 PREFS_USER_ACCESS_TOKEN, Context.MODE_PRIVATE);
-        if (mUserAccessToken != null) return mUserAccessToken;
-        if (sp.contains(PREF_ACCESS_TOKEN)) {
-            mUserAccessToken = new UserAccessToken();
-            mUserAccessToken.setToken(sp.getString(PREF_ACCESS_TOKEN, null));
-            mUserAccessToken.setTokenType(sp.getString(PREF_TOKEN_TYPE, null));
-            mUserAccessToken.setExpiration(sp.getLong(PREF_EXPIRATION, 0));
-            mUserAccessToken.setScope(sp.getString(PREF_SCOPE, null));
-            mUserAccessToken.setRefreshToken(sp.getString(PREF_REFRESH_TOKEN, null));
-        }
+        if (!sp.contains(PREF_ACCESS_TOKEN)) return null;
+        mUserAccessToken = new UserAccessToken();
+        mUserAccessToken.setToken(sp.getString(PREF_ACCESS_TOKEN, null));
+        mUserAccessToken.setTokenType(sp.getString(PREF_TOKEN_TYPE, null));
+        mUserAccessToken.setExpiration(sp.getLong(PREF_EXPIRATION, 0));
+        mUserAccessToken.setScope(sp.getString(PREF_SCOPE, null));
+        mUserAccessToken.setRefreshToken(sp.getString(PREF_REFRESH_TOKEN, null));
         return mUserAccessToken;
     }
 
@@ -194,32 +189,27 @@ public class AccessTokenManagerImpl implements AccessTokenManager {
         return mApplicationAccessToken;
     }
 
-    @Override
-    public void saveUserAccessTokenResponse(AuthorizationResponse response) {
-        if (mUserAccessToken == null) {
-            mUserAccessToken = new UserAccessToken();
-        }
-        mUserAccessToken.setToken(response.getToken());
-        mUserAccessToken.setTokenType(response.getTokenType());
-        mUserAccessToken.setExpiration(response.getExpiresIn() * 1000 + new Date().getTime());
-        mUserAccessToken.setScope(response.getScope());
-        // When refreshing, we might not receive the refresh token in the response; don't delete it
-        if (response.getRefreshToken() != null) {
-            mUserAccessToken.setRefreshToken(response.getRefreshToken());
-        }
+    public Action1<AccessToken> saveUserAccessToken() {
+        return (token) -> {
+            mLogger.d(String.format("--ACCESS TOKEN RESPONSE--\nAccess Token: %s\nRefresh Token: %s",
+                    token.getToken(), token.getRefreshToken()));
 
-        mLogger.d(String.format("--ACCESS TOKEN RESPONSE--\nAccess Token: %s\nRefresh Token: %s",
-                mUserAccessToken.getToken(), mUserAccessToken.getRefreshToken()));
+            // Save the previous refresh token if we didn't get a fresh one
+            if (token.getRefreshToken() == null) {
+                token.setRefreshToken(mUserAccessToken.getRefreshToken());
+            }
+            mUserAccessToken = token;
 
-        SharedPreferences sp = mContext.getSharedPreferences(
-                PREFS_USER_ACCESS_TOKEN, Context.MODE_PRIVATE);
-        sp.edit()
-                .putString(PREF_ACCESS_TOKEN, mUserAccessToken.getToken())
-                .putString(PREF_TOKEN_TYPE, mUserAccessToken.getTokenType())
-                .putLong(PREF_EXPIRATION, mUserAccessToken.getExpiration())
-                .putString(PREF_SCOPE, mUserAccessToken.getScope())
-                .putString(PREF_REFRESH_TOKEN, mUserAccessToken.getRefreshToken())
-                .apply();
+            SharedPreferences sp =
+                    mContext.getSharedPreferences(PREFS_USER_ACCESS_TOKEN, Context.MODE_PRIVATE);
+            sp.edit()
+                    .putString(PREF_ACCESS_TOKEN, mUserAccessToken.getToken())
+                    .putString(PREF_TOKEN_TYPE, mUserAccessToken.getTokenType())
+                    .putLong(PREF_EXPIRATION, mUserAccessToken.getExpiration())
+                    .putString(PREF_SCOPE, mUserAccessToken.getScope())
+                    .putString(PREF_REFRESH_TOKEN, mUserAccessToken.getRefreshToken())
+                    .apply();
+        };
     }
 
     @Override
@@ -261,15 +251,13 @@ public class AccessTokenManagerImpl implements AccessTokenManager {
 
     @Subscribe @SuppressWarnings("unused")
     public void onUserSignOut(UserSignOutEvent event) {
-        AccessToken token = getSavedUserAccessToken();
-        if (token != null) {
-            mServiceAuth.revokeAuthToken().call(token.getToken(), "access_token");
-            mServiceAuth.revokeAuthToken().call(token.getRefreshToken(), "refresh_token");
+        mUserAccessToken = getSavedUserAccessToken();
+        if (mUserAccessToken != null) {
+            mServiceAuth.revokeAuthToken().call(mUserAccessToken.getToken(), "access_token");
+            mServiceAuth.revokeAuthToken().call(mUserAccessToken.getRefreshToken(), "refresh_token");
+            clearSavedUserAccessToken();
+            mIdentityManager.clearSavedUserIdentity();
         }
-
-        clearSavedUserAccessToken();
-        mIdentityManager.clearSavedUserIdentity();
-//        mBus.post(new UserIdentitySavedEvent(null));
     }
 
     ///////////////

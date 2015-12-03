@@ -5,6 +5,12 @@ import com.google.gson.annotations.SerializedName;
 
 public class AuthorizationResponse {
 
+    /**
+     * TODO
+     * Cache time this item was created to calculate date of expiration
+     * Then we can serialize straight to AccessToken
+     */
+
     @Expose @SerializedName("access_token")
     protected String accessToken;
 

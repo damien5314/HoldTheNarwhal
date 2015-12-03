@@ -17,7 +17,7 @@ public interface AccessTokenManager {
     Observable<AccessToken> getApplicationAccessToken();
     AccessToken getSavedUserAccessToken();
     AccessToken getSavedApplicationAccessToken();
-    void saveUserAccessTokenResponse(AuthorizationResponse response);
+//    Action1<AccessToken> saveUserAccessToken;
     void saveApplicationAccessTokenResponse(AuthorizationResponse response);
     void clearSavedUserAccessToken();
     void clearSavedApplicationAccessToken();
