@@ -17,7 +17,6 @@ import java.util.Date;
 import rx.Observable;
 import rx.functions.Action1;
 import rx.functions.Func1;
-import rx.schedulers.Schedulers;
 
 public class AccessTokenManagerImpl implements AccessTokenManager {
     private static final String PREFS_USER_ACCESS_TOKEN = "prefs_user_access_token";
@@ -67,9 +66,19 @@ public class AccessTokenManagerImpl implements AccessTokenManager {
         mIdentityManager.clearSavedUserIdentity();
         String grantType = "authorization_code";
         mServiceAuth.getUserAuthToken(grantType, authCode, RedditServiceAuth.REDIRECT_URI)
-                .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
                 .map(responseToAccessToken())
                 .subscribe(saveUserAccessToken());
+    }
+
+    @Override
+    public Observable<AccessToken> getAccessToken() {
+        return getUserAccessToken()
+                .onErrorResumeNext(getApplicationAccessToken());
+    }
+
+    private Observable<AccessToken> getApplicationAccessToken() {
+        return Observable.just(getSavedApplicationAccessToken())
+                .flatMap(refreshApplicationAccessToken());
     }
 
     @Override
@@ -112,17 +121,6 @@ public class AccessTokenManagerImpl implements AccessTokenManager {
         };
     }
 
-    private Observable<AccessToken> getApplicationAccessToken() {
-        return Observable.just(getSavedApplicationAccessToken())
-                .flatMap(refreshApplicationAccessToken());
-    }
-
-    @Override
-    public Observable<AccessToken> getAccessToken() {
-        return getUserAccessToken()
-                .onErrorResumeNext(getApplicationAccessToken());
-    }
-
     private Func1<AuthorizationResponse, AccessToken> responseToAccessToken() {
         return response -> {
             AccessToken token = new UserAccessToken();
@@ -135,9 +133,7 @@ public class AccessTokenManagerImpl implements AccessTokenManager {
         };
     }
 
-    // /data/data/com.ddiehl.android.htn.debug/shared_prefs/prefs_user_access_token.xml
-    @Override
-    public AccessToken getSavedUserAccessToken() {
+    private AccessToken getSavedUserAccessToken() {
         SharedPreferences sp =  mContext.getSharedPreferences(
                 PREFS_USER_ACCESS_TOKEN, Context.MODE_PRIVATE);
         if (!sp.contains(PREF_ACCESS_TOKEN)) return null;
@@ -150,8 +146,7 @@ public class AccessTokenManagerImpl implements AccessTokenManager {
         return token;
     }
 
-    @Override
-    public AccessToken getSavedApplicationAccessToken() {
+    private AccessToken getSavedApplicationAccessToken() {
         SharedPreferences sp =  mContext.getSharedPreferences(
                 PREFS_APPLICATION_ACCESS_TOKEN, Context.MODE_PRIVATE);
         if (!sp.contains(PREF_ACCESS_TOKEN)) return null;
