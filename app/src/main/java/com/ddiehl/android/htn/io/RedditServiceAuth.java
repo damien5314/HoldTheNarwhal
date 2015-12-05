@@ -76,7 +76,7 @@ public class RedditServiceAuth {
                 .map(Response::body);
     }
 
-    public Observable<AuthorizationResponse> getUserAuthToken(
+    public Observable<AuthorizationResponse> getUserAccessToken(
             String grantType, String authCode, String redirectUri) {
         return mAuthService.getUserAuthToken(grantType, authCode, redirectUri)
                 .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())

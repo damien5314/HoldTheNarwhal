@@ -35,6 +35,7 @@ import com.ddiehl.android.htn.io.RedditServiceAuth;
 import com.ddiehl.android.htn.presenter.MainPresenter;
 import com.ddiehl.android.htn.presenter.MainPresenterImpl;
 import com.ddiehl.android.htn.view.MainView;
+import com.ddiehl.android.htn.view.SignInListener;
 import com.ddiehl.android.htn.view.dialogs.AnalyticsDialog;
 import com.ddiehl.android.htn.view.dialogs.ConfirmSignOutDialog;
 import com.ddiehl.android.htn.view.dialogs.NsfwWarningDialog;
@@ -53,12 +54,17 @@ import butterknife.OnClick;
 import hugo.weaving.DebugLog;
 
 public class MainActivity extends AppCompatActivity implements MainView,
-        NavigationView.OnNavigationItemSelectedListener {
+        NavigationView.OnNavigationItemSelectedListener, SignInListener {
     public static final int REQUEST_NSFW_WARNING = 0x1;
     private static final String DIALOG_NSFW_WARNING = "dialog_nsfw_warning";
     private static final String DIALOG_CONFIRM_SIGN_OUT = "dialog_confirm_sign_out";
     private static final String DIALOG_ANALYTICS = "dialog_analytics";
     private static final String DIALOG_SUBREDDIT_NAVIGATION = "dialog_subreddit_navigation";
+
+    private static final String EXTRA_CUSTOM_TABS_SESSION =
+            "android.support.customtabs.extra.SESSION";
+    private static final String EXTRA_CUSTOM_TABS_TOOLBAR_COLOR =
+            "android.support.customtabs.extra.TOOLBAR_COLOR";
 
     private ProgressDialog mLoadingOverlay;
 
@@ -95,7 +101,7 @@ public class MainActivity extends AppCompatActivity implements MainView,
         }
 
         // Initialize dependencies
-        mMainPresenter = new MainPresenterImpl(this);
+        mMainPresenter = new MainPresenterImpl(this, this);
     }
 
     // FIXME Can we change this to onResume()?
@@ -197,11 +203,6 @@ public class MainActivity extends AppCompatActivity implements MainView,
         showFragment(f);
     }
 
-    private static final String EXTRA_CUSTOM_TABS_SESSION =
-            "android.support.customtabs.extra.SESSION";
-    private static final String EXTRA_CUSTOM_TABS_TOOLBAR_COLOR =
-            "android.support.customtabs.extra.TOOLBAR_COLOR";
-
     @Override @SuppressLint("NewApi")
     public void showWebViewForURL(@NonNull String url) {
         closeNavigationDrawer();
@@ -217,6 +218,14 @@ public class MainActivity extends AppCompatActivity implements MainView,
         } else {
             Fragment f = WebViewFragment.newInstance(url);
             showFragment(f);
+        }
+    }
+
+    @Override
+    public void onUserSignedIn(boolean isSignedIn) {
+        Fragment fragment = getCurrentDisplayedFragment();
+        if (fragment instanceof SettingsFragment) {
+            ((SettingsFragment) fragment).refresh(isSignedIn);
         }
     }
 
@@ -353,8 +362,11 @@ public class MainActivity extends AppCompatActivity implements MainView,
     }
 
     @Override
-    public void onSubredditNavigationCancelled() {
-        /* no-op */
+    public void onSubredditNavigationCancelled() { /* no-op */ }
+
+    @Override
+    public void onAuthCodeReceived(String authCode) {
+        mMainPresenter.onAuthCodeReceived(authCode);
     }
 
     /////////////////
@@ -404,10 +416,5 @@ public class MainActivity extends AppCompatActivity implements MainView,
         }
 
         ft.commit();
-    }
-
-    @Override
-    public void onAuthCodeReceived(String authCode) {
-        mMainPresenter.onAuthCodeReceived(authCode);
     }
 }

@@ -20,7 +20,6 @@ import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.SettingsManager;
 import com.ddiehl.android.htn.SettingsManagerImpl;
 import com.ddiehl.android.htn.events.requests.GetUserSettingsEvent;
-import com.ddiehl.android.htn.events.requests.UserSignOutEvent;
 import com.ddiehl.android.htn.events.responses.UserAuthorizedEvent;
 import com.ddiehl.android.htn.events.responses.UserSettingsRetrievedEvent;
 import com.ddiehl.android.htn.view.MainView;
@@ -93,7 +92,7 @@ public class SettingsFragment extends PreferenceFragment
         }
     }
 
-    private void refresh(boolean pullFromServer) {
+    public void refresh(boolean pullFromServer) {
         getActivity().invalidateOptionsMenu();
         getPreferenceScreen().removeAll();
         addDefaultPreferences();
@@ -145,11 +144,6 @@ public class SettingsFragment extends PreferenceFragment
     @Subscribe @SuppressWarnings("unused")
     public void onUserAuthorized(UserAuthorizedEvent event) {
         refresh(true);
-    }
-
-    @Subscribe @SuppressWarnings("unused")
-    public void onUserSignOut(UserSignOutEvent event) {
-        refresh(false);
     }
 
     private void updateAllPrefSummaries() {

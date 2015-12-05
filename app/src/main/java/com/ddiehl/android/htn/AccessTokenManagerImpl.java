@@ -3,14 +3,12 @@ package com.ddiehl.android.htn;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.ddiehl.android.htn.events.requests.UserSignOutEvent;
 import com.ddiehl.android.htn.io.RedditServiceAuth;
 import com.ddiehl.android.htn.logging.Logger;
 import com.ddiehl.reddit.identity.AccessToken;
 import com.ddiehl.reddit.identity.ApplicationAccessToken;
 import com.ddiehl.reddit.identity.AuthorizationResponse;
 import com.ddiehl.reddit.identity.UserAccessToken;
-import com.squareup.otto.Subscribe;
 
 import java.util.Date;
 
@@ -65,7 +63,7 @@ public class AccessTokenManagerImpl implements AccessTokenManager {
     public void onUserAuthCodeReceived(String authCode) {
         mIdentityManager.clearSavedUserIdentity();
         String grantType = "authorization_code";
-        mServiceAuth.getUserAuthToken(grantType, authCode, RedditServiceAuth.REDIRECT_URI)
+        mServiceAuth.getUserAccessToken(grantType, authCode, RedditServiceAuth.REDIRECT_URI)
                 .map(responseToAccessToken())
                 .subscribe(saveUserAccessToken());
     }
@@ -88,7 +86,7 @@ public class AccessTokenManagerImpl implements AccessTokenManager {
     }
 
     private Func1<AccessToken, Observable<AccessToken>> refreshUserAccessToken() {
-        return (accessToken) -> {
+        return accessToken -> {
             if (accessToken.secondsUntilExpiration() > EXPIRATION_THRESHOLD) {
                 return Observable.just(accessToken);
             } else return refreshUserAccessToken(accessToken);
@@ -196,6 +194,12 @@ public class AccessTokenManagerImpl implements AccessTokenManager {
 
     @Override
     public void clearSavedUserAccessToken() {
+        AccessToken token = getSavedUserAccessToken();
+        if (token != null) {
+            mServiceAuth.revokeAuthToken(token)
+                    .doOnRequest(response -> mIdentityManager.clearSavedUserIdentity())
+                    .subscribe();
+        }
         mContext.getSharedPreferences(PREFS_USER_ACCESS_TOKEN, Context.MODE_PRIVATE)
                 .edit().clear().apply();
     }
@@ -204,17 +208,6 @@ public class AccessTokenManagerImpl implements AccessTokenManager {
     public void clearSavedApplicationAccessToken() {
         mContext.getSharedPreferences(PREFS_APPLICATION_ACCESS_TOKEN, Context.MODE_PRIVATE)
                 .edit().clear().apply();
-    }
-
-    @Subscribe @SuppressWarnings("unused")
-    public void onUserSignOut(UserSignOutEvent event) {
-        AccessToken token = getSavedUserAccessToken();
-        if (token != null) {
-            mServiceAuth.revokeAuthToken(token).doOnRequest(response -> {
-                clearSavedUserAccessToken();
-                mIdentityManager.clearSavedUserIdentity();
-            }).subscribe();
-        }
     }
 
     ///////////////

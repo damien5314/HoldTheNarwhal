@@ -8,11 +8,12 @@ import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.SettingsManager;
 import com.ddiehl.android.htn.analytics.Analytics;
-import com.ddiehl.android.htn.events.requests.UserSignOutEvent;
 import com.ddiehl.android.htn.events.responses.UserIdentitySavedEvent;
+import com.ddiehl.android.htn.io.RedditService;
 import com.ddiehl.android.htn.logging.Logger;
 import com.ddiehl.android.htn.utils.BaseUtils;
 import com.ddiehl.android.htn.view.MainView;
+import com.ddiehl.android.htn.view.SignInListener;
 import com.ddiehl.reddit.identity.UserIdentity;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
@@ -22,16 +23,19 @@ import retrofit.Response;
 public class MainPresenterImpl implements MainPresenter {
     private Logger mLogger = HoldTheNarwhal.getLogger();
     private Bus mBus = BusProvider.getInstance();
+    protected RedditService mRedditService = HoldTheNarwhal.getRedditService();
     private AccessTokenManager mAccessTokenManager = HoldTheNarwhal.getAccessTokenManager();
     private IdentityManager mIdentityManager = HoldTheNarwhal.getIdentityManager();
     private SettingsManager mSettingsManager = HoldTheNarwhal.getSettingsManager();
     private Analytics mAnalytics = HoldTheNarwhal.getAnalytics();
 
     private MainView mMainView;
+    private SignInListener mSignInListener;
     private String mUsernameContext;
 
-    public MainPresenterImpl(MainView view) {
+    public MainPresenterImpl(MainView view, SignInListener signInListener) {
         mMainView = view;
+        mSignInListener = signInListener;
     }
 
     @Override
@@ -59,7 +63,9 @@ public class MainPresenterImpl implements MainPresenter {
     @Override
     public void signOutUser() {
         mMainView.closeNavigationDrawer();
-        mBus.post(new UserSignOutEvent());
+        mAccessTokenManager.clearSavedUserAccessToken();
+        mMainView.showToast(R.string.user_signed_out);
+        if (mSignInListener != null) mSignInListener.onUserSignedIn(false);
         mAnalytics.logSignOut();
     }
 
@@ -126,11 +132,6 @@ public class MainPresenterImpl implements MainPresenter {
                     AndroidContextProvider.getContext().getString(R.string.welcome_user), name);
             mMainView.showToast(toast);
         }
-    }
-
-    @Subscribe @SuppressWarnings("unused")
-    public void onUserSignOut(UserSignOutEvent event) {
-        mMainView.showToast(R.string.user_signed_out);
     }
 
     private UserIdentity getAuthorizedUser() {
