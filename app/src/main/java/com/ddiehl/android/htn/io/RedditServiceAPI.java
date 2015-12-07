@@ -173,12 +173,11 @@ public class RedditServiceAPI implements RedditService {
     public Observable<ListingResponse> onLoadLinks(
             @Nullable String subreddit, @Nullable String sort,
             @Nullable String timespan, @Nullable String after) {
-        return requireAccessToken().flatMap(accessToken -> Observable.create(
-                subscriber -> mAPI.getLinks(sort, subreddit, timespan, after)
+        return requireAccessToken().concatMap(token ->
+                mAPI.getLinks(sort, subreddit, timespan, after)
                         .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(response -> subscriber.onNext(response.body()),
-                                subscriber::onError)));
+                        .map(Response::body));
     }
 
     @Override
