@@ -30,7 +30,7 @@ public class AccessTokenManagerImpl implements AccessTokenManager {
 
     private Logger mLogger = HoldTheNarwhal.getLogger();
     private Context mContext = AndroidContextProvider.getContext();
-    private RedditServiceAuth mServiceAuth = new RedditServiceAuth();
+    private RedditServiceAuth mServiceAuth = HoldTheNarwhal.getRedditServiceAuth();
     private IdentityManager mIdentityManager = HoldTheNarwhal.getIdentityManager();
 
     @Override
@@ -57,15 +57,6 @@ public class AccessTokenManagerImpl implements AccessTokenManager {
     @Override
     public boolean hasValidAccessToken() {
         return getValidAccessToken() != null;
-    }
-
-    @Override
-    public void onUserAuthCodeReceived(String authCode) {
-        mIdentityManager.clearSavedUserIdentity();
-        String grantType = "authorization_code";
-        mServiceAuth.getUserAccessToken(grantType, authCode, RedditServiceAuth.REDIRECT_URI)
-                .map(responseToAccessToken())
-                .subscribe(saveUserAccessToken());
     }
 
     @Override
@@ -157,7 +148,8 @@ public class AccessTokenManagerImpl implements AccessTokenManager {
         return token;
     }
 
-    private Action1<AccessToken> saveUserAccessToken() {
+    @Override
+    public Action1<AccessToken> saveUserAccessToken() {
         return token -> {
             mLogger.d(String.format("--ACCESS TOKEN RESPONSE--\nAccess Token: %s\nRefresh Token: %s",
                     token.getToken(), token.getRefreshToken()));
@@ -176,7 +168,8 @@ public class AccessTokenManagerImpl implements AccessTokenManager {
         };
     }
 
-    private Action1<AccessToken> saveApplicationAccessToken() {
+    @Override
+    public Action1<AccessToken> saveApplicationAccessToken() {
         return token -> {
             mLogger.d(String.format("--ACCESS TOKEN RESPONSE--\nAccess Token: %s\nRefresh Token: %s",
                     token.getToken(), token.getRefreshToken()));

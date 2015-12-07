@@ -97,4 +97,23 @@ public class RedditServiceAuth {
                 .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
                 .map(Response::body);
     }
+
+    ///////////////
+    // Singleton //
+    ///////////////
+
+    private static RedditServiceAuth _instance;
+
+    private RedditServiceAuth() { }
+
+    public static RedditServiceAuth getInstance() {
+        if (_instance == null) {
+            synchronized (RedditServiceAuth.class) {
+                if (_instance == null) {
+                    _instance = new RedditServiceAuth();
+                }
+            }
+        }
+        return _instance;
+    }
 }

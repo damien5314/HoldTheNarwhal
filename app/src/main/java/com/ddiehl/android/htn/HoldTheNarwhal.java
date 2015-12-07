@@ -6,6 +6,7 @@ import com.ddiehl.android.htn.analytics.Analytics;
 import com.ddiehl.android.htn.analytics.FlurryAnalytics;
 import com.ddiehl.android.htn.io.RedditService;
 import com.ddiehl.android.htn.io.RedditServiceAPI;
+import com.ddiehl.android.htn.io.RedditServiceAuth;
 import com.ddiehl.android.htn.logging.Logger;
 import com.ddiehl.android.htn.logging.TimberLogger;
 import com.facebook.stetho.Stetho;
@@ -79,6 +80,14 @@ public class HoldTheNarwhal extends Application {
      */
     public static SettingsManager getSettingsManager() {
         return SettingsManagerImpl.getInstance();
+    }
+
+    /**
+     * Provides an instance of {@link RedditServiceAuth} with which to retrieve OAuth2 tokens
+     * @return Instance of {@link RedditServiceAuth}
+     */
+    public static RedditServiceAuth getRedditServiceAuth() {
+        return RedditServiceAuth.getInstance();
     }
 
     /**

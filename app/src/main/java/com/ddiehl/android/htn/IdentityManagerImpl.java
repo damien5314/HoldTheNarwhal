@@ -48,33 +48,28 @@ public class IdentityManagerImpl implements IdentityManager {
 
     private UserIdentity getSavedUserIdentity() {
         SharedPreferences prefs = mContext.getSharedPreferences(PREFS_USER_IDENTITY, Context.MODE_PRIVATE);
-
-        if (prefs.contains(PREF_ID)) {
-            UserIdentity id = new UserIdentity();
-            id.hasMail(prefs.getBoolean(PREF_HAS_MAIL, false));
-            id.setName(prefs.getString(PREF_NAME, null));
-            id.setCreated(prefs.getLong(PREF_CREATED, new Date().getTime()));
-            id.isHiddenFromRobots(prefs.getBoolean(PREF_HIDE_FROM_ROBOTS, false));
-            id.setGoldCreddits(prefs.getInt(PREF_GOLD_CREDDITS, 0));
-            id.setCreatedUTC(prefs.getLong(PREF_CREATED_UTC, new Date().getTime()));
-            id.hasModMail(prefs.getBoolean(PREF_HAS_MOD_MAIL, false));
-            id.setLinkKarma(prefs.getInt(PREF_LINK_KARMA, 0));
-            id.setCommentKarma(prefs.getInt(PREF_COMMENT_KARMA, 0));
-            id.isOver18(prefs.getBoolean(PREF_IS_OVER_18, false));
-            id.isGold(prefs.getBoolean(PREF_IS_GOLD, false));
-            id.isMod(prefs.getBoolean(PREF_IS_MOD, false));
-            id.setGoldExpiration(prefs.getLong(PREF_GOLD_EXPIRATION, 0));
-            id.hasVerifiedEmail(prefs.getBoolean(PREF_HAS_VERIFIED_EMAIL, false));
-            id.setId(prefs.getString(PREF_ID, null));
-            id.setInboxCount(prefs.getInt(PREF_INBOX_COUNT, 0));
-            return id;
-        }
-
-        return null;
+        if (!prefs.contains(PREF_ID)) return null;
+        UserIdentity id = new UserIdentity();
+        id.hasMail(prefs.getBoolean(PREF_HAS_MAIL, false));
+        id.setName(prefs.getString(PREF_NAME, null));
+        id.setCreated(prefs.getLong(PREF_CREATED, new Date().getTime()));
+        id.isHiddenFromRobots(prefs.getBoolean(PREF_HIDE_FROM_ROBOTS, false));
+        id.setGoldCreddits(prefs.getInt(PREF_GOLD_CREDDITS, 0));
+        id.setCreatedUTC(prefs.getLong(PREF_CREATED_UTC, new Date().getTime()));
+        id.hasModMail(prefs.getBoolean(PREF_HAS_MOD_MAIL, false));
+        id.setLinkKarma(prefs.getInt(PREF_LINK_KARMA, 0));
+        id.setCommentKarma(prefs.getInt(PREF_COMMENT_KARMA, 0));
+        id.isOver18(prefs.getBoolean(PREF_IS_OVER_18, false));
+        id.isGold(prefs.getBoolean(PREF_IS_GOLD, false));
+        id.isMod(prefs.getBoolean(PREF_IS_MOD, false));
+        id.setGoldExpiration(prefs.getLong(PREF_GOLD_EXPIRATION, 0));
+        id.hasVerifiedEmail(prefs.getBoolean(PREF_HAS_VERIFIED_EMAIL, false));
+        id.setId(prefs.getString(PREF_ID, null));
+        id.setInboxCount(prefs.getInt(PREF_INBOX_COUNT, 0));
+        return id;
     }
 
-    @Override
-    @Subscribe
+    @Override @Subscribe
     public void onUserIdentityRetrieved(UserIdentityRetrievedEvent event) {
         UserIdentity id = event.getUserIdentity();
         saveUserIdentity(id);

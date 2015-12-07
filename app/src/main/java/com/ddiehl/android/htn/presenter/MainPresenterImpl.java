@@ -8,22 +8,31 @@ import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.SettingsManager;
 import com.ddiehl.android.htn.analytics.Analytics;
+import com.ddiehl.android.htn.events.requests.GetUserIdentityEvent;
 import com.ddiehl.android.htn.events.responses.UserIdentitySavedEvent;
 import com.ddiehl.android.htn.io.RedditService;
+import com.ddiehl.android.htn.io.RedditServiceAuth;
 import com.ddiehl.android.htn.logging.Logger;
 import com.ddiehl.android.htn.utils.BaseUtils;
 import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.android.htn.view.SignInListener;
+import com.ddiehl.reddit.identity.AccessToken;
+import com.ddiehl.reddit.identity.AuthorizationResponse;
+import com.ddiehl.reddit.identity.UserAccessToken;
 import com.ddiehl.reddit.identity.UserIdentity;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
+import java.util.Date;
+
 import retrofit.Response;
+import rx.functions.Func1;
 
 public class MainPresenterImpl implements MainPresenter {
     private Logger mLogger = HoldTheNarwhal.getLogger();
     private Bus mBus = BusProvider.getInstance();
     protected RedditService mRedditService = HoldTheNarwhal.getRedditService();
+    protected RedditServiceAuth mRedditServiceAuth = HoldTheNarwhal.getRedditServiceAuth();
     private AccessTokenManager mAccessTokenManager = HoldTheNarwhal.getAccessTokenManager();
     private IdentityManager mIdentityManager = HoldTheNarwhal.getIdentityManager();
     private SettingsManager mSettingsManager = HoldTheNarwhal.getSettingsManager();
@@ -110,7 +119,29 @@ public class MainPresenterImpl implements MainPresenter {
 
     @Override
     public void onAuthCodeReceived(String authCode) {
-        mAccessTokenManager.onUserAuthCodeReceived(authCode);
+//        mAccessTokenManager.onUserAuthCodeReceived(authCode);
+        mIdentityManager.clearSavedUserIdentity();
+        String grantType = "authorization_code";
+        mRedditServiceAuth.getUserAccessToken(grantType, authCode, RedditServiceAuth.REDIRECT_URI)
+                .map(responseToAccessToken())
+                .subscribe(response -> {
+                    mAccessTokenManager.saveUserAccessToken().call(response);
+                    // TODO
+                    // Replace event here with functional style
+                    mRedditService.onGetUserIdentity(new GetUserIdentityEvent());
+                });
+    }
+
+    private Func1<AuthorizationResponse, AccessToken> responseToAccessToken() {
+        return response -> {
+            AccessToken token = new UserAccessToken();
+            token.setToken(response.getToken());
+            token.setTokenType(response.getToken());
+            token.setExpiration(response.getExpiresIn() * 1000 + new Date().getTime());
+            token.setScope(response.getScope());
+            token.setRefreshToken(response.getRefreshToken());
+            return token;
+        };
     }
 
     @Subscribe @SuppressWarnings("unused")
