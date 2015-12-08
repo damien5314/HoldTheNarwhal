@@ -20,6 +20,7 @@ import android.view.View;
 import com.ddiehl.android.htn.BusProvider;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
+import com.ddiehl.android.htn.UserIdentityListener;
 import com.ddiehl.android.htn.analytics.Analytics;
 import com.ddiehl.android.htn.presenter.ListingsPresenter;
 import com.ddiehl.android.htn.view.ListingsView;
@@ -28,14 +29,16 @@ import com.ddiehl.android.htn.view.activities.MainActivity;
 import com.ddiehl.android.htn.view.adapters.ListingsAdapter;
 import com.ddiehl.android.htn.view.dialogs.ChooseLinkSortDialog;
 import com.ddiehl.android.htn.view.dialogs.ChooseTimespanDialog;
+import com.ddiehl.reddit.identity.UserIdentity;
 import com.ddiehl.reddit.listings.Comment;
 import com.ddiehl.reddit.listings.Link;
 import com.squareup.otto.Bus;
 
 import butterknife.ButterKnife;
+import rx.functions.Action1;
 
 public abstract class AbsListingsFragment extends Fragment
-        implements ListingsView, SwipeRefreshLayout.OnRefreshListener {
+        implements ListingsView, SwipeRefreshLayout.OnRefreshListener, UserIdentityListener {
 
     private static final int REQUEST_CHOOSE_SORT = 0x2;
     private static final int REQUEST_CHOOSE_TIMESPAN = 0x3;
@@ -383,6 +386,15 @@ public abstract class AbsListingsFragment extends Fragment
     @Override
     public void listingRemovedAt(int position) {
         mListingsAdapter.notifyItemRemoved(position);
+    }
+
+    @Override
+    public Action1<UserIdentity> onUserIdentityChanged() {
+        return identity -> {
+            if (mListingsPresenter instanceof UserIdentityListener) {
+                ((UserIdentityListener) mListingsPresenter).onUserIdentityChanged().call(identity);
+            }
+        };
     }
 
     @Override

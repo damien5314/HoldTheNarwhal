@@ -10,6 +10,7 @@ import com.ddiehl.android.htn.BusProvider;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.SettingsManager;
+import com.ddiehl.android.htn.UserIdentityListener;
 import com.ddiehl.android.htn.analytics.Analytics;
 import com.ddiehl.android.htn.events.requests.HideEvent;
 import com.ddiehl.android.htn.events.requests.LoadLinkCommentsEvent;
@@ -19,7 +20,6 @@ import com.ddiehl.android.htn.events.requests.VoteEvent;
 import com.ddiehl.android.htn.events.responses.LinkCommentsLoadedEvent;
 import com.ddiehl.android.htn.events.responses.MoreChildrenLoadedEvent;
 import com.ddiehl.android.htn.events.responses.SaveSubmittedEvent;
-import com.ddiehl.android.htn.events.responses.UserIdentitySavedEvent;
 import com.ddiehl.android.htn.events.responses.VoteSubmittedEvent;
 import com.ddiehl.android.htn.model.CommentBank;
 import com.ddiehl.android.htn.model.CommentBankList;
@@ -28,6 +28,7 @@ import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.reddit.Archivable;
 import com.ddiehl.reddit.Savable;
 import com.ddiehl.reddit.Votable;
+import com.ddiehl.reddit.identity.UserIdentity;
 import com.ddiehl.reddit.listings.AbsComment;
 import com.ddiehl.reddit.listings.Comment;
 import com.ddiehl.reddit.listings.CommentStub;
@@ -38,7 +39,9 @@ import com.squareup.otto.Subscribe;
 
 import java.util.List;
 
-public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
+import rx.functions.Action1;
+
+public class LinkCommentsPresenterImpl implements LinkCommentsPresenter, UserIdentityListener {
     private static final int MAX_CHILDREN_PER_REQUEST = 20;
 
     private MainView mMainView;
@@ -80,10 +83,15 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
     }
 
     @Override
-    public void getComments() {
+    public void requestData() {
         mMainView.showSpinner(null);
         mBus.post(new LoadLinkCommentsEvent(mSubreddit, mLinkId, mSort, mCommentId));
         mAnalytics.logLoadLinkComments(mSort);
+    }
+
+    @Override
+    public Action1<UserIdentity> onUserIdentityChanged() {
+        return identity -> requestData();
     }
 
     @Subscribe @SuppressWarnings("unused")
@@ -153,7 +161,7 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
         if (!mSort.equals(sort)) {
             mSort = sort;
             mSettingsManager.saveCommentSort(mSort);
-            getComments();
+            requestData();
         }
     }
 
@@ -315,13 +323,7 @@ public class LinkCommentsPresenterImpl implements LinkCommentsPresenter {
         // so only set if it's not null
         mSubreddit = subreddit == null ? mSubreddit : subreddit;
         mCommentId = commentId.contains("_") ? commentId.substring(3) : commentId; // Remove type prefix
-//        getComments();
         mLinkCommentsView.showCommentsForLink(mSubreddit, mLinkId, mCommentId);
-    }
-
-    @Subscribe  @SuppressWarnings("unused")
-    public void onUserIdentitySaved(UserIdentitySavedEvent event) {
-        getComments();
     }
 
     @Subscribe @SuppressWarnings("unused")

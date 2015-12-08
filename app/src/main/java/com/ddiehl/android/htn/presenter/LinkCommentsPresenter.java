@@ -9,7 +9,7 @@ import com.ddiehl.reddit.listings.Link;
 public interface LinkCommentsPresenter extends BasePresenter, LinkPresenter, CommentPresenter {
 
     Link getLinkContext();
-    void getComments();
+    void requestData();
     void getMoreChildren(@NonNull CommentStub comment);
     void toggleThreadVisible(@NonNull AbsComment comment);
 

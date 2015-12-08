@@ -12,13 +12,13 @@ import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.SettingsManager;
+import com.ddiehl.android.htn.UserIdentityListener;
 import com.ddiehl.android.htn.analytics.Analytics;
 import com.ddiehl.android.htn.events.requests.HideEvent;
 import com.ddiehl.android.htn.events.requests.SaveEvent;
 import com.ddiehl.android.htn.events.requests.VoteEvent;
 import com.ddiehl.android.htn.events.responses.HideSubmittedEvent;
 import com.ddiehl.android.htn.events.responses.SaveSubmittedEvent;
-import com.ddiehl.android.htn.events.responses.UserIdentitySavedEvent;
 import com.ddiehl.android.htn.events.responses.UserInfoLoadedEvent;
 import com.ddiehl.android.htn.events.responses.VoteSubmittedEvent;
 import com.ddiehl.android.htn.io.RedditService;
@@ -44,7 +44,7 @@ import java.util.List;
 
 import rx.functions.Action1;
 
-public abstract class AbsListingsPresenter implements ListingsPresenter {
+public abstract class AbsListingsPresenter implements ListingsPresenter, UserIdentityListener {
     protected Logger mLogger = HoldTheNarwhal.getLogger();
     protected Bus mBus = BusProvider.getInstance();
     protected AccessTokenManager mAccessTokenManager = HoldTheNarwhal.getAccessTokenManager();
@@ -120,6 +120,13 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
     }
 
     @Override
+    public Action1<UserIdentity> onUserIdentityChanged() {
+        return identity -> {
+            refreshData();
+        };
+    }
+
+    @Override
     public int getNumListings() {
         return mListings.size();
     }
@@ -169,11 +176,6 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
         mSubreddit = subreddit;
         mSort = "hot";
         mTimespan = "all";
-        refreshData();
-    }
-
-    @Subscribe
-    public void onUserIdentitySaved(UserIdentitySavedEvent event) {
         refreshData();
     }
 
@@ -503,11 +505,6 @@ public abstract class AbsListingsPresenter implements ListingsPresenter {
     @Override
     public UserIdentity getAuthorizedUser() {
         return mIdentityManager.getUserIdentity();
-    }
-
-    @Override
-    public boolean dataRequested() {
-        return mListingsRequested;
     }
 
     @Override

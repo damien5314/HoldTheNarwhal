@@ -4,7 +4,6 @@ import com.ddiehl.android.htn.events.requests.GetSubredditInfoEvent;
 import com.ddiehl.android.htn.events.responses.HideSubmittedEvent;
 import com.ddiehl.android.htn.events.responses.SaveSubmittedEvent;
 import com.ddiehl.android.htn.events.responses.SubredditInfoLoadedEvent;
-import com.ddiehl.android.htn.events.responses.UserIdentitySavedEvent;
 import com.ddiehl.android.htn.events.responses.VoteSubmittedEvent;
 import com.ddiehl.android.htn.view.ListingsView;
 import com.ddiehl.android.htn.view.MainView;
@@ -51,11 +50,6 @@ public class SubredditPresenter extends AbsListingsPresenter {
         }
 
         mMainView.onSubredditInfoLoaded(mSubredditInfo);
-    }
-
-    @Subscribe @Override
-    public void onUserIdentitySaved(UserIdentitySavedEvent event) {
-        super.onUserIdentitySaved(event);
     }
 
     @Override

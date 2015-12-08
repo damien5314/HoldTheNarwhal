@@ -3,7 +3,6 @@ package com.ddiehl.android.htn;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.ddiehl.android.htn.events.responses.UserIdentitySavedEvent;
 import com.ddiehl.reddit.identity.UserIdentity;
 import com.squareup.otto.Bus;
 
@@ -105,8 +104,6 @@ public class IdentityManagerImpl implements IdentityManager {
                 .putString(PREF_ID, id)
                 .putInt(PREF_INBOX_COUNT, inboxCount)
                 .apply();
-
-        mBus.post(new UserIdentitySavedEvent(identity));
     }
 
     @Override
