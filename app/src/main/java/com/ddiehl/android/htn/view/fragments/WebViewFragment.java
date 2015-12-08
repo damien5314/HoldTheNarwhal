@@ -24,7 +24,7 @@ import android.widget.ZoomButtonsController;
 import com.ddiehl.android.htn.BuildConfig;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
-import com.ddiehl.android.htn.io.RedditServiceAuth;
+import com.ddiehl.android.htn.io.RedditAuthService;
 import com.ddiehl.android.htn.logging.Logger;
 import com.ddiehl.android.htn.utils.AuthUtils;
 import com.ddiehl.android.htn.utils.BaseUtils;
@@ -100,8 +100,8 @@ public class WebViewFragment extends Fragment {
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 mLogger.d("Loading URL: " + url);
 
-                if (url.contains(RedditServiceAuth.REDIRECT_URI)
-                        && !url.equals(RedditServiceAuth.AUTHORIZATION_URL)) {
+                if (url.contains(RedditAuthService.REDIRECT_URI)
+                        && !url.equals(RedditAuthService.AUTHORIZATION_URL)) {
                     // Pass auth code back to the Activity, which will pop this fragment
                     String authCode = AuthUtils.getUserAuthCodeFromRedirectUri(url);
 //                    mBus.post(new UserAuthCodeReceivedEvent(authCode));

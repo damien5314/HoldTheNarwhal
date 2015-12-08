@@ -3,7 +3,7 @@ package com.ddiehl.android.htn;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.ddiehl.android.htn.io.RedditServiceAuth;
+import com.ddiehl.android.htn.io.RedditAuthService;
 import com.ddiehl.android.htn.logging.Logger;
 import com.ddiehl.reddit.identity.AccessToken;
 import com.ddiehl.reddit.identity.ApplicationAccessToken;
@@ -30,7 +30,7 @@ public class AccessTokenManagerImpl implements AccessTokenManager {
 
     private Logger mLogger = HoldTheNarwhal.getLogger();
     private Context mContext = AndroidContextProvider.getContext();
-    private RedditServiceAuth mServiceAuth = HoldTheNarwhal.getRedditServiceAuth();
+    private RedditAuthService mServiceAuth = HoldTheNarwhal.getRedditServiceAuth();
     private IdentityManager mIdentityManager = HoldTheNarwhal.getIdentityManager();
 
     @Override

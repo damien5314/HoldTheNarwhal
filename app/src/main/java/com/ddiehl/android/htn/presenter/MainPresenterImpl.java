@@ -11,7 +11,7 @@ import com.ddiehl.android.htn.analytics.Analytics;
 import com.ddiehl.android.htn.events.requests.GetUserIdentityEvent;
 import com.ddiehl.android.htn.events.responses.UserIdentitySavedEvent;
 import com.ddiehl.android.htn.io.RedditService;
-import com.ddiehl.android.htn.io.RedditServiceAuth;
+import com.ddiehl.android.htn.io.RedditAuthService;
 import com.ddiehl.android.htn.logging.Logger;
 import com.ddiehl.android.htn.utils.BaseUtils;
 import com.ddiehl.android.htn.view.MainView;
@@ -32,7 +32,7 @@ public class MainPresenterImpl implements MainPresenter {
     private Logger mLogger = HoldTheNarwhal.getLogger();
     private Bus mBus = BusProvider.getInstance();
     protected RedditService mRedditService = HoldTheNarwhal.getRedditService();
-    protected RedditServiceAuth mRedditServiceAuth = HoldTheNarwhal.getRedditServiceAuth();
+    protected RedditAuthService mRedditAuthService = HoldTheNarwhal.getRedditServiceAuth();
     private AccessTokenManager mAccessTokenManager = HoldTheNarwhal.getAccessTokenManager();
     private IdentityManager mIdentityManager = HoldTheNarwhal.getIdentityManager();
     private SettingsManager mSettingsManager = HoldTheNarwhal.getSettingsManager();
@@ -122,7 +122,7 @@ public class MainPresenterImpl implements MainPresenter {
 //        mAccessTokenManager.onUserAuthCodeReceived(authCode);
         mIdentityManager.clearSavedUserIdentity();
         String grantType = "authorization_code";
-        mRedditServiceAuth.getUserAccessToken(grantType, authCode, RedditServiceAuth.REDIRECT_URI)
+        mRedditAuthService.getUserAccessToken(grantType, authCode, RedditAuthService.REDIRECT_URI)
                 .map(responseToAccessToken())
                 .subscribe(response -> {
                     mAccessTokenManager.saveUserAccessToken().call(response);

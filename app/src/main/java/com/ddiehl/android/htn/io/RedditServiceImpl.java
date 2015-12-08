@@ -77,13 +77,13 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
-public class RedditServiceAPI implements RedditService {
+public class RedditServiceImpl implements RedditService {
     private Bus mBus = BusProvider.getInstance();
     private AccessTokenManager mAccessTokenManager = HoldTheNarwhal.getAccessTokenManager();
     private Analytics mAnalytics = HoldTheNarwhal.getAnalytics();
     private RedditAPI mAPI;
 
-    RedditServiceAPI() {
+    RedditServiceImpl() {
         mAPI = buildApi();
     }
 
@@ -163,10 +163,6 @@ public class RedditServiceAPI implements RedditService {
                             mBus.post(error);
                             mBus.post(new UserSettingsUpdatedEvent(error));
                         });
-    }
-
-    private Observable<AccessToken> requireAccessToken() {
-        return mAccessTokenManager.getAccessToken();
     }
 
     @Override
@@ -441,17 +437,21 @@ public class RedditServiceAPI implements RedditService {
                         });
     }
 
+    private Observable<AccessToken> requireAccessToken() {
+        return mAccessTokenManager.getAccessToken();
+    }
+
     ///////////////
     // Singleton //
     ///////////////
 
-    private static RedditServiceAPI _instance;
+    private static RedditServiceImpl _instance;
 
-    public static RedditServiceAPI getInstance() {
+    public static RedditServiceImpl getInstance() {
         if (_instance == null) {
-            synchronized (RedditServiceAPI.class) {
+            synchronized (RedditServiceImpl.class) {
                 if (_instance == null) {
-                    _instance = new RedditServiceAPI();
+                    _instance = new RedditServiceImpl();
                 }
             }
         }

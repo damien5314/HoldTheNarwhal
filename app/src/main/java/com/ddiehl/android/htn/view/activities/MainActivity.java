@@ -31,7 +31,7 @@ import android.widget.TextView;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.analytics.Analytics;
-import com.ddiehl.android.htn.io.RedditServiceAuth;
+import com.ddiehl.android.htn.io.RedditAuthService;
 import com.ddiehl.android.htn.presenter.MainPresenter;
 import com.ddiehl.android.htn.presenter.MainPresenterImpl;
 import com.ddiehl.android.htn.view.MainView;
@@ -180,7 +180,7 @@ public class MainActivity extends AppCompatActivity implements MainView,
     @Override
     public void showLoginView() {
         closeNavigationDrawer();
-        showWebViewForURL(RedditServiceAuth.AUTHORIZATION_URL);
+        showWebViewForURL(RedditAuthService.AUTHORIZATION_URL);
     }
 
     @Override

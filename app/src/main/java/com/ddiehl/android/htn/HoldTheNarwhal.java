@@ -4,9 +4,10 @@ import android.app.Application;
 
 import com.ddiehl.android.htn.analytics.Analytics;
 import com.ddiehl.android.htn.analytics.FlurryAnalytics;
+import com.ddiehl.android.htn.io.RedditAuthServiceImpl;
 import com.ddiehl.android.htn.io.RedditService;
-import com.ddiehl.android.htn.io.RedditServiceAPI;
-import com.ddiehl.android.htn.io.RedditServiceAuth;
+import com.ddiehl.android.htn.io.RedditServiceImpl;
+import com.ddiehl.android.htn.io.RedditAuthService;
 import com.ddiehl.android.htn.logging.Logger;
 import com.ddiehl.android.htn.logging.TimberLogger;
 import com.facebook.stetho.Stetho;
@@ -83,11 +84,11 @@ public class HoldTheNarwhal extends Application {
     }
 
     /**
-     * Provides an instance of {@link RedditServiceAuth} with which to retrieve OAuth2 tokens
-     * @return Instance of {@link RedditServiceAuth}
+     * Provides an instance of {@link RedditAuthServiceImpl} with which to retrieve OAuth2 tokens
+     * @return Instance of {@link RedditAuthServiceImpl}
      */
-    public static RedditServiceAuth getRedditServiceAuth() {
-        return RedditServiceAuth.getInstance();
+    public static RedditAuthService getRedditServiceAuth() {
+        return RedditAuthServiceImpl.getInstance();
     }
 
     /**
@@ -95,7 +96,7 @@ public class HoldTheNarwhal extends Application {
      * @return Instance of {@link RedditService}
      */
     public static RedditService getRedditService() {
-        return RedditServiceAPI.getInstance();
+        return RedditServiceImpl.getInstance();
     }
 
     /**

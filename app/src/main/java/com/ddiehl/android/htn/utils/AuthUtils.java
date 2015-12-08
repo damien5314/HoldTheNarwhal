@@ -3,7 +3,7 @@ package com.ddiehl.android.htn.utils;
 import android.net.Uri;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
-import com.ddiehl.android.htn.io.RedditServiceAuth;
+import com.ddiehl.android.htn.io.RedditAuthService;
 
 public class AuthUtils {
     public static String getUserAuthCodeFromRedirectUri(String url) {
@@ -13,9 +13,9 @@ public class AuthUtils {
 
         // Verify state parameter is correct
         String returnedState = getValueFromQuery(params[0]);
-        if (!returnedState.equals(RedditServiceAuth.STATE)) {
+        if (!returnedState.equals(RedditAuthService.STATE)) {
             HoldTheNarwhal.getLogger().e("STATE does not match: %s (EXPECTED: %s)",
-                    returnedState, RedditServiceAuth.STATE);
+                    returnedState, RedditAuthService.STATE);
             return null;
         }
 
