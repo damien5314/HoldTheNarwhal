@@ -8,10 +8,8 @@ import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.SettingsManager;
 import com.ddiehl.android.htn.analytics.Analytics;
-import com.ddiehl.android.htn.events.requests.GetUserIdentityEvent;
-import com.ddiehl.android.htn.events.responses.UserIdentitySavedEvent;
-import com.ddiehl.android.htn.io.RedditService;
 import com.ddiehl.android.htn.io.RedditAuthService;
+import com.ddiehl.android.htn.io.RedditService;
 import com.ddiehl.android.htn.logging.Logger;
 import com.ddiehl.android.htn.utils.BaseUtils;
 import com.ddiehl.android.htn.view.MainView;
@@ -26,6 +24,7 @@ import com.squareup.otto.Subscribe;
 import java.util.Date;
 
 import retrofit.Response;
+import rx.functions.Action0;
 import rx.functions.Func1;
 
 public class MainPresenterImpl implements MainPresenter {
@@ -119,16 +118,29 @@ public class MainPresenterImpl implements MainPresenter {
 
     @Override
     public void onAuthCodeReceived(String authCode) {
-//        mAccessTokenManager.onUserAuthCodeReceived(authCode);
         mIdentityManager.clearSavedUserIdentity();
         String grantType = "authorization_code";
         mRedditAuthService.getUserAccessToken(grantType, authCode, RedditAuthService.REDIRECT_URI)
                 .map(responseToAccessToken())
                 .subscribe(response -> {
                     mAccessTokenManager.saveUserAccessToken().call(response);
-                    // TODO
-                    // Replace event here with functional style
-                    mRedditService.onGetUserIdentity(new GetUserIdentityEvent());
+                    getUserIdentity().call();
+                });
+    }
+
+    @Override
+    public Action0 getUserIdentity() {
+        return () -> mRedditService.getUserIdentity()
+                .subscribe(identity -> {
+                    mMainView.updateUserIdentity(identity);
+                    if (identity != null) {
+                        // FIXME Ensure we only show this when the user changes
+                        String name = identity.getName();
+                        String toast = String.format(
+                                AndroidContextProvider.getContext().getString(R.string.welcome_user),
+                                name);
+                        mMainView.showToast(toast);
+                    }
                 });
     }
 
@@ -150,19 +162,6 @@ public class MainPresenterImpl implements MainPresenter {
 //        Log.e("HTN", Log.getStackTraceString(error));
         mMainView.showToast(BaseUtils.getFriendlyError(error));
         mAnalytics.logApiError(error);
-    }
-
-    @Subscribe @SuppressWarnings("unused")
-    public void onUserIdentitySaved(UserIdentitySavedEvent event) {
-        UserIdentity user = event.getUserIdentity();
-        mMainView.updateUserIdentity(user);
-        if (user != null) {
-            // FIXME Ensure we only show this when the user changes
-            String name = user.getName();
-            String toast = String.format(
-                    AndroidContextProvider.getContext().getString(R.string.welcome_user), name);
-            mMainView.showToast(toast);
-        }
     }
 
     private UserIdentity getAuthorizedUser() {

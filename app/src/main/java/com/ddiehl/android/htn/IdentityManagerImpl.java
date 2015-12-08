@@ -3,11 +3,9 @@ package com.ddiehl.android.htn;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.ddiehl.android.htn.events.responses.UserIdentityRetrievedEvent;
 import com.ddiehl.android.htn.events.responses.UserIdentitySavedEvent;
 import com.ddiehl.reddit.identity.UserIdentity;
 import com.squareup.otto.Bus;
-import com.squareup.otto.Subscribe;
 
 import java.util.Date;
 
@@ -67,12 +65,6 @@ public class IdentityManagerImpl implements IdentityManager {
         id.setId(prefs.getString(PREF_ID, null));
         id.setInboxCount(prefs.getInt(PREF_INBOX_COUNT, 0));
         return id;
-    }
-
-    @Override @Subscribe
-    public void onUserIdentityRetrieved(UserIdentityRetrievedEvent event) {
-        UserIdentity id = event.getUserIdentity();
-        saveUserIdentity(id);
     }
 
     @Override
