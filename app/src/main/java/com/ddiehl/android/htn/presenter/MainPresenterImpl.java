@@ -132,6 +132,7 @@ public class MainPresenterImpl implements MainPresenter {
     public Action0 getUserIdentity() {
         return () -> mRedditService.getUserIdentity()
                 .subscribe(identity -> {
+                    mIdentityManager.saveUserIdentity(identity);
                     mMainView.updateUserIdentity(identity);
                     if (identity != null) {
                         // FIXME Ensure we only show this when the user changes

@@ -22,7 +22,6 @@ import android.view.ViewGroup;
 import com.ddiehl.android.htn.BusProvider;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
-import com.ddiehl.android.htn.UserIdentityListener;
 import com.ddiehl.android.htn.analytics.Analytics;
 import com.ddiehl.android.htn.presenter.LinkCommentsPresenter;
 import com.ddiehl.android.htn.presenter.LinkCommentsPresenterImpl;
@@ -31,16 +30,14 @@ import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.android.htn.view.activities.MainActivity;
 import com.ddiehl.android.htn.view.adapters.LinkCommentsAdapter;
 import com.ddiehl.android.htn.view.dialogs.ChooseCommentSortDialog;
-import com.ddiehl.reddit.identity.UserIdentity;
 import com.ddiehl.reddit.listings.Comment;
 import com.ddiehl.reddit.listings.Link;
 import com.squareup.otto.Bus;
 
 import butterknife.ButterKnife;
-import rx.functions.Action1;
 
 public class LinkCommentsFragment extends Fragment
-        implements LinkCommentsView, SwipeRefreshLayout.OnRefreshListener, UserIdentityListener {
+        implements LinkCommentsView, SwipeRefreshLayout.OnRefreshListener {
     private static final String ARG_SUBREDDIT = "subreddit";
     private static final String ARG_ARTICLE = "article";
     private static final String ARG_COMMENT_ID = "comment_id";
@@ -382,15 +379,6 @@ public class LinkCommentsFragment extends Fragment
     @Override
     public void openReplyView(@NonNull Comment comment) {
         mMainView.showToast(R.string.implementation_pending);
-    }
-
-    @Override
-    public Action1<UserIdentity> onUserIdentityChanged() {
-        return identity -> {
-            if (mLinkCommentsPresenter instanceof UserIdentityListener) {
-                ((UserIdentityListener) mLinkCommentsPresenter).onUserIdentityChanged().call(identity);
-            }
-        };
     }
 
     @Override

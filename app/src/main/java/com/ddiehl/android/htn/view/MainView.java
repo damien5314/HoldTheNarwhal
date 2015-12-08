@@ -39,5 +39,4 @@ public interface MainView extends AnalyticsDialog.Callbacks, ConfirmSignOutDialo
     void showToast(@NonNull String msg);
     void showToast(@StringRes int resId);
     void onSubredditInfoLoaded(@NonNull Subreddit subredditInfo);
-
 }

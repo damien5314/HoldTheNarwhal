@@ -8,9 +8,9 @@ import android.view.View;
 import com.ddiehl.android.htn.AccessTokenManager;
 import com.ddiehl.android.htn.BusProvider;
 import com.ddiehl.android.htn.HoldTheNarwhal;
+import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.SettingsManager;
-import com.ddiehl.android.htn.UserIdentityListener;
 import com.ddiehl.android.htn.analytics.Analytics;
 import com.ddiehl.android.htn.events.requests.HideEvent;
 import com.ddiehl.android.htn.events.requests.LoadLinkCommentsEvent;
@@ -41,7 +41,8 @@ import java.util.List;
 
 import rx.functions.Action1;
 
-public class LinkCommentsPresenterImpl implements LinkCommentsPresenter, UserIdentityListener {
+public class LinkCommentsPresenterImpl
+        implements LinkCommentsPresenter, IdentityManager.Callbacks {
     private static final int MAX_CHILDREN_PER_REQUEST = 20;
 
     private MainView mMainView;

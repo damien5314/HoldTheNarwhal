@@ -4,9 +4,10 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.ddiehl.reddit.identity.UserIdentity;
-import com.squareup.otto.Bus;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 public class IdentityManagerImpl implements IdentityManager {
     private static final String PREFS_USER_IDENTITY = "prefs_user_identity";
@@ -27,9 +28,9 @@ public class IdentityManagerImpl implements IdentityManager {
     private static final String PREF_ID = "pref_id";
     private static final String PREF_INBOX_COUNT = "pref_inbox_count";
 
-    private Bus mBus = BusProvider.getInstance();
     private Context mContext = AndroidContextProvider.getContext();
     private UserIdentity mUserIdentity;
+    private Set<Callbacks> mListeners = new HashSet<>();
 
     private IdentityManagerImpl() {
         mUserIdentity = getSavedUserIdentity();
@@ -85,7 +86,8 @@ public class IdentityManagerImpl implements IdentityManager {
         String id = identity.getId();
         Integer inboxCount = identity.getInboxCount();
 
-        SharedPreferences prefs = mContext.getSharedPreferences(PREFS_USER_IDENTITY, Context.MODE_PRIVATE);
+        SharedPreferences prefs =
+                mContext.getSharedPreferences(PREFS_USER_IDENTITY, Context.MODE_PRIVATE);
         prefs.edit()
                 .putBoolean(PREF_HAS_MAIL, hasMail)
                 .putString(PREF_NAME, name)
@@ -104,6 +106,8 @@ public class IdentityManagerImpl implements IdentityManager {
                 .putString(PREF_ID, id)
                 .putInt(PREF_INBOX_COUNT, inboxCount)
                 .apply();
+
+        notifyListeners();
     }
 
     @Override
@@ -112,6 +116,23 @@ public class IdentityManagerImpl implements IdentityManager {
         mContext.getSharedPreferences(PREFS_USER_IDENTITY, Context.MODE_PRIVATE)
                 .edit().clear().apply();
         HoldTheNarwhal.getSettingsManager().clearUserSettings();
+        notifyListeners();
+    }
+
+    @Override
+    public void registerUserIdentityChangeListener(Callbacks listener) {
+        mListeners.add(listener);
+    }
+
+    @Override
+    public void unregisterUserIdentityChangeListener(Callbacks listener) {
+        mListeners.remove(listener);
+    }
+
+    private void notifyListeners() {
+        for (Callbacks listener : mListeners) {
+            listener.onUserIdentityChanged().call(mUserIdentity);
+        }
     }
 
     ///////////////

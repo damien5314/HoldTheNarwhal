@@ -12,7 +12,6 @@ import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.SettingsManager;
-import com.ddiehl.android.htn.UserIdentityListener;
 import com.ddiehl.android.htn.analytics.Analytics;
 import com.ddiehl.android.htn.events.requests.HideEvent;
 import com.ddiehl.android.htn.events.requests.SaveEvent;
@@ -44,7 +43,8 @@ import java.util.List;
 
 import rx.functions.Action1;
 
-public abstract class AbsListingsPresenter implements ListingsPresenter, UserIdentityListener {
+public abstract class AbsListingsPresenter
+        implements ListingsPresenter, IdentityManager.Callbacks {
     protected Logger mLogger = HoldTheNarwhal.getLogger();
     protected Bus mBus = BusProvider.getInstance();
     protected AccessTokenManager mAccessTokenManager = HoldTheNarwhal.getAccessTokenManager();
@@ -84,6 +84,7 @@ public abstract class AbsListingsPresenter implements ListingsPresenter, UserIde
     @Override
     public void onResume() {
         mBus.register(this);
+        mIdentityManager.registerUserIdentityChangeListener(this);
         if (!mListingsRequested && mListings.size() == 0) {
             refreshData();
         }
@@ -92,6 +93,7 @@ public abstract class AbsListingsPresenter implements ListingsPresenter, UserIde
     @Override
     public void onPause() {
         mBus.unregister(this);
+        mIdentityManager.unregisterUserIdentityChangeListener(this);
     }
 
     @Override
@@ -121,9 +123,7 @@ public abstract class AbsListingsPresenter implements ListingsPresenter, UserIde
 
     @Override
     public Action1<UserIdentity> onUserIdentityChanged() {
-        return identity -> {
-            refreshData();
-        };
+        return identity -> refreshData();
     }
 
     @Override

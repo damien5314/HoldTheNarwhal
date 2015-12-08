@@ -30,7 +30,6 @@ import android.widget.TextView;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
-import com.ddiehl.android.htn.UserIdentityListener;
 import com.ddiehl.android.htn.analytics.Analytics;
 import com.ddiehl.android.htn.io.RedditAuthService;
 import com.ddiehl.android.htn.presenter.MainPresenter;
@@ -127,12 +126,6 @@ public class MainActivity extends AppCompatActivity implements MainView,
         mSignOutView.setVisibility(identity == null ? View.GONE : View.VISIBLE);
         mGoldIndicator.setVisibility(identity != null && identity.isGold() ? View.VISIBLE : View.GONE);
         updateNavigationItems(identity != null);
-        // Notify displayed Fragment if instance of UserIdentityListener
-        Fragment fragment = getCurrentDisplayedFragment();
-        if (fragment != null && fragment.isVisible()
-                && fragment instanceof UserIdentityListener) {
-            ((UserIdentityListener) fragment).onUserIdentityChanged().call(identity);
-        }
     }
 
     @Override
