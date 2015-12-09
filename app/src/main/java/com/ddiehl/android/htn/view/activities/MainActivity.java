@@ -35,7 +35,6 @@ import com.ddiehl.android.htn.io.RedditAuthService;
 import com.ddiehl.android.htn.presenter.MainPresenter;
 import com.ddiehl.android.htn.presenter.MainPresenterImpl;
 import com.ddiehl.android.htn.view.MainView;
-import com.ddiehl.android.htn.view.SignInListener;
 import com.ddiehl.android.htn.view.dialogs.AnalyticsDialog;
 import com.ddiehl.android.htn.view.dialogs.ConfirmSignOutDialog;
 import com.ddiehl.android.htn.view.dialogs.NsfwWarningDialog;
@@ -54,7 +53,7 @@ import butterknife.OnClick;
 import hugo.weaving.DebugLog;
 
 public class MainActivity extends AppCompatActivity implements MainView,
-        NavigationView.OnNavigationItemSelectedListener, SignInListener {
+        NavigationView.OnNavigationItemSelectedListener {
     public static final int REQUEST_NSFW_WARNING = 0x1;
     private static final String DIALOG_NSFW_WARNING = "dialog_nsfw_warning";
     private static final String DIALOG_CONFIRM_SIGN_OUT = "dialog_confirm_sign_out";
@@ -101,7 +100,7 @@ public class MainActivity extends AppCompatActivity implements MainView,
         }
 
         // Initialize dependencies
-        mMainPresenter = new MainPresenterImpl(this, this);
+        mMainPresenter = new MainPresenterImpl(this);
     }
 
     // FIXME Can we change this to onResume()?
@@ -218,14 +217,6 @@ public class MainActivity extends AppCompatActivity implements MainView,
         } else {
             Fragment f = WebViewFragment.newInstance(url);
             showFragment(f);
-        }
-    }
-
-    @Override
-    public void onUserSignedIn(boolean isSignedIn) {
-        Fragment fragment = getCurrentDisplayedFragment();
-        if (fragment instanceof SettingsFragment) {
-            ((SettingsFragment) fragment).refresh(isSignedIn);
         }
     }
 

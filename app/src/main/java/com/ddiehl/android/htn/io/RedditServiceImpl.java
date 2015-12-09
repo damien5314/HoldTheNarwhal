@@ -38,6 +38,7 @@ import com.ddiehl.android.htn.events.responses.UserInfoLoadedEvent;
 import com.ddiehl.android.htn.events.responses.UserSettingsRetrievedEvent;
 import com.ddiehl.android.htn.events.responses.UserSettingsUpdatedEvent;
 import com.ddiehl.android.htn.events.responses.VoteSubmittedEvent;
+import com.ddiehl.android.htn.logging.Logger;
 import com.ddiehl.reddit.Hideable;
 import com.ddiehl.reddit.Savable;
 import com.ddiehl.reddit.Votable;
@@ -77,6 +78,7 @@ import rx.schedulers.Schedulers;
 
 public class RedditServiceImpl implements RedditService {
     private Bus mBus = BusProvider.getInstance();
+    private Logger mLogger = HoldTheNarwhal.getLogger();
     private AccessTokenManager mAccessTokenManager = HoldTheNarwhal.getAccessTokenManager();
     private Analytics mAnalytics = HoldTheNarwhal.getAnalytics();
     private RedditAPI mAPI;
@@ -122,7 +124,7 @@ public class RedditServiceImpl implements RedditService {
 
     @Override
     public Observable<UserIdentity> getUserIdentity() {
-        return requireUserAccessToken().concatMap(token ->
+        return requireUserAccessToken().flatMap(token ->
                 mAPI.getUserIdentity()
                         .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
@@ -161,7 +163,7 @@ public class RedditServiceImpl implements RedditService {
     public Observable<ListingResponse> onLoadLinks(
             @Nullable String subreddit, @Nullable String sort,
             @Nullable String timespan, @Nullable String after) {
-        return requireAccessToken().concatMap(token ->
+        return requireAccessToken().flatMap(token ->
                 mAPI.getLinks(sort, subreddit, timespan, after)
                         .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
@@ -430,11 +432,13 @@ public class RedditServiceImpl implements RedditService {
     }
 
     private Observable<AccessToken> requireAccessToken() {
-        return mAccessTokenManager.getAccessToken();
+        return mAccessTokenManager.getAccessToken()
+                .doOnError(error -> mLogger.e("No access token available"));
     }
 
     private Observable<AccessToken> requireUserAccessToken() {
-        return mAccessTokenManager.getUserAccessToken();
+        return mAccessTokenManager.getUserAccessToken()
+                .doOnError(error -> mLogger.e("No user access token available"));
     }
 
     ///////////////

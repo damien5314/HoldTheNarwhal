@@ -69,6 +69,7 @@ public class IdentityManagerImpl implements IdentityManager {
 
     @Override
     public void saveUserIdentity(UserIdentity identity) {
+        mUserIdentity = identity;
         Boolean hasMail = identity.hasMail();
         String name = identity.getName();
         Long created = identity.getCreated();
@@ -85,7 +86,6 @@ public class IdentityManagerImpl implements IdentityManager {
         Boolean hasVerifiedEmail = identity.hasVerifiedEmail();
         String id = identity.getId();
         Integer inboxCount = identity.getInboxCount();
-
         SharedPreferences prefs =
                 mContext.getSharedPreferences(PREFS_USER_IDENTITY, Context.MODE_PRIVATE);
         prefs.edit()
@@ -106,7 +106,6 @@ public class IdentityManagerImpl implements IdentityManager {
                 .putString(PREF_ID, id)
                 .putInt(PREF_INBOX_COUNT, inboxCount)
                 .apply();
-
         notifyListeners();
     }
 

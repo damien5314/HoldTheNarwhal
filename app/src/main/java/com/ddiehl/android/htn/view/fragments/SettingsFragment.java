@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import com.ddiehl.android.htn.AccessTokenManager;
 import com.ddiehl.android.htn.BusProvider;
 import com.ddiehl.android.htn.HoldTheNarwhal;
+import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.SettingsManager;
 import com.ddiehl.android.htn.SettingsManagerImpl;
@@ -31,8 +32,10 @@ import com.squareup.otto.Subscribe;
 import java.io.IOException;
 import java.io.InputStream;
 
+import rx.functions.Action1;
+
 public class SettingsFragment extends PreferenceFragment
-        implements SharedPreferences.OnSharedPreferenceChangeListener {
+        implements SharedPreferences.OnSharedPreferenceChangeListener, IdentityManager.Callbacks {
     private Bus mBus = BusProvider.getInstance();
     private AccessTokenManager mAccessTokenManager;
     private SettingsManager mSettingsManager;
@@ -64,7 +67,6 @@ public class SettingsFragment extends PreferenceFragment
         super.onResume();
         getActivity().getSharedPreferences(SettingsManagerImpl.PREFS_USER, Context.MODE_PRIVATE)
                 .registerOnSharedPreferenceChangeListener(this);
-
         if (mAccessTokenManager.isUserAuthorized()) {
             refresh(true);
         }
@@ -90,6 +92,14 @@ public class SettingsFragment extends PreferenceFragment
         if (p instanceof CheckBoxPreference) {
             ((CheckBoxPreference) p).setChecked(sharedPreferences.getBoolean(key, false)); // default = false?
         }
+    }
+
+    @Override
+    public Action1<UserIdentity> onUserIdentityChanged() {
+        return identity -> {
+            boolean shouldRefresh = identity == null;
+            refresh(shouldRefresh);
+        };
     }
 
     public void refresh(boolean pullFromServer) {

@@ -13,7 +13,6 @@ import com.ddiehl.android.htn.io.RedditService;
 import com.ddiehl.android.htn.logging.Logger;
 import com.ddiehl.android.htn.utils.BaseUtils;
 import com.ddiehl.android.htn.view.MainView;
-import com.ddiehl.android.htn.view.SignInListener;
 import com.ddiehl.reddit.identity.AccessToken;
 import com.ddiehl.reddit.identity.AuthorizationResponse;
 import com.ddiehl.reddit.identity.UserAccessToken;
@@ -24,10 +23,10 @@ import com.squareup.otto.Subscribe;
 import java.util.Date;
 
 import retrofit.Response;
-import rx.functions.Action0;
+import rx.functions.Action1;
 import rx.functions.Func1;
 
-public class MainPresenterImpl implements MainPresenter {
+public class MainPresenterImpl implements MainPresenter, IdentityManager.Callbacks {
     private Logger mLogger = HoldTheNarwhal.getLogger();
     private Bus mBus = BusProvider.getInstance();
     protected RedditService mRedditService = HoldTheNarwhal.getRedditService();
@@ -38,17 +37,16 @@ public class MainPresenterImpl implements MainPresenter {
     private Analytics mAnalytics = HoldTheNarwhal.getAnalytics();
 
     private MainView mMainView;
-    private SignInListener mSignInListener;
     private String mUsernameContext;
 
-    public MainPresenterImpl(MainView view, SignInListener signInListener) {
+    public MainPresenterImpl(MainView view) {
         mMainView = view;
-        mSignInListener = signInListener;
     }
 
     @Override
     public void onResume() {
         mBus.register(this);
+        mIdentityManager.registerUserIdentityChangeListener(this);
         UserIdentity user = getAuthorizedUser();
         mMainView.updateUserIdentity(user);
         mAnalytics.setUserIdentity(user == null ? null : user.getName());
@@ -66,14 +64,31 @@ public class MainPresenterImpl implements MainPresenter {
     public void onPause() {
         mAnalytics.endSession();
         mBus.unregister(this);
+        mIdentityManager.unregisterUserIdentityChangeListener(this);
+    }
+
+    @Override
+    public Action1<UserIdentity> onUserIdentityChanged() {
+        return identity -> {
+            if (identity == null) {
+                mMainView.updateUserIdentity(null);
+                mMainView.showToast(R.string.user_signed_out);
+            } else {
+                // FIXME Ensure we only show this when the user changes
+                String name = identity.getName();
+                String toast = String.format(
+                        AndroidContextProvider.getContext().getString(R.string.welcome_user),
+                        name);
+                mMainView.showToast(toast);
+            }
+        };
     }
 
     @Override
     public void signOutUser() {
         mMainView.closeNavigationDrawer();
         mAccessTokenManager.clearSavedUserAccessToken();
-        mMainView.showToast(R.string.user_signed_out);
-        if (mSignInListener != null) mSignInListener.onUserSignedIn(false);
+        mIdentityManager.clearSavedUserIdentity();
         mAnalytics.logSignOut();
     }
 
@@ -118,31 +133,19 @@ public class MainPresenterImpl implements MainPresenter {
 
     @Override
     public void onAuthCodeReceived(String authCode) {
-        mIdentityManager.clearSavedUserIdentity();
+//        mIdentityManager.clearSavedUserIdentity();
         String grantType = "authorization_code";
         mRedditAuthService.getUserAccessToken(grantType, authCode, RedditAuthService.REDIRECT_URI)
                 .map(responseToAccessToken())
-                .subscribe(response -> {
-                    mAccessTokenManager.saveUserAccessToken().call(response);
-                    getUserIdentity().call();
-                });
+                .doOnNext(mAccessTokenManager.saveUserAccessToken())
+                .subscribe(getUserIdentity());
     }
 
     @Override
-    public Action0 getUserIdentity() {
-        return () -> mRedditService.getUserIdentity()
-                .subscribe(identity -> {
-                    mIdentityManager.saveUserIdentity(identity);
-                    mMainView.updateUserIdentity(identity);
-                    if (identity != null) {
-                        // FIXME Ensure we only show this when the user changes
-                        String name = identity.getName();
-                        String toast = String.format(
-                                AndroidContextProvider.getContext().getString(R.string.welcome_user),
-                                name);
-                        mMainView.showToast(toast);
-                    }
-                });
+    public Action1<AccessToken> getUserIdentity() {
+        return token -> mRedditService.getUserIdentity()
+                .doOnNext(mIdentityManager::saveUserIdentity)
+                .subscribe(mMainView::updateUserIdentity);
     }
 
     private Func1<AuthorizationResponse, AccessToken> responseToAccessToken() {
