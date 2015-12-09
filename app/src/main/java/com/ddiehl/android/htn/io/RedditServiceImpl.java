@@ -14,7 +14,6 @@ import com.ddiehl.android.htn.events.requests.FriendAddEvent;
 import com.ddiehl.android.htn.events.requests.FriendDeleteEvent;
 import com.ddiehl.android.htn.events.requests.FriendNoteSaveEvent;
 import com.ddiehl.android.htn.events.requests.GetSubredditInfoEvent;
-import com.ddiehl.android.htn.events.requests.GetUserSettingsEvent;
 import com.ddiehl.android.htn.events.requests.HideEvent;
 import com.ddiehl.android.htn.events.requests.LoadLinkCommentsEvent;
 import com.ddiehl.android.htn.events.requests.LoadMoreChildrenEvent;
@@ -35,7 +34,6 @@ import com.ddiehl.android.htn.events.responses.SaveSubmittedEvent;
 import com.ddiehl.android.htn.events.responses.SubredditInfoLoadedEvent;
 import com.ddiehl.android.htn.events.responses.TrophiesLoadedEvent;
 import com.ddiehl.android.htn.events.responses.UserInfoLoadedEvent;
-import com.ddiehl.android.htn.events.responses.UserSettingsRetrievedEvent;
 import com.ddiehl.android.htn.events.responses.UserSettingsUpdatedEvent;
 import com.ddiehl.android.htn.events.responses.VoteSubmittedEvent;
 import com.ddiehl.android.htn.logging.Logger;
@@ -48,6 +46,7 @@ import com.ddiehl.reddit.adapters.ListingResponseDeserializer;
 import com.ddiehl.reddit.identity.AccessToken;
 import com.ddiehl.reddit.identity.Friend;
 import com.ddiehl.reddit.identity.UserIdentity;
+import com.ddiehl.reddit.identity.UserSettings;
 import com.ddiehl.reddit.listings.AbsComment;
 import com.ddiehl.reddit.listings.CommentStub;
 import com.ddiehl.reddit.listings.Link;
@@ -133,16 +132,11 @@ public class RedditServiceImpl implements RedditService {
     }
 
     @Override
-    public void onGetUserSettings(@NonNull GetUserSettingsEvent event) {
-        mAPI.getUserSettings()
+    public Observable<UserSettings> getUserSettings() {
+        return mAPI.getUserSettings()
                 .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        response -> mBus.post(new UserSettingsRetrievedEvent(response.body())),
-                        error -> {
-                            mBus.post(error);
-                            mBus.post(new UserSettingsRetrievedEvent(error));
-                        });
+                .map(Response::body);
     }
 
     @Override

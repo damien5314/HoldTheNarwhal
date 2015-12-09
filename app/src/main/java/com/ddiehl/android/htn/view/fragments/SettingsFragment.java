@@ -20,14 +20,10 @@ import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.SettingsManager;
 import com.ddiehl.android.htn.SettingsManagerImpl;
-import com.ddiehl.android.htn.events.requests.GetUserSettingsEvent;
-import com.ddiehl.android.htn.events.responses.UserAuthorizedEvent;
-import com.ddiehl.android.htn.events.responses.UserSettingsRetrievedEvent;
+import com.ddiehl.android.htn.io.RedditService;
 import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.reddit.identity.UserIdentity;
-import com.ddiehl.reddit.identity.UserSettings;
 import com.squareup.otto.Bus;
-import com.squareup.otto.Subscribe;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,8 +33,10 @@ import rx.functions.Action1;
 public class SettingsFragment extends PreferenceFragment
         implements SharedPreferences.OnSharedPreferenceChangeListener, IdentityManager.Callbacks {
     private Bus mBus = BusProvider.getInstance();
-    private AccessTokenManager mAccessTokenManager;
-    private SettingsManager mSettingsManager;
+    private RedditService mRedditService = HoldTheNarwhal.getRedditService();
+    private AccessTokenManager mAccessTokenManager = HoldTheNarwhal.getAccessTokenManager();
+    private IdentityManager mIdentityManager = HoldTheNarwhal.getIdentityManager();
+    private SettingsManager mSettingsManager = HoldTheNarwhal.getSettingsManager();
     private MainView mMainView;
 
     @Override
@@ -46,10 +44,7 @@ public class SettingsFragment extends PreferenceFragment
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
         setHasOptionsMenu(true);
-        mAccessTokenManager = HoldTheNarwhal.getAccessTokenManager();
-        mSettingsManager = HoldTheNarwhal.getSettingsManager();
         mMainView = (MainView) getActivity();
-
         getPreferenceManager().setSharedPreferencesName(SettingsManagerImpl.PREFS_USER);
         addDefaultPreferences();
     }
@@ -65,6 +60,7 @@ public class SettingsFragment extends PreferenceFragment
     @Override
     public void onResume() {
         super.onResume();
+        mIdentityManager.registerUserIdentityChangeListener(this);
         getActivity().getSharedPreferences(SettingsManagerImpl.PREFS_USER, Context.MODE_PRIVATE)
                 .registerOnSharedPreferenceChangeListener(this);
         if (mAccessTokenManager.isUserAuthorized()) {
@@ -74,6 +70,7 @@ public class SettingsFragment extends PreferenceFragment
 
     @Override
     public void onPause() {
+        mIdentityManager.unregisterUserIdentityChangeListener(this);
         getActivity().getSharedPreferences(SettingsManagerImpl.PREFS_USER, Context.MODE_PRIVATE)
                 .unregisterOnSharedPreferenceChangeListener(this);
         super.onPause();
@@ -97,7 +94,7 @@ public class SettingsFragment extends PreferenceFragment
     @Override
     public Action1<UserIdentity> onUserIdentityChanged() {
         return identity -> {
-            boolean shouldRefresh = identity == null;
+            boolean shouldRefresh = identity != null;
             refresh(shouldRefresh);
         };
     }
@@ -134,26 +131,10 @@ public class SettingsFragment extends PreferenceFragment
 
     private void getData() {
         mMainView.showSpinner(null);
-        mBus.post(new GetUserSettingsEvent());
-    }
-
-    @Subscribe
-    public void onSettingsRetrieved(UserSettingsRetrievedEvent event) {
-        if (event.isFailed()) {
-            mMainView.dismissSpinner();
-            return;
-        }
-
-        UserSettings settings = event.getSettings();
-        mSettingsManager.saveUserSettings(settings);
-
-        refresh(false);
-        mMainView.dismissSpinner();
-    }
-
-    @Subscribe @SuppressWarnings("unused")
-    public void onUserAuthorized(UserAuthorizedEvent event) {
-        refresh(true);
+        mRedditService.getUserSettings()
+                .doOnNext(mSettingsManager::saveUserSettings)
+                .doOnTerminate(mMainView::dismissSpinner)
+                .subscribe(settings -> refresh(false));
     }
 
     private void updateAllPrefSummaries() {
