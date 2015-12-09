@@ -28,7 +28,7 @@ public class IdentityManagerImpl implements IdentityManager {
     private static final String PREF_ID = "pref_id";
     private static final String PREF_INBOX_COUNT = "pref_inbox_count";
 
-    private Context mContext = AndroidContextProvider.getContext();
+    private Context mContext = HoldTheNarwhal.getContext();
     private UserIdentity mUserIdentity;
     private Set<Callbacks> mListeners = new HashSet<>();
 

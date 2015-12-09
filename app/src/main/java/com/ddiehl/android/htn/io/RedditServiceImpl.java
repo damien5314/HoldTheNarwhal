@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.ddiehl.android.htn.AccessTokenManager;
-import com.ddiehl.android.htn.AndroidContextProvider;
 import com.ddiehl.android.htn.BusProvider;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.analytics.Analytics;
@@ -89,7 +88,7 @@ public class RedditServiceImpl implements RedditService {
     private RedditAPI buildApi() {
         final int cacheSize = 10 * 1024 * 1024; // 10 MiB
         OkHttpClient client = new OkHttpClient();
-        Context context = AndroidContextProvider.getContext();
+        Context context = HoldTheNarwhal.getContext();
         File cache = new File(context.getCacheDir().getAbsolutePath(), "htn-http-cache");
         client.setCache(new Cache(cache, cacheSize));
         client.networkInterceptors().add(new RawResponseInterceptor());

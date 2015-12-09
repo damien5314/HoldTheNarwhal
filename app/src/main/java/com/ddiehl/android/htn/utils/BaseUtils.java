@@ -11,7 +11,6 @@ import android.view.Display;
 import android.view.WindowManager;
 import android.widget.Toast;
 
-import com.ddiehl.android.htn.AndroidContextProvider;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.squareup.okhttp.Headers;
@@ -44,7 +43,7 @@ public class BaseUtils {
 
     @NonNull
     public static String getFriendlyError(@Nullable retrofit.Response response) {
-        Context context = AndroidContextProvider.getContext();
+        Context context = HoldTheNarwhal.getContext();
         if (response == null) {
             return context.getString(R.string.error_network_unavailable);
         } else {

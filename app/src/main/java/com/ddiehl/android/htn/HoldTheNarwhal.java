@@ -1,13 +1,14 @@
 package com.ddiehl.android.htn;
 
 import android.app.Application;
+import android.content.Context;
 
 import com.ddiehl.android.htn.analytics.Analytics;
 import com.ddiehl.android.htn.analytics.FlurryAnalytics;
+import com.ddiehl.android.htn.io.RedditAuthService;
 import com.ddiehl.android.htn.io.RedditAuthServiceImpl;
 import com.ddiehl.android.htn.io.RedditService;
 import com.ddiehl.android.htn.io.RedditServiceImpl;
-import com.ddiehl.android.htn.io.RedditAuthService;
 import com.ddiehl.android.htn.logging.Logger;
 import com.ddiehl.android.htn.logging.TimberLogger;
 import com.facebook.stetho.Stetho;
@@ -16,6 +17,8 @@ import com.squareup.otto.Bus;
 
 
 public class HoldTheNarwhal extends Application {
+    private static Context mContext;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -29,7 +32,7 @@ public class HoldTheNarwhal extends Application {
                         .build());
 
         Bus bus = BusProvider.getInstance();
-        AndroidContextProvider.setContext(this);
+        mContext = this;
 
         // Initialize static dependencies
         Analytics analytics = getAnalytics();
@@ -55,6 +58,10 @@ public class HoldTheNarwhal extends Application {
      */
     public static Logger getLogger() {
         return TimberLogger.getInstance();
+    }
+
+    public static Context getContext() {
+        return mContext;
     }
 
     /**

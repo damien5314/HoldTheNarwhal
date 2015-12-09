@@ -29,7 +29,7 @@ public class AccessTokenManagerImpl implements AccessTokenManager {
     private static final int EXPIRATION_THRESHOLD = 60;
 
     private Logger mLogger = HoldTheNarwhal.getLogger();
-    private Context mContext = AndroidContextProvider.getContext();
+    private Context mContext = HoldTheNarwhal.getContext();
     private RedditAuthService mServiceAuth = HoldTheNarwhal.getRedditServiceAuth();
     private IdentityManager mIdentityManager = HoldTheNarwhal.getIdentityManager();
 

@@ -81,7 +81,7 @@ public class SettingsManagerImpl implements SettingsManager {
             "mark_messages_read, hide_ads, min_link_score, newwindow, numsites, num_comments, " +
             "highlight_new_comments, default_comment_sort, hide_locationbar";
 
-    private Context mContext = AndroidContextProvider.getContext();
+    private Context mContext = HoldTheNarwhal.getContext();
     private Bus mBus = BusProvider.getInstance();
     private Analytics mAnalytics = HoldTheNarwhal.getAnalytics();
     private SharedPreferences mSharedPreferences;

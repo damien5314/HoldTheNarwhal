@@ -1,7 +1,6 @@
 package com.ddiehl.android.htn.presenter;
 
 import com.ddiehl.android.htn.AccessTokenManager;
-import com.ddiehl.android.htn.AndroidContextProvider;
 import com.ddiehl.android.htn.BusProvider;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.IdentityManager;
@@ -77,7 +76,7 @@ public class MainPresenterImpl implements MainPresenter, IdentityManager.Callbac
                 // FIXME Ensure we only show this when the user changes
                 String name = identity.getName();
                 String toast = String.format(
-                        AndroidContextProvider.getContext().getString(R.string.welcome_user),
+                        HoldTheNarwhal.getContext().getString(R.string.welcome_user),
                         name);
                 mMainView.showToast(toast);
             }
