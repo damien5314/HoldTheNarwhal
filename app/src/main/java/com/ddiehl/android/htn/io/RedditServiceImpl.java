@@ -16,19 +16,15 @@ import com.ddiehl.android.htn.events.requests.FriendNoteSaveEvent;
 import com.ddiehl.android.htn.events.requests.GetSubredditInfoEvent;
 import com.ddiehl.android.htn.events.requests.HideEvent;
 import com.ddiehl.android.htn.events.requests.LoadUserProfileListingEvent;
-import com.ddiehl.android.htn.events.requests.LoadUserProfileSummaryEvent;
 import com.ddiehl.android.htn.events.requests.ReportEvent;
 import com.ddiehl.android.htn.events.requests.SaveEvent;
 import com.ddiehl.android.htn.events.requests.VoteEvent;
 import com.ddiehl.android.htn.events.responses.FriendAddedEvent;
 import com.ddiehl.android.htn.events.responses.FriendDeletedEvent;
-import com.ddiehl.android.htn.events.responses.FriendInfoLoadedEvent;
 import com.ddiehl.android.htn.events.responses.HideSubmittedEvent;
 import com.ddiehl.android.htn.events.responses.ListingsLoadedEvent;
 import com.ddiehl.android.htn.events.responses.SaveSubmittedEvent;
 import com.ddiehl.android.htn.events.responses.SubredditInfoLoadedEvent;
-import com.ddiehl.android.htn.events.responses.TrophiesLoadedEvent;
-import com.ddiehl.android.htn.events.responses.UserInfoLoadedEvent;
 import com.ddiehl.android.htn.events.responses.VoteSubmittedEvent;
 import com.ddiehl.android.htn.logging.Logger;
 import com.ddiehl.reddit.Hideable;
@@ -39,6 +35,7 @@ import com.ddiehl.reddit.adapters.ListingDeserializer;
 import com.ddiehl.reddit.adapters.ListingResponseDeserializer;
 import com.ddiehl.reddit.identity.AccessToken;
 import com.ddiehl.reddit.identity.Friend;
+import com.ddiehl.reddit.identity.FriendInfo;
 import com.ddiehl.reddit.identity.UserIdentity;
 import com.ddiehl.reddit.identity.UserSettings;
 import com.ddiehl.reddit.listings.AbsComment;
@@ -178,55 +175,27 @@ public class RedditServiceImpl implements RedditService {
     }
 
     @Override
-    public void onLoadUserProfileSummary(@NonNull LoadUserProfileSummaryEvent event) {
-        final String username = event.getUsername();
-        getUserInfo(username);
-        getUserTrophies(username);
-    }
-
-    private void getUserInfo(String username) {
-        mAPI.getUserInfo(username)
+    public Observable<UserIdentity> getUserInfo(@NonNull String username) {
+        return mAPI.getUserInfo(username)
                 .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        response -> {
-                            UserIdentity user = response.body().getUser();
-                            mBus.post(new UserInfoLoadedEvent(user));
-                            if (user.isFriend()) {
-                                getFriendInfo(username); // getFriendInfo for friend note
-                            }
-                        },
-                        error -> {
-                            mBus.post(error);
-                            mBus.post(new UserInfoLoadedEvent(error));
-                        }
-                );
+                .map(response -> response.body().getUser());
     }
 
-    private void getUserTrophies(String username) {
-        mAPI.getUserTrophies(username)
+    @Override
+    public Observable<FriendInfo> getFriendInfo(String username) {
+        return mAPI.getFriendInfo(username)
                 .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        response -> mBus.post(new TrophiesLoadedEvent(response.body())),
-                        error -> {
-                            mBus.post(error);
-                            mBus.post(new TrophiesLoadedEvent(error));
-                        }
-                );
+                .map(Response::body);
     }
 
-    private void getFriendInfo(String username) {
-        mAPI.getFriendInfo(username)
+    @Override
+    public Observable<List<Listing>> getUserTrophies(@NonNull String username) {
+        return mAPI.getUserTrophies(username)
                 .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        response -> mBus.post(new FriendInfoLoadedEvent(response.body())),
-                        error -> {
-                            mBus.post(error);
-                            mBus.post(new FriendInfoLoadedEvent(error));
-                        }
-                );
+                .map(response -> response.body().getData().getTrophies());
     }
 
     @Override

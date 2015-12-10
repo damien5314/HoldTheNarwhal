@@ -18,7 +18,6 @@ import com.ddiehl.android.htn.events.requests.SaveEvent;
 import com.ddiehl.android.htn.events.requests.VoteEvent;
 import com.ddiehl.android.htn.events.responses.HideSubmittedEvent;
 import com.ddiehl.android.htn.events.responses.SaveSubmittedEvent;
-import com.ddiehl.android.htn.events.responses.UserInfoLoadedEvent;
 import com.ddiehl.android.htn.events.responses.VoteSubmittedEvent;
 import com.ddiehl.android.htn.io.RedditService;
 import com.ddiehl.android.htn.logging.Logger;
@@ -179,30 +178,17 @@ public abstract class AbsListingsPresenter
         refreshData();
     }
 
-    @Subscribe
     public Action1<ListingResponse> onListingsLoaded() {
         return (response) -> {
             mMainView.dismissSpinner();
             List<Listing> listings = response.getData().getChildren();
-            if (listings == null) throw new RuntimeException("Event data is null, but event is not failed");
+            if (listings == null) throw new RuntimeException("Event data is null");
             mListings.addAll(listings);
             mListingsView.listingsUpdated();
             ListingResponseData data = response.getData();
             mNextPageListingId = data.getAfter();
             mListingsRequested = false;
         };
-    }
-
-    @Subscribe
-    public void onUserInfoLoaded(UserInfoLoadedEvent event) {
-        mMainView.dismissSpinner();
-        if (event.isFailed()) {
-            mListingsRequested = false;
-            return;
-        }
-
-        // TODO
-        mListingsRequested = false;
     }
 
     @Subscribe
@@ -392,7 +378,6 @@ public abstract class AbsListingsPresenter
                                        Comment comment) {
         mListingSelected = comment;
         mListingsView.showCommentContextMenu(menu, v, comment);
-
         menu.findItem(R.id.action_comment_save).setVisible(!comment.isSaved());
         menu.findItem(R.id.action_comment_unsave).setVisible(comment.isSaved());
     }
@@ -498,7 +483,6 @@ public abstract class AbsListingsPresenter
 
     @Override
     public void openCommentLink(@NonNull Comment comment) {
-//        Comment comment = (Comment) mListingSelected;
         mListingsView.showCommentsForLink(comment.getSubreddit(), comment.getLinkId().substring(3), null);
     }
 

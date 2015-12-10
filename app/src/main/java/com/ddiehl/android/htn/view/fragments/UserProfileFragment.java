@@ -2,6 +2,7 @@ package com.ddiehl.android.htn.view.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.view.LayoutInflater;
@@ -21,12 +22,10 @@ import com.ddiehl.android.htn.events.requests.FriendDeleteEvent;
 import com.ddiehl.android.htn.events.requests.FriendNoteSaveEvent;
 import com.ddiehl.android.htn.events.responses.FriendAddedEvent;
 import com.ddiehl.android.htn.events.responses.FriendDeletedEvent;
-import com.ddiehl.android.htn.events.responses.FriendInfoLoadedEvent;
-import com.ddiehl.android.htn.events.responses.TrophiesLoadedEvent;
-import com.ddiehl.android.htn.events.responses.UserInfoLoadedEvent;
 import com.ddiehl.android.htn.presenter.UserProfilePresenter;
 import com.ddiehl.android.htn.utils.BaseUtils;
 import com.ddiehl.android.htn.view.MainView;
+import com.ddiehl.android.htn.view.UserProfileSummaryView;
 import com.ddiehl.android.htn.view.adapters.ListingsAdapter;
 import com.ddiehl.reddit.identity.FriendInfo;
 import com.ddiehl.reddit.identity.UserIdentity;
@@ -44,8 +43,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class UserProfileFragment extends AbsListingsFragment {
-
+public class UserProfileFragment extends AbsListingsFragment implements UserProfileSummaryView {
     private static final String ARG_SHOW = "arg_show";
     private static final String ARG_USERNAME = "arg_username";
 
@@ -85,7 +83,8 @@ public class UserProfileFragment extends AbsListingsFragment {
         Bundle args = getArguments();
         String show = args.getString(ARG_SHOW);
         String username = args.getString(ARG_USERNAME);
-        mListingsPresenter = new UserProfilePresenter(mMainView, this, show, username, "new", "all");
+        mListingsPresenter = new UserProfilePresenter(mMainView, this, this,
+                show, username, "new", "all");
         mListingsAdapter = new ListingsAdapter(mListingsPresenter);
     }
 
@@ -126,16 +125,12 @@ public class UserProfileFragment extends AbsListingsFragment {
         super.onStop();
     }
 
-    @Subscribe @SuppressWarnings("unused")
-    public void onUserInfoLoaded(UserInfoLoadedEvent event) {
-        mMainView.dismissSpinner();
-        if (event.isFailed()) {
-            return;
-        }
-
-        UserIdentity user = event.getUserIdentity();
-        String created = String.format(mContext.getString(R.string.user_profile_summary_created),
-                SimpleDateFormat.getDateInstance().format(new Date(user.getCreatedUTC() * 1000)));
+    @Override
+    public void showUserInfo(@NonNull UserIdentity user) {
+        Date createDate = new Date(user.getCreatedUTC() * 1000);
+        String created = String.format(
+                mContext.getString(R.string.user_profile_summary_created),
+                SimpleDateFormat.getDateInstance().format(createDate));
         mCreateDate.setText(created);
         mKarmaLayout.setVisibility(View.VISIBLE);
         mLinkKarma.setText(NumberFormat.getInstance().format(user.getLinkKarma()));
@@ -153,31 +148,19 @@ public class UserProfileFragment extends AbsListingsFragment {
         }
     }
 
-    @Subscribe
-    public void onFriendInfoLoaded(FriendInfoLoadedEvent event) {
-        mMainView.dismissSpinner();
-        if (event.isFailed()) {
-            return;
-        }
-
+    @Override
+    public void showFriendInfo(FriendInfo friend) {
         UserIdentity self = HoldTheNarwhal.getIdentityManager().getUserIdentity();
         if (self != null && self.isGold()) {
             mFriendNoteLayout.setVisibility(View.VISIBLE);
-            FriendInfo friend = event.getFriendInfo();
             mFriendNote.setText(friend.getNote());
         }
     }
 
-    @Subscribe
-    public void onTrophiesLoaded(TrophiesLoadedEvent event) {
-        mMainView.dismissSpinner();
-        if (event.isFailed()) {
-            return;
-        }
-
+    @Override
+    public void showTrophies(List<Listing> trophies) {
         final int minDpWidth = 160;
         final int numColumns = ((int) BaseUtils.getScreenWidth(mContext)) / minDpWidth;
-        List<Listing> trophies = event.getListings();
         LinearLayout row = null;
         LayoutInflater inflater = getActivity().getLayoutInflater();
         mTrophies.removeAllViews(); // Reset layout

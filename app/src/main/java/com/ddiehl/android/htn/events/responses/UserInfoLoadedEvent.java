@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import com.ddiehl.reddit.identity.UserIdentity;
 
 public class UserInfoLoadedEvent extends FailableEvent {
-
     private UserIdentity mUserIdentity;
 
     public UserInfoLoadedEvent(@NonNull UserIdentity id) {

@@ -11,14 +11,15 @@ import com.ddiehl.android.htn.events.requests.FriendNoteSaveEvent;
 import com.ddiehl.android.htn.events.requests.GetSubredditInfoEvent;
 import com.ddiehl.android.htn.events.requests.HideEvent;
 import com.ddiehl.android.htn.events.requests.LoadUserProfileListingEvent;
-import com.ddiehl.android.htn.events.requests.LoadUserProfileSummaryEvent;
 import com.ddiehl.android.htn.events.requests.ReportEvent;
 import com.ddiehl.android.htn.events.requests.SaveEvent;
 import com.ddiehl.android.htn.events.requests.VoteEvent;
+import com.ddiehl.reddit.identity.FriendInfo;
 import com.ddiehl.reddit.identity.UserIdentity;
 import com.ddiehl.reddit.identity.UserSettings;
 import com.ddiehl.reddit.listings.CommentStub;
 import com.ddiehl.reddit.listings.Link;
+import com.ddiehl.reddit.listings.Listing;
 import com.ddiehl.reddit.listings.ListingResponse;
 import com.ddiehl.reddit.listings.MoreChildrenResponse;
 import com.squareup.okhttp.ResponseBody;
@@ -48,7 +49,9 @@ public interface RedditService {
     Observable<Pair<CommentStub, MoreChildrenResponse>> loadMoreChildren(
             @NonNull Link link, @NonNull CommentStub moreComments,
             @NonNull List<String> children, @Nullable String sort);
-    void onLoadUserProfileSummary(@NonNull LoadUserProfileSummaryEvent event);
+    Observable<UserIdentity> getUserInfo(@NonNull String username);
+    Observable<FriendInfo> getFriendInfo(String username);
+    Observable<List<Listing>> getUserTrophies(@NonNull String username);
     void onLoadUserProfile(@NonNull LoadUserProfileListingEvent event);
     void onAddFriend(@NonNull FriendAddEvent event);
     void onDeleteFriend(@NonNull FriendDeleteEvent event);
