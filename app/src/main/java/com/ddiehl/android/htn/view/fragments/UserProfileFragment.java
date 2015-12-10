@@ -82,7 +82,6 @@ public class UserProfileFragment extends AbsListingsFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         Bundle args = getArguments();
         String show = args.getString(ARG_SHOW);
         String username = args.getString(ARG_USERNAME);

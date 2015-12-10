@@ -30,8 +30,9 @@ import rx.Observable;
 
 
 public interface RedditService {
-
-    String USER_AGENT = String.format("android:com.ddiehl.android.htn:v%s (by /u/damien5314)", BuildConfig.VERSION_NAME);
+    String USER_AGENT = String.format(
+            "android:com.ddiehl.android.htn:v%s (by /u/damien5314)",
+            BuildConfig.VERSION_NAME);
     String ENDPOINT_NORMAL = "https://www.reddit.com";
     String ENDPOINT_OAUTH = "https://oauth.reddit.com";
 
@@ -49,14 +50,12 @@ public interface RedditService {
             @NonNull List<String> children, @Nullable String sort);
     void onLoadUserProfileSummary(@NonNull LoadUserProfileSummaryEvent event);
     void onLoadUserProfile(@NonNull LoadUserProfileListingEvent event);
-
+    void onAddFriend(@NonNull FriendAddEvent event);
+    void onDeleteFriend(@NonNull FriendDeleteEvent event);
+    void onSaveFriendNote(@NonNull FriendNoteSaveEvent event);
     void onGetSubredditInfo(@NonNull GetSubredditInfoEvent event);
     void onVote(@NonNull VoteEvent event);
     void onSave(@NonNull SaveEvent event);
     void onHide(@NonNull HideEvent event);
     void onReport(@NonNull ReportEvent event);
-
-    void onAddFriend(@NonNull FriendAddEvent event);
-    void onDeleteFriend(@NonNull FriendDeleteEvent event);
-    void onSaveFriendNote(@NonNull FriendNoteSaveEvent event);
 }
