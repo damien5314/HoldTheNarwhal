@@ -145,7 +145,7 @@ public class RedditServiceImpl implements RedditService {
     }
 
     @Override
-    public Observable<ListingResponse> onLoadLinks(
+    public Observable<ListingResponse> loadLinks(
             @Nullable String subreddit, @Nullable String sort,
             @Nullable String timespan, @Nullable String after) {
         return requireAccessToken().flatMap(token ->

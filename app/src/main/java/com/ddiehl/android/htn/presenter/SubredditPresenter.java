@@ -27,7 +27,7 @@ public class SubredditPresenter extends AbsListingsPresenter {
     public void requestData() {
         if (mSubreddit == null || mSubreddit.equals("all") || mSubredditInfo != null) {
             mAnalytics.logLoadSubreddit(mSubreddit, mSort, mTimespan);
-            mRedditService.onLoadLinks(mSubreddit, mSort, mTimespan, mNextPageListingId)
+            mRedditService.loadLinks(mSubreddit, mSort, mTimespan, mNextPageListingId)
                     .subscribe(onListingsLoaded());
         } else {
             mListingsRequested = false;

@@ -32,7 +32,11 @@ public interface RedditService {
     String ENDPOINT_NORMAL = "https://www.reddit.com";
     String ENDPOINT_AUTHORIZED = "https://oauth.reddit.com";
 
-    Observable<ListingResponse> onLoadLinks(
+    Observable<UserIdentity> getUserIdentity();
+    Observable<UserSettings> getUserSettings();
+    Observable<ResponseBody> updateUserSettings(Map<String, String> settings);
+
+    Observable<ListingResponse> loadLinks(
             @Nullable String subreddit, @Nullable String sort,
             @Nullable String timespan, @Nullable String after);
 
@@ -42,9 +46,6 @@ public interface RedditService {
     void onLoadUserProfile(@NonNull LoadUserProfileListingEvent event);
 
     void onGetSubredditInfo(@NonNull GetSubredditInfoEvent event);
-    Observable<UserIdentity> getUserIdentity();
-    Observable<UserSettings> getUserSettings();
-    Observable<ResponseBody> updateUserSettings(Map<String, String> settings);
     void onVote(@NonNull VoteEvent event);
     void onSave(@NonNull SaveEvent event);
     void onHide(@NonNull HideEvent event);
