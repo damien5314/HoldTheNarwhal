@@ -13,10 +13,8 @@ import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.SettingsManager;
 import com.ddiehl.android.htn.analytics.Analytics;
 import com.ddiehl.android.htn.events.requests.HideEvent;
-import com.ddiehl.android.htn.events.requests.LoadMoreChildrenEvent;
 import com.ddiehl.android.htn.events.requests.SaveEvent;
 import com.ddiehl.android.htn.events.requests.VoteEvent;
-import com.ddiehl.android.htn.events.responses.MoreChildrenLoadedEvent;
 import com.ddiehl.android.htn.events.responses.SaveSubmittedEvent;
 import com.ddiehl.android.htn.events.responses.VoteSubmittedEvent;
 import com.ddiehl.android.htn.io.RedditService;
@@ -117,37 +115,28 @@ public class LinkCommentsPresenterImpl
         List<String> children = comment.getChildren();
         // Truncate list of children to 20
         children = children.subList(0, Math.min(MAX_CHILDREN_PER_REQUEST, children.size()));
-        mBus.post(new LoadMoreChildrenEvent(mLinkContext, comment, children, mSort));
+        mRedditService.loadMoreChildren(mLinkContext, comment, children, mSort)
+                .doOnTerminate(mMainView::dismissSpinner)
+                .subscribe(response -> {
+                    CommentStub parentStub = response.first;
+                    List<Listing> comments = response.second.getChildComments();
+                    if (comments == null || comments.size() == 0) {
+                        mCommentBank.remove(parentStub);
+                    } else {
+                        if (parentStub != null) {
+                            AbsComment.Utils.setDepthForCommentsList(comments, parentStub.getDepth());
+                            int stubIndex = mCommentBank.indexOf(parentStub);
+                            parentStub.removeChildren(comments);
+                            parentStub.setCount(parentStub.getChildren().size());
+                            if (parentStub.getCount() == 0) mCommentBank.remove(stubIndex);
+                            mCommentBank.addAll(stubIndex, comments);
+                        }
+                    }
+                    Integer minScore = mSettingsManager.getMinCommentScore();
+                    mCommentBank.collapseAllThreadsUnder(minScore);
+                    mLinkCommentsView.commentsUpdated();
+                });
         mAnalytics.logLoadMoreChildren(mSort);
-    }
-
-    @Subscribe @SuppressWarnings("unused")
-    public void onMoreChildrenLoaded(MoreChildrenLoadedEvent event) {
-        mMainView.dismissSpinner();
-        if (event.isFailed()) {
-            return;
-        }
-
-        CommentStub parentStub = event.getParentStub();
-        List<Listing> comments = event.getComments();
-
-        if (comments == null || comments.size() == 0) {
-            mCommentBank.remove(parentStub);
-        } else {
-            if (parentStub != null) {
-                AbsComment.Utils.setDepthForCommentsList(comments, parentStub.getDepth());
-                int stubIndex = mCommentBank.indexOf(parentStub);
-                parentStub.removeChildren(comments);
-                parentStub.setCount(parentStub.getChildren().size());
-                if (parentStub.getCount() == 0)
-                    mCommentBank.remove(stubIndex);
-                mCommentBank.addAll(stubIndex, comments);
-            }
-        }
-
-        Integer minScore = mSettingsManager.getMinCommentScore();
-        mCommentBank.collapseAllThreadsUnder(minScore);
-        mLinkCommentsView.commentsUpdated();
     }
 
     @Override

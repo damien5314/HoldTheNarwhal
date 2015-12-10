@@ -2,6 +2,7 @@ package com.ddiehl.android.htn.io;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Pair;
 
 import com.ddiehl.android.htn.BuildConfig;
 import com.ddiehl.android.htn.events.requests.FriendAddEvent;
@@ -9,7 +10,6 @@ import com.ddiehl.android.htn.events.requests.FriendDeleteEvent;
 import com.ddiehl.android.htn.events.requests.FriendNoteSaveEvent;
 import com.ddiehl.android.htn.events.requests.GetSubredditInfoEvent;
 import com.ddiehl.android.htn.events.requests.HideEvent;
-import com.ddiehl.android.htn.events.requests.LoadMoreChildrenEvent;
 import com.ddiehl.android.htn.events.requests.LoadUserProfileListingEvent;
 import com.ddiehl.android.htn.events.requests.LoadUserProfileSummaryEvent;
 import com.ddiehl.android.htn.events.requests.ReportEvent;
@@ -17,7 +17,10 @@ import com.ddiehl.android.htn.events.requests.SaveEvent;
 import com.ddiehl.android.htn.events.requests.VoteEvent;
 import com.ddiehl.reddit.identity.UserIdentity;
 import com.ddiehl.reddit.identity.UserSettings;
+import com.ddiehl.reddit.listings.CommentStub;
+import com.ddiehl.reddit.listings.Link;
 import com.ddiehl.reddit.listings.ListingResponse;
+import com.ddiehl.reddit.listings.MoreChildrenResponse;
 import com.squareup.okhttp.ResponseBody;
 
 import java.util.List;
@@ -41,7 +44,9 @@ public interface RedditService {
     Observable<List<ListingResponse>> loadLinkComments(
             @NonNull String subreddit, @NonNull String article,
             @Nullable String sort, @Nullable String commentId);
-    void onLoadMoreChildren(@NonNull LoadMoreChildrenEvent event);
+    Observable<Pair<CommentStub, MoreChildrenResponse>> loadMoreChildren(
+            @NonNull Link link, @NonNull CommentStub moreComments,
+            @NonNull List<String> children, @Nullable String sort);
     void onLoadUserProfileSummary(@NonNull LoadUserProfileSummaryEvent event);
     void onLoadUserProfile(@NonNull LoadUserProfileListingEvent event);
 

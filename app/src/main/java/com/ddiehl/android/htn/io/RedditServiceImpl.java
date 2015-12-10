@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.util.Pair;
 
 import com.ddiehl.android.htn.AccessTokenManager;
 import com.ddiehl.android.htn.BusProvider;
@@ -14,7 +15,6 @@ import com.ddiehl.android.htn.events.requests.FriendDeleteEvent;
 import com.ddiehl.android.htn.events.requests.FriendNoteSaveEvent;
 import com.ddiehl.android.htn.events.requests.GetSubredditInfoEvent;
 import com.ddiehl.android.htn.events.requests.HideEvent;
-import com.ddiehl.android.htn.events.requests.LoadMoreChildrenEvent;
 import com.ddiehl.android.htn.events.requests.LoadUserProfileListingEvent;
 import com.ddiehl.android.htn.events.requests.LoadUserProfileSummaryEvent;
 import com.ddiehl.android.htn.events.requests.ReportEvent;
@@ -25,7 +25,6 @@ import com.ddiehl.android.htn.events.responses.FriendDeletedEvent;
 import com.ddiehl.android.htn.events.responses.FriendInfoLoadedEvent;
 import com.ddiehl.android.htn.events.responses.HideSubmittedEvent;
 import com.ddiehl.android.htn.events.responses.ListingsLoadedEvent;
-import com.ddiehl.android.htn.events.responses.MoreChildrenLoadedEvent;
 import com.ddiehl.android.htn.events.responses.SaveSubmittedEvent;
 import com.ddiehl.android.htn.events.responses.SubredditInfoLoadedEvent;
 import com.ddiehl.android.htn.events.responses.TrophiesLoadedEvent;
@@ -47,6 +46,7 @@ import com.ddiehl.reddit.listings.CommentStub;
 import com.ddiehl.reddit.listings.Link;
 import com.ddiehl.reddit.listings.Listing;
 import com.ddiehl.reddit.listings.ListingResponse;
+import com.ddiehl.reddit.listings.MoreChildrenResponse;
 import com.facebook.stetho.okhttp.StethoInterceptor;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
@@ -164,27 +164,17 @@ public class RedditServiceImpl implements RedditService {
     }
 
     @Override
-    public void onLoadMoreChildren(@NonNull LoadMoreChildrenEvent event) {
-        Link link = event.getLink();
-        final CommentStub parentStub = event.getParentCommentStub();
-        List<String> children = event.getChildren();
-        String sort = event.getSort();
-
+    public Observable<Pair<CommentStub, MoreChildrenResponse>> loadMoreChildren(
+            @NonNull Link link, @NonNull CommentStub parentStub,
+            @NonNull List<String> children, @Nullable String sort) {
         StringBuilder b = new StringBuilder();
-        for (String child : children)
-            b.append(child).append(",");
+        for (String child : children) b.append(child).append(",");
         String childrenString = b.toString();
         childrenString = childrenString.substring(0, Math.max(childrenString.length() - 1, 0));
-
-        mAPI.getMoreChildren(link.getName(), childrenString, sort)
+        return mAPI.getMoreChildren(link.getName(), childrenString, sort)
                 .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        response -> mBus.post(new MoreChildrenLoadedEvent(parentStub, response.body())),
-                        error -> {
-                            mBus.post(error);
-                            mBus.post(new MoreChildrenLoadedEvent(error));
-                        });
+                .map(response -> Pair.create(parentStub, response.body()));
     }
 
     @Override

@@ -12,14 +12,12 @@ public class MoreChildrenResponse {
         @Expose private MoreChildrenResponseData data;
 
         private static class MoreChildrenResponseData {
-
             @Expose private List<Listing> things;
         }
     }
 
     public List<Listing> getChildComments() {
-        if (json.data == null)
-            return null;
+        if (json.data == null) return null;
         return json.data.things;
     }
 }
