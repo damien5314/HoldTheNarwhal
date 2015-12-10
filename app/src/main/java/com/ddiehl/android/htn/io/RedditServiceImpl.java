@@ -14,7 +14,6 @@ import com.ddiehl.android.htn.events.requests.FriendDeleteEvent;
 import com.ddiehl.android.htn.events.requests.FriendNoteSaveEvent;
 import com.ddiehl.android.htn.events.requests.GetSubredditInfoEvent;
 import com.ddiehl.android.htn.events.requests.HideEvent;
-import com.ddiehl.android.htn.events.requests.LoadLinkCommentsEvent;
 import com.ddiehl.android.htn.events.requests.LoadMoreChildrenEvent;
 import com.ddiehl.android.htn.events.requests.LoadUserProfileListingEvent;
 import com.ddiehl.android.htn.events.requests.LoadUserProfileSummaryEvent;
@@ -25,7 +24,6 @@ import com.ddiehl.android.htn.events.responses.FriendAddedEvent;
 import com.ddiehl.android.htn.events.responses.FriendDeletedEvent;
 import com.ddiehl.android.htn.events.responses.FriendInfoLoadedEvent;
 import com.ddiehl.android.htn.events.responses.HideSubmittedEvent;
-import com.ddiehl.android.htn.events.responses.LinkCommentsLoadedEvent;
 import com.ddiehl.android.htn.events.responses.ListingsLoadedEvent;
 import com.ddiehl.android.htn.events.responses.MoreChildrenLoadedEvent;
 import com.ddiehl.android.htn.events.responses.SaveSubmittedEvent;
@@ -108,7 +106,7 @@ public class RedditServiceImpl implements RedditService {
 
         Retrofit restAdapter = new Retrofit.Builder()
                 .client(client)
-                .baseUrl(ENDPOINT_AUTHORIZED)
+                .baseUrl(ENDPOINT_OAUTH)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .build();
@@ -156,20 +154,13 @@ public class RedditServiceImpl implements RedditService {
     }
 
     @Override
-    public void onLoadLinkComments(@NonNull LoadLinkCommentsEvent event) {
-        String subreddit = event.getSubreddit();
-        String article = event.getArticle();
-        String sort = event.getSort();
-        String commentId = event.getCommentId();
-        mAPI.getComments(subreddit, article, sort, commentId)
+    public Observable<List<ListingResponse>> loadLinkComments(
+            @NonNull String subreddit, @NonNull String article,
+            @Nullable String sort, @Nullable String commentId) {
+        return mAPI.getComments(subreddit, article, sort, commentId)
                 .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        response -> mBus.post(new LinkCommentsLoadedEvent(response.body())),
-                        error -> {
-                            mBus.post(error);
-                            mBus.post(new LinkCommentsLoadedEvent(error));
-                        });
+                .map(Response::body);
     }
 
     @Override

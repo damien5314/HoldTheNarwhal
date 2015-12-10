@@ -13,14 +13,13 @@ import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.SettingsManager;
 import com.ddiehl.android.htn.analytics.Analytics;
 import com.ddiehl.android.htn.events.requests.HideEvent;
-import com.ddiehl.android.htn.events.requests.LoadLinkCommentsEvent;
 import com.ddiehl.android.htn.events.requests.LoadMoreChildrenEvent;
 import com.ddiehl.android.htn.events.requests.SaveEvent;
 import com.ddiehl.android.htn.events.requests.VoteEvent;
-import com.ddiehl.android.htn.events.responses.LinkCommentsLoadedEvent;
 import com.ddiehl.android.htn.events.responses.MoreChildrenLoadedEvent;
 import com.ddiehl.android.htn.events.responses.SaveSubmittedEvent;
 import com.ddiehl.android.htn.events.responses.VoteSubmittedEvent;
+import com.ddiehl.android.htn.io.RedditService;
 import com.ddiehl.android.htn.model.CommentBank;
 import com.ddiehl.android.htn.model.CommentBankList;
 import com.ddiehl.android.htn.view.LinkCommentsView;
@@ -34,6 +33,7 @@ import com.ddiehl.reddit.listings.Comment;
 import com.ddiehl.reddit.listings.CommentStub;
 import com.ddiehl.reddit.listings.Link;
 import com.ddiehl.reddit.listings.Listing;
+import com.ddiehl.reddit.listings.ListingResponse;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -51,6 +51,7 @@ public class LinkCommentsPresenterImpl
     private CommentBank mCommentBank;
 
     private Bus mBus = BusProvider.getInstance();
+    private RedditService mRedditService = HoldTheNarwhal.getRedditService();
     private AccessTokenManager mAccessTokenManager = HoldTheNarwhal.getAccessTokenManager();
     private SettingsManager mSettingsManager = HoldTheNarwhal.getSettingsManager();
     private Analytics mAnalytics = HoldTheNarwhal.getAnalytics();
@@ -86,31 +87,28 @@ public class LinkCommentsPresenterImpl
     @Override
     public void requestData() {
         mMainView.showSpinner(null);
-        mBus.post(new LoadLinkCommentsEvent(mSubreddit, mLinkId, mSort, mCommentId));
+        mRedditService.loadLinkComments(mSubreddit, mLinkId, mSort, mCommentId)
+                .doOnTerminate(mMainView::dismissSpinner)
+                .subscribe(listingResponseList -> {
+                    // Link is responseList.get(0), comments are responseList.get(1)
+                    ListingResponse linkResponse = listingResponseList.get(0);
+                    mLinkContext = (Link) linkResponse.getData().getChildren().get(0);
+                    if (mLinkContext != null) mMainView.setTitle(mLinkContext.getTitle());
+                    ListingResponse commentsResponse = listingResponseList.get(1);
+                    List<Listing> comments = commentsResponse.getData().getChildren();
+                    AbsComment.Utils.flattenCommentList(comments);
+                    mCommentBank.clear();
+                    mCommentBank.addAll(comments);
+                    Integer minScore = mSettingsManager.getMinCommentScore();
+                    mCommentBank.collapseAllThreadsUnder(minScore);
+                    mLinkCommentsView.commentsUpdated();
+                });
         mAnalytics.logLoadLinkComments(mSort);
     }
 
     @Override
     public Action1<UserIdentity> onUserIdentityChanged() {
         return identity -> requestData();
-    }
-
-    @Subscribe @SuppressWarnings("unused")
-    public void onCommentsLoaded(LinkCommentsLoadedEvent event) {
-        mMainView.dismissSpinner();
-        if (event.isFailed()) {
-            return;
-        }
-
-        mLinkContext = event.getLink();
-        if (mLinkContext != null) mMainView.setTitle(mLinkContext.getTitle());
-        List<Listing> comments = event.getComments();
-        AbsComment.Utils.flattenCommentList(comments);
-        mCommentBank.clear();
-        mCommentBank.addAll(comments);
-        Integer minScore = mSettingsManager.getMinCommentScore();
-        mCommentBank.collapseAllThreadsUnder(minScore);
-        mLinkCommentsView.commentsUpdated();
     }
 
     @Override

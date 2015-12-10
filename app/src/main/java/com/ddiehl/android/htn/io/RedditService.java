@@ -9,7 +9,6 @@ import com.ddiehl.android.htn.events.requests.FriendDeleteEvent;
 import com.ddiehl.android.htn.events.requests.FriendNoteSaveEvent;
 import com.ddiehl.android.htn.events.requests.GetSubredditInfoEvent;
 import com.ddiehl.android.htn.events.requests.HideEvent;
-import com.ddiehl.android.htn.events.requests.LoadLinkCommentsEvent;
 import com.ddiehl.android.htn.events.requests.LoadMoreChildrenEvent;
 import com.ddiehl.android.htn.events.requests.LoadUserProfileListingEvent;
 import com.ddiehl.android.htn.events.requests.LoadUserProfileSummaryEvent;
@@ -21,6 +20,7 @@ import com.ddiehl.reddit.identity.UserSettings;
 import com.ddiehl.reddit.listings.ListingResponse;
 import com.squareup.okhttp.ResponseBody;
 
+import java.util.List;
 import java.util.Map;
 
 import rx.Observable;
@@ -30,17 +30,17 @@ public interface RedditService {
 
     String USER_AGENT = String.format("android:com.ddiehl.android.htn:v%s (by /u/damien5314)", BuildConfig.VERSION_NAME);
     String ENDPOINT_NORMAL = "https://www.reddit.com";
-    String ENDPOINT_AUTHORIZED = "https://oauth.reddit.com";
+    String ENDPOINT_OAUTH = "https://oauth.reddit.com";
 
     Observable<UserIdentity> getUserIdentity();
     Observable<UserSettings> getUserSettings();
     Observable<ResponseBody> updateUserSettings(Map<String, String> settings);
-
     Observable<ListingResponse> loadLinks(
             @Nullable String subreddit, @Nullable String sort,
             @Nullable String timespan, @Nullable String after);
-
-    void onLoadLinkComments(@NonNull LoadLinkCommentsEvent event);
+    Observable<List<ListingResponse>> loadLinkComments(
+            @NonNull String subreddit, @NonNull String article,
+            @Nullable String sort, @Nullable String commentId);
     void onLoadMoreChildren(@NonNull LoadMoreChildrenEvent event);
     void onLoadUserProfileSummary(@NonNull LoadUserProfileSummaryEvent event);
     void onLoadUserProfile(@NonNull LoadUserProfileListingEvent event);
