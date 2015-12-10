@@ -10,6 +10,7 @@ import retrofit.Response;
 
 public interface Analytics {
     void initialize();
+    void setEnabled(boolean b);
     void startSession();
     void endSession();
     void setUserIdentity(@Nullable String name);

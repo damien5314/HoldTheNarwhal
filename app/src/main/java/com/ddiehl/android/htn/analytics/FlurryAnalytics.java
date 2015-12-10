@@ -25,7 +25,7 @@ public class FlurryAnalytics implements Analytics {
 
     private Logger mLogger = HoldTheNarwhal.getLogger();
     private Context mContext = HoldTheNarwhal.getContext();
-    private SettingsManager mSettingsManager;
+    private boolean mEnabled = false;
     private boolean mInitialized = false;
 
     @Override
@@ -35,7 +35,8 @@ public class FlurryAnalytics implements Analytics {
             return;
         }
         // Set this in init to avoid circular dependency
-        mSettingsManager = HoldTheNarwhal.getSettingsManager();
+        SettingsManager sm = HoldTheNarwhal.getSettingsManager();
+        setEnabled(sm.areAnalyticsEnabled());
         String apiKey = BuildConfig.FLURRY_API_KEY;
         FlurryAgent.init(mContext, apiKey);
         FlurryAgent.setContinueSessionMillis(FLURRY_SESSION_TIMEOUT_SECONDS * 1000);
@@ -46,13 +47,20 @@ public class FlurryAnalytics implements Analytics {
     }
 
     @Override
+    public void setEnabled(boolean b) {
+        mEnabled = b;
+        if (b) startSession();
+        else endSession();
+    }
+
+    @Override
     public void startSession() {
         if (Build.VERSION.SDK_INT >= 14) return; // Sessions are handled automatically API 14+
         FlurryAgent.onStartSession(mContext);
     }
 
     private void onStartSession() {
-        if (!mSettingsManager.areAnalyticsEnabled()) return;
+        if (!mEnabled) return;
         // Log initial Flurry event
         Map<String, String> params = new HashMap<>();
         UserIdentity identity = HoldTheNarwhal.getIdentityManager().getUserIdentity();
@@ -79,7 +87,7 @@ public class FlurryAnalytics implements Analytics {
 
     @Override
     public void logOpenLink(@NonNull Link link) {
-        if (!mSettingsManager.areAnalyticsEnabled()) return;
+        if (!mEnabled) return;
         Map<String, String> params = new HashMap<>();
         params.put("subreddit", link.getSubreddit());
         params.put("id", link.getId());
@@ -93,91 +101,91 @@ public class FlurryAnalytics implements Analytics {
 
     @Override
     public void logOptionChangeSort() {
-        if (!mSettingsManager.areAnalyticsEnabled()) return;
+        if (!mEnabled) return;
         FlurryAgent.logEvent("option - change sort");
     }
 
     @Override
     public void logOptionChangeSort(@NonNull String sort) {
-        if (!mSettingsManager.areAnalyticsEnabled()) return;
+        if (!mEnabled) return;
         FlurryAgent.logEvent("option - change sort - " + sort);
     }
 
     @Override
     public void logOptionChangeTimespan() {
-        if (!mSettingsManager.areAnalyticsEnabled()) return;
+        if (!mEnabled) return;
         FlurryAgent.logEvent("option - change timespan");
     }
 
     @Override
     public void logOptionChangeTimespan(@NonNull String timespan) {
-        if (!mSettingsManager.areAnalyticsEnabled()) return;
+        if (!mEnabled) return;
         FlurryAgent.logEvent("option - change timespan - " + timespan);
     }
 
     @Override
     public void logOptionRefresh() {
-        if (!mSettingsManager.areAnalyticsEnabled()) return;
+        if (!mEnabled) return;
         FlurryAgent.logEvent("option - refresh");
     }
 
     @Override
     public void logOptionSettings() {
-        if (!mSettingsManager.areAnalyticsEnabled()) return;
+        if (!mEnabled) return;
         FlurryAgent.logEvent("option - settings");
     }
 
     @Override
     public void logDrawerNavigateToSubreddit() {
-        if (!mSettingsManager.areAnalyticsEnabled()) return;
+        if (!mEnabled) return;
         FlurryAgent.logEvent("nav drawer - navigate to subreddit");
     }
 
     @Override
     public void logDrawerLogIn() {
-        if (!mSettingsManager.areAnalyticsEnabled()) return;
+        if (!mEnabled) return;
         FlurryAgent.logEvent("nav drawer - log in");
     }
 
     @Override
     public void logDrawerUserProfile() {
-        if (!mSettingsManager.areAnalyticsEnabled()) return;
+        if (!mEnabled) return;
         FlurryAgent.logEvent("nav drawer - user profile");
     }
 
     @Override
     public void logDrawerUserSubreddits() {
-        if (!mSettingsManager.areAnalyticsEnabled()) return;
+        if (!mEnabled) return;
         FlurryAgent.logEvent("nav drawer - user subreddits");
     }
 
     @Override
     public void logDrawerFrontPage() {
-        if (!mSettingsManager.areAnalyticsEnabled()) return;
+        if (!mEnabled) return;
         FlurryAgent.logEvent("nav drawer - navigate to front page");
     }
 
     @Override
     public void logDrawerAllSubreddits() {
-        if (!mSettingsManager.areAnalyticsEnabled()) return;
+        if (!mEnabled) return;
         FlurryAgent.logEvent("nav drawer - navigate to /r/all");
     }
 
     @Override
     public void logDrawerRandomSubreddit() {
-        if (!mSettingsManager.areAnalyticsEnabled()) return;
+        if (!mEnabled) return;
         FlurryAgent.logEvent("nav drawer - navigate to random subreddit");
     }
 
     @Override
     public void logClickedSignOut() {
-        if (!mSettingsManager.areAnalyticsEnabled()) return;
+        if (!mEnabled) return;
         FlurryAgent.logEvent("clicked sign out");
     }
 
     @Override
     public void logSettingChanged(@NonNull String key, @NonNull String value) {
-        if (!mSettingsManager.areAnalyticsEnabled()) return;
+        if (!mEnabled) return;
         Map<String, String> params = new HashMap<>();
         params.put("key", key);
         params.put("value", value);
@@ -186,7 +194,7 @@ public class FlurryAnalytics implements Analytics {
 
     @Override
     public void logApiError(Response error) {
-        if (!mSettingsManager.areAnalyticsEnabled()) return;
+        if (!mEnabled) return;
         Map<String, String> params = new HashMap<>();
         params.put("url", error.raw().request().url().toString());
         params.put("code", String.valueOf(error.code()));
@@ -199,7 +207,7 @@ public class FlurryAnalytics implements Analytics {
 
     @Override
     public void logSignIn(@NonNull UserIdentity identity) {
-        if (!mSettingsManager.areAnalyticsEnabled()) return;
+        if (!mEnabled) return;
         Map<String, String> params = new HashMap<>();
         params.put("user", BaseUtils.getMd5HexString(identity.getName()));
         Date date = new Date(Double.valueOf(identity.getCreatedUTC() * 1000).longValue());
@@ -214,7 +222,7 @@ public class FlurryAnalytics implements Analytics {
 
     @Override
     public void logSignOut() {
-        if (!mSettingsManager.areAnalyticsEnabled()) return;
+        if (!mEnabled) return;
         FlurryAgent.logEvent("user signed out");
         FlurryAgent.setUserId(null);
     }
@@ -222,7 +230,7 @@ public class FlurryAnalytics implements Analytics {
     @Override
     public void logLoadSubreddit(
             @Nullable String subreddit, @NonNull String sort, @NonNull String timespan) {
-        if (!mSettingsManager.areAnalyticsEnabled()) return;
+        if (!mEnabled) return;
         Map<String, String> params = new HashMap<>();
         params.put("subreddit", subreddit);
         params.put("sort", sort);
@@ -233,7 +241,7 @@ public class FlurryAnalytics implements Analytics {
     @Override
     public void logLoadUserProfile(
             @NonNull String show, @NonNull String sort, @NonNull String timespan) {
-        if (!mSettingsManager.areAnalyticsEnabled()) return;
+        if (!mEnabled) return;
         Map<String, String> params = new HashMap<>();
         params.put("show", show);
         params.put("sort", sort);
@@ -243,7 +251,7 @@ public class FlurryAnalytics implements Analytics {
 
     @Override
     public void logLoadLinkComments(@NonNull String sort) {
-        if (!mSettingsManager.areAnalyticsEnabled()) return;
+        if (!mEnabled) return;
         Map<String, String> params = new HashMap<>();
         params.put("sort", sort);
         FlurryAgent.logEvent("load link comments", params);
@@ -251,7 +259,7 @@ public class FlurryAnalytics implements Analytics {
 
     @Override
     public void logLoadMoreChildren(@NonNull String sort) {
-        if (!mSettingsManager.areAnalyticsEnabled()) return;
+        if (!mEnabled) return;
         Map<String, String> params = new HashMap<>();
         params.put("sort", sort);
         FlurryAgent.logEvent("load more comment children", params);
@@ -259,7 +267,7 @@ public class FlurryAnalytics implements Analytics {
 
     @Override
     public void logVote(@NonNull String type, int direction) {
-        if (!mSettingsManager.areAnalyticsEnabled()) return;
+        if (!mEnabled) return;
         Map<String, String> params = new HashMap<>();
         params.put("type", type);
         params.put("direction", String.valueOf(direction));
@@ -268,7 +276,7 @@ public class FlurryAnalytics implements Analytics {
 
     @Override
     public void logSave(@NonNull String type, @Nullable String category, boolean isSaving) {
-        if (!mSettingsManager.areAnalyticsEnabled()) return;
+        if (!mEnabled) return;
         Map<String, String> params = new HashMap<>();
         params.put("type", type);
         params.put("category", category);
@@ -278,7 +286,7 @@ public class FlurryAnalytics implements Analytics {
 
     @Override
     public void logHide(@NonNull String type, boolean isHiding) {
-        if (!mSettingsManager.areAnalyticsEnabled()) return;
+        if (!mEnabled) return;
         Map<String, String> params = new HashMap<>();
         params.put("type", type);
         params.put("b", String.valueOf(isHiding));
@@ -287,7 +295,7 @@ public class FlurryAnalytics implements Analytics {
 
     @Override
     public void logReport() {
-        if (!mSettingsManager.areAnalyticsEnabled()) return;
+        if (!mEnabled) return;
         // TODO: Implement analytics event once feature is implemented
     }
 

@@ -112,11 +112,7 @@ public class SettingsManagerImpl implements SettingsManager {
         switch (key) {
             case SettingsManagerImpl.PREF_ALLOW_ANALYTICS:
                 boolean allowed = sp.getBoolean(PREF_ALLOW_ANALYTICS, false);
-                if (allowed) {
-                    mAnalytics.startSession();
-                } else {
-                    mAnalytics.endSession();
-                }
+                mAnalytics.setEnabled(allowed);
                 break;
             default:
                 Object p = getValueFromKey(sp, key);
