@@ -15,11 +15,13 @@ import com.ddiehl.android.htn.events.requests.LoadUserProfileListingEvent;
 import com.ddiehl.android.htn.events.requests.LoadUserProfileSummaryEvent;
 import com.ddiehl.android.htn.events.requests.ReportEvent;
 import com.ddiehl.android.htn.events.requests.SaveEvent;
-import com.ddiehl.android.htn.events.requests.UpdateUserSettingsEvent;
 import com.ddiehl.android.htn.events.requests.VoteEvent;
 import com.ddiehl.reddit.identity.UserIdentity;
 import com.ddiehl.reddit.identity.UserSettings;
 import com.ddiehl.reddit.listings.ListingResponse;
+import com.squareup.okhttp.ResponseBody;
+
+import java.util.Map;
 
 import rx.Observable;
 
@@ -42,7 +44,7 @@ public interface RedditService {
     void onGetSubredditInfo(@NonNull GetSubredditInfoEvent event);
     Observable<UserIdentity> getUserIdentity();
     Observable<UserSettings> getUserSettings();
-    void onUpdateUserSettings(@NonNull UpdateUserSettingsEvent event);
+    Observable<ResponseBody> updateUserSettings(Map<String, String> settings);
     void onVote(@NonNull VoteEvent event);
     void onSave(@NonNull SaveEvent event);
     void onHide(@NonNull HideEvent event);

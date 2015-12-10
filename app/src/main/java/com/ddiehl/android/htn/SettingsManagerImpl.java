@@ -4,10 +4,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.ddiehl.android.htn.analytics.Analytics;
-import com.ddiehl.android.htn.events.requests.UpdateUserSettingsEvent;
 import com.ddiehl.android.htn.events.responses.UserSettingsRetrievedEvent;
+import com.ddiehl.android.htn.io.RedditService;
 import com.ddiehl.reddit.identity.UserSettings;
-import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import java.util.HashMap;
@@ -82,7 +81,7 @@ public class SettingsManagerImpl implements SettingsManager {
             "highlight_new_comments, default_comment_sort, hide_locationbar";
 
     private Context mContext = HoldTheNarwhal.getContext();
-    private Bus mBus = BusProvider.getInstance();
+    private RedditService mRedditService = HoldTheNarwhal.getRedditService();
     private Analytics mAnalytics = HoldTheNarwhal.getAnalytics();
     private SharedPreferences mSharedPreferences;
 
@@ -156,7 +155,10 @@ public class SettingsManagerImpl implements SettingsManager {
         if (changedSettings.size() > 0 &&
                 HoldTheNarwhal.getAccessTokenManager().isUserAuthorized()) {
             // Post SettingsUpdate event with changed keys and values
-            mBus.post(new UpdateUserSettingsEvent(changedSettings));
+            mRedditService.updateUserSettings(changedSettings)
+                    .subscribe(response -> {}, error -> {
+                        // TODO Error handling when updating user settings fails
+                    });
         }
 
         Map prefs = sp.getAll();

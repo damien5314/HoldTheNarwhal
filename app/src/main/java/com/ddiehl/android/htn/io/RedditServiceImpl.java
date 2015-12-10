@@ -20,7 +20,6 @@ import com.ddiehl.android.htn.events.requests.LoadUserProfileListingEvent;
 import com.ddiehl.android.htn.events.requests.LoadUserProfileSummaryEvent;
 import com.ddiehl.android.htn.events.requests.ReportEvent;
 import com.ddiehl.android.htn.events.requests.SaveEvent;
-import com.ddiehl.android.htn.events.requests.UpdateUserSettingsEvent;
 import com.ddiehl.android.htn.events.requests.VoteEvent;
 import com.ddiehl.android.htn.events.responses.FriendAddedEvent;
 import com.ddiehl.android.htn.events.responses.FriendDeletedEvent;
@@ -33,7 +32,6 @@ import com.ddiehl.android.htn.events.responses.SaveSubmittedEvent;
 import com.ddiehl.android.htn.events.responses.SubredditInfoLoadedEvent;
 import com.ddiehl.android.htn.events.responses.TrophiesLoadedEvent;
 import com.ddiehl.android.htn.events.responses.UserInfoLoadedEvent;
-import com.ddiehl.android.htn.events.responses.UserSettingsUpdatedEvent;
 import com.ddiehl.android.htn.events.responses.VoteSubmittedEvent;
 import com.ddiehl.android.htn.logging.Logger;
 import com.ddiehl.reddit.Hideable;
@@ -60,10 +58,12 @@ import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
+import com.squareup.okhttp.ResponseBody;
 import com.squareup.otto.Bus;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 
 import retrofit.GsonConverterFactory;
 import retrofit.Response;
@@ -79,11 +79,7 @@ public class RedditServiceImpl implements RedditService {
     private Logger mLogger = HoldTheNarwhal.getLogger();
     private AccessTokenManager mAccessTokenManager = HoldTheNarwhal.getAccessTokenManager();
     private Analytics mAnalytics = HoldTheNarwhal.getAnalytics();
-    private RedditAPI mAPI;
-
-    RedditServiceImpl() {
-        mAPI = buildApi();
-    }
+    private RedditAPI mAPI = buildApi();
 
     private RedditAPI buildApi() {
         final int cacheSize = 10 * 1024 * 1024; // 10 MiB
@@ -139,17 +135,13 @@ public class RedditServiceImpl implements RedditService {
     }
 
     @Override
-    public void onUpdateUserSettings(@NonNull UpdateUserSettingsEvent event) {
-        String json = new Gson().toJson(event.getPrefs());
-        mAPI.updateUserSettings(RequestBody.create(MediaType.parse("application/json"), json))
+    public Observable<ResponseBody> updateUserSettings(Map<String, String> settings) {
+        String json = new Gson().toJson(settings);
+        RequestBody body = RequestBody.create(MediaType.parse("application/json"), json);
+        return mAPI.updateUserSettings(body)
                 .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        response -> mBus.post(new UserSettingsUpdatedEvent()),
-                        error -> {
-                            mBus.post(error);
-                            mBus.post(new UserSettingsUpdatedEvent(error));
-                        });
+                .map(Response::body);
     }
 
     @Override
