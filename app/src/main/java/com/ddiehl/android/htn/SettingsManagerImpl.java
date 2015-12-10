@@ -4,10 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.ddiehl.android.htn.analytics.Analytics;
-import com.ddiehl.android.htn.events.responses.UserSettingsRetrievedEvent;
 import com.ddiehl.android.htn.io.RedditService;
 import com.ddiehl.reddit.identity.UserSettings;
-import com.squareup.otto.Subscribe;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -99,12 +97,6 @@ public class SettingsManagerImpl implements SettingsManager {
     @Override
     public boolean hasFromRemote() {
         return mSharedPreferences.getBoolean(PREF_HAS_FROM_REMOTE, false);
-    }
-
-    @Override @Subscribe @SuppressWarnings("unused")
-    public void onUserSettingsRetrieved(UserSettingsRetrievedEvent event) {
-        UserSettings settings = event.getSettings();
-        saveUserSettings(settings);
     }
 
     @Override
