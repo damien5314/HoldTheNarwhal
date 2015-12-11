@@ -74,7 +74,6 @@ public abstract class AbsListingsFragment extends Fragment
                 mVisibleItemCount = mgr.getChildCount();
                 mTotalItemCount = mgr.getItemCount();
                 mFirstVisibleItem = mgr.findFirstVisibleItemPosition();
-
                 if ((mVisibleItemCount + mFirstVisibleItem) >= mTotalItemCount) {
                     if (mListingsPresenter.getNextPageListingId() != null) {
                         mListingsPresenter.getMoreData();
