@@ -5,7 +5,6 @@ import android.support.annotation.Nullable;
 import android.util.Pair;
 
 import com.ddiehl.android.htn.BuildConfig;
-import com.ddiehl.android.htn.events.requests.GetSubredditInfoEvent;
 import com.ddiehl.android.htn.events.requests.HideEvent;
 import com.ddiehl.android.htn.events.requests.ReportEvent;
 import com.ddiehl.android.htn.events.requests.SaveEvent;
@@ -18,6 +17,7 @@ import com.ddiehl.reddit.listings.Link;
 import com.ddiehl.reddit.listings.Listing;
 import com.ddiehl.reddit.listings.ListingResponse;
 import com.ddiehl.reddit.listings.MoreChildrenResponse;
+import com.ddiehl.reddit.listings.Subreddit;
 import com.squareup.okhttp.ResponseBody;
 
 import java.util.List;
@@ -54,7 +54,7 @@ public interface RedditService {
     Observable<ResponseBody> addFriend(@NonNull String username);
     Observable<ResponseBody> deleteFriend(@NonNull String username);
     Observable<ResponseBody> saveFriendNote(@NonNull String username, @NonNull String note);
-    void onGetSubredditInfo(@NonNull GetSubredditInfoEvent event);
+    Observable<Subreddit> getSubredditInfo(@NonNull String subreddit);
     void onVote(@NonNull VoteEvent event);
     void onSave(@NonNull SaveEvent event);
     void onHide(@NonNull HideEvent event);

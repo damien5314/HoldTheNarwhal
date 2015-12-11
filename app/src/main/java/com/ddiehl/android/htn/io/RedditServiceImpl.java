@@ -10,14 +10,12 @@ import com.ddiehl.android.htn.AccessTokenManager;
 import com.ddiehl.android.htn.BusProvider;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.analytics.Analytics;
-import com.ddiehl.android.htn.events.requests.GetSubredditInfoEvent;
 import com.ddiehl.android.htn.events.requests.HideEvent;
 import com.ddiehl.android.htn.events.requests.ReportEvent;
 import com.ddiehl.android.htn.events.requests.SaveEvent;
 import com.ddiehl.android.htn.events.requests.VoteEvent;
 import com.ddiehl.android.htn.events.responses.HideSubmittedEvent;
 import com.ddiehl.android.htn.events.responses.SaveSubmittedEvent;
-import com.ddiehl.android.htn.events.responses.SubredditInfoLoadedEvent;
 import com.ddiehl.android.htn.events.responses.VoteSubmittedEvent;
 import com.ddiehl.android.htn.logging.Logger;
 import com.ddiehl.reddit.Hideable;
@@ -37,6 +35,7 @@ import com.ddiehl.reddit.listings.Link;
 import com.ddiehl.reddit.listings.Listing;
 import com.ddiehl.reddit.listings.ListingResponse;
 import com.ddiehl.reddit.listings.MoreChildrenResponse;
+import com.ddiehl.reddit.listings.Subreddit;
 import com.facebook.stetho.okhttp.StethoInterceptor;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
@@ -233,19 +232,11 @@ public class RedditServiceImpl implements RedditService {
     }
 
     @Override
-    public void onGetSubredditInfo(@NonNull GetSubredditInfoEvent event) {
-        final String name = event.getSubredditName();
-
-        mAPI.getSubredditInfo(name)
+    public Observable<Subreddit> getSubredditInfo(@NonNull String subreddit) {
+        return requireAccessToken().flatMap(token -> mAPI.getSubredditInfo(subreddit)
                 .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        subreddit -> mBus.post(new SubredditInfoLoadedEvent(subreddit.body())),
-                        error -> {
-                            mBus.post(error);
-                            mBus.post(new SubredditInfoLoadedEvent(error));
-                        }
-                );
+                .map(Response::body));
     }
 
     @Override

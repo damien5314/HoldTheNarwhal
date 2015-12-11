@@ -1,9 +1,7 @@
 package com.ddiehl.android.htn.presenter;
 
-import com.ddiehl.android.htn.events.requests.GetSubredditInfoEvent;
 import com.ddiehl.android.htn.events.responses.HideSubmittedEvent;
 import com.ddiehl.android.htn.events.responses.SaveSubmittedEvent;
-import com.ddiehl.android.htn.events.responses.SubredditInfoLoadedEvent;
 import com.ddiehl.android.htn.events.responses.VoteSubmittedEvent;
 import com.ddiehl.android.htn.view.ListingsView;
 import com.ddiehl.android.htn.view.MainView;
@@ -31,29 +29,26 @@ public class SubredditPresenter extends AbsListingsPresenter {
                     .subscribe(onListingsLoaded());
         } else {
             mListingsRequested = false;
-            mBus.post(new GetSubredditInfoEvent(mSubreddit));
+            mRedditService.getSubredditInfo(mSubreddit)
+                    .subscribe(onSubredditInfoLoaded());
         }
     }
 
-    @Subscribe @SuppressWarnings("unused")
-    public void onSubredditInfoLoaded(SubredditInfoLoadedEvent event) {
-        if (event.isFailed())
-            return;
-
-        mSubredditInfo = event.getSubreddit();
-        UserIdentity user = getAuthorizedUser();
-        if ((mSubredditInfo != null && mSubredditInfo.isOver18())
-                && (user == null || !user.isOver18())) {
-            mMainView.showNsfwWarningDialog();
-        } else {
-            requestData();
-        }
-
-        mMainView.onSubredditInfoLoaded(mSubredditInfo);
+    private Action1<Subreddit> onSubredditInfoLoaded() {
+        return subreddit -> {
+            mSubredditInfo = subreddit;
+            UserIdentity user = getAuthorizedUser();
+            if ((mSubredditInfo != null && mSubredditInfo.isOver18())
+                    && (user == null || !user.isOver18())) {
+                mMainView.showNsfwWarningDialog();
+            } else {
+                requestData();
+            }
+            mMainView.loadImageIntoDrawerHeader(subreddit.getHeaderImageUrl());
+        };
     }
 
-    @Override
-    public Action1<ListingResponse> onListingsLoaded() {
+    protected Action1<ListingResponse> onListingsLoaded() {
         return (response) -> {
             super.onListingsLoaded().call(response);
             if (mSubreddit != null && mSubreddit.equals("random")) {

@@ -287,11 +287,6 @@ public class MainActivity extends AppCompatActivity implements MainView,
     public void onSignOutCancel() { /* no-op */ }
 
     @Override
-    public void onSubredditInfoLoaded(@NonNull Subreddit subredditInfo) {
-        loadImageIntoDrawerHeader(subredditInfo.getHeaderImageUrl());
-    }
-
-    @Override
     public void loadImageIntoDrawerHeader(@Nullable String url) {
         Picasso.with(this)
                 .load(url)

@@ -9,7 +9,6 @@ import com.ddiehl.android.htn.view.dialogs.ConfirmSignOutDialog;
 import com.ddiehl.android.htn.view.dialogs.SubredditNavigationDialog;
 import com.ddiehl.android.htn.view.fragments.WebViewFragment;
 import com.ddiehl.reddit.identity.UserIdentity;
-import com.ddiehl.reddit.listings.Subreddit;
 
 public interface MainView extends AnalyticsDialog.Callbacks, ConfirmSignOutDialog.Callbacks,
         SubredditNavigationDialog.Callbacks, WebViewFragment.Callbacks {
@@ -38,5 +37,4 @@ public interface MainView extends AnalyticsDialog.Callbacks, ConfirmSignOutDialo
     void dismissSpinner();
     void showToast(@NonNull String msg);
     void showToast(@StringRes int resId);
-    void onSubredditInfoLoaded(@NonNull Subreddit subredditInfo);
 }
