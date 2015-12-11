@@ -66,7 +66,6 @@ public abstract class AbsListingsPresenter
         mSubreddit = subreddit;
         mSort = sort;
         mTimespan = timespan;
-
         mListings = new ArrayList<>();
     }
 
