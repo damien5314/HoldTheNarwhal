@@ -10,7 +10,6 @@ import com.ddiehl.android.htn.AccessTokenManager;
 import com.ddiehl.android.htn.BusProvider;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.analytics.Analytics;
-import com.ddiehl.android.htn.events.requests.ReportEvent;
 import com.ddiehl.android.htn.logging.Logger;
 import com.ddiehl.reddit.Hideable;
 import com.ddiehl.reddit.Savable;
@@ -298,8 +297,8 @@ public class RedditServiceImpl implements RedditService {
     }
 
     @Override
-    public void onReport(@NonNull final ReportEvent event) {
-
+    public Observable<ResponseBody> onReport(@NonNull String id, @NonNull String reason) {
+        return Observable.error(new RuntimeException("Not yet implemented"));
     }
 
     private Observable<AccessToken> requireAccessToken() {
