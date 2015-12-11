@@ -13,8 +13,6 @@ import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.SettingsManager;
 import com.ddiehl.android.htn.analytics.Analytics;
 import com.ddiehl.android.htn.events.requests.HideEvent;
-import com.ddiehl.android.htn.events.requests.SaveEvent;
-import com.ddiehl.android.htn.events.responses.SaveSubmittedEvent;
 import com.ddiehl.android.htn.io.RedditService;
 import com.ddiehl.android.htn.model.CommentBank;
 import com.ddiehl.android.htn.model.CommentBankList;
@@ -31,7 +29,6 @@ import com.ddiehl.reddit.listings.Link;
 import com.ddiehl.reddit.listings.Listing;
 import com.ddiehl.reddit.listings.ListingResponse;
 import com.squareup.otto.Bus;
-import com.squareup.otto.Subscribe;
 
 import java.util.List;
 
@@ -222,8 +219,7 @@ public class LinkCommentsPresenterImpl
             mMainView.showToast(R.string.user_required);
             return;
         }
-
-        mBus.post(new SaveEvent(mLinkContext, null, true));
+        save(mLinkContext, true);
         mAnalytics.logSave(mLinkContext.getKind(), null, true);
     }
 
@@ -233,8 +229,7 @@ public class LinkCommentsPresenterImpl
             mMainView.showToast(R.string.user_required);
             return;
         }
-
-        mBus.post(new SaveEvent(mLinkContext, null, false));
+        save(mLinkContext, false);
         mAnalytics.logSave(mLinkContext.getKind(), null, false);
     }
 
@@ -312,23 +307,6 @@ public class LinkCommentsPresenterImpl
         mLinkCommentsView.showCommentsForLink(mSubreddit, mLinkId, mCommentId);
     }
 
-    @Subscribe @SuppressWarnings("unused")
-    public void onSaveSubmitted(SaveSubmittedEvent event) {
-        Savable listing = event.getListing();
-
-        if (event.isFailed()) {
-            mMainView.showToast(R.string.save_failed);
-            return;
-        }
-
-        if (listing != null) listing.isSaved(event.isToSave());
-        if (listing instanceof Link) {
-            mLinkCommentsView.linkUpdated();
-        } else {
-            mLinkCommentsView.commentUpdatedAt(mCommentBank.visibleIndexOf(((AbsComment) listing)));
-        }
-    }
-
     @Override
     public void openCommentPermalink() {
         Comment comment = (Comment) mListingSelected;
@@ -367,7 +345,7 @@ public class LinkCommentsPresenterImpl
         }
 
         Comment comment = (Comment) mListingSelected;
-        mBus.post(new SaveEvent(comment, null, true));
+        save(comment, true);
         mAnalytics.logSave(comment.getKind(), null, true);
     }
 
@@ -379,7 +357,7 @@ public class LinkCommentsPresenterImpl
         }
 
         Comment comment = (Comment) mListingSelected;
-        mBus.post(new SaveEvent(comment, null, false));
+        save(comment, false);
         mAnalytics.logSave(comment.getKind(), null, false);
     }
 
@@ -443,5 +421,20 @@ public class LinkCommentsPresenterImpl
                     });
             mAnalytics.logVote(votable.getKind(), direction);
         }
+    }
+
+    private void save(Savable savable, boolean toSave) {
+        mRedditService.save(savable, null, toSave)
+                .doOnError(error -> mMainView.showToast(R.string.save_failed))
+                .doOnNext(response -> {
+                    savable.isSaved(toSave);
+                    if (savable instanceof Link) {
+                        mLinkCommentsView.linkUpdated();
+                    } else {
+                        mLinkCommentsView.commentUpdatedAt(
+                                mCommentBank.visibleIndexOf(((AbsComment) savable)));
+                    }
+                })
+                .subscribe();
     }
 }

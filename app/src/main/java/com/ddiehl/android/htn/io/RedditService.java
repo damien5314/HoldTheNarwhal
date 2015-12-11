@@ -7,7 +7,7 @@ import android.util.Pair;
 import com.ddiehl.android.htn.BuildConfig;
 import com.ddiehl.android.htn.events.requests.HideEvent;
 import com.ddiehl.android.htn.events.requests.ReportEvent;
-import com.ddiehl.android.htn.events.requests.SaveEvent;
+import com.ddiehl.reddit.Savable;
 import com.ddiehl.reddit.Votable;
 import com.ddiehl.reddit.identity.FriendInfo;
 import com.ddiehl.reddit.identity.UserIdentity;
@@ -56,7 +56,7 @@ public interface RedditService {
     Observable<ResponseBody> saveFriendNote(@NonNull String username, @NonNull String note);
     Observable<Subreddit> getSubredditInfo(@NonNull String subreddit);
     Observable<ResponseBody> vote(@NonNull Votable votable, int direction);
-    void onSave(@NonNull SaveEvent event);
+    Observable<ResponseBody> save(@NonNull Savable listing, @Nullable String category, boolean save);
     void onHide(@NonNull HideEvent event);
     void onReport(@NonNull ReportEvent event);
 }

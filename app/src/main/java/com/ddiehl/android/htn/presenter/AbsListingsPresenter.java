@@ -14,9 +14,7 @@ import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.SettingsManager;
 import com.ddiehl.android.htn.analytics.Analytics;
 import com.ddiehl.android.htn.events.requests.HideEvent;
-import com.ddiehl.android.htn.events.requests.SaveEvent;
 import com.ddiehl.android.htn.events.responses.HideSubmittedEvent;
-import com.ddiehl.android.htn.events.responses.SaveSubmittedEvent;
 import com.ddiehl.android.htn.io.RedditService;
 import com.ddiehl.android.htn.logging.Logger;
 import com.ddiehl.android.htn.view.ListingsView;
@@ -190,21 +188,6 @@ public abstract class AbsListingsPresenter
     }
 
     @Subscribe
-    public void onListingSaved(SaveSubmittedEvent event) {
-        Savable listing = event.getListing();
-
-        if (event.isFailed()) {
-            mMainView.showToast(R.string.save_failed);
-            return;
-        }
-
-        if (listing == null) throw new RuntimeException("Event data is null, but event is not failed");
-        listing.isSaved(event.isToSave());
-        //noinspection SuspiciousMethodCalls
-        mListingsView.listingUpdatedAt(mListings.indexOf(listing));
-    }
-
-    @Subscribe
     public void onListingHidden(HideSubmittedEvent event) {
         Hideable listing = event.getListing();
 
@@ -275,7 +258,7 @@ public abstract class AbsListingsPresenter
         }
 
         Link link = (Link) mListingSelected;
-        mBus.post(new SaveEvent(link, null, true));
+        save(link, true);
         mAnalytics.logSave(link.getKind(), null, true);
     }
 
@@ -287,7 +270,7 @@ public abstract class AbsListingsPresenter
         }
 
         Link link = (Link) mListingSelected;
-        mBus.post(new SaveEvent(link, null, false));
+        save(link, false);
         mAnalytics.logSave(link.getKind(), null, false);
     }
 
@@ -412,9 +395,8 @@ public abstract class AbsListingsPresenter
             mMainView.showToast(R.string.user_required);
             return;
         }
-
         Comment comment = (Comment) mListingSelected;
-        mBus.post(new SaveEvent(comment, null, true));
+        save(comment, true);
         mAnalytics.logSave(comment.getKind(), null, true);
     }
 
@@ -424,9 +406,8 @@ public abstract class AbsListingsPresenter
             mMainView.showToast(R.string.user_required);
             return;
         }
-
         Comment comment = (Comment) mListingSelected;
-        mBus.post(new SaveEvent(comment, null, false));
+        save(comment, false);
         mAnalytics.logSave(comment.getKind(), null, false);
     }
 
@@ -526,6 +507,16 @@ public abstract class AbsListingsPresenter
                     });
             mAnalytics.logVote(votable.getKind(), direction);
         }
+    }
+
+    private void save(Savable savable, boolean toSave) {
+        mRedditService.save(savable, null, toSave)
+                .doOnError(error -> mMainView.showToast(R.string.save_failed))
+                .doOnNext(response -> {
+                    savable.isSaved(toSave);
+                    mListingsView.listingUpdatedAt(mListings.indexOf(savable));
+                })
+                .subscribe();
     }
 
     @Override

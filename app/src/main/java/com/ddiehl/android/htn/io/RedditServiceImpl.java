@@ -12,9 +12,7 @@ import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.analytics.Analytics;
 import com.ddiehl.android.htn.events.requests.HideEvent;
 import com.ddiehl.android.htn.events.requests.ReportEvent;
-import com.ddiehl.android.htn.events.requests.SaveEvent;
 import com.ddiehl.android.htn.events.responses.HideSubmittedEvent;
-import com.ddiehl.android.htn.events.responses.SaveSubmittedEvent;
 import com.ddiehl.android.htn.logging.Logger;
 import com.ddiehl.reddit.Hideable;
 import com.ddiehl.reddit.Savable;
@@ -252,32 +250,28 @@ public class RedditServiceImpl implements RedditService {
     }
 
     @Override
-    public void onSave(@NonNull final SaveEvent event) {
-        final Savable listing = event.getListing();
-        final String category = event.getCategory();
-        final boolean toSave = event.isToSave();
-
-        Action1<Response> onSaveSuccess = response -> {
-            if (!response.message().contains("USER_REQUIRED")) {
-                mBus.post(new SaveSubmittedEvent(listing, category, toSave));
-            }
-        };
-
-        Action1<Throwable> onSaveFailure = (error) -> {
-            mBus.post(error);
-            mBus.post(new SaveSubmittedEvent(error));
-        };
-
-        if (event.isToSave()) { // Save
-            mAPI.save(listing.getName(), event.getCategory())
+    public Observable<ResponseBody> save(
+            @NonNull Savable listing, @Nullable String category, boolean toSave) {
+        if (toSave) { // Save
+            return mAPI.save(listing.getName(), category)
                     .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(onSaveSuccess, onSaveFailure);
+                    .flatMap(response -> {
+                        if (response.message().contains("USER_REQUIRED")) {
+                            return Observable.error(new RuntimeException("Sign in required"));
+                        } else return Observable.just(response);
+                    })
+                    .map(Response::body);
         } else { // Unsave
-            mAPI.unsave(listing.getName())
+            return mAPI.unsave(listing.getName())
                     .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(onSaveSuccess, onSaveFailure);
+                    .flatMap(response -> {
+                        if (response.message().contains("USER_REQUIRED")) {
+                            return Observable.error(new RuntimeException("Sign in required"));
+                        } else return Observable.just(response);
+                    })
+                    .map(Response::body);
         }
     }
 
