@@ -101,27 +101,24 @@ public class LinkCommentsPresenterImpl
     }
 
     @Override
-    public void getMoreChildren(@NonNull CommentStub comment) {
+    public void getMoreChildren(@NonNull CommentStub parentStub) {
         mMainView.showSpinner(null);
-        List<String> children = comment.getChildren();
+        List<String> children = parentStub.getChildren();
         // Truncate list of children to 20
         children = children.subList(0, Math.min(MAX_CHILDREN_PER_REQUEST, children.size()));
-        mRedditService.loadMoreChildren(mLinkContext, comment, children, mSort)
+        mRedditService.loadMoreChildren(mLinkContext, parentStub, children, mSort)
                 .doOnTerminate(mMainView::dismissSpinner)
                 .subscribe(response -> {
-                    CommentStub parentStub = response.first;
-                    List<Listing> comments = response.second.getChildComments();
+                    List<Listing> comments = response.getChildComments();
                     if (comments == null || comments.size() == 0) {
                         mCommentBank.remove(parentStub);
                     } else {
-                        if (parentStub != null) {
-                            AbsComment.Utils.setDepthForCommentsList(comments, parentStub.getDepth());
-                            int stubIndex = mCommentBank.indexOf(parentStub);
-                            parentStub.removeChildren(comments);
-                            parentStub.setCount(parentStub.getChildren().size());
-                            if (parentStub.getCount() == 0) mCommentBank.remove(stubIndex);
-                            mCommentBank.addAll(stubIndex, comments);
-                        }
+                        AbsComment.Utils.setDepthForCommentsList(comments, parentStub.getDepth());
+                        int stubIndex = mCommentBank.indexOf(parentStub);
+                        parentStub.removeChildren(comments);
+                        parentStub.setCount(parentStub.getChildren().size());
+                        if (parentStub.getCount() == 0) mCommentBank.remove(stubIndex);
+                        mCommentBank.addAll(stubIndex, comments);
                     }
                     Integer minScore = mSettingsManager.getMinCommentScore();
                     mCommentBank.collapseAllThreadsUnder(minScore);

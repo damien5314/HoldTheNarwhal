@@ -2,7 +2,6 @@ package com.ddiehl.android.htn.io;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Pair;
 
 import com.ddiehl.android.htn.BuildConfig;
 import com.ddiehl.reddit.Hideable;
@@ -41,7 +40,7 @@ public interface RedditService {
     Observable<List<ListingResponse>> loadLinkComments(
             @NonNull String subreddit, @NonNull String article,
             @Nullable String sort, @Nullable String commentId);
-    Observable<Pair<CommentStub, MoreChildrenResponse>> loadMoreChildren(
+    Observable<MoreChildrenResponse> loadMoreChildren(
             @NonNull Link link, @NonNull CommentStub moreComments,
             @NonNull List<String> children, @Nullable String sort);
     Observable<UserIdentity> getUserInfo(@NonNull String username);

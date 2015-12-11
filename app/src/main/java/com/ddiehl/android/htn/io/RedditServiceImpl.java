@@ -4,7 +4,6 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import android.util.Pair;
 
 import com.ddiehl.android.htn.AccessTokenManager;
 import com.ddiehl.android.htn.HoldTheNarwhal;
@@ -149,7 +148,7 @@ public class RedditServiceImpl implements RedditService {
     }
 
     @Override
-    public Observable<Pair<CommentStub, MoreChildrenResponse>> loadMoreChildren(
+    public Observable<MoreChildrenResponse> loadMoreChildren(
             @NonNull Link link, @NonNull CommentStub parentStub,
             @NonNull List<String> children, @Nullable String sort) {
         StringBuilder b = new StringBuilder();
@@ -159,7 +158,7 @@ public class RedditServiceImpl implements RedditService {
                 mAPI.getMoreChildren(link.getName(), childrenString, sort)
                         .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .map(response -> Pair.create(parentStub, response.body())));
+                        .map(Response::body));
     }
 
     @Override
