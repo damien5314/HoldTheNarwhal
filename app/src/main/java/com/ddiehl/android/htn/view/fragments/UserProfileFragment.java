@@ -138,7 +138,7 @@ public class UserProfileFragment extends AbsListingsFragment implements UserProf
 
         // If user is not self, show friend button
         UserIdentity self = HoldTheNarwhal.getIdentityManager().getUserIdentity();
-        if (!user.getName().equals(self.getName())) {
+        if (self != null && !user.getName().equals(self.getName())) {
             mFriendButtonLayout.setVisibility(View.VISIBLE);
             if (user.isFriend()) {
                 setFriendButtonState(true);
@@ -159,6 +159,7 @@ public class UserProfileFragment extends AbsListingsFragment implements UserProf
 
     @Override
     public void showTrophies(List<Listing> trophies) {
+        if (trophies == null || trophies.size() == 0) return; // Nothing to show
         final int minDpWidth = 160;
         final int numColumns = ((int) BaseUtils.getScreenWidth(mContext)) / minDpWidth;
         LinearLayout row = null;
