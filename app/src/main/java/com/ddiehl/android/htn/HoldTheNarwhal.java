@@ -10,6 +10,7 @@ import com.ddiehl.android.htn.io.RedditAuthServiceImpl;
 import com.ddiehl.android.htn.io.RedditService;
 import com.ddiehl.android.htn.io.RedditServiceImpl;
 import com.ddiehl.android.htn.logging.Logger;
+import com.ddiehl.android.htn.logging.NoLogger;
 import com.ddiehl.android.htn.logging.TimberLogger;
 import com.facebook.stetho.Stetho;
 import com.squareup.leakcanary.LeakCanary;
@@ -46,7 +47,8 @@ public class HoldTheNarwhal extends Application {
      * @return Instance of {@link Logger}
      */
     public static Logger getLogger() {
-        return TimberLogger.getInstance();
+        if (BuildConfig.DEBUG) return TimberLogger.getInstance();
+        else return new NoLogger();
     }
 
     public static Context getContext() {
