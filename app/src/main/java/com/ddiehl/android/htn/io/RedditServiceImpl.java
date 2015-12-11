@@ -10,13 +10,11 @@ import com.ddiehl.android.htn.AccessTokenManager;
 import com.ddiehl.android.htn.BusProvider;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.analytics.Analytics;
-import com.ddiehl.android.htn.events.requests.FriendNoteSaveEvent;
 import com.ddiehl.android.htn.events.requests.GetSubredditInfoEvent;
 import com.ddiehl.android.htn.events.requests.HideEvent;
 import com.ddiehl.android.htn.events.requests.ReportEvent;
 import com.ddiehl.android.htn.events.requests.SaveEvent;
 import com.ddiehl.android.htn.events.requests.VoteEvent;
-import com.ddiehl.android.htn.events.responses.FriendAddedEvent;
 import com.ddiehl.android.htn.events.responses.HideSubmittedEvent;
 import com.ddiehl.android.htn.events.responses.SaveSubmittedEvent;
 import com.ddiehl.android.htn.events.responses.SubredditInfoLoadedEvent;
@@ -223,23 +221,15 @@ public class RedditServiceImpl implements RedditService {
     }
 
     @Override
-    public void onSaveFriendNote(@NonNull FriendNoteSaveEvent event) {
-        String username = event.getUsername();
-        String note = event.getNote();
+    public Observable<ResponseBody> saveFriendNote(@NonNull String username, @NonNull String note) {
         if (TextUtils.isEmpty(note)) {
-            mBus.post(new FriendAddedEvent(new RuntimeException("User note should be non-empty")));
-            return;
+            return Observable.error(new RuntimeException("User note should be non-empty"));
         }
         String json = new Gson().toJson(new Friend(note));
-        mAPI.addFriend(username, RequestBody.create(MediaType.parse("application/json"), json))
+        return mAPI.addFriend(username, RequestBody.create(MediaType.parse("application/json"), json))
                 .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        response -> mBus.post(new FriendAddedEvent(username, note)),
-                        error -> {
-                            mBus.post(error);
-                            mBus.post(new FriendAddedEvent(error));
-                        });
+                .map(Response::body);
     }
 
     @Override

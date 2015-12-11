@@ -17,7 +17,6 @@ import android.widget.TextView;
 import com.ddiehl.android.htn.BusProvider;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
-import com.ddiehl.android.htn.events.requests.FriendNoteSaveEvent;
 import com.ddiehl.android.htn.presenter.UserProfilePresenter;
 import com.ddiehl.android.htn.utils.BaseUtils;
 import com.ddiehl.android.htn.view.MainView;
@@ -102,9 +101,8 @@ public class UserProfileFragment extends AbsListingsFragment implements UserProf
         mFriendNoteLayout.setVisibility(View.GONE);
         mFriendNoteSave.setOnClickListener((view) -> {
             mMainView.showSpinner(null);
-            String username = mUserProfilePresenter.getUsernameContext();
             String note = mFriendNote.getText().toString();
-            mBus.post(new FriendNoteSaveEvent(username, note));
+            mUserProfilePresenter.saveFriendNote(note);
         });
         return v;
     }

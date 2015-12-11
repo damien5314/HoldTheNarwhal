@@ -1,5 +1,7 @@
 package com.ddiehl.android.htn.presenter;
 
+import android.support.annotation.NonNull;
+
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.events.responses.HideSubmittedEvent;
@@ -80,6 +82,14 @@ public class UserProfilePresenter extends AbsListingsPresenter {
                     mSummaryView.setFriendButtonState(false);
                     mSummaryView.hideFriendNote();
                 });
+    }
+
+    // Note must be non-empty for a positive response (API bug?)
+    public void saveFriendNote(@NonNull String note) {
+        mRedditService.saveFriendNote(mUsernameContext, note)
+                .doOnTerminate(mMainView::dismissSpinner)
+                .subscribe(response -> {},
+                        error -> mMainView.showToast(R.string.user_friend_add_error));
     }
 
     private void getListingData() {
