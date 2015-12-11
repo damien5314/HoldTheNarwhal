@@ -1,6 +1,5 @@
 package com.ddiehl.android.htn.presenter;
 
-import com.ddiehl.android.htn.events.requests.LoadUserProfileListingEvent;
 import com.ddiehl.android.htn.events.responses.HideSubmittedEvent;
 import com.ddiehl.android.htn.events.responses.SaveSubmittedEvent;
 import com.ddiehl.android.htn.events.responses.VoteSubmittedEvent;
@@ -35,7 +34,10 @@ public class UserProfilePresenter extends AbsListingsPresenter {
 
     private void getSummaryData() {
         mRedditService.getUserInfo(mUsernameContext)
-                .doOnTerminate(mMainView::dismissSpinner)
+                .doOnTerminate(() -> {
+                    mMainView.dismissSpinner();
+                    mListingsRequested = false;
+                })
                 .doOnNext(getFriendInfo())
                 .subscribe(mSummaryView::showUserInfo);
         mRedditService.getUserTrophies(mUsernameContext)
@@ -52,7 +54,8 @@ public class UserProfilePresenter extends AbsListingsPresenter {
     }
 
     private void getListingData() {
-        mBus.post(new LoadUserProfileListingEvent(mShow, mUsernameContext, mSort, mTimespan, mNextPageListingId));
+        mRedditService.loadUserProfile(mShow, mUsernameContext, mSort, mTimespan, mNextPageListingId)
+                .subscribe(onListingsLoaded());
     }
 
     public void requestData(String show) {

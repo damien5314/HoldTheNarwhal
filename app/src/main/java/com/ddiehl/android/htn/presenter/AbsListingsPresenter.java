@@ -178,7 +178,7 @@ public abstract class AbsListingsPresenter
         refreshData();
     }
 
-    public Action1<ListingResponse> onListingsLoaded() {
+    protected Action1<ListingResponse> onListingsLoaded() {
         return (response) -> {
             mMainView.dismissSpinner();
             List<Listing> listings = response.getData().getChildren();

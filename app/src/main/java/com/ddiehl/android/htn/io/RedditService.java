@@ -10,7 +10,6 @@ import com.ddiehl.android.htn.events.requests.FriendDeleteEvent;
 import com.ddiehl.android.htn.events.requests.FriendNoteSaveEvent;
 import com.ddiehl.android.htn.events.requests.GetSubredditInfoEvent;
 import com.ddiehl.android.htn.events.requests.HideEvent;
-import com.ddiehl.android.htn.events.requests.LoadUserProfileListingEvent;
 import com.ddiehl.android.htn.events.requests.ReportEvent;
 import com.ddiehl.android.htn.events.requests.SaveEvent;
 import com.ddiehl.android.htn.events.requests.VoteEvent;
@@ -52,7 +51,9 @@ public interface RedditService {
     Observable<UserIdentity> getUserInfo(@NonNull String username);
     Observable<FriendInfo> getFriendInfo(String username);
     Observable<List<Listing>> getUserTrophies(@NonNull String username);
-    void onLoadUserProfile(@NonNull LoadUserProfileListingEvent event);
+    Observable<ListingResponse> loadUserProfile(
+            @NonNull String show, @NonNull String username, @Nullable String sort,
+            @Nullable String timespan, @Nullable String after);
     void onAddFriend(@NonNull FriendAddEvent event);
     void onDeleteFriend(@NonNull FriendDeleteEvent event);
     void onSaveFriendNote(@NonNull FriendNoteSaveEvent event);

@@ -15,14 +15,12 @@ import com.ddiehl.android.htn.events.requests.FriendDeleteEvent;
 import com.ddiehl.android.htn.events.requests.FriendNoteSaveEvent;
 import com.ddiehl.android.htn.events.requests.GetSubredditInfoEvent;
 import com.ddiehl.android.htn.events.requests.HideEvent;
-import com.ddiehl.android.htn.events.requests.LoadUserProfileListingEvent;
 import com.ddiehl.android.htn.events.requests.ReportEvent;
 import com.ddiehl.android.htn.events.requests.SaveEvent;
 import com.ddiehl.android.htn.events.requests.VoteEvent;
 import com.ddiehl.android.htn.events.responses.FriendAddedEvent;
 import com.ddiehl.android.htn.events.responses.FriendDeletedEvent;
 import com.ddiehl.android.htn.events.responses.HideSubmittedEvent;
-import com.ddiehl.android.htn.events.responses.ListingsLoadedEvent;
 import com.ddiehl.android.htn.events.responses.SaveSubmittedEvent;
 import com.ddiehl.android.htn.events.responses.SubredditInfoLoadedEvent;
 import com.ddiehl.android.htn.events.responses.VoteSubmittedEvent;
@@ -199,22 +197,14 @@ public class RedditServiceImpl implements RedditService {
     }
 
     @Override
-    public void onLoadUserProfile(@NonNull LoadUserProfileListingEvent event) {
-        final String show = event.getShow();
-        final String userId = event.getUsername();
-        final String sort = event.getSort();
-        final String timespan = event.getTimeSpan();
-        final String after = event.getAfter();
-
-        mAPI.getUserProfile(show, userId, sort, timespan, after)
-                .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        listing -> mBus.post(new ListingsLoadedEvent(listing.body())),
-                        error -> {
-                            mBus.post(error);
-                            mBus.post(new ListingsLoadedEvent(error));
-                        });
+    public Observable<ListingResponse> loadUserProfile(
+            @NonNull String show, @NonNull String username, @Nullable String sort,
+            @Nullable String timespan, @Nullable String after) {
+        return requireAccessToken().flatMap(token ->
+                mAPI.getUserProfile(show, username, sort, timespan, after)
+                        .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .map(Response::body));
     }
 
     @Override

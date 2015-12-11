@@ -252,30 +252,22 @@ public class UserProfileFragment extends AbsListingsFragment implements UserProf
         }
 
         mUserProfileTabs.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-            }
+            @Override public void onTabUnselected(TabLayout.Tab tab) { }
+            @Override public void onTabReselected(TabLayout.Tab tab) { }
 
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
 //                ((MainView) getActivity()).showUserProfile((String) tab.getTag(),
 //                        mListingsPresenter.getUsernameContext());
                 String tag = (String) tab.getTag();
-
-                if (tab.getTag().equals("summary")) {
+                if (tag != null && tag.equals("summary")) {
                     mUserProfileSummary.setVisibility(View.VISIBLE);
                     mListView.setVisibility(View.GONE);
 //                    ((MainView) getActivity()).showUserProfile(tag, mListingsPresenter.getUsernameContext());
                 } else {
                     mUserProfileSummary.setVisibility(View.GONE);
                     mListView.setVisibility(View.VISIBLE);
-//                    ((UserProfileListingPresenter) mListingsPresenter).requestData(tag);
                 }
-
                 ((UserProfilePresenter) mListingsPresenter).requestData(tag);
             }
         });
