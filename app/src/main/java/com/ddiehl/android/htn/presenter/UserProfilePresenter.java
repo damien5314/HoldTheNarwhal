@@ -4,14 +4,10 @@ import android.support.annotation.NonNull;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
-import com.ddiehl.android.htn.events.responses.HideSubmittedEvent;
-import com.ddiehl.android.htn.events.responses.SaveSubmittedEvent;
-import com.ddiehl.android.htn.events.responses.VoteSubmittedEvent;
 import com.ddiehl.android.htn.view.ListingsView;
 import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.android.htn.view.UserProfileView;
 import com.ddiehl.reddit.identity.UserIdentity;
-import com.squareup.otto.Subscribe;
 
 import rx.functions.Action1;
 
@@ -100,20 +96,5 @@ public class UserProfilePresenter extends AbsListingsPresenter {
     public void requestData(String show) {
         mShow = show;
         refreshData();
-    }
-
-    @Subscribe @Override
-    public void onVoteSubmitted(VoteSubmittedEvent event) {
-        super.onVoteSubmitted(event);
-    }
-
-    @Subscribe @Override
-    public void onListingSaved(SaveSubmittedEvent event) {
-        super.onListingSaved(event);
-    }
-
-    @Subscribe @Override
-    public void onListingHidden(HideSubmittedEvent event) {
-        super.onListingHidden(event);
     }
 }

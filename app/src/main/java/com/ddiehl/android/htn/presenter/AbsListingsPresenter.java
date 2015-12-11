@@ -15,10 +15,8 @@ import com.ddiehl.android.htn.SettingsManager;
 import com.ddiehl.android.htn.analytics.Analytics;
 import com.ddiehl.android.htn.events.requests.HideEvent;
 import com.ddiehl.android.htn.events.requests.SaveEvent;
-import com.ddiehl.android.htn.events.requests.VoteEvent;
 import com.ddiehl.android.htn.events.responses.HideSubmittedEvent;
 import com.ddiehl.android.htn.events.responses.SaveSubmittedEvent;
-import com.ddiehl.android.htn.events.responses.VoteSubmittedEvent;
 import com.ddiehl.android.htn.io.RedditService;
 import com.ddiehl.android.htn.logging.Logger;
 import com.ddiehl.android.htn.view.ListingsView;
@@ -189,21 +187,6 @@ public abstract class AbsListingsPresenter
             mNextPageListingId = data.getAfter();
             mListingsRequested = false;
         };
-    }
-
-    @Subscribe
-    public void onVoteSubmitted(VoteSubmittedEvent event) {
-        Votable listing = event.getListing();
-
-        if (event.isFailed()) {
-            mMainView.showToast(R.string.vote_failed);
-            return;
-        }
-
-        if (listing == null) throw new RuntimeException("Event data is null, but event is not failed");
-        listing.applyVote(event.getDirection());
-        //noinspection SuspiciousMethodCalls
-        mListingsView.listingUpdatedAt(mListings.indexOf(listing));
     }
 
     @Subscribe
@@ -527,7 +510,7 @@ public abstract class AbsListingsPresenter
         onSortChanged(); // Sort was still changed to bring up this prompt, fire the callback
     }
 
-    private void vote(int dir) {
+    private void vote(int direction) {
         Listing listing = mListingSelected;
         if (((Archivable) listing).isArchived()) {
             mMainView.showToast(R.string.listing_archived);
@@ -535,8 +518,13 @@ public abstract class AbsListingsPresenter
             mMainView.showToast(R.string.user_required);
         } else {
             Votable votable = (Votable) listing;
-            mBus.post(new VoteEvent(votable, listing.getKind(), dir));
-            mAnalytics.logVote(votable.getKind(), dir);
+            mRedditService.vote(votable, direction)
+                    .doOnError(error -> mMainView.showToast(R.string.vote_failed))
+                    .subscribe(response -> {
+                        votable.applyVote(direction);
+                        mListingsView.listingUpdatedAt(mListings.indexOf(listing));
+                    });
+            mAnalytics.logVote(votable.getKind(), direction);
         }
     }
 

@@ -13,10 +13,8 @@ import com.ddiehl.android.htn.analytics.Analytics;
 import com.ddiehl.android.htn.events.requests.HideEvent;
 import com.ddiehl.android.htn.events.requests.ReportEvent;
 import com.ddiehl.android.htn.events.requests.SaveEvent;
-import com.ddiehl.android.htn.events.requests.VoteEvent;
 import com.ddiehl.android.htn.events.responses.HideSubmittedEvent;
 import com.ddiehl.android.htn.events.responses.SaveSubmittedEvent;
-import com.ddiehl.android.htn.events.responses.VoteSubmittedEvent;
 import com.ddiehl.android.htn.logging.Logger;
 import com.ddiehl.reddit.Hideable;
 import com.ddiehl.reddit.Savable;
@@ -240,23 +238,17 @@ public class RedditServiceImpl implements RedditService {
     }
 
     @Override
-    public void onVote(@NonNull final VoteEvent event) {
-        final Votable listing = event.getListing();
-        String fullname = String.format("%s_%s", event.getType(), listing.getId());
-
-        mAPI.vote(fullname, event.getDirection())
+    public Observable<ResponseBody> vote(@NonNull Votable listing, int direction) {
+        String fullname = String.format("%s_%s", listing.getKind(), listing.getId());
+        return mAPI.vote(fullname, direction)
                 .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        response -> {
-                            if (!response.message().contains("USER_REQUIRED")) {
-                                mBus.post(new VoteSubmittedEvent(listing, event.getDirection()));
-                            }
-                        },
-                        error -> {
-                            mBus.post(error);
-                            mBus.post(new VoteSubmittedEvent(error));
-                        });
+                .flatMap(response -> {
+                    if (response.message().contains("USER_REQUIRED")) {
+                        return Observable.error(new RuntimeException("Sign in required"));
+                    } else return Observable.just(response);
+                })
+                .map(Response::body);
     }
 
     @Override

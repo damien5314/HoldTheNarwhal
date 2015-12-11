@@ -1,15 +1,11 @@
 package com.ddiehl.android.htn.presenter;
 
-import com.ddiehl.android.htn.events.responses.HideSubmittedEvent;
-import com.ddiehl.android.htn.events.responses.SaveSubmittedEvent;
-import com.ddiehl.android.htn.events.responses.VoteSubmittedEvent;
 import com.ddiehl.android.htn.view.ListingsView;
 import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.reddit.identity.UserIdentity;
 import com.ddiehl.reddit.listings.Link;
 import com.ddiehl.reddit.listings.ListingResponse;
 import com.ddiehl.reddit.listings.Subreddit;
-import com.squareup.otto.Subscribe;
 
 import rx.functions.Action1;
 
@@ -55,20 +51,5 @@ public class SubredditPresenter extends AbsListingsPresenter {
                 mSubreddit = ((Link) mListings.get(0)).getSubreddit();
             }
         };
-    }
-
-    @Subscribe @Override
-    public void onVoteSubmitted(VoteSubmittedEvent event) {
-        super.onVoteSubmitted(event);
-    }
-
-    @Subscribe @Override
-    public void onListingSaved(SaveSubmittedEvent event) {
-        super.onListingSaved(event);
-    }
-
-    @Subscribe @Override
-    public void onListingHidden(HideSubmittedEvent event) {
-        super.onListingHidden(event);
     }
 }

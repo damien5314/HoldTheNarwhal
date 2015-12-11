@@ -14,9 +14,7 @@ import com.ddiehl.android.htn.SettingsManager;
 import com.ddiehl.android.htn.analytics.Analytics;
 import com.ddiehl.android.htn.events.requests.HideEvent;
 import com.ddiehl.android.htn.events.requests.SaveEvent;
-import com.ddiehl.android.htn.events.requests.VoteEvent;
 import com.ddiehl.android.htn.events.responses.SaveSubmittedEvent;
-import com.ddiehl.android.htn.events.responses.VoteSubmittedEvent;
 import com.ddiehl.android.htn.io.RedditService;
 import com.ddiehl.android.htn.model.CommentBank;
 import com.ddiehl.android.htn.model.CommentBankList;
@@ -315,23 +313,6 @@ public class LinkCommentsPresenterImpl
     }
 
     @Subscribe @SuppressWarnings("unused")
-    public void onVoteSubmitted(VoteSubmittedEvent event) {
-        Votable listing = event.getListing();
-
-        if (event.isFailed()) {
-            mMainView.showToast(R.string.vote_failed);
-            return;
-        }
-
-        if (listing != null) listing.applyVote(event.getDirection());
-        if (listing instanceof Link) {
-            mLinkCommentsView.linkUpdated();
-        } else {
-            mLinkCommentsView.commentUpdatedAt(mCommentBank.visibleIndexOf(((AbsComment) listing)));
-        }
-    }
-
-    @Subscribe @SuppressWarnings("unused")
     public void onSaveSubmitted(SaveSubmittedEvent event) {
         Savable listing = event.getListing();
 
@@ -441,7 +422,7 @@ public class LinkCommentsPresenterImpl
         // Link is already being displayed with this presenter
     }
 
-    private void vote(int dir) {
+    private void vote(int direction) {
         Listing listing = mListingSelected;
         if (((Archivable) listing).isArchived()) {
             mMainView.showToast(R.string.listing_archived);
@@ -449,8 +430,18 @@ public class LinkCommentsPresenterImpl
             mMainView.showToast(R.string.user_required);
         } else {
             Votable votable = (Votable) listing;
-            mBus.post(new VoteEvent(votable, listing.getKind(), dir));
-            mAnalytics.logVote(votable.getKind(), dir);
+            mRedditService.vote(votable, direction)
+                    .doOnError(error -> mMainView.showToast(R.string.vote_failed))
+                    .subscribe(response -> {
+                        votable.applyVote(direction);
+                        if (listing instanceof Link) {
+                            mLinkCommentsView.linkUpdated();
+                        } else {
+                            mLinkCommentsView.commentUpdatedAt(
+                                    mCommentBank.visibleIndexOf(((AbsComment) listing)));
+                        }
+                    });
+            mAnalytics.logVote(votable.getKind(), direction);
         }
     }
 }

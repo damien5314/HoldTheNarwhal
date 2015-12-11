@@ -8,7 +8,7 @@ import com.ddiehl.android.htn.BuildConfig;
 import com.ddiehl.android.htn.events.requests.HideEvent;
 import com.ddiehl.android.htn.events.requests.ReportEvent;
 import com.ddiehl.android.htn.events.requests.SaveEvent;
-import com.ddiehl.android.htn.events.requests.VoteEvent;
+import com.ddiehl.reddit.Votable;
 import com.ddiehl.reddit.identity.FriendInfo;
 import com.ddiehl.reddit.identity.UserIdentity;
 import com.ddiehl.reddit.identity.UserSettings;
@@ -55,7 +55,7 @@ public interface RedditService {
     Observable<ResponseBody> deleteFriend(@NonNull String username);
     Observable<ResponseBody> saveFriendNote(@NonNull String username, @NonNull String note);
     Observable<Subreddit> getSubredditInfo(@NonNull String subreddit);
-    void onVote(@NonNull VoteEvent event);
+    Observable<ResponseBody> vote(@NonNull Votable votable, int direction);
     void onSave(@NonNull SaveEvent event);
     void onHide(@NonNull HideEvent event);
     void onReport(@NonNull ReportEvent event);
