@@ -17,17 +17,14 @@ import android.widget.TextView;
 import com.ddiehl.android.htn.BusProvider;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
-import com.ddiehl.android.htn.events.requests.FriendAddEvent;
 import com.ddiehl.android.htn.events.requests.FriendDeleteEvent;
 import com.ddiehl.android.htn.events.requests.FriendNoteSaveEvent;
-import com.ddiehl.android.htn.events.responses.FriendAddedEvent;
 import com.ddiehl.android.htn.events.responses.FriendDeletedEvent;
 import com.ddiehl.android.htn.presenter.UserProfilePresenter;
 import com.ddiehl.android.htn.utils.BaseUtils;
 import com.ddiehl.android.htn.view.MainView;
-import com.ddiehl.android.htn.view.UserProfileSummaryView;
+import com.ddiehl.android.htn.view.UserProfileView;
 import com.ddiehl.android.htn.view.adapters.ListingsAdapter;
-import com.ddiehl.reddit.identity.FriendInfo;
 import com.ddiehl.reddit.identity.UserIdentity;
 import com.ddiehl.reddit.listings.Listing;
 import com.ddiehl.reddit.listings.Trophy;
@@ -43,7 +40,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class UserProfileFragment extends AbsListingsFragment implements UserProfileSummaryView {
+public class UserProfileFragment extends AbsListingsFragment implements UserProfileView {
     private static final String ARG_SHOW = "arg_show";
     private static final String ARG_USERNAME = "arg_username";
 
@@ -65,6 +62,7 @@ public class UserProfileFragment extends AbsListingsFragment implements UserProf
 
     private Context mContext;
     private Bus mBus = BusProvider.getInstance();
+    private UserProfilePresenter mUserProfilePresenter;
 
     public UserProfileFragment() { }
 
@@ -83,9 +81,10 @@ public class UserProfileFragment extends AbsListingsFragment implements UserProf
         Bundle args = getArguments();
         String show = args.getString(ARG_SHOW);
         String username = args.getString(ARG_USERNAME);
-        mListingsPresenter = new UserProfilePresenter(mMainView, this, this,
+        mUserProfilePresenter = new UserProfilePresenter(mMainView, this, this,
                 show, username, "new", "all");
-        mListingsAdapter = new ListingsAdapter(mListingsPresenter);
+        mListingsAdapter = new ListingsAdapter(mUserProfilePresenter);
+        mListingsPresenter = mUserProfilePresenter;
     }
 
     @Override
@@ -106,7 +105,7 @@ public class UserProfileFragment extends AbsListingsFragment implements UserProf
         mFriendNoteLayout.setVisibility(View.GONE);
         mFriendNoteSave.setOnClickListener((view) -> {
             mMainView.showSpinner(null);
-            String username = mListingsPresenter.getUsernameContext();
+            String username = mUserProfilePresenter.getUsernameContext();
             String note = mFriendNote.getText().toString();
             mBus.post(new FriendNoteSaveEvent(username, note));
         });
@@ -149,12 +148,33 @@ public class UserProfileFragment extends AbsListingsFragment implements UserProf
     }
 
     @Override
-    public void showFriendInfo(FriendInfo friend) {
-        UserIdentity self = HoldTheNarwhal.getIdentityManager().getUserIdentity();
-        if (self != null && self.isGold()) {
-            mFriendNoteLayout.setVisibility(View.VISIBLE);
-            mFriendNote.setText(friend.getNote());
+    public void setFriendButtonState(boolean isFriend) {
+        String username = mUserProfilePresenter.getUsernameContext();
+        if (isFriend) {
+            mFriendButton.setText(R.string.user_friend_delete_button_text);
+            mFriendButton.setOnClickListener((v) -> {
+                ((MainView) getActivity()).showSpinner(null);
+                mBus.post(new FriendDeleteEvent(username));
+            });
+        } else {
+            mFriendButton.setText(R.string.user_friend_add_button_text);
+            mFriendButton.setOnClickListener((v) -> {
+                ((MainView) getActivity()).showSpinner(null);
+                mUserProfilePresenter.addFriend();
+            });
         }
+    }
+
+    @Override
+    public void showFriendNote(@NonNull String note) {
+        mFriendNoteLayout.setVisibility(View.VISIBLE);
+        mFriendNote.setText(note);
+    }
+
+    @Override
+    public void hideFriendNote() {
+        mFriendNoteLayout.setVisibility(View.GONE);
+        mFriendNote.setText(null);
     }
 
     @Override
@@ -194,22 +214,6 @@ public class UserProfileFragment extends AbsListingsFragment implements UserProf
     }
 
     @Subscribe
-    public void onFriendAdded(FriendAddedEvent event) {
-        mMainView.dismissSpinner();
-        if (event.isFailed()) {
-            mMainView.showToast(R.string.user_friend_add_error);
-            return;
-        }
-        setFriendButtonState(true);
-
-        UserIdentity self = HoldTheNarwhal.getIdentityManager().getUserIdentity();
-        if (self != null && self.isGold()) {
-            mFriendNote.setText(event.getNote());
-            mFriendNoteLayout.setVisibility(View.VISIBLE);
-        }
-    }
-
-    @Subscribe
     public void onFriendDeleted(FriendDeletedEvent event) {
         mMainView.dismissSpinner();
         if (event.isFailed()) {
@@ -237,9 +241,9 @@ public class UserProfileFragment extends AbsListingsFragment implements UserProf
                 .setText(getString(R.string.navigation_tabs_gilded)).setTag("gilded"));
 
         // Authorized tabs
-        UserIdentity id = mListingsPresenter.getAuthorizedUser();
+        UserIdentity id = mUserProfilePresenter.getAuthorizedUser();
         boolean showAuthorizedTabs = id != null &&
-                id.getName().equals(mListingsPresenter.getUsernameContext());
+                id.getName().equals(mUserProfilePresenter.getUsernameContext());
         if (showAuthorizedTabs) {
             mUserProfileTabs.addTab(mUserProfileTabs.newTab()
                     .setText(getString(R.string.navigation_tabs_upvoted)).setTag("upvoted"));
@@ -257,46 +261,27 @@ public class UserProfileFragment extends AbsListingsFragment implements UserProf
 
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-//                ((MainView) getActivity()).showUserProfile((String) tab.getTag(),
-//                        mListingsPresenter.getUsernameContext());
                 String tag = (String) tab.getTag();
                 if (tag != null && tag.equals("summary")) {
                     mUserProfileSummary.setVisibility(View.VISIBLE);
                     mListView.setVisibility(View.GONE);
-//                    ((MainView) getActivity()).showUserProfile(tag, mListingsPresenter.getUsernameContext());
                 } else {
                     mUserProfileSummary.setVisibility(View.GONE);
                     mListView.setVisibility(View.VISIBLE);
                 }
-                ((UserProfilePresenter) mListingsPresenter).requestData(tag);
+                mUserProfilePresenter.requestData(tag);
             }
         });
     }
 
-    private void setFriendButtonState(boolean isFriend) {
-        String username = mListingsPresenter.getUsernameContext();
-        if (isFriend) {
-            mFriendButton.setText(R.string.user_friend_delete_button_text);
-            mFriendButton.setOnClickListener((v) -> {
-                ((MainView) getActivity()).showSpinner(null);
-                mBus.post(new FriendDeleteEvent(username));
-            });
-        } else {
-            mFriendButton.setText(R.string.user_friend_add_button_text);
-            mFriendButton.setOnClickListener((v) -> {
-                ((MainView) getActivity()).showSpinner(null);
-                mBus.post(new FriendAddEvent(username));
-            });
-        }
-    }
-
     public void updateTitle() {
-        mMainView.setTitle(String.format(getString(R.string.username), mListingsPresenter.getUsernameContext()));
+        mMainView.setTitle(String.format(getString(R.string.username),
+                mUserProfilePresenter.getUsernameContext()));
     }
 
 //    @Override
 //    public void showSpinner(String msg) {
-//        if (mListingsPresenter.getShow().equals("summary")) {
+//        if (mUserProfilePresenter.getShow().equals("summary")) {
 //            ((MainView) getActivity()).showSpinner(msg);
 //            return;
 //        }
@@ -310,7 +295,7 @@ public class UserProfileFragment extends AbsListingsFragment implements UserProf
 //
 //    @Override
 //    public void dismissSpinner() {
-//        if (mListingsPresenter.getShow().equals("summary")) {
+//        if (mUserProfilePresenter.getShow().equals("summary")) {
 //            ((MainView) getActivity()).dismissSpinner();
 //            return;
 //        }

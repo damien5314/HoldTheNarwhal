@@ -10,7 +10,6 @@ import com.ddiehl.android.htn.AccessTokenManager;
 import com.ddiehl.android.htn.BusProvider;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.analytics.Analytics;
-import com.ddiehl.android.htn.events.requests.FriendAddEvent;
 import com.ddiehl.android.htn.events.requests.FriendDeleteEvent;
 import com.ddiehl.android.htn.events.requests.FriendNoteSaveEvent;
 import com.ddiehl.android.htn.events.requests.GetSubredditInfoEvent;
@@ -208,6 +207,50 @@ public class RedditServiceImpl implements RedditService {
     }
 
     @Override
+    public Observable<ResponseBody> addFriend(@NonNull String username) {
+        String json = "{}";
+        RequestBody body = RequestBody.create(MediaType.parse("application/json"), json);
+        return mAPI.addFriend(username, body)
+                .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .map(Response::body);
+    }
+
+    @Override
+    public void onSaveFriendNote(@NonNull FriendNoteSaveEvent event) {
+        String username = event.getUsername();
+        String note = event.getNote();
+        if (TextUtils.isEmpty(note)) {
+            mBus.post(new FriendAddedEvent(new RuntimeException("User note should be non-empty")));
+            return;
+        }
+        String json = new Gson().toJson(new Friend(note));
+        mAPI.addFriend(username, RequestBody.create(MediaType.parse("application/json"), json))
+                .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        response -> mBus.post(new FriendAddedEvent(username, note)),
+                        error -> {
+                            mBus.post(error);
+                            mBus.post(new FriendAddedEvent(error));
+                        });
+    }
+
+    @Override
+    public void onDeleteFriend(@NonNull FriendDeleteEvent event) {
+        String username = event.getUsername();
+        mAPI.deleteFriend(username)
+                .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        response -> mBus.post(new FriendDeletedEvent(username)),
+                        error -> {
+                            mBus.post(error);
+                            mBus.post(new FriendDeletedEvent(error));
+                        });
+    }
+
+    @Override
     public void onGetSubredditInfo(@NonNull GetSubredditInfoEvent event) {
         final String name = event.getSubredditName();
 
@@ -305,55 +348,6 @@ public class RedditServiceImpl implements RedditService {
     @Override
     public void onReport(@NonNull final ReportEvent event) {
 
-    }
-
-    @Override
-    public void onAddFriend(@NonNull FriendAddEvent event) {
-        String username = event.getUsername();
-        String json = "{}";
-        mAPI.addFriend(username, RequestBody.create(MediaType.parse("application/json"), json))
-                .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        response -> mBus.post(new FriendAddedEvent(username, "")),
-                        error -> {
-                            mBus.post(error);
-                            mBus.post(new FriendAddedEvent(error));
-                        });
-    }
-
-    @Override
-    public void onSaveFriendNote(@NonNull FriendNoteSaveEvent event) {
-        String username = event.getUsername();
-        String note = event.getNote();
-        if (TextUtils.isEmpty(note)) {
-            mBus.post(new FriendAddedEvent(new RuntimeException("User note should be non-empty")));
-            return;
-        }
-        String json = new Gson().toJson(new Friend(note));
-        mAPI.addFriend(username, RequestBody.create(MediaType.parse("application/json"), json))
-                .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        response -> mBus.post(new FriendAddedEvent(username, note)),
-                        error -> {
-                            mBus.post(error);
-                            mBus.post(new FriendAddedEvent(error));
-                        });
-    }
-
-    @Override
-    public void onDeleteFriend(@NonNull FriendDeleteEvent event) {
-        String username = event.getUsername();
-        mAPI.deleteFriend(username)
-                .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        response -> mBus.post(new FriendDeletedEvent(username)),
-                        error -> {
-                            mBus.post(error);
-                            mBus.post(new FriendDeletedEvent(error));
-                        });
     }
 
     private Observable<AccessToken> requireAccessToken() {

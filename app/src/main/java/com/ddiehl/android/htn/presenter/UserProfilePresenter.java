@@ -1,21 +1,23 @@
 package com.ddiehl.android.htn.presenter;
 
+import com.ddiehl.android.htn.HoldTheNarwhal;
+import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.events.responses.HideSubmittedEvent;
 import com.ddiehl.android.htn.events.responses.SaveSubmittedEvent;
 import com.ddiehl.android.htn.events.responses.VoteSubmittedEvent;
 import com.ddiehl.android.htn.view.ListingsView;
 import com.ddiehl.android.htn.view.MainView;
-import com.ddiehl.android.htn.view.UserProfileSummaryView;
+import com.ddiehl.android.htn.view.UserProfileView;
 import com.ddiehl.reddit.identity.UserIdentity;
 import com.squareup.otto.Subscribe;
 
 import rx.functions.Action1;
 
 public class UserProfilePresenter extends AbsListingsPresenter {
-    private UserProfileSummaryView mSummaryView;
+    private UserProfileView mSummaryView;
 
     public UserProfilePresenter(
-            MainView main, ListingsView view, UserProfileSummaryView view2,
+            MainView main, ListingsView view, UserProfileView view2,
             String show, String username, String sort, String timespan) {
         super(main, view, show, username, null, sort, timespan);
         mSummaryView = view2;
@@ -48,9 +50,27 @@ public class UserProfilePresenter extends AbsListingsPresenter {
         return user -> {
             if (user.isFriend()) {
                 mRedditService.getFriendInfo(user.getName())
-                        .subscribe(mSummaryView::showFriendInfo);
+                        .subscribe(response -> {
+                            UserIdentity self = HoldTheNarwhal.getIdentityManager().getUserIdentity();
+                            if (self != null && self.isGold()) {
+                                mSummaryView.showFriendNote(response.getNote());
+                            }
+                        });
             }
         };
+    }
+
+    public void addFriend() {
+        mRedditService.addFriend(mUsernameContext)
+                .doOnTerminate(mMainView::dismissSpinner)
+                .doOnError(error -> mMainView.showToast(R.string.user_friend_add_error))
+                .subscribe(response -> {
+                    mSummaryView.setFriendButtonState(true);
+                    UserIdentity self = HoldTheNarwhal.getIdentityManager().getUserIdentity();
+                    if (self != null && self.isGold()) {
+                        mSummaryView.showFriendNote("");
+                    }
+                });
     }
 
     private void getListingData() {

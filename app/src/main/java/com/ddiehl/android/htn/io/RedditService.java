@@ -5,7 +5,6 @@ import android.support.annotation.Nullable;
 import android.util.Pair;
 
 import com.ddiehl.android.htn.BuildConfig;
-import com.ddiehl.android.htn.events.requests.FriendAddEvent;
 import com.ddiehl.android.htn.events.requests.FriendDeleteEvent;
 import com.ddiehl.android.htn.events.requests.FriendNoteSaveEvent;
 import com.ddiehl.android.htn.events.requests.GetSubredditInfoEvent;
@@ -54,7 +53,7 @@ public interface RedditService {
     Observable<ListingResponse> loadUserProfile(
             @NonNull String show, @NonNull String username, @Nullable String sort,
             @Nullable String timespan, @Nullable String after);
-    void onAddFriend(@NonNull FriendAddEvent event);
+    Observable<ResponseBody> addFriend(@NonNull String username);
     void onDeleteFriend(@NonNull FriendDeleteEvent event);
     void onSaveFriendNote(@NonNull FriendNoteSaveEvent event);
     void onGetSubredditInfo(@NonNull GetSubredditInfoEvent event);
