@@ -44,6 +44,7 @@ public class SubredditPresenter extends AbsListingsPresenter {
         };
     }
 
+    @Override
     protected Action1<ListingResponse> onListingsLoaded() {
         return (response) -> {
             super.onListingsLoaded().call(response);
