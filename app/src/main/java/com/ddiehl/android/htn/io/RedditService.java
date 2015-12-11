@@ -25,36 +25,36 @@ import rx.Observable;
 
 
 public interface RedditService {
-    String USER_AGENT = String.format(
-            "android:com.ddiehl.android.htn:v%s (by /u/damien5314)",
-            BuildConfig.VERSION_NAME);
-    String ENDPOINT_NORMAL = "https://www.reddit.com";
-    String ENDPOINT_OAUTH = "https://oauth.reddit.com";
+  String USER_AGENT = String.format(
+      "android:com.ddiehl.android.htn:v%s (by /u/damien5314)",
+      BuildConfig.VERSION_NAME);
+  String ENDPOINT_NORMAL = "https://www.reddit.com";
+  String ENDPOINT_OAUTH = "https://oauth.reddit.com";
 
-    Observable<UserIdentity> getUserIdentity();
-    Observable<UserSettings> getUserSettings();
-    Observable<ResponseBody> updateUserSettings(Map<String, String> settings);
-    Observable<ListingResponse> loadLinks(
-            @Nullable String subreddit, @Nullable String sort,
-            @Nullable String timespan, @Nullable String after);
-    Observable<List<ListingResponse>> loadLinkComments(
-            @NonNull String subreddit, @NonNull String article,
-            @Nullable String sort, @Nullable String commentId);
-    Observable<MoreChildrenResponse> loadMoreChildren(
-            @NonNull Link link, @NonNull CommentStub moreComments,
-            @NonNull List<String> children, @Nullable String sort);
-    Observable<UserIdentity> getUserInfo(@NonNull String username);
-    Observable<FriendInfo> getFriendInfo(String username);
-    Observable<List<Listing>> getUserTrophies(@NonNull String username);
-    Observable<ListingResponse> loadUserProfile(
-            @NonNull String show, @NonNull String username, @Nullable String sort,
-            @Nullable String timespan, @Nullable String after);
-    Observable<ResponseBody> addFriend(@NonNull String username);
-    Observable<ResponseBody> deleteFriend(@NonNull String username);
-    Observable<ResponseBody> saveFriendNote(@NonNull String username, @NonNull String note);
-    Observable<Subreddit> getSubredditInfo(@NonNull String subreddit);
-    Observable<ResponseBody> vote(@NonNull Votable votable, int direction);
-    Observable<ResponseBody> save(@NonNull Savable listing, @Nullable String category, boolean save);
-    Observable<ResponseBody> hide(@NonNull Hideable listing, boolean toHide);
-    Observable<ResponseBody> onReport(@NonNull String id, @NonNull String reason);
+  Observable<UserIdentity> getUserIdentity();
+  Observable<UserSettings> getUserSettings();
+  Observable<ResponseBody> updateUserSettings(Map<String, String> settings);
+  Observable<ListingResponse> loadLinks(
+      @Nullable String subreddit, @Nullable String sort,
+      @Nullable String timespan, @Nullable String after);
+  Observable<List<ListingResponse>> loadLinkComments(
+      @NonNull String subreddit, @NonNull String article,
+      @Nullable String sort, @Nullable String commentId);
+  Observable<MoreChildrenResponse> loadMoreChildren(
+      @NonNull Link link, @NonNull CommentStub moreComments,
+      @NonNull List<String> children, @Nullable String sort);
+  Observable<UserIdentity> getUserInfo(@NonNull String username);
+  Observable<FriendInfo> getFriendInfo(String username);
+  Observable<List<Listing>> getUserTrophies(@NonNull String username);
+  Observable<ListingResponse> loadUserProfile(
+      @NonNull String show, @NonNull String username, @Nullable String sort,
+      @Nullable String timespan, @Nullable String after);
+  Observable<ResponseBody> addFriend(@NonNull String username);
+  Observable<ResponseBody> deleteFriend(@NonNull String username);
+  Observable<ResponseBody> saveFriendNote(@NonNull String username, @NonNull String note);
+  Observable<Subreddit> getSubredditInfo(@NonNull String subreddit);
+  Observable<ResponseBody> vote(@NonNull Votable votable, int direction);
+  Observable<ResponseBody> save(@NonNull Savable listing, @Nullable String category, boolean save);
+  Observable<ResponseBody> hide(@NonNull Hideable listing, boolean toHide);
+  Observable<ResponseBody> onReport(@NonNull String id, @NonNull String reason);
 }

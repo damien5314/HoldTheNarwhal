@@ -8,9 +8,9 @@ import com.ddiehl.reddit.listings.Listing;
 import java.util.List;
 
 public interface UserProfileView {
-    void showUserInfo(@NonNull UserIdentity user);
-    void showFriendNote(@NonNull String note);
-    void hideFriendNote();
-    void showTrophies(List<Listing> trophies);
-    void setFriendButtonState(boolean isFriend);
+  void showUserInfo(@NonNull UserIdentity user);
+  void showFriendNote(@NonNull String note);
+  void hideFriendNote();
+  void showTrophies(List<Listing> trophies);
+  void setFriendButtonState(boolean isFriend);
 }

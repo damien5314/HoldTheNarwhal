@@ -10,27 +10,27 @@ import java.util.List;
 
 public interface ListingsPresenter extends BasePresenter, LinkPresenter, CommentPresenter {
 
-    void refreshData();
-    void setData(@NonNull List<Listing> data);
-    void getMoreData();
+  void refreshData();
+  void setData(@NonNull List<Listing> data);
+  void getMoreData();
 
-    int getNumListings();
-    Listing getListing(int position);
+  int getNumListings();
+  Listing getListing(int position);
 
-    String getUsernameContext();
-    String getSubreddit();
-    String getNextPageListingId();
-    String getSort();
-    String getTimespan();
-    String getShow();
-    boolean getShowControversiality();
-    void updateSubreddit(@Nullable String subreddit);
-    void onSortChanged();
+  String getUsernameContext();
+  String getSubreddit();
+  String getNextPageListingId();
+  String getSort();
+  String getTimespan();
+  String getShow();
+  boolean getShowControversiality();
+  void updateSubreddit(@Nullable String subreddit);
+  void onSortChanged();
 
-    UserIdentity getAuthorizedUser();
+  UserIdentity getAuthorizedUser();
 
-    void onSortSelected(@Nullable String sort);
-    void onTimespanSelected(@Nullable String timespan);
+  void onSortSelected(@Nullable String sort);
+  void onTimespanSelected(@Nullable String timespan);
 
-    void onNsfwSelected(boolean nsfwAllowed);
+  void onNsfwSelected(boolean nsfwAllowed);
 }

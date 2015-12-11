@@ -18,19 +18,19 @@
 
 ### Remove logging ### No longer needed with Logger library
 #-assumenosideeffects class android.util.Log {
-#    public static boolean isLoggable(java.lang.String, int);
-#    public static int v(...);
-#    public static int i(...);
-#    public static int w(...);
-#    public static int d(...);
-#    public static int e(...);
+#  public static boolean isLoggable(java.lang.String, int);
+#  public static int v(...);
+#  public static int i(...);
+#  public static int w(...);
+#  public static int d(...);
+#  public static int e(...);
 #}
 
 ### Otto ###
 -keepattributes *Annotation*
 -keepclassmembers class ** {
-    @com.squareup.otto.Subscribe public *;
-    @com.squareup.otto.Produce public *;
+  @com.squareup.otto.Subscribe public *;
+  @com.squareup.otto.Produce public *;
 }
 
 ### Okio, OkHttp, Retrofit ###
@@ -43,7 +43,7 @@
 -keepattributes Signature
 -keepattributes Exceptions
 -keepclasseswithmembers class * { # Do we need this one?
-    @retrofit.http.* <methods>;
+  @retrofit.http.* <methods>;
 }
 
 ### Gson models ###
@@ -78,10 +78,10 @@
 
 ### InMobi ###
 -keep class com.google.android.gms.ads.identifier.AdvertisingIdClient {
-     public *;
+   public *;
 }
 -keep class com.google.android.gms.ads.identifier.AdvertisingIdClient$Info {
-     public *;
+   public *;
 }
 
 ### Stetho ###

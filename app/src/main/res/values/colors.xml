@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- Icon height in navigation drawer is 20dp w/ 6dp padding -->
-    <!-- http://www.materialpalette.com/blue-grey/red -->
-    <color name="primary_light">#CFD8DC</color>
-    <color name="primary">#607D8B</color>
-    <color name="primary_dark">#455A64</color>
-    <color name="accent">#FF5252</color>
-    <color name="primary_text">#212121</color>
-    <color name="secondary_text">#727272</color>
-    <color name="icons">#FFFFFF</color>
-    <color name="divider">#B6B6B6</color>
+  <!-- Icon height in navigation drawer is 20dp w/ 6dp padding -->
+  <!-- http://www.materialpalette.com/blue-grey/red -->
+  <color name="primary_light">#CFD8DC</color>
+  <color name="primary">#607D8B</color>
+  <color name="primary_dark">#455A64</color>
+  <color name="accent">#FF5252</color>
+  <color name="primary_text">#212121</color>
+  <color name="secondary_text">#727272</color>
+  <color name="icons">#FFFFFF</color>
+  <color name="divider">#B6B6B6</color>
 
-    <color name="transparent">#00000000</color>
-    <color name="indentation">@color/primary</color>
-    <color name="reddit_orange">#60FF8B60</color>
-    <color name="reddit_orange_full">#FFFF8B60</color>
-    <color name="reddit_blue">#609494FF</color>
-    <color name="reddit_blue_full">#FF9494FF</color>
-    <color name="reddit_gold">#f6e600</color>
-    <color name="author_op_background">#0055DF</color>
-    <color name="author_op_text">#ffffff</color>
-    <color name="author_moderator_background">#228822</color>
-    <color name="author_moderator_text">#ffffff</color>
-    <color name="author_admin_background">#FF0011</color>
-    <color name="author_admin_text">#ffffff</color>
-    <color name="markdown_quote_block">@color/primary_light</color>
-    <color name="comment_controversiality_indicator">#FF5252</color>
+  <color name="transparent">#00000000</color>
+  <color name="indentation">@color/primary</color>
+  <color name="reddit_orange">#60FF8B60</color>
+  <color name="reddit_orange_full">#FFFF8B60</color>
+  <color name="reddit_blue">#609494FF</color>
+  <color name="reddit_blue_full">#FF9494FF</color>
+  <color name="reddit_gold">#f6e600</color>
+  <color name="author_op_background">#0055DF</color>
+  <color name="author_op_text">#ffffff</color>
+  <color name="author_moderator_background">#228822</color>
+  <color name="author_moderator_text">#ffffff</color>
+  <color name="author_admin_background">#FF0011</color>
+  <color name="author_admin_text">#ffffff</color>
+  <color name="markdown_quote_block">@color/primary_light</color>
+  <color name="comment_controversiality_indicator">#FF5252</color>
 
 </resources>

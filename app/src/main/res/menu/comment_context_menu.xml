@@ -1,65 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+  xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item
-        android:id="@+id/action_comment_permalink"
-        android:title="@string/action_comment_permalink"
-        android:icon="@null"
-        app:showAsAction="never" />
+  <item
+    android:id="@+id/action_comment_permalink"
+    android:title="@string/action_comment_permalink"
+    android:icon="@null"
+    app:showAsAction="never" />
 
-    <item
-        android:id="@+id/action_comment_reply"
-        android:title="@string/action_reply"
-        android:icon="@drawable/ic_action_reply"
-        app:showAsAction="never"/>
+  <item
+    android:id="@+id/action_comment_reply"
+    android:title="@string/action_reply"
+    android:icon="@drawable/ic_action_reply"
+    app:showAsAction="never"/>
 
-    <item
-        android:id="@+id/action_comment_upvote"
-        android:title="@string/action_upvote"
-        android:icon="@drawable/ic_action_upvote"
-        app:showAsAction="never"/>
+  <item
+    android:id="@+id/action_comment_upvote"
+    android:title="@string/action_upvote"
+    android:icon="@drawable/ic_action_upvote"
+    app:showAsAction="never"/>
 
-    <item
-        android:id="@+id/action_comment_downvote"
-        android:title="@string/action_downvote"
-        android:icon="@drawable/ic_action_downvote"
-        app:showAsAction="never"/>
+  <item
+    android:id="@+id/action_comment_downvote"
+    android:title="@string/action_downvote"
+    android:icon="@drawable/ic_action_downvote"
+    app:showAsAction="never"/>
 
-    <item
-        android:id="@+id/action_comment_save"
-        android:title="@string/action_save"
-        android:icon="@drawable/ic_action_save"
-        app:showAsAction="never"/>
+  <item
+    android:id="@+id/action_comment_save"
+    android:title="@string/action_save"
+    android:icon="@drawable/ic_action_save"
+    app:showAsAction="never"/>
 
-    <item
-        android:id="@+id/action_comment_unsave"
-        android:title="@string/action_unsave"
-        android:icon="@drawable/ic_action_save"
-        app:showAsAction="never"/>
+  <item
+    android:id="@+id/action_comment_unsave"
+    android:title="@string/action_unsave"
+    android:icon="@drawable/ic_action_save"
+    app:showAsAction="never"/>
 
-    <item
-        android:id="@+id/action_comment_share"
-        android:title="@string/action_share"
-        android:icon="@drawable/ic_action_share"
-        app:showAsAction="never"/>
+  <item
+    android:id="@+id/action_comment_share"
+    android:title="@string/action_share"
+    android:icon="@drawable/ic_action_share"
+    app:showAsAction="never"/>
 
-    <item
-        android:id="@+id/action_comment_view_user_profile"
-        android:title="@string/action_view_user_profile"
-        android:icon="@drawable/ic_action_view_user_profile"
-        app:showAsAction="never"/>
+  <item
+    android:id="@+id/action_comment_view_user_profile"
+    android:title="@string/action_view_user_profile"
+    android:icon="@drawable/ic_action_view_user_profile"
+    app:showAsAction="never"/>
 
-    <item
-        android:id="@+id/action_comment_open_in_browser"
-        android:title="@string/action_open_in_browser"
-        android:icon="@drawable/ic_action_open_in_browser"
-        app:showAsAction="never"/>
+  <item
+    android:id="@+id/action_comment_open_in_browser"
+    android:title="@string/action_open_in_browser"
+    android:icon="@drawable/ic_action_open_in_browser"
+    app:showAsAction="never"/>
 
-    <item
-        android:id="@+id/action_comment_report"
-        android:title="@string/action_report"
-        android:icon="@drawable/ic_action_report"
-        app:showAsAction="never"/>
+  <item
+    android:id="@+id/action_comment_report"
+    android:title="@string/action_report"
+    android:icon="@drawable/ic_action_report"
+    app:showAsAction="never"/>
 
 </menu>

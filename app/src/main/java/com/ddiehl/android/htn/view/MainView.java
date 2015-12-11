@@ -11,30 +11,30 @@ import com.ddiehl.android.htn.view.fragments.WebViewFragment;
 import com.ddiehl.reddit.identity.UserIdentity;
 
 public interface MainView extends AnalyticsDialog.Callbacks, ConfirmSignOutDialog.Callbacks,
-        SubredditNavigationDialog.Callbacks, WebViewFragment.Callbacks {
+    SubredditNavigationDialog.Callbacks, WebViewFragment.Callbacks {
 
-    void updateUserIdentity(@Nullable UserIdentity identity);
-    void loadImageIntoDrawerHeader(@Nullable String url);
-    void showAnalyticsRequestDialog();
-    void showNsfwWarningDialog();
-    void showSettings();
+  void updateUserIdentity(@Nullable UserIdentity identity);
+  void loadImageIntoDrawerHeader(@Nullable String url);
+  void showAnalyticsRequestDialog();
+  void showNsfwWarningDialog();
+  void showSettings();
 
-    void updateNavigationItems(boolean isLoggedIn);
+  void updateNavigationItems(boolean isLoggedIn);
 
-    void closeNavigationDrawer();
-    void showLoginView();
-    void showUserProfile(@NonNull String username);
-    void showUserProfile(@NonNull String show, @NonNull String username);
-    void showUserSubreddits();
-    void showSubreddit(@Nullable String subreddit);
-    void showSubredditIfEmpty(@Nullable String subreddit);
-    void showWebViewForURL(@NonNull String url);
+  void closeNavigationDrawer();
+  void showLoginView();
+  void showUserProfile(@NonNull String username);
+  void showUserProfile(@NonNull String show, @NonNull String username);
+  void showUserSubreddits();
+  void showSubreddit(@Nullable String subreddit);
+  void showSubredditIfEmpty(@Nullable String subreddit);
+  void showWebViewForURL(@NonNull String url);
 
-    // Methods formerly from BaseView
-    void setTitle(@NonNull CharSequence title);
-    void showSpinner(@Nullable String msg);
-    void showSpinner(@StringRes int resId);
-    void dismissSpinner();
-    void showToast(@NonNull String msg);
-    void showToast(@StringRes int resId);
+  // Methods formerly from BaseView
+  void setTitle(@NonNull CharSequence title);
+  void showSpinner(@Nullable String msg);
+  void showSpinner(@StringRes int resId);
+  void dismissSpinner();
+  void showToast(@NonNull String msg);
+  void showToast(@StringRes int resId);
 }

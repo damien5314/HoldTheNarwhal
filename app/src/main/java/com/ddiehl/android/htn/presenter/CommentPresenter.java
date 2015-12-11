@@ -10,20 +10,20 @@ import com.ddiehl.reddit.listings.CommentStub;
 
 public interface CommentPresenter extends BasePresenter {
 
-    void showCommentContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, Comment comment);
-    void showCommentThread(@Nullable String subreddit, @Nullable String linkId, @NonNull String commentId);
-    void getMoreChildren(@NonNull CommentStub comment);
-    void openCommentPermalink();
-    void openReplyView();
-    void upvoteComment();
-    void downvoteComment();
-    void saveComment();
-    void unsaveComment();
-    void shareComment();
-    void openCommentUserProfile();
-    void openCommentUserProfile(@NonNull Comment comment);
-    void openCommentInBrowser();
-    void reportComment();
-    void openCommentLink(@NonNull Comment comment);
+  void showCommentContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, Comment comment);
+  void showCommentThread(@Nullable String subreddit, @Nullable String linkId, @NonNull String commentId);
+  void getMoreChildren(@NonNull CommentStub comment);
+  void openCommentPermalink();
+  void openReplyView();
+  void upvoteComment();
+  void downvoteComment();
+  void saveComment();
+  void unsaveComment();
+  void shareComment();
+  void openCommentUserProfile();
+  void openCommentUserProfile(@NonNull Comment comment);
+  void openCommentInBrowser();
+  void reportComment();
+  void openCommentLink(@NonNull Comment comment);
 
 }

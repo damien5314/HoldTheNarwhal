@@ -20,28 +20,28 @@ import butterknife.ButterKnife;
 
 public class AboutAppFragment extends MarkdownTextFragment {
 
-    public static Fragment newInstance(@NonNull String text) {
-        Fragment f = new AboutAppFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_TEXT, text);
-        f.setArguments(args);
-        return f;
-    }
+  public static Fragment newInstance(@NonNull String text) {
+    Fragment f = new AboutAppFragment();
+    Bundle args = new Bundle();
+    args.putString(ARG_TEXT, text);
+    f.setArguments(args);
+    return f;
+  }
 
-    public static Fragment newInstance(@NonNull InputStream in_s) {
-        String text = BaseUtils.getStringFromInputStream(in_s);
-        return newInstance(text);
-    }
+  public static Fragment newInstance(@NonNull InputStream in_s) {
+    String text = BaseUtils.getStringFromInputStream(in_s);
+    return newInstance(text);
+  }
 
-    @Nullable @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = super.onCreateView(inflater, container, savedInstanceState);
-        if (v == null) return null;
-        CharSequence ins = String.format("Version %1$s\n\nReleased %2$s\n\n",
-                BuildConfig.VERSION_NAME,
-                BaseUtils.getBuildTimeFormatted(v.getContext()));
-        MarkdownTextView tv = ButterKnife.findById(v, R.id.markdown_text_view);
-        tv.setText(TextUtils.concat(ins, tv.getText()));
-        return v;
-    }
+  @Nullable @Override
+  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    View v = super.onCreateView(inflater, container, savedInstanceState);
+    if (v == null) return null;
+    CharSequence ins = String.format("Version %1$s\n\nReleased %2$s\n\n",
+        BuildConfig.VERSION_NAME,
+        BaseUtils.getBuildTimeFormatted(v.getContext()));
+    MarkdownTextView tv = ButterKnife.findById(v, R.id.markdown_text_view);
+    tv.setText(TextUtils.concat(ins, tv.getText()));
+    return v;
+  }
 }

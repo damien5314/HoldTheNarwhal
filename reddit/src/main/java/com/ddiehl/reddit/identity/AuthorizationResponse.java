@@ -3,46 +3,44 @@ package com.ddiehl.reddit.identity;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+/**
+ * TODO
+ * Cache time this item was created to calculate date of expiration
+ * Then we can serialize straight to AccessToken
+ */
 public class AuthorizationResponse {
+  @Expose @SerializedName("access_token")
+  protected String accessToken;
 
-    /**
-     * TODO
-     * Cache time this item was created to calculate date of expiration
-     * Then we can serialize straight to AccessToken
-     */
+  @Expose @SerializedName("token_type")
+  protected String tokenType;
 
-    @Expose @SerializedName("access_token")
-    protected String accessToken;
+  @Expose @SerializedName("expires_in")
+  protected long expiresIn; // seconds
 
-    @Expose @SerializedName("token_type")
-    protected String tokenType;
+  @Expose @SerializedName("scope")
+  protected String scope;
 
-    @Expose @SerializedName("expires_in")
-    protected long expiresIn; // seconds
+  @Expose @SerializedName("refresh_token")
+  protected String refreshToken;
 
-    @Expose @SerializedName("scope")
-    protected String scope;
+  public String getToken() {
+    return accessToken;
+  }
 
-    @Expose @SerializedName("refresh_token")
-    protected String refreshToken;
+  public String getTokenType() {
+    return tokenType;
+  }
 
-    public String getToken() {
-        return accessToken;
-    }
+  public long getExpiresIn() {
+    return expiresIn;
+  }
 
-    public String getTokenType() {
-        return tokenType;
-    }
+  public String getScope() {
+    return scope;
+  }
 
-    public long getExpiresIn() {
-        return expiresIn;
-    }
-
-    public String getScope() {
-        return scope;
-    }
-
-    public String getRefreshToken() {
-        return refreshToken;
-    }
+  public String getRefreshToken() {
+    return refreshToken;
+  }
 }

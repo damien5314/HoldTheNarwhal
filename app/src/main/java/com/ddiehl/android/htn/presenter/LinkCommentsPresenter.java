@@ -8,16 +8,16 @@ import com.ddiehl.reddit.listings.Link;
 
 public interface LinkCommentsPresenter extends BasePresenter, LinkPresenter, CommentPresenter {
 
-    Link getLinkContext();
-    void requestData();
-    void getMoreChildren(@NonNull CommentStub comment);
-    void toggleThreadVisible(@NonNull AbsComment comment);
+  Link getLinkContext();
+  void requestData();
+  void getMoreChildren(@NonNull CommentStub comment);
+  void toggleThreadVisible(@NonNull AbsComment comment);
 
-    int getNumComments();
-    AbsComment getComment(int position);
+  int getNumComments();
+  AbsComment getComment(int position);
 
-    String getSort();
-    boolean getShowControversiality();
-    void updateSort(@NonNull String sort);
+  String getSort();
+  boolean getShowControversiality();
+  void updateSort(@NonNull String sort);
 
 }

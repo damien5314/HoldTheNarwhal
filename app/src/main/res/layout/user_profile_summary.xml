@@ -1,168 +1,168 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/user_profile_summary"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/user_profile_summary"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content">
 
+  <LinearLayout
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin">
+
+    <TextView
+      android:id="@+id/user_created"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:paddingTop="@dimen/baseline_spacing"
+      android:paddingBottom="@dimen/baseline_spacing"
+      android:textSize="@dimen/user_created_text_size"
+      android:textColor="@color/primary_text"
+      android:gravity="center"
+      tools:text="redditor since April 20, 2008"/>
+
+    <!-- link karma & comment karma -->
     <LinearLayout
+      android:id="@+id/user_karma_layout"
+      android:orientation="horizontal"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:paddingTop="@dimen/baseline_spacing"
+      android:paddingBottom="@dimen/baseline_spacing">
+
+      <LinearLayout
         android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="@dimen/activity_vertical_margin"
-        android:paddingBottom="@dimen/activity_vertical_margin"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin">
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
 
         <TextView
-            android:id="@+id/user_created"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="@dimen/baseline_spacing"
-            android:paddingBottom="@dimen/baseline_spacing"
-            android:textSize="@dimen/user_created_text_size"
-            android:textColor="@color/primary_text"
-            android:gravity="center"
-            tools:text="redditor since April 20, 2008"/>
+          android:id="@+id/user_link_karma"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:gravity="center"
+          android:textSize="@dimen/user_karma_text_size"
+          android:textColor="@color/primary_text"
+          tools:text="57,321"/>
 
-        <!-- link karma & comment karma -->
-        <LinearLayout
-            android:id="@+id/user_karma_layout"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="@dimen/baseline_spacing"
-            android:paddingBottom="@dimen/baseline_spacing">
+        <TextView
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:gravity="center"
+          android:textSize="@dimen/user_karma_label_text_size"
+          android:textColor="@color/secondary_text"
+          android:text="@string/user_link_score" />
 
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1">
+      </LinearLayout>
 
-                <TextView
-                    android:id="@+id/user_link_karma"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:textSize="@dimen/user_karma_text_size"
-                    android:textColor="@color/primary_text"
-                    tools:text="57,321"/>
+      <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:textSize="@dimen/user_karma_label_text_size"
-                    android:textColor="@color/secondary_text"
-                    android:text="@string/user_link_score" />
+        <TextView
+          android:id="@+id/user_comment_karma"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:gravity="center"
+          android:textSize="@dimen/user_karma_text_size"
+          android:textColor="@color/primary_text"
+          tools:text="113,069"/>
 
-            </LinearLayout>
+        <TextView
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:gravity="center"
+          android:textSize="@dimen/user_karma_label_text_size"
+          android:textColor="@color/secondary_text"
+          android:text="@string/user_comment_score" />
 
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1">
-
-                <TextView
-                    android:id="@+id/user_comment_karma"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:textSize="@dimen/user_karma_text_size"
-                    android:textColor="@color/primary_text"
-                    tools:text="113,069"/>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:textSize="@dimen/user_karma_label_text_size"
-                    android:textColor="@color/secondary_text"
-                    android:text="@string/user_comment_score" />
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <!-- Friend/Unfriend button -->
-        <FrameLayout
-            android:id="@+id/user_friend_button_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="@dimen/baseline_spacing"
-            android:paddingBottom="@dimen/baseline_spacing">
-
-            <Button
-                android:id="@+id/user_friend_button"
-                android:layout_width="@dimen/user_friend_button_width"
-                android:layout_height="@dimen/user_friend_button_height"
-                android:layout_gravity="center"/>
-
-        </FrameLayout>
-
-        <LinearLayout
-            android:id="@+id/user_note_layout"
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="@dimen/baseline_spacing"
-            android:paddingBottom="@dimen/baseline_spacing">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/user_note_label_text_size"
-                android:textColor="@color/secondary_text"
-                android:text="@string/user_note_label"/>
-
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <EditText
-                    android:id="@+id/user_friend_note_edit"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:inputType="text"
-                    android:textSize="@dimen/user_friend_note_text_size"/>
-
-                <Button
-                    android:id="@+id/user_friend_note_confirm"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:text="@string/user_friend_note_confirm_button"/>
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <!-- trophies -->
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="@dimen/baseline_spacing">
-
-            <!--<TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/secondary_text"
-                android:textSize="@dimen/user_trophies_label_text_size"
-                android:text="@string/user_trophies_label"/>-->
-
-            <TableLayout
-                android:id="@+id/user_trophies"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-        </LinearLayout>
+      </LinearLayout>
 
     </LinearLayout>
+
+    <!-- Friend/Unfriend button -->
+    <FrameLayout
+      android:id="@+id/user_friend_button_layout"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:paddingTop="@dimen/baseline_spacing"
+      android:paddingBottom="@dimen/baseline_spacing">
+
+      <Button
+        android:id="@+id/user_friend_button"
+        android:layout_width="@dimen/user_friend_button_width"
+        android:layout_height="@dimen/user_friend_button_height"
+        android:layout_gravity="center"/>
+
+    </FrameLayout>
+
+    <LinearLayout
+      android:id="@+id/user_note_layout"
+      android:orientation="vertical"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:paddingTop="@dimen/baseline_spacing"
+      android:paddingBottom="@dimen/baseline_spacing">
+
+      <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/user_note_label_text_size"
+        android:textColor="@color/secondary_text"
+        android:text="@string/user_note_label"/>
+
+      <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+          android:id="@+id/user_friend_note_edit"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:inputType="text"
+          android:textSize="@dimen/user_friend_note_text_size"/>
+
+        <Button
+          android:id="@+id/user_friend_note_confirm"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center_vertical"
+          android:text="@string/user_friend_note_confirm_button"/>
+
+      </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- trophies -->
+    <LinearLayout
+      android:orientation="vertical"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:paddingTop="@dimen/baseline_spacing">
+
+      <!--<TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/secondary_text"
+        android:textSize="@dimen/user_trophies_label_text_size"
+        android:text="@string/user_trophies_label"/>-->
+
+      <TableLayout
+        android:id="@+id/user_trophies"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+  </LinearLayout>
 
 </ScrollView>

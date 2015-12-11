@@ -4,25 +4,25 @@ import com.google.gson.annotations.Expose;
 
 public class ListingResponse {
 
-    @Expose
-    private String kind;
-    @Expose
-    private ListingResponseData data;
+  @Expose
+  private String kind;
+  @Expose
+  private ListingResponseData data;
 
 
-    public String getKind() {
-        return kind;
-    }
+  public String getKind() {
+    return kind;
+  }
 
-    public void setKind(String kind) {
-        this.kind = kind;
-    }
+  public void setKind(String kind) {
+    this.kind = kind;
+  }
 
-    public ListingResponseData getData() {
-        return data;
-    }
+  public ListingResponseData getData() {
+    return data;
+  }
 
-    public void setData(ListingResponseData data) {
-        this.data = data;
-    }
+  public void setData(ListingResponseData data) {
+    this.data = data;
+  }
 }

@@ -4,13 +4,13 @@ import com.ddiehl.reddit.identity.UserIdentity;
 
 public class UserIdentityListing extends Listing<UserIdentity> {
 
-    public UserIdentity getUser() {
-        return data;
-    }
+  public UserIdentity getUser() {
+    return data;
+  }
 
-    @Override
-    public String toString() {
-        return getId() + " - " + getName() + " - Gold: " + data.isGold();
-    }
+  @Override
+  public String toString() {
+    return getId() + " - " + getName() + " - Gold: " + data.isGold();
+  }
 
 }

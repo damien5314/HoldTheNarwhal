@@ -15,62 +15,62 @@ import com.ddiehl.reddit.listings.Link;
 
 public class ListingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private static final int TYPE_LINK = 0;
-    private static final int TYPE_COMMENT = 1;
+  private static final int TYPE_LINK = 0;
+  private static final int TYPE_COMMENT = 1;
 
-    private ListingsPresenter mListingsPresenter;
+  private ListingsPresenter mListingsPresenter;
 
-    public ListingsAdapter(ListingsPresenter presenter) {
-        mListingsPresenter = presenter;
+  public ListingsAdapter(ListingsPresenter presenter) {
+    mListingsPresenter = presenter;
+  }
+
+  @Override
+  public int getItemViewType(int position) {
+    Listing listing = mListingsPresenter.getListing(position);
+
+    if (listing instanceof Link) {
+      return TYPE_LINK;
     }
 
-    @Override
-    public int getItemViewType(int position) {
-        Listing listing = mListingsPresenter.getListing(position);
-
-        if (listing instanceof Link) {
-            return TYPE_LINK;
-        }
-
-        if (listing instanceof Comment) {
-            return TYPE_COMMENT;
-        }
-
-        throw new RuntimeException("Item view type not recognized: " + listing.getClass());
+    if (listing instanceof Comment) {
+      return TYPE_COMMENT;
     }
 
-    @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        switch (viewType) {
-            case TYPE_LINK:
-                View view = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.listings_link, parent, false);
-                return new ListingsLinkViewHolder(view, mListingsPresenter);
-            case TYPE_COMMENT:
-                view = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.listings_comment, parent, false);
-                return new ListingsCommentViewHolder(view, mListingsPresenter);
-            default:
-                throw new RuntimeException("Unexpected ViewHolder type: " + viewType);
-        }
-    }
+    throw new RuntimeException("Item view type not recognized: " + listing.getClass());
+  }
 
-    @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        if (holder instanceof ListingsLinkViewHolder) {
-            Link link = (Link) mListingsPresenter.getListing(position);
-            ((ListingsLinkViewHolder) holder).bind(link, false);
-        } else if (holder instanceof ListingsCommentViewHolder) {
-            Comment comment = (Comment) mListingsPresenter.getListing(position);
-            boolean showControversiality = mListingsPresenter.getShowControversiality()
-                    && comment.getControversiality() > 0;
-            ((ListingsCommentViewHolder) holder).bind(comment, showControversiality);
-        }
+  @Override
+  public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    switch (viewType) {
+      case TYPE_LINK:
+        View view = LayoutInflater.from(parent.getContext())
+            .inflate(R.layout.listings_link, parent, false);
+        return new ListingsLinkViewHolder(view, mListingsPresenter);
+      case TYPE_COMMENT:
+        view = LayoutInflater.from(parent.getContext())
+            .inflate(R.layout.listings_comment, parent, false);
+        return new ListingsCommentViewHolder(view, mListingsPresenter);
+      default:
+        throw new RuntimeException("Unexpected ViewHolder type: " + viewType);
     }
+  }
 
-    @Override
-    public int getItemCount() {
-        return mListingsPresenter.getNumListings();
+  @Override
+  public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    if (holder instanceof ListingsLinkViewHolder) {
+      Link link = (Link) mListingsPresenter.getListing(position);
+      ((ListingsLinkViewHolder) holder).bind(link, false);
+    } else if (holder instanceof ListingsCommentViewHolder) {
+      Comment comment = (Comment) mListingsPresenter.getListing(position);
+      boolean showControversiality = mListingsPresenter.getShowControversiality()
+          && comment.getControversiality() > 0;
+      ((ListingsCommentViewHolder) holder).bind(comment, showControversiality);
     }
+  }
+
+  @Override
+  public int getItemCount() {
+    return mListingsPresenter.getNumListings();
+  }
 
 }

@@ -5,14 +5,14 @@ import com.ddiehl.reddit.identity.UserIdentity;
 import rx.functions.Action1;
 
 public interface IdentityManager {
-    UserIdentity getUserIdentity();
-    void saveUserIdentity(UserIdentity identity);
-    void clearSavedUserIdentity();
+  UserIdentity getUserIdentity();
+  void saveUserIdentity(UserIdentity identity);
+  void clearSavedUserIdentity();
 
-    void registerUserIdentityChangeListener(Callbacks listener);
-    void unregisterUserIdentityChangeListener(Callbacks listener);
+  void registerUserIdentityChangeListener(Callbacks listener);
+  void unregisterUserIdentityChangeListener(Callbacks listener);
 
-    interface Callbacks {
-        Action1<UserIdentity> onUserIdentityChanged();
-    }
+  interface Callbacks {
+    Action1<UserIdentity> onUserIdentityChanged();
+  }
 }

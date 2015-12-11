@@ -1,234 +1,234 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-<!--    <ListPreference
-        android:key="lang"
-        android:title="@string/pref_lang"
-        android:summary="@string/pref_lang_summary"/>-->
+<!--  <ListPreference
+    android:key="lang"
+    android:title="@string/pref_lang"
+    android:summary="@string/pref_lang_summary"/>-->
+
+<!--  <CheckBoxPreference
+    android:key="newwindow"
+    android:title="@string/pref_newwindow"/>-->
+
+  <PreferenceCategory
+    android:title="media">
+
+    <ListPreference
+      android:key="media"
+      android:title="@string/pref_media"
+      android:dialogTitle="@string/pref_media"
+      android:summary="%s"
+      android:entries="@array/pref_media_options"
+      android:entryValues="@array/pref_media_option_values"
+      android:defaultValue="subreddit"/> <!-- show thumbnails next to links -->
+
+  </PreferenceCategory>
+
+  <PreferenceCategory
+    android:title="link options">
 
 <!--    <CheckBoxPreference
-        android:key="newwindow"
-        android:title="@string/pref_newwindow"/>-->
+      android:key="organic"
+      android:title="@string/pref_organic"/>--> <!-- show spotlight box on front page -->
 
-    <PreferenceCategory
-        android:title="media">
+<!--    <CheckBoxPreference
+      android:key="show_trending"
+      android:title="@string/pref_show_trending"/>-->
 
-        <ListPreference
-            android:key="media"
-            android:title="@string/pref_media"
-            android:dialogTitle="@string/pref_media"
-            android:summary="%s"
-            android:entries="@array/pref_media_options"
-            android:entryValues="@array/pref_media_option_values"
-            android:defaultValue="subreddit"/> <!-- show thumbnails next to links -->
+<!--    <CheckBoxPreference
+      android:key="clickgadget"
+      android:title="@string/pref_clickgadget"/>-->
 
-    </PreferenceCategory>
-
-    <PreferenceCategory
-        android:title="link options">
-
-<!--        <CheckBoxPreference
-            android:key="organic"
-            android:title="@string/pref_organic"/>--> <!-- show spotlight box on front page -->
-
-<!--        <CheckBoxPreference
-            android:key="show_trending"
-            android:title="@string/pref_show_trending"/>-->
-
-<!--        <CheckBoxPreference
-            android:key="clickgadget"
-            android:title="@string/pref_clickgadget"/>-->
-
-<!--        <CheckBoxPreference
-            android:key="compress"
-            android:title="@string/pref_compress"/>-->
-
-        <CheckBoxPreference
-            android:key="domain_details"
-            android:title="@string/pref_domain_details"
-            android:defaultValue="false"/>
-
-        <CheckBoxPreference
-            android:key="hide_ups"
-            android:title="@string/pref_hide_ups"
-            android:defaultValue="false"/>
-
-        <CheckBoxPreference
-            android:key="hide_downs"
-            android:title="@string/pref_hide_downs"
-            android:defaultValue="false"/>
-
-        <ListPreference
-            android:key="numsites"
-            android:title="@string/pref_numsites"
-            android:dialogTitle="@string/pref_numsites"
-            android:summary="%s"
-            android:entries="@array/pref_num_links_values"
-            android:entryValues="@array/pref_num_links_values"/>
-
-        <EditTextPreference
-            android:key="min_link_score"
-            android:title="@string/pref_min_link_score"
-            android:hint="@string/pref_min_link_score_hint"
-            android:defaultValue="-4"
-            android:inputType="numberSigned"/>
-
-    </PreferenceCategory>
-
-    <PreferenceCategory
-        android:title="comment options">
-
-        <ListPreference
-            android:key="default_comment_sort"
-            android:title="@string/dialog_settings_default_comment_sort"
-            android:dialogTitle="@string/dialog_settings_default_comment_sort"
-            android:entries="@array/comment_sort_options"
-            android:entryValues="@array/comment_sort_option_values"
-            android:defaultValue="@string/default_comment_sort"
-            android:summary="%s" />
-
-<!--        <CheckBoxPreference
-            android:key="ignore_suggested_sort"
-            android:title="@string/pref_ignore_suggested_sort"/>-->
-
-        <CheckBoxPreference
-            android:key="highlight_controversial"
-            android:title="@string/pref_highlight_controversial"
-            android:defaultValue="false"/>
-
-        <EditTextPreference
-            android:key="num_comments"
-            android:title="@string/pref_num_comments"
-            android:hint="@string/pref_num_comments_hint"
-            android:summary="%s"
-            android:defaultValue="200"
-            android:inputType="number"/>
-
-        <EditTextPreference
-            android:key="min_comment_score"
-            android:title="@string/pref_min_comment_score"
-            android:hint="@string/pref_min_comment_score_hint"
-            android:defaultValue="-4"
-            android:inputType="numberSigned"/>
-
-    </PreferenceCategory>
-
-    <PreferenceCategory
-        android:title="messaging options">
-
-        <CheckBoxPreference
-            android:key="threaded_messages"
-            android:title="@string/pref_threaded_messages"
-            android:defaultValue="true"/>
-
-        <CheckBoxPreference
-            android:key="collapse_read_messages"
-            android:title="@string/pref_collapse_read_messages"
-            android:defaultValue="false"/>
-
-        <CheckBoxPreference
-            android:key="mark_messages_read"
-            android:title="@string/pref_mark_messages_read"
-            android:defaultValue="true"/>
-
-        <CheckBoxPreference
-            android:key="monitor_mentions"
-            android:title="@string/pref_monitor_mentions"
-            android:defaultValue="true"/>
-
-    </PreferenceCategory>
-
-    <PreferenceCategory
-        android:title="display options">
-
-<!--        <CheckBoxPreference
-            android:key="enable_default_themes"
-            android:title="@string/pref_enable_default_themes"/>--> <!-- allow subreddits to show me custom themes -->
-
-        <CheckBoxPreference
-            android:key="show_flair"
-            android:title="@string/pref_show_flair"
-            android:defaultValue="true"/>
-
-        <CheckBoxPreference
-            android:key="show_link_flair"
-            android:title="@string/pref_show_link_flair"
-            android:defaultValue="true"/>
-
-    </PreferenceCategory>
-
-    <PreferenceCategory
-        android:title="content options">
-
-        <CheckBoxPreference
-            android:key="over_18"
-            android:title="@string/pref_over_18"
-            android:summary="@string/pref_over_18_summary"
-            android:defaultValue="false"/>
-
-        <CheckBoxPreference
-            android:key="no_profanity"
-            android:title="@string/pref_no_profanity"
-            android:summary="@string/pref_no_profanity_summary"
-            android:defaultValue="true"
-            android:dependency="over_18"
-            android:disableDependentsState="true"/> <!-- make safe(r) for work -->
-
-        <CheckBoxPreference
-            android:key="label_nsfw"
-            android:title="@string/pref_label_nsfw"
-            android:summary="@string/pref_label_nsfw_summary"
-            android:defaultValue="true"
-            android:dependency="no_profanity"/>
-
-<!--        <CheckBoxPreference
-            android:key="private_feeds"
-            android:title="@string/pref_private_feeds"/>-->
-
-    </PreferenceCategory>
-
-    <PreferenceCategory
-        android:title="privacy options">
-
-        <CheckBoxPreference
-            android:key="public_votes"
-            android:title="@string/pref_public_votes"
-            android:defaultValue="false"/>
-
-        <CheckBoxPreference
-            android:key="research"
-            android:title="@string/pref_research"
-            android:defaultValue="false"/>
-
-        <CheckBoxPreference
-            android:key="hide_from_robots"
-            android:title="@string/pref_hide_from_robots"
-            android:defaultValue="false"/>
-
-    </PreferenceCategory>
+<!--    <CheckBoxPreference
+      android:key="compress"
+      android:title="@string/pref_compress"/>-->
 
     <CheckBoxPreference
-        android:key="beta"
-        android:title="@string/pref_beta"
-        android:defaultValue="false"/>
+      android:key="domain_details"
+      android:title="@string/pref_domain_details"
+      android:defaultValue="false"/>
 
-    <!--
-        <CheckBoxPreference
-            android:key="email_messages"/>
+    <CheckBoxPreference
+      android:key="hide_ups"
+      android:title="@string/pref_hide_ups"
+      android:defaultValue="false"/>
 
-        <CheckBoxPreference
-            android:key="hide_locationbar"/>
+    <CheckBoxPreference
+      android:key="hide_downs"
+      android:title="@string/pref_hide_downs"
+      android:defaultValue="false"/>
 
-        <CheckBoxPreference
-            android:key="show_promote"/>
+    <ListPreference
+      android:key="numsites"
+      android:title="@string/pref_numsites"
+      android:dialogTitle="@string/pref_numsites"
+      android:summary="%s"
+      android:entries="@array/pref_num_links_values"
+      android:entryValues="@array/pref_num_links_values"/>
 
-        <CheckBoxPreference
-            android:key="show_stylesheets"/>
+    <EditTextPreference
+      android:key="min_link_score"
+      android:title="@string/pref_min_link_score"
+      android:hint="@string/pref_min_link_score_hint"
+      android:defaultValue="-4"
+      android:inputType="numberSigned"/>
 
-        <EditTextPreference
-            android:key="theme_selector"/>
+  </PreferenceCategory>
 
-        <CheckBoxPreference
-            android:key="use_global_defaults"/>-->
+  <PreferenceCategory
+    android:title="comment options">
+
+    <ListPreference
+      android:key="default_comment_sort"
+      android:title="@string/dialog_settings_default_comment_sort"
+      android:dialogTitle="@string/dialog_settings_default_comment_sort"
+      android:entries="@array/comment_sort_options"
+      android:entryValues="@array/comment_sort_option_values"
+      android:defaultValue="@string/default_comment_sort"
+      android:summary="%s" />
+
+<!--    <CheckBoxPreference
+      android:key="ignore_suggested_sort"
+      android:title="@string/pref_ignore_suggested_sort"/>-->
+
+    <CheckBoxPreference
+      android:key="highlight_controversial"
+      android:title="@string/pref_highlight_controversial"
+      android:defaultValue="false"/>
+
+    <EditTextPreference
+      android:key="num_comments"
+      android:title="@string/pref_num_comments"
+      android:hint="@string/pref_num_comments_hint"
+      android:summary="%s"
+      android:defaultValue="200"
+      android:inputType="number"/>
+
+    <EditTextPreference
+      android:key="min_comment_score"
+      android:title="@string/pref_min_comment_score"
+      android:hint="@string/pref_min_comment_score_hint"
+      android:defaultValue="-4"
+      android:inputType="numberSigned"/>
+
+  </PreferenceCategory>
+
+  <PreferenceCategory
+    android:title="messaging options">
+
+    <CheckBoxPreference
+      android:key="threaded_messages"
+      android:title="@string/pref_threaded_messages"
+      android:defaultValue="true"/>
+
+    <CheckBoxPreference
+      android:key="collapse_read_messages"
+      android:title="@string/pref_collapse_read_messages"
+      android:defaultValue="false"/>
+
+    <CheckBoxPreference
+      android:key="mark_messages_read"
+      android:title="@string/pref_mark_messages_read"
+      android:defaultValue="true"/>
+
+    <CheckBoxPreference
+      android:key="monitor_mentions"
+      android:title="@string/pref_monitor_mentions"
+      android:defaultValue="true"/>
+
+  </PreferenceCategory>
+
+  <PreferenceCategory
+    android:title="display options">
+
+<!--    <CheckBoxPreference
+      android:key="enable_default_themes"
+      android:title="@string/pref_enable_default_themes"/>--> <!-- allow subreddits to show me custom themes -->
+
+    <CheckBoxPreference
+      android:key="show_flair"
+      android:title="@string/pref_show_flair"
+      android:defaultValue="true"/>
+
+    <CheckBoxPreference
+      android:key="show_link_flair"
+      android:title="@string/pref_show_link_flair"
+      android:defaultValue="true"/>
+
+  </PreferenceCategory>
+
+  <PreferenceCategory
+    android:title="content options">
+
+    <CheckBoxPreference
+      android:key="over_18"
+      android:title="@string/pref_over_18"
+      android:summary="@string/pref_over_18_summary"
+      android:defaultValue="false"/>
+
+    <CheckBoxPreference
+      android:key="no_profanity"
+      android:title="@string/pref_no_profanity"
+      android:summary="@string/pref_no_profanity_summary"
+      android:defaultValue="true"
+      android:dependency="over_18"
+      android:disableDependentsState="true"/> <!-- make safe(r) for work -->
+
+    <CheckBoxPreference
+      android:key="label_nsfw"
+      android:title="@string/pref_label_nsfw"
+      android:summary="@string/pref_label_nsfw_summary"
+      android:defaultValue="true"
+      android:dependency="no_profanity"/>
+
+<!--    <CheckBoxPreference
+      android:key="private_feeds"
+      android:title="@string/pref_private_feeds"/>-->
+
+  </PreferenceCategory>
+
+  <PreferenceCategory
+    android:title="privacy options">
+
+    <CheckBoxPreference
+      android:key="public_votes"
+      android:title="@string/pref_public_votes"
+      android:defaultValue="false"/>
+
+    <CheckBoxPreference
+      android:key="research"
+      android:title="@string/pref_research"
+      android:defaultValue="false"/>
+
+    <CheckBoxPreference
+      android:key="hide_from_robots"
+      android:title="@string/pref_hide_from_robots"
+      android:defaultValue="false"/>
+
+  </PreferenceCategory>
+
+  <CheckBoxPreference
+    android:key="beta"
+    android:title="@string/pref_beta"
+    android:defaultValue="false"/>
+
+  <!--
+    <CheckBoxPreference
+      android:key="email_messages"/>
+
+    <CheckBoxPreference
+      android:key="hide_locationbar"/>
+
+    <CheckBoxPreference
+      android:key="show_promote"/>
+
+    <CheckBoxPreference
+      android:key="show_stylesheets"/>
+
+    <EditTextPreference
+      android:key="theme_selector"/>
+
+    <CheckBoxPreference
+      android:key="use_global_defaults"/>-->
 
 </PreferenceScreen>

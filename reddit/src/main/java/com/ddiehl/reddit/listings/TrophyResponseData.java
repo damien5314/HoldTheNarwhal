@@ -7,11 +7,11 @@ import java.util.List;
 
 public class TrophyResponseData {
 
-    @Expose
-    private List<Listing> trophies;
+  @Expose
+  private List<Listing> trophies;
 
-    public List<Listing> getTrophies() {
-        return trophies;
-    }
+  public List<Listing> getTrophies() {
+    return trophies;
+  }
 
 }

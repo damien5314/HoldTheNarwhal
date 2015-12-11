@@ -21,137 +21,137 @@ import rx.functions.Action1;
 import rx.functions.Func1;
 
 public class MainPresenterImpl implements MainPresenter, IdentityManager.Callbacks {
-    private Logger mLogger = HoldTheNarwhal.getLogger();
-    protected RedditService mRedditService = HoldTheNarwhal.getRedditService();
-    protected RedditAuthService mRedditAuthService = HoldTheNarwhal.getRedditServiceAuth();
-    private AccessTokenManager mAccessTokenManager = HoldTheNarwhal.getAccessTokenManager();
-    private IdentityManager mIdentityManager = HoldTheNarwhal.getIdentityManager();
-    private SettingsManager mSettingsManager = HoldTheNarwhal.getSettingsManager();
-    private Analytics mAnalytics = HoldTheNarwhal.getAnalytics();
+  private Logger mLogger = HoldTheNarwhal.getLogger();
+  protected RedditService mRedditService = HoldTheNarwhal.getRedditService();
+  protected RedditAuthService mRedditAuthService = HoldTheNarwhal.getRedditServiceAuth();
+  private AccessTokenManager mAccessTokenManager = HoldTheNarwhal.getAccessTokenManager();
+  private IdentityManager mIdentityManager = HoldTheNarwhal.getIdentityManager();
+  private SettingsManager mSettingsManager = HoldTheNarwhal.getSettingsManager();
+  private Analytics mAnalytics = HoldTheNarwhal.getAnalytics();
 
-    private MainView mMainView;
-    private String mUsernameContext;
+  private MainView mMainView;
+  private String mUsernameContext;
 
-    public MainPresenterImpl(MainView view) {
-        mMainView = view;
+  public MainPresenterImpl(MainView view) {
+    mMainView = view;
+  }
+
+  @Override
+  public void onResume() {
+    mIdentityManager.registerUserIdentityChangeListener(this);
+    UserIdentity user = getAuthorizedUser();
+    mMainView.updateUserIdentity(user);
+    mAnalytics.setUserIdentity(user == null ? null : user.getName());
+
+    boolean b = user != null && user.getName() != null;
+    mMainView.updateNavigationItems(b);
+
+    if (!showAnalyticsRequestIfNeverShown()) {
+      mAnalytics.startSession();
+      mMainView.showSubredditIfEmpty(null);
     }
+  }
 
-    @Override
-    public void onResume() {
-        mIdentityManager.registerUserIdentityChangeListener(this);
-        UserIdentity user = getAuthorizedUser();
-        mMainView.updateUserIdentity(user);
-        mAnalytics.setUserIdentity(user == null ? null : user.getName());
+  @Override
+  public void onPause() {
+    mAnalytics.endSession();
+    mIdentityManager.unregisterUserIdentityChangeListener(this);
+  }
 
-        boolean b = user != null && user.getName() != null;
-        mMainView.updateNavigationItems(b);
+  @Override
+  public Action1<UserIdentity> onUserIdentityChanged() {
+    return identity -> {
+      if (identity == null) {
+        mMainView.updateUserIdentity(null);
+        mMainView.showToast(R.string.user_signed_out);
+      } else {
+        // FIXME Ensure we only show this when the user changes
+        String name = identity.getName();
+        String toast = String.format(
+            HoldTheNarwhal.getContext().getString(R.string.welcome_user),
+            name);
+        mMainView.showToast(toast);
+      }
+    };
+  }
 
-        if (!showAnalyticsRequestIfNeverShown()) {
-            mAnalytics.startSession();
-            mMainView.showSubredditIfEmpty(null);
-        }
+  @Override
+  public void signOutUser() {
+    mMainView.closeNavigationDrawer();
+    mAccessTokenManager.clearSavedUserAccessToken();
+    mIdentityManager.clearSavedUserIdentity();
+    mAnalytics.logSignOut();
+  }
+
+  @Override
+  public String getUsernameContext() {
+    return mUsernameContext;
+  }
+
+  @Override
+  public void setUsernameContext(String username) {
+    mUsernameContext = username;
+  }
+
+  private boolean showAnalyticsRequestIfNeverShown() {
+    if (!mSettingsManager.askedForAnalytics()) {
+      mMainView.showAnalyticsRequestDialog();
+      return true;
     }
+    return false;
+  }
 
-    @Override
-    public void onPause() {
-        mAnalytics.endSession();
-        mIdentityManager.unregisterUserIdentityChangeListener(this);
-    }
+  @Override
+  public void onAnalyticsAccepted() {
+    mSettingsManager.setAskedForAnalytics(true);
+    mSettingsManager.setAnalyticsEnabled(true);
+    mAnalytics.startSession();
+    mMainView.showSubredditIfEmpty(null);
+  }
 
-    @Override
-    public Action1<UserIdentity> onUserIdentityChanged() {
-        return identity -> {
-            if (identity == null) {
-                mMainView.updateUserIdentity(null);
-                mMainView.showToast(R.string.user_signed_out);
-            } else {
-                // FIXME Ensure we only show this when the user changes
-                String name = identity.getName();
-                String toast = String.format(
-                        HoldTheNarwhal.getContext().getString(R.string.welcome_user),
-                        name);
-                mMainView.showToast(toast);
-            }
-        };
-    }
+  @Override
+  public void onAnalyticsDeclined() {
+    mSettingsManager.setAskedForAnalytics(true);
+    mSettingsManager.setAnalyticsEnabled(false);
+    mAnalytics.endSession();
+    mMainView.showSubredditIfEmpty(null);
+  }
 
-    @Override
-    public void signOutUser() {
-        mMainView.closeNavigationDrawer();
-        mAccessTokenManager.clearSavedUserAccessToken();
-        mIdentityManager.clearSavedUserIdentity();
-        mAnalytics.logSignOut();
-    }
+  @Override
+  public boolean customTabsEnabled() {
+    return mSettingsManager.customTabsEnabled();
+  }
 
-    @Override
-    public String getUsernameContext() {
-        return mUsernameContext;
-    }
+  @Override
+  public void onAuthCodeReceived(String authCode) {
+//    mIdentityManager.clearSavedUserIdentity();
+    String grantType = "authorization_code";
+    mRedditAuthService.getUserAccessToken(grantType, authCode, RedditAuthService.REDIRECT_URI)
+        .map(responseToAccessToken())
+        .doOnNext(mAccessTokenManager.saveUserAccessToken())
+        .subscribe(getUserIdentity());
+  }
 
-    @Override
-    public void setUsernameContext(String username) {
-        mUsernameContext = username;
-    }
+  @Override
+  public Action1<AccessToken> getUserIdentity() {
+    return token -> mRedditService.getUserIdentity()
+        .doOnNext(mIdentityManager::saveUserIdentity)
+        .subscribe(mMainView::updateUserIdentity);
+  }
 
-    private boolean showAnalyticsRequestIfNeverShown() {
-        if (!mSettingsManager.askedForAnalytics()) {
-            mMainView.showAnalyticsRequestDialog();
-            return true;
-        }
-        return false;
-    }
+  private Func1<AuthorizationResponse, AccessToken> responseToAccessToken() {
+    return response -> {
+      AccessToken token = new UserAccessToken();
+      token.setToken(response.getToken());
+      token.setTokenType(response.getToken());
+      token.setExpiration(response.getExpiresIn() * 1000 + new Date().getTime());
+      token.setScope(response.getScope());
+      token.setRefreshToken(response.getRefreshToken());
+      return token;
+    };
+  }
 
-    @Override
-    public void onAnalyticsAccepted() {
-        mSettingsManager.setAskedForAnalytics(true);
-        mSettingsManager.setAnalyticsEnabled(true);
-        mAnalytics.startSession();
-        mMainView.showSubredditIfEmpty(null);
-    }
-
-    @Override
-    public void onAnalyticsDeclined() {
-        mSettingsManager.setAskedForAnalytics(true);
-        mSettingsManager.setAnalyticsEnabled(false);
-        mAnalytics.endSession();
-        mMainView.showSubredditIfEmpty(null);
-    }
-
-    @Override
-    public boolean customTabsEnabled() {
-        return mSettingsManager.customTabsEnabled();
-    }
-
-    @Override
-    public void onAuthCodeReceived(String authCode) {
-//        mIdentityManager.clearSavedUserIdentity();
-        String grantType = "authorization_code";
-        mRedditAuthService.getUserAccessToken(grantType, authCode, RedditAuthService.REDIRECT_URI)
-                .map(responseToAccessToken())
-                .doOnNext(mAccessTokenManager.saveUserAccessToken())
-                .subscribe(getUserIdentity());
-    }
-
-    @Override
-    public Action1<AccessToken> getUserIdentity() {
-        return token -> mRedditService.getUserIdentity()
-                .doOnNext(mIdentityManager::saveUserIdentity)
-                .subscribe(mMainView::updateUserIdentity);
-    }
-
-    private Func1<AuthorizationResponse, AccessToken> responseToAccessToken() {
-        return response -> {
-            AccessToken token = new UserAccessToken();
-            token.setToken(response.getToken());
-            token.setTokenType(response.getToken());
-            token.setExpiration(response.getExpiresIn() * 1000 + new Date().getTime());
-            token.setScope(response.getScope());
-            token.setRefreshToken(response.getRefreshToken());
-            return token;
-        };
-    }
-
-    private UserIdentity getAuthorizedUser() {
-        return mIdentityManager.getUserIdentity();
-    }
+  private UserIdentity getAuthorizedUser() {
+    return mIdentityManager.getUserIdentity();
+  }
 }

@@ -22,80 +22,80 @@ import rx.Observable;
 import rx.schedulers.Schedulers;
 
 public class RedditAuthServiceImpl implements RedditAuthService {
-    private RedditAuthAPI mAuthService = buildApi();
+  private RedditAuthAPI mAuthService = buildApi();
 
-    private RedditAuthAPI buildApi() {
-        OkHttpClient client = new OkHttpClient();
-        client.networkInterceptors().add(new UserAgentInterceptor(RedditService.USER_AGENT));
-        client.networkInterceptors().add(
-                AuthorizationInterceptor.get(AuthorizationInterceptor.Type.HTTP_AUTH));
-        client.networkInterceptors().add(new LoggingInterceptor());
-        client.networkInterceptors().add(new StethoInterceptor());
+  private RedditAuthAPI buildApi() {
+    OkHttpClient client = new OkHttpClient();
+    client.networkInterceptors().add(new UserAgentInterceptor(RedditService.USER_AGENT));
+    client.networkInterceptors().add(
+        AuthorizationInterceptor.get(AuthorizationInterceptor.Type.HTTP_AUTH));
+    client.networkInterceptors().add(new LoggingInterceptor());
+    client.networkInterceptors().add(new StethoInterceptor());
 
-        Gson gson = new GsonBuilder()
-                .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-                .create();
+    Gson gson = new GsonBuilder()
+        .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+        .create();
 
-        Retrofit restAdapter = new Retrofit.Builder()
-                .client(client)
-                .baseUrl(ENDPOINT_NORMAL)
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                .build();
+    Retrofit restAdapter = new Retrofit.Builder()
+        .client(client)
+        .baseUrl(ENDPOINT_NORMAL)
+        .addConverterFactory(GsonConverterFactory.create(gson))
+        .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+        .build();
 
-        return restAdapter.create(RedditAuthAPI.class);
-    }
+    return restAdapter.create(RedditAuthAPI.class);
+  }
 
-    @Override
-    public Observable<AuthorizationResponse> authorizeApplication() {
-        String grantType = "https://oauth.reddit.com/grants/installed_client";
-        String deviceId = HoldTheNarwhal.getSettingsManager().getDeviceId();
-        return mAuthService.getApplicationAuthToken(grantType, deviceId)
-                .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
-                .map(Response::body);
-    }
+  @Override
+  public Observable<AuthorizationResponse> authorizeApplication() {
+    String grantType = "https://oauth.reddit.com/grants/installed_client";
+    String deviceId = HoldTheNarwhal.getSettingsManager().getDeviceId();
+    return mAuthService.getApplicationAuthToken(grantType, deviceId)
+        .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
+        .map(Response::body);
+  }
 
-    @Override
-    public Observable<AuthorizationResponse> getUserAccessToken(
-            String grantType, String authCode, String redirectUri) {
-        return mAuthService.getUserAuthToken(grantType, authCode, redirectUri)
-                .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
-                .map(Response::body);
-    }
+  @Override
+  public Observable<AuthorizationResponse> getUserAccessToken(
+      String grantType, String authCode, String redirectUri) {
+    return mAuthService.getUserAuthToken(grantType, authCode, redirectUri)
+        .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
+        .map(Response::body);
+  }
 
-    @Override
-    public Observable<AuthorizationResponse> refreshUserAccessToken(String refreshToken) {
-        String grantType = "refresh_token";
-        return mAuthService.refreshUserAuthToken(grantType, refreshToken)
-                .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
-                .map(Response::body);
-    }
+  @Override
+  public Observable<AuthorizationResponse> refreshUserAccessToken(String refreshToken) {
+    String grantType = "refresh_token";
+    return mAuthService.refreshUserAuthToken(grantType, refreshToken)
+        .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
+        .map(Response::body);
+  }
 
-    @Override
-    public Observable<ResponseBody> revokeAuthToken(AccessToken token) {
-        return Observable.merge(
-                mAuthService.revokeUserAuthToken(token.getToken(), "access_token"),
-                mAuthService.revokeUserAuthToken(token.getRefreshToken(), "refresh_token"))
-                .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
-                .map(Response::body);
-    }
+  @Override
+  public Observable<ResponseBody> revokeAuthToken(AccessToken token) {
+    return Observable.merge(
+        mAuthService.revokeUserAuthToken(token.getToken(), "access_token"),
+        mAuthService.revokeUserAuthToken(token.getRefreshToken(), "refresh_token"))
+        .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
+        .map(Response::body);
+  }
 
-    ///////////////
-    // Singleton //
-    ///////////////
+  ///////////////
+  // Singleton //
+  ///////////////
 
-    private static RedditAuthService _instance;
+  private static RedditAuthService _instance;
 
-    private RedditAuthServiceImpl() { }
+  private RedditAuthServiceImpl() { }
 
-    public static RedditAuthService getInstance() {
+  public static RedditAuthService getInstance() {
+    if (_instance == null) {
+      synchronized (RedditAuthServiceImpl.class) {
         if (_instance == null) {
-            synchronized (RedditAuthServiceImpl.class) {
-                if (_instance == null) {
-                    _instance = new RedditAuthServiceImpl();
-                }
-            }
+          _instance = new RedditAuthServiceImpl();
         }
-        return _instance;
+      }
     }
+    return _instance;
+  }
 }

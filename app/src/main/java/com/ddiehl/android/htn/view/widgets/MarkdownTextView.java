@@ -12,53 +12,53 @@ import in.uncod.android.bypass.Bypass;
 
 public class MarkdownTextView extends TextView {
 
-    private CharSequence mRawText;
+  private CharSequence mRawText;
 
-    public MarkdownTextView(Context context) {
-        super(context);
-        setMovementMethod(LinkMovementMethod.getInstance());
+  public MarkdownTextView(Context context) {
+    super(context);
+    setMovementMethod(LinkMovementMethod.getInstance());
+  }
+
+  public MarkdownTextView(Context context, AttributeSet attrs) {
+    super(context, attrs);
+    setMovementMethod(LinkMovementMethod.getInstance());
+  }
+
+  public MarkdownTextView(Context context, AttributeSet attrs, int defStyleAttr) {
+    super(context, attrs, defStyleAttr);
+    setMovementMethod(LinkMovementMethod.getInstance());
+  }
+
+  @Override
+  public CharSequence getText() {
+    return mRawText;
+  }
+
+  @Override
+  public void setText(CharSequence text, BufferType type) {
+    if (!isInEditMode()) {
+      mRawText = text;
+      Bypass b = BypassWrapper.getInstance(getContext());
+      CharSequence formatted = b.markdownToSpannable(text.toString());
+      super.setText(formatted, type);
     }
+  }
 
-    public MarkdownTextView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        setMovementMethod(LinkMovementMethod.getInstance());
-    }
+  private static class BypassWrapper {
 
-    public MarkdownTextView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        setMovementMethod(LinkMovementMethod.getInstance());
-    }
+    private static Bypass _instance;
 
-    @Override
-    public CharSequence getText() {
-        return mRawText;
-    }
-
-    @Override
-    public void setText(CharSequence text, BufferType type) {
-        if (!isInEditMode()) {
-            mRawText = text;
-            Bypass b = BypassWrapper.getInstance(getContext());
-            CharSequence formatted = b.markdownToSpannable(text.toString());
-            super.setText(formatted, type);
+    public static Bypass getInstance(Context c) {
+      if (_instance == null) {
+        synchronized (Bypass.class) {
+          if (_instance == null) {
+            Bypass.Options o = new Bypass.Options();
+            o.setBlockQuoteColor(c.getResources().getColor(R.color.markdown_quote_block));
+            _instance = new Bypass(c, o);
+          }
         }
+      }
+      return _instance;
     }
-
-    private static class BypassWrapper {
-
-        private static Bypass _instance;
-
-        public static Bypass getInstance(Context c) {
-            if (_instance == null) {
-                synchronized (Bypass.class) {
-                    if (_instance == null) {
-                        Bypass.Options o = new Bypass.Options();
-                        o.setBlockQuoteColor(c.getResources().getColor(R.color.markdown_quote_block));
-                        _instance = new Bypass(c, o);
-                    }
-                }
-            }
-            return _instance;
-        }
-    }
+  }
 }
