@@ -10,7 +10,6 @@ import com.ddiehl.android.htn.AccessTokenManager;
 import com.ddiehl.android.htn.BusProvider;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.analytics.Analytics;
-import com.ddiehl.android.htn.events.requests.FriendDeleteEvent;
 import com.ddiehl.android.htn.events.requests.FriendNoteSaveEvent;
 import com.ddiehl.android.htn.events.requests.GetSubredditInfoEvent;
 import com.ddiehl.android.htn.events.requests.HideEvent;
@@ -18,7 +17,6 @@ import com.ddiehl.android.htn.events.requests.ReportEvent;
 import com.ddiehl.android.htn.events.requests.SaveEvent;
 import com.ddiehl.android.htn.events.requests.VoteEvent;
 import com.ddiehl.android.htn.events.responses.FriendAddedEvent;
-import com.ddiehl.android.htn.events.responses.FriendDeletedEvent;
 import com.ddiehl.android.htn.events.responses.HideSubmittedEvent;
 import com.ddiehl.android.htn.events.responses.SaveSubmittedEvent;
 import com.ddiehl.android.htn.events.responses.SubredditInfoLoadedEvent;
@@ -210,10 +208,18 @@ public class RedditServiceImpl implements RedditService {
     public Observable<ResponseBody> addFriend(@NonNull String username) {
         String json = "{}";
         RequestBody body = RequestBody.create(MediaType.parse("application/json"), json);
-        return mAPI.addFriend(username, body)
+        return requireUserAccessToken().flatMap(token -> mAPI.addFriend(username, body)
                 .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .map(Response::body);
+                .map(Response::body));
+    }
+
+    @Override
+    public Observable<ResponseBody> deleteFriend(@NonNull String username) {
+        return requireUserAccessToken().flatMap(token -> mAPI.deleteFriend(username)
+                .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .map(Response::body));
     }
 
     @Override
@@ -233,20 +239,6 @@ public class RedditServiceImpl implements RedditService {
                         error -> {
                             mBus.post(error);
                             mBus.post(new FriendAddedEvent(error));
-                        });
-    }
-
-    @Override
-    public void onDeleteFriend(@NonNull FriendDeleteEvent event) {
-        String username = event.getUsername();
-        mAPI.deleteFriend(username)
-                .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        response -> mBus.post(new FriendDeletedEvent(username)),
-                        error -> {
-                            mBus.post(error);
-                            mBus.post(new FriendDeletedEvent(error));
                         });
     }
 

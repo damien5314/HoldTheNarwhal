@@ -17,9 +17,7 @@ import android.widget.TextView;
 import com.ddiehl.android.htn.BusProvider;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
-import com.ddiehl.android.htn.events.requests.FriendDeleteEvent;
 import com.ddiehl.android.htn.events.requests.FriendNoteSaveEvent;
-import com.ddiehl.android.htn.events.responses.FriendDeletedEvent;
 import com.ddiehl.android.htn.presenter.UserProfilePresenter;
 import com.ddiehl.android.htn.utils.BaseUtils;
 import com.ddiehl.android.htn.view.MainView;
@@ -29,7 +27,6 @@ import com.ddiehl.reddit.identity.UserIdentity;
 import com.ddiehl.reddit.listings.Listing;
 import com.ddiehl.reddit.listings.Trophy;
 import com.squareup.otto.Bus;
-import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
 
 import java.text.NumberFormat;
@@ -149,12 +146,11 @@ public class UserProfileFragment extends AbsListingsFragment implements UserProf
 
     @Override
     public void setFriendButtonState(boolean isFriend) {
-        String username = mUserProfilePresenter.getUsernameContext();
         if (isFriend) {
             mFriendButton.setText(R.string.user_friend_delete_button_text);
             mFriendButton.setOnClickListener((v) -> {
                 ((MainView) getActivity()).showSpinner(null);
-                mBus.post(new FriendDeleteEvent(username));
+                mUserProfilePresenter.deleteFriend();
             });
         } else {
             mFriendButton.setText(R.string.user_friend_add_button_text);
@@ -211,17 +207,6 @@ public class UserProfileFragment extends AbsListingsFragment implements UserProf
         int lastIndex = mTrophies.getChildCount() - 1;
         ((TableLayout.LayoutParams) mTrophies.getChildAt(lastIndex).getLayoutParams())
                 .bottomMargin = 0;
-    }
-
-    @Subscribe
-    public void onFriendDeleted(FriendDeletedEvent event) {
-        mMainView.dismissSpinner();
-        if (event.isFailed()) {
-            return;
-        }
-        setFriendButtonState(false);
-        mFriendNote.setText("");
-        mFriendNoteLayout.setVisibility(View.GONE);
     }
 
     public void updateUserProfileTabs() {

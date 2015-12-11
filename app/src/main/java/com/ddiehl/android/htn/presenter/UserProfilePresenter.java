@@ -73,6 +73,15 @@ public class UserProfilePresenter extends AbsListingsPresenter {
                 });
     }
 
+    public void deleteFriend() {
+        mRedditService.deleteFriend(mUsernameContext)
+                .doOnTerminate(mMainView::dismissSpinner)
+                .subscribe(response -> {
+                    mSummaryView.setFriendButtonState(false);
+                    mSummaryView.hideFriendNote();
+                });
+    }
+
     private void getListingData() {
         mRedditService.loadUserProfile(mShow, mUsernameContext, mSort, mTimespan, mNextPageListingId)
                 .subscribe(onListingsLoaded());
