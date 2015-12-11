@@ -8,6 +8,9 @@ import android.text.TextUtils;
 import com.ddiehl.android.htn.AccessTokenManager;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.analytics.Analytics;
+import com.ddiehl.android.htn.io.interceptors.AuthorizationInterceptor;
+import com.ddiehl.android.htn.io.interceptors.LoggingInterceptor;
+import com.ddiehl.android.htn.io.interceptors.RawResponseInterceptor;
 import com.ddiehl.android.htn.logging.Logger;
 import com.ddiehl.reddit.Hideable;
 import com.ddiehl.reddit.Savable;
@@ -34,7 +37,6 @@ import com.google.gson.GsonBuilder;
 import com.squareup.okhttp.Cache;
 import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.ResponseBody;
 
@@ -67,14 +69,8 @@ public class RedditServiceImpl implements RedditService {
         File cache = new File(context.getCacheDir().getAbsolutePath(), "htn-http-cache");
         client.setCache(new Cache(cache, cacheSize));
         client.networkInterceptors().add(new RawResponseInterceptor());
-        client.networkInterceptors().add((chain) -> {
-            Request originalRequest = chain.request();
-            Request newRequest = originalRequest.newBuilder()
-                    .removeHeader("Authorization")
-                    .addHeader("Authorization", "bearer " + mAccessTokenManager.getValidAccessToken())
-                    .build();
-            return chain.proceed(newRequest);
-        });
+        client.networkInterceptors().add(
+                AuthorizationInterceptor.get(AuthorizationInterceptor.Type.TOKEN_AUTH));
         client.networkInterceptors().add(new LoggingInterceptor());
         client.networkInterceptors().add(new StethoInterceptor());
 

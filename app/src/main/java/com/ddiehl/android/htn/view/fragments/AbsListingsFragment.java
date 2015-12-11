@@ -34,7 +34,7 @@ import butterknife.ButterKnife;
 
 public abstract class AbsListingsFragment extends Fragment
         implements ListingsView, SwipeRefreshLayout.OnRefreshListener {
-
+    private static final String LINK_BASE_URL = "http://www.reddit.com";
     private static final int REQUEST_CHOOSE_SORT = 0x2;
     private static final int REQUEST_CHOOSE_TIMESPAN = 0x3;
     private static final String DIALOG_CHOOSE_SORT = "dialog_choose_sort";
@@ -69,7 +69,6 @@ public abstract class AbsListingsFragment extends Fragment
         rv.clearOnScrollListeners();
         rv.addOnScrollListener(new RecyclerView.OnScrollListener() {
             int mFirstVisibleItem, mVisibleItemCount, mTotalItemCount;
-
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 mVisibleItemCount = mgr.getChildCount();
@@ -119,7 +118,6 @@ public abstract class AbsListingsFragment extends Fragment
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.links_menu, menu);
-
         // Disable timespan option if current sort does not support it
         String sort = mListingsPresenter.getSort();
         if (sort.equals("hot") || sort.equals("new") || sort.equals("rising")) {
@@ -156,7 +154,8 @@ public abstract class AbsListingsFragment extends Fragment
     @Override
     public void showSortOptionsMenu() {
         FragmentManager fm = getActivity().getFragmentManager();
-        ChooseLinkSortDialog chooseLinkSortDialog = ChooseLinkSortDialog.newInstance(mListingsPresenter.getSort());
+        ChooseLinkSortDialog chooseLinkSortDialog =
+                ChooseLinkSortDialog.newInstance(mListingsPresenter.getSort());
         chooseLinkSortDialog.setTargetFragment(this, REQUEST_CHOOSE_SORT);
         chooseLinkSortDialog.show(fm, DIALOG_CHOOSE_SORT);
     }
@@ -164,7 +163,8 @@ public abstract class AbsListingsFragment extends Fragment
     @Override
     public void showTimespanOptionsMenu() {
         FragmentManager fm = getActivity().getFragmentManager();
-        ChooseTimespanDialog chooseTimespanDialog = ChooseTimespanDialog.newInstance(mListingsPresenter.getTimespan());
+        ChooseTimespanDialog chooseTimespanDialog =
+                ChooseTimespanDialog.newInstance(mListingsPresenter.getTimespan());
         chooseTimespanDialog.setTargetFragment(this, REQUEST_CHOOSE_TIMESPAN);
         chooseTimespanDialog.show(fm, DIALOG_CHOOSE_TIMESPAN);
     }
@@ -289,7 +289,7 @@ public abstract class AbsListingsFragment extends Fragment
     public void openShareView(@NonNull Link link) {
         Intent i = new Intent(Intent.ACTION_SEND);
         i.setType("text/plain");
-        i.putExtra(Intent.EXTRA_TEXT, "http://www.reddit.com" + link.getPermalink());
+        i.putExtra(Intent.EXTRA_TEXT, LINK_BASE_URL + link.getPermalink());
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(i);
     }
@@ -317,8 +317,8 @@ public abstract class AbsListingsFragment extends Fragment
     }
 
     @Override
-    public void showCommentsForLink(@Nullable String subreddit, @Nullable String linkId,
-                                    @Nullable String commentId) {
+    public void showCommentsForLink(
+            @Nullable String subreddit, @Nullable String linkId, @Nullable String commentId) {
         Fragment fragment = LinkCommentsFragment.newInstance(subreddit, linkId, commentId);
         FragmentManager fm = getActivity().getFragmentManager();
         fm.beginTransaction()
@@ -328,8 +328,8 @@ public abstract class AbsListingsFragment extends Fragment
     }
 
     @Override
-    public void showCommentThread(@Nullable String subreddit, @Nullable String linkId,
-                                  @NonNull String commentId) {
+    public void showCommentThread(
+            @Nullable String subreddit, @Nullable String linkId, @NonNull String commentId) {
         showCommentsForLink(subreddit, linkId, commentId);
     }
 

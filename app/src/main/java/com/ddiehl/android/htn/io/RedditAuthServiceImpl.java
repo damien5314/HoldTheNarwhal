@@ -2,6 +2,9 @@ package com.ddiehl.android.htn.io;
 
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
+import com.ddiehl.android.htn.io.interceptors.AuthorizationInterceptor;
+import com.ddiehl.android.htn.io.interceptors.LoggingInterceptor;
+import com.ddiehl.android.htn.io.interceptors.UserAgentInterceptor;
 import com.ddiehl.reddit.identity.AccessToken;
 import com.ddiehl.reddit.identity.AuthorizationResponse;
 import com.facebook.stetho.okhttp.StethoInterceptor;
@@ -9,7 +12,6 @@ import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
 import com.squareup.okhttp.ResponseBody;
 
 import retrofit.GsonConverterFactory;
@@ -20,20 +22,13 @@ import rx.Observable;
 import rx.schedulers.Schedulers;
 
 public class RedditAuthServiceImpl implements RedditAuthService {
-
     private RedditAuthAPI mAuthService = buildApi();
 
     private RedditAuthAPI buildApi() {
         OkHttpClient client = new OkHttpClient();
         client.networkInterceptors().add(new UserAgentInterceptor(RedditService.USER_AGENT));
-        client.networkInterceptors().add((chain) -> {
-            Request originalRequest = chain.request();
-            Request newRequest = originalRequest.newBuilder()
-                    .removeHeader("Authorization")
-                    .addHeader("Authorization", HTTP_AUTH_HEADER)
-                    .build();
-            return chain.proceed(newRequest);
-        });
+        client.networkInterceptors().add(
+                AuthorizationInterceptor.get(AuthorizationInterceptor.Type.HTTP_AUTH));
         client.networkInterceptors().add(new LoggingInterceptor());
         client.networkInterceptors().add(new StethoInterceptor());
 

@@ -1,4 +1,4 @@
-package com.ddiehl.android.htn.io;
+package com.ddiehl.android.htn.io.interceptors;
 
 import com.squareup.okhttp.Interceptor;
 import com.squareup.okhttp.Request;
@@ -8,7 +8,6 @@ import java.io.IOException;
 
 /* This interceptor adds a custom User-Agent. */
 public class UserAgentInterceptor implements Interceptor {
-
     private final String userAgent;
 
     public UserAgentInterceptor(String userAgent) {

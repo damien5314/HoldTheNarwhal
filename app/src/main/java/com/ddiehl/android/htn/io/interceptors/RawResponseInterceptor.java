@@ -1,4 +1,4 @@
-package com.ddiehl.android.htn.io;
+package com.ddiehl.android.htn.io.interceptors;
 
 import com.squareup.okhttp.HttpUrl;
 import com.squareup.okhttp.Interceptor;
@@ -8,7 +8,6 @@ import com.squareup.okhttp.Response;
 import java.io.IOException;
 
 public class RawResponseInterceptor implements Interceptor {
-
     @Override
     public Response intercept(Chain chain) throws IOException {
         Request originalRequest = chain.request();
