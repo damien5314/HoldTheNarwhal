@@ -103,12 +103,8 @@ public class AccessTokenManagerImpl implements AccessTokenManager {
 
     private Observable<AccessToken> mGetApplicationAccessToken = Observable.create(subscriber -> {
         AccessToken token = getSavedApplicationAccessToken();
-        if (token == null) {
-            subscriber.onError(new RuntimeException("No access token available"));
-        } else {
-            refreshApplicationAccessToken.call(token)
+        refreshApplicationAccessToken.call(token)
                     .subscribe(subscriber::onNext, subscriber::onError, subscriber::onCompleted);
-        }
     });
 
     private Observable<AccessToken> refreshUserAccessToken(AccessToken accessToken) {
