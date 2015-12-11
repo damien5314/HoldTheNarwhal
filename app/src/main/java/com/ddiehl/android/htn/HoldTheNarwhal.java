@@ -13,7 +13,6 @@ import com.ddiehl.android.htn.logging.Logger;
 import com.ddiehl.android.htn.logging.TimberLogger;
 import com.facebook.stetho.Stetho;
 import com.squareup.leakcanary.LeakCanary;
-import com.squareup.otto.Bus;
 
 
 public class HoldTheNarwhal extends Application {
@@ -31,25 +30,15 @@ public class HoldTheNarwhal extends Application {
                         .enableWebKitInspector(Stetho.defaultInspectorModulesProvider(this))
                         .build());
 
-        Bus bus = BusProvider.getInstance();
         mContext = this;
 
         // Initialize static dependencies
+        AccessTokenManager accessTokenManager = getAccessTokenManager();
+        IdentityManager identityManager = getIdentityManager();
+        SettingsManager settingsManager = getSettingsManager();
+        RedditService api = getRedditService();
         Analytics analytics = getAnalytics();
         analytics.initialize();
-        bus.register(analytics);
-
-        AccessTokenManager accessTokenManager = getAccessTokenManager();
-        bus.register(accessTokenManager);
-
-        IdentityManager identityManager = getIdentityManager();
-        bus.register(identityManager);
-
-        SettingsManager settingsManager = getSettingsManager();
-        bus.register(settingsManager);
-
-        RedditService api = getRedditService();
-        bus.register(api);
     }
 
     /**

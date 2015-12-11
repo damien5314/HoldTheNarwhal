@@ -6,7 +6,6 @@ import android.view.ContextMenu;
 import android.view.View;
 
 import com.ddiehl.android.htn.AccessTokenManager;
-import com.ddiehl.android.htn.BusProvider;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
@@ -27,7 +26,6 @@ import com.ddiehl.reddit.listings.CommentStub;
 import com.ddiehl.reddit.listings.Link;
 import com.ddiehl.reddit.listings.Listing;
 import com.ddiehl.reddit.listings.ListingResponse;
-import com.squareup.otto.Bus;
 
 import java.util.List;
 
@@ -42,7 +40,6 @@ public class LinkCommentsPresenterImpl
     private Link mLinkContext;
     private CommentBank mCommentBank;
 
-    private Bus mBus = BusProvider.getInstance();
     private RedditService mRedditService = HoldTheNarwhal.getRedditService();
     private AccessTokenManager mAccessTokenManager = HoldTheNarwhal.getAccessTokenManager();
     private SettingsManager mSettingsManager = HoldTheNarwhal.getSettingsManager();

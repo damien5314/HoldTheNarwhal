@@ -14,7 +14,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.ddiehl.android.htn.AccessTokenManager;
-import com.ddiehl.android.htn.BusProvider;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
@@ -23,7 +22,6 @@ import com.ddiehl.android.htn.SettingsManagerImpl;
 import com.ddiehl.android.htn.io.RedditService;
 import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.reddit.identity.UserIdentity;
-import com.squareup.otto.Bus;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,7 +30,6 @@ import rx.functions.Action1;
 
 public class SettingsFragment extends PreferenceFragment
         implements SharedPreferences.OnSharedPreferenceChangeListener, IdentityManager.Callbacks {
-    private Bus mBus = BusProvider.getInstance();
     private RedditService mRedditService = HoldTheNarwhal.getRedditService();
     private AccessTokenManager mAccessTokenManager = HoldTheNarwhal.getAccessTokenManager();
     private IdentityManager mIdentityManager = HoldTheNarwhal.getIdentityManager();
@@ -52,8 +49,6 @@ public class SettingsFragment extends PreferenceFragment
     @Override
     public void onStart() {
         super.onStart();
-        mBus.register(this);
-        mBus.unregister(mSettingsManager);
         getActivity().setTitle(R.string.settings_fragment_title);
     }
 
@@ -74,13 +69,6 @@ public class SettingsFragment extends PreferenceFragment
         getActivity().getSharedPreferences(SettingsManagerImpl.PREFS_USER, Context.MODE_PRIVATE)
                 .unregisterOnSharedPreferenceChangeListener(this);
         super.onPause();
-    }
-
-    @Override
-    public void onStop() {
-        mBus.register(mSettingsManager);
-        mBus.unregister(this);
-        super.onStop();
     }
 
     @Override

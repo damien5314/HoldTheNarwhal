@@ -7,7 +7,6 @@ import android.text.TextUtils;
 import android.util.Pair;
 
 import com.ddiehl.android.htn.AccessTokenManager;
-import com.ddiehl.android.htn.BusProvider;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.analytics.Analytics;
 import com.ddiehl.android.htn.logging.Logger;
@@ -39,7 +38,6 @@ import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.ResponseBody;
-import com.squareup.otto.Bus;
 
 import java.io.File;
 import java.util.List;
@@ -53,8 +51,11 @@ import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
+/**
+ * TODO
+ * Add error to each Observable which returns network error type
+ */
 public class RedditServiceImpl implements RedditService {
-    private Bus mBus = BusProvider.getInstance();
     private Logger mLogger = HoldTheNarwhal.getLogger();
     private AccessTokenManager mAccessTokenManager = HoldTheNarwhal.getAccessTokenManager();
     private Analytics mAnalytics = HoldTheNarwhal.getAnalytics();

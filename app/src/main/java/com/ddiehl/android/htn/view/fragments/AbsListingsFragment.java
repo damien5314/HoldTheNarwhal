@@ -17,7 +17,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.ddiehl.android.htn.BusProvider;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.analytics.Analytics;
@@ -30,7 +29,6 @@ import com.ddiehl.android.htn.view.dialogs.ChooseLinkSortDialog;
 import com.ddiehl.android.htn.view.dialogs.ChooseTimespanDialog;
 import com.ddiehl.reddit.listings.Comment;
 import com.ddiehl.reddit.listings.Link;
-import com.squareup.otto.Bus;
 
 import butterknife.ButterKnife;
 
@@ -42,7 +40,6 @@ public abstract class AbsListingsFragment extends Fragment
     private static final String DIALOG_CHOOSE_SORT = "dialog_choose_sort";
     private static final String DIALOG_CHOOSE_TIMESPAN = "dialog_choose_timespan";
 
-    Bus mBus = BusProvider.getInstance();
     Analytics mAnalytics = HoldTheNarwhal.getAnalytics();
 
     MainView mMainView;
@@ -55,7 +52,6 @@ public abstract class AbsListingsFragment extends Fragment
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
         setHasOptionsMenu(true);
-        mBus = BusProvider.getInstance();
         mMainView = (MainView) getActivity();
     }
 

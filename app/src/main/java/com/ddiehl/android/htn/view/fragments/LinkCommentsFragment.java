@@ -19,7 +19,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.ddiehl.android.htn.BusProvider;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.analytics.Analytics;
@@ -32,7 +31,6 @@ import com.ddiehl.android.htn.view.adapters.LinkCommentsAdapter;
 import com.ddiehl.android.htn.view.dialogs.ChooseCommentSortDialog;
 import com.ddiehl.reddit.listings.Comment;
 import com.ddiehl.reddit.listings.Link;
-import com.squareup.otto.Bus;
 
 import butterknife.ButterKnife;
 
@@ -45,7 +43,6 @@ public class LinkCommentsFragment extends Fragment
     private static final int REQUEST_CHOOSE_SORT = 0;
     private static final String DIALOG_CHOOSE_SORT = "dialog_choose_sort";
 
-    private Bus mBus = BusProvider.getInstance();
     private Analytics mAnalytics = HoldTheNarwhal.getAnalytics();
     private MainView mMainView;
     private LinkCommentsPresenter mLinkCommentsPresenter;
@@ -120,7 +117,6 @@ public class LinkCommentsFragment extends Fragment
     @Override
     public void onResume() {
         super.onResume();
-        mBus.register(mLinkCommentsPresenter);
 
         if (mLinkCommentsAdapter.getItemCount() < 2) { // Always returns at least 1
             mLinkCommentsPresenter.requestData();
@@ -130,7 +126,6 @@ public class LinkCommentsFragment extends Fragment
     @Override
     public void onPause() {
         super.onPause();
-        mBus.unregister(mLinkCommentsPresenter);
     }
 
     @Override

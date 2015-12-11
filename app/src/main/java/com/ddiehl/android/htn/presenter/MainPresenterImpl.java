@@ -1,7 +1,6 @@
 package com.ddiehl.android.htn.presenter;
 
 import com.ddiehl.android.htn.AccessTokenManager;
-import com.ddiehl.android.htn.BusProvider;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
@@ -10,24 +9,19 @@ import com.ddiehl.android.htn.analytics.Analytics;
 import com.ddiehl.android.htn.io.RedditAuthService;
 import com.ddiehl.android.htn.io.RedditService;
 import com.ddiehl.android.htn.logging.Logger;
-import com.ddiehl.android.htn.utils.BaseUtils;
 import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.reddit.identity.AccessToken;
 import com.ddiehl.reddit.identity.AuthorizationResponse;
 import com.ddiehl.reddit.identity.UserAccessToken;
 import com.ddiehl.reddit.identity.UserIdentity;
-import com.squareup.otto.Bus;
-import com.squareup.otto.Subscribe;
 
 import java.util.Date;
 
-import retrofit.Response;
 import rx.functions.Action1;
 import rx.functions.Func1;
 
 public class MainPresenterImpl implements MainPresenter, IdentityManager.Callbacks {
     private Logger mLogger = HoldTheNarwhal.getLogger();
-    private Bus mBus = BusProvider.getInstance();
     protected RedditService mRedditService = HoldTheNarwhal.getRedditService();
     protected RedditAuthService mRedditAuthService = HoldTheNarwhal.getRedditServiceAuth();
     private AccessTokenManager mAccessTokenManager = HoldTheNarwhal.getAccessTokenManager();
@@ -44,7 +38,6 @@ public class MainPresenterImpl implements MainPresenter, IdentityManager.Callbac
 
     @Override
     public void onResume() {
-        mBus.register(this);
         mIdentityManager.registerUserIdentityChangeListener(this);
         UserIdentity user = getAuthorizedUser();
         mMainView.updateUserIdentity(user);
@@ -62,7 +55,6 @@ public class MainPresenterImpl implements MainPresenter, IdentityManager.Callbac
     @Override
     public void onPause() {
         mAnalytics.endSession();
-        mBus.unregister(this);
         mIdentityManager.unregisterUserIdentityChangeListener(this);
     }
 
@@ -157,14 +149,6 @@ public class MainPresenterImpl implements MainPresenter, IdentityManager.Callbac
             token.setRefreshToken(response.getRefreshToken());
             return token;
         };
-    }
-
-    @Subscribe @SuppressWarnings("unused")
-    public void onNetworkError(Response error) {
-        mLogger.e("Retrofit Error: " + error.raw().message());
-//        Log.e("HTN", Log.getStackTraceString(error));
-        mMainView.showToast(BaseUtils.getFriendlyError(error));
-        mAnalytics.logApiError(error);
     }
 
     private UserIdentity getAuthorizedUser() {

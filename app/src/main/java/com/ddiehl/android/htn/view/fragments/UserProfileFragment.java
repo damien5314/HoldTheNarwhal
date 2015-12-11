@@ -14,7 +14,6 @@ import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
-import com.ddiehl.android.htn.BusProvider;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.presenter.UserProfilePresenter;
@@ -25,7 +24,6 @@ import com.ddiehl.android.htn.view.adapters.ListingsAdapter;
 import com.ddiehl.reddit.identity.UserIdentity;
 import com.ddiehl.reddit.listings.Listing;
 import com.ddiehl.reddit.listings.Trophy;
-import com.squareup.otto.Bus;
 import com.squareup.picasso.Picasso;
 
 import java.text.NumberFormat;
@@ -57,7 +55,6 @@ public class UserProfileFragment extends AbsListingsFragment implements UserProf
     @Bind(R.id.user_trophies) LinearLayout mTrophies;
 
     private Context mContext;
-    private Bus mBus = BusProvider.getInstance();
     private UserProfilePresenter mUserProfilePresenter;
 
     public UserProfileFragment() { }
@@ -105,18 +102,6 @@ public class UserProfileFragment extends AbsListingsFragment implements UserProf
             mUserProfilePresenter.saveFriendNote(note);
         });
         return v;
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        mBus.register(this);
-    }
-
-    @Override
-    public void onStop() {
-        mBus.unregister(this);
-        super.onStop();
     }
 
     @Override

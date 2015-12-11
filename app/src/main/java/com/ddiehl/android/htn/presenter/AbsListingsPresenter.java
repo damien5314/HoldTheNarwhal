@@ -7,7 +7,6 @@ import android.view.ContextMenu;
 import android.view.View;
 
 import com.ddiehl.android.htn.AccessTokenManager;
-import com.ddiehl.android.htn.BusProvider;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
@@ -28,7 +27,6 @@ import com.ddiehl.reddit.listings.Link;
 import com.ddiehl.reddit.listings.Listing;
 import com.ddiehl.reddit.listings.ListingResponse;
 import com.ddiehl.reddit.listings.ListingResponseData;
-import com.squareup.otto.Bus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +36,6 @@ import rx.functions.Action1;
 public abstract class AbsListingsPresenter
         implements ListingsPresenter, IdentityManager.Callbacks {
     protected Logger mLogger = HoldTheNarwhal.getLogger();
-    protected Bus mBus = BusProvider.getInstance();
     protected AccessTokenManager mAccessTokenManager = HoldTheNarwhal.getAccessTokenManager();
     protected IdentityManager mIdentityManager = HoldTheNarwhal.getIdentityManager();
     protected SettingsManager mSettingsManager = HoldTheNarwhal.getSettingsManager();
@@ -75,7 +72,6 @@ public abstract class AbsListingsPresenter
 
     @Override
     public void onResume() {
-        mBus.register(this);
         mIdentityManager.registerUserIdentityChangeListener(this);
         if (!mListingsRequested && mListings.size() == 0) {
             refreshData();
@@ -84,7 +80,6 @@ public abstract class AbsListingsPresenter
 
     @Override
     public void onPause() {
-        mBus.unregister(this);
         mIdentityManager.unregisterUserIdentityChangeListener(this);
     }
 
