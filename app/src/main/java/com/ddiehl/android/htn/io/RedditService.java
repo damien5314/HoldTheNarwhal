@@ -5,8 +5,8 @@ import android.support.annotation.Nullable;
 import android.util.Pair;
 
 import com.ddiehl.android.htn.BuildConfig;
-import com.ddiehl.android.htn.events.requests.HideEvent;
 import com.ddiehl.android.htn.events.requests.ReportEvent;
+import com.ddiehl.reddit.Hideable;
 import com.ddiehl.reddit.Savable;
 import com.ddiehl.reddit.Votable;
 import com.ddiehl.reddit.identity.FriendInfo;
@@ -57,6 +57,6 @@ public interface RedditService {
     Observable<Subreddit> getSubredditInfo(@NonNull String subreddit);
     Observable<ResponseBody> vote(@NonNull Votable votable, int direction);
     Observable<ResponseBody> save(@NonNull Savable listing, @Nullable String category, boolean save);
-    void onHide(@NonNull HideEvent event);
+    Observable<ResponseBody> hide(@NonNull Hideable listing, boolean toHide);
     void onReport(@NonNull ReportEvent event);
 }

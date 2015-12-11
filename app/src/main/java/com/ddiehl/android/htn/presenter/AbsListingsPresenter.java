@@ -13,8 +13,6 @@ import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.SettingsManager;
 import com.ddiehl.android.htn.analytics.Analytics;
-import com.ddiehl.android.htn.events.requests.HideEvent;
-import com.ddiehl.android.htn.events.responses.HideSubmittedEvent;
 import com.ddiehl.android.htn.io.RedditService;
 import com.ddiehl.android.htn.logging.Logger;
 import com.ddiehl.android.htn.view.ListingsView;
@@ -31,7 +29,6 @@ import com.ddiehl.reddit.listings.Listing;
 import com.ddiehl.reddit.listings.ListingResponse;
 import com.ddiehl.reddit.listings.ListingResponseData;
 import com.squareup.otto.Bus;
-import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -187,26 +184,6 @@ public abstract class AbsListingsPresenter
         };
     }
 
-    @Subscribe
-    public void onListingHidden(HideSubmittedEvent event) {
-        Hideable listing = event.getListing();
-
-        if (event.isFailed()) {
-            mMainView.showToast(R.string.hide_failed);
-            return;
-        }
-
-        //noinspection SuspiciousMethodCalls
-        int pos = mListings.indexOf(listing);
-        if (event.isToHide()) {
-            mMainView.showToast(R.string.link_hidden);
-            mListings.remove(pos);
-            mListingsView.listingRemovedAt(pos);
-        } else {
-            mListingsView.listingRemovedAt(pos);
-        }
-    }
-
     @Override
     public void showLinkContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo,
                                     Link link) {
@@ -312,7 +289,7 @@ public abstract class AbsListingsPresenter
         }
 
         Link link = (Link) mListingSelected;
-        mBus.post(new HideEvent(link, true));
+        hide(link, true);
         mAnalytics.logHide(link.getKind(), true);
     }
 
@@ -324,7 +301,7 @@ public abstract class AbsListingsPresenter
         }
 
         Link link = (Link) mListingSelected;
-        mBus.post(new HideEvent(link, false));
+        hide(link, false);
         mAnalytics.logHide(link.getKind(), false);
     }
 
@@ -515,6 +492,22 @@ public abstract class AbsListingsPresenter
                 .doOnNext(response -> {
                     savable.isSaved(toSave);
                     mListingsView.listingUpdatedAt(mListings.indexOf(savable));
+                })
+                .subscribe();
+    }
+
+    private void hide(Hideable hideable, boolean toHide) {
+        mRedditService.hide(hideable, toHide)
+                .doOnError(error -> mMainView.showToast(R.string.hide_failed))
+                .doOnNext(response -> {
+                    int pos = mListings.indexOf(hideable);
+                    if (toHide) {
+                        mMainView.showToast(R.string.link_hidden);
+                        mListings.remove(pos);
+                        mListingsView.listingRemovedAt(pos);
+                    } else {
+                        mListingsView.listingRemovedAt(pos);
+                    }
                 })
                 .subscribe();
     }

@@ -12,7 +12,6 @@ import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.SettingsManager;
 import com.ddiehl.android.htn.analytics.Analytics;
-import com.ddiehl.android.htn.events.requests.HideEvent;
 import com.ddiehl.android.htn.io.RedditService;
 import com.ddiehl.android.htn.model.CommentBank;
 import com.ddiehl.android.htn.model.CommentBankList;
@@ -265,7 +264,7 @@ public class LinkCommentsPresenterImpl
             return;
         }
 
-        mBus.post(new HideEvent(mLinkContext, true));
+        hideLink(true);
         mAnalytics.logHide(mLinkContext.getKind(), true);
     }
 
@@ -276,8 +275,17 @@ public class LinkCommentsPresenterImpl
             return;
         }
 
-        mBus.post(new HideEvent(mLinkContext, false));
+        hideLink(false);
         mAnalytics.logHide(mLinkContext.getKind(), false);
+    }
+
+    private void hideLink(boolean toHide) {
+        mRedditService.hide(mLinkContext, toHide)
+                .doOnError(error -> mMainView.showToast(R.string.hide_failed))
+                .doOnNext(response -> {
+                    if (toHide) mMainView.showToast(R.string.link_hidden);
+                })
+                .subscribe();
     }
 
     @Override

@@ -10,9 +10,7 @@ import com.ddiehl.android.htn.AccessTokenManager;
 import com.ddiehl.android.htn.BusProvider;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.analytics.Analytics;
-import com.ddiehl.android.htn.events.requests.HideEvent;
 import com.ddiehl.android.htn.events.requests.ReportEvent;
-import com.ddiehl.android.htn.events.responses.HideSubmittedEvent;
 import com.ddiehl.android.htn.logging.Logger;
 import com.ddiehl.reddit.Hideable;
 import com.ddiehl.reddit.Savable;
@@ -54,7 +52,6 @@ import retrofit.Retrofit;
 import retrofit.RxJavaCallAdapterFactory;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
 public class RedditServiceImpl implements RedditService {
@@ -276,31 +273,27 @@ public class RedditServiceImpl implements RedditService {
     }
 
     @Override
-    public void onHide(@NonNull final HideEvent event) {
-        final Hideable listing = event.getListing();
-        final boolean toHide = event.isToHide();
-
-        Action1<Response> onSuccess = (response) -> {
-            if (!response.message().contains("USER_REQUIRED")) {
-                mBus.post(new HideSubmittedEvent(listing, toHide));
-            }
-        };
-
-        Action1<Throwable> onFailure = (error) -> {
-            mBus.post(error);
-            mBus.post(new HideSubmittedEvent(error));
-        };
-
-        if (event.isToHide()) { // Hide
-            mAPI.hide(listing.getName())
+    public Observable<ResponseBody> hide(@NonNull Hideable listing, boolean toHide) {
+        if (toHide) { // Hide
+            return mAPI.hide(listing.getName())
                     .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(onSuccess, onFailure);
+                    .flatMap(response -> {
+                        if (response.message().contains("USER_REQUIRED")) {
+                            return Observable.error(new RuntimeException("Sign in required"));
+                        } else return Observable.just(response);
+                    })
+                    .map(Response::body);
         } else { // Unhide
-            mAPI.unhide(listing.getName())
+            return mAPI.unhide(listing.getName())
                     .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(onSuccess, onFailure);
+                    .flatMap(response -> {
+                        if (response.message().contains("USER_REQUIRED")) {
+                            return Observable.error(new RuntimeException("Sign in required"));
+                        } else return Observable.just(response);
+                    })
+                    .map(Response::body);
         }
     }
 
