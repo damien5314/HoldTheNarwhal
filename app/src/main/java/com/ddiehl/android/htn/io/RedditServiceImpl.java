@@ -108,20 +108,22 @@ public class RedditServiceImpl implements RedditService {
 
     @Override
     public Observable<UserSettings> getUserSettings() {
-        return mAPI.getUserSettings()
-                .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .map(Response::body);
+        return requireUserAccessToken().flatMap(token ->
+                mAPI.getUserSettings()
+                        .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .map(Response::body));
     }
 
     @Override
     public Observable<ResponseBody> updateUserSettings(Map<String, String> settings) {
         String json = new Gson().toJson(settings);
         RequestBody body = RequestBody.create(MediaType.parse("application/json"), json);
-        return mAPI.updateUserSettings(body)
-                .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .map(Response::body);
+        return requireUserAccessToken().flatMap(token ->
+                mAPI.updateUserSettings(body)
+                        .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .map(Response::body));
     }
 
     @Override
@@ -139,10 +141,11 @@ public class RedditServiceImpl implements RedditService {
     public Observable<List<ListingResponse>> loadLinkComments(
             @NonNull String subreddit, @NonNull String article,
             @Nullable String sort, @Nullable String commentId) {
-        return mAPI.getComments(subreddit, article, sort, commentId)
-                .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .map(Response::body);
+        return requireAccessToken().flatMap(token ->
+                mAPI.getComments(subreddit, article, sort, commentId)
+                        .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .map(Response::body));
     }
 
     @Override
@@ -151,36 +154,39 @@ public class RedditServiceImpl implements RedditService {
             @NonNull List<String> children, @Nullable String sort) {
         StringBuilder b = new StringBuilder();
         for (String child : children) b.append(child).append(",");
-        String childrenString = b.toString();
-        childrenString = childrenString.substring(0, Math.max(childrenString.length() - 1, 0));
-        return mAPI.getMoreChildren(link.getName(), childrenString, sort)
-                .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .map(response -> Pair.create(parentStub, response.body()));
+        String childrenString = b.substring(0, Math.max(b.length() - 1, 0));
+        return requireAccessToken().flatMap(token ->
+                mAPI.getMoreChildren(link.getName(), childrenString, sort)
+                        .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .map(response -> Pair.create(parentStub, response.body())));
     }
 
     @Override
     public Observable<UserIdentity> getUserInfo(@NonNull String username) {
-        return mAPI.getUserInfo(username)
-                .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .map(response -> response.body().getUser());
+        return requireAccessToken().flatMap(token ->
+                mAPI.getUserInfo(username)
+                        .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .map(response -> response.body().getUser()));
     }
 
     @Override
     public Observable<FriendInfo> getFriendInfo(String username) {
-        return mAPI.getFriendInfo(username)
-                .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .map(Response::body);
+        return requireUserAccessToken().flatMap(token ->
+                mAPI.getFriendInfo(username)
+                        .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .map(Response::body));
     }
 
     @Override
     public Observable<List<Listing>> getUserTrophies(@NonNull String username) {
-        return mAPI.getUserTrophies(username)
-                .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .map(response -> response.body().getData().getTrophies());
+        return requireAccessToken().flatMap(token ->
+                mAPI.getUserTrophies(username)
+                        .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .map(response -> response.body().getData().getTrophies()));
     }
 
     @Override
@@ -198,18 +204,20 @@ public class RedditServiceImpl implements RedditService {
     public Observable<ResponseBody> addFriend(@NonNull String username) {
         String json = "{}";
         RequestBody body = RequestBody.create(MediaType.parse("application/json"), json);
-        return requireUserAccessToken().flatMap(token -> mAPI.addFriend(username, body)
-                .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .map(Response::body));
+        return requireUserAccessToken().flatMap(token ->
+                mAPI.addFriend(username, body)
+                        .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .map(Response::body));
     }
 
     @Override
     public Observable<ResponseBody> deleteFriend(@NonNull String username) {
-        return requireUserAccessToken().flatMap(token -> mAPI.deleteFriend(username)
-                .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .map(Response::body));
+        return requireUserAccessToken().flatMap(token ->
+                mAPI.deleteFriend(username)
+                        .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .map(Response::body));
     }
 
     @Override
@@ -218,72 +226,78 @@ public class RedditServiceImpl implements RedditService {
             return Observable.error(new RuntimeException("User note should be non-empty"));
         }
         String json = new Gson().toJson(new Friend(note));
-        return mAPI.addFriend(username, RequestBody.create(MediaType.parse("application/json"), json))
-                .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .map(Response::body);
+        return requireUserAccessToken().flatMap(token ->
+                mAPI.addFriend(username, RequestBody.create(MediaType.parse("application/json"), json))
+                        .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .map(Response::body));
     }
 
     @Override
     public Observable<Subreddit> getSubredditInfo(@NonNull String subreddit) {
-        return requireAccessToken().flatMap(token -> mAPI.getSubredditInfo(subreddit)
-                .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .map(Response::body));
+        return requireAccessToken().flatMap(token ->
+                mAPI.getSubredditInfo(subreddit)
+                        .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .map(Response::body));
     }
 
     @Override
     public Observable<ResponseBody> vote(@NonNull Votable listing, int direction) {
         String fullname = String.format("%s_%s", listing.getKind(), listing.getId());
-        return mAPI.vote(fullname, direction)
-                .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .flatMap(response -> {
-                    if (response.message().contains("USER_REQUIRED")) {
-                        return Observable.error(new RuntimeException("Sign in required"));
-                    } else return Observable.just(response);
-                })
-                .map(Response::body);
+        return requireUserAccessToken().flatMap(token ->
+                mAPI.vote(fullname, direction)
+                        .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .flatMap(response -> {
+                            if (response.message().contains("USER_REQUIRED")) {
+                                return Observable.error(new RuntimeException("Sign in required"));
+                            } else return Observable.just(response);
+                        })
+                        .map(Response::body));
     }
 
     @Override
     public Observable<ResponseBody> save(
             @NonNull Savable listing, @Nullable String category, boolean toSave) {
         if (toSave) { // Save
-            return mAPI.save(listing.getName(), category)
-                    .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .flatMap(response -> {
-                        if (response.message().contains("USER_REQUIRED")) {
-                            return Observable.error(new RuntimeException("Sign in required"));
-                        } else return Observable.just(response);
-                    })
-                    .map(Response::body);
+            return requireUserAccessToken().flatMap(token ->
+                    mAPI.save(listing.getName(), category)
+                            .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .flatMap(response -> {
+                                if (response.message().contains("USER_REQUIRED")) {
+                                    return Observable.error(new RuntimeException("Sign in required"));
+                                } else return Observable.just(response);
+                            })
+                            .map(Response::body));
         } else { // Unsave
-            return mAPI.unsave(listing.getName())
-                    .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .flatMap(response -> {
-                        if (response.message().contains("USER_REQUIRED")) {
-                            return Observable.error(new RuntimeException("Sign in required"));
-                        } else return Observable.just(response);
-                    })
-                    .map(Response::body);
+            return requireUserAccessToken().flatMap(token ->
+                    mAPI.unsave(listing.getName())
+                            .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .flatMap(response -> {
+                                if (response.message().contains("USER_REQUIRED")) {
+                                    return Observable.error(new RuntimeException("Sign in required"));
+                                } else return Observable.just(response);
+                            })
+                            .map(Response::body));
         }
     }
 
     @Override
     public Observable<ResponseBody> hide(@NonNull Hideable listing, boolean toHide) {
         if (toHide) { // Hide
-            return mAPI.hide(listing.getName())
-                    .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .flatMap(response -> {
-                        if (response.message().contains("USER_REQUIRED")) {
-                            return Observable.error(new RuntimeException("Sign in required"));
-                        } else return Observable.just(response);
-                    })
-                    .map(Response::body);
+            return requireUserAccessToken().flatMap(token ->
+                    mAPI.hide(listing.getName())
+                            .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .flatMap(response -> {
+                                if (response.message().contains("USER_REQUIRED")) {
+                                    return Observable.error(new RuntimeException("Sign in required"));
+                                } else return Observable.just(response);
+                            })
+                            .map(Response::body));
         } else { // Unhide
             return mAPI.unhide(listing.getName())
                     .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
