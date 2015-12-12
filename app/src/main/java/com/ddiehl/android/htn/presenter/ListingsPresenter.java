@@ -12,10 +12,8 @@ public interface ListingsPresenter extends BasePresenter, LinkPresenter, Comment
   void refreshData();
   void setData(@NonNull List<Listing> data);
   void getMoreData();
-
   int getNumListings();
   Listing getListing(int position);
-
   String getUsernameContext();
   String getSubreddit();
   String getNextPageListingId();
@@ -25,11 +23,8 @@ public interface ListingsPresenter extends BasePresenter, LinkPresenter, Comment
   boolean getShowControversiality();
   void updateSubreddit(@Nullable String subreddit);
   void onSortChanged();
-
   UserIdentity getAuthorizedUser();
-
   void onSortSelected(@Nullable String sort);
   void onTimespanSelected(@Nullable String timespan);
-
   void onNsfwSelected(boolean nsfwAllowed);
 }

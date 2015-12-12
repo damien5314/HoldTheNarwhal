@@ -9,9 +9,10 @@ import com.ddiehl.reddit.listings.Comment;
 import com.ddiehl.reddit.listings.CommentStub;
 
 public interface CommentPresenter extends BasePresenter {
-
-  void showCommentContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, Comment comment);
-  void showCommentThread(@Nullable String subreddit, @Nullable String linkId, @NonNull String commentId);
+  void showCommentContextMenu(
+      ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, Comment comment);
+  void showCommentThread(
+      @Nullable String subreddit, @Nullable String linkId, @NonNull String commentId);
   void getMoreComments(@NonNull CommentStub comment);
   void openCommentPermalink();
   void openReplyView();
@@ -25,5 +26,4 @@ public interface CommentPresenter extends BasePresenter {
   void openCommentInBrowser();
   void reportComment();
   void openCommentLink(@NonNull Comment comment);
-
 }

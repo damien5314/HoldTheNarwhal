@@ -8,7 +8,6 @@ import rx.functions.Action1;
 
 public interface MainPresenter extends BasePresenter {
   void signOutUser();
-  String getUsernameContext();
   void setUsernameContext(@Nullable String username);
   void onAnalyticsAccepted();
   void onAnalyticsDeclined();

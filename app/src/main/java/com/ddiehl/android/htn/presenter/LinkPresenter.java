@@ -7,8 +7,8 @@ import android.view.View;
 import com.ddiehl.reddit.listings.Link;
 
 public interface LinkPresenter extends BasePresenter {
-
-  void showLinkContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, Link link);
+  void showLinkContextMenu(
+      ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, Link link);
   void openLink(@NonNull Link link);
   void showCommentsForLink(@NonNull Link link);
   void showCommentsForLink();
@@ -24,5 +24,4 @@ public interface LinkPresenter extends BasePresenter {
   void hideLink();
   void unhideLink();
   void reportLink();
-
 }

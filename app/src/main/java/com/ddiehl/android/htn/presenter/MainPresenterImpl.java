@@ -78,11 +78,6 @@ public class MainPresenterImpl implements MainPresenter, IdentityManager.Callbac
   }
 
   @Override
-  public String getUsernameContext() {
-    return mUsernameContext;
-  }
-
-  @Override
   public void setUsernameContext(String username) {
     mUsernameContext = username;
   }
