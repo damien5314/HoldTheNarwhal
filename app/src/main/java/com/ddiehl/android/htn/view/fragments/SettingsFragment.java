@@ -1,5 +1,6 @@
 package com.ddiehl.android.htn.view.fragments;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
@@ -13,7 +14,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
-import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.SettingsManagerImpl;
 import com.ddiehl.android.htn.presenter.SettingsPresenter;
@@ -24,7 +24,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class SettingsFragment extends PreferenceFragment
-    implements SharedPreferences.OnSharedPreferenceChangeListener, IdentityManager.Callbacks {
+    implements SharedPreferences.OnSharedPreferenceChangeListener {
   private SettingsPresenter mSettingsPresenter;
 
   @Override
@@ -47,10 +47,14 @@ public class SettingsFragment extends PreferenceFragment
   public void onResume() {
     super.onResume();
     mSettingsPresenter.onResume();
+    getActivity().getSharedPreferences(SettingsManagerImpl.PREFS_USER, Context.MODE_PRIVATE)
+            .registerOnSharedPreferenceChangeListener(this);
   }
 
   @Override
   public void onPause() {
+    getActivity().getSharedPreferences(SettingsManagerImpl.PREFS_USER, Context.MODE_PRIVATE)
+            .unregisterOnSharedPreferenceChangeListener(this);
     mSettingsPresenter.onPause();
     super.onPause();
   }
@@ -59,7 +63,7 @@ public class SettingsFragment extends PreferenceFragment
   public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
     Preference p = findPreference(key);
     if (p instanceof CheckBoxPreference) {
-      ((CheckBoxPreference) p).setChecked(sharedPreferences.getBoolean(key, false)); // default = false?
+      ((CheckBoxPreference) p).setChecked(sharedPreferences.getBoolean(key, false));
     }
   }
 
@@ -75,7 +79,7 @@ public class SettingsFragment extends PreferenceFragment
     addPreferencesFromResource(R.xml.preferences_all); // Required for getSharedPreferences()
     Preference prefAboutApp = findPreference("pref_about_app");
     prefAboutApp.setOnPreferenceClickListener(preference -> {
-      showAboutAppMarkdown();
+      showAboutApp();
       return false;
     });
   }
@@ -127,7 +131,7 @@ public class SettingsFragment extends PreferenceFragment
   public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
       case R.id.action_refresh:
-        refresh(true);
+        mSettingsPresenter.refresh(true);
         return true;
     }
     return super.onOptionsItemSelected(item);
@@ -141,7 +145,7 @@ public class SettingsFragment extends PreferenceFragment
         .commit();
   }
 
-  private void showAboutAppMarkdown() {
+  public void showAboutApp() {
     InputStream in_s;
     try {
       in_s = getActivity().getAssets().open("htn_about_app.md");

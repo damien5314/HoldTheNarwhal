@@ -1,13 +1,11 @@
 package com.ddiehl.android.htn.presenter;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.ddiehl.android.htn.AccessTokenManager;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.SettingsManager;
-import com.ddiehl.android.htn.SettingsManagerImpl;
 import com.ddiehl.android.htn.io.RedditService;
 import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.android.htn.view.fragments.SettingsFragment;
@@ -20,7 +18,6 @@ public class SettingsPresenter implements BasePresenter, IdentityManager.Callbac
   private AccessTokenManager mAccessTokenManager = HoldTheNarwhal.getAccessTokenManager();
   private IdentityManager mIdentityManager = HoldTheNarwhal.getIdentityManager();
   private SettingsManager mSettingsManager = HoldTheNarwhal.getSettingsManager();
-  private Context mContext = HoldTheNarwhal.getContext();
   private MainView mMainView;
   private SettingsFragment mSettingsView;
 
@@ -32,8 +29,6 @@ public class SettingsPresenter implements BasePresenter, IdentityManager.Callbac
   @Override
   public void onResume() {
     mIdentityManager.registerUserIdentityChangeListener(this);
-    mContext.getSharedPreferences(SettingsManagerImpl.PREFS_USER, Context.MODE_PRIVATE)
-        .registerOnSharedPreferenceChangeListener(this);
     if (mAccessTokenManager.isUserAuthorized()) {
       refresh(true);
     }
@@ -42,8 +37,6 @@ public class SettingsPresenter implements BasePresenter, IdentityManager.Callbac
   @Override
   public void onPause() {
     mIdentityManager.unregisterUserIdentityChangeListener(this);
-    mContext.getSharedPreferences(SettingsManagerImpl.PREFS_USER, Context.MODE_PRIVATE)
-        .unregisterOnSharedPreferenceChangeListener(this);
   }
 
   @Override
