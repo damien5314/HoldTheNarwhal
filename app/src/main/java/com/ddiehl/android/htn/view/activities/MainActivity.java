@@ -44,7 +44,6 @@ import com.ddiehl.android.htn.view.fragments.SubredditFragment;
 import com.ddiehl.android.htn.view.fragments.UserProfileFragment;
 import com.ddiehl.android.htn.view.fragments.WebViewFragment;
 import com.ddiehl.reddit.identity.UserIdentity;
-import com.ddiehl.reddit.listings.Subreddit;
 import com.squareup.picasso.Picasso;
 
 import butterknife.Bind;
@@ -203,7 +202,7 @@ public class MainActivity extends AppCompatActivity implements MainView,
   }
 
   @Override @SuppressLint("NewApi")
-  public void showWebViewForURL(@NonNull String url) {
+  public void openURL(@NonNull String url) {
     closeNavigationDrawer();
     if (canUseCustomTabs()) {
       // If so, present URL in custom tabs instead of WebView
@@ -214,10 +213,12 @@ public class MainActivity extends AppCompatActivity implements MainView,
       extras.putInt(EXTRA_CUSTOM_TABS_TOOLBAR_COLOR, ContextCompat.getColor(this, R.color.primary));
       intent.putExtras(extras);
       startActivity(intent);
-    } else {
-      Fragment f = WebViewFragment.newInstance(url);
-      showFragment(f);
-    }
+    } else showWebViewForURL(url);
+  }
+
+  private void showWebViewForURL(@NonNull String url) {
+    Fragment f = WebViewFragment.newInstance(url);
+    showFragment(f);
   }
 
   private boolean canUseCustomTabs() {

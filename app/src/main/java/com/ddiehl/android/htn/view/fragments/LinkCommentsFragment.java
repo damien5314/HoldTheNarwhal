@@ -358,7 +358,7 @@ public class LinkCommentsFragment extends Fragment
 
   @Override
   public void openLinkInWebView(@NonNull Link link) {
-    ((MainActivity) getActivity()).showWebViewForURL(link.getUrl());
+    ((MainActivity) getActivity()).openURL(link.getUrl());
   }
 
   @Override

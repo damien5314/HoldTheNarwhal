@@ -314,7 +314,7 @@ public abstract class AbsListingsFragment extends Fragment
   @Override
   public void openLinkInWebView(@NonNull Link link) {
     mAnalytics.logOpenLink(link);
-    ((MainActivity) getActivity()).showWebViewForURL(link.getUrl());
+    ((MainActivity) getActivity()).openURL(link.getUrl());
   }
 
   @Override

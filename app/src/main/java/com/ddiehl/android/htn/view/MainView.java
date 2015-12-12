@@ -28,7 +28,7 @@ public interface MainView extends AnalyticsDialog.Callbacks, ConfirmSignOutDialo
   void showUserSubreddits();
   void showSubreddit(@Nullable String subreddit);
   void showSubredditIfEmpty(@Nullable String subreddit);
-  void showWebViewForURL(@NonNull String url);
+  void openURL(@NonNull String url);
 
   // Methods formerly from BaseView
   void setTitle(@NonNull CharSequence title);

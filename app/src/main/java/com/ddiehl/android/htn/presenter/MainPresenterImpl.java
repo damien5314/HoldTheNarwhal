@@ -28,7 +28,6 @@ public class MainPresenterImpl implements MainPresenter, IdentityManager.Callbac
   private IdentityManager mIdentityManager = HoldTheNarwhal.getIdentityManager();
   private SettingsManager mSettingsManager = HoldTheNarwhal.getSettingsManager();
   private Analytics mAnalytics = HoldTheNarwhal.getAnalytics();
-
   private MainView mMainView;
   private String mUsernameContext;
 
