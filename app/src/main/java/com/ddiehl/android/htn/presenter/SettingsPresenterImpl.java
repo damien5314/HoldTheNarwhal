@@ -8,7 +8,7 @@ import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.SettingsManager;
 import com.ddiehl.android.htn.io.RedditService;
 import com.ddiehl.android.htn.view.MainView;
-import com.ddiehl.android.htn.view.fragments.SettingsView;
+import com.ddiehl.android.htn.view.SettingsView;
 import com.ddiehl.reddit.identity.UserIdentity;
 
 import rx.functions.Action1;

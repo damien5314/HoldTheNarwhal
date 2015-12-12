@@ -1,7 +1,8 @@
 package com.ddiehl.android.htn.io;
 
 
-import com.ddiehl.reddit.identity.AuthorizationResponse;
+import com.ddiehl.reddit.identity.ApplicationAccessToken;
+import com.ddiehl.reddit.identity.UserAccessToken;
 import com.squareup.okhttp.ResponseBody;
 
 import retrofit.Response;
@@ -13,18 +14,18 @@ import rx.Observable;
 public interface RedditAuthAPI {
 
   @FormUrlEncoded @POST("/api/v1/access_token")
-  Observable<Response<AuthorizationResponse>> getApplicationAuthToken(
+  Observable<Response<ApplicationAccessToken>> getApplicationAuthToken(
       @Field("grant_type") String grantType,
       @Field("device_id") String deviceId);
 
   @FormUrlEncoded @POST("/api/v1/access_token")
-  Observable<Response<AuthorizationResponse>> getUserAuthToken(
+  Observable<Response<UserAccessToken>> getUserAuthToken(
       @Field("grant_type") String grantType,
       @Field("code") String code,
       @Field("redirect_uri") String redirectUri);
 
   @FormUrlEncoded @POST("/api/v1/access_token")
-  Observable<Response<AuthorizationResponse>> refreshUserAuthToken(
+  Observable<Response<UserAccessToken>> refreshUserAuthToken(
       @Field("grant_type") String grantType,
       @Field("refresh_token") String refreshToken);
 

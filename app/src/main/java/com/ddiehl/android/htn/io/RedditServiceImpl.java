@@ -21,6 +21,7 @@ import com.ddiehl.reddit.adapters.ListingResponseDeserializer;
 import com.ddiehl.reddit.identity.AccessToken;
 import com.ddiehl.reddit.identity.Friend;
 import com.ddiehl.reddit.identity.FriendInfo;
+import com.ddiehl.reddit.identity.UserAccessToken;
 import com.ddiehl.reddit.identity.UserIdentity;
 import com.ddiehl.reddit.identity.UserSettings;
 import com.ddiehl.reddit.listings.AbsComment;
@@ -312,7 +313,7 @@ public class RedditServiceImpl implements RedditService {
         .doOnError(error -> mLogger.e("No access token available"));
   }
 
-  private Observable<AccessToken> requireUserAccessToken() {
+  private Observable<UserAccessToken> requireUserAccessToken() {
     return mAccessTokenManager.getUserAccessToken()
         .doOnError(error -> mLogger.e("No user access token available"));
   }

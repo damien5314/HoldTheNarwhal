@@ -3,7 +3,8 @@ package com.ddiehl.android.htn.io;
 import com.ddiehl.android.htn.BuildConfig;
 import com.ddiehl.android.htn.utils.BaseUtils;
 import com.ddiehl.reddit.identity.AccessToken;
-import com.ddiehl.reddit.identity.AuthorizationResponse;
+import com.ddiehl.reddit.identity.ApplicationAccessToken;
+import com.ddiehl.reddit.identity.UserAccessToken;
 import com.squareup.okhttp.Credentials;
 import com.squareup.okhttp.ResponseBody;
 
@@ -24,12 +25,12 @@ public interface RedditAuthService {
                   "&response_type=%s&duration=%s&state=%s&redirect_uri=%s&scope=%s",
               CLIENT_ID, RESPONSE_TYPE, DURATION, STATE, REDIRECT_URI, SCOPE);
 
-  Observable<AuthorizationResponse> authorizeApplication();
+  Observable<ApplicationAccessToken> authorizeApplication();
 
-  Observable<AuthorizationResponse> getUserAccessToken(
+  Observable<UserAccessToken> getUserAccessToken(
       String grantType, String authCode, String redirectUri);
 
-  Observable<AuthorizationResponse> refreshUserAccessToken(String refreshToken);
+  Observable<UserAccessToken> refreshUserAccessToken(String refreshToken);
 
   Observable<ResponseBody> revokeAuthToken(AccessToken token);
 }

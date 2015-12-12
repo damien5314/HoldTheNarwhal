@@ -11,14 +11,9 @@ import com.ddiehl.android.htn.io.RedditService;
 import com.ddiehl.android.htn.logging.Logger;
 import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.reddit.identity.AccessToken;
-import com.ddiehl.reddit.identity.AuthorizationResponse;
-import com.ddiehl.reddit.identity.UserAccessToken;
 import com.ddiehl.reddit.identity.UserIdentity;
 
-import java.util.Date;
-
 import rx.functions.Action1;
-import rx.functions.Func1;
 
 public class MainPresenterImpl implements MainPresenter, IdentityManager.Callbacks {
   private Logger mLogger = HoldTheNarwhal.getLogger();
@@ -126,7 +121,6 @@ public class MainPresenterImpl implements MainPresenter, IdentityManager.Callbac
 //    mIdentityManager.clearSavedUserIdentity();
     String grantType = "authorization_code";
     mRedditAuthService.getUserAccessToken(grantType, authCode, RedditAuthService.REDIRECT_URI)
-        .map(responseToAccessToken())
         .doOnNext(mAccessTokenManager.saveUserAccessToken())
         .subscribe(getUserIdentity());
   }
@@ -137,18 +131,6 @@ public class MainPresenterImpl implements MainPresenter, IdentityManager.Callbac
         .doOnError(mMainView::showError)
         .doOnNext(mIdentityManager::saveUserIdentity)
         .subscribe(mMainView::updateUserIdentity);
-  }
-
-  private Func1<AuthorizationResponse, AccessToken> responseToAccessToken() {
-    return response -> {
-      AccessToken token = new UserAccessToken();
-      token.setToken(response.getToken());
-      token.setTokenType(response.getToken());
-      token.setExpiration(response.getExpiresIn() * 1000 + new Date().getTime());
-      token.setScope(response.getScope());
-      token.setRefreshToken(response.getRefreshToken());
-      return token;
-    };
   }
 
   private UserIdentity getAuthorizedUser() {

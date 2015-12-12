@@ -19,6 +19,7 @@ import com.ddiehl.android.htn.SettingsManagerImpl;
 import com.ddiehl.android.htn.presenter.SettingsPresenter;
 import com.ddiehl.android.htn.presenter.SettingsPresenterImpl;
 import com.ddiehl.android.htn.view.MainView;
+import com.ddiehl.android.htn.view.SettingsView;
 import com.ddiehl.reddit.identity.UserIdentity;
 
 import java.io.IOException;

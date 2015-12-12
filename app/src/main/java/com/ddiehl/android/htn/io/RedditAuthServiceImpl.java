@@ -6,7 +6,8 @@ import com.ddiehl.android.htn.io.interceptors.AuthorizationInterceptor;
 import com.ddiehl.android.htn.io.interceptors.LoggingInterceptor;
 import com.ddiehl.android.htn.io.interceptors.UserAgentInterceptor;
 import com.ddiehl.reddit.identity.AccessToken;
-import com.ddiehl.reddit.identity.AuthorizationResponse;
+import com.ddiehl.reddit.identity.ApplicationAccessToken;
+import com.ddiehl.reddit.identity.UserAccessToken;
 import com.facebook.stetho.okhttp.StethoInterceptor;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
@@ -47,7 +48,7 @@ public class RedditAuthServiceImpl implements RedditAuthService {
   }
 
   @Override
-  public Observable<AuthorizationResponse> authorizeApplication() {
+  public Observable<ApplicationAccessToken> authorizeApplication() {
     String grantType = "https://oauth.reddit.com/grants/installed_client";
     String deviceId = HoldTheNarwhal.getSettingsManager().getDeviceId();
     return mAuthService.getApplicationAuthToken(grantType, deviceId)
@@ -56,7 +57,7 @@ public class RedditAuthServiceImpl implements RedditAuthService {
   }
 
   @Override
-  public Observable<AuthorizationResponse> getUserAccessToken(
+  public Observable<UserAccessToken> getUserAccessToken(
       String grantType, String authCode, String redirectUri) {
     return mAuthService.getUserAuthToken(grantType, authCode, redirectUri)
         .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
@@ -64,7 +65,7 @@ public class RedditAuthServiceImpl implements RedditAuthService {
   }
 
   @Override
-  public Observable<AuthorizationResponse> refreshUserAccessToken(String refreshToken) {
+  public Observable<UserAccessToken> refreshUserAccessToken(String refreshToken) {
     String grantType = "refresh_token";
     return mAuthService.refreshUserAuthToken(grantType, refreshToken)
         .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())

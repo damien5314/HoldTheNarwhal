@@ -1,10 +1,27 @@
 package com.ddiehl.reddit.identity;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
+import java.util.Date;
+
 public abstract class AccessToken {
+  private long mCreated = new Date().getTime();
+
+  @Expose @SerializedName("access_token")
   protected String mToken;
+
+  @Expose @SerializedName("token_type")
   protected String mTokenType;
+
+  @Expose @SerializedName("expires_in")
+  protected long mSecondsToExpiration;
   protected long mExpiration; // UTC
+
+  @Expose @SerializedName("scope")
   protected String mScope;
+
+  @Expose @SerializedName("refresh_token")
   protected String mRefreshToken;
 
   public String getToken() {
@@ -24,6 +41,7 @@ public abstract class AccessToken {
   }
 
   public long getExpiration() {
+    if (mExpiration == 0) mExpiration = mSecondsToExpiration * 1000 + mCreated;
     return mExpiration;
   }
 
@@ -48,11 +66,7 @@ public abstract class AccessToken {
   }
 
   public long secondsUntilExpiration() {
-    return Math.max(0, (mExpiration - System.currentTimeMillis()) / 1000);
-  }
-
-  public boolean hasRefreshToken() {
-    return mRefreshToken != null;
+    return Math.max(0, (getExpiration() - System.currentTimeMillis()) / 1000);
   }
 
   public abstract boolean isUserAccessToken();
