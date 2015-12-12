@@ -9,7 +9,6 @@ import com.ddiehl.reddit.listings.Listing;
 import java.util.List;
 
 public interface ListingsPresenter extends BasePresenter, LinkPresenter, CommentPresenter {
-
   void refreshData();
   void setData(@NonNull List<Listing> data);
   void getMoreData();
