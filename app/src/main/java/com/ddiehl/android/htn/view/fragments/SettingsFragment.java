@@ -13,35 +13,26 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-import com.ddiehl.android.htn.AccessTokenManager;
 import com.ddiehl.android.htn.HoldTheNarwhal;
-import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
-import com.ddiehl.android.htn.SettingsManager;
 import com.ddiehl.android.htn.SettingsManagerImpl;
-import com.ddiehl.android.htn.io.RedditService;
+import com.ddiehl.android.htn.presenter.SettingsPresenter;
 import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.reddit.identity.UserIdentity;
 
 import java.io.IOException;
 import java.io.InputStream;
 
-import rx.functions.Action1;
-
 public class SettingsFragment extends PreferenceFragment
-    implements SharedPreferences.OnSharedPreferenceChangeListener, IdentityManager.Callbacks {
-  private RedditService mRedditService = HoldTheNarwhal.getRedditService();
-  private AccessTokenManager mAccessTokenManager = HoldTheNarwhal.getAccessTokenManager();
-  private IdentityManager mIdentityManager = HoldTheNarwhal.getIdentityManager();
-  private SettingsManager mSettingsManager = HoldTheNarwhal.getSettingsManager();
-  private MainView mMainView;
+    implements SharedPreferences.OnSharedPreferenceChangeListener {
+  private SettingsPresenter mSettingsPresenter;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setRetainInstance(true);
     setHasOptionsMenu(true);
-    mMainView = (MainView) getActivity();
+    mSettingsPresenter = new SettingsPresenter((MainView) getActivity(), this);
     getPreferenceManager().setSharedPreferencesName(SettingsManagerImpl.PREFS_USER);
     addDefaultPreferences();
   }
@@ -55,19 +46,16 @@ public class SettingsFragment extends PreferenceFragment
   @Override
   public void onResume() {
     super.onResume();
-    mIdentityManager.registerUserIdentityChangeListener(this);
+    mSettingsPresenter.onResume();
     getActivity().getSharedPreferences(SettingsManagerImpl.PREFS_USER, Context.MODE_PRIVATE)
-        .registerOnSharedPreferenceChangeListener(this);
-    if (mAccessTokenManager.isUserAuthorized()) {
-      refresh(true);
-    }
+            .registerOnSharedPreferenceChangeListener(this);
   }
 
   @Override
   public void onPause() {
-    mIdentityManager.unregisterUserIdentityChangeListener(this);
     getActivity().getSharedPreferences(SettingsManagerImpl.PREFS_USER, Context.MODE_PRIVATE)
-        .unregisterOnSharedPreferenceChangeListener(this);
+            .unregisterOnSharedPreferenceChangeListener(this);
+    mSettingsPresenter.onPause();
     super.onPause();
   }
 
@@ -75,36 +63,23 @@ public class SettingsFragment extends PreferenceFragment
   public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
     Preference p = findPreference(key);
     if (p instanceof CheckBoxPreference) {
-      ((CheckBoxPreference) p).setChecked(sharedPreferences.getBoolean(key, false)); // default = false?
+      ((CheckBoxPreference) p).setChecked(sharedPreferences.getBoolean(key, false));
     }
   }
 
-  @Override
-  public Action1<UserIdentity> onUserIdentityChanged() {
-    return identity -> {
-      boolean shouldRefresh = identity != null;
-      refresh(shouldRefresh);
-    };
-  }
-
-  public void refresh(boolean pullFromServer) {
+  public void showPreferences(boolean showUser) {
     getActivity().invalidateOptionsMenu();
     getPreferenceScreen().removeAll();
     addDefaultPreferences();
-    if (mSettingsManager.hasFromRemote()) {
-      addUserPreferences();
-    }
+    if (showUser) addUserPreferences();
     updateAllPrefSummaries();
-    if (pullFromServer) {
-      getData();
-    }
   }
 
   private void addDefaultPreferences() {
     addPreferencesFromResource(R.xml.preferences_all); // Required for getSharedPreferences()
     Preference prefAboutApp = findPreference("pref_about_app");
     prefAboutApp.setOnPreferenceClickListener(preference -> {
-      showAboutAppMarkdown();
+      showAboutApp();
       return false;
     });
   }
@@ -115,15 +90,6 @@ public class SettingsFragment extends PreferenceFragment
     if (user != null && user.isGold()) {
       addPreferencesFromResource(R.xml.preferences_user_gold);
     }
-  }
-
-  private void getData() {
-    mMainView.showSpinner(null);
-    mRedditService.getUserSettings()
-        .doOnTerminate(mMainView::dismissSpinner)
-        .doOnError(mMainView::showError)
-        .doOnNext(mSettingsManager::saveUserSettings)
-        .subscribe(settings -> refresh(false));
   }
 
   private void updateAllPrefSummaries() {
@@ -158,14 +124,14 @@ public class SettingsFragment extends PreferenceFragment
   @Override
   public void onPrepareOptionsMenu(Menu menu) {
     super.onPrepareOptionsMenu(menu);
-    menu.findItem(R.id.action_refresh).setVisible(mSettingsManager.hasFromRemote());
+    menu.findItem(R.id.action_refresh).setVisible(mSettingsPresenter.isRefreshable());
   }
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
       case R.id.action_refresh:
-        refresh(true);
+        mSettingsPresenter.refresh(true);
         return true;
     }
     return super.onOptionsItemSelected(item);
@@ -179,8 +145,8 @@ public class SettingsFragment extends PreferenceFragment
         .commit();
   }
 
-  private void showAboutAppMarkdown() {
-    InputStream in_s = null;
+  public void showAboutApp() {
+    InputStream in_s;
     try {
       in_s = getActivity().getAssets().open("htn_about_app.md");
       getFragmentManager().beginTransaction()
