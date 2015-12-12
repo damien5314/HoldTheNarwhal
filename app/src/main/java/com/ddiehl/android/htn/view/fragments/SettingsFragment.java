@@ -17,6 +17,7 @@ import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.SettingsManagerImpl;
 import com.ddiehl.android.htn.presenter.SettingsPresenter;
+import com.ddiehl.android.htn.presenter.SettingsPresenterImpl;
 import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.reddit.identity.UserIdentity;
 
@@ -24,7 +25,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class SettingsFragment extends PreferenceFragment
-    implements SharedPreferences.OnSharedPreferenceChangeListener {
+    implements SettingsView, SharedPreferences.OnSharedPreferenceChangeListener {
   private SettingsPresenter mSettingsPresenter;
 
   @Override
@@ -32,7 +33,7 @@ public class SettingsFragment extends PreferenceFragment
     super.onCreate(savedInstanceState);
     setRetainInstance(true);
     setHasOptionsMenu(true);
-    mSettingsPresenter = new SettingsPresenter((MainView) getActivity(), this);
+    mSettingsPresenter = new SettingsPresenterImpl((MainView) getActivity(), this);
     getPreferenceManager().setSharedPreferencesName(SettingsManagerImpl.PREFS_USER);
     addDefaultPreferences();
   }
@@ -67,6 +68,7 @@ public class SettingsFragment extends PreferenceFragment
     }
   }
 
+  @Override
   public void showPreferences(boolean showUser) {
     getActivity().invalidateOptionsMenu();
     getPreferenceScreen().removeAll();
@@ -145,6 +147,7 @@ public class SettingsFragment extends PreferenceFragment
         .commit();
   }
 
+  @Override
   public void showAboutApp() {
     InputStream in_s;
     try {
