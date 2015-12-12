@@ -26,7 +26,6 @@ import com.ddiehl.android.htn.presenter.LinkCommentsPresenter;
 import com.ddiehl.android.htn.presenter.LinkCommentsPresenterImpl;
 import com.ddiehl.android.htn.view.LinkCommentsView;
 import com.ddiehl.android.htn.view.MainView;
-import com.ddiehl.android.htn.view.activities.MainActivity;
 import com.ddiehl.android.htn.view.adapters.LinkCommentsAdapter;
 import com.ddiehl.android.htn.view.dialogs.ChooseCommentSortDialog;
 import com.ddiehl.reddit.listings.Comment;
@@ -356,7 +355,7 @@ public class LinkCommentsFragment extends Fragment
 
   @Override
   public void openLinkInWebView(@NonNull Link link) {
-    ((MainActivity) getActivity()).openURL(link.getUrl());
+    ((_MainActivity) getActivity()).openURL(link.getUrl());
   }
 
   @Override

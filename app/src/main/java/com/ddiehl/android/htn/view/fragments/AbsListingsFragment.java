@@ -23,7 +23,6 @@ import com.ddiehl.android.htn.analytics.Analytics;
 import com.ddiehl.android.htn.presenter.ListingsPresenter;
 import com.ddiehl.android.htn.view.ListingsView;
 import com.ddiehl.android.htn.view.MainView;
-import com.ddiehl.android.htn.view.activities.MainActivity;
 import com.ddiehl.android.htn.view.adapters.ListingsAdapter;
 import com.ddiehl.android.htn.view.dialogs.ChooseLinkSortDialog;
 import com.ddiehl.android.htn.view.dialogs.ChooseTimespanDialog;
@@ -107,7 +106,7 @@ public abstract class AbsListingsFragment extends Fragment
         String timespan = data.getStringExtra(ChooseTimespanDialog.EXTRA_TIMESPAN);
         mListingsPresenter.onTimespanSelected(timespan);
         break;
-      case MainActivity.REQUEST_NSFW_WARNING:
+      case _MainActivity.REQUEST_NSFW_WARNING:
         boolean result = resultCode == Activity.RESULT_OK;
         mListingsPresenter.onNsfwSelected(result);
         break;
@@ -314,7 +313,7 @@ public abstract class AbsListingsFragment extends Fragment
   @Override
   public void openLinkInWebView(@NonNull Link link) {
     mAnalytics.logOpenLink(link);
-    ((MainActivity) getActivity()).openURL(link.getUrl());
+    ((_MainActivity) getActivity()).openURL(link.getUrl());
   }
 
   @Override
