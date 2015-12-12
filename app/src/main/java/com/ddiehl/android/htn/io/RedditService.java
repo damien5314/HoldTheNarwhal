@@ -56,5 +56,5 @@ public interface RedditService {
   Observable<ResponseBody> vote(@NonNull Votable votable, int direction);
   Observable<ResponseBody> save(@NonNull Savable listing, @Nullable String category, boolean save);
   Observable<ResponseBody> hide(@NonNull Hideable listing, boolean toHide);
-  Observable<ResponseBody> onReport(@NonNull String id, @NonNull String reason);
+  Observable<ResponseBody> report(@NonNull String id, @NonNull String reason);
 }

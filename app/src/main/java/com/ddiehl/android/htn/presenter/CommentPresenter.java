@@ -12,7 +12,7 @@ public interface CommentPresenter extends BasePresenter {
 
   void showCommentContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, Comment comment);
   void showCommentThread(@Nullable String subreddit, @Nullable String linkId, @NonNull String commentId);
-  void getMoreChildren(@NonNull CommentStub comment);
+  void getMoreComments(@NonNull CommentStub comment);
   void openCommentPermalink();
   void openReplyView();
   void upvoteComment();

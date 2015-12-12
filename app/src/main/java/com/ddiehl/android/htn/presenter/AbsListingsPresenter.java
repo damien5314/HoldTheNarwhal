@@ -326,7 +326,7 @@ public abstract class AbsListingsPresenter
   }
 
   @Override
-  public void getMoreChildren(@NonNull CommentStub comment) {
+  public void getMoreComments(@NonNull CommentStub comment) {
     // Comment stubs cannot appear in a listing view
   }
 

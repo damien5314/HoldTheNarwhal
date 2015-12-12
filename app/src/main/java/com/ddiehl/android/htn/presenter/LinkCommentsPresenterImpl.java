@@ -26,6 +26,7 @@ import com.ddiehl.reddit.listings.CommentStub;
 import com.ddiehl.reddit.listings.Link;
 import com.ddiehl.reddit.listings.Listing;
 import com.ddiehl.reddit.listings.ListingResponse;
+import com.ddiehl.reddit.listings.MoreChildrenResponse;
 
 import java.util.List;
 
@@ -82,22 +83,26 @@ public class LinkCommentsPresenterImpl
     mMainView.showSpinner(null);
     mRedditService.loadLinkComments(mSubreddit, mLinkId, mSort, mCommentId)
         .doOnTerminate(mMainView::dismissSpinner)
-        .subscribe(listingResponseList -> {
-          // Link is responseList.get(0), comments are responseList.get(1)
-          ListingResponse linkResponse = listingResponseList.get(0);
-          mLinkContext = (Link) linkResponse.getData().getChildren().get(0);
-          if (mLinkContext != null) mMainView.setTitle(mLinkContext.getTitle());
-          ListingResponse commentsResponse = listingResponseList.get(1);
-          List<Listing> comments = commentsResponse.getData().getChildren();
-          AbsComment.Utils.flattenCommentList(comments);
-          mCommentBank.clear();
-          mCommentBank.addAll(comments);
-          Integer minScore = mSettingsManager.getMinCommentScore();
-          mCommentBank.collapseAllThreadsUnder(minScore);
-          mLinkCommentsView.commentsUpdated();
-        });
+        .doOnError(mMainView::showError)
+        .subscribe(showLinkComments);
     mAnalytics.logLoadLinkComments(mSort);
   }
+
+  private Action1<List<ListingResponse>> showLinkComments =
+      (listingResponseList) -> {
+        // Link is responseList.get(0), comments are responseList.get(1)
+        ListingResponse linkResponse = listingResponseList.get(0);
+        mLinkContext = (Link) linkResponse.getData().getChildren().get(0);
+        if (mLinkContext != null) mMainView.setTitle(mLinkContext.getTitle());
+        ListingResponse commentsResponse = listingResponseList.get(1);
+        List<Listing> comments = commentsResponse.getData().getChildren();
+        AbsComment.Utils.flattenCommentList(comments);
+        mCommentBank.clear();
+        mCommentBank.addAll(comments);
+        Integer minScore = mSettingsManager.getMinCommentScore();
+        mCommentBank.collapseAllThreadsUnder(minScore);
+        mLinkCommentsView.commentsUpdated();
+      };
 
   @Override
   public Action1<UserIdentity> onUserIdentityChanged() {
@@ -105,30 +110,35 @@ public class LinkCommentsPresenterImpl
   }
 
   @Override
-  public void getMoreChildren(@NonNull CommentStub parentStub) {
+  public void getMoreComments(@NonNull CommentStub parentStub) {
     mMainView.showSpinner(null);
     List<String> children = parentStub.getChildren();
     // Truncate list of children to 20
     children = children.subList(0, Math.min(MAX_CHILDREN_PER_REQUEST, children.size()));
     mRedditService.loadMoreChildren(mLinkContext, parentStub, children, mSort)
         .doOnTerminate(mMainView::dismissSpinner)
-        .subscribe(response -> {
-          List<Listing> comments = response.getChildComments();
-          if (comments == null || comments.size() == 0) {
-            mCommentBank.remove(parentStub);
-          } else {
-            AbsComment.Utils.setDepthForCommentsList(comments, parentStub.getDepth());
-            int stubIndex = mCommentBank.indexOf(parentStub);
-            parentStub.removeChildren(comments);
-            parentStub.setCount(parentStub.getChildren().size());
-            if (parentStub.getCount() == 0) mCommentBank.remove(stubIndex);
-            mCommentBank.addAll(stubIndex, comments);
-          }
-          Integer minScore = mSettingsManager.getMinCommentScore();
-          mCommentBank.collapseAllThreadsUnder(minScore);
-          mLinkCommentsView.commentsUpdated();
-        });
+        .doOnError(mMainView::showError)
+        .subscribe(showMoreComments(parentStub));
     mAnalytics.logLoadMoreChildren(mSort);
+  }
+
+  private Action1<MoreChildrenResponse> showMoreComments(@NonNull CommentStub parentStub) {
+    return response -> {
+      List<Listing> comments = response.getChildComments();
+      if (comments == null || comments.size() == 0) {
+        mCommentBank.remove(parentStub);
+      } else {
+        AbsComment.Utils.setDepthForCommentsList(comments, parentStub.getDepth());
+        int stubIndex = mCommentBank.indexOf(parentStub);
+        parentStub.removeChildren(comments);
+        parentStub.setCount(parentStub.getChildren().size());
+        if (parentStub.getCount() == 0) mCommentBank.remove(stubIndex);
+        mCommentBank.addAll(stubIndex, comments);
+      }
+      Integer minScore = mSettingsManager.getMinCommentScore();
+      mCommentBank.collapseAllThreadsUnder(minScore);
+      mLinkCommentsView.commentsUpdated();
+    };
   }
 
   @Override

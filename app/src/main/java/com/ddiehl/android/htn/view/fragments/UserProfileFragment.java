@@ -97,6 +97,7 @@ public class UserProfileFragment extends AbsListingsFragment implements UserProf
     mFriendButtonLayout.setVisibility(View.GONE);
     mFriendNoteLayout.setVisibility(View.GONE);
     mFriendNoteSave.setOnClickListener((view) -> {
+      // TODO Check for non-empty input here instead of presenter?
       mMainView.showSpinner(null);
       String note = mFriendNote.getText().toString();
       mUserProfilePresenter.saveFriendNote(note);

@@ -120,8 +120,9 @@ public class SettingsFragment extends PreferenceFragment
   private void getData() {
     mMainView.showSpinner(null);
     mRedditService.getUserSettings()
-        .doOnNext(mSettingsManager::saveUserSettings)
         .doOnTerminate(mMainView::dismissSpinner)
+        .doOnError(mMainView::showError)
+        .doOnNext(mSettingsManager::saveUserSettings)
         .subscribe(settings -> refresh(false));
   }
 

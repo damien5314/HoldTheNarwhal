@@ -10,7 +10,7 @@ public interface LinkCommentsPresenter extends BasePresenter, LinkPresenter, Com
 
   Link getLinkContext();
   void requestData();
-  void getMoreChildren(@NonNull CommentStub comment);
+  void getMoreComments(@NonNull CommentStub comment);
   void toggleThreadVisible(@NonNull AbsComment comment);
 
   int getNumComments();

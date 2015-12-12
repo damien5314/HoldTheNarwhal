@@ -67,7 +67,7 @@ public class ThreadStubViewHolder extends RecyclerView.ViewHolder {
     if (mCommentStub.getCount() == 0) {
       mCommentPresenter.showCommentThread(null, null, mCommentStub.getParentId());
     } else {
-      mCommentPresenter.getMoreChildren(mCommentStub);
+      mCommentPresenter.getMoreComments(mCommentStub);
     }
   }
 }

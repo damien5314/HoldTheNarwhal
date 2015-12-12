@@ -52,10 +52,6 @@ import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-/**
- * TODO
- * Add error to each Observable which returns network error type
- */
 public class RedditServiceImpl implements RedditService {
   private Logger mLogger = HoldTheNarwhal.getLogger();
   private AccessTokenManager mAccessTokenManager = HoldTheNarwhal.getAccessTokenManager();
@@ -307,7 +303,7 @@ public class RedditServiceImpl implements RedditService {
   }
 
   @Override
-  public Observable<ResponseBody> onReport(@NonNull String id, @NonNull String reason) {
+  public Observable<ResponseBody> report(@NonNull String id, @NonNull String reason) {
     return Observable.error(new RuntimeException("Not yet implemented"));
   }
 

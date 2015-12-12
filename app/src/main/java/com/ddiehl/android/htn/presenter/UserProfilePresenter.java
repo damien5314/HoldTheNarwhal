@@ -36,11 +36,13 @@ public class UserProfilePresenter extends AbsListingsPresenter {
     mRedditService.getUserInfo(mUsernameContext)
         .doOnTerminate(() -> {
           mMainView.dismissSpinner();
-          mListingsRequested = false;
+          mListingsRequested = false; // FIXME Why does this not get set like the other views?
         })
+        .doOnError(mMainView::showError)
         .doOnNext(getFriendInfo())
         .subscribe(mSummaryView::showUserInfo);
     mRedditService.getUserTrophies(mUsernameContext)
+        .doOnError(mMainView::showError)
         .subscribe(mSummaryView::showTrophies);
   }
 
@@ -48,6 +50,7 @@ public class UserProfilePresenter extends AbsListingsPresenter {
     return user -> {
       if (user.isFriend()) {
         mRedditService.getFriendInfo(user.getName())
+            .doOnError(mMainView::showError)
             .subscribe(response -> {
               UserIdentity self = HoldTheNarwhal.getIdentityManager().getUserIdentity();
               if (self != null && self.isGold()) {
@@ -61,7 +64,7 @@ public class UserProfilePresenter extends AbsListingsPresenter {
   public void addFriend() {
     mRedditService.addFriend(mUsernameContext)
         .doOnTerminate(mMainView::dismissSpinner)
-        .doOnError(error -> mMainView.showToast(R.string.user_friend_add_error))
+        .doOnError(mMainView::showError)
         .subscribe(response -> {
           mSummaryView.setFriendButtonState(true);
           UserIdentity self = HoldTheNarwhal.getIdentityManager().getUserIdentity();
@@ -74,6 +77,7 @@ public class UserProfilePresenter extends AbsListingsPresenter {
   public void deleteFriend() {
     mRedditService.deleteFriend(mUsernameContext)
         .doOnTerminate(mMainView::dismissSpinner)
+        .doOnError(mMainView::showError)
         .subscribe(response -> {
           mSummaryView.setFriendButtonState(false);
           mSummaryView.hideFriendNote();
@@ -84,12 +88,14 @@ public class UserProfilePresenter extends AbsListingsPresenter {
   public void saveFriendNote(@NonNull String note) {
     mRedditService.saveFriendNote(mUsernameContext, note)
         .doOnTerminate(mMainView::dismissSpinner)
+        .doOnError(mMainView::showError)
         .subscribe(response -> {},
             error -> mMainView.showToast(R.string.user_friend_add_error));
   }
 
   private void getListingData() {
     mRedditService.loadUserProfile(mShow, mUsernameContext, mSort, mTimespan, mNextPageListingId)
+        .doOnError(mMainView::showError)
         .subscribe(onListingsLoaded());
   }
 

@@ -144,9 +144,8 @@ public class SettingsManagerImpl implements SettingsManager {
         HoldTheNarwhal.getAccessTokenManager().isUserAuthorized()) {
       // Post SettingsUpdate event with changed keys and values
       mRedditService.updateUserSettings(changedSettings)
-          .subscribe(response -> {}, error -> {
-            // TODO Error handling when updating user settings fails
-          });
+//          .doOnError(mMainView::showError) // TODO We need a presenter for SettingsFragment
+          .subscribe();
     }
 
     Map prefs = sp.getAll();

@@ -22,10 +22,12 @@ public class SubredditPresenter extends AbsListingsPresenter {
     if (mSubreddit == null || mSubreddit.equals("all") || mSubredditInfo != null) {
       mAnalytics.logLoadSubreddit(mSubreddit, mSort, mTimespan);
       mRedditService.loadLinks(mSubreddit, mSort, mTimespan, mNextPageListingId)
+          .doOnError(mMainView::showError)
           .subscribe(onListingsLoaded());
     } else {
       mListingsRequested = false;
       mRedditService.getSubredditInfo(mSubreddit)
+          .doOnError(mMainView::showError)
           .subscribe(onSubredditInfoLoaded());
     }
   }
