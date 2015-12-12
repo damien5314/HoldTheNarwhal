@@ -8,7 +8,6 @@ public interface IdentityManager {
   UserIdentity getUserIdentity();
   void saveUserIdentity(UserIdentity identity);
   void clearSavedUserIdentity();
-
   void registerUserIdentityChangeListener(Callbacks listener);
   void unregisterUserIdentityChangeListener(Callbacks listener);
 

@@ -352,6 +352,11 @@ public class _MainActivity extends AppCompatActivity implements MainView,
     mMainPresenter.onAuthCodeReceived(authCode);
   }
 
+  @Override
+  public void showError(Throwable error) {
+    showToast(error.getMessage());
+  }
+
   private void showSubredditNavigationDialog() {
     mDrawerLayout.closeDrawer(GravityCompat.START);
     new SubredditNavigationDialog().show(getFragmentManager(), DIALOG_SUBREDDIT_NAVIGATION);

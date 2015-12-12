@@ -12,7 +12,6 @@ import com.ddiehl.reddit.identity.UserIdentity;
 
 public interface MainView extends AnalyticsDialog.Callbacks, ConfirmSignOutDialog.Callbacks,
     SubredditNavigationDialog.Callbacks, WebViewFragment.Callbacks {
-
   void updateUserIdentity(@Nullable UserIdentity identity);
   void loadImageIntoDrawerHeader(@Nullable String url);
   void showAnalyticsRequestDialog();
@@ -37,4 +36,5 @@ public interface MainView extends AnalyticsDialog.Callbacks, ConfirmSignOutDialo
   void dismissSpinner();
   void showToast(@NonNull String msg);
   void showToast(@StringRes int resId);
+  void showError(Throwable error);
 }

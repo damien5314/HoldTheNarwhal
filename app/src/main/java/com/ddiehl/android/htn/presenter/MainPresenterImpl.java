@@ -134,6 +134,7 @@ public class MainPresenterImpl implements MainPresenter, IdentityManager.Callbac
   @Override
   public Action1<AccessToken> getUserIdentity() {
     return token -> mRedditService.getUserIdentity()
+        .doOnError(mMainView::showError)
         .doOnNext(mIdentityManager::saveUserIdentity)
         .subscribe(mMainView::updateUserIdentity);
   }
