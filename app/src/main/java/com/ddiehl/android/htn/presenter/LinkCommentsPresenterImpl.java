@@ -42,6 +42,7 @@ public class LinkCommentsPresenterImpl
 
   private RedditService mRedditService = HoldTheNarwhal.getRedditService();
   private AccessTokenManager mAccessTokenManager = HoldTheNarwhal.getAccessTokenManager();
+  private IdentityManager mIdentityManager = HoldTheNarwhal.getIdentityManager();
   private SettingsManager mSettingsManager = HoldTheNarwhal.getSettingsManager();
   private Analytics mAnalytics = HoldTheNarwhal.getAnalytics();
 
@@ -65,12 +66,15 @@ public class LinkCommentsPresenterImpl
 
   @Override
   public void onResume() {
-
+    mIdentityManager.registerUserIdentityChangeListener(this);
+    if (mCommentBank.size() == 0) {
+      requestData();
+    }
   }
 
   @Override
   public void onPause() {
-
+    mIdentityManager.unregisterUserIdentityChangeListener(this);
   }
 
   @Override

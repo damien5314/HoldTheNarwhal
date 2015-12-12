@@ -117,14 +117,12 @@ public class LinkCommentsFragment extends Fragment
   @Override
   public void onResume() {
     super.onResume();
-
-    if (mLinkCommentsAdapter.getItemCount() < 2) { // Always returns at least 1
-      mLinkCommentsPresenter.requestData();
-    }
+    mLinkCommentsPresenter.onResume();
   }
 
   @Override
   public void onPause() {
+    mLinkCommentsPresenter.onPause();
     super.onPause();
   }
 
