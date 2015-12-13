@@ -153,7 +153,7 @@ public abstract class AbsListingsFragment extends Fragment
   public void showSortOptionsMenu() {
     FragmentManager fm = getActivity().getFragmentManager();
     ChooseLinkSortDialog chooseLinkSortDialog =
-      ChooseLinkSortDialog.newInstance(mListingsPresenter.getSort());
+        ChooseLinkSortDialog.newInstance(mListingsPresenter.getSort());
     chooseLinkSortDialog.setTargetFragment(this, REQUEST_CHOOSE_SORT);
     chooseLinkSortDialog.show(fm, DIALOG_CHOOSE_SORT);
   }
@@ -162,7 +162,7 @@ public abstract class AbsListingsFragment extends Fragment
   public void showTimespanOptionsMenu() {
     FragmentManager fm = getActivity().getFragmentManager();
     ChooseTimespanDialog chooseTimespanDialog =
-      ChooseTimespanDialog.newInstance(mListingsPresenter.getTimespan());
+        ChooseTimespanDialog.newInstance(mListingsPresenter.getTimespan());
     chooseTimespanDialog.setTargetFragment(this, REQUEST_CHOOSE_TIMESPAN);
     chooseTimespanDialog.show(fm, DIALOG_CHOOSE_TIMESPAN);
   }
@@ -189,13 +189,13 @@ public abstract class AbsListingsFragment extends Fragment
   public void showLinkContextMenu(ContextMenu menu, View v, Link link) {
     getActivity().getMenuInflater().inflate(R.menu.link_context_menu, menu);
     String title = String.format(v.getContext().getString(R.string.menu_action_link),
-      link.getTitle(), link.getScore());
+        link.getTitle(), link.getScore());
     menu.setHeaderTitle(title);
     menu.findItem(R.id.action_link_hide).setVisible(!link.isHidden());
     menu.findItem(R.id.action_link_unhide).setVisible(link.isHidden());
     // Set username for listing in the user profile menu item
     String username = String.format(
-      getString(R.string.action_view_user_profile), link.getAuthor());
+        getString(R.string.action_view_user_profile), link.getAuthor());
     menu.findItem(R.id.action_link_view_user_profile).setTitle(username);
   }
 
@@ -203,14 +203,14 @@ public abstract class AbsListingsFragment extends Fragment
   public void showCommentContextMenu(ContextMenu menu, View v, Comment comment) {
     getActivity().getMenuInflater().inflate(R.menu.comment_context_menu, menu);
     String title = String.format(getString(R.string.menu_action_comment),
-      comment.getAuthor(), comment.getScore());
+        comment.getAuthor(), comment.getScore());
     menu.setHeaderTitle(title);
     if (comment.isArchived()) {
       menu.findItem(R.id.action_comment_report).setVisible(false);
     }
     // Set username for listing in the user profile menu item
     String username = String.format(
-      getString(R.string.action_view_user_profile), comment.getAuthor());
+        getString(R.string.action_view_user_profile), comment.getAuthor());
     menu.findItem(R.id.action_comment_view_user_profile).setTitle(username);
   }
 
@@ -318,18 +318,18 @@ public abstract class AbsListingsFragment extends Fragment
 
   @Override
   public void showCommentsForLink(
-    @Nullable String subreddit, @Nullable String linkId, @Nullable String commentId) {
+      @Nullable String subreddit, @Nullable String linkId, @Nullable String commentId) {
     Fragment fragment = LinkCommentsFragment.newInstance(subreddit, linkId, commentId);
     FragmentManager fm = getActivity().getFragmentManager();
     fm.beginTransaction()
-      .replace(R.id.fragment_container, fragment)
-      .addToBackStack(null)
-      .commit();
+        .replace(R.id.fragment_container, fragment)
+        .addToBackStack(null)
+        .commit();
   }
 
   @Override
   public void showCommentThread(
-    @Nullable String subreddit, @Nullable String linkId, @NonNull String commentId) {
+      @Nullable String subreddit, @Nullable String linkId, @NonNull String commentId) {
     showCommentsForLink(subreddit, linkId, commentId);
   }
 
@@ -368,7 +368,6 @@ public abstract class AbsListingsFragment extends Fragment
   @Override
   public void listingsUpdated() {
     mListingsAdapter.notifyDataSetChanged();
-//    mMainView.updateTitle();
   }
 
   @Override
