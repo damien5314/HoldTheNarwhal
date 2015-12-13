@@ -1,4 +1,4 @@
-package com.ddiehl.android.htn.logging;
+package com.ddiehl.android.dlogger;
 
 public interface Logger {
   void d(String message, Object... args);

@@ -1,5 +1,6 @@
 package com.ddiehl.android.htn.presenter;
 
+import com.ddiehl.android.dlogger.Logger;
 import com.ddiehl.android.htn.AccessTokenManager;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.IdentityManager;
@@ -8,7 +9,6 @@ import com.ddiehl.android.htn.SettingsManager;
 import com.ddiehl.android.htn.analytics.Analytics;
 import com.ddiehl.android.htn.io.RedditAuthService;
 import com.ddiehl.android.htn.io.RedditService;
-import com.ddiehl.android.htn.logging.Logger;
 import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.reddit.identity.AccessToken;
 import com.ddiehl.reddit.identity.UserIdentity;

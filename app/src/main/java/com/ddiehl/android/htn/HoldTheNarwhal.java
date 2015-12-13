@@ -3,15 +3,15 @@ package com.ddiehl.android.htn;
 import android.app.Application;
 import android.content.Context;
 
+import com.ddiehl.android.dlogger.Logger;
+import com.ddiehl.android.dlogger.NoLogger;
+import com.ddiehl.android.dlogger.TimberLogger;
 import com.ddiehl.android.htn.analytics.Analytics;
 import com.ddiehl.android.htn.analytics.FlurryAnalytics;
 import com.ddiehl.android.htn.io.RedditAuthService;
 import com.ddiehl.android.htn.io.RedditAuthServiceImpl;
 import com.ddiehl.android.htn.io.RedditService;
 import com.ddiehl.android.htn.io.RedditServiceImpl;
-import com.ddiehl.android.htn.logging.Logger;
-import com.ddiehl.android.htn.logging.NoLogger;
-import com.ddiehl.android.htn.logging.TimberLogger;
 import com.facebook.stetho.Stetho;
 import com.squareup.leakcanary.LeakCanary;
 

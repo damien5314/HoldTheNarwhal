@@ -5,13 +5,13 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
+import com.ddiehl.android.dlogger.Logger;
 import com.ddiehl.android.htn.AccessTokenManager;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.analytics.Analytics;
 import com.ddiehl.android.htn.io.interceptors.AuthorizationInterceptor;
 import com.ddiehl.android.htn.io.interceptors.LoggingInterceptor;
 import com.ddiehl.android.htn.io.interceptors.RawResponseInterceptor;
-import com.ddiehl.android.htn.logging.Logger;
 import com.ddiehl.reddit.Hideable;
 import com.ddiehl.reddit.Savable;
 import com.ddiehl.reddit.Votable;

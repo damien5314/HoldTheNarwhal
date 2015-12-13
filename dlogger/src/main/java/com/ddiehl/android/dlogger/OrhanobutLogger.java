@@ -1,6 +1,7 @@
-package com.ddiehl.android.htn.logging;
+package com.ddiehl.android.dlogger;
 
-import com.orhanobut.logger.*;
+import com.ddiehl.android.sampleapp.dlogger.BuildConfig;
+import com.orhanobut.logger.LogLevel;
 
 public class OrhanobutLogger implements Logger {
   public static final String TAG = "HTN";
@@ -9,7 +10,7 @@ public class OrhanobutLogger implements Logger {
     com.orhanobut.logger.Logger.init(TAG)
         .hideThreadInfo()
         .setMethodCount(0)
-        .setLogLevel(com.ddiehl.android.htn.BuildConfig.DEBUG ? LogLevel.FULL : LogLevel.NONE);
+        .setLogLevel(BuildConfig.DEBUG ? LogLevel.FULL : LogLevel.NONE);
   }
 
   @Override

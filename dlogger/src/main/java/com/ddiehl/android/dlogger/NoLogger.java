@@ -1,4 +1,4 @@
-package com.ddiehl.android.htn.logging;
+package com.ddiehl.android.dlogger;
 
 public class NoLogger implements Logger {
   @Override public void d(String message, Object... args) { /* no-op */ }

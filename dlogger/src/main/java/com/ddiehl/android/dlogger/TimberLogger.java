@@ -1,4 +1,4 @@
-package com.ddiehl.android.htn.logging;
+package com.ddiehl.android.dlogger;
 
 import timber.log.Timber;
 

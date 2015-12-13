@@ -3,8 +3,8 @@ package com.ddiehl.android.htn;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.ddiehl.android.dlogger.Logger;
 import com.ddiehl.android.htn.io.RedditAuthService;
-import com.ddiehl.android.htn.logging.Logger;
 import com.ddiehl.reddit.identity.AccessToken;
 import com.ddiehl.reddit.identity.ApplicationAccessToken;
 import com.ddiehl.reddit.identity.UserAccessToken;

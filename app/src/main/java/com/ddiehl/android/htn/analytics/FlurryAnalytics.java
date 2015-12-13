@@ -5,10 +5,10 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.ddiehl.android.dlogger.Logger;
 import com.ddiehl.android.htn.BuildConfig;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.SettingsManager;
-import com.ddiehl.android.htn.logging.Logger;
 import com.ddiehl.android.htn.utils.BaseUtils;
 import com.ddiehl.reddit.identity.UserIdentity;
 import com.ddiehl.reddit.listings.Link;

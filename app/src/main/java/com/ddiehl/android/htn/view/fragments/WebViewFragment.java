@@ -21,11 +21,11 @@ import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 import android.widget.ZoomButtonsController;
 
+import com.ddiehl.android.dlogger.Logger;
 import com.ddiehl.android.htn.BuildConfig;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.io.RedditAuthService;
-import com.ddiehl.android.htn.logging.Logger;
 import com.ddiehl.android.htn.utils.AuthUtils;
 import com.ddiehl.android.htn.utils.BaseUtils;
 import com.ddiehl.android.htn.view.MainView;
@@ -38,7 +38,6 @@ public class WebViewFragment extends Fragment {
   private static final String ARG_URL = "url";
 
   private Logger mLogger = HoldTheNarwhal.getLogger();
-//  private Bus mBus = BusProvider.getInstance();
   private MainView mMainView;
   private String mUrl;
 
