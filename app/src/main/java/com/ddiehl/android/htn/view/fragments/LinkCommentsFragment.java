@@ -355,12 +355,12 @@ public class LinkCommentsFragment extends Fragment
 
   @Override
   public void openLinkInWebView(@NonNull Link link) {
-    ((_MainActivity) getActivity()).openURL(link.getUrl());
+    ((MainView) getActivity()).openURL(link.getUrl());
   }
 
   @Override
-  public void showCommentsForLink(@Nullable String subreddit, @Nullable String linkId,
-                  @Nullable String commentId) {
+  public void showCommentsForLink(
+      @Nullable String subreddit, @Nullable String linkId, @Nullable String commentId) {
     Fragment f = LinkCommentsFragment.newInstance(subreddit, linkId, commentId);
     getFragmentManager().beginTransaction()
         .replace(R.id.fragment_container, f)
@@ -375,22 +375,9 @@ public class LinkCommentsFragment extends Fragment
 
   @Override
   public void onRefresh() {
+    mSwipeRefreshLayout.setRefreshing(false);
+//    mSwipeRefreshLayout.post(() -> mSwipeRefreshLayout.setRefreshing(false));
     mLinkCommentsPresenter.requestData();
     mAnalytics.logOptionRefresh();
   }
-
-//  @Override
-//  public void showSpinner(String msg) {
-//    mSwipeRefreshLayout.post(() -> mSwipeRefreshLayout.setRefreshing(true));
-//  }
-//
-//  @Override
-//  public void showSpinner(int resId) {
-//    this.showSpinner(getString(resId));
-//  }
-//
-//  @Override
-//  public void dismissSpinner() {
-//    mSwipeRefreshLayout.setRefreshing(false);
-//  }
 }

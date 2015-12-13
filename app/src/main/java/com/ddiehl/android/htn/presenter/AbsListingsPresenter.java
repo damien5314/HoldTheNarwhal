@@ -179,8 +179,8 @@ public abstract class AbsListingsPresenter
   }
 
   @Override
-  public void showLinkContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo,
-                  Link link) {
+  public void showLinkContextMenu(
+      ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, Link link) {
     mListingSelected = link;
     mListingsView.showLinkContextMenu(menu, v, link);
     menu.findItem(R.id.action_link_save).setVisible(!link.isSaved());
@@ -311,8 +311,8 @@ public abstract class AbsListingsPresenter
   }
 
   @Override
-  public void showCommentContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo,
-                     Comment comment) {
+  public void showCommentContextMenu(
+      ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, Comment comment) {
     mListingSelected = comment;
     mListingsView.showCommentContextMenu(menu, v, comment);
     menu.findItem(R.id.action_comment_save).setVisible(!comment.isSaved());

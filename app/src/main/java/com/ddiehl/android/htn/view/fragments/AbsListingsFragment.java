@@ -313,7 +313,7 @@ public abstract class AbsListingsFragment extends Fragment
   @Override
   public void openLinkInWebView(@NonNull Link link) {
     mAnalytics.logOpenLink(link);
-    ((_MainActivity) getActivity()).openURL(link.getUrl());
+    ((MainView) getActivity()).openURL(link.getUrl());
   }
 
   @Override
@@ -382,22 +382,9 @@ public abstract class AbsListingsFragment extends Fragment
 
   @Override
   public void onRefresh() {
+    mSwipeRefreshLayout.setRefreshing(false);
+//    mSwipeRefreshLayout.post(() -> mSwipeRefreshLayout.setRefreshing(false));
     mListingsPresenter.refreshData();
     mAnalytics.logOptionRefresh();
   }
-
-//  @Override
-//  public void showSpinner(String msg) {
-//    mSwipeRefreshLayout.post(() -> mSwipeRefreshLayout.setRefreshing(true));
-//  }
-//
-//  @Override
-//  public void showSpinner(int resId) {
-//    mSwipeRefreshLayout.post(() -> mSwipeRefreshLayout.setRefreshing(true));
-//  }
-//
-//  @Override
-//  public void dismissSpinner() {
-//    mSwipeRefreshLayout.setRefreshing(false);
-//  }
 }
