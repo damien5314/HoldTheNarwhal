@@ -336,6 +336,11 @@ public class LinkCommentsPresenterImpl
   }
 
   @Override
+  public void onCommentEntered(@NonNull String parentId, @NonNull String commentText) {
+    // TODO API call to add comment
+  }
+
+  @Override
   public void upvoteComment() {
     Votable votable = (Votable) mListingSelected;
     int dir = (votable.isLiked() == null || !votable.isLiked()) ? 1 : 0;
