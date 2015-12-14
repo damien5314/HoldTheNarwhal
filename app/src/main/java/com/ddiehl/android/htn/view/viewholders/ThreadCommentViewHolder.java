@@ -22,7 +22,6 @@ import butterknife.OnClick;
 
 public class ThreadCommentViewHolder extends RecyclerView.ViewHolder
     implements View.OnCreateContextMenuListener {
-
   private Context mContext;
   private CommentPresenter mCommentPresenter;
   private Comment mComment;

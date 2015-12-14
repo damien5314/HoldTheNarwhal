@@ -214,4 +214,7 @@
   <string name="pref_allow_analytics">allow collection of usage data</string>
   <string name="pref_use_custom_tabs">use Chrome tabs to view links</string>
 
+  <string name="comment_edit_text_hint">markdown supported</string>
+  <string name="comment_add_submit">submit</string>
+
 </resources>

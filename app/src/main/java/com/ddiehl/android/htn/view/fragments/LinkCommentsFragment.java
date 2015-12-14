@@ -27,6 +27,7 @@ import com.ddiehl.android.htn.presenter.LinkCommentsPresenterImpl;
 import com.ddiehl.android.htn.view.LinkCommentsView;
 import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.android.htn.view.adapters.LinkCommentsAdapter;
+import com.ddiehl.android.htn.view.dialogs.AddCommentDialog;
 import com.ddiehl.android.htn.view.dialogs.ChooseCommentSortDialog;
 import com.ddiehl.reddit.listings.Comment;
 import com.ddiehl.reddit.listings.Link;
@@ -41,6 +42,7 @@ public class LinkCommentsFragment extends Fragment
 
   private static final int REQUEST_CHOOSE_SORT = 0;
   private static final String DIALOG_CHOOSE_SORT = "dialog_choose_sort";
+  private static final String DIALOG_ADD_COMMENT = "add_comment_dialog";
 
   private Analytics mAnalytics = HoldTheNarwhal.getAnalytics();
   private MainView mMainView;
@@ -370,7 +372,8 @@ public class LinkCommentsFragment extends Fragment
 
   @Override
   public void openReplyView(@NonNull Comment comment) {
-    mMainView.showToast(R.string.implementation_pending);
+    AddCommentDialog dialog = new AddCommentDialog();
+    dialog.show(getFragmentManager(), DIALOG_ADD_COMMENT);
   }
 
   @Override
