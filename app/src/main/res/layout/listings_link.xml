@@ -149,8 +149,6 @@
             android:id="@+id/link_saved_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
             android:layout_gravity="center_vertical"
             android:src="@drawable/ic_saved"/>
 
@@ -158,8 +156,6 @@
             android:id="@+id/link_stickied_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toStartOf="@id/link_saved_view"
-            android:layout_toLeftOf="@id/link_saved_view"
             android:src="@drawable/ic_stickied"/>
 
         </LinearLayout>
