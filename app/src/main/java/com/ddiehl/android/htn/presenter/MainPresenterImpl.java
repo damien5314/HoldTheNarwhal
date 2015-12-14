@@ -113,11 +113,10 @@ public class MainPresenterImpl implements MainPresenter, IdentityManager.Callbac
 
   @Override
   public void onAuthCodeReceived(String authCode) {
-//    mIdentityManager.clearSavedUserIdentity();
     String grantType = "authorization_code";
     mRedditAuthService.getUserAccessToken(grantType, authCode, RedditAuthService.REDIRECT_URI)
         .doOnNext(mAccessTokenManager.saveUserAccessToken())
-        .subscribe(getUserIdentity());
+        .subscribe(getUserIdentity(), error -> mMainView.showToast(R.string.error_authentication));
   }
 
   @Override

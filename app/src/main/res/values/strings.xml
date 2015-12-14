@@ -127,6 +127,7 @@
   <string name="error_500">reddit is experiencing issues, try again later</string>
   <string name="error_503">reddit is unavailable, try again soon</string>
   <string name="error_520">reddit is in maintenance</string>
+  <string name="error_authentication">error during authentication</string>
 
   <!-- Miscellaneous -->
   <string name="username">/u/%s</string>

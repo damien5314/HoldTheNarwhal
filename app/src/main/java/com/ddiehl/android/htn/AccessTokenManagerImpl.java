@@ -192,8 +192,9 @@ public class AccessTokenManagerImpl implements AccessTokenManager {
     AccessToken token = getSavedUserAccessToken();
     if (token != null) {
       mServiceAuth.revokeAuthToken(token)
-//          .doOnRequest(response -> mIdentityManager.clearSavedUserIdentity())
-          .subscribe();
+          .subscribe(r -> {
+          }, e -> {
+          });
     }
     mContext.getSharedPreferences(PREFS_USER_ACCESS_TOKEN, Context.MODE_PRIVATE)
         .edit().clear().apply();
