@@ -83,8 +83,7 @@ public class LinkCommentsPresenterImpl
     mMainView.showSpinner(null);
     mRedditService.loadLinkComments(mSubreddit, mLinkId, mSort, mCommentId)
         .doOnTerminate(mMainView::dismissSpinner)
-        .doOnError(mMainView::showError)
-        .subscribe(showLinkComments);
+        .subscribe(showLinkComments, mMainView::showError);
     mAnalytics.logLoadLinkComments(mSort);
   }
 
@@ -117,8 +116,7 @@ public class LinkCommentsPresenterImpl
     children = children.subList(0, Math.min(MAX_CHILDREN_PER_REQUEST, children.size()));
     mRedditService.loadMoreChildren(mLinkContext, parentStub, children, mSort)
         .doOnTerminate(mMainView::dismissSpinner)
-        .doOnError(mMainView::showError)
-        .subscribe(showMoreComments(parentStub));
+        .subscribe(showMoreComments(parentStub), mMainView::showError);
     mAnalytics.logLoadMoreChildren(mSort);
   }
 
@@ -289,11 +287,9 @@ public class LinkCommentsPresenterImpl
 
   private void hideLink(boolean toHide) {
     mRedditService.hide(mLinkContext, toHide)
-        .doOnError(error -> mMainView.showToast(R.string.hide_failed))
-        .doOnNext(response -> {
+        .subscribe(response -> {
           if (toHide) mMainView.showToast(R.string.link_hidden);
-        })
-        .subscribe();
+        }, error -> mMainView.showToast(R.string.hide_failed));
   }
 
   @Override
@@ -425,24 +421,22 @@ public class LinkCommentsPresenterImpl
     } else {
       Votable votable = (Votable) listing;
       mRedditService.vote(votable, direction)
-          .doOnError(error -> mMainView.showToast(R.string.vote_failed))
           .subscribe(response -> {
             votable.applyVote(direction);
             if (listing instanceof Link) {
               mLinkCommentsView.linkUpdated();
             } else {
-              mLinkCommentsView.commentUpdatedAt(
-                  mCommentBank.visibleIndexOf(((AbsComment) listing)));
+              int index = mCommentBank.visibleIndexOf(((AbsComment) listing));
+              mLinkCommentsView.commentUpdatedAt(index);
             }
-          });
+          }, error -> mMainView.showToast(R.string.vote_failed));
       mAnalytics.logVote(votable.getKind(), direction);
     }
   }
 
   private void save(Savable savable, boolean toSave) {
     mRedditService.save(savable, null, toSave)
-        .doOnError(error -> mMainView.showToast(R.string.save_failed))
-        .doOnNext(response -> {
+        .subscribe(response -> {
           savable.isSaved(toSave);
           if (savable instanceof Link) {
             mLinkCommentsView.linkUpdated();
@@ -450,7 +444,6 @@ public class LinkCommentsPresenterImpl
             mLinkCommentsView.commentUpdatedAt(
                 mCommentBank.visibleIndexOf(((AbsComment) savable)));
           }
-        })
-        .subscribe();
+        }, error -> mMainView.showToast(R.string.save_failed));
   }
 }

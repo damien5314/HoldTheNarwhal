@@ -22,13 +22,13 @@ public class SubredditPresenter extends AbsListingsPresenter {
     if (mSubreddit == null || mSubreddit.equals("all") || mSubredditInfo != null) {
       mAnalytics.logLoadSubreddit(mSubreddit, mSort, mTimespan);
       mRedditService.loadLinks(mSubreddit, mSort, mTimespan, mNextPageListingId)
-          .doOnError(mMainView::showError)
-          .subscribe(onListingsLoaded());
+          .doOnTerminate(mMainView::dismissSpinner)
+          .subscribe(onListingsLoaded(), mMainView::showError);
     } else {
       mListingsRequested = false;
       mRedditService.getSubredditInfo(mSubreddit)
-          .doOnError(mMainView::showError)
-          .subscribe(onSubredditInfoLoaded());
+          .doOnTerminate(mMainView::dismissSpinner)
+          .subscribe(onSubredditInfoLoaded(), mMainView::showError);
     }
   }
 

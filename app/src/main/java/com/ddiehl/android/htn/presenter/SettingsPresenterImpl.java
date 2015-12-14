@@ -60,9 +60,8 @@ public class SettingsPresenterImpl implements SettingsPresenter, IdentityManager
     mMainView.showSpinner(null);
     mRedditService.getUserSettings()
         .doOnTerminate(mMainView::dismissSpinner)
-        .doOnError(mMainView::showError)
         .doOnNext(mSettingsManager::saveUserSettings)
-        .subscribe(settings -> refresh(false));
+        .subscribe(settings -> refresh(false), mMainView::showError);
   }
 
   @Override

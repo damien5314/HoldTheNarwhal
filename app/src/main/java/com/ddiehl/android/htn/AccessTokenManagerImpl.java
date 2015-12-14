@@ -45,12 +45,10 @@ public class AccessTokenManagerImpl implements AccessTokenManager {
     if (token != null && token.secondsUntilExpiration() > EXPIRATION_THRESHOLD) {
       return token.getToken();
     }
-
     token = getSavedApplicationAccessToken();
     if (token != null && token.secondsUntilExpiration() > EXPIRATION_THRESHOLD) {
       return token.getToken();
     }
-
     return null;
   }
 
@@ -61,7 +59,8 @@ public class AccessTokenManagerImpl implements AccessTokenManager {
 
   @Override
   public Observable<AccessToken> getAccessToken() {
-    return mGetUserAccessToken.map(userAccessToken -> (AccessToken) userAccessToken)
+    return getUserAccessToken()
+        .map(userAccessToken -> (AccessToken) userAccessToken)
         .onErrorResumeNext(mGetApplicationAccessToken);
   }
 
@@ -88,15 +87,16 @@ public class AccessTokenManagerImpl implements AccessTokenManager {
         }
       };
 
-  private Observable<UserAccessToken> mGetUserAccessToken = Observable.create(subscriber -> {
-    UserAccessToken token = getSavedUserAccessToken();
-    if (token == null) {
-      subscriber.onError(new RuntimeException("No user access token available"));
-    } else {
-      refreshUserAccessToken.call(token)
-          .subscribe(subscriber::onNext, subscriber::onError, subscriber::onCompleted);
-    }
-  });
+  private Observable<UserAccessToken> mGetUserAccessToken =
+      Observable.create(subscriber -> {
+        UserAccessToken token = getSavedUserAccessToken();
+        if (token == null) {
+          subscriber.onError(new RuntimeException("No user access token available"));
+        } else {
+          refreshUserAccessToken.call(token)
+              .subscribe(subscriber::onNext, subscriber::onError, subscriber::onCompleted);
+        }
+      });
 
   private Observable<ApplicationAccessToken> mGetApplicationAccessToken =
       Observable.create(subscriber -> {

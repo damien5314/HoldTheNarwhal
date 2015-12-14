@@ -471,12 +471,10 @@ public abstract class AbsListingsPresenter
     } else {
       Votable votable = (Votable) listing;
       mRedditService.vote(votable, direction)
-          .doOnError(error -> mMainView.showToast(R.string.vote_failed))
-          .doOnNext(response -> {
+          .subscribe(response -> {
             votable.applyVote(direction);
             mListingsView.listingUpdatedAt(mListings.indexOf(listing));
-          })
-          .subscribe();
+          }, error -> mMainView.showToast(R.string.vote_failed));
       mAnalytics.logVote(votable.getKind(), direction);
     }
   }
@@ -484,19 +482,16 @@ public abstract class AbsListingsPresenter
   private void save(Savable savable, boolean toSave) {
     Listing listing = mListingSelected;
     mRedditService.save(savable, null, toSave)
-        .doOnError(error -> mMainView.showToast(R.string.save_failed))
-        .doOnNext(response -> {
+        .subscribe(response -> {
           savable.isSaved(toSave);
           mListingsView.listingUpdatedAt(mListings.indexOf(listing));
-        })
-        .subscribe();
+        }, error -> mMainView.showToast(R.string.save_failed));
   }
 
   private void hide(Hideable hideable, boolean toHide) {
     Listing listing = mListingSelected;
     mRedditService.hide(hideable, toHide)
-        .doOnError(error -> mMainView.showToast(R.string.hide_failed))
-        .doOnNext(response -> {
+        .subscribe(response -> {
           int pos = mListings.indexOf(listing);
           if (toHide) {
             mMainView.showToast(R.string.link_hidden);
@@ -505,8 +500,7 @@ public abstract class AbsListingsPresenter
           } else {
             mListingsView.listingRemovedAt(pos);
           }
-        })
-        .subscribe();
+        }, error -> mMainView.showToast(R.string.hide_failed));
   }
 
   @Override

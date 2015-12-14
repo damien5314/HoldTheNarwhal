@@ -3,7 +3,6 @@ package com.ddiehl.android.htn.presenter;
 import android.support.annotation.NonNull;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
-import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.view.ListingsView;
 import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.android.htn.view.UserProfileView;
@@ -38,25 +37,22 @@ public class UserProfilePresenter extends AbsListingsPresenter {
           mMainView.dismissSpinner();
           mListingsRequested = false; // FIXME Why does this not get set like the other views?
         })
-        .doOnError(mMainView::showError)
         .doOnNext(getFriendInfo())
-        .subscribe(mSummaryView::showUserInfo);
+        .subscribe(mSummaryView::showUserInfo, mMainView::showError);
     mRedditService.getUserTrophies(mUsernameContext)
-        .doOnError(mMainView::showError)
-        .subscribe(mSummaryView::showTrophies);
+        .subscribe(mSummaryView::showTrophies, mMainView::showError);
   }
 
   private Action1<UserIdentity> getFriendInfo() {
     return user -> {
       if (user.isFriend()) {
         mRedditService.getFriendInfo(user.getName())
-            .doOnError(mMainView::showError)
             .subscribe(response -> {
               UserIdentity self = HoldTheNarwhal.getIdentityManager().getUserIdentity();
               if (self != null && self.isGold()) {
                 mSummaryView.showFriendNote(response.getNote());
               }
-            });
+            }, mMainView::showError);
       }
     };
   }
@@ -71,17 +67,16 @@ public class UserProfilePresenter extends AbsListingsPresenter {
           if (self != null && self.isGold()) {
             mSummaryView.showFriendNote("");
           }
-        });
+        }, mMainView::showError);
   }
 
   public void deleteFriend() {
     mRedditService.deleteFriend(mUsernameContext)
         .doOnTerminate(mMainView::dismissSpinner)
-        .doOnError(mMainView::showError)
         .subscribe(response -> {
           mSummaryView.setFriendButtonState(false);
           mSummaryView.hideFriendNote();
-        });
+        }, mMainView::showError);
   }
 
   // Note must be non-empty for a positive response (API bug?)
@@ -89,14 +84,14 @@ public class UserProfilePresenter extends AbsListingsPresenter {
     mRedditService.saveFriendNote(mUsernameContext, note)
         .doOnTerminate(mMainView::dismissSpinner)
         .doOnError(mMainView::showError)
-        .subscribe(response -> {},
-            error -> mMainView.showToast(R.string.user_friend_add_error));
+        .subscribe(r -> {
+        }, mMainView::showError);
+//            error -> mMainView.showToast(R.string.user_friend_add_error));
   }
 
   private void getListingData() {
     mRedditService.loadUserProfile(mShow, mUsernameContext, mSort, mTimespan, mNextPageListingId)
-        .doOnError(mMainView::showError)
-        .subscribe(onListingsLoaded());
+        .subscribe(onListingsLoaded(), mMainView::showError);
   }
 
   public void requestData(String show) {

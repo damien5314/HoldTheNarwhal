@@ -42,6 +42,8 @@ import com.ddiehl.android.htn.view.dialogs.SubredditNavigationDialog;
 import com.ddiehl.reddit.identity.UserIdentity;
 import com.squareup.picasso.Picasso;
 
+import java.net.UnknownHostException;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -354,7 +356,11 @@ public class _MainActivity extends AppCompatActivity implements MainView,
 
   @Override
   public void showError(Throwable error) {
-    showToast(error.getMessage());
+    String message = error.getMessage();
+    if (error instanceof UnknownHostException) {
+      message = getString(R.string.error_network_unavailable);
+    }
+    showToast(message);
   }
 
   private void showSubredditNavigationDialog() {
