@@ -10,6 +10,7 @@ import com.ddiehl.reddit.Votable;
 import com.ddiehl.reddit.identity.FriendInfo;
 import com.ddiehl.reddit.identity.UserIdentity;
 import com.ddiehl.reddit.identity.UserSettings;
+import com.ddiehl.reddit.listings.Comment;
 import com.ddiehl.reddit.listings.CommentStub;
 import com.ddiehl.reddit.listings.Link;
 import com.ddiehl.reddit.listings.Listing;
@@ -57,5 +58,5 @@ public interface RedditService {
   Observable<ResponseBody> save(@NonNull Savable listing, @Nullable String category, boolean save);
   Observable<ResponseBody> hide(@NonNull Hideable listing, boolean toHide);
   Observable<ResponseBody> report(@NonNull String id, @NonNull String reason);
-  Observable<ResponseBody> addComment(@NonNull String parentId, @NonNull String text);
+  Observable<Comment> addComment(@NonNull String parentId, @NonNull String text);
 }

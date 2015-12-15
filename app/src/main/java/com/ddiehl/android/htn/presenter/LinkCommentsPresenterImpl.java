@@ -343,13 +343,13 @@ public class LinkCommentsPresenterImpl
   @Override
   public void onCommentSubmitted(@NonNull String parentId, @NonNull String commentText) {
     mRedditService.addComment(parentId, commentText)
-        .subscribe(response -> {
+        .subscribe(comment -> {
           mMainView.showToast("Comment successful");
-          Comment newComment = new Comment();
-          newComment.applyVote(1);
-          newComment.setAuthor(HoldTheNarwhal.getIdentityManager().getUserIdentity().getName());
-          int position = mCommentBank.indexOf((Comment) mListingSelected) + 1;
-          mCommentBank.add(position, newComment);
+          int position;
+          if (parentId.startsWith("t1_")) { // Comment
+            position = mCommentBank.indexOf((Comment) mListingSelected) + 1;
+          } else position = 0;
+          mCommentBank.add(position, comment);
           mLinkCommentsView.commentAddedAt(position);
         }, mMainView::showError);
   }

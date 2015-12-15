@@ -25,6 +25,7 @@ import com.ddiehl.reddit.identity.UserAccessToken;
 import com.ddiehl.reddit.identity.UserIdentity;
 import com.ddiehl.reddit.identity.UserSettings;
 import com.ddiehl.reddit.listings.AbsComment;
+import com.ddiehl.reddit.listings.Comment;
 import com.ddiehl.reddit.listings.CommentStub;
 import com.ddiehl.reddit.listings.Link;
 import com.ddiehl.reddit.listings.Listing;
@@ -309,13 +310,13 @@ public class RedditServiceImpl implements RedditService {
   }
 
   @Override
-  public Observable<ResponseBody> addComment(@NonNull String parentId, @NonNull String text) {
+  public Observable<Comment> addComment(@NonNull String parentId, @NonNull String text) {
 //    String fullname = String.format("%1$s_%2$s", listing.getKind(), listing.getId());
     return requireUserAccessToken().flatMap(token ->
         mAPI.addComment(parentId, text)
             .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .map(Response::body)
+            .map(response -> response.body().getComment())
     );
   }
 

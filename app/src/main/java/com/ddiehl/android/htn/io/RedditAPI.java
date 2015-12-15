@@ -3,6 +3,7 @@ package com.ddiehl.android.htn.io;
 import com.ddiehl.reddit.identity.FriendInfo;
 import com.ddiehl.reddit.identity.UserIdentity;
 import com.ddiehl.reddit.identity.UserSettings;
+import com.ddiehl.reddit.listings.AddCommentResponse;
 import com.ddiehl.reddit.listings.ListingResponse;
 import com.ddiehl.reddit.listings.MoreChildrenResponse;
 import com.ddiehl.reddit.listings.Subreddit;
@@ -115,8 +116,8 @@ public interface RedditAPI {
       @Query("reason") String reason,
       @Query("otherReason") String otherReason);
 
-  @POST("/api/comment")
-  Observable<Response<ResponseBody>> addComment(
+  @POST("/api/comment?api_type=json")
+  Observable<Response<AddCommentResponse>> addComment(
       @Query("parent") String parentId,
       @Query("text") String commentText);
 
