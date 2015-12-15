@@ -46,13 +46,19 @@
   <string name="user_profile_summary_created">redditor since %s</string>
   <string name="user_link_score">link score</string>
   <string name="user_comment_score">comment score</string>
-  <string name="user_note_label">note</string>
-  <string name="user_note_hint">likes pictures of cats</string>
-  <string name="user_friend_note_confirm_button">save</string>
   <string name="user_trophies_label">trophies</string>
+  <string name="user_friend_note_label">note</string>
+  <string name="user_friend_note_hint">likes pictures of cats</string>
+  <string name="user_friend_empty_note">friend note cannot be empty</string>
+  <string name="user_friend_note_save_button">save</string>
+  <string name="user_friend_note_save_confirm">friend note saved</string>
+  <string name="user_friend_note_save_error">error saving friend note</string>
   <string name="user_friend_add_button_text">add to friends</string>
+  <string name="user_friend_add_confirm">user added to friends</string>
+  <string name="user_friend_add_error">error adding to friends</string>
   <string name="user_friend_delete_button_text">remove from friends</string>
-  <string name="user_friend_add_error">friend note cannot be empty</string>
+  <string name="user_friend_delete_confirm">user removed from friends</string>
+  <string name="user_friend_delete_error">error removing friend</string>
 
   <!-- Ads -->
   <string name="advertisement">advertisement</string>

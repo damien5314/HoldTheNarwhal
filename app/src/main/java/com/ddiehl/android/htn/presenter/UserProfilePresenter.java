@@ -1,8 +1,10 @@
 package com.ddiehl.android.htn.presenter;
 
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
+import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.view.ListingsView;
 import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.android.htn.view.UserProfileView;
@@ -35,7 +37,7 @@ public class UserProfilePresenter extends AbsListingsPresenter {
     mRedditService.getUserInfo(mUsernameContext)
         .doOnTerminate(() -> {
           mMainView.dismissSpinner();
-          mListingsRequested = false; // FIXME Why does this not get set like the other views?
+          mListingsRequested = false;
         })
         .doOnNext(getFriendInfo())
         .subscribe(mSummaryView::showUserInfo, mMainView::showError);
@@ -66,7 +68,8 @@ public class UserProfilePresenter extends AbsListingsPresenter {
           if (self != null && self.isGold()) {
             mSummaryView.showFriendNote("");
           }
-        }, mMainView::showError);
+          mMainView.showToast(R.string.user_friend_add_confirm);
+        }, e -> mMainView.showToast(R.string.user_friend_add_error));
   }
 
   public void deleteFriend() {
@@ -75,17 +78,20 @@ public class UserProfilePresenter extends AbsListingsPresenter {
         .subscribe(response -> {
           mSummaryView.setFriendButtonState(false);
           mSummaryView.hideFriendNote();
-        }, mMainView::showError);
+          mMainView.showToast(R.string.user_friend_delete_confirm);
+        }, e -> mMainView.showToast(R.string.user_friend_delete_error));
   }
 
-  // Note must be non-empty for a positive response (API bug?)
   public void saveFriendNote(@NonNull String note) {
-    mRedditService.saveFriendNote(mUsernameContext, note)
-        .doOnTerminate(mMainView::dismissSpinner)
-        .doOnError(mMainView::showError)
-        .subscribe(r -> {
-        }, mMainView::showError);
-//            error -> mMainView.showToast(R.string.user_friend_add_error));
+    // Note must be non-empty for a positive response
+    if (TextUtils.isEmpty(note)) mMainView.showToast(R.string.user_friend_empty_note);
+    else {
+      mMainView.showSpinner(null);
+      mRedditService.saveFriendNote(mUsernameContext, note)
+          .doOnTerminate(mMainView::dismissSpinner)
+          .subscribe(r -> mMainView.showToast(R.string.user_friend_note_save_confirm),
+              e -> mMainView.showToast(R.string.user_friend_note_save_error));
+    }
   }
 
   private void getListingData() {

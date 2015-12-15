@@ -116,7 +116,7 @@
         android:layout_height="wrap_content"
         android:textSize="@dimen/user_note_label_text_size"
         android:textColor="@color/secondary_text"
-        android:text="@string/user_note_label"/>
+        android:text="@string/user_friend_note_label"/>
 
       <LinearLayout
         android:orientation="horizontal"
@@ -136,7 +136,7 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_gravity="center_vertical"
-          android:text="@string/user_friend_note_confirm_button"/>
+          android:text="@string/user_friend_note_save_button"/>
 
       </LinearLayout>
 
