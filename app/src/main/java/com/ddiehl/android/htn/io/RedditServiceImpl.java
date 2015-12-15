@@ -74,6 +74,7 @@ public class RedditServiceImpl implements RedditService {
 
     Gson gson = new GsonBuilder()
         .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+        .excludeFieldsWithoutExposeAnnotation()
         .registerTypeAdapter(ListingResponse.class, new ListingResponseDeserializer())
         .registerTypeAdapter(Listing.class, new ListingDeserializer())
         .registerTypeAdapter(AbsComment.class, new AbsCommentDeserializer())
