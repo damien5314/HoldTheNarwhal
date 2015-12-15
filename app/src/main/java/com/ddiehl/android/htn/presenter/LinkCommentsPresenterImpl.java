@@ -338,8 +338,13 @@ public class LinkCommentsPresenterImpl
   @Override
   public void onCommentEntered(@NonNull String commentText) {
     mRedditService.addComment(mListingSelected, commentText)
-        .subscribe(r -> mMainView.showToast("Comment successful"),
-            mMainView::showError);
+        .subscribe(response -> {
+          mMainView.showToast("Comment successful");
+          Comment newComment = new Comment();
+          newComment.applyVote(1);
+          newComment.setAuthor(HoldTheNarwhal.getIdentityManager().getUserIdentity().getName());
+          mCommentBank.add(mCommentBank.indexOf((Comment) mListingSelected)+1, newComment);
+        }, mMainView::showError);
   }
 
   @Override

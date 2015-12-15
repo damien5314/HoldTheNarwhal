@@ -360,7 +360,7 @@ public class _MainActivity extends AppCompatActivity implements MainView,
     if (error instanceof UnknownHostException) {
       message = getString(R.string.error_network_unavailable);
     }
-    showToast(message);
+    Snackbar.make(mDrawerLayout, message, Snackbar.LENGTH_LONG).show();
   }
 
   private void showSubredditNavigationDialog() {

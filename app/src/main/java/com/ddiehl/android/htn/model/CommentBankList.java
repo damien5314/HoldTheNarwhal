@@ -12,13 +12,24 @@ import java.util.Collection;
 import java.util.List;
 
 public class CommentBankList implements CommentBank {
-
   private List<Listing> mData;
   private List<Listing> mVisibleData;
 
   public CommentBankList() {
     mData = new ArrayList<>();
     mVisibleData = new ArrayList<>();
+  }
+
+  @Override
+  public void add(AbsComment comment) {
+    mData.add(comment);
+    syncVisibleData();
+  }
+
+  @Override
+  public void add(int index, AbsComment comment) {
+    mData.add(index, comment);
+    syncVisibleData();
   }
 
   @Override

@@ -10,7 +10,8 @@ import java.util.Collection;
 import java.util.List;
 
 public interface CommentBank {
-
+  void add(AbsComment comment);
+  void add(int index, AbsComment comment);
   boolean addAll(Collection<Listing> collection);
   boolean addAll(int index, Collection<Listing> collection);
   int indexOf(AbsComment obj);

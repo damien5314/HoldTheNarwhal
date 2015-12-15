@@ -90,6 +90,18 @@ public class Comment extends AbsComment<Comment.Data> implements Votable, Savabl
     return data.author;
   }
 
+  public void setAuthor(String author) {
+    data.author = author;
+  }
+
+  public String getAuthorFlairCssClass() {
+    return data.AuthorFlairCssClass;
+  }
+
+  public String getAuthorFlairText() {
+    return data.authorFlairText;
+  }
+
   public int getScore() {
     return data.score;
   }
@@ -110,10 +122,6 @@ public class Comment extends AbsComment<Comment.Data> implements Votable, Savabl
     return data.edited;
   }
 
-  public String getAuthorFlairCssClass() {
-    return data.AuthorFlairCssClass;
-  }
-
   public int getDowns() {
     return data.downs;
   }
@@ -132,10 +140,6 @@ public class Comment extends AbsComment<Comment.Data> implements Votable, Savabl
 
   public double getCreated() {
     return data.created;
-  }
-
-  public String getAuthorFlairText() {
-    return data.authorFlairText;
   }
 
   public Double getCreateUtc() {
