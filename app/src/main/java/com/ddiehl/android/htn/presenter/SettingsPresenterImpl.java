@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import com.ddiehl.android.htn.AccessTokenManager;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.IdentityManager;
+import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.SettingsManager;
 import com.ddiehl.android.htn.io.RedditService;
 import com.ddiehl.android.htn.view.MainView;
@@ -61,7 +62,8 @@ public class SettingsPresenterImpl implements SettingsPresenter, IdentityManager
     mRedditService.getUserSettings()
         .doOnTerminate(mMainView::dismissSpinner)
         .doOnNext(mSettingsManager::saveUserSettings)
-        .subscribe(settings -> refresh(false), mMainView::showError);
+        .subscribe(settings -> refresh(false),
+            e -> mMainView.showError(e, R.string.error_get_user_settings));
   }
 
   @Override

@@ -482,7 +482,7 @@ public abstract class AbsListingsPresenter
           .subscribe(response -> {
             votable.applyVote(direction);
             mListingsView.listingUpdatedAt(mListings.indexOf(listing));
-          }, error -> mMainView.showToast(R.string.vote_failed));
+          }, e -> mMainView.showError(e, R.string.vote_failed));
       mAnalytics.logVote(votable.getKind(), direction);
     }
   }
@@ -493,7 +493,7 @@ public abstract class AbsListingsPresenter
         .subscribe(response -> {
           savable.isSaved(toSave);
           mListingsView.listingUpdatedAt(mListings.indexOf(listing));
-        }, error -> mMainView.showToast(R.string.save_failed));
+        }, e -> mMainView.showError(e, R.string.save_failed));
   }
 
   private void hide(Hideable hideable, boolean toHide) {
@@ -508,7 +508,7 @@ public abstract class AbsListingsPresenter
           } else {
             mListingsView.listingRemovedAt(pos);
           }
-        }, error -> mMainView.showToast(R.string.hide_failed));
+        }, e -> mMainView.showError(e, R.string.hide_failed));
   }
 
   @Override

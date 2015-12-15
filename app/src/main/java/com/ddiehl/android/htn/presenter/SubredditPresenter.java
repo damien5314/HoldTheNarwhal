@@ -1,5 +1,6 @@
 package com.ddiehl.android.htn.presenter;
 
+import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.view.ListingsView;
 import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.reddit.identity.UserIdentity;
@@ -24,12 +25,14 @@ public class SubredditPresenter extends AbsListingsPresenter {
       mAnalytics.logLoadSubreddit(mSubreddit, mSort, mTimespan);
       mRedditService.loadLinks(mSubreddit, mSort, mTimespan, mNextPageListingId)
           .doOnTerminate(onGetDataCompleted())
-          .subscribe(onListingsLoaded(), mMainView::showError);
+          .subscribe(onListingsLoaded(),
+              e -> mMainView.showError(e, R.string.error_get_links));
     } else {
       mListingsRequested = false;
       mRedditService.getSubredditInfo(mSubreddit)
           .doOnTerminate(onGetDataCompleted())
-          .subscribe(onSubredditInfoLoaded(), mMainView::showError);
+          .subscribe(onSubredditInfoLoaded(),
+              e -> mMainView.showError(e, R.string.error_get_subreddit_info));
     }
   }
 

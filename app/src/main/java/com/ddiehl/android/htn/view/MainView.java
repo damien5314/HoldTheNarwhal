@@ -17,9 +17,7 @@ public interface MainView extends AnalyticsDialog.Callbacks, ConfirmSignOutDialo
   void showAnalyticsRequestDialog();
   void showNsfwWarningDialog();
   void showSettings();
-
   void updateNavigationItems(boolean isLoggedIn);
-
   void closeNavigationDrawer();
   void showLoginView();
   void showUserProfile(@NonNull String username);
@@ -28,7 +26,6 @@ public interface MainView extends AnalyticsDialog.Callbacks, ConfirmSignOutDialo
   void showSubreddit(@Nullable String subreddit);
   void showSubredditIfEmpty(@Nullable String subreddit);
   void openURL(@NonNull String url);
-
   // Methods formerly from BaseView
   void setTitle(@NonNull CharSequence title);
   void showSpinner(@Nullable String msg);
@@ -36,5 +33,5 @@ public interface MainView extends AnalyticsDialog.Callbacks, ConfirmSignOutDialo
   void dismissSpinner();
   void showToast(@NonNull String msg);
   void showToast(@StringRes int resId);
-  void showError(Throwable error);
+  void showError(Throwable error, int errorResId);
 }

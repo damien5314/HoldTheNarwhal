@@ -84,7 +84,8 @@ public class LinkCommentsPresenterImpl
     mMainView.showSpinner(null);
     mRedditService.loadLinkComments(mSubreddit, mLinkId, mSort, mCommentId)
         .doOnTerminate(mMainView::dismissSpinner)
-        .subscribe(showLinkComments, mMainView::showError);
+        .subscribe(showLinkComments,
+            e -> mMainView.showError(e, R.string.error_get_link_comments));
     mAnalytics.logLoadLinkComments(mSort);
   }
 
@@ -117,7 +118,8 @@ public class LinkCommentsPresenterImpl
     children = children.subList(0, Math.min(MAX_CHILDREN_PER_REQUEST, children.size()));
     mRedditService.loadMoreChildren(mLinkContext, parentStub, children, mSort)
         .doOnTerminate(mMainView::dismissSpinner)
-        .subscribe(showMoreComments(parentStub), mMainView::showError);
+        .subscribe(showMoreComments(parentStub),
+            e -> mMainView.showError(e, R.string.error_get_more_comments));
     mAnalytics.logLoadMoreChildren(mSort);
   }
 
@@ -297,7 +299,7 @@ public class LinkCommentsPresenterImpl
     mRedditService.hide(mLinkContext, toHide)
         .subscribe(response -> {
           if (toHide) mMainView.showToast(R.string.link_hidden);
-        }, error -> mMainView.showToast(R.string.hide_failed));
+        }, e -> mMainView.showError(e, R.string.hide_failed));
   }
 
   @Override
@@ -360,7 +362,7 @@ public class LinkCommentsPresenterImpl
           } else position = 0;
           mCommentBank.add(position, comment);
           mLinkCommentsView.commentAddedAt(position);
-        }, mMainView::showError);
+        }, e -> mMainView.showError(e, R.string.error_add_comment));
   }
 
   @Override
@@ -458,7 +460,7 @@ public class LinkCommentsPresenterImpl
               int index = mCommentBank.visibleIndexOf(((AbsComment) listing));
               mLinkCommentsView.commentUpdatedAt(index);
             }
-          }, error -> mMainView.showToast(R.string.vote_failed));
+          }, e -> mMainView.showError(e, R.string.vote_failed));
       mAnalytics.logVote(votable.getKind(), direction);
     }
   }
@@ -473,6 +475,6 @@ public class LinkCommentsPresenterImpl
             mLinkCommentsView.commentUpdatedAt(
                 mCommentBank.visibleIndexOf(((AbsComment) savable)));
           }
-        }, error -> mMainView.showToast(R.string.save_failed));
+        }, e -> mMainView.showError(e, R.string.save_failed));
   }
 }

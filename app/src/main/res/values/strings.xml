@@ -121,20 +121,6 @@
   <string name="dialog_nsfw_confirm">Continue</string>
   <string name="dialog_nsfw_decline">Take me back</string>
 
-  <!-- Events -->
-  <string name="listing_archived">sorry, this is archived</string>
-  <string name="vote_failed">vote failed, please try again</string>
-  <string name="save_failed">save failed, please try again</string>
-  <string name="hide_failed">hide failed, please try again</string>
-  <string name="link_hidden">link hidden</string>
-  <string name="error_xxx">an error has occurred</string>
-  <string name="error_network_unavailable">network is unavailable</string>
-  <string name="error_404">page not found</string>
-  <string name="error_500">reddit is experiencing issues, try again later</string>
-  <string name="error_503">reddit is unavailable, try again soon</string>
-  <string name="error_520">reddit is in maintenance</string>
-  <string name="error_authentication">error during authentication</string>
-
   <!-- Miscellaneous -->
   <string name="username">/u/%s</string>
   <string name="user_required">you must sign in to do that</string>
@@ -223,5 +209,30 @@
 
   <string name="comment_edit_text_hint">markdown supported</string>
   <string name="comment_add_submit">submit</string>
+
+  <!-- Events -->
+  <string name="listing_archived">sorry, this is archived</string>
+  <string name="vote_failed">vote failed, please try again</string>
+  <string name="save_failed">save failed, please try again</string>
+  <string name="hide_failed">hide failed, please try again</string>
+  <string name="link_hidden">link hidden</string>
+  <string name="error_xxx">an error has occurred</string>
+  <string name="error_network_unavailable">network is unavailable</string>
+  <string name="error_404">page not found</string>
+  <string name="error_500">reddit is experiencing issues, try again later</string>
+  <string name="error_503">reddit is unavailable, try again soon</string>
+  <string name="error_520">reddit is in maintenance</string>
+  <string name="error_authentication">error during authentication</string>
+  <string name="error_get_user_identity">error getting user identity</string>
+  <string name="error_get_user_settings">error loading settings</string>
+  <string name="error_get_link_comments">error loading link comments</string>
+  <string name="error_get_more_comments">error loading comments</string>
+  <string name="error_add_comment">error adding comment</string>
+  <string name="error_get_links">error loading links</string>
+  <string name="error_get_subreddit_info">error loading subreddit info</string>
+  <string name="error_get_user_info">error loading user info</string>
+  <string name="error_get_user_trophies">error getting user trophies</string>
+  <string name="error_get_friend_info">error getting friend info</string>
+  <string name="error_get_user_profile_listings">error loading profile listings</string>
 
 </resources>

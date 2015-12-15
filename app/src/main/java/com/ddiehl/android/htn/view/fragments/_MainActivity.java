@@ -28,6 +28,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.ddiehl.android.dlogger.Logger;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.analytics.Analytics;
@@ -71,6 +72,7 @@ public class _MainActivity extends AppCompatActivity implements MainView,
   @Bind(R.id.sign_out_button) View mSignOutView;
   @Bind(R.id.navigation_drawer_header_image) ImageView mHeaderImage;
 
+  private Logger mLogger = HoldTheNarwhal.getLogger();
   private Analytics mAnalytics = HoldTheNarwhal.getAnalytics();
   private MainPresenter mMainPresenter;
 
@@ -355,9 +357,10 @@ public class _MainActivity extends AppCompatActivity implements MainView,
   }
 
   @Override
-  public void showError(Throwable error) {
-    error.printStackTrace();
-    String message = error.getMessage();
+  public void showError(Throwable error, int errorResId) {
+    String message = getString(errorResId);
+//    error.printStackTrace();
+    mLogger.e(error, message);
     if (error instanceof UnknownHostException) {
       message = getString(R.string.error_network_unavailable);
     }

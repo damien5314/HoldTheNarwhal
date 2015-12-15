@@ -39,9 +39,11 @@ public class UserProfilePresenter extends AbsListingsPresenter {
           mListingsRequested = false;
         })
         .doOnNext(getFriendInfo())
-        .subscribe(mSummaryView::showUserInfo, mMainView::showError);
+        .subscribe(mSummaryView::showUserInfo,
+            e -> mMainView.showError(e, R.string.error_get_user_info));
     mRedditService.getUserTrophies(mUsernameContext)
-        .subscribe(mSummaryView::showTrophies, mMainView::showError);
+        .subscribe(mSummaryView::showTrophies,
+            e -> mMainView.showError(e, R.string.error_get_user_trophies));
   }
 
   private Action1<UserIdentity> getFriendInfo() {
@@ -53,7 +55,7 @@ public class UserProfilePresenter extends AbsListingsPresenter {
               if (self != null && self.isGold()) {
                 mSummaryView.showFriendNote(response.getNote());
               }
-            }, mMainView::showError);
+            }, e -> mMainView.showError(e, R.string.error_get_friend_info));
       }
     };
   }
@@ -68,7 +70,7 @@ public class UserProfilePresenter extends AbsListingsPresenter {
             mSummaryView.showFriendNote("");
           }
           mMainView.showToast(R.string.user_friend_add_confirm);
-        }, e -> mMainView.showToast(R.string.user_friend_add_error));
+        }, e -> mMainView.showError(e, R.string.user_friend_add_error));
   }
 
   public void deleteFriend() {
@@ -78,7 +80,7 @@ public class UserProfilePresenter extends AbsListingsPresenter {
           mSummaryView.setFriendButtonState(false);
           mSummaryView.hideFriendNote();
           mMainView.showToast(R.string.user_friend_delete_confirm);
-        }, e -> mMainView.showToast(R.string.user_friend_delete_error));
+        }, e -> mMainView.showError(e, R.string.user_friend_delete_error));
   }
 
   public void saveFriendNote(@NonNull String note) {
@@ -89,7 +91,7 @@ public class UserProfilePresenter extends AbsListingsPresenter {
       mRedditService.saveFriendNote(mUsernameContext, note)
           .doOnTerminate(mMainView::dismissSpinner)
           .subscribe(r -> mMainView.showToast(R.string.user_friend_note_save_confirm),
-              e -> mMainView.showToast(R.string.user_friend_note_save_error));
+              e -> mMainView.showError(e, R.string.user_friend_note_save_error));
     }
   }
 
@@ -99,7 +101,8 @@ public class UserProfilePresenter extends AbsListingsPresenter {
           mMainView.dismissSpinner();
           mListingsRequested = false;
         })
-        .subscribe(onListingsLoaded(), mMainView::showError);
+        .subscribe(onListingsLoaded(),
+            e -> mMainView.showError(e, R.string.error_get_user_profile_listings));
   }
 
   public void requestData(String show) {

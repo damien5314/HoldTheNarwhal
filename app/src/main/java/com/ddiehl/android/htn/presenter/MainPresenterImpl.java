@@ -1,5 +1,7 @@
 package com.ddiehl.android.htn.presenter;
 
+import android.content.Context;
+
 import com.ddiehl.android.dlogger.Logger;
 import com.ddiehl.android.htn.AccessTokenManager;
 import com.ddiehl.android.htn.HoldTheNarwhal;
@@ -17,8 +19,9 @@ import rx.functions.Action1;
 
 public class MainPresenterImpl implements MainPresenter, IdentityManager.Callbacks {
   private Logger mLogger = HoldTheNarwhal.getLogger();
-  protected RedditService mRedditService = HoldTheNarwhal.getRedditService();
-  protected RedditAuthService mRedditAuthService = HoldTheNarwhal.getRedditServiceAuth();
+  private Context mContext = HoldTheNarwhal.getContext();
+  private RedditService mRedditService = HoldTheNarwhal.getRedditService();
+  private RedditAuthService mRedditAuthService = HoldTheNarwhal.getRedditServiceAuth();
   private AccessTokenManager mAccessTokenManager = HoldTheNarwhal.getAccessTokenManager();
   private IdentityManager mIdentityManager = HoldTheNarwhal.getIdentityManager();
   private SettingsManager mSettingsManager = HoldTheNarwhal.getSettingsManager();
@@ -123,7 +126,8 @@ public class MainPresenterImpl implements MainPresenter, IdentityManager.Callbac
   public Action1<AccessToken> getUserIdentity() {
     return token -> mRedditService.getUserIdentity()
         .doOnNext(mIdentityManager::saveUserIdentity)
-        .subscribe(mMainView::updateUserIdentity, mMainView::showError);
+        .subscribe(mMainView::updateUserIdentity,
+            e -> mMainView.showError(e, R.string.error_get_user_identity));
   }
 
   private UserIdentity getAuthorizedUser() {
