@@ -52,7 +52,8 @@ public class LinkCommentsPresenterImpl
   private String mCommentId;
   private String mSort; // Remove this and read from preferences when needed
 
-  private Listing mListingSelected;
+  private Listing mListingSelected = null;
+  private Listing mReplyTarget = null;
 
   public LinkCommentsPresenterImpl(
       MainView main, LinkCommentsView view, String subreddit, String linkId, String commentId) {
@@ -209,6 +210,7 @@ public class LinkCommentsPresenterImpl
 
   @Override
   public void replyToLink() {
+    mReplyTarget = mLinkContext;
     mLinkCommentsView.openReplyView(mLinkContext);
   }
 
@@ -336,17 +338,20 @@ public class LinkCommentsPresenterImpl
     if (((Archivable) mListingSelected).isArchived()) {
       mMainView.showToast(R.string.listing_archived);
     } else {
+      mReplyTarget = mListingSelected;
       mLinkCommentsView.openReplyView(mListingSelected);
     }
   }
 
   @Override
-  public void onCommentSubmitted(@NonNull String parentId, @NonNull String commentText) {
+  public void onCommentSubmitted(@NonNull String commentText) {
+    String parentId = String.format("%1$s_%2$s", mReplyTarget.getKind(), mReplyTarget.getId());
     mRedditService.addComment(parentId, commentText)
         .subscribe(comment -> {
           mMainView.showToast("Comment successful");
           int position;
           if (parentId.startsWith("t1_")) { // Comment
+            comment.setDepth(((Comment) mReplyTarget).getDepth()+1);
             position = mCommentBank.indexOf((Comment) mListingSelected) + 1;
           } else position = 0;
           mCommentBank.add(position, comment);

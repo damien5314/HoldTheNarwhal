@@ -338,7 +338,7 @@ public class LinkCommentsFragment extends Fragment
         if (resultCode == Activity.RESULT_OK) {
           String parentId = data.getStringExtra(AddCommentDialog.EXTRA_PARENT_ID);
           String commentText = data.getStringExtra(AddCommentDialog.EXTRA_COMMENT_TEXT);
-          mLinkCommentsPresenter.onCommentSubmitted(parentId, commentText);
+          mLinkCommentsPresenter.onCommentSubmitted(commentText);
         }
         break;
     }
@@ -365,7 +365,6 @@ public class LinkCommentsFragment extends Fragment
         mAnalytics.logOptionSettings();
         return true;
     }
-
     return super.onOptionsItemSelected(item);
   }
 

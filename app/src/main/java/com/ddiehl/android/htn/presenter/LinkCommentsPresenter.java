@@ -16,5 +16,5 @@ public interface LinkCommentsPresenter extends BasePresenter, LinkPresenter, Com
   String getSort();
   boolean getShowControversiality();
   void updateSort(@NonNull String sort);
-  void onCommentSubmitted(@NonNull String parentId, @NonNull String commentText);
+  void onCommentSubmitted(@NonNull String commentText);
 }
