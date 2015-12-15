@@ -307,13 +307,14 @@ public abstract class AbsListingsPresenter
 
   @Override
   public void reportLink() {
-    if (!mAccessTokenManager.isUserAuthorized()) {
+    Listing listing = mListingSelected;
+    if (((Archivable) listing).isArchived()) {
+      mMainView.showToast(R.string.listing_archived);
+    } else if (!mAccessTokenManager.isUserAuthorized()) {
       mMainView.showToast(R.string.user_required);
-      return;
+    } else {
+      mMainView.showToast(R.string.implementation_pending);
     }
-
-    Link link = (Link) mListingSelected;
-    mMainView.showToast(R.string.implementation_pending);
   }
 
   @Override
@@ -413,13 +414,14 @@ public abstract class AbsListingsPresenter
 
   @Override
   public void reportComment() {
-    if (!mAccessTokenManager.isUserAuthorized()) {
+    Listing listing = mListingSelected;
+    if (((Archivable) listing).isArchived()) {
+      mMainView.showToast(R.string.listing_archived);
+    } else if (!mAccessTokenManager.isUserAuthorized()) {
       mMainView.showToast(R.string.user_required);
-      return;
+    } else {
+      mMainView.showToast(R.string.implementation_pending);
     }
-
-    Comment comment = (Comment) mListingSelected;
-    mMainView.showToast(R.string.implementation_pending);
   }
 
   @Override

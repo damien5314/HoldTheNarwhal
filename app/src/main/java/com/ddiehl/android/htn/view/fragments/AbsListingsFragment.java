@@ -206,9 +206,6 @@ public abstract class AbsListingsFragment extends Fragment
     String title = String.format(getString(R.string.menu_action_comment),
         comment.getAuthor(), comment.getScore());
     menu.setHeaderTitle(title);
-    if (comment.isArchived()) {
-      menu.findItem(R.id.action_comment_report).setVisible(false);
-    }
     // Set username for listing in the user profile menu item
     String username = String.format(
         getString(R.string.action_view_user_profile), comment.getAuthor());
@@ -384,7 +381,6 @@ public abstract class AbsListingsFragment extends Fragment
   @Override
   public void onRefresh() {
     mSwipeRefreshLayout.setRefreshing(false);
-//    mSwipeRefreshLayout.post(() -> mSwipeRefreshLayout.setRefreshing(false));
     mListingsPresenter.refreshData();
     mAnalytics.logOptionRefresh();
   }

@@ -302,12 +302,14 @@ public class LinkCommentsPresenterImpl
 
   @Override
   public void reportLink() {
-    if (!mAccessTokenManager.isUserAuthorized()) {
+    Listing listing = mLinkContext;
+    if (((Archivable) listing).isArchived()) {
+      mMainView.showToast(R.string.listing_archived);
+    } else if (!mAccessTokenManager.isUserAuthorized()) {
       mMainView.showToast(R.string.user_required);
-      return;
+    } else {
+      mMainView.showToast(R.string.implementation_pending);
     }
-
-    mMainView.showToast(R.string.implementation_pending);
   }
 
   @Override
@@ -337,6 +339,8 @@ public class LinkCommentsPresenterImpl
   public void replyToComment() {
     if (((Archivable) mListingSelected).isArchived()) {
       mMainView.showToast(R.string.listing_archived);
+    } else if (!mAccessTokenManager.isUserAuthorized()) {
+      mMainView.showToast(R.string.user_required);
     } else {
       mReplyTarget = mListingSelected;
       mLinkCommentsView.openReplyView(mListingSelected);
@@ -422,13 +426,14 @@ public class LinkCommentsPresenterImpl
 
   @Override
   public void reportComment() {
-    if (!mAccessTokenManager.isUserAuthorized()) {
+    Listing listing = mListingSelected;
+    if (((Archivable) listing).isArchived()) {
+      mMainView.showToast(R.string.listing_archived);
+    } else if (!mAccessTokenManager.isUserAuthorized()) {
       mMainView.showToast(R.string.user_required);
-      return;
+    } else {
+      mMainView.showToast(R.string.implementation_pending);
     }
-
-    Comment comment = (Comment) mListingSelected;
-    mMainView.showToast(R.string.implementation_pending);
   }
 
   @Override
