@@ -248,7 +248,7 @@ public class _MainActivity extends AppCompatActivity implements MainView,
   public void showSpinner(@Nullable String message) {
     if (mLoadingOverlay == null) {
       mLoadingOverlay = new ProgressDialog(this, R.style.ProgressDialog);
-      mLoadingOverlay.setCancelable(true);
+      mLoadingOverlay.setCancelable(false);
       mLoadingOverlay.setProgressStyle(ProgressDialog.STYLE_SPINNER);
     }
     mLoadingOverlay.setMessage(message);
