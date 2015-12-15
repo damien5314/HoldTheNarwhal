@@ -24,12 +24,11 @@ public class UserProfilePresenter extends AbsListingsPresenter {
 
   @Override
   public void requestData() {
+    mAnalytics.logLoadUserProfile(mShow, mSort, mTimespan);
     if (mShow.equals("summary")) {
       getSummaryData();
-      // TODO: Analytics event for user profile summary screen
     } else {
       getListingData();
-      mAnalytics.logLoadUserProfile(mShow, mSort, mTimespan);
     }
   }
 
