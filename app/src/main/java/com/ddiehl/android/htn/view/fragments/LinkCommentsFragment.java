@@ -55,7 +55,7 @@ public class LinkCommentsFragment extends Fragment
   private LinkCommentsPresenter mLinkCommentsPresenter;
 
   private LinkCommentsAdapter mLinkCommentsAdapter;
-  SwipeRefreshLayout mSwipeRefreshLayout;
+  private SwipeRefreshLayout mSwipeRefreshLayout;
 
   public LinkCommentsFragment() { /* Default constructor */ }
 
@@ -74,28 +74,23 @@ public class LinkCommentsFragment extends Fragment
     super.onCreate(savedInstanceState);
     setRetainInstance(true);
     setHasOptionsMenu(true);
-
     Bundle args = getArguments();
     String subreddit = args.getString(ARG_SUBREDDIT);
     String articleId = args.getString(ARG_ARTICLE);
     String commentId = args.getString(ARG_COMMENT_ID);
-
     mMainView = (MainView) getActivity();
     mLinkCommentsPresenter = new LinkCommentsPresenterImpl(
         mMainView, this, subreddit, articleId, commentId);
     mLinkCommentsAdapter = new LinkCommentsAdapter(mLinkCommentsPresenter);
-
     updateTitle();
   }
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     View v = inflater.inflate(R.layout.link_comments_fragment, container, false);
-
     RecyclerView recyclerView = ButterKnife.findById(v, R.id.recycler_view);
     recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     recyclerView.setAdapter(mLinkCommentsAdapter);
-
     return v;
   }
 
@@ -106,13 +101,7 @@ public class LinkCommentsFragment extends Fragment
     mSwipeRefreshLayout.setOnRefreshListener(this);
   }
 
-  @Override
-  public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-    super.onActivityCreated(savedInstanceState);
-    updateTitle();
-  }
-
-  public void updateTitle() {
+  private void updateTitle() {
     Link link = mLinkCommentsPresenter.getLinkContext();
     if (link != null) {
       mMainView.setTitle(link.getTitle());
@@ -188,8 +177,8 @@ public class LinkCommentsFragment extends Fragment
   }
 
   @Override
-  public void showCommentThread(@Nullable String subreddit, @Nullable String linkId,
-                  @NonNull String commentId) {
+  public void showCommentThread(
+      @Nullable String subreddit, @Nullable String linkId, @NonNull String commentId) {
     mLinkCommentsPresenter.showCommentThread(subreddit, linkId, commentId);
   }
 

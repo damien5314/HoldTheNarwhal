@@ -27,7 +27,6 @@ public class SubredditFragment extends AbsListingsFragment {
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-
     Bundle args = getArguments();
     String subreddit = args.getString(ARG_SUBREDDIT);
     mListingsPresenter = new SubredditPresenter(mMainView, this, subreddit, "hot", "all");
@@ -38,13 +37,8 @@ public class SubredditFragment extends AbsListingsFragment {
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     View v = inflater.inflate(R.layout.listings_fragment, container, false);
     instantiateListView(v);
-    return v;
-  }
-
-  @Override
-  public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-    super.onActivityCreated(savedInstanceState);
     updateTitle();
+    return v;
   }
 
   public void updateTitle() {
@@ -59,9 +53,5 @@ public class SubredditFragment extends AbsListingsFragment {
     } else {
       mMainView.setTitle(getString(R.string.front_page_title));
     }
-  }
-
-  public void updateSubreddit(String subreddit) {
-    mListingsPresenter.updateSubreddit(subreddit);
   }
 }

@@ -7,6 +7,7 @@ import com.ddiehl.reddit.listings.Link;
 import com.ddiehl.reddit.listings.ListingResponse;
 import com.ddiehl.reddit.listings.Subreddit;
 
+import rx.functions.Action0;
 import rx.functions.Action1;
 
 public class SubredditPresenter extends AbsListingsPresenter {
@@ -22,14 +23,21 @@ public class SubredditPresenter extends AbsListingsPresenter {
     if (mSubreddit == null || mSubreddit.equals("all") || mSubredditInfo != null) {
       mAnalytics.logLoadSubreddit(mSubreddit, mSort, mTimespan);
       mRedditService.loadLinks(mSubreddit, mSort, mTimespan, mNextPageListingId)
-          .doOnTerminate(mMainView::dismissSpinner)
+          .doOnTerminate(onGetDataCompleted())
           .subscribe(onListingsLoaded(), mMainView::showError);
     } else {
       mListingsRequested = false;
       mRedditService.getSubredditInfo(mSubreddit)
-          .doOnTerminate(mMainView::dismissSpinner)
+          .doOnTerminate(onGetDataCompleted())
           .subscribe(onSubredditInfoLoaded(), mMainView::showError);
     }
+  }
+
+  private Action0 onGetDataCompleted() {
+    return () -> {
+      mMainView.dismissSpinner();
+      mListingsRequested = false;
+    };
   }
 
   private Action1<Subreddit> onSubredditInfoLoaded() {

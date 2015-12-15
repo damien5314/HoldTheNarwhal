@@ -60,7 +60,6 @@ public class UserProfilePresenter extends AbsListingsPresenter {
   public void addFriend() {
     mRedditService.addFriend(mUsernameContext)
         .doOnTerminate(mMainView::dismissSpinner)
-        .doOnError(mMainView::showError)
         .subscribe(response -> {
           mSummaryView.setFriendButtonState(true);
           UserIdentity self = HoldTheNarwhal.getIdentityManager().getUserIdentity();
@@ -91,6 +90,10 @@ public class UserProfilePresenter extends AbsListingsPresenter {
 
   private void getListingData() {
     mRedditService.loadUserProfile(mShow, mUsernameContext, mSort, mTimespan, mNextPageListingId)
+        .doOnTerminate(() -> {
+          mMainView.dismissSpinner();
+          mListingsRequested = false;
+        })
         .subscribe(onListingsLoaded(), mMainView::showError);
   }
 
