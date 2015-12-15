@@ -12,7 +12,6 @@ import com.ddiehl.android.htn.view.adapters.ListingsAdapter;
 import com.ddiehl.reddit.listings.Link;
 
 public class SubredditFragment extends AbsListingsFragment {
-
   private static final String ARG_SUBREDDIT = "subreddit";
 
   public SubredditFragment() { }

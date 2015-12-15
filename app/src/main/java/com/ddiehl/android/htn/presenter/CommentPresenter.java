@@ -15,7 +15,7 @@ public interface CommentPresenter extends BasePresenter {
       @Nullable String subreddit, @Nullable String linkId, @NonNull String commentId);
   void getMoreComments(@NonNull CommentStub comment);
   void openCommentPermalink();
-  void openReplyView();
+  void replyToComment();
   void upvoteComment();
   void downvoteComment();
   void saveComment();

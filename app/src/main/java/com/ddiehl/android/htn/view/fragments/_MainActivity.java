@@ -357,6 +357,7 @@ public class _MainActivity extends AppCompatActivity implements MainView,
   @Override
   public void showError(Throwable error) {
     String message = error.getMessage();
+    HoldTheNarwhal.getLogger().e("An error occurred", error);
     if (error instanceof UnknownHostException) {
       message = getString(R.string.error_network_unavailable);
     }

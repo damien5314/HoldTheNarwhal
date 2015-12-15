@@ -183,6 +183,7 @@ public abstract class AbsListingsPresenter
       ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, Link link) {
     mListingSelected = link;
     mListingsView.showLinkContextMenu(menu, v, link);
+    menu.findItem(R.id.action_link_reply).setVisible(false);
     menu.findItem(R.id.action_link_save).setVisible(!link.isSaved());
     menu.findItem(R.id.action_link_unsave).setVisible(link.isSaved());
   }
@@ -205,6 +206,11 @@ public abstract class AbsListingsPresenter
   @Override
   public void showCommentsForLink(@NonNull Link link) {
     mListingsView.showCommentsForLink(link.getSubreddit(), link.getId(), null);
+  }
+
+  @Override
+  public void replyToLink() {
+    mListingsView.openReplyView(mListingSelected);
   }
 
   @Override
@@ -337,7 +343,7 @@ public abstract class AbsListingsPresenter
   }
 
   @Override
-  public void openReplyView() {
+  public void replyToComment() {
     Comment comment = (Comment) mListingSelected;
     if (comment.isArchived()) {
       mMainView.showToast(R.string.listing_archived);

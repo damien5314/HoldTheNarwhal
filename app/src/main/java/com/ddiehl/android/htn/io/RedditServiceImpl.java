@@ -309,10 +309,12 @@ public class RedditServiceImpl implements RedditService {
   }
 
   @Override
-  public Observable<ResponseBody> addComment(@NonNull Listing listing, @NonNull String text) {
-    String fullname = String.format("%1$s_%2$s", listing.getKind(), listing.getId());
+  public Observable<ResponseBody> addComment(@NonNull String parentId, @NonNull String text) {
+//    String fullname = String.format("%1$s_%2$s", listing.getKind(), listing.getId());
     return requireUserAccessToken().flatMap(token ->
-        mAPI.addComment(fullname, text)
+        mAPI.addComment(parentId, text)
+            .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
             .map(Response::body)
     );
   }

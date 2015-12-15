@@ -32,6 +32,7 @@ import com.ddiehl.android.htn.view.dialogs.AddCommentDialog;
 import com.ddiehl.android.htn.view.dialogs.ChooseCommentSortDialog;
 import com.ddiehl.reddit.listings.Comment;
 import com.ddiehl.reddit.listings.Link;
+import com.ddiehl.reddit.listings.Listing;
 
 import butterknife.ButterKnife;
 
@@ -138,6 +139,7 @@ public class LinkCommentsFragment extends Fragment
     String title = String.format(v.getContext().getString(R.string.menu_action_link),
         link.getTitle(), link.getScore());
     menu.setHeaderTitle(title);
+    menu.findItem(R.id.action_link_reply).setVisible(true);
     menu.findItem(R.id.action_link_show_comments).setVisible(false);
     menu.findItem(R.id.action_link_hide).setVisible(false);
     menu.findItem(R.id.action_link_unhide).setVisible(false);
@@ -159,6 +161,11 @@ public class LinkCommentsFragment extends Fragment
   @Override
   public void commentUpdatedAt(int position) {
     mLinkCommentsAdapter.notifyItemChanged(position + 1);
+  }
+
+  @Override
+  public void commentAddedAt(int position) {
+    mLinkCommentsAdapter.notifyItemInserted(position + 1);
   }
 
   @Override
@@ -241,6 +248,9 @@ public class LinkCommentsFragment extends Fragment
   @Override
   public boolean onContextItemSelected(MenuItem item) {
     switch (item.getItemId()) {
+      case R.id.action_link_reply:
+        mLinkCommentsPresenter.replyToLink();
+        return true;
       case R.id.action_link_upvote:
         mLinkCommentsPresenter.upvoteLink();
         return true;
@@ -282,7 +292,7 @@ public class LinkCommentsFragment extends Fragment
         mLinkCommentsPresenter.openCommentPermalink();
         return true;
       case R.id.action_comment_reply:
-        mLinkCommentsPresenter.openReplyView();
+        mLinkCommentsPresenter.replyToComment();
         return true;
       case R.id.action_comment_upvote:
         mLinkCommentsPresenter.upvoteComment();
@@ -328,7 +338,7 @@ public class LinkCommentsFragment extends Fragment
         if (resultCode == Activity.RESULT_OK) {
           String parentId = data.getStringExtra(AddCommentDialog.EXTRA_PARENT_ID);
           String commentText = data.getStringExtra(AddCommentDialog.EXTRA_COMMENT_TEXT);
-          mLinkCommentsPresenter.onCommentEntered(commentText);
+          mLinkCommentsPresenter.onCommentSubmitted(parentId, commentText);
         }
         break;
     }
@@ -383,9 +393,9 @@ public class LinkCommentsFragment extends Fragment
   }
 
   @Override
-  public void openReplyView(@NonNull Comment comment) {
-    AddCommentDialog dialog = AddCommentDialog.newInstance(
-        comment.getKind() + "_" + comment.getId());
+  public void openReplyView(@NonNull Listing listing) {
+    String id = listing.getKind() + "_" + listing.getId();
+    AddCommentDialog dialog = AddCommentDialog.newInstance(id);
     dialog.setTargetFragment(this, REQUEST_ADD_COMMENT);
     dialog.show(getFragmentManager(), DIALOG_ADD_COMMENT);
   }

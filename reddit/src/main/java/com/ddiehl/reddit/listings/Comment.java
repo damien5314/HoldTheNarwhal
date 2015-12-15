@@ -9,7 +9,6 @@ import java.util.List;
 
 @SuppressWarnings("unused")
 public class Comment extends AbsComment<Comment.Data> implements Votable, Savable {
-
   private boolean isCollapsed = false;
 
   public String getUrl() {
@@ -203,7 +202,6 @@ public class Comment extends AbsComment<Comment.Data> implements Votable, Savabl
   }
 
   public static class Data extends AbsComment.Data {
-
     // Attributes specific to listing views
     @Expose @SerializedName("link_title")
     private String linkTitle;
@@ -266,7 +264,6 @@ public class Comment extends AbsComment<Comment.Data> implements Votable, Savabl
     private Object numReports;
     @Expose
     private String distinguished;
-
   }
 
   @Override

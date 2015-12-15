@@ -180,7 +180,8 @@ public class LinkCommentsPresenterImpl
   }
 
   @Override
-  public void showLinkContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, Link link) {
+  public void showLinkContextMenu(
+      ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, Link link) {
     mListingSelected = link;
     mLinkCommentsView.showLinkContextMenu(menu, v, link);
     menu.findItem(R.id.action_link_save).setVisible(!link.isSaved());
@@ -204,6 +205,11 @@ public class LinkCommentsPresenterImpl
   @Override
   public void showCommentsForLink(@NonNull Link link) {
     mLinkCommentsView.showCommentsForLink(link.getSubreddit(), link.getId(), null);
+  }
+
+  @Override
+  public void replyToLink() {
+    mLinkCommentsView.openReplyView(mLinkContext);
   }
 
   @Override
@@ -326,24 +332,25 @@ public class LinkCommentsPresenterImpl
   }
 
   @Override
-  public void openReplyView() {
-    Comment comment = (Comment) mListingSelected;
-    if (comment.isArchived()) {
+  public void replyToComment() {
+    if (((Archivable) mListingSelected).isArchived()) {
       mMainView.showToast(R.string.listing_archived);
     } else {
-      mLinkCommentsView.openReplyView(comment);
+      mLinkCommentsView.openReplyView(mListingSelected);
     }
   }
 
   @Override
-  public void onCommentEntered(@NonNull String commentText) {
-    mRedditService.addComment(mListingSelected, commentText)
+  public void onCommentSubmitted(@NonNull String parentId, @NonNull String commentText) {
+    mRedditService.addComment(parentId, commentText)
         .subscribe(response -> {
           mMainView.showToast("Comment successful");
           Comment newComment = new Comment();
           newComment.applyVote(1);
           newComment.setAuthor(HoldTheNarwhal.getIdentityManager().getUserIdentity().getName());
-          mCommentBank.add(mCommentBank.indexOf((Comment) mListingSelected)+1, newComment);
+          int position = mCommentBank.indexOf((Comment) mListingSelected) + 1;
+          mCommentBank.add(position, newComment);
+          mLinkCommentsView.commentAddedAt(position);
         }, mMainView::showError);
   }
 

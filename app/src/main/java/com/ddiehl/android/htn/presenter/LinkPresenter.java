@@ -12,6 +12,7 @@ public interface LinkPresenter extends BasePresenter {
   void openLink(@NonNull Link link);
   void showCommentsForLink(@NonNull Link link);
   void showCommentsForLink();
+  void replyToLink();
   void upvoteLink();
   void downvoteLink();
   void saveLink();

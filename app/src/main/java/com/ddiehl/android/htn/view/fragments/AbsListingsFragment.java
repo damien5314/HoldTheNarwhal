@@ -28,6 +28,7 @@ import com.ddiehl.android.htn.view.dialogs.ChooseLinkSortDialog;
 import com.ddiehl.android.htn.view.dialogs.ChooseTimespanDialog;
 import com.ddiehl.reddit.listings.Comment;
 import com.ddiehl.reddit.listings.Link;
+import com.ddiehl.reddit.listings.Listing;
 
 import butterknife.ButterKnife;
 
@@ -257,7 +258,7 @@ public abstract class AbsListingsFragment extends Fragment
         mListingsPresenter.openCommentPermalink();
         return true;
       case R.id.action_comment_reply:
-        mListingsPresenter.openReplyView();
+        mListingsPresenter.replyToComment();
         return true;
       case R.id.action_comment_upvote:
         mListingsPresenter.upvoteComment();
@@ -334,7 +335,7 @@ public abstract class AbsListingsFragment extends Fragment
   }
 
   @Override
-  public void openReplyView(@NonNull Comment comment) {
+  public void openReplyView(@NonNull Listing listing) {
     mMainView.showToast(R.string.implementation_pending);
   }
 
