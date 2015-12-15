@@ -328,7 +328,7 @@ public class LinkCommentsFragment extends Fragment
         if (resultCode == Activity.RESULT_OK) {
           String parentId = data.getStringExtra(AddCommentDialog.EXTRA_PARENT_ID);
           String commentText = data.getStringExtra(AddCommentDialog.EXTRA_COMMENT_TEXT);
-          mLinkCommentsPresenter.onCommentEntered(parentId, commentText);
+          mLinkCommentsPresenter.onCommentEntered(commentText);
         }
         break;
     }

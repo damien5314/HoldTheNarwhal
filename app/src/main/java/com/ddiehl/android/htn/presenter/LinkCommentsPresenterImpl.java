@@ -336,8 +336,10 @@ public class LinkCommentsPresenterImpl
   }
 
   @Override
-  public void onCommentEntered(@NonNull String parentId, @NonNull String commentText) {
-    // TODO API call to add comment
+  public void onCommentEntered(@NonNull String commentText) {
+    mRedditService.addComment(mListingSelected, commentText)
+        .subscribe(r -> mMainView.showToast("Comment successful"),
+            mMainView::showError);
   }
 
   @Override

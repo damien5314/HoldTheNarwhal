@@ -115,6 +115,11 @@ public interface RedditAPI {
       @Query("reason") String reason,
       @Query("otherReason") String otherReason);
 
+  @POST("/api/comment")
+  Observable<Response<ResponseBody>> addComment(
+      @Query("parent") String parentId,
+      @Query("text") String commentText);
+
   @PUT("/api/v1/me/friends/{username}")
   Observable<Response<ResponseBody>> addFriend(
       @Path("username") String username,

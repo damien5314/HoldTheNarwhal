@@ -308,6 +308,15 @@ public class RedditServiceImpl implements RedditService {
     return Observable.error(new RuntimeException("Not yet implemented"));
   }
 
+  @Override
+  public Observable<ResponseBody> addComment(@NonNull Listing listing, @NonNull String text) {
+    String fullname = String.format("%1$s_%2$s", listing.getKind(), listing.getId());
+    return requireUserAccessToken().flatMap(token ->
+        mAPI.addComment(fullname, text)
+            .map(Response::body)
+    );
+  }
+
   private Observable<AccessToken> requireAccessToken() {
     return mAccessTokenManager.getAccessToken()
         .doOnError(error -> mLogger.e("No access token available"));

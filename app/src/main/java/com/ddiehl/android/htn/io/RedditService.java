@@ -57,4 +57,5 @@ public interface RedditService {
   Observable<ResponseBody> save(@NonNull Savable listing, @Nullable String category, boolean save);
   Observable<ResponseBody> hide(@NonNull Hideable listing, boolean toHide);
   Observable<ResponseBody> report(@NonNull String id, @NonNull String reason);
+  Observable<ResponseBody> addComment(@NonNull Listing listing, @NonNull String text);
 }
