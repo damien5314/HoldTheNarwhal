@@ -234,5 +234,6 @@
   <string name="error_get_user_trophies">error getting user trophies</string>
   <string name="error_get_friend_info">error getting friend info</string>
   <string name="error_get_user_profile_listings">error loading profile listings</string>
+  <string name="error_no_network">no network connection</string>
 
 </resources>

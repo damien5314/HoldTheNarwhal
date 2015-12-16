@@ -14,4 +14,5 @@ public interface MainPresenter extends BasePresenter {
   boolean customTabsEnabled();
   void onAuthCodeReceived(String authCode);
   Action1<AccessToken> getUserIdentity();
+  void onLogIn();
 }

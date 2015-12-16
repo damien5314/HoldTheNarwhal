@@ -1,6 +1,8 @@
 package com.ddiehl.android.htn.presenter;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 
 import com.ddiehl.android.dlogger.Logger;
 import com.ddiehl.android.htn.AccessTokenManager;
@@ -70,6 +72,19 @@ public class MainPresenterImpl implements MainPresenter, IdentityManager.Callbac
         mMainView.showToast(toast);
       }
     };
+  }
+
+  @Override
+  public void onLogIn() {
+    if (isConnectedToNetwork()) mMainView.showLoginView();
+    else mMainView.showToast(R.string.error_no_network);
+  }
+
+  private boolean isConnectedToNetwork() {
+    ConnectivityManager cm =
+        (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+    NetworkInfo info = cm.getActiveNetworkInfo();
+    return info != null && info.isConnectedOrConnecting();
   }
 
   @Override

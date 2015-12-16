@@ -84,8 +84,6 @@ public class _MainActivity extends AppCompatActivity implements MainView,
     setContentView(R.layout.activity_main);
     ButterKnife.bind(this);
 
-    setMirroredIcons();
-
     // Listen to events from the navigation drawer
     mNavigationView.setNavigationItemSelectedListener(this);
 
@@ -141,13 +139,14 @@ public class _MainActivity extends AppCompatActivity implements MainView,
 
   @Override
   public boolean onNavigationItemSelected(MenuItem menuItem) {
+    closeNavigationDrawer();
     switch (menuItem.getItemId()) {
       case R.id.drawer_navigate_to_subreddit:
         showSubredditNavigationDialog();
         mAnalytics.logDrawerNavigateToSubreddit();
         return true;
       case R.id.drawer_log_in:
-        showLoginView();
+        mMainPresenter.onLogIn();
         mAnalytics.logDrawerLogIn();
         return true;
       case R.id.drawer_user_profile:
@@ -177,7 +176,6 @@ public class _MainActivity extends AppCompatActivity implements MainView,
 
   @Override
   public void showLoginView() {
-    closeNavigationDrawer();
     showWebViewForURL(RedditAuthService.AUTHORIZATION_URL);
   }
 
@@ -188,7 +186,6 @@ public class _MainActivity extends AppCompatActivity implements MainView,
 
   @Override
   public void showUserProfile(@NonNull String show, @NonNull String username) {
-    closeNavigationDrawer();
     mMainPresenter.setUsernameContext(username);
     Fragment f = UserProfileFragment.newInstance(show, username);
     showFragment(f);
@@ -196,14 +193,12 @@ public class _MainActivity extends AppCompatActivity implements MainView,
 
   @Override
   public void showSubreddit(@Nullable String subreddit) {
-    closeNavigationDrawer();
     Fragment f = SubredditFragment.newInstance(subreddit);
     showFragment(f);
   }
 
   @Override @SuppressLint("NewApi")
   public void openURL(@NonNull String url) {
-    closeNavigationDrawer();
     if (canUseCustomTabs()) {
       // If so, present URL in custom tabs instead of WebView
       Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
