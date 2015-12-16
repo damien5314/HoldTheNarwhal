@@ -67,12 +67,11 @@ public class ListingsLinkViewHolder extends RecyclerView.ViewHolder
   public void bind(Link link, boolean showSelfText) {
     mLink = link;
 
-    // FIXME What is this check for?
-    if (link == null) {
-      mLinkView.setVisibility(View.GONE);
-      mSelfText.setVisibility(View.GONE);
-      return;
-    }
+//    if (link == null) {
+//      mLinkView.setVisibility(View.GONE);
+//      mSelfText.setVisibility(View.GONE);
+//      return;
+//    }
 
     showSelfText(link, showSelfText);
     showScore(link);
