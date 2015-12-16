@@ -75,9 +75,47 @@ public class MainPresenterImpl implements MainPresenter, IdentityManager.Callbac
   }
 
   @Override
+  public void onNavigateToSubreddit() {
+    mMainView.showSubredditNavigationView();
+    mAnalytics.logDrawerNavigateToSubreddit();
+  }
+
+  @Override
   public void onLogIn() {
     if (isConnectedToNetwork()) mMainView.showLoginView();
     else mMainView.showToast(R.string.error_no_network);
+    mAnalytics.logDrawerLogIn();
+  }
+
+  @Override
+  public void onShowUserProfile() {
+    String name = mIdentityManager.getUserIdentity().getName();
+    mMainView.showUserProfile(name);
+    mAnalytics.logDrawerUserProfile();
+  }
+
+  @Override
+  public void onShowSubreddits() {
+    mMainView.showUserSubreddits();
+    mAnalytics.logDrawerUserSubreddits();
+  }
+
+  @Override
+  public void onShowFrontPage() {
+    mMainView.showSubreddit(null);
+    mAnalytics.logDrawerFrontPage();
+  }
+
+  @Override
+  public void onShowAllListings() {
+    mMainView.showSubreddit("all");
+    mAnalytics.logDrawerAllSubreddits();
+  }
+
+  @Override
+  public void onShowRandomSubreddit() {
+    mMainView.showSubreddit("random");
+    mAnalytics.logDrawerRandomSubreddit();
   }
 
   private boolean isConnectedToNetwork() {

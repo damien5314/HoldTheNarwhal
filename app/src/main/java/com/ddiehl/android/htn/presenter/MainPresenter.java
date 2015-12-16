@@ -14,5 +14,11 @@ public interface MainPresenter extends BasePresenter {
   boolean customTabsEnabled();
   void onAuthCodeReceived(String authCode);
   Action1<AccessToken> getUserIdentity();
+  void onNavigateToSubreddit();
   void onLogIn();
+  void onShowUserProfile();
+  void onShowSubreddits();
+  void onShowFrontPage();
+  void onShowAllListings();
+  void onShowRandomSubreddit();
 }

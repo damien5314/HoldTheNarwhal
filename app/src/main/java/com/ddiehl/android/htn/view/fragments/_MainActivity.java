@@ -142,33 +142,25 @@ public class _MainActivity extends AppCompatActivity implements MainView,
     closeNavigationDrawer();
     switch (menuItem.getItemId()) {
       case R.id.drawer_navigate_to_subreddit:
-        showSubredditNavigationDialog();
-        mAnalytics.logDrawerNavigateToSubreddit();
+        mMainPresenter.onNavigateToSubreddit();
         return true;
       case R.id.drawer_log_in:
         mMainPresenter.onLogIn();
-        mAnalytics.logDrawerLogIn();
         return true;
       case R.id.drawer_user_profile:
-        String name = mCurrentUser.getName();
-        showUserProfile(name);
-        mAnalytics.logDrawerUserProfile();
+        mMainPresenter.onShowUserProfile();
         return true;
       case R.id.drawer_subreddits:
-        showUserSubreddits();
-        mAnalytics.logDrawerUserSubreddits();
+        mMainPresenter.onShowSubreddits();
         return true;
       case R.id.drawer_front_page:
-        showSubreddit(null);
-        mAnalytics.logDrawerFrontPage();
+        mMainPresenter.onShowFrontPage();
         return true;
       case R.id.drawer_r_all:
-        showSubreddit("all");
-        mAnalytics.logDrawerAllSubreddits();
+        mMainPresenter.onShowAllListings();
         return true;
       case R.id.drawer_random_subreddit:
-        showSubreddit("random");
-        mAnalytics.logDrawerRandomSubreddit();
+        mMainPresenter.onShowRandomSubreddit();
         return true;
     }
     return false;
@@ -304,7 +296,7 @@ public class _MainActivity extends AppCompatActivity implements MainView,
   @Override
   public void onBackPressed() {
     if (mDrawerLayout.isDrawerVisible(mNavigationView)) {
-      mDrawerLayout.closeDrawer(mNavigationView);
+      closeNavigationDrawer();
       return;
     }
 
@@ -354,7 +346,6 @@ public class _MainActivity extends AppCompatActivity implements MainView,
   @Override
   public void showError(Throwable error, int errorResId) {
     String message = getString(errorResId);
-//    error.printStackTrace();
     mLogger.e(error, message);
     if (error instanceof UnknownHostException) {
       message = getString(R.string.error_network_unavailable);
@@ -362,8 +353,8 @@ public class _MainActivity extends AppCompatActivity implements MainView,
     Snackbar.make(mDrawerLayout, message, Snackbar.LENGTH_LONG).show();
   }
 
-  private void showSubredditNavigationDialog() {
-    mDrawerLayout.closeDrawer(GravityCompat.START);
+  @Override
+  public void showSubredditNavigationView() {
     new SubredditNavigationDialog().show(getFragmentManager(), DIALOG_SUBREDDIT_NAVIGATION);
   }
 
