@@ -2,6 +2,7 @@ package com.ddiehl.android.htn.io.interceptors;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.io.RedditAuthService;
+import com.ddiehl.reddit.identity.AccessToken;
 import com.squareup.okhttp.Interceptor;
 import com.squareup.okhttp.Request;
 
@@ -24,10 +25,12 @@ public class AuthorizationInterceptor {
       case TOKEN_AUTH:
         return chain -> {
           Request originalRequest = chain.request();
+          AccessToken token = HoldTheNarwhal.getAccessTokenManager().getValidAccessToken();
+          HoldTheNarwhal.getLogger()
+              .d("Access token expires in " + token.secondsUntilExpiration() + " seconds");
           Request newRequest = originalRequest.newBuilder()
               .removeHeader("Authorization")
-              .addHeader("Authorization", "bearer "
-                  + HoldTheNarwhal.getAccessTokenManager().getValidAccessToken())
+              .addHeader("Authorization", "bearer " + token.getToken())
               .build();
           return chain.proceed(newRequest);
         };

@@ -168,13 +168,15 @@ public abstract class AbsListingsPresenter
   protected Action1<ListingResponse> onListingsLoaded() {
     return (response) -> {
       mMainView.dismissSpinner();
-      List<Listing> listings = response.getData().getChildren();
-      if (listings == null) throw new RuntimeException("Event data is null");
+      mListingsRequested = false;
+      // FIXME For some reason 401 responses come back null instead of as errors
+      if (response == null) return;
+      ListingResponseData data = response.getData();
+      List<Listing> listings = data.getChildren();
+      if (listings == null) throw new NullPointerException("Listings data is null");
       mListings.addAll(listings);
       mListingsView.listingsUpdated();
-      ListingResponseData data = response.getData();
       mNextPageListingId = data.getAfter();
-      mListingsRequested = false;
     };
   }
 

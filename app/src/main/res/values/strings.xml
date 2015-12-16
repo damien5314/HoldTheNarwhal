@@ -51,14 +51,6 @@
   <string name="user_friend_note_hint">likes pictures of cats</string>
   <string name="user_friend_empty_note">friend note cannot be empty</string>
   <string name="user_friend_note_save_button">save</string>
-  <string name="user_friend_note_save_confirm">friend note saved</string>
-  <string name="user_friend_note_save_error">error saving friend note</string>
-  <string name="user_friend_add_button_text">add to friends</string>
-  <string name="user_friend_add_confirm">user added to friends</string>
-  <string name="user_friend_add_error">error adding to friends</string>
-  <string name="user_friend_delete_button_text">remove from friends</string>
-  <string name="user_friend_delete_confirm">user removed from friends</string>
-  <string name="user_friend_delete_error">error removing friend</string>
 
   <!-- Ads -->
   <string name="advertisement">advertisement</string>
@@ -216,6 +208,15 @@
   <string name="save_failed">save failed, please try again</string>
   <string name="hide_failed">hide failed, please try again</string>
   <string name="link_hidden">link hidden</string>
+  <string name="user_settings_update_confirm">settings updated</string>
+  <string name="user_friend_note_save_confirm">friend note saved</string>
+  <string name="user_friend_note_save_error">error saving friend note</string>
+  <string name="user_friend_add_button_text">add to friends</string>
+  <string name="user_friend_add_confirm">user added to friends</string>
+  <string name="user_friend_add_error">error adding to friends</string>
+  <string name="user_friend_delete_button_text">remove from friends</string>
+  <string name="user_friend_delete_confirm">user removed from friends</string>
+  <string name="user_friend_delete_error">error removing friend</string>
   <string name="error_xxx">an error has occurred</string>
   <string name="error_network_unavailable">network is unavailable</string>
   <string name="error_404">page not found</string>
@@ -235,5 +236,6 @@
   <string name="error_get_friend_info">error getting friend info</string>
   <string name="error_get_user_profile_listings">error loading profile listings</string>
   <string name="error_no_network">no network connection</string>
+  <string name="error_user_settings_update">error updating settings</string>
 
 </resources>

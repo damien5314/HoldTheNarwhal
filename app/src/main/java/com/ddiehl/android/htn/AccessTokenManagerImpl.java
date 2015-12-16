@@ -39,15 +39,15 @@ public class AccessTokenManagerImpl implements AccessTokenManager {
   }
 
   @Override
-  public String getValidAccessToken() {
+  public AccessToken getValidAccessToken() {
     AccessToken token;
     token = getSavedUserAccessToken();
     if (token != null && token.secondsUntilExpiration() > EXPIRATION_THRESHOLD) {
-      return token.getToken();
+      return token;
     }
     token = getSavedApplicationAccessToken();
     if (token != null && token.secondsUntilExpiration() > EXPIRATION_THRESHOLD) {
-      return token.getToken();
+      return token;
     }
     return null;
   }

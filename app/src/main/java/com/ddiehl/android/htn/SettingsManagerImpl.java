@@ -3,6 +3,7 @@ package com.ddiehl.android.htn;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.ddiehl.android.dlogger.Logger;
 import com.ddiehl.android.htn.analytics.Analytics;
 import com.ddiehl.android.htn.io.RedditService;
 import com.ddiehl.reddit.identity.UserSettings;
@@ -79,6 +80,7 @@ public class SettingsManagerImpl implements SettingsManager {
       "highlight_new_comments, default_comment_sort, hide_locationbar";
 
   private Context mContext = HoldTheNarwhal.getContext();
+  private Logger mLogger = HoldTheNarwhal.getLogger();
   private RedditService mRedditService = HoldTheNarwhal.getRedditService();
   private Analytics mAnalytics = HoldTheNarwhal.getAnalytics();
   private SharedPreferences mSharedPreferences;
@@ -101,10 +103,7 @@ public class SettingsManagerImpl implements SettingsManager {
 
   @Override
   public void onSharedPreferenceChanged(SharedPreferences sp, String key) {
-//    updatePrefSummary(findPreference(key)); // Don't think this was needed anyway
-
-    if (mIsChanging)
-      return;
+    if (mIsChanging) return;
     mIsChanging = true;
 
     Map<String, String> changedSettings = new HashMap<>(); // Track changed keys and values
@@ -144,8 +143,8 @@ public class SettingsManagerImpl implements SettingsManager {
         HoldTheNarwhal.getAccessTokenManager().isUserAuthorized()) {
       // Post SettingsUpdate event with changed keys and values
       mRedditService.updateUserSettings(changedSettings)
-//          .doOnError(mMainView::showError) // TODO We need a presenter for SettingsFragment
-          .subscribe();
+          .subscribe(r -> mLogger.d("Settings updated successfully"),
+              e -> mLogger.e(e, "Error updating settings"));
     }
 
     Map prefs = sp.getAll();
@@ -211,6 +210,8 @@ public class SettingsManagerImpl implements SettingsManager {
   @Override
   public void clearUserSettings() {
     mSharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
+    // Only removing reddit preferences, app preferences can stay the same
+    // Need to do this because PreferenceFragment can only show preferences from one SP instance
     mSharedPreferences.edit()
         .remove(PREF_HAS_FROM_REMOTE)
         .remove(PREF_BETA)

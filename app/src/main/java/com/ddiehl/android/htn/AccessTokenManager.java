@@ -10,7 +10,7 @@ import rx.functions.Action1;
 public interface AccessTokenManager {
   boolean isUserAuthorized();
   boolean hasValidAccessToken();
-  String getValidAccessToken();
+  AccessToken getValidAccessToken();
   Observable<UserAccessToken> getUserAccessToken();
   Observable<AccessToken> getAccessToken();
   Action1<UserAccessToken> saveUserAccessToken();
