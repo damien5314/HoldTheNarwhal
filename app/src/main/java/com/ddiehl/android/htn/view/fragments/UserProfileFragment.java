@@ -241,31 +241,8 @@ public class UserProfileFragment extends AbsListingsFragment implements UserProf
     });
   }
 
-  public void updateTitle() {
+  private void updateTitle() {
     mMainView.setTitle(String.format(getString(R.string.username),
         mUserProfilePresenter.getUsernameContext()));
   }
-
-//  @Override
-//  public void showSpinner(String msg) {
-//    if (mUserProfilePresenter.getShow().equals("summary")) {
-//      ((MainView) getActivity()).showSpinner(msg);
-//      return;
-//    }
-//    mSwipeRefreshLayout.setRefreshing(true);
-//  }
-//
-//  @Override
-//  public void showSpinner(int resId) {
-//    this.showSpinner(getString(resId));
-//  }
-//
-//  @Override
-//  public void dismissSpinner() {
-//    if (mUserProfilePresenter.getShow().equals("summary")) {
-//      ((MainView) getActivity()).dismissSpinner();
-//      return;
-//    }
-//    mSwipeRefreshLayout.setRefreshing(false);
-//  }
 }
