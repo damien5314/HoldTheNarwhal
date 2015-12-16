@@ -76,8 +76,6 @@ public class _MainActivity extends AppCompatActivity implements MainView,
   private Analytics mAnalytics = HoldTheNarwhal.getAnalytics();
   private MainPresenter mMainPresenter;
 
-  private UserIdentity mCurrentUser;
-
   @Override @DebugLog
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -100,23 +98,20 @@ public class _MainActivity extends AppCompatActivity implements MainView,
     mMainPresenter = new MainPresenterImpl(this);
   }
 
-  // FIXME Can we change this to onResume()?
   @Override
-  protected void onStart() {
-    super.onStart();
+  protected void onResume() {
+    super.onResume();
     mMainPresenter.onResume();
   }
 
-  // FIXME Can we change this to onPause()?
   @Override
-  protected void onStop() {
+  protected void onPause() {
     mMainPresenter.onPause();
-    super.onStop();
+    super.onPause();
   }
 
   @Override
   public void updateUserIdentity(@Nullable UserIdentity identity) {
-    mCurrentUser = identity;
     mAccountNameView.setText(identity == null ?
         getString(R.string.account_name_unauthorized) : identity.getName());
     mSignOutView.setVisibility(identity == null ? View.GONE : View.VISIBLE);
