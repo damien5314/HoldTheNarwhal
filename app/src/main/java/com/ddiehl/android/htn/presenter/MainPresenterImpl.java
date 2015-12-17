@@ -196,13 +196,20 @@ public class MainPresenterImpl implements MainPresenter, IdentityManager.Callbac
       mLogger.d("Path segment: " + segment);
     }
 
+    // TODO Handle case of front page link, and its variations /hot /new, etc
     if (segments.get(0).equals("r")) {
       // Subreddit navigation
       String subreddit = segments.get(1);
       // Check for more metadata
       if (segments.size() > 2 && segments.get(2).equals("comments")) {
         // Navigating to comment thread
-        mMainView.showCommentsForLink(subreddit, segments.get(3), null);
+        if (segments.size() > 5) {
+          // Link to specific comment
+          mMainView.showCommentsForLink(subreddit, segments.get(3), segments.get(5));
+        } else {
+          // Link to full thread
+          mMainView.showCommentsForLink(subreddit, segments.get(3), null);
+        }
       } else {
         // Just go to subreddit itself
         mMainView.showSubreddit(subreddit);
