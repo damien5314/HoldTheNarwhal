@@ -193,9 +193,9 @@ public class MainPresenterImpl implements MainPresenter, IdentityManager.Callbac
 
   @Override
   public void processDeepLink(@NonNull Uri data) {
+    mDeepLink = null;
     mLogger.d("Deep Link: " + data.toString());
     List<String> segments = data.getPathSegments();
-    // TODO Ensure m.reddit.com links are captured
     if (segments.size() == 0) {
       // Front page
       mMainView.showSubreddit(null, null);

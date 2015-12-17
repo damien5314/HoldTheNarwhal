@@ -57,7 +57,6 @@ public class _MainActivity extends AppCompatActivity implements MainView,
   private static final String DIALOG_CONFIRM_SIGN_OUT = "dialog_confirm_sign_out";
   private static final String DIALOG_ANALYTICS = "dialog_analytics";
   private static final String DIALOG_SUBREDDIT_NAVIGATION = "dialog_subreddit_navigation";
-
   private static final String EXTRA_CUSTOM_TABS_SESSION =
       "android.support.customtabs.extra.SESSION";
   private static final String EXTRA_CUSTOM_TABS_TOOLBAR_COLOR =
