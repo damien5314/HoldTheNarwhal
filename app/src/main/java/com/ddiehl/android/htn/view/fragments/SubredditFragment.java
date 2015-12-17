@@ -41,6 +41,7 @@ public class SubredditFragment extends AbsListingsFragment {
     return v;
   }
 
+  @Override
   public void updateTitle() {
     String subreddit = mListingsPresenter.getSubreddit();
     if (subreddit != null) {

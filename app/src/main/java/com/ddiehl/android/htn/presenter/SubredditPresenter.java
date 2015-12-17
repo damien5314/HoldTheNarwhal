@@ -76,6 +76,7 @@ public class SubredditPresenter extends AbsListingsPresenter {
       super.onListingsLoaded().call(response);
       if (mSubreddit != null && mSubreddit.equals("random")) {
         mSubreddit = ((Link) mListings.get(0)).getSubreddit();
+        mListingsView.updateTitle();
       }
     };
   }

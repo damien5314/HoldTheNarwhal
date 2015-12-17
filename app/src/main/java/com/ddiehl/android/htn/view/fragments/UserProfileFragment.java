@@ -241,7 +241,8 @@ public class UserProfileFragment extends AbsListingsFragment implements UserProf
     });
   }
 
-  private void updateTitle() {
+  @Override
+  public void updateTitle() {
     mMainView.setTitle(String.format(getString(R.string.username),
         mUserProfilePresenter.getUsernameContext()));
   }
