@@ -216,9 +216,6 @@ public class MainPresenterImpl implements MainPresenter, IdentityManager.Callbac
         // Default view
         mMainView.showUserProfile(segments.get(1));
       }
-    } else {
-      // Unknown link
-      // TODO Display error "unable to handle link" or forward intent
     }
   }
 

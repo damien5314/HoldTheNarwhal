@@ -28,7 +28,9 @@
         <category android:name="android.intent.category.BROWSABLE" />
         <data android:scheme="http" />
         <data android:scheme="https" />
-        <data android:host="www.reddit.com" />
+        <data android:host="www.reddit.com" android:pathPattern="/r/.*" />
+        <data android:host="www.reddit.com" android:pathPattern="/u/.*" />
+        <data android:host="www.reddit.com" android:pathPattern="/user/.*" />
       </intent-filter>
     </activity>
 
