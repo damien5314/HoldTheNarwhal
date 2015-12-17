@@ -342,12 +342,12 @@ public abstract class AbsListingsFragment extends Fragment
 
   @Override
   public void openUserProfileView(@NonNull Link link) {
-    ((MainView) getActivity()).showUserProfile("summary", link.getAuthor());
+    ((MainView) getActivity()).showUserProfile(link.getAuthor(), "summary");
   }
 
   @Override
   public void openUserProfileView(@NonNull Comment comment) {
-    ((MainView) getActivity()).showUserProfile("summary", comment.getAuthor());
+    ((MainView) getActivity()).showUserProfile(comment.getAuthor(), "summary");
   }
 
   @Override

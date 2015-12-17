@@ -170,11 +170,11 @@ public class _MainActivity extends AppCompatActivity implements MainView,
 
   @Override
   public void showUserProfile(@NonNull String username) {
-    showUserProfile("summary", username);
+    showUserProfile(username, "summary");
   }
 
   @Override
-  public void showUserProfile(@NonNull String show, @NonNull String username) {
+  public void showUserProfile(@NonNull String username, @NonNull String show) {
     mMainPresenter.setUsernameContext(username);
     Fragment f = UserProfileFragment.newInstance(show, username);
     showFragment(f);

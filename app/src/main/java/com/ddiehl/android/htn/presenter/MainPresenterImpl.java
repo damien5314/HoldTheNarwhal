@@ -211,7 +211,7 @@ public class MainPresenterImpl implements MainPresenter, IdentityManager.Callbac
       // User profile navigation
       if (segments.size() > 2) {
         // Profile view specified
-        mMainView.showUserProfile(segments.get(2), segments.get(1));
+        mMainView.showUserProfile(segments.get(1), segments.get(2));
       } else {
         // Default view
         mMainView.showUserProfile(segments.get(1));
