@@ -1,5 +1,7 @@
 package com.ddiehl.android.htn.presenter;
 
+import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.ddiehl.reddit.identity.AccessToken;
@@ -21,4 +23,5 @@ public interface MainPresenter extends BasePresenter {
   void onShowFrontPage();
   void onShowAllListings();
   void onShowRandomSubreddit();
+  void onDeepLinkReceived(@NonNull Uri data);
 }

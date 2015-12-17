@@ -3,6 +3,8 @@ package com.ddiehl.android.htn.presenter;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
+import android.support.annotation.NonNull;
 
 import com.ddiehl.android.dlogger.Logger;
 import com.ddiehl.android.htn.AccessTokenManager;
@@ -16,6 +18,8 @@ import com.ddiehl.android.htn.io.RedditService;
 import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.reddit.identity.AccessToken;
 import com.ddiehl.reddit.identity.UserIdentity;
+
+import java.util.List;
 
 import rx.functions.Action1;
 
@@ -181,6 +185,33 @@ public class MainPresenterImpl implements MainPresenter, IdentityManager.Callbac
         .doOnNext(mIdentityManager::saveUserIdentity)
         .subscribe(mMainView::updateUserIdentity,
             e -> mMainView.showError(e, R.string.error_get_user_identity));
+  }
+
+  @Override
+  public void onDeepLinkReceived(@NonNull Uri data) {
+    List<String> segments = data.getPathSegments();
+
+    // Debugging
+    for (String segment : segments) {
+      mLogger.d("Path segment: " + segment);
+    }
+
+    if (segments.get(0).equals("r")) {
+      // Subreddit navigation
+      String subreddit = segments.get(1);
+      // Check for more metadata
+      if (segments.size() > 2 && segments.get(2).equals("comments")) {
+        // Navigating to comment thread
+      } else {
+        // Just go to subreddit itself
+        mMainView.showSubreddit(subreddit);
+      }
+    } else if (segments.get(0).equals("u")) {
+      // User profile navigation
+    } else {
+      // Unknown link
+      // TODO Display error "unable to handle link"
+    }
   }
 
   private UserIdentity getAuthorizedUser() {

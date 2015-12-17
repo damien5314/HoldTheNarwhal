@@ -102,6 +102,8 @@ public class _MainActivity extends AppCompatActivity implements MainView,
   protected void onResume() {
     super.onResume();
     mMainPresenter.onResume();
+    Uri data = getIntent().getData();
+    if (data != null) mMainPresenter.onDeepLinkReceived(data);
   }
 
   @Override
