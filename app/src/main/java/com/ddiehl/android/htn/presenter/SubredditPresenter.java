@@ -17,6 +17,19 @@ public class SubredditPresenter extends AbsListingsPresenter {
   public SubredditPresenter(
       MainView main, ListingsView view, String subreddit, String sort, String timespan) {
     super(main, view, null, null, subreddit, sort, timespan);
+    mMainView.loadImageIntoDrawerHeader(null);
+  }
+
+  @Override
+  public void onResume() {
+    super.onResume();
+    loadHeaderImage();
+  }
+
+  @Override
+  public void onPause() {
+    super.onPause();
+    mMainView.loadImageIntoDrawerHeader(null);
   }
 
   @Override
@@ -44,8 +57,8 @@ public class SubredditPresenter extends AbsListingsPresenter {
   }
 
   private Action1<Subreddit> onSubredditInfoLoaded() {
-    return subreddit -> {
-      mSubredditInfo = subreddit;
+    return info -> {
+      mSubredditInfo = info;
       UserIdentity user = getAuthorizedUser();
       if ((mSubredditInfo != null && mSubredditInfo.isOver18())
           && (user == null || !user.isOver18())) {
@@ -53,7 +66,7 @@ public class SubredditPresenter extends AbsListingsPresenter {
       } else {
         requestData();
       }
-      mMainView.loadImageIntoDrawerHeader(subreddit.getHeaderImageUrl());
+      loadHeaderImage();
     };
   }
 
@@ -65,5 +78,11 @@ public class SubredditPresenter extends AbsListingsPresenter {
         mSubreddit = ((Link) mListings.get(0)).getSubreddit();
       }
     };
+  }
+
+  private void loadHeaderImage() {
+    if (mSubredditInfo != null) {
+      mMainView.loadImageIntoDrawerHeader(mSubredditInfo.getHeaderImageUrl());
+    }
   }
 }
