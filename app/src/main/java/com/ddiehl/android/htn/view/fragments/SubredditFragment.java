@@ -2,6 +2,7 @@ package com.ddiehl.android.htn.view.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,13 +13,15 @@ import com.ddiehl.android.htn.view.adapters.ListingsAdapter;
 import com.ddiehl.reddit.listings.Link;
 
 public class SubredditFragment extends AbsListingsFragment {
-  private static final String ARG_SUBREDDIT = "subreddit";
+  private static final String ARG_SUBREDDIT = "arg_subreddit";
+  private static final String ARG_SORT = "arg_sort";
 
   public SubredditFragment() { }
 
-  public static SubredditFragment newInstance(String subreddit) {
+  public static SubredditFragment newInstance(@Nullable String subreddit, @Nullable String sort) {
     Bundle args = new Bundle();
     args.putString(ARG_SUBREDDIT, subreddit);
+    args.putString(ARG_SORT, sort);
     SubredditFragment fragment = new SubredditFragment();
     fragment.setArguments(args);
     return fragment;
@@ -29,7 +32,9 @@ public class SubredditFragment extends AbsListingsFragment {
     super.onCreate(savedInstanceState);
     Bundle args = getArguments();
     String subreddit = args.getString(ARG_SUBREDDIT);
-    mListingsPresenter = new SubredditPresenter(mMainView, this, subreddit, "hot", "all");
+    String sort = args.getString(ARG_SORT);
+    if (TextUtils.isEmpty(sort)) sort = "hot";
+    mListingsPresenter = new SubredditPresenter(mMainView, this, subreddit, sort, "all");
     mListingsAdapter = new ListingsAdapter(mListingsPresenter);
   }
 

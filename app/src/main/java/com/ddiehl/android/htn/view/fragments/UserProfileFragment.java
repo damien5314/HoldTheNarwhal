@@ -37,6 +37,7 @@ import butterknife.ButterKnife;
 public class UserProfileFragment extends AbsListingsFragment implements UserProfileView {
   private static final String ARG_SHOW = "arg_show";
   private static final String ARG_USERNAME = "arg_username";
+  private static final String ARG_SORT = "arg_sort";
 
   @Bind(R.id.user_profile_tabs) TabLayout mUserProfileTabs;
   @Bind(R.id.user_profile_summary) View mUserProfileSummary;
@@ -59,11 +60,13 @@ public class UserProfileFragment extends AbsListingsFragment implements UserProf
 
   public UserProfileFragment() { }
 
-  public static UserProfileFragment newInstance(String show, String username) {
+  public static UserProfileFragment newInstance(
+      @NonNull String show, @NonNull String username, @NonNull String sort) {
     UserProfileFragment f = new UserProfileFragment();
     Bundle args = new Bundle();
     args.putString(ARG_SHOW, show);
     args.putString(ARG_USERNAME, username);
+    args.putString(ARG_SORT, sort);
     f.setArguments(args);
     return f;
   }
@@ -74,8 +77,9 @@ public class UserProfileFragment extends AbsListingsFragment implements UserProf
     Bundle args = getArguments();
     String show = args.getString(ARG_SHOW);
     String username = args.getString(ARG_USERNAME);
+    String sort = args.getString(ARG_SORT);
     mUserProfilePresenter = new UserProfilePresenter(mMainView, this, this,
-        show, username, "new", "all");
+        show, username, sort, "all");
     mListingsAdapter = new ListingsAdapter(mUserProfilePresenter);
     mListingsPresenter = mUserProfilePresenter;
   }

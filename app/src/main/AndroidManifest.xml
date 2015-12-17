@@ -7,7 +7,7 @@
   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
   <application
-    android:name=".HoldTheNarwhal"
+    android:name="com.ddiehl.android.htn.HoldTheNarwhal"
     android:allowBackup="true"
     android:icon="@mipmap/ic_launcher"
     android:label="@string/app_name"
@@ -28,9 +28,16 @@
         <category android:name="android.intent.category.BROWSABLE" />
         <data android:scheme="http" />
         <data android:scheme="https" />
-        <data android:host="www.reddit.com" android:pathPattern="/r/.*" />
-        <data android:host="www.reddit.com" android:pathPattern="/u/.*" />
-        <data android:host="www.reddit.com" android:pathPattern="/user/.*" />
+        <data android:host="*.reddit.com" android:path="" />
+        <data android:host="*.reddit.com" android:pathPattern="/" />
+        <data android:host="*.reddit.com" android:pathPattern="/hot" />
+        <data android:host="*.reddit.com" android:pathPattern="/new" />
+        <data android:host="*.reddit.com" android:pathPattern="/rising" />
+        <data android:host="*.reddit.com" android:pathPattern="/controversial" />
+        <data android:host="*.reddit.com" android:pathPattern="/top" />
+        <data android:host="*.reddit.com" android:pathPattern="/r/.*" />
+        <data android:host="*.reddit.com" android:pathPattern="/u/.*" />
+        <data android:host="*.reddit.com" android:pathPattern="/user/.*" />
       </intent-filter>
     </activity>
 

@@ -95,15 +95,14 @@ public class _MainActivity extends AppCompatActivity implements MainView,
     }
 
     // Initialize dependencies
-    mMainPresenter = new MainPresenterImpl(this);
+    Uri data = getIntent().getData();
+    mMainPresenter = new MainPresenterImpl(this, data);
   }
 
   @Override
   protected void onResume() {
     super.onResume();
     mMainPresenter.onResume();
-    Uri data = getIntent().getData();
-    if (data != null) mMainPresenter.onDeepLinkReceived(data);
   }
 
   @Override
@@ -175,14 +174,18 @@ public class _MainActivity extends AppCompatActivity implements MainView,
 
   @Override
   public void showUserProfile(@NonNull String username, @NonNull String show) {
-    mMainPresenter.setUsernameContext(username);
-    Fragment f = UserProfileFragment.newInstance(show, username);
+    showUserProfile(username, show, "new");
+  }
+
+  @Override
+  public void showUserProfile(@NonNull String username, @NonNull String show, @NonNull String sort) {
+    Fragment f = UserProfileFragment.newInstance(show, username, sort);
     showFragment(f);
   }
 
   @Override
-  public void showSubreddit(@Nullable String subreddit) {
-    Fragment f = SubredditFragment.newInstance(subreddit);
+  public void showSubreddit(@Nullable String subreddit, @Nullable String sort) {
+    Fragment f = SubredditFragment.newInstance(subreddit, sort);
     showFragment(f);
   }
 
@@ -308,7 +311,7 @@ public class _MainActivity extends AppCompatActivity implements MainView,
   @Override
   public void showSubredditIfEmpty(@Nullable String subreddit) {
     if (getCurrentDisplayedFragment() == null) {
-      showSubreddit(subreddit);
+      showSubreddit(subreddit, null);
     }
   }
 
@@ -329,7 +332,7 @@ public class _MainActivity extends AppCompatActivity implements MainView,
 
   @Override
   public void onSubredditNavigationConfirmed(String subreddit) {
-    showSubreddit(subreddit);
+    showSubreddit(subreddit, null);
   }
 
   @Override

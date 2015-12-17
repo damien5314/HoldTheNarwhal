@@ -33,10 +33,11 @@ public class MainPresenterImpl implements MainPresenter, IdentityManager.Callbac
   private SettingsManager mSettingsManager = HoldTheNarwhal.getSettingsManager();
   private Analytics mAnalytics = HoldTheNarwhal.getAnalytics();
   private MainView mMainView;
-  private String mUsernameContext;
+  private Uri mDeepLink;
 
-  public MainPresenterImpl(MainView view) {
+  public MainPresenterImpl(MainView view, Uri deepLink) {
     mMainView = view;
+    mDeepLink = deepLink;
   }
 
   @Override
@@ -51,6 +52,14 @@ public class MainPresenterImpl implements MainPresenter, IdentityManager.Callbac
 
     if (!showAnalyticsRequestIfNeverShown()) {
       mAnalytics.startSession();
+      showFirstView();
+    }
+  }
+
+  private void showFirstView() {
+    if (mDeepLink != null) {
+      processDeepLink(mDeepLink);
+    } else {
       mMainView.showSubredditIfEmpty(null);
     }
   }
@@ -106,19 +115,19 @@ public class MainPresenterImpl implements MainPresenter, IdentityManager.Callbac
 
   @Override
   public void onShowFrontPage() {
-    mMainView.showSubreddit(null);
+    mMainView.showSubreddit(null, null);
     mAnalytics.logDrawerFrontPage();
   }
 
   @Override
   public void onShowAllListings() {
-    mMainView.showSubreddit("all");
+    mMainView.showSubreddit("all", null);
     mAnalytics.logDrawerAllSubreddits();
   }
 
   @Override
   public void onShowRandomSubreddit() {
-    mMainView.showSubreddit("random");
+    mMainView.showSubreddit("random", null);
     mAnalytics.logDrawerRandomSubreddit();
   }
 
@@ -137,11 +146,6 @@ public class MainPresenterImpl implements MainPresenter, IdentityManager.Callbac
     mAnalytics.logSignOut();
   }
 
-  @Override
-  public void setUsernameContext(String username) {
-    mUsernameContext = username;
-  }
-
   private boolean showAnalyticsRequestIfNeverShown() {
     if (!mSettingsManager.askedForAnalytics()) {
       mMainView.showAnalyticsRequestDialog();
@@ -155,7 +159,7 @@ public class MainPresenterImpl implements MainPresenter, IdentityManager.Callbac
     mSettingsManager.setAskedForAnalytics(true);
     mSettingsManager.setAnalyticsEnabled(true);
     mAnalytics.startSession();
-    mMainView.showSubredditIfEmpty(null);
+    showFirstView();
   }
 
   @Override
@@ -163,7 +167,7 @@ public class MainPresenterImpl implements MainPresenter, IdentityManager.Callbac
     mSettingsManager.setAskedForAnalytics(true);
     mSettingsManager.setAnalyticsEnabled(false);
     mAnalytics.endSession();
-    mMainView.showSubredditIfEmpty(null);
+    showFirstView();
   }
 
   @Override
@@ -188,42 +192,75 @@ public class MainPresenterImpl implements MainPresenter, IdentityManager.Callbac
   }
 
   @Override
-  public void onDeepLinkReceived(@NonNull Uri data) {
+  public void processDeepLink(@NonNull Uri data) {
+    mLogger.d("Deep Link: " + data.toString());
     List<String> segments = data.getPathSegments();
-
-    // Debugging
-    for (String segment : segments) {
-      mLogger.d("Path segment: " + segment);
-    }
-
-    // TODO Handle case of front page link, and its variations /hot /new, etc
-    if (segments.get(0).equals("r")) {
+    // TODO Ensure m.reddit.com links are captured
+    if (segments.size() == 0) {
+      // Front page
+      mMainView.showSubreddit(null, null);
+      return;
+    } else if (segments.get(0).equals("hot")
+        || segments.get(0).equals("new")
+        || segments.get(0).equals("rising")
+        || segments.get(0).equals("controversial")
+        || segments.get(0).equals("top")
+        || segments.get(0).equals("gilded")) {
+      // Sorted front page
+      mMainView.showSubreddit(null, segments.get(0));
+      return;
+    } else if (segments.get(0).equals("r")) {
       // Subreddit navigation
       String subreddit = segments.get(1);
       // Check for more metadata
-      if (segments.size() > 2 && segments.get(2).equals("comments")) {
-        // Navigating to comment thread
-        if (segments.size() > 5) {
-          // Link to specific comment
-          mMainView.showCommentsForLink(subreddit, segments.get(3), segments.get(5));
-        } else {
-          // Link to full thread
-          mMainView.showCommentsForLink(subreddit, segments.get(3), null);
+      if (segments.size() > 2) {
+        if (segments.get(2).equals("comments")) {
+          // Navigating to comment thread
+          if (segments.size() > 5) {
+            // Link to specific comment
+            mMainView.showCommentsForLink(subreddit, segments.get(3), segments.get(5));
+            return;
+          } else {
+            // Link to full thread
+            mMainView.showCommentsForLink(subreddit, segments.get(3), null);
+            return;
+          }
+        } else if (segments.get(2).equals("hot")
+            || segments.get(2).equals("new")
+            || segments.get(2).equals("rising")
+            || segments.get(2).equals("controversial")
+            || segments.get(2).equals("top")
+            || segments.get(2).equals("gilded")) {
+          // Subreddit sorted
+          mMainView.showSubreddit(subreddit, segments.get(2));
+          return;
         }
       } else {
-        // Just go to subreddit itself
-        mMainView.showSubreddit(subreddit);
+        // Subreddit default sort
+        mMainView.showSubreddit(subreddit, null);
+        return;
       }
     } else if (segments.get(0).equals("u") || segments.get(0).equals("user")) {
       // User profile navigation
       if (segments.size() > 2) {
         // Profile view specified
-        mMainView.showUserProfile(segments.get(1), segments.get(2));
+        if (segments.size() > 3) {
+          // Profile view with sort
+          // FIXME This actually should be read from a query string
+          mMainView.showUserProfile(segments.get(1), segments.get(2), segments.get(3));
+        } else {
+          // Profile view default sort
+          mMainView.showUserProfile(segments.get(1), segments.get(2));
+        }
+        return;
       } else {
         // Default view
         mMainView.showUserProfile(segments.get(1));
+        return;
       }
     }
+    mLogger.w("Deep link fell through without redirection: " + data.toString());
+    mMainView.showSubreddit(null, null); // Show front page
   }
 
   private UserIdentity getAuthorizedUser() {
