@@ -387,11 +387,18 @@ public class _MainActivity extends AppCompatActivity implements MainView,
   private void showFragment(@NonNull Fragment f) {
     FragmentManager fm = getFragmentManager();
     FragmentTransaction ft = fm.beginTransaction().replace(R.id.fragment_container, f);
-
-    if (getCurrentDisplayedFragment() != null) {
-      ft.addToBackStack(null);
-    }
-
+    if (getCurrentDisplayedFragment() != null) ft.addToBackStack(null);
     ft.commit();
+  }
+
+  @Override
+  public void showCommentsForLink(
+      @Nullable String subreddit, @Nullable String linkId, @Nullable String commentId) {
+    Fragment fragment = LinkCommentsFragment.newInstance(subreddit, linkId, commentId);
+    FragmentManager fm = getFragmentManager();
+    fm.beginTransaction()
+        .replace(R.id.fragment_container, fragment)
+        .addToBackStack(null)
+        .commit();
   }
 }

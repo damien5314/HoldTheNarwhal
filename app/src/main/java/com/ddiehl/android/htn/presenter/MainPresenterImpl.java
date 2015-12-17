@@ -202,15 +202,23 @@ public class MainPresenterImpl implements MainPresenter, IdentityManager.Callbac
       // Check for more metadata
       if (segments.size() > 2 && segments.get(2).equals("comments")) {
         // Navigating to comment thread
+        mMainView.showCommentsForLink(subreddit, segments.get(3), null);
       } else {
         // Just go to subreddit itself
         mMainView.showSubreddit(subreddit);
       }
-    } else if (segments.get(0).equals("u")) {
+    } else if (segments.get(0).equals("u") || segments.get(0).equals("user")) {
       // User profile navigation
+      if (segments.size() > 2) {
+        // Profile view specified
+        mMainView.showUserProfile(segments.get(2), segments.get(1));
+      } else {
+        // Default view
+        mMainView.showUserProfile(segments.get(1));
+      }
     } else {
       // Unknown link
-      // TODO Display error "unable to handle link"
+      // TODO Display error "unable to handle link" or forward intent
     }
   }
 

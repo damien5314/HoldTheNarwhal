@@ -317,12 +317,7 @@ public abstract class AbsListingsFragment extends Fragment
   @Override
   public void showCommentsForLink(
       @Nullable String subreddit, @Nullable String linkId, @Nullable String commentId) {
-    Fragment fragment = LinkCommentsFragment.newInstance(subreddit, linkId, commentId);
-    FragmentManager fm = getActivity().getFragmentManager();
-    fm.beginTransaction()
-        .replace(R.id.fragment_container, fragment)
-        .addToBackStack(null)
-        .commit();
+    mMainView.showCommentsForLink(subreddit, linkId, commentId);
   }
 
   @Override
