@@ -200,12 +200,7 @@ public class MainPresenterImpl implements MainPresenter, IdentityManager.Callbac
       // Front page
       mMainView.showSubreddit(null, null);
       return;
-    } else if (segments.get(0).equals("hot")
-        || segments.get(0).equals("new")
-        || segments.get(0).equals("rising")
-        || segments.get(0).equals("controversial")
-        || segments.get(0).equals("top")
-        || segments.get(0).equals("gilded")) {
+    } else if (isSubredditSort(segments.get(0))) {
       // Sorted front page
       mMainView.showSubreddit(null, segments.get(0));
       return;
@@ -225,12 +220,7 @@ public class MainPresenterImpl implements MainPresenter, IdentityManager.Callbac
             mMainView.showCommentsForLink(subreddit, segments.get(3), null);
             return;
           }
-        } else if (segments.get(2).equals("hot")
-            || segments.get(2).equals("new")
-            || segments.get(2).equals("rising")
-            || segments.get(2).equals("controversial")
-            || segments.get(2).equals("top")
-            || segments.get(2).equals("gilded")) {
+        } else if (isSubredditSort(segments.get(2))) {
           // Subreddit sorted
           mMainView.showSubreddit(subreddit, segments.get(2));
           return;
@@ -248,19 +238,25 @@ public class MainPresenterImpl implements MainPresenter, IdentityManager.Callbac
           // Profile view with sort
           // FIXME This actually should be read from a query string
           mMainView.showUserProfile(segments.get(1), segments.get(2), segments.get(3));
+          return;
         } else {
           // Profile view default sort
           mMainView.showUserProfile(segments.get(1), segments.get(2));
+          return;
         }
-        return;
-      } else {
-        // Default view
-        mMainView.showUserProfile(segments.get(1));
-        return;
       }
     }
     mLogger.w("Deep link fell through without redirection: " + data.toString());
     mMainView.showSubreddit(null, null); // Show front page
+  }
+
+  private boolean isSubredditSort(String s) {
+    return s.equals("hot")
+        || s.equals("new")
+        || s.equals("rising")
+        || s.equals("controversial")
+        || s.equals("top")
+        || s.equals("gilded");
   }
 
   private UserIdentity getAuthorizedUser() {
