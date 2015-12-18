@@ -19,5 +19,8 @@ public interface SettingsManager extends SharedPreferences.OnSharedPreferenceCha
   void saveCommentSort(String pref);
   Integer getMinCommentScore();
   boolean getShowControversiality();
+  boolean getOver18();
   void setOver18(boolean b);
+  boolean getNoProfanity();
+  boolean getLabelNsfw();
 }

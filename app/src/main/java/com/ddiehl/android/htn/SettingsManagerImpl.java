@@ -350,10 +350,25 @@ public class SettingsManagerImpl implements SettingsManager {
   }
 
   @Override
+  public boolean getOver18() {
+    return mSharedPreferences.getBoolean(PREF_OVER_18, false);
+  }
+
+  @Override
   public void setOver18(boolean b) {
     mSharedPreferences.edit()
         .putBoolean(PREF_OVER_18, b)
         .apply();
+  }
+
+  @Override
+  public boolean getNoProfanity() {
+    return mSharedPreferences.getBoolean(PREF_NO_PROFANITY, true);
+  }
+
+  @Override
+  public boolean getLabelNsfw() {
+    return mSharedPreferences.getBoolean(PREF_LABEL_NSFW, true);
   }
 
   ///////////////
