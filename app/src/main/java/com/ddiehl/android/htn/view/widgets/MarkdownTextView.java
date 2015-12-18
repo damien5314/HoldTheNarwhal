@@ -11,7 +11,6 @@ import in.uncod.android.bypass.Bypass;
 
 
 public class MarkdownTextView extends TextView {
-
   private CharSequence mRawText;
 
   public MarkdownTextView(Context context) {
@@ -31,17 +30,20 @@ public class MarkdownTextView extends TextView {
 
   @Override
   public CharSequence getText() {
+    if (isInEditMode()) return super.getText();
     return mRawText;
   }
 
   @Override
   public void setText(CharSequence text, BufferType type) {
-    if (!isInEditMode()) {
-      mRawText = text;
-      Bypass b = BypassWrapper.getInstance(getContext());
-      CharSequence formatted = b.markdownToSpannable(text.toString());
-      super.setText(formatted, type);
+    if (isInEditMode()) {
+      super.setText(text, type);
+      return;
     }
+    mRawText = text;
+    Bypass b = BypassWrapper.getInstance(getContext());
+    CharSequence formatted = b.markdownToSpannable(text.toString());
+    super.setText(formatted, type);
   }
 
   private static class BypassWrapper {
@@ -53,7 +55,8 @@ public class MarkdownTextView extends TextView {
         synchronized (Bypass.class) {
           if (_instance == null) {
             Bypass.Options o = new Bypass.Options();
-            o.setBlockQuoteColor(c.getResources().getColor(R.color.markdown_quote_block));
+            o.setBlockQuoteColor(
+                c.getResources().getColor(R.color.markdown_quote_block, c.getTheme()));
             _instance = new Bypass(c, o);
           }
         }
