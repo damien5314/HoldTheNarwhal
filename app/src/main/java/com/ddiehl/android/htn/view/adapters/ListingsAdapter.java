@@ -6,22 +6,25 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ddiehl.android.htn.R;
+import com.ddiehl.android.htn.presenter.LinkPresenter;
 import com.ddiehl.android.htn.presenter.ListingsPresenter;
 import com.ddiehl.android.htn.view.viewholders.ListingsCommentViewHolder;
 import com.ddiehl.android.htn.view.viewholders.ListingsLinkViewHolder;
 import com.ddiehl.reddit.listings.Comment;
-import com.ddiehl.reddit.listings.Listing;
 import com.ddiehl.reddit.listings.Link;
+import com.ddiehl.reddit.listings.Listing;
 
 public class ListingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-
   private static final int TYPE_LINK = 0;
   private static final int TYPE_COMMENT = 1;
 
   private ListingsPresenter mListingsPresenter;
+  private boolean mShowNsfwTag;
+  private LinkPresenter.ThumbnailMode mThumbnailMode;
 
   public ListingsAdapter(ListingsPresenter presenter) {
     mListingsPresenter = presenter;
+    getSettings();
   }
 
   @Override
@@ -57,9 +60,10 @@ public class ListingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
   @Override
   public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    if (position % 25 == 0) getSettings();
     if (holder instanceof ListingsLinkViewHolder) {
       Link link = (Link) mListingsPresenter.getListing(position);
-      ((ListingsLinkViewHolder) holder).bind(link, false);
+      ((ListingsLinkViewHolder) holder).bind(link, false, mThumbnailMode, mShowNsfwTag);
     } else if (holder instanceof ListingsCommentViewHolder) {
       Comment comment = (Comment) mListingsPresenter.getListing(position);
       boolean showControversiality = mListingsPresenter.getShowControversiality()
@@ -73,4 +77,8 @@ public class ListingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     return mListingsPresenter.getNumListings();
   }
 
+  private void getSettings() {
+    mShowNsfwTag = mListingsPresenter.shouldShowNsfwTag();
+    mThumbnailMode = mListingsPresenter.getThumbnailMode();
+  }
 }

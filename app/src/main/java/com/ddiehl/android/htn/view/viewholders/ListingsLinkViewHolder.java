@@ -2,6 +2,7 @@ package com.ddiehl.android.htn.view.viewholders;
 
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu;
 import android.view.View;
@@ -22,7 +23,6 @@ import butterknife.OnClick;
 
 public class ListingsLinkViewHolder extends RecyclerView.ViewHolder
     implements View.OnCreateContextMenuListener {
-
   private Context mContext;
   private LinkPresenter mLinkPresenter;
   private Link mLink;
@@ -36,6 +36,7 @@ public class ListingsLinkViewHolder extends RecyclerView.ViewHolder
   @Bind(R.id.link_subreddit) TextView mLinkSubreddit;
   @Bind(R.id.link_comment_count) TextView mLinkComments;
   @Bind(R.id.link_self_text) TextView mSelfText;
+  @Bind(R.id.link_nsfw_indicator) TextView mNsfwIndicator;
   @Bind(R.id.link_thumbnail) ImageView mLinkThumbnail;
   @Bind(R.id.link_timestamp) RedditDateTextView mLinkTimestamp;
   @Bind(R.id.link_gilded_text_view) TextView mGildedText;
@@ -64,15 +65,9 @@ public class ListingsLinkViewHolder extends RecyclerView.ViewHolder
     v.showContextMenu();
   }
 
-  public void bind(Link link, boolean showSelfText) {
+  public void bind(
+      Link link, boolean showSelfText, LinkPresenter.ThumbnailMode mode, boolean showNsfw) {
     mLink = link;
-
-//    if (link == null) {
-//      mLinkView.setVisibility(View.GONE);
-//      mSelfText.setVisibility(View.GONE);
-//      return;
-//    }
-
     showSelfText(link, showSelfText);
     showScore(link);
     showTitle(link);
@@ -81,7 +76,8 @@ public class ListingsLinkViewHolder extends RecyclerView.ViewHolder
     showSubreddit(link);
     showDomain(link);
     showCommentCount(link);
-    showThumbnail(link);
+    showNsfwTag(link.getOver18() && showNsfw);
+    showThumbnail(link, mode);
     showLiked(link);
     showGilded(link);
     showSaved(link);
@@ -123,7 +119,6 @@ public class ListingsLinkViewHolder extends RecyclerView.ViewHolder
           mLinkAuthor.setTextColor(mContext.getResources().getColor(R.color.author_admin_text));
           break;
         default:
-
       }
     }
   }
@@ -155,7 +150,8 @@ public class ListingsLinkViewHolder extends RecyclerView.ViewHolder
     mLinkComments.setText(String.format(mContext.getString(R.string.link_comment_count), link.getNumComments()));
   }
 
-  private static String getPreviewUrl(List<Link.Preview.Image> images) {
+  private String getPreviewUrl(@Nullable List<Link.Preview.Image> images) {
+    if (images == null || images.size() == 0) return null;
     Link.Preview.Image imageToDisplay;
     // Retrieve preview image to display
     Link.Preview.Image image = images.get(0);
@@ -166,8 +162,46 @@ public class ListingsLinkViewHolder extends RecyclerView.ViewHolder
       imageToDisplay = image;
     }
     List<Link.Preview.Image.Res> resolutions = imageToDisplay.getResolutions();
-    Link.Preview.Image.Res res = resolutions.size() > 0 ? resolutions.get(0) : imageToDisplay.getSource();
+    Link.Preview.Image.Res res =
+        resolutions.size() > 0 ? resolutions.get(0) : imageToDisplay.getSource();
     return res.getUrl();
+  }
+
+  private void showThumbnail(Link link, LinkPresenter.ThumbnailMode mode) {
+    String url = null;
+
+    if (link.getOver18()) {
+      if (mode == LinkPresenter.ThumbnailMode.NO_THUMBNAIL) {
+        mLinkThumbnail.setVisibility(View.GONE);
+      } else {
+        mLinkThumbnail.setVisibility(View.VISIBLE);
+        if (mode == LinkPresenter.ThumbnailMode.VARIANT) {
+          url = getPreviewUrl(link.getPreviewImages());
+        } else { // ThumbnailMode.FULL
+          url = link.getThumbnail();
+        }
+      }
+    } else {
+      url = link.getThumbnail();
+    }
+
+    if (url == null) url = "";
+    switch (url) {
+      case "nsfw":
+        Picasso.with(mContext)
+            .load(R.drawable.ic_nsfw2)
+            .into(mLinkThumbnail);
+        break;
+      case "": case "default": case "self":
+        mLinkThumbnail.setVisibility(View.GONE);
+        break;
+      default:
+        loadThumbnail(url);
+    }
+  }
+
+  private void showNsfwTag(boolean b) {
+    mNsfwIndicator.setVisibility(b ? View.VISIBLE : View.GONE);
   }
 
   private void loadThumbnail(String url) {
@@ -177,34 +211,6 @@ public class ListingsLinkViewHolder extends RecyclerView.ViewHolder
         .fit().centerCrop()
         .error(R.drawable.ic_alert_error)
         .into(mLinkThumbnail);
-  }
-
-  private void showNsfw() {
-    Picasso.with(mContext)
-        .load(R.drawable.ic_nsfw2)
-        .into(mLinkThumbnail);
-  }
-
-  private void showThumbnail(Link link) {
-    mLinkThumbnail.setVisibility(View.VISIBLE);
-    String url = null;
-    List<Link.Preview.Image> images = link.getPreviewImages();
-    if (images != null && images.size() > 0) {
-      url = getPreviewUrl(images);
-    }
-    if (url == null) {
-      url = link.getThumbnail();
-    }
-    switch (url) {
-      case "nsfw":
-        showNsfw();
-        break;
-      case "": case "default": case "self":
-        mLinkThumbnail.setVisibility(View.GONE);
-        break;
-      default:
-        loadThumbnail(url);
-    }
   }
 
   private void showLiked(Link link) {

@@ -27,6 +27,7 @@ import com.ddiehl.reddit.listings.Link;
 import com.ddiehl.reddit.listings.Listing;
 import com.ddiehl.reddit.listings.ListingResponse;
 import com.ddiehl.reddit.listings.ListingResponseData;
+import com.ddiehl.reddit.listings.Subreddit;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +52,7 @@ public abstract class AbsListingsPresenter
   protected String mSubreddit;
   protected String mSort;
   protected String mTimespan;
+  protected Subreddit mSubredditInfo;
 
   protected Listing mListingSelected;
   protected boolean mListingsRequested = false;
@@ -521,6 +523,33 @@ public abstract class AbsListingsPresenter
     } else {
       mMainView.dismissSpinner();
       mListingsView.goBack();
+    }
+  }
+
+  @Override
+  public boolean shouldShowNsfwTag() {
+    return !mSettingsManager.getOver18() || !(mSubredditInfo != null && mSubredditInfo.isOver18())
+        && (mSettingsManager.getNoProfanity() || mSettingsManager.getLabelNsfw());
+  }
+
+  @Override
+  public ThumbnailMode getThumbnailMode() {
+    if (mSettingsManager.getOver18()) {
+      if (mSubredditInfo != null && mSubredditInfo.isOver18()) {
+        return ThumbnailMode.FULL;
+      } else {
+        if (mSettingsManager.getNoProfanity()) {
+          return ThumbnailMode.VARIANT;
+        } else {
+          if (mSettingsManager.getLabelNsfw()) {
+            return ThumbnailMode.VARIANT;
+          } else {
+            return ThumbnailMode.FULL;
+          }
+        }
+      }
+    } else {
+      return ThumbnailMode.NO_THUMBNAIL;
     }
   }
 }

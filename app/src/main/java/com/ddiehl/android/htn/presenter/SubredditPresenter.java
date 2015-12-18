@@ -12,8 +12,6 @@ import rx.functions.Action0;
 import rx.functions.Action1;
 
 public class SubredditPresenter extends AbsListingsPresenter {
-  private Subreddit mSubredditInfo;
-
   public SubredditPresenter(
       MainView main, ListingsView view, String subreddit, String sort, String timespan) {
     super(main, view, null, null, subreddit, sort, timespan);

@@ -25,4 +25,8 @@ public interface LinkPresenter extends BasePresenter {
   void hideLink();
   void unhideLink();
   void reportLink();
+  boolean shouldShowNsfwTag();
+  ThumbnailMode getThumbnailMode();
+
+  enum ThumbnailMode { NO_THUMBNAIL, VARIANT, FULL }
 }

@@ -6,14 +6,15 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ddiehl.android.htn.R;
-import com.ddiehl.android.htn.view.viewholders.ThreadStubViewHolder;
-import com.ddiehl.android.htn.view.viewholders.ThreadCommentViewHolder;
+import com.ddiehl.android.htn.presenter.LinkCommentsPresenter;
+import com.ddiehl.android.htn.presenter.LinkPresenter;
 import com.ddiehl.android.htn.view.viewholders.ListingsLinkViewHolder;
+import com.ddiehl.android.htn.view.viewholders.ThreadCommentViewHolder;
+import com.ddiehl.android.htn.view.viewholders.ThreadStubViewHolder;
 import com.ddiehl.reddit.listings.AbsComment;
 import com.ddiehl.reddit.listings.Comment;
 import com.ddiehl.reddit.listings.CommentStub;
 import com.ddiehl.reddit.listings.Link;
-import com.ddiehl.android.htn.presenter.LinkCommentsPresenter;
 
 public class LinkCommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
   private static final int TYPE_LINK = 0;
@@ -63,7 +64,9 @@ public class LinkCommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
   public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
     if (holder instanceof ListingsLinkViewHolder) {
       Link link = mLinkCommentsPresenter.getLinkContext();
-      ((ListingsLinkViewHolder) holder).bind(link, true);
+      LinkPresenter.ThumbnailMode mode = mLinkCommentsPresenter.getThumbnailMode();
+      boolean showNsfw = mLinkCommentsPresenter.shouldShowNsfwTag();
+      ((ListingsLinkViewHolder) holder).bind(link, true, mode, showNsfw);
     } else if (holder instanceof ThreadCommentViewHolder) {
       Link link = mLinkCommentsPresenter.getLinkContext();
       Comment comment = (Comment) mLinkCommentsPresenter.getComment(position - 1);

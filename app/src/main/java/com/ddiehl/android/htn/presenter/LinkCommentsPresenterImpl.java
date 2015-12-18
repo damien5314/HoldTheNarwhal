@@ -363,7 +363,7 @@ public class LinkCommentsPresenterImpl
           mMainView.showToast("Comment successful");
           int position;
           if (parentId.startsWith("t1_")) { // Comment
-            comment.setDepth(((Comment) mReplyTarget).getDepth()+1);
+            comment.setDepth(((Comment) mReplyTarget).getDepth() + 1);
             position = mCommentBank.indexOf((Comment) mListingSelected) + 1;
           } else position = 0;
           mCommentBank.add(position, comment);
@@ -482,5 +482,17 @@ public class LinkCommentsPresenterImpl
                 mCommentBank.visibleIndexOf(((AbsComment) savable)));
           }
         }, e -> mMainView.showError(e, R.string.save_failed));
+  }
+
+  @Override
+  public ThumbnailMode getThumbnailMode() {
+    // TODO
+    return ThumbnailMode.FULL;
+  }
+
+  @Override
+  public boolean shouldShowNsfwTag() {
+    // TODO
+    return false;
   }
 }
