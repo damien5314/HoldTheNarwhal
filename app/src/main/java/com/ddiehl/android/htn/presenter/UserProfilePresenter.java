@@ -23,6 +23,12 @@ public class UserProfilePresenter extends AbsListingsPresenter {
   }
 
   @Override
+  public void onResume() {
+    super.onResume();
+    mSummaryView.selectTab(mShow);
+  }
+
+  @Override
   public void requestData() {
     mAnalytics.logLoadUserProfile(mShow, mSort, mTimespan);
     if (mShow.equals("summary")) {

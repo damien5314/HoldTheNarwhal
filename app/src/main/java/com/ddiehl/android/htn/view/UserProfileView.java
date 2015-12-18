@@ -13,4 +13,5 @@ public interface UserProfileView {
   void hideFriendNote();
   void showTrophies(List<Listing> trophies);
   void setFriendButtonState(boolean isFriend);
+  void selectTab(String show);
 }

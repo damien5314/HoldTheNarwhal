@@ -239,13 +239,6 @@ public class UserProfileFragment extends AbsListingsFragment implements UserProf
       mUserProfileTabs.addTab(mTabSaved);
     }
 
-    if (mSelectedTabIndex != -1) {
-      mUserProfileTabs.setOnTabSelectedListener(null);
-      TabLayout.Tab tab = mUserProfileTabs.getTabAt(mSelectedTabIndex);
-      if (tab != null) tab.select();
-      mUserProfileTabs.setOnTabSelectedListener(mTabSelectedListener);
-    }
-
     mUserProfileTabs.setOnTabSelectedListener(mTabSelectedListener);
   }
 
@@ -254,8 +247,8 @@ public class UserProfileFragment extends AbsListingsFragment implements UserProf
     boolean showAuthorizedTabs = id != null &&
         id.getName().equals(mUserProfilePresenter.getUsernameContext());
     if (showAuthorizedTabs) {
-      if (mUserProfileTabs.getChildCount() != 9) {
-        while (mUserProfileTabs.getChildCount() > 5) {
+      if (getChildrenInTabLayout(mUserProfileTabs) != 9) {
+        while (getChildrenInTabLayout(mUserProfileTabs) > 5) {
           mUserProfileTabs.removeTabAt(5);
         }
         mUserProfileTabs.addTab(mTabUpvoted);
@@ -264,10 +257,32 @@ public class UserProfileFragment extends AbsListingsFragment implements UserProf
         mUserProfileTabs.addTab(mTabSaved);
       }
     } else {
-      while (mUserProfileTabs.getChildCount() > 5) {
+      while (getChildrenInTabLayout(mUserProfileTabs) > 5) {
         mUserProfileTabs.removeTabAt(5);
       }
     }
+  }
+
+  @Override
+  public void selectTab(String show) {
+    mUserProfileTabs.setOnTabSelectedListener(null);
+    for (int i = 0; i < getChildrenInTabLayout(mUserProfileTabs); i++) {
+      TabLayout.Tab tab = mUserProfileTabs.getTabAt(i);
+      if (tab != null) {
+        String tag = (String) tab.getTag();
+        if (tag != null && tag.equals(show)) {
+          tab.select();
+          break;
+        }
+      }
+    }
+    mUserProfileTabs.setOnTabSelectedListener(mTabSelectedListener);
+  }
+
+  private int getChildrenInTabLayout(TabLayout l) {
+    ViewGroup g = (ViewGroup) l.getChildAt(0);
+    if (g == null) return 0;
+    return g.getChildCount();
   }
 
   TabLayout.OnTabSelectedListener mTabSelectedListener = new TabLayout.OnTabSelectedListener() {
