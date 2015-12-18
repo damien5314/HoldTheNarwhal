@@ -212,8 +212,14 @@ public class LinkCommentsPresenterImpl
 
   @Override
   public void replyToLink() {
-    mReplyTarget = mLinkContext;
-    mLinkCommentsView.openReplyView(mLinkContext);
+    if (((Archivable) mListingSelected).isArchived()) {
+      mMainView.showToast(R.string.listing_archived);
+    } else if (!mAccessTokenManager.isUserAuthorized()) {
+      mMainView.showToast(R.string.user_required);
+    } else {
+      mReplyTarget = mLinkContext;
+      mLinkCommentsView.openReplyView(mLinkContext);
+    }
   }
 
   @Override
