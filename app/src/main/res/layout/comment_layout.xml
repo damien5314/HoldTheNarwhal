@@ -107,10 +107,10 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_gravity="center_vertical"
+          android:gravity="center"
           android:drawableStart="@drawable/ic_gilded_2"
           android:drawableLeft="@drawable/ic_gilded_2"
-          tools:text="× 2"
-          style="@style/GildedTextView"/>
+          tools:text="× 2"/>
 
       </LinearLayout>
 

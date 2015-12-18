@@ -237,5 +237,6 @@
   <string name="error_get_user_profile_listings">error loading profile listings</string>
   <string name="error_no_network">no network connection</string>
   <string name="error_user_settings_update">error updating settings</string>
+  <string name="nsfw">nsfw</string>
 
 </resources>
