@@ -164,7 +164,7 @@ public class Bypass {
 				builder.append(" ");
 				if (mOrderedListNumber.containsKey(element.getParent())) {
 					int number = mOrderedListNumber.get(element.getParent());
-					builder.append(Integer.toString(number) + ".");
+					builder.append(Integer.toString(number)).append(".");
 					mOrderedListNumber.put(element.getParent(), number + 1);
 				}
 				else {
@@ -188,8 +188,7 @@ public class Bypass {
 						show = element.getAttribute("title");
 					}
 					if (!TextUtils.isEmpty(show)) {
-						show = "[" + show + "]";
-						builder.append(show);
+						builder.append("[").append(show).append("]");
 					}
 				}
 				else {
