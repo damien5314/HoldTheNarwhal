@@ -25,7 +25,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import in.uncod.android.bypass.Element.Type;
 import in.uncod.android.bypass.style.HorizontalLineSpan;
 
-
 public class Bypass {
 	static {
 		System.loadLibrary("bypass");
@@ -58,11 +57,11 @@ public class Bypass {
 		mHruleTopBottomPadding = 20;
 	}
 
-    public Bypass(Context context) {
+	public Bypass(Context context) {
 		this(context, new Options());
 	}
 
-    public Bypass(Context context, Options options) {
+	public Bypass(Context context, Options options) {
 		mOptions = options;
 
 		DisplayMetrics dm = context.getResources().getDisplayMetrics();
@@ -260,7 +259,7 @@ public class Bypass {
 			case LINK:
 			case AUTOLINK:
 				String link = element.getAttribute("link");
-				if (Patterns.EMAIL_ADDRESS.matcher(link).matches()) {
+				if (!TextUtils.isEmpty(link) && Patterns.EMAIL_ADDRESS.matcher(link).matches()) {
 					link = "mailto:" + link;
 				}
 				setSpan(builder, new URLSpan(link));
@@ -295,7 +294,8 @@ public class Bypass {
 
 	// These have trailing newlines that we want to avoid spanning
 	private static void setBlockSpan(SpannableStringBuilder builder, Object what) {
-		builder.setSpan(what, 0, builder.length() - 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		int length = Math.max(0, builder.length() - 1);
+		builder.setSpan(what, 0, length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 	}
 
 	/**
