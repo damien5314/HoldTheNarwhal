@@ -122,7 +122,6 @@ public class ThreadCommentViewHolder extends RecyclerView.ViewHolder
 
   private void showBody(Comment comment) {
     mBodyView.setText(comment.getBody().trim());
-//    mBodyView.setVisibility(View.VISIBLE);
   }
 
   private void showScore(Comment comment) {
