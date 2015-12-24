@@ -45,7 +45,7 @@ public class LinkCommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     switch (viewType) {
       case TYPE_LINK:
         View view = LayoutInflater.from(parent.getContext())
-            .inflate(R.layout.listings_link, parent, false);
+            .inflate(R.layout.link_comments_link, parent, false);
         return new ListingsLinkViewHolder(view, mLinkCommentsPresenter);
       case TYPE_COMMENT:
         view = LayoutInflater.from(parent.getContext())

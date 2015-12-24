@@ -30,7 +30,12 @@
     <item name="android:textColor">@android:color/white</item>
   </style>
 
-  <style name="LinkMetadataTextView">
+  <style name="LinkMetadataTextViewLight">
+    <item name="android:textSize">@dimen/link_metadata_text_size</item>
+    <item name="android:textColor">@color/secondary_text</item>
+  </style>
+
+  <style name="LinkMetadataTextViewDark">
     <item name="android:textSize">@dimen/link_metadata_text_size</item>
     <item name="android:textColor">@android:color/white</item>
   </style>
