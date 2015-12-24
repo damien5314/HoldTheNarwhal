@@ -26,6 +26,7 @@ public class ListingsLinkViewHolder extends RecyclerView.ViewHolder
   private Context mContext;
   private LinkPresenter mLinkPresenter;
   private Link mLink;
+  private int mAuthorTextColor;
 
   @Bind(R.id.link_view) View mLinkView;
   @Bind(R.id.link_saved_view) View mSavedView;
@@ -48,6 +49,7 @@ public class ListingsLinkViewHolder extends RecyclerView.ViewHolder
     mLinkPresenter = presenter;
     ButterKnife.bind(this, v);
     itemView.setOnCreateContextMenuListener(this);
+    mAuthorTextColor = mLinkAuthor.getCurrentTextColor();
   }
 
   @OnClick({ R.id.link_title, R.id.link_thumbnail})
@@ -95,7 +97,8 @@ public class ListingsLinkViewHolder extends RecyclerView.ViewHolder
   }
 
   private void showScore(Link link) {
-    mLinkScore.setText(String.format(mContext.getString(R.string.link_score), link.getScore()));
+    mLinkScore.setText(
+        String.format(mContext.getString(R.string.link_score), link.getScore()));
   }
 
   private void showTitle(Link link) {
@@ -103,20 +106,23 @@ public class ListingsLinkViewHolder extends RecyclerView.ViewHolder
   }
 
   private void showAuthor(Link link) {
-    mLinkAuthor.setText(String.format(mContext.getString(R.string.link_author), link.getAuthor()));
+    mLinkAuthor.setText(
+        String.format(mContext.getString(R.string.link_author), link.getAuthor()));
     String distinguished = link.getDistinguished();
     if (distinguished == null || distinguished.equals("")) {
       mLinkAuthor.setBackgroundResource(0);
-      mLinkAuthor.setTextColor(mContext.getResources().getColor(android.R.color.white));
+      mLinkAuthor.setTextColor(mAuthorTextColor);
     } else {
       switch (distinguished) {
         case "moderator":
           mLinkAuthor.setBackgroundResource(R.drawable.author_moderator_bg);
-          mLinkAuthor.setTextColor(mContext.getResources().getColor(R.color.author_moderator_text));
+          mLinkAuthor.setTextColor(
+              mContext.getResources().getColor(R.color.author_moderator_text));
           break;
         case "admin":
           mLinkAuthor.setBackgroundResource(R.drawable.author_admin_bg);
-          mLinkAuthor.setTextColor(mContext.getResources().getColor(R.color.author_admin_text));
+          mLinkAuthor.setTextColor(
+              mContext.getResources().getColor(R.color.author_admin_text));
           break;
         default:
       }
@@ -139,15 +145,18 @@ public class ListingsLinkViewHolder extends RecyclerView.ViewHolder
   }
 
   private void showSubreddit(Link link) {
-    mLinkSubreddit.setText(String.format(mContext.getString(R.string.link_subreddit), link.getSubreddit()));
+    mLinkSubreddit.setText(
+        String.format(mContext.getString(R.string.link_subreddit), link.getSubreddit()));
   }
 
   private void showDomain(Link link) {
-    mLinkDomain.setText(String.format(mContext.getString(R.string.link_domain), link.getDomain()));
+    mLinkDomain.setText(
+        String.format(mContext.getString(R.string.link_domain), link.getDomain()));
   }
 
   private void showCommentCount(Link link) {
-    mLinkComments.setText(String.format(mContext.getString(R.string.link_comment_count), link.getNumComments()));
+    mLinkComments.setText(
+        String.format(mContext.getString(R.string.link_comment_count), link.getNumComments()));
   }
 
   private String getPreviewUrl(@Nullable List<Link.Preview.Image> images) {
