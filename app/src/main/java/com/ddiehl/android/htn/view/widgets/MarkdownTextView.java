@@ -53,10 +53,10 @@ public class MarkdownTextView extends TextView {
       Bypass b = BypassWrapper.getInstance(getContext());
       CharSequence formatted = b.markdownToSpannable(text.toString());
       SpannableString s = SpannableString.valueOf(formatted);
-      Linkify.addLinks(s, Pattern.compile("\\s/*r/[^ \n]*"), "https://www.reddit.com", null,
+      Linkify.addLinks(s, Pattern.compile("\\s/*[ru](ser)*/[^ \n]*"), "https://www.reddit.com", null,
           (match, url) -> {
             url = url.trim();
-            if (url.startsWith("r")) url = "/" + url;
+            if (!url.startsWith("/")) url = "/" + url;
             return url;
           });
       super.setText(s, type);

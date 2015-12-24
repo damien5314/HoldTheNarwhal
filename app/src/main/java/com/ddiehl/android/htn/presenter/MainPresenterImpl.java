@@ -61,6 +61,7 @@ public class MainPresenterImpl implements MainPresenter, IdentityManager.Callbac
       processDeepLink(mDeepLink);
     } else {
       mMainView.showSubredditIfEmpty(null);
+//      mMainView.showCommentsForLink("damien5314apitest", "3xfn0h", null);
     }
   }
 
@@ -244,6 +245,9 @@ public class MainPresenterImpl implements MainPresenter, IdentityManager.Callbac
           mMainView.showUserProfile(segments.get(1), segments.get(2));
           return;
         }
+      } else {
+        mMainView.showUserProfile(segments.get(1));
+        return;
       }
     }
     mLogger.w("Deep link fell through without redirection: " + data.toString());
