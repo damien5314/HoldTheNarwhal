@@ -38,6 +38,7 @@
   <dimen name="comment_data_divider_margin">3dp</dimen>
   <dimen name="comment_secondary_data_margin">5dp</dimen>
   <dimen name="link_thumbnail_size">64dp</dimen>
+  <dimen name="link_full_size">128dp</dimen>
   <dimen name="comment_data_height">32dp</dimen>
   <dimen name="comment_author_background_corner">3dp</dimen>
   <dimen name="comment_author_background_padding">3dp</dimen>
