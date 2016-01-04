@@ -47,7 +47,7 @@ public class ListingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     switch (viewType) {
       case TYPE_LINK:
         View view = LayoutInflater.from(parent.getContext())
-            .inflate(R.layout.listings_link_card, parent, false);
+            .inflate(R.layout.listings_link, parent, false);
         return new ListingsLinkViewHolder(view, mListingsPresenter);
       case TYPE_COMMENT:
         view = LayoutInflater.from(parent.getContext())

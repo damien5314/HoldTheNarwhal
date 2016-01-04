@@ -1,197 +1,206 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Reminder - changes here should be reflected in link_comments_link.xml -->
-<LinearLayout
+<android.support.v7.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/link_view"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/listings_card_bg"
-    android:orientation="vertical">
+    card_view:cardElevation="@dimen/link_card_elevation"
+    card_view:cardUseCompatPadding="true">
 
+  <!-- Reminder - changes here should be reflected in link_comments_link.xml -->
   <LinearLayout
+      android:id="@+id/link_view"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:paddingTop="@dimen/link_list_item_margin_vertical"
-      android:paddingBottom="@dimen/link_list_item_margin_vertical"
-      android:paddingLeft="@dimen/link_list_item_margin_horizontal"
-      android:paddingRight="@dimen/link_list_item_margin_horizontal"
+      android:background="@drawable/listings_card_bg"
       android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/link_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAlignment="viewStart"
-        android:layout_gravity="start"
-        tools:text="The brown fox jumped over the white fence"
-        style="@style/LinkTitleTextView"/>
-
     <LinearLayout
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center">
-
-      <TextView
-          android:id="@+id/link_nsfw_indicator"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:background="@drawable/nsfw_tag_bg"
-          android:text="@string/nsfw"
-          android:textSize="@dimen/link_metadata_text_size"
-          android:textColor="@color/nsfw_tag_color"/>
-
-      <TextView
-          android:paddingLeft="6dp"
-          android:paddingRight="6dp"
-          android:id="@+id/link_gilded_text_view"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:fontFamily="sans-serif-light"
-          android:textSize="@dimen/link_metadata_text_size"
-          android:textColor="@color/secondary_text"
-          android:gravity="center"
-          android:drawableStart="@drawable/ic_gilded_2"
-          android:drawableLeft="@drawable/ic_gilded_2"
-          tools:targetApi="16"
-          tools:text="× 2"/>
-
-      <TextView
-          android:id="@+id/link_domain"
-          android:layout_width="0dp"
-          android:layout_height="wrap_content"
-          android:layout_weight="1"
-          android:fontFamily="sans-serif-light"
-          android:textSize="@dimen/link_metadata_text_size"
-          android:textColor="@color/secondary_text"
-          android:gravity="center_vertical|end"
-          tools:text="imgur.com"
-          tools:targetApi="16"/>
-
-    </LinearLayout>
-
-  </LinearLayout>
-
-  <LinearLayout
-      android:layout_width="fill_parent"
-      android:layout_height="wrap_content"
-      android:paddingTop="@dimen/link_list_item_margin_vertical"
-      android:paddingBottom="@dimen/link_list_item_margin_vertical"
-      android:paddingLeft="@dimen/link_list_item_margin_horizontal"
-      android:paddingRight="@dimen/link_list_item_margin_horizontal"
-      android:background="@color/primary_dark"
-      android:orientation="horizontal">
-
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:layout_marginEnd="@dimen/link_data_margin"
-        android:layout_marginRight="@dimen/link_data_margin"
+        android:paddingTop="@dimen/link_list_item_margin_vertical"
+        android:paddingBottom="@dimen/link_list_item_margin_vertical"
+        android:paddingLeft="@dimen/link_list_item_margin_horizontal"
+        android:paddingRight="@dimen/link_list_item_margin_horizontal"
         android:orientation="vertical">
 
-      <RelativeLayout
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content">
-
-        <TextView
-            android:id="@+id/link_score"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/LinkMetadataTextViewDark"
-            tools:text="573 points"/>
-
-        <com.ddiehl.android.htn.view.widgets.RedditDateTextView
-            android:id="@+id/link_timestamp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            tools:text="2 days ago"
-            style="@style/LinkMetadataTextViewDark"/>
-
-      </RelativeLayout>
-
-      <RelativeLayout
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content">
-
-        <TextView
-            android:id="@+id/link_author"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            tools:text="/u/andrewsmith1984"
-            style="@style/LinkMetadataTextViewDark"/>
-
-        <TextView
-            android:id="@+id/link_subreddit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            tools:text="/r/AskReddit"
-            style="@style/LinkMetadataTextViewDark"/>
-
-      </RelativeLayout>
-
-      <View
-          android:layout_width="fill_parent"
-          android:layout_height="@dimen/comment_data_divider_width"
-          android:layout_marginTop="@dimen/comment_data_divider_margin"
-          android:layout_marginBottom="@dimen/comment_data_divider_margin"
-          android:background="@color/divider" />
+      <TextView
+          android:id="@+id/link_title"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:textAlignment="viewStart"
+          android:layout_gravity="start"
+          style="@style/LinkTitleTextView"
+          tools:text="The brown fox jumped over the white fence"/>
 
       <LinearLayout
-          android:layout_width="match_parent"
+          android:layout_width="fill_parent"
           android:layout_height="wrap_content"
-          android:orientation="horizontal">
+          android:gravity="center">
 
         <TextView
-            android:id="@+id/link_comment_count"
+            android:id="@+id/link_nsfw_indicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/nsfw_tag_bg"
+            android:text="@string/nsfw"
+            android:textSize="@dimen/link_metadata_text_size"
+            android:textColor="@color/nsfw_tag_color"/>
+
+        <TextView
+            android:paddingLeft="6dp"
+            android:paddingRight="6dp"
+            android:id="@+id/link_gilded_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-light"
+            android:textSize="@dimen/link_metadata_text_size"
+            android:textColor="@color/secondary_text"
+            android:gravity="center"
+            android:drawableStart="@drawable/ic_gilded_2"
+            android:drawableLeft="@drawable/ic_gilded_2"
+            tools:targetApi="16"
+            tools:text="× 2"/>
+
+        <TextView
+            android:id="@+id/link_domain"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_gravity="start"
-            tools:text="1993 comments"
-            style="@style/LinkMetadataTextViewDark"/>
-
-        <ImageView
-            android:id="@+id/link_saved_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:src="@drawable/ic_saved"/>
-
-        <ImageView
-            android:id="@+id/link_stickied_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_stickied"/>
+            android:fontFamily="sans-serif-light"
+            android:textSize="@dimen/link_metadata_text_size"
+            android:textColor="@color/secondary_text"
+            android:gravity="center_vertical|end"
+            tools:text="imgur.com"
+            tools:targetApi="16"/>
 
       </LinearLayout>
 
     </LinearLayout>
 
-    <ImageView
-        android:id="@+id/link_thumbnail"
-        android:layout_width="@dimen/link_thumbnail_size"
-        android:layout_height="@dimen/link_thumbnail_size"
-        android:layout_gravity="center"
-        android:background="@drawable/thumbnail_bg"
-        android:src="@drawable/ic_thumbnail_placeholder"/>
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/link_list_item_margin_vertical"
+        android:paddingBottom="@dimen/link_list_item_margin_vertical"
+        android:paddingLeft="@dimen/link_list_item_margin_horizontal"
+        android:paddingRight="@dimen/link_list_item_margin_horizontal"
+        android:background="@color/primary_dark"
+        android:orientation="horizontal">
+
+      <LinearLayout
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:layout_marginEnd="@dimen/link_data_margin"
+          android:layout_marginRight="@dimen/link_data_margin"
+          android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+          <TextView
+              android:id="@+id/link_score"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              style="@style/LinkMetadataTextViewDark"
+              tools:text="573 points"/>
+
+          <com.ddiehl.android.htn.view.widgets.RedditDateTextView
+              android:id="@+id/link_timestamp"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_alignParentRight="true"
+              android:layout_alignParentEnd="true"
+              tools:text="2 days ago"
+              style="@style/LinkMetadataTextViewDark"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+          <TextView
+              android:id="@+id/link_author"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              tools:text="/u/andrewsmith1984"
+              style="@style/LinkMetadataTextViewDark"/>
+
+          <TextView
+              android:id="@+id/link_subreddit"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_alignParentEnd="true"
+              android:layout_alignParentRight="true"
+              tools:text="/r/AskReddit"
+              style="@style/LinkMetadataTextViewDark"/>
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/comment_data_divider_width"
+            android:layout_marginTop="@dimen/comment_data_divider_margin"
+            android:layout_marginBottom="@dimen/comment_data_divider_margin"
+            android:background="@color/divider" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+          <TextView
+              android:id="@+id/link_comment_count"
+              android:layout_width="0dp"
+              android:layout_height="wrap_content"
+              android:layout_weight="1"
+              android:layout_gravity="start"
+              tools:text="1993 comments"
+              style="@style/LinkMetadataTextViewDark"/>
+
+          <ImageView
+              android:id="@+id/link_saved_view"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_gravity="center_vertical"
+              android:src="@drawable/ic_saved"/>
+
+          <ImageView
+              android:id="@+id/link_stickied_view"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:src="@drawable/ic_stickied"/>
+
+        </LinearLayout>
+
+      </LinearLayout>
+
+      <ImageView
+          android:id="@+id/link_thumbnail"
+          android:layout_width="@dimen/link_image_small_size"
+          android:layout_height="@dimen/link_image_small_size"
+          android:layout_gravity="center"
+          android:background="@drawable/thumbnail_bg"
+          android:src="@drawable/ic_thumbnail_placeholder"/>
+
+    </LinearLayout>
+
+    <com.ddiehl.android.htn.view.widgets.MarkdownTextView
+        android:id="@+id/link_self_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="viewStart"
+        android:gravity="start"
+        android:textColor="@color/primary_text"
+        android:padding="@dimen/link_self_text_padding"
+        android:bufferType="spannable"
+        android:background="@android:color/white"
+        tools:text="Lorem ipsum dolor sit amet"/>
 
   </LinearLayout>
 
-  <com.ddiehl.android.htn.view.widgets.MarkdownTextView
-      android:id="@+id/link_self_text"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:textAlignment="viewStart"
-      android:gravity="start"
-      android:textColor="@color/primary_text"
-      android:padding="@dimen/link_self_text_padding"
-      android:bufferType="spannable"
-      android:background="@android:color/white"
-      tools:text="Lorem ipsum dolor sit amet"/>
-
-</LinearLayout>
+</android.support.v7.widget.CardView>

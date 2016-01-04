@@ -24,22 +24,23 @@
   <dimen name="comment_more_text_size">12sp</dimen>
   <dimen name="comment_author_margin">0dp</dimen> <!-- 5dp -->
   <dimen name="comment_score_margin">0dp</dimen> <!-- 5dp -->
-  <dimen name="comment_expander_margin_horizontal">@dimen/comment_data_margin_horizontal</dimen> <!-- 5dp -->
-  <dimen name="comment_data_margin_horizontal">5dp</dimen> <!-- 5dp -->
-  <dimen name="toolbar_elevation">6dp</dimen> <!-- Should be 4dp? -->
+  <dimen name="comment_expander_margin_horizontal">@dimen/comment_data_margin_horizontal</dimen>
+  <dimen name="comment_data_margin_horizontal">8dp</dimen> <!-- 5dp -->
+  <dimen name="toolbar_elevation">6dp</dimen>
   <dimen name="link_self_text_padding">8dp</dimen>
   <dimen name="link_list_item_margin_vertical">8dp</dimen>
   <dimen name="link_list_item_margin_horizontal">8dp</dimen>
   <dimen name="link_card_margin">0dp</dimen>
-  <dimen name="link_card_elevation">4dp</dimen> <!-- Should be 6dp? -->
+  <dimen name="link_card_elevation">4dp</dimen>
   <dimen name="link_card_corner_radius">0dp</dimen>
-  <dimen name="link_data_margin">5dp</dimen>
+  <dimen name="link_data_margin">4dp</dimen>
   <dimen name="comment_data_divider_width">1dp</dimen>
-  <dimen name="comment_data_divider_margin">3dp</dimen>
-  <dimen name="comment_secondary_data_margin">5dp</dimen>
-  <dimen name="link_thumbnail_size">64dp</dimen>
-  <dimen name="link_full_size">128dp</dimen>
+  <dimen name="comment_data_divider_margin">4dp</dimen>
+  <dimen name="comment_secondary_data_margin">4dp</dimen>
+  <dimen name="link_image_small_size">64dp</dimen>
+  <dimen name="link_image_full_size">128dp</dimen>
   <dimen name="comment_data_height">32dp</dimen>
+  <dimen name="comment_text_margin">6dp</dimen>
   <dimen name="comment_author_background_corner">3dp</dimen>
   <dimen name="comment_author_background_padding">3dp</dimen>
   <dimen name="banner_ad_margin">4dp</dimen>
@@ -59,5 +60,6 @@
   <dimen name="user_trophy_icon_width">72dp</dimen>
   <dimen name="user_trophy_icon_height">@dimen/user_trophy_icon_width</dimen>
   <dimen name="user_trophy_name_text_size">16sp</dimen>
+  <dimen name="link_metadata_margin">4dp</dimen>
 
 </resources>

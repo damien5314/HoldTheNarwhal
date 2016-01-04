@@ -1,116 +1,102 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:app="http://schemas.android.com/apk/res-auto"
-  xmlns:tools="http://schemas.android.com/tools"
-  android:orientation="vertical"
-  android:layout_width="fill_parent"
-  android:layout_height="wrap_content"
-  android:paddingLeft="@dimen/comment_data_margin_horizontal"
-  android:paddingRight="@dimen/comment_data_margin_horizontal">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="@dimen/comment_data_margin_horizontal"
+    android:paddingRight="@dimen/comment_data_margin_horizontal">
 
   <FrameLayout
-    android:id="@+id/comment_metadata"
-    android:layout_width="fill_parent"
-    android:layout_height="@dimen/comment_data_height">
+      android:id="@+id/comment_metadata"
+      android:layout_width="fill_parent"
+      android:layout_height="@dimen/comment_data_height">
 
     <LinearLayout
-      android:orientation="horizontal"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_gravity="start|center"
-      android:gravity="bottom">
-
-      <!--<ImageView
-        android:id="@+id/comment_expander_icon"
-        android:layout_width="@dimen/comment_expander_size"
-        android:layout_height="@dimen/comment_expander_size"
-        android:layout_marginRight="@dimen/comment_expander_margin_horizontal"
-        android:layout_marginEnd="@dimen/comment_expander_margin_horizontal"
-        android:layout_gravity="center_vertical"
-        android:src="@drawable/ic_thread_collapse"
-        android:background="@drawable/comment_expander_bg"/>-->
-
-      <TextView
-        android:id="@+id/comment_author"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="@dimen/comment_author_margin"
-        android:layout_marginEnd="@dimen/comment_author_margin"
-        android:textColor="@color/secondary_text"
-        android:textStyle="bold"
-        android:textSize="@dimen/comment_author_text_size"
-        android:ellipsize="end"
-        android:maxLines="1"
-        tools:text="andrewsmith1984"/>
-
-      <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/comment_secondary_data_margin"
-        android:layout_marginRight="@dimen/comment_secondary_data_margin"
-        android:textSize="@dimen/comment_secondary_data_text_size"
-        android:text="•"/>
-
-      <TextView
-        android:id="@+id/comment_score"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="@dimen/comment_score_margin"
-        android:layout_marginEnd="@dimen/comment_score_margin"
-        android:textColor="@color/secondary_text"
-        android:textSize="@dimen/comment_score_text_size"
-        android:maxLines="1"
-        tools:text="573"/>
-
-      <TextView
-        android:id="@+id/comment_controversiality_indicator"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:text="†"
-        android:textColor="@color/comment_controversiality_indicator"/>
-
-      <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/comment_secondary_data_margin"
-        android:layout_marginRight="@dimen/comment_secondary_data_margin"
-        android:textSize="@dimen/comment_secondary_data_text_size"
-        android:text="•"/>
-
-      <com.ddiehl.android.htn.view.widgets.RedditDateTextView
-        android:id="@+id/comment_timestamp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/secondary_text"
-        android:textSize="@dimen/comment_timestamp_text_size"
-        android:maxLines="1"
-        app:abbreviated="true"
-        tools:text="2 days ago"/>
-
-      <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
         android:orientation="horizontal"
-        android:gravity="end">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start|center"
+        android:gravity="bottom">
 
-        <ImageView
-          android:id="@+id/comment_saved_icon"
+      <TextView
+          android:id="@+id/comment_author"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:src="@drawable/ic_saved_dark"/>
+          android:textColor="@color/secondary_text"
+          android:textStyle="bold"
+          android:textSize="@dimen/comment_author_text_size"
+          android:ellipsize="end"
+          android:maxLines="1"
+          tools:text="andrewsmith1984"/>
 
-        <TextView
-          android:id="@+id/comment_gilded_text_view"
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginLeft="@dimen/comment_secondary_data_margin"
+          android:layout_marginRight="@dimen/comment_secondary_data_margin"
+          android:textSize="@dimen/comment_secondary_data_text_size"
+          android:text="@string/comment_metadata_divider"/>
+
+      <TextView
+          android:id="@+id/comment_score"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:textColor="@color/secondary_text"
+          android:textSize="@dimen/comment_score_text_size"
+          android:maxLines="1"
+          tools:text="573"/>
+
+      <TextView
+          android:id="@+id/comment_controversiality_indicator"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_gravity="center_vertical"
-          android:gravity="center"
-          android:drawableStart="@drawable/ic_gilded_2"
-          android:drawableLeft="@drawable/ic_gilded_2"
-          tools:text="× 2"/>
+          android:text="@string/comment_controversiality_indicator"
+          android:textColor="@color/comment_controversiality_indicator"/>
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginLeft="@dimen/comment_secondary_data_margin"
+          android:layout_marginRight="@dimen/comment_secondary_data_margin"
+          android:textSize="@dimen/comment_secondary_data_text_size"
+          android:text="@string/comment_metadata_divider"/>
+
+      <com.ddiehl.android.htn.view.widgets.RedditDateTextView
+          android:id="@+id/comment_timestamp"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:textColor="@color/secondary_text"
+          android:textSize="@dimen/comment_timestamp_text_size"
+          android:maxLines="1"
+          app:abbreviated="true"
+          tools:text="2 days ago"/>
+
+      <LinearLayout
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:orientation="horizontal"
+          android:gravity="end">
+
+        <ImageView
+            android:id="@+id/comment_saved_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_saved_dark"/>
+
+        <TextView
+            android:id="@+id/comment_gilded_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:gravity="center"
+            android:drawableStart="@drawable/ic_gilded_2"
+            android:drawableLeft="@drawable/ic_gilded_2"
+            tools:text="× 2"/>
 
       </LinearLayout>
 
@@ -119,15 +105,16 @@
   </FrameLayout>
 
   <com.ddiehl.android.htn.view.widgets.MarkdownTextView
-    android:id="@+id/comment_body"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:textAlignment="viewStart"
-    android:gravity="start"
-    android:paddingBottom="5dp"
-    android:textSize="@dimen/comment_body_text_size"
-    android:textColor="@color/primary_text"
-    android:bufferType="spannable"
-    tools:text="Lorem ipsum dolor sit amet"/>
+      android:id="@+id/comment_body"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="@dimen/comment_text_margin"
+      android:textAlignment="viewStart"
+      android:gravity="start"
+      android:textSize="@dimen/comment_body_text_size"
+      android:textColor="@color/primary_text"
+      android:bufferType="spannable"
+      tools:text="Lorem ipsum dolor sit amet"
+      tools:ignore="UnusedAttribute"/>
 
 </LinearLayout>

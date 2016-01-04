@@ -32,6 +32,8 @@
   <string name="more_comments_s">load 1 more comment</string>
   <string name="more_comments">load %s more comments</string>
   <string name="listing_comment_title_format">%1$s \nby /u/%2$s on /r/%3$s</string>
+  <string name="comment_metadata_divider">•</string>
+  <string name="comment_controversiality_indicator">†</string>
 
   <!-- User Profile -->
   <string name="navigation_tabs_summary">summary</string>
