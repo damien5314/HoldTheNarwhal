@@ -7,7 +7,7 @@
     </shape>
   </item>
 
-  <item android:top="1dp" >
+  <item android:top="@dimen/comment_top_border_width">
     <shape>
       <solid android:color="#ffffff" />
     </shape>

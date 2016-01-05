@@ -15,6 +15,7 @@
       android:paddingTop="@dimen/link_list_item_margin_vertical"
       android:paddingLeft="@dimen/link_list_item_margin_horizontal"
       android:paddingRight="@dimen/link_list_item_margin_horizontal"
+      android:background="@android:color/white"
       android:orientation="vertical">
 
     <TextView
@@ -125,6 +126,7 @@
 
     <!--android:paddingLeft="@dimen/link_list_item_margin_horizontal"-->
     <!--android:paddingRight="@dimen/link_list_item_margin_horizontal"-->
+    <!--android:background="@android:color/white"-->
     <com.ddiehl.android.htn.view.widgets.MarkdownTextView
         android:id="@+id/link_self_text"
         android:layout_width="match_parent"
@@ -134,7 +136,6 @@
         android:textColor="@color/primary_text"
         android:layout_marginTop="@dimen/link_list_item_margin_vertical"
         android:bufferType="spannable"
-        android:background="@android:color/white"
         tools:text="Lorem ipsum dolor sit amet"
         tools:ignore="UnusedAttribute"/>
 
