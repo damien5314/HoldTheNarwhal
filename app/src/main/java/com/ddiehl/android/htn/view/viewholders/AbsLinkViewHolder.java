@@ -86,7 +86,7 @@ public abstract class AbsLinkViewHolder extends RecyclerView.ViewHolder
     showStickied(link);
   }
 
-  private void showSelfText(Link link, boolean showSelfText) {
+  protected void showSelfText(Link link, boolean showSelfText) {
     mLinkView.setVisibility(View.VISIBLE);
     if (link.getSelftext() != null && !link.getSelftext().equals("") && showSelfText) {
       mSelfText.setText(link.getSelftext());
@@ -96,16 +96,16 @@ public abstract class AbsLinkViewHolder extends RecyclerView.ViewHolder
     }
   }
 
-  private void showScore(Link link) {
+  protected void showScore(Link link) {
     mLinkScore.setText(
         String.format(mContext.getString(R.string.link_score), link.getScore()));
   }
 
-  private void showTitle(Link link) {
+  protected void showTitle(Link link) {
     mLinkTitle.setText(link.getTitle());
   }
 
-  private void showAuthor(Link link) {
+  protected void showAuthor(Link link) {
     mLinkAuthor.setText(
         String.format(mContext.getString(R.string.link_author), link.getAuthor()));
     String distinguished = link.getDistinguished();
@@ -129,7 +129,7 @@ public abstract class AbsLinkViewHolder extends RecyclerView.ViewHolder
     }
   }
 
-  private void showTimestamp(Link link) {
+  protected void showTimestamp(Link link) {
     long timestamp = link.getCreatedUtc().longValue();
     mLinkTimestamp.setDate(timestamp);
     if (link.isEdited() != null) {
@@ -145,22 +145,22 @@ public abstract class AbsLinkViewHolder extends RecyclerView.ViewHolder
     }
   }
 
-  private void showSubreddit(Link link) {
+  protected void showSubreddit(Link link) {
     mLinkSubreddit.setText(
         String.format(mContext.getString(R.string.link_subreddit), link.getSubreddit()));
   }
 
-  private void showDomain(Link link) {
+  protected void showDomain(Link link) {
     mLinkDomain.setText(
         String.format(mContext.getString(R.string.link_domain), link.getDomain()));
   }
 
-  private void showCommentCount(Link link) {
+  protected void showCommentCount(Link link) {
     mLinkComments.setText(
         String.format(mContext.getString(R.string.link_comment_count), link.getNumComments()));
   }
 
-  private String getPreviewUrl(@Nullable List<Link.Preview.Image> images) {
+  protected String getPreviewUrl(@Nullable List<Link.Preview.Image> images) {
     if (images == null || images.size() == 0) return null;
     Link.Preview.Image imageToDisplay;
     // Retrieve preview image to display
@@ -177,7 +177,7 @@ public abstract class AbsLinkViewHolder extends RecyclerView.ViewHolder
     return res.getUrl();
   }
 
-  private void showThumbnail(Link link, LinkPresenter.ThumbnailMode mode) {
+  protected void showThumbnail(Link link, LinkPresenter.ThumbnailMode mode) {
     String url = null;
 
     if (link.getOver18()) {
@@ -210,11 +210,11 @@ public abstract class AbsLinkViewHolder extends RecyclerView.ViewHolder
     }
   }
 
-  private void showNsfwTag(boolean b) {
+  protected void showNsfwTag(boolean b) {
     mNsfwIndicator.setVisibility(b ? View.VISIBLE : View.GONE);
   }
 
-  private void loadThumbnail(String url) {
+  protected void loadThumbnail(String url) {
     Picasso.with(mContext)
         .load(url)
         .placeholder(R.drawable.ic_thumbnail_placeholder)
@@ -225,7 +225,7 @@ public abstract class AbsLinkViewHolder extends RecyclerView.ViewHolder
 
   protected abstract void showLiked(Link link);
 
-  private void showGilded(Link link) {
+  protected void showGilded(Link link) {
     Integer gilded = link.getGilded();
     if (gilded != null && gilded > 0) {
       mGildedText.setText(String.format(mContext.getString(R.string.link_gilded_text), gilded));
@@ -235,12 +235,12 @@ public abstract class AbsLinkViewHolder extends RecyclerView.ViewHolder
     }
   }
 
-  private void showSaved(Link link) {
+  protected void showSaved(Link link) {
     Boolean saved = link.isSaved();
     mSavedView.setVisibility(saved != null && saved ? View.VISIBLE : View.INVISIBLE);
   }
 
-  private void showStickied(Link link) {
+  protected void showStickied(Link link) {
     Boolean stickied = link.getStickied();
     mStickiedView.setVisibility(stickied != null && stickied ? View.VISIBLE : View.INVISIBLE);
   }
