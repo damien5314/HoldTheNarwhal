@@ -13,105 +13,112 @@
       android:layout_height="match_parent"
       android:paddingBottom="@dimen/link_list_item_margin_vertical"
       android:paddingTop="@dimen/link_list_item_margin_vertical"
-      android:paddingLeft="@dimen/link_list_item_margin_horizontal"
-      android:paddingRight="@dimen/link_list_item_margin_horizontal"
       android:background="@android:color/white"
       android:orientation="vertical">
-
-    <TextView
-        android:id="@+id/link_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAlignment="viewStart"
-        android:layout_gravity="start"
-        tools:text="The quick brown fox jumped over the white fence"
-        style="@style/LinkTitleTextView"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:paddingLeft="@dimen/link_list_item_margin_horizontal"
+        android:paddingRight="@dimen/link_list_item_margin_horizontal"
+        android:orientation="vertical">
 
       <TextView
-          android:id="@+id/link_nsfw_indicator"
+          android:id="@+id/link_title"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginEnd="@dimen/link_metadata_margin"
-          android:layout_marginRight="@dimen/link_metadata_margin"
-          android:background="@drawable/nsfw_tag_bg"
-          android:text="@string/nsfw"
-          android:textSize="@dimen/link_metadata_text_size"
-          android:textColor="@color/nsfw_tag_color"/>
+          android:textAlignment="viewStart"
+          android:layout_gravity="start"
+          tools:text="The quick brown fox jumped over the white fence"
+          style="@style/LinkTitleTextView"/>
 
-      <!--android:fontFamily="sans-serif-light"-->
-      <TextView
-          android:id="@+id/link_gilded_text_view"
-          android:layout_width="wrap_content"
+      <LinearLayout
+          android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:gravity="center_vertical"
-          android:drawableStart="@drawable/ic_gilded_2"
-          android:drawableLeft="@drawable/ic_gilded_2"
-          android:textSize="@dimen/link_metadata_text_size"
-          android:textColor="@color/secondary_text"
-          tools:targetApi="16"
-          tools:text="× 2"/>
+          android:orientation="horizontal">
 
-      <TextView
-          android:id="@+id/link_domain"
-          android:layout_width="0dp"
-          android:layout_height="wrap_content"
-          android:layout_weight="1"
-          android:gravity="end"
-          android:textSize="@dimen/link_metadata_text_size"
-          android:textColor="@color/secondary_text"
-          tools:text="imgur.com"/>
+        <TextView
+            android:id="@+id/link_nsfw_indicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/link_metadata_margin"
+            android:layout_marginRight="@dimen/link_metadata_margin"
+            android:background="@drawable/nsfw_tag_bg"
+            android:text="@string/nsfw"
+            android:textSize="@dimen/link_metadata_text_size"
+            android:textColor="@color/nsfw_tag_color"/>
+
+        <!--android:fontFamily="sans-serif-light"-->
+        <TextView
+            android:id="@+id/link_gilded_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:drawableStart="@drawable/ic_gilded_2"
+            android:drawableLeft="@drawable/ic_gilded_2"
+            android:textSize="@dimen/link_metadata_text_size"
+            android:textColor="@color/secondary_text"
+            tools:targetApi="16"
+            tools:text="× 2"/>
+
+        <TextView
+            android:id="@+id/link_domain"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="end"
+            android:textSize="@dimen/link_metadata_text_size"
+            android:textColor="@color/secondary_text"
+            tools:text="imgur.com"/>
+
+      </LinearLayout>
+
+      <RelativeLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/link_score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/LinkMetadataTextViewLight"
+            tools:text="573 points"/>
+
+        <com.ddiehl.android.htn.view.widgets.RedditDateTextView
+            android:id="@+id/link_timestamp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            style="@style/LinkMetadataTextViewLight"
+            tools:text="2 days ago"/>
+
+      </RelativeLayout>
+
+      <RelativeLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/link_author"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="/u/andrewsmith1984"
+            style="@style/LinkMetadataTextViewLight"/>
+
+        <TextView
+            android:id="@+id/link_subreddit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            tools:text="/r/AskReddit"
+            style="@style/LinkMetadataTextViewLight"/>
+
+      </RelativeLayout>
 
     </LinearLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-      <TextView
-          android:id="@+id/link_score"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          style="@style/LinkMetadataTextViewLight"
-          tools:text="573 points"/>
-
-      <com.ddiehl.android.htn.view.widgets.RedditDateTextView
-          android:id="@+id/link_timestamp"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_alignParentRight="true"
-          android:layout_alignParentEnd="true"
-          style="@style/LinkMetadataTextViewLight"
-          tools:text="2 days ago"/>
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-      <TextView
-          android:id="@+id/link_author"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          tools:text="/u/andrewsmith1984"
-          style="@style/LinkMetadataTextViewLight"/>
-
-      <TextView
-          android:id="@+id/link_subreddit"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_alignParentEnd="true"
-          android:layout_alignParentRight="true"
-          tools:text="/r/AskReddit"
-          style="@style/LinkMetadataTextViewLight"/>
-
-    </RelativeLayout>
 
     <!--android:background="@drawable/thumbnail_bg_light"-->
     <ImageView
@@ -120,7 +127,7 @@
         android:layout_height="@dimen/link_image_full_size"
         android:layout_gravity="center"
         android:layout_marginTop="8dp"
-        android:background="@drawable/thumbnail_bg_light"
+        android:background="@drawable/thumbnail_bg_light_half"
         android:src="@drawable/ic_thumbnail_placeholder"
         tools:src="@android:color/darker_gray"/>
 
@@ -131,10 +138,12 @@
         android:id="@+id/link_self_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAlignment="viewStart"
-        android:gravity="start"
-        android:textColor="@color/primary_text"
         android:layout_marginTop="@dimen/link_list_item_margin_vertical"
+        android:paddingLeft="@dimen/link_list_item_margin_horizontal"
+        android:paddingRight="@dimen/link_list_item_margin_horizontal"
+        android:gravity="start"
+        android:textAlignment="viewStart"
+        android:textColor="@color/primary_text"
         android:bufferType="spannable"
         tools:text="Lorem ipsum dolor sit amet"
         tools:ignore="UnusedAttribute"/>
@@ -153,6 +162,8 @@
           android:layout_height="wrap_content"
           android:layout_weight="1"
           android:layout_gravity="start"
+          android:paddingLeft="@dimen/link_list_item_margin_horizontal"
+          android:paddingRight="@dimen/link_list_item_margin_horizontal"
           tools:text="1993 comments"
           style="@style/LinkMetadataTextViewLight"/>
 

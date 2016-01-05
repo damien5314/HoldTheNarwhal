@@ -79,10 +79,9 @@ public class MainPresenterImpl implements MainPresenter, IdentityManager.Callbac
         mMainView.showToast(R.string.user_signed_out);
       } else {
         // FIXME Ensure we only show this when the user changes
+        Context context = HoldTheNarwhal.getContext();
         String name = identity.getName();
-        String toast = String.format(
-            HoldTheNarwhal.getContext().getString(R.string.welcome_user),
-            name);
+        String toast = String.format(context.getString(R.string.welcome_user), name);
         mMainView.showToast(toast);
       }
     };

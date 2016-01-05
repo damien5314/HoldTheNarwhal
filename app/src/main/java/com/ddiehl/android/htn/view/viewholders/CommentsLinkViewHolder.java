@@ -8,6 +8,7 @@ import android.view.View;
 
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.presenter.LinkPresenter;
+import com.ddiehl.android.htn.utils.BaseUtils;
 import com.ddiehl.reddit.listings.Link;
 
 public class CommentsLinkViewHolder extends AbsLinkViewHolder {
@@ -26,7 +27,7 @@ public class CommentsLinkViewHolder extends AbsLinkViewHolder {
       color = ContextCompat.getColor(mContext, R.color.reddit_blue_full);
     }
     Integer score = link.getScore();
-    int length = score == 0 ? 0 : (int) Math.log10(score) + 1;
+    int length = BaseUtils.getNumberOfDigits(score);
     Spannable s = new SpannableString(mLinkScore.getText());
     int index = mLinkScore.getText().toString().indexOf(score.toString());
     s.setSpan(new ForegroundColorSpan(color), index, length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);

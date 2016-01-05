@@ -206,4 +206,10 @@ public class BaseUtils {
 //    float dpHeight = outMetrics.heightPixels / density;
     return outMetrics.widthPixels / density;
   }
+
+  public static int getNumberOfDigits(int n) {
+    if (n < 0) n *= -1;
+    if (n == 0) return 0;
+    return (int) Math.log10(n) + 1;
+  }
 }
