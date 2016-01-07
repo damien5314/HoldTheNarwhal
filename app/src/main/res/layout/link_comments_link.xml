@@ -54,7 +54,7 @@
             android:id="@+id/link_gilded_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
+            android:gravity="center"
             android:drawableStart="@drawable/ic_gilded_2"
             android:drawableLeft="@drawable/ic_gilded_2"
             android:textSize="@dimen/link_metadata_text_size"
@@ -120,20 +120,21 @@
 
     </LinearLayout>
 
-    <!--android:background="@drawable/thumbnail_bg_light"-->
-    <ImageView
-        android:id="@+id/link_thumbnail"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/link_image_full_size"
-        android:layout_gravity="center"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/thumbnail_bg_light_half"
-        android:src="@drawable/ic_thumbnail_placeholder"
-        tools:src="@android:color/darker_gray"/>
+        android:layout_height="wrap_content">
 
-    <!--android:paddingLeft="@dimen/link_list_item_margin_horizontal"-->
-    <!--android:paddingRight="@dimen/link_list_item_margin_horizontal"-->
-    <!--android:background="@android:color/white"-->
+      <ImageView
+          android:id="@+id/link_thumbnail"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center"
+          android:maxHeight="@dimen/link_image_full_size"
+          android:layout_marginTop="8dp"
+          android:src="@drawable/ic_thumbnail_placeholder"/>
+
+    </FrameLayout>
+
     <com.ddiehl.android.htn.view.widgets.MarkdownTextView
         android:id="@+id/link_self_text"
         android:layout_width="match_parent"
@@ -148,8 +149,6 @@
         tools:text="Lorem ipsum dolor sit amet"
         tools:ignore="UnusedAttribute"/>
 
-    <!--android:paddingLeft="@dimen/link_list_item_margin_horizontal"-->
-    <!--android:paddingRight="@dimen/link_list_item_margin_horizontal"-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -1,6 +1,7 @@
 package com.ddiehl.android.htn.view.viewholders;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -45,9 +46,17 @@ public class CommentsLinkViewHolder extends AbsLinkViewHolder {
     String url = null;
     if (link.getPreviewImages() != null) {
       List<Link.Preview.Image> images = link.getPreviewImages();
+      Link.Preview.Image image = images.get(0);
+      int width = image.getSource().getWidth();
+      int height = image.getSource().getHeight();
       DisplayMetrics display = mContext.getResources().getDisplayMetrics();
+      float scale = mContext.getResources().getDisplayMetrics().scaledDensity;
+      float bw = mContext.getResources().getDimension(R.dimen.comment_link_image_border_width);
+//      mLinkThumbnail.getLayoutParams().width = (int) (width * scale) + 5;
+//      mLinkThumbnail.getLayoutParams().height = (int) Math.ceil((height + bw) * scale);
+//      mLinkThumbnail.getLayoutParams().height = (int) Math.ceil(height * scale);
       // FIXME Find a preview best for screen size
-      url = images.get(0).getSource().getUrl();
+      url = image.getSource().getUrl();
     }
     if (url == null) url = "";
     switch (url) {
@@ -62,5 +71,17 @@ public class CommentsLinkViewHolder extends AbsLinkViewHolder {
       default:
         loadThumbnail(url);
     }
+  }
+
+  protected void loadThumbnail(@Nullable String url) {
+//  protected void loadThumbnail(@Nullable String url, int width, int height) {
+    Picasso.with(mContext)
+        .load(url)
+        .placeholder(R.drawable.ic_thumbnail_placeholder)
+//        .fit()
+//        .resize(width, height)
+//        .centerCrop()
+        .error(R.drawable.ic_alert_error)
+        .into(mLinkThumbnail);
   }
 }

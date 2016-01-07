@@ -92,6 +92,7 @@ public class LinkCommentsPresenterImpl
   private Action1<List<ListingResponse>> showLinkComments =
       (listingResponseList) -> {
         // Link is responseList.get(0), comments are responseList.get(1)
+        if (listingResponseList == null) return;
         ListingResponse linkResponse = listingResponseList.get(0);
         mLinkContext = (Link) linkResponse.getData().getChildren().get(0);
         if (mLinkContext != null) mMainView.setTitle(mLinkContext.getTitle());

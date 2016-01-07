@@ -3,7 +3,6 @@ package com.ddiehl.android.htn.view.viewholders;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu;
 import android.view.View;
@@ -14,7 +13,6 @@ import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.presenter.LinkPresenter;
 import com.ddiehl.android.htn.view.widgets.RedditDateTextView;
 import com.ddiehl.reddit.listings.Link;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -179,15 +177,6 @@ public abstract class AbsLinkViewHolder extends RecyclerView.ViewHolder
 
   protected void showNsfwTag(boolean b) {
     mNsfwIndicator.setVisibility(b ? View.VISIBLE : View.GONE);
-  }
-
-  protected void loadThumbnail(@Nullable String url) {
-    Picasso.with(mContext)
-        .load(url)
-        .placeholder(R.drawable.ic_thumbnail_placeholder)
-        .fit().centerCrop()
-        .error(R.drawable.ic_alert_error)
-        .into(mLinkThumbnail);
   }
 
   protected abstract void showLiked(@NonNull Link link);
