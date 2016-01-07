@@ -15,7 +15,7 @@
     android:supportsRtl="true">
 
     <activity
-      android:name=".view.fragments._MainActivity"
+      android:name=".view.activities.MainActivity"
       android:label="@string/app_name"
       android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize">
       <intent-filter>

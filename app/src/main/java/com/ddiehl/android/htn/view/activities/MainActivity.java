@@ -1,4 +1,4 @@
-package com.ddiehl.android.htn.view.fragments;
+package com.ddiehl.android.htn.view.activities;
 
 import android.annotation.SuppressLint;
 import android.app.DialogFragment;
@@ -40,6 +40,11 @@ import com.ddiehl.android.htn.view.dialogs.AnalyticsDialog;
 import com.ddiehl.android.htn.view.dialogs.ConfirmSignOutDialog;
 import com.ddiehl.android.htn.view.dialogs.NsfwWarningDialog;
 import com.ddiehl.android.htn.view.dialogs.SubredditNavigationDialog;
+import com.ddiehl.android.htn.view.fragments.LinkCommentsFragment;
+import com.ddiehl.android.htn.view.fragments.SettingsFragment;
+import com.ddiehl.android.htn.view.fragments.SubredditFragment;
+import com.ddiehl.android.htn.view.fragments.UserProfileFragment;
+import com.ddiehl.android.htn.view.fragments.WebViewFragment;
 import com.ddiehl.reddit.identity.UserIdentity;
 import com.squareup.picasso.Picasso;
 
@@ -50,7 +55,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import hugo.weaving.DebugLog;
 
-public class _MainActivity extends AppCompatActivity implements MainView,
+public class MainActivity extends AppCompatActivity implements MainView,
     NavigationView.OnNavigationItemSelectedListener {
   public static final int REQUEST_NSFW_WARNING = 0x1;
   private static final String DIALOG_NSFW_WARNING = "dialog_nsfw_warning";
