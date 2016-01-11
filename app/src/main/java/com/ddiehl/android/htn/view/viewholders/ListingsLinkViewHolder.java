@@ -1,7 +1,6 @@
 package com.ddiehl.android.htn.view.viewholders;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.view.View;
 
 import com.ddiehl.android.htn.R;
@@ -62,15 +61,5 @@ public class ListingsLinkViewHolder extends AbsLinkViewHolder {
       default:
         loadThumbnail(url);
     }
-  }
-
-  protected void loadThumbnail(@Nullable String url) {
-    Picasso.with(mContext)
-        .load(url)
-        .placeholder(R.drawable.ic_thumbnail_placeholder)
-        .fit()
-        .centerCrop()
-        .error(R.drawable.ic_alert_error)
-        .into(mLinkThumbnail);
   }
 }

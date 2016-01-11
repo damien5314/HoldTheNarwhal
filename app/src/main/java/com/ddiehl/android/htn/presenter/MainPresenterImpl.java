@@ -60,10 +60,10 @@ public class MainPresenterImpl implements MainPresenter, IdentityManager.Callbac
     if (mDeepLink != null) {
       processDeepLink(mDeepLink);
     } else {
-//      mMainView.showSubredditIfEmpty(null);
+      mMainView.showSubredditIfEmpty(null);
 //      mMainView.showCommentsForLink("damien5314apitest", "3xfn0h", null);
 //      mMainView.showCommentsForLink("Android", "3zke4v", null); // Check thumbnail border
-      mMainView.showCommentsForLink("damien5314apitest", "3zmuy3", null); // Wide image test
+//      mMainView.showSubreddit("damien5314apitest", null); // Wide image test
     }
   }
 
