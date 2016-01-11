@@ -87,15 +87,20 @@ public class Link extends Listing<Link.Data> implements Votable, Savable, Hideab
     return data.score;
   }
 
+  public void setScore(Integer score) {
+    data.score = score;
+  }
+
   @Override
   public void applyVote(int direction) {
     int scoreDiff = direction - getLikedScore();
-    data.score += scoreDiff;
     switch (direction) {
       case 0: isLiked(null); break;
       case 1: isLiked(true); break;
       case -1: isLiked(false); break;
     }
+    if (data.score == null) return;
+    data.score += scoreDiff;
   }
 
   private int getLikedScore() {
@@ -133,8 +138,8 @@ public class Link extends Listing<Link.Data> implements Votable, Savable, Hideab
     return data.subredditId;
   }
 
-  public Boolean isScoreHidden() {
-    return data.hideScore;
+  public boolean isScoreHidden() {
+    return data.hideScore == null ? false : data.hideScore;
   }
 
   public Object getLinkFlairCssClass() {

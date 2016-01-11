@@ -10,7 +10,6 @@ import android.view.View;
 
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.presenter.LinkPresenter;
-import com.ddiehl.android.htn.utils.BaseUtils;
 import com.ddiehl.reddit.listings.Link;
 import com.squareup.picasso.Picasso;
 
@@ -32,9 +31,11 @@ public class CommentsLinkViewHolder extends AbsLinkViewHolder {
       color = ContextCompat.getColor(mContext, R.color.reddit_blue_full);
     }
     Integer score = link.getScore();
-    int length = BaseUtils.getNumberOfDigits(score);
+    String scoreStr = score == null ?
+        mContext.getString(R.string.hidden_score_placeholder) : score.toString();
+    int length = scoreStr.length();
+    int index = mLinkScore.getText().toString().indexOf(scoreStr);
     Spannable s = new SpannableString(mLinkScore.getText());
-    int index = mLinkScore.getText().toString().indexOf(score.toString());
     s.setSpan(new ForegroundColorSpan(color), index, length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
     mLinkScore.setText(s);
   }

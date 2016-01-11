@@ -25,9 +25,13 @@ public class ListingDeserializer implements JsonDeserializer<Listing> {
     switch (kind) {
       case "t1":
         listing = context.deserialize(json, Comment.class);
+        Comment comment = (Comment) listing;
+        if (comment.isScoreHidden()) comment.setScore(null);
         return listing;
       case "t3":
         listing = context.deserialize(json, Link.class);
+        Link link = (Link) listing;
+        if (link.isScoreHidden()) link.setScore(null);
         return listing;
       case "t5":
         listing = context.deserialize(json, Subreddit.class);

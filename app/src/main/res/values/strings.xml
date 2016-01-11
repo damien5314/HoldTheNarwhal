@@ -23,6 +23,7 @@
   <string name="link_author">/u/%s</string>
   <string name="link_domain">%s</string>
   <string name="link_comment_count">%s comments</string>
+  <string name="hidden_score_placeholder">\?</string>
 
   <!-- Comments -->
   <string name="comments_fragment_title">comments</string>

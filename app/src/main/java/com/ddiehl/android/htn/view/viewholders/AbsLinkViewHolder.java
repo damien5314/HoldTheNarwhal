@@ -93,8 +93,9 @@ public abstract class AbsLinkViewHolder extends RecyclerView.ViewHolder
   }
 
   protected void showScore(@NonNull Link link) {
-    mLinkScore.setText(
-        String.format(mContext.getString(R.string.link_score), link.getScore()));
+    String score = link.getScore() == null ?
+        mContext.getString(R.string.hidden_score_placeholder) : link.getScore().toString();
+    mLinkScore.setText(String.format(mContext.getString(R.string.link_score), score));
   }
 
   protected void showTitle(@NonNull Link link) {

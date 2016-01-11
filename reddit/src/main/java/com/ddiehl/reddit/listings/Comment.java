@@ -101,8 +101,12 @@ public class Comment extends AbsComment<Comment.Data> implements Votable, Savabl
     return data.authorFlairText;
   }
 
-  public int getScore() {
+  public Integer getScore() {
     return data.score;
+  }
+
+  public void setScore(Integer score) {
+    data.score = score;
   }
 
   public Object getApprovedBy() {
@@ -134,7 +138,7 @@ public class Comment extends AbsComment<Comment.Data> implements Votable, Savabl
   }
 
   public boolean isScoreHidden() {
-    return data.scoreHidden;
+    return data.hideScore == null ? false : data.hideScore;
   }
 
   public double getCreated() {
@@ -164,12 +168,13 @@ public class Comment extends AbsComment<Comment.Data> implements Votable, Savabl
   @Override
   public void applyVote(int direction) {
     int scoreDiff = direction - getLikedScore();
-    data.score += scoreDiff;
     switch (direction) {
       case 0: isLiked(null); break;
       case 1: isLiked(true); break;
       case -1: isLiked(false); break;
     }
+    if (data.score == null) return;
+    data.score += scoreDiff;
   }
 
   private int getLikedScore() {
@@ -235,7 +240,7 @@ public class Comment extends AbsComment<Comment.Data> implements Votable, Savabl
     @Expose
     private String author;
     @Expose
-    private int score;
+    private Integer score;
     @SerializedName("approved_by")
     private Object approvedBy;
     private int controversiality;
@@ -250,8 +255,8 @@ public class Comment extends AbsComment<Comment.Data> implements Votable, Savabl
     private String bodyHtml;
     @Expose
     private String subreddit;
-    @SerializedName("score_hidden")
-    private boolean scoreHidden;
+    @Expose @SerializedName("score_hidden")
+    private Boolean hideScore;
     private double created;
     @SerializedName("author_flair_text")
     private String authorFlairText;
