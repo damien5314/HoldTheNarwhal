@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.DisplayMetrics;
@@ -211,5 +212,31 @@ public class BaseUtils {
     if (n < 0) n *= -1;
     if (n == 0) return 0;
     return (int) Math.log10(n) + 1;
+  }
+
+  /**
+   * http://stackoverflow.com/a/9563438/3238938
+   * This method converts dp unit to equivalent pixels, depending on device density.
+   *
+   * @param dp A value in dp (density independent pixels) unit. Which we need to convert into pixels
+   * @return A float value to represent px equivalent to dp depending on device density
+   */
+  public static float convertDpToPixel(float dp) {
+    Resources resources = Resources.getSystem();
+    DisplayMetrics metrics = resources.getDisplayMetrics();
+    return dp * (metrics.densityDpi / 160f);
+  }
+
+  /**
+   * http://stackoverflow.com/a/9563438/3238938
+   * This method converts device specific pixels to density independent pixels.
+   *
+   * @param px A value in px (pixels) unit. Which we need to convert into db
+   * @return A float value to represent dp equivalent to px value
+   */
+  public static float convertPixelsToDp(float px) {
+    Resources resources = Resources.getSystem();
+    DisplayMetrics metrics = resources.getDisplayMetrics();
+    return px / (metrics.densityDpi / 160f);
   }
 }
