@@ -133,6 +133,10 @@ public class Link extends Listing<Link.Data> implements Votable, Savable, Hideab
     return data.subredditId;
   }
 
+  public Boolean isScoreHidden() {
+    return data.hideScore;
+  }
+
   public Object getLinkFlairCssClass() {
     return data.linkFlairCssClass;
   }
@@ -271,6 +275,8 @@ public class Link extends Listing<Link.Data> implements Votable, Savable, Hideab
     private String thumbnail;
     @SerializedName("subreddit_id")
     private String subredditId;
+    @Expose @SerializedName("hide_score")
+    private Boolean hideScore;
     @SerializedName("link_flair_css_class")
     private Object linkFlairCssClass;
     @SerializedName("author_flair_css_class")
