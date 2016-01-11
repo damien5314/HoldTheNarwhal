@@ -9,7 +9,6 @@ import com.ddiehl.android.htn.R;
 import java.util.Date;
 
 public class RedditDateTextView extends TextView {
-
   private static final int[] TIMESPAN_IDS = {
       R.string.timespan_years,
       R.string.timespan_months,
@@ -43,6 +42,8 @@ public class RedditDateTextView extends TextView {
       R.string.timespan_now
   };
 
+  private static int NOW_THRESHOLD_SECONDS = 10;
+
   private boolean mAbbreviated = false;
 
   public RedditDateTextView(Context context) {
@@ -56,16 +57,16 @@ public class RedditDateTextView extends TextView {
   }
 
   public void setDate(Date date) {
-    setText(getFormattedDateString(date));
+    setText(getFormattedDateString(date.getTime()));
   }
 
   public void setDate(long utc) {
-    setText(getFormattedDateString(new Date(utc * 1000)));
+    setText(getFormattedDateString(utc * 1000));
   }
 
-  private String getFormattedDateString(Date date) {
+  private String getFormattedDateString(long utcMs) {
     long currentTime = System.currentTimeMillis();
-    long differential = currentTime - date.getTime();
+    long differential = currentTime - utcMs;
 
     long seconds = differential / 1000;
     long minutes = seconds / 60;
@@ -93,13 +94,11 @@ public class RedditDateTextView extends TextView {
       }
     }
 
-    // If < 10 seconds ago, use "now"
-    if (unit == seconds && seconds <= 10) {
+    if (unit == seconds && seconds <= NOW_THRESHOLD_SECONDS) {
       output = getContext().getString(TIMESPAN_IDS[TIMESPAN_IDS.length - 1]);
     }
 
     return String.format(output, unit);
-//    return DateUtils.getRelativeTimeSpanString(date.getTime(), new Date().getTime(), DateUtils.MINUTE_IN_MILLIS).toString();
   }
 
   public void setEdited(boolean edited) {
