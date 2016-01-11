@@ -6,7 +6,6 @@ import com.ddiehl.reddit.Votable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -252,7 +251,7 @@ public class Link extends Listing<Link.Data> implements Votable, Savable, Hideab
     @Expose
     private Boolean likes;
     @SerializedName("user_reports")
-    private List<Object> userReports = new ArrayList<>();
+    private List<Object> userReports;
     @SerializedName("secure_media")
     private Object secureMedia;
     @SerializedName("link_flair_text")
@@ -310,7 +309,7 @@ public class Link extends Listing<Link.Data> implements Votable, Savable, Hideab
     private String distinguished;
     private Media media;
     @SerializedName("mod_reports")
-    private List<Object> modReports = new ArrayList<>();
+    private List<Object> modReports;
     private Boolean visited;
     @SerializedName("num_reports")
     private Object numReports;

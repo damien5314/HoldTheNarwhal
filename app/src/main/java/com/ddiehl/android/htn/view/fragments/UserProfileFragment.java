@@ -166,8 +166,9 @@ public class UserProfileFragment extends AbsListingsFragment implements UserProf
   @Override
   public void showTrophies(List<Listing> trophies) {
     if (trophies == null || trophies.size() == 0) return; // Nothing to show
+    // TODO Clean up trophy width/layout
     final int minDpWidth = 160;
-    final int numColumns = ((int) BaseUtils.getScreenWidth(mContext)) / minDpWidth;
+    final int numColumns = ((int) BaseUtils.getScreenWidth()) / minDpWidth;
     LinearLayout row = null;
     LayoutInflater inflater = getActivity().getLayoutInflater();
     mTrophies.removeAllViews(); // Reset layout

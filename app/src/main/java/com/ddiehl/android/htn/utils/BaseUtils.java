@@ -8,8 +8,6 @@ import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.DisplayMetrics;
-import android.view.Display;
-import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
@@ -197,15 +195,10 @@ public class BaseUtils {
     return SimpleDateFormat.getDateInstance().format(new java.util.Date(t));
   }
 
-  public static float getScreenWidth(@NonNull Context c) {
-    WindowManager wm = ((WindowManager) c.getSystemService(Context.WINDOW_SERVICE));
-    Display display = wm.getDefaultDisplay();
-    DisplayMetrics outMetrics = new DisplayMetrics ();
-    display.getMetrics(outMetrics);
-
-    float density = c.getResources().getDisplayMetrics().density;
-//    float dpHeight = outMetrics.heightPixels / density;
-    return outMetrics.widthPixels / density;
+  public static float getScreenWidth() {
+    DisplayMetrics display = Resources.getSystem().getDisplayMetrics();
+    float density = display.density;
+    return display.widthPixels / density;
   }
 
   public static int getNumberOfDigits(int n) {
