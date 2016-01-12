@@ -46,11 +46,13 @@ public class ListingsLinkViewHolder extends AbsLinkViewHolder {
         }
       }
     } else {
+      mLinkThumbnail.setVisibility(View.VISIBLE);
       url = link.getThumbnail();
     }
     if (url == null) url = "";
     switch (url) {
       case "nsfw":
+        mLinkThumbnail.setVisibility(View.VISIBLE);
         Picasso.with(mContext)
             .load(R.drawable.ic_nsfw2)
             .into(mLinkThumbnail);
@@ -59,6 +61,7 @@ public class ListingsLinkViewHolder extends AbsLinkViewHolder {
         mLinkThumbnail.setVisibility(View.GONE);
         break;
       default:
+        mLinkThumbnail.setVisibility(View.VISIBLE);
         loadThumbnail(url);
     }
   }

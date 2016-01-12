@@ -58,6 +58,7 @@ public class CommentsLinkViewHolder extends AbsLinkViewHolder {
     if (url == null) url = "";
     switch (url) {
       case "nsfw":
+        mLinkThumbnail.setVisibility(View.VISIBLE);
         Picasso.with(mContext)
             .load(R.drawable.ic_nsfw2)
             .into(mLinkThumbnail);
@@ -66,6 +67,7 @@ public class CommentsLinkViewHolder extends AbsLinkViewHolder {
         mLinkThumbnail.setVisibility(View.GONE);
         break;
       default:
+        mLinkThumbnail.setVisibility(View.VISIBLE);
         loadThumbnail(url);
     }
   }
