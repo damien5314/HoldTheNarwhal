@@ -12,6 +12,7 @@ import com.ddiehl.android.htn.analytics.Analytics;
 import com.ddiehl.android.htn.io.interceptors.AuthorizationInterceptor;
 import com.ddiehl.android.htn.io.interceptors.LoggingInterceptor;
 import com.ddiehl.android.htn.io.interceptors.RawResponseInterceptor;
+import com.ddiehl.android.htn.io.interceptors.UserAgentInterceptor;
 import com.ddiehl.reddit.Hideable;
 import com.ddiehl.reddit.Savable;
 import com.ddiehl.reddit.Votable;
@@ -66,6 +67,7 @@ public class RedditServiceImpl implements RedditService {
     Context context = HoldTheNarwhal.getContext();
     File cache = new File(context.getCacheDir().getAbsolutePath(), "htn-http-cache");
     client.setCache(new Cache(cache, cacheSize));
+    client.networkInterceptors().add(new UserAgentInterceptor(RedditService.USER_AGENT));
     client.networkInterceptors().add(new RawResponseInterceptor());
     client.networkInterceptors().add(
         AuthorizationInterceptor.get(AuthorizationInterceptor.Type.TOKEN_AUTH));
