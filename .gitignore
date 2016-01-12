@@ -3,6 +3,7 @@
 /build/
 /local.properties
 *.iml
+/captures/
 
 gradlew
 gradlew.bat
