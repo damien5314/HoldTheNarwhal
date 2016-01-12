@@ -31,15 +31,8 @@ public class ListingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
   @Override
   public int getItemViewType(int position) {
     Listing listing = mListingsPresenter.getListing(position);
-
-    if (listing instanceof Link) {
-      return TYPE_LINK;
-    }
-
-    if (listing instanceof Comment) {
-      return TYPE_COMMENT;
-    }
-
+    if (listing instanceof Link) return TYPE_LINK;
+    if (listing instanceof Comment) return TYPE_COMMENT;
     throw new RuntimeException("Item view type not recognized: " + listing.getClass());
   }
 

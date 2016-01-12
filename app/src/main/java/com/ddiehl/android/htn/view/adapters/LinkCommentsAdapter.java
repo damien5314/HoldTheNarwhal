@@ -30,15 +30,10 @@ public class LinkCommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
   @Override
   public int getItemViewType(int position) {
-    if (position == 0)
-      return TYPE_LINK;
-
+    if (position == 0) return TYPE_LINK;
     AbsComment comment = mLinkCommentsPresenter.getComment(position - 1);
-
-    if (comment instanceof Comment)
-      return TYPE_COMMENT;
-    else
-      return TYPE_COMMENT_STUB;
+    if (comment instanceof Comment) return TYPE_COMMENT;
+    else return TYPE_COMMENT_STUB;
   }
 
   @Override
