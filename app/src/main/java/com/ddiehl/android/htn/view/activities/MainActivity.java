@@ -394,7 +394,7 @@ public class MainActivity extends AppCompatActivity implements MainView,
   private void showFragment(@NonNull Fragment f) {
     FragmentManager fm = getFragmentManager();
     FragmentTransaction ft = fm.beginTransaction().replace(R.id.fragment_container, f);
-    if (getCurrentDisplayedFragment() != null) ft.addToBackStack(null);
+//    if (getCurrentDisplayedFragment() != null) ft.addToBackStack(null);
     ft.commit();
   }
 
@@ -405,7 +405,7 @@ public class MainActivity extends AppCompatActivity implements MainView,
     FragmentManager fm = getFragmentManager();
     fm.beginTransaction()
         .replace(R.id.fragment_container, fragment)
-        .addToBackStack(null)
+//        .addToBackStack(null)
         .commit();
   }
 }

@@ -144,7 +144,7 @@ public class SettingsFragment extends PreferenceFragment
     getFragmentManager().beginTransaction()
         .replace(R.id.fragment_container,
             WebViewFragment.newInstance("file:///android_asset/htn_about_app.html"))
-        .addToBackStack(null)
+//        .addToBackStack(null)
         .commit();
   }
 
@@ -155,7 +155,7 @@ public class SettingsFragment extends PreferenceFragment
       in_s = getActivity().getAssets().open("htn_about_app.md");
       getFragmentManager().beginTransaction()
           .replace(R.id.fragment_container, AboutAppFragment.newInstance(in_s))
-          .addToBackStack(null)
+//          .addToBackStack(null)
           .commit();
     } catch (IOException e) {
       e.printStackTrace();

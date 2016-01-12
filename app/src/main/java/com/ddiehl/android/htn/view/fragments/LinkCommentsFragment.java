@@ -376,7 +376,7 @@ public class LinkCommentsFragment extends Fragment
     Fragment f = LinkCommentsFragment.newInstance(subreddit, linkId, commentId);
     getFragmentManager().beginTransaction()
         .replace(R.id.fragment_container, f)
-        .addToBackStack(null)
+//        .addToBackStack(null)
         .commit();
   }
 
