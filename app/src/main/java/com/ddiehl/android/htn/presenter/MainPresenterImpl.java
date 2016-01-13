@@ -105,6 +105,7 @@ public class MainPresenterImpl implements MainPresenter, IdentityManager.Callbac
 
   @Override
   public void onShowUserProfile() {
+    mMainView.resetBackNavigation();
     String name = mIdentityManager.getUserIdentity().getName();
     mMainView.showUserProfile(name);
     mAnalytics.logDrawerUserProfile();
@@ -118,18 +119,21 @@ public class MainPresenterImpl implements MainPresenter, IdentityManager.Callbac
 
   @Override
   public void onShowFrontPage() {
+    mMainView.resetBackNavigation();
     mMainView.showSubreddit(null, null);
     mAnalytics.logDrawerFrontPage();
   }
 
   @Override
   public void onShowAllListings() {
+    mMainView.resetBackNavigation();
     mMainView.showSubreddit("all", null);
     mAnalytics.logDrawerAllSubreddits();
   }
 
   @Override
   public void onShowRandomSubreddit() {
+    mMainView.resetBackNavigation();
     mMainView.showSubreddit("random", null);
     mAnalytics.logDrawerRandomSubreddit();
   }

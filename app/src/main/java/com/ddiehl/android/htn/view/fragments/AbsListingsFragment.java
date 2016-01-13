@@ -180,14 +180,6 @@ public abstract class AbsListingsFragment extends Fragment
   }
 
   @Override
-  public void goBack() {
-    FragmentManager fm = getFragmentManager();
-    if (fm.getBackStackEntryCount() > 0) {
-      fm.popBackStack();
-    }
-  }
-
-  @Override
   public void showLinkContextMenu(ContextMenu menu, View v, Link link) {
     getActivity().getMenuInflater().inflate(R.menu.link_context_menu, menu);
     String title = String.format(v.getContext().getString(R.string.menu_action_link),

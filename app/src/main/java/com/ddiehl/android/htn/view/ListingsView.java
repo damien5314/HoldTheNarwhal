@@ -9,5 +9,4 @@ public interface ListingsView extends LinkView, CommentView {
   void onSortChanged();
   void onTimespanChanged();
   void updateTitle();
-  void goBack();
 }

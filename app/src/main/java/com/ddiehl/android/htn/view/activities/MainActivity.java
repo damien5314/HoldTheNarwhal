@@ -144,7 +144,6 @@ public class MainActivity extends AppCompatActivity implements MainView,
   @Override
   public boolean onNavigationItemSelected(MenuItem menuItem) {
     closeNavigationDrawer();
-    resetBackNavigation();
     switch (menuItem.getItemId()) {
       case R.id.drawer_navigate_to_subreddit:
         mMainPresenter.onNavigateToSubreddit();
@@ -318,6 +317,11 @@ public class MainActivity extends AppCompatActivity implements MainView,
   }
 
   @Override
+  public void goBack() {
+    onBackPressed();
+  }
+
+  @Override
   public void showSubredditIfEmpty(@Nullable String subreddit) {
     if (getCurrentDisplayedFragment() == null) {
       showSubreddit(subreddit, null);
@@ -410,7 +414,8 @@ public class MainActivity extends AppCompatActivity implements MainView,
     showFragment(f);
   }
 
-  private void resetBackNavigation() {
+  @Override
+  public void resetBackNavigation() {
     mBackStackReset = true;
     getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
   }

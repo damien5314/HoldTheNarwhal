@@ -522,7 +522,7 @@ public abstract class AbsListingsPresenter
       refreshData();
     } else {
       mMainView.dismissSpinner();
-      mListingsView.goBack();
+      mMainView.goBack();
     }
   }
 

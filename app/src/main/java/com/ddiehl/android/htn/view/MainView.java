@@ -39,4 +39,6 @@ public interface MainView extends AnalyticsDialog.Callbacks, ConfirmSignOutDialo
   void showCommentsForLink(
       @Nullable String subreddit, @Nullable String linkId, @Nullable String commentId);
   void showAboutApp();
+  void goBack();
+  void resetBackNavigation();
 }
