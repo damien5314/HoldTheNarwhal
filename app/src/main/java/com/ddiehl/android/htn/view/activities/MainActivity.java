@@ -82,6 +82,7 @@ public class MainActivity extends AppCompatActivity implements MainView,
   private Logger mLogger = HoldTheNarwhal.getLogger();
   private Analytics mAnalytics = HoldTheNarwhal.getAnalytics();
   private MainPresenter mMainPresenter;
+  private boolean mBackStackReset = true;
 
   @Override @DebugLog
   protected void onCreate(Bundle savedInstanceState) {
@@ -143,7 +144,7 @@ public class MainActivity extends AppCompatActivity implements MainView,
   @Override
   public boolean onNavigationItemSelected(MenuItem menuItem) {
     closeNavigationDrawer();
-    // TODO Clear back stack
+    resetBackNavigation();
     switch (menuItem.getItemId()) {
       case R.id.drawer_navigate_to_subreddit:
         mMainPresenter.onNavigateToSubreddit();
@@ -307,11 +308,11 @@ public class MainActivity extends AppCompatActivity implements MainView,
       closeNavigationDrawer();
       return;
     }
-
     FragmentManager fm = getFragmentManager();
     if (fm.getBackStackEntryCount() > 0) {
       fm.popBackStack();
     } else {
+      // TODO Exit confirmation dialog
       super.onBackPressed();
     }
   }
@@ -396,11 +397,22 @@ public class MainActivity extends AppCompatActivity implements MainView,
   }
 
   private void showFragment(@NonNull Fragment f) {
-    FragmentManager fm = getFragmentManager();
     @SuppressLint("CommitTransaction")
-    FragmentTransaction ft = fm.beginTransaction().replace(R.id.fragment_container, f);
-    if (getCurrentDisplayedFragment() != null) ft.addToBackStack(null);
+    FragmentTransaction ft = getFragmentManager().beginTransaction()
+        .replace(R.id.fragment_container, f);
+    if (getCurrentDisplayedFragment() != null && !mBackStackReset) ft.addToBackStack(null);
+    mBackStackReset = false;
     ft.commit();
+  }
+
+  private void showTopLevelFragment(@NonNull Fragment f) {
+    resetBackNavigation();
+    showFragment(f);
+  }
+
+  private void resetBackNavigation() {
+    mBackStackReset = true;
+    getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
   }
 
   private void setMirroredIcons() {
