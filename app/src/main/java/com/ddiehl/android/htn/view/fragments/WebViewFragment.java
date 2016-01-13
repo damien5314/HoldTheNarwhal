@@ -33,7 +33,6 @@ import com.ddiehl.android.htn.view.MainView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-
 public class WebViewFragment extends Fragment {
   private static final String ARG_URL = "url";
 
@@ -55,10 +54,10 @@ public class WebViewFragment extends Fragment {
 
   public WebViewFragment() { }
 
-  public static Fragment newInstance(String url) {
+  public static WebViewFragment newInstance(String url) {
     Bundle args = new Bundle();
     args.putString(ARG_URL, url);
-    Fragment fragment = new WebViewFragment();
+    WebViewFragment fragment = new WebViewFragment();
     fragment.setArguments(args);
     return fragment;
   }
@@ -103,7 +102,6 @@ public class WebViewFragment extends Fragment {
             && !url.equals(RedditAuthService.AUTHORIZATION_URL)) {
           // Pass auth code back to the Activity, which will pop this fragment
           String authCode = AuthUtils.getUserAuthCodeFromRedirectUri(url);
-//          mBus.post(new UserAuthCodeReceivedEvent(authCode));
           mMainView.onAuthCodeReceived(authCode);
           getFragmentManager().popBackStack();
           return true; // Can we do this to prevent the page from loading at all?

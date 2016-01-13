@@ -1,6 +1,5 @@
 package com.ddiehl.android.htn.view.fragments;
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -20,15 +19,15 @@ import butterknife.ButterKnife;
 
 public class AboutAppFragment extends MarkdownTextFragment {
 
-  public static Fragment newInstance(@NonNull String text) {
-    Fragment f = new AboutAppFragment();
+  public static AboutAppFragment newInstance(@NonNull String text) {
+    AboutAppFragment f = new AboutAppFragment();
     Bundle args = new Bundle();
     args.putString(ARG_TEXT, text);
     f.setArguments(args);
     return f;
   }
 
-  public static Fragment newInstance(@NonNull InputStream in_s) {
+  public static AboutAppFragment newInstance(@NonNull InputStream in_s) {
     String text = BaseUtils.getStringFromInputStream(in_s);
     return newInstance(text);
   }

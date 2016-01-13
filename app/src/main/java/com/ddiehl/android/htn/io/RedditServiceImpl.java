@@ -98,8 +98,8 @@ public class RedditServiceImpl implements RedditService {
         mAPI.getUserIdentity()
             .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnNext(response -> mAnalytics.logSignIn(response.body()))
-            .map(Response::body));
+            .map(Response::body)
+            .doOnNext(response -> mAnalytics.logSignIn(response)));
   }
 
   @Override

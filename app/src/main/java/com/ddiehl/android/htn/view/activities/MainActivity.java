@@ -40,6 +40,7 @@ import com.ddiehl.android.htn.view.dialogs.AnalyticsDialog;
 import com.ddiehl.android.htn.view.dialogs.ConfirmSignOutDialog;
 import com.ddiehl.android.htn.view.dialogs.NsfwWarningDialog;
 import com.ddiehl.android.htn.view.dialogs.SubredditNavigationDialog;
+import com.ddiehl.android.htn.view.fragments.AboutAppFragment;
 import com.ddiehl.android.htn.view.fragments.LinkCommentsFragment;
 import com.ddiehl.android.htn.view.fragments.SettingsFragment;
 import com.ddiehl.android.htn.view.fragments.SubredditFragment;
@@ -48,6 +49,8 @@ import com.ddiehl.android.htn.view.fragments.WebViewFragment;
 import com.ddiehl.reddit.identity.UserIdentity;
 import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.UnknownHostException;
 
 import butterknife.Bind;
@@ -140,6 +143,7 @@ public class MainActivity extends AppCompatActivity implements MainView,
   @Override
   public boolean onNavigationItemSelected(MenuItem menuItem) {
     closeNavigationDrawer();
+    // TODO Clear back stack
     switch (menuItem.getItemId()) {
       case R.id.drawer_navigate_to_subreddit:
         mMainPresenter.onNavigateToSubreddit();
@@ -221,7 +225,7 @@ public class MainActivity extends AppCompatActivity implements MainView,
     showToast(R.string.implementation_pending);
   }
 
-  @OnClick(R.id.sign_out_button) @SuppressWarnings("unused")
+  @OnClick(R.id.sign_out_button)
   void onSignOut() {
     new ConfirmSignOutDialog().show(getFragmentManager(), DIALOG_CONFIRM_SIGN_OUT);
     mAnalytics.logClickedSignOut();
@@ -362,6 +366,43 @@ public class MainActivity extends AppCompatActivity implements MainView,
     new SubredditNavigationDialog().show(getFragmentManager(), DIALOG_SUBREDDIT_NAVIGATION);
   }
 
+  @Override
+  public void showCommentsForLink(
+      @Nullable String subreddit, @Nullable String linkId, @Nullable String commentId) {
+    Fragment fragment = LinkCommentsFragment.newInstance(subreddit, linkId, commentId);
+    showFragment(fragment);
+  }
+
+  @Override
+  public void showAboutApp() {
+    InputStream text;
+    try {
+      text = getAssets().open("htn_about_app.md");
+      Fragment fragment = AboutAppFragment.newInstance(text);
+      showFragment(fragment);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  private void showAboutAppHtml() {
+    WebViewFragment fragment =
+        WebViewFragment.newInstance("file:///android_asset/htn_about_app.html");
+    showFragment(fragment);
+  }
+
+  private Fragment getCurrentDisplayedFragment() {
+    return getFragmentManager().findFragmentById(R.id.fragment_container);
+  }
+
+  private void showFragment(@NonNull Fragment f) {
+    FragmentManager fm = getFragmentManager();
+    @SuppressLint("CommitTransaction")
+    FragmentTransaction ft = fm.beginTransaction().replace(R.id.fragment_container, f);
+    if (getCurrentDisplayedFragment() != null) ft.addToBackStack(null);
+    ft.commit();
+  }
+
   private void setMirroredIcons() {
     if (Build.VERSION.SDK_INT >= 19) {
       int[] ids = new int[] {
@@ -385,27 +426,5 @@ public class MainActivity extends AppCompatActivity implements MainView,
         }
       }
     }
-  }
-
-  private Fragment getCurrentDisplayedFragment() {
-    return getFragmentManager().findFragmentById(R.id.fragment_container);
-  }
-
-  private void showFragment(@NonNull Fragment f) {
-    FragmentManager fm = getFragmentManager();
-    FragmentTransaction ft = fm.beginTransaction().replace(R.id.fragment_container, f);
-//    if (getCurrentDisplayedFragment() != null) ft.addToBackStack(null);
-    ft.commit();
-  }
-
-  @Override
-  public void showCommentsForLink(
-      @Nullable String subreddit, @Nullable String linkId, @Nullable String commentId) {
-    Fragment fragment = LinkCommentsFragment.newInstance(subreddit, linkId, commentId);
-    FragmentManager fm = getFragmentManager();
-    fm.beginTransaction()
-        .replace(R.id.fragment_container, fragment)
-//        .addToBackStack(null)
-        .commit();
   }
 }

@@ -22,11 +22,9 @@ import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.android.htn.view.SettingsView;
 import com.ddiehl.reddit.identity.UserIdentity;
 
-import java.io.IOException;
-import java.io.InputStream;
-
 public class SettingsFragment extends PreferenceFragment
     implements SettingsView, SharedPreferences.OnSharedPreferenceChangeListener {
+  private MainView mMainView;
   private SettingsPresenter mSettingsPresenter;
 
   @Override
@@ -34,7 +32,8 @@ public class SettingsFragment extends PreferenceFragment
     super.onCreate(savedInstanceState);
     setRetainInstance(true);
     setHasOptionsMenu(true);
-    mSettingsPresenter = new SettingsPresenterImpl((MainView) getActivity(), this);
+    mMainView = (MainView) getActivity();
+    mSettingsPresenter = new SettingsPresenterImpl(mMainView, this);
     getPreferenceManager().setSharedPreferencesName(SettingsManagerImpl.PREFS_USER);
     addDefaultPreferences();
   }
@@ -140,25 +139,8 @@ public class SettingsFragment extends PreferenceFragment
     return super.onOptionsItemSelected(item);
   }
 
-  private void showAboutAppHtml() {
-    getFragmentManager().beginTransaction()
-        .replace(R.id.fragment_container,
-            WebViewFragment.newInstance("file:///android_asset/htn_about_app.html"))
-//        .addToBackStack(null)
-        .commit();
-  }
-
   @Override
   public void showAboutApp() {
-    InputStream in_s;
-    try {
-      in_s = getActivity().getAssets().open("htn_about_app.md");
-      getFragmentManager().beginTransaction()
-          .replace(R.id.fragment_container, AboutAppFragment.newInstance(in_s))
-//          .addToBackStack(null)
-          .commit();
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+    mMainView.showAboutApp();
   }
 }

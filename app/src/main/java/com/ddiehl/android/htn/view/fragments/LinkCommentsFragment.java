@@ -373,11 +373,7 @@ public class LinkCommentsFragment extends Fragment
   @Override
   public void showCommentsForLink(
       @Nullable String subreddit, @Nullable String linkId, @Nullable String commentId) {
-    Fragment f = LinkCommentsFragment.newInstance(subreddit, linkId, commentId);
-    getFragmentManager().beginTransaction()
-        .replace(R.id.fragment_container, f)
-//        .addToBackStack(null)
-        .commit();
+    mMainView.showCommentsForLink(subreddit, linkId, commentId);
   }
 
   @Override
