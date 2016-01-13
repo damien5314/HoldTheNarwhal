@@ -38,7 +38,7 @@ public class HoldTheNarwhal extends Application {
           new Picasso.Builder(this)
               .memoryCache(Cache.NONE)
               .indicatorsEnabled(true)
-              .loggingEnabled(true)
+              .loggingEnabled(false)
               .build());
     }
 

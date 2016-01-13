@@ -3,12 +3,12 @@ package com.ddiehl.android.htn.io;
 
 import com.ddiehl.reddit.identity.ApplicationAccessToken;
 import com.ddiehl.reddit.identity.UserAccessToken;
-import com.squareup.okhttp.ResponseBody;
 
-import retrofit.Response;
-import retrofit.http.Field;
-import retrofit.http.FormUrlEncoded;
-import retrofit.http.POST;
+import okhttp3.ResponseBody;
+import retrofit2.Response;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.POST;
 import rx.Observable;
 
 public interface RedditAuthAPI {
@@ -24,7 +24,8 @@ public interface RedditAuthAPI {
       @Field("code") String code,
       @Field("redirect_uri") String redirectUri);
 
-  @FormUrlEncoded @POST("/api/v1/access_token")
+  @FormUrlEncoded
+  @POST("/api/v1/access_token")
   Observable<Response<UserAccessToken>> refreshUserAuthToken(
       @Field("grant_type") String grantType,
       @Field("refresh_token") String refreshToken);

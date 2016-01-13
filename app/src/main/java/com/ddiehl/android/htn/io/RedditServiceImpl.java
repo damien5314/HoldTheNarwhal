@@ -33,24 +33,23 @@ import com.ddiehl.reddit.listings.Listing;
 import com.ddiehl.reddit.listings.ListingResponse;
 import com.ddiehl.reddit.listings.MoreChildrenResponse;
 import com.ddiehl.reddit.listings.Subreddit;
-import com.facebook.stetho.okhttp.StethoInterceptor;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.squareup.okhttp.Cache;
-import com.squareup.okhttp.MediaType;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.RequestBody;
-import com.squareup.okhttp.ResponseBody;
 
 import java.io.File;
 import java.util.List;
 import java.util.Map;
 
-import retrofit.GsonConverterFactory;
-import retrofit.Response;
-import retrofit.Retrofit;
-import retrofit.RxJavaCallAdapterFactory;
+import okhttp3.Cache;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import retrofit2.GsonConverterFactory;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.RxJavaCallAdapterFactory;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -63,16 +62,17 @@ public class RedditServiceImpl implements RedditService {
 
   private RedditAPI buildApi() {
     final int cacheSize = 10 * 1024 * 1024; // 10 MiB
-    OkHttpClient client = new OkHttpClient();
     Context context = HoldTheNarwhal.getContext();
     File cache = new File(context.getCacheDir().getAbsolutePath(), "htn-http-cache");
-    client.setCache(new Cache(cache, cacheSize));
-    client.networkInterceptors().add(new UserAgentInterceptor(RedditService.USER_AGENT));
-    client.networkInterceptors().add(new RawResponseInterceptor());
-    client.networkInterceptors().add(
-        AuthorizationInterceptor.get(AuthorizationInterceptor.Type.TOKEN_AUTH));
-    client.networkInterceptors().add(new LoggingInterceptor());
-    client.networkInterceptors().add(new StethoInterceptor());
+    OkHttpClient client = new OkHttpClient.Builder()
+        .cache(new Cache(cache, cacheSize))
+        .addNetworkInterceptor(new UserAgentInterceptor(RedditService.USER_AGENT))
+        .addNetworkInterceptor(new RawResponseInterceptor())
+        .addNetworkInterceptor(
+            AuthorizationInterceptor.get(AuthorizationInterceptor.Type.TOKEN_AUTH))
+        .addNetworkInterceptor(new LoggingInterceptor())
+//        .addNetworkInterceptor(new StethoInterceptor())
+        .build();
 
     Gson gson = new GsonBuilder()
         .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
@@ -295,15 +295,16 @@ public class RedditServiceImpl implements RedditService {
               })
               .map(Response::body));
     } else { // Unhide
-      return mAPI.unhide(listing.getName())
-          .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
-          .observeOn(AndroidSchedulers.mainThread())
-          .flatMap(response -> {
-            if (response.message().contains("USER_REQUIRED")) {
-              return Observable.error(new RuntimeException("Sign in required"));
-            } else return Observable.just(response);
-          })
-          .map(Response::body);
+      return requireUserAccessToken().flatMap(token ->
+          mAPI.unhide(listing.getName())
+              .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
+              .observeOn(AndroidSchedulers.mainThread())
+              .flatMap(response -> {
+                if (response.message().contains("USER_REQUIRED")) {
+                  return Observable.error(new RuntimeException("Sign in required"));
+                } else return Observable.just(response);
+              })
+              .map(Response::body));
     }
   }
 

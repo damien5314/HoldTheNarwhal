@@ -6,7 +6,7 @@ import android.support.annotation.Nullable;
 import com.ddiehl.reddit.identity.UserIdentity;
 import com.ddiehl.reddit.listings.Link;
 
-import retrofit.Response;
+import okhttp3.Response;
 
 public interface Analytics {
   void initialize();

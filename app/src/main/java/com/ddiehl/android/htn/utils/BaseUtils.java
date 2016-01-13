@@ -8,13 +8,8 @@ import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.DisplayMetrics;
-import android.widget.Toast;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
-import com.ddiehl.android.htn.R;
-import com.squareup.okhttp.Headers;
-import com.squareup.okhttp.Response;
-import com.squareup.okhttp.ResponseBody;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -30,36 +25,12 @@ import java.util.UUID;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import okhttp3.Headers;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
+
 
 public class BaseUtils {
-  public static void showError(@NonNull Context context, @Nullable retrofit.Response error) {
-    String code = error == null ? "NULL" : String.valueOf(error.code());
-    HoldTheNarwhal.getLogger().d(String.format("Retrofit error (STATUS %s)", code));
-    Toast.makeText(context,
-        String.format("An error has occurred (%s)", code), Toast.LENGTH_LONG).show();
-  }
-
-  @NonNull
-  public static String getFriendlyError(@Nullable retrofit.Response response) {
-    Context context = HoldTheNarwhal.getContext();
-    if (response == null) {
-      return context.getString(R.string.error_network_unavailable);
-    } else {
-      switch (response.code()) {
-        case 404:
-          return context.getString(R.string.error_404);
-        case 500:
-          return context.getString(R.string.error_500);
-        case 503:
-          return context.getString(R.string.error_503);
-        case 520:
-          return context.getString(R.string.error_520);
-        default:
-          String errorMsg = context.getString(R.string.error_xxx);
-          return String.format(errorMsg, response.code());
-      }
-    }
-  }
 
   public static void printResponse(@Nullable Response response) {
     printResponseStatus(response);
@@ -70,7 +41,7 @@ public class BaseUtils {
   public static void printResponseStatus(@Nullable Response response) {
     if (response != null) {
       HoldTheNarwhal.getLogger().d(String.format("URL: %s (STATUS: %s)",
-          response.request().urlString(), response.code()));
+          response.request().url().toString(), response.code()));
     }
   }
 

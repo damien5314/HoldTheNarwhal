@@ -5,9 +5,9 @@ import com.ddiehl.android.htn.utils.BaseUtils;
 import com.ddiehl.reddit.identity.AccessToken;
 import com.ddiehl.reddit.identity.ApplicationAccessToken;
 import com.ddiehl.reddit.identity.UserAccessToken;
-import com.squareup.okhttp.Credentials;
-import com.squareup.okhttp.ResponseBody;
 
+import okhttp3.Credentials;
+import okhttp3.ResponseBody;
 import rx.Observable;
 
 public interface RedditAuthService {

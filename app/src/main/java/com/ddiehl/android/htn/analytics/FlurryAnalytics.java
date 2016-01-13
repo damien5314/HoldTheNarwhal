@@ -18,7 +18,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import retrofit.Response;
+import okhttp3.Response;
 
 public class FlurryAnalytics implements Analytics {
   private static final int FLURRY_SESSION_TIMEOUT_SECONDS = 30;
@@ -196,7 +196,7 @@ public class FlurryAnalytics implements Analytics {
   public void logApiError(Response error) {
     if (!mEnabled) return;
     Map<String, String> params = new HashMap<>();
-    params.put("url", error.raw().request().url().toString());
+    params.put("url", error.request().url().toString());
     params.put("code", String.valueOf(error.code()));
     FlurryAgent.logEvent("api error", params);
   }

@@ -17,11 +17,11 @@ import com.ddiehl.reddit.listings.Listing;
 import com.ddiehl.reddit.listings.ListingResponse;
 import com.ddiehl.reddit.listings.MoreChildrenResponse;
 import com.ddiehl.reddit.listings.Subreddit;
-import com.squareup.okhttp.ResponseBody;
 
 import java.util.List;
 import java.util.Map;
 
+import okhttp3.ResponseBody;
 import rx.Observable;
 
 

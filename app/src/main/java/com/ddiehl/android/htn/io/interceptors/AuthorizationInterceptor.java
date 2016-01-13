@@ -3,8 +3,9 @@ package com.ddiehl.android.htn.io.interceptors;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.io.RedditAuthService;
 import com.ddiehl.reddit.identity.AccessToken;
-import com.squareup.okhttp.Interceptor;
-import com.squareup.okhttp.Request;
+
+import okhttp3.Interceptor;
+import okhttp3.Request;
 
 public class AuthorizationInterceptor {
   public enum Type { HTTP_AUTH, TOKEN_AUTH }
