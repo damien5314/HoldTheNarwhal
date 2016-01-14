@@ -80,6 +80,11 @@ public class LinkCommentsPresenterImpl
   }
 
   @Override
+  public void onViewDestroyed() {
+    mCommentBank.clear();
+  }
+
+  @Override
   public void requestData() {
     mMainView.showSpinner(null);
     mRedditService.loadLinkComments(mSubreddit, mLinkId, mSort, mCommentId)

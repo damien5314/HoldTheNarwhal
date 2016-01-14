@@ -74,6 +74,9 @@ public class MainPresenterImpl implements MainPresenter, IdentityManager.Callbac
   }
 
   @Override
+  public void onViewDestroyed() { /* no-op */ }
+
+  @Override
   public Action1<UserIdentity> onUserIdentityChanged() {
     return identity -> {
       if (identity == null) {

@@ -41,6 +41,9 @@ public class SettingsPresenterImpl implements SettingsPresenter, IdentityManager
   }
 
   @Override
+  public void onViewDestroyed() { /* no-op */ }
+
+  @Override
   public Action1<UserIdentity> onUserIdentityChanged() {
     return identity -> {
       boolean shouldRefresh = identity != null;

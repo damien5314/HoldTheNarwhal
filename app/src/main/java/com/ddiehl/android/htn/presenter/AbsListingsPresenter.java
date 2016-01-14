@@ -43,7 +43,7 @@ public abstract class AbsListingsPresenter
   protected RedditService mRedditService = HoldTheNarwhal.getRedditService();
   protected Analytics mAnalytics = HoldTheNarwhal.getAnalytics();
 
-  protected List<Listing> mListings;
+  protected List<Listing> mListings = new ArrayList<>();
   protected ListingsView mListingsView;
   protected MainView mMainView;
 
@@ -68,7 +68,6 @@ public abstract class AbsListingsPresenter
     mSubreddit = subreddit;
     mSort = sort;
     mTimespan = timespan;
-    mListings = new ArrayList<>();
   }
 
   @Override
@@ -82,6 +81,12 @@ public abstract class AbsListingsPresenter
   @Override
   public void onPause() {
     mIdentityManager.unregisterUserIdentityChangeListener(this);
+  }
+
+  @Override
+  public void onViewDestroyed() {
+    mLogger.d("Clearing data for view: " + mMainView.toString());
+    mListings.clear();
   }
 
   @Override

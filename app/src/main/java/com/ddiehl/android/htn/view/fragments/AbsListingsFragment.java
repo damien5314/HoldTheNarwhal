@@ -98,6 +98,12 @@ public abstract class AbsListingsFragment extends Fragment
   }
 
   @Override
+  public void onDestroyView() {
+    super.onDestroyView();
+    mListingsPresenter.onViewDestroyed();
+  }
+
+  @Override
   public void onActivityResult(int requestCode, int resultCode, Intent data) {
     switch (requestCode) {
       case REQUEST_CHOOSE_SORT:

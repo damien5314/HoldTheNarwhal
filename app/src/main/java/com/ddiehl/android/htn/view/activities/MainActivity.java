@@ -82,7 +82,6 @@ public class MainActivity extends AppCompatActivity implements MainView,
   private Logger mLogger = HoldTheNarwhal.getLogger();
   private Analytics mAnalytics = HoldTheNarwhal.getAnalytics();
   private MainPresenter mMainPresenter;
-  private boolean mBackStackReset = true;
 
   @Override @DebugLog
   protected void onCreate(Bundle savedInstanceState) {
@@ -404,20 +403,14 @@ public class MainActivity extends AppCompatActivity implements MainView,
     @SuppressLint("CommitTransaction")
     FragmentTransaction ft = getFragmentManager().beginTransaction()
         .replace(R.id.fragment_container, f);
-    if (getCurrentDisplayedFragment() != null && !mBackStackReset) ft.addToBackStack(null);
-    mBackStackReset = false;
+    if (getCurrentDisplayedFragment() != null) ft.addToBackStack(null);
     ft.commit();
-  }
-
-  private void showTopLevelFragment(@NonNull Fragment f) {
-    resetBackNavigation();
-    showFragment(f);
   }
 
   @Override
   public void resetBackNavigation() {
-    mBackStackReset = true;
-    getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+//    getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+    // TODO Try this once the memory issues are confirmed fixed
   }
 
   private void setMirroredIcons() {
