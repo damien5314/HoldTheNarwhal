@@ -86,6 +86,7 @@ public abstract class AbsListingsPresenter
   @Override
   public void onViewDestroyed() {
     mLogger.d("Clearing data for view: " + mMainView.toString());
+    mListingSelected = null;
     mListings.clear();
   }
 

@@ -81,6 +81,7 @@ public class LinkCommentsPresenterImpl
 
   @Override
   public void onViewDestroyed() {
+    mLinkContext = null;
     mCommentBank.clear();
   }
 

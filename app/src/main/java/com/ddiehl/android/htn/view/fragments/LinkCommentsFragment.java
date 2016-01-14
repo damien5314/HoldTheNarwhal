@@ -101,6 +101,12 @@ public class LinkCommentsFragment extends Fragment
     mSwipeRefreshLayout.setOnRefreshListener(this);
   }
 
+  @Override
+  public void onDestroyView() {
+    super.onDestroyView();
+    mLinkCommentsPresenter.onViewDestroyed();
+  }
+
   private void updateTitle() {
     Link link = mLinkCommentsPresenter.getLinkContext();
     if (link != null) {
