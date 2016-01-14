@@ -12,10 +12,12 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
@@ -31,6 +33,7 @@ import com.ddiehl.reddit.listings.Comment;
 import com.ddiehl.reddit.listings.Link;
 import com.ddiehl.reddit.listings.Listing;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public abstract class AbsListingsFragment extends Fragment
@@ -41,8 +44,9 @@ public abstract class AbsListingsFragment extends Fragment
   private static final String DIALOG_CHOOSE_SORT = "dialog_choose_sort";
   private static final String DIALOG_CHOOSE_TIMESPAN = "dialog_choose_timespan";
 
-  Analytics mAnalytics = HoldTheNarwhal.getAnalytics();
+  @Bind(R.id.recycler_view) RecyclerView mRecyclerView;
 
+  Analytics mAnalytics = HoldTheNarwhal.getAnalytics();
   MainView mMainView;
   ListingsPresenter mListingsPresenter;
   ListingsAdapter mListingsAdapter;
@@ -54,6 +58,17 @@ public abstract class AbsListingsFragment extends Fragment
     setRetainInstance(true);
     setHasOptionsMenu(true);
     mMainView = (MainView) getActivity();
+  }
+
+  protected abstract int getLayoutResId();
+
+  @Nullable @Override
+  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    View view = inflater.inflate(getLayoutResId(), container, false);
+    ButterKnife.bind(this, view);
+    mListingsAdapter = new ListingsAdapter(mListingsPresenter);
+    instantiateListView(view);
+    return view;
   }
 
   @Override
@@ -101,8 +116,10 @@ public abstract class AbsListingsFragment extends Fragment
   public void onDestroyView() {
     super.onDestroyView();
     mListingsPresenter.onViewDestroyed();
+    mRecyclerView.setAdapter(null);
   }
 
+  // TODO Annotate requestCode with a @RequestCode annotation like we have in LinkCommentsFragment
   @Override
   public void onActivityResult(int requestCode, int resultCode, Intent data) {
     switch (requestCode) {

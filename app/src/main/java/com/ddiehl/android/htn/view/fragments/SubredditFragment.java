@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.presenter.SubredditPresenter;
-import com.ddiehl.android.htn.view.adapters.ListingsAdapter;
 import com.ddiehl.reddit.listings.Link;
 
 public class SubredditFragment extends AbsListingsFragment {
@@ -35,13 +34,16 @@ public class SubredditFragment extends AbsListingsFragment {
     String sort = args.getString(ARG_SORT);
     if (TextUtils.isEmpty(sort)) sort = "hot";
     mListingsPresenter = new SubredditPresenter(mMainView, this, subreddit, sort, "all");
-    mListingsAdapter = new ListingsAdapter(mListingsPresenter);
+  }
+
+  @Override
+  protected int getLayoutResId() {
+    return R.layout.listings_fragment;
   }
 
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    View v = inflater.inflate(R.layout.listings_fragment, container, false);
-    instantiateListView(v);
+    View v = super.onCreateView(inflater, container, savedInstanceState);
     updateTitle();
     return v;
   }

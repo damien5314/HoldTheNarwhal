@@ -20,7 +20,6 @@ import com.ddiehl.android.htn.presenter.UserProfilePresenter;
 import com.ddiehl.android.htn.utils.BaseUtils;
 import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.android.htn.view.UserProfileView;
-import com.ddiehl.android.htn.view.adapters.ListingsAdapter;
 import com.ddiehl.reddit.identity.UserIdentity;
 import com.ddiehl.reddit.listings.Listing;
 import com.ddiehl.reddit.listings.Trophy;
@@ -32,7 +31,6 @@ import java.util.Date;
 import java.util.List;
 
 import butterknife.Bind;
-import butterknife.ButterKnife;
 
 public class UserProfileFragment extends AbsListingsFragment implements UserProfileView {
   private static final String ARG_SHOW = "arg_show";
@@ -55,11 +53,9 @@ public class UserProfileFragment extends AbsListingsFragment implements UserProf
   @Bind(R.id.user_friend_note_confirm) Button mFriendNoteSave;
   @Bind(R.id.user_trophies) LinearLayout mTrophies;
 
-  private int mSelectedTabIndex = -1;
   private TabLayout.Tab mTabSummary, mTabOverview, mTabComments, mTabSubmitted, mTabGilded,
       mTabUpvoted, mTabDownvoted, mTabHidden, mTabSaved;
 
-  private Context mContext;
   private UserProfilePresenter mUserProfilePresenter;
 
   public UserProfileFragment() { }
@@ -84,7 +80,6 @@ public class UserProfileFragment extends AbsListingsFragment implements UserProf
     String sort = args.getString(ARG_SORT);
     mUserProfilePresenter = new UserProfilePresenter(mMainView, this, this,
         show, username, sort, "all");
-    mListingsAdapter = new ListingsAdapter(mUserProfilePresenter);
     mListingsPresenter = mUserProfilePresenter;
   }
 
@@ -94,12 +89,14 @@ public class UserProfileFragment extends AbsListingsFragment implements UserProf
     updateTitle();
   }
 
+  @Override
+  protected int getLayoutResId() {
+    return R.layout.user_profile_listings_fragment;
+  }
+
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    View v = inflater.inflate(R.layout.user_profile_listings_fragment, container, false);
-    mContext = v.getContext();
-    ButterKnife.bind(this, v);
-    instantiateListView(v);
+    View v = super.onCreateView(inflater, container, savedInstanceState);
     initializeUserProfileTabs();
     mKarmaLayout.setVisibility(View.GONE);
     mFriendButtonLayout.setVisibility(View.GONE);
@@ -114,14 +111,14 @@ public class UserProfileFragment extends AbsListingsFragment implements UserProf
   @Override
   public void showUserInfo(@NonNull UserIdentity user) {
     Date createDate = new Date(user.getCreatedUTC() * 1000);
+    Context context = HoldTheNarwhal.getContext();
     String created = String.format(
-        mContext.getString(R.string.user_profile_summary_created),
+        context.getString(R.string.user_profile_summary_created),
         SimpleDateFormat.getDateInstance().format(createDate));
     mCreateDate.setText(created);
     mKarmaLayout.setVisibility(View.VISIBLE);
     mLinkKarma.setText(NumberFormat.getInstance().format(user.getLinkKarma()));
     mCommentKarma.setText(NumberFormat.getInstance().format(user.getCommentKarma()));
-
     // If user is not self, show friend button
     UserIdentity self = HoldTheNarwhal.getIdentityManager().getUserIdentity();
     if (self != null && !user.getName().equals(self.getName())) {
@@ -189,9 +186,10 @@ public class UserProfileFragment extends AbsListingsFragment implements UserProf
       LinearLayout v = (LinearLayout) inflater.inflate(R.layout.trophy_layout, row, false);
       if (row != null) row.addView(v);
 
+      // FIXME Use ButterKnife.findViewById?
       TextView trophyNameView = (TextView) v.findViewById(R.id.trophy_name);
       trophyNameView.setText(name);
-      Picasso.with(mContext)
+      Picasso.with(getActivity())
           .load(trophy.getIcon70())
           .into(((ImageView) v.findViewById(R.id.trophy_icon)));
     }
@@ -287,17 +285,11 @@ public class UserProfileFragment extends AbsListingsFragment implements UserProf
   }
 
   TabLayout.OnTabSelectedListener mTabSelectedListener = new TabLayout.OnTabSelectedListener() {
-    @Override
-    public void onTabUnselected(TabLayout.Tab tab) {
-    }
-
-    @Override
-    public void onTabReselected(TabLayout.Tab tab) {
-    }
+    @Override public void onTabUnselected(TabLayout.Tab tab) {}
+    @Override public void onTabReselected(TabLayout.Tab tab) {}
 
     @Override
     public void onTabSelected(TabLayout.Tab tab) {
-      mSelectedTabIndex = tab.getPosition();
       String tag = (String) tab.getTag();
       if (tag != null && tag.equals("summary")) {
         mUserProfileSummary.setVisibility(View.VISIBLE);

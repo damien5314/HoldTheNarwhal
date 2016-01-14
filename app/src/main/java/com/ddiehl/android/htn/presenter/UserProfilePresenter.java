@@ -12,6 +12,8 @@ import com.ddiehl.reddit.identity.UserIdentity;
 
 import rx.functions.Action1;
 
+// FIXME This should not extend from AbsListingsPresenter because it doesn't present Listings
+// Have this extend from BasePresenter and hold its own dependencies
 public class UserProfilePresenter extends AbsListingsPresenter {
   private UserProfileView mSummaryView;
 

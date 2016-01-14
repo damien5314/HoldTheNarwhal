@@ -36,24 +36,21 @@ public class LinkCommentsPresenterImpl
     implements LinkCommentsPresenter, IdentityManager.Callbacks {
   private static final int MAX_CHILDREN_PER_REQUEST = 20;
 
-  private MainView mMainView;
-  private LinkCommentsView mLinkCommentsView;
-  private Link mLinkContext;
-  private CommentBank mCommentBank;
-
   private RedditService mRedditService = HoldTheNarwhal.getRedditService();
   private AccessTokenManager mAccessTokenManager = HoldTheNarwhal.getAccessTokenManager();
   private IdentityManager mIdentityManager = HoldTheNarwhal.getIdentityManager();
   private SettingsManager mSettingsManager = HoldTheNarwhal.getSettingsManager();
   private Analytics mAnalytics = HoldTheNarwhal.getAnalytics();
-
+  private MainView mMainView;
+  private LinkCommentsView mLinkCommentsView;
+  private CommentBank mCommentBank;
+  private Link mLinkContext;
+  private Listing mListingSelected = null;
+  private Listing mReplyTarget = null;
   private String mSubreddit;
   private String mLinkId;
   private String mCommentId;
   private String mSort; // Remove this and read from preferences when needed
-
-  private Listing mListingSelected = null;
-  private Listing mReplyTarget = null;
 
   public LinkCommentsPresenterImpl(
       MainView main, LinkCommentsView view, String subreddit, String linkId, String commentId) {
@@ -82,7 +79,9 @@ public class LinkCommentsPresenterImpl
   @Override
   public void onViewDestroyed() {
     mLinkContext = null;
+    mListingSelected = null;
     mCommentBank.clear();
+    mLinkCommentsView.commentsUpdated();
   }
 
   @Override

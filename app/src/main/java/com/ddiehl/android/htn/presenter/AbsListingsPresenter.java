@@ -88,6 +88,7 @@ public abstract class AbsListingsPresenter
     mLogger.d("Clearing data for view: " + mMainView.toString());
     mListingSelected = null;
     mListings.clear();
+    mListingsView.listingsUpdated();
   }
 
   @Override
