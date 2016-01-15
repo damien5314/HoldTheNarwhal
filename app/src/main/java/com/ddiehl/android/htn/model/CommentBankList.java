@@ -1,6 +1,5 @@
 package com.ddiehl.android.htn.model;
 
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.ddiehl.reddit.listings.AbsComment;
@@ -117,9 +116,16 @@ public class CommentBankList implements CommentBank {
     }
   }
 
+//  @Override
+//  public void toggleThreadVisible(int index, boolean visible) {
+//    setThreadVisible(index, visible);
+//  }
+
   @Override
-  public void toggleThreadVisible(@NonNull AbsComment comment) {
-    setThreadVisible(indexOf(comment), comment.isCollapsed());
+  public void toggleThreadVisible(Comment comment) {
+    int position = indexOf(comment);
+    boolean visible = comment.isCollapsed();
+    setThreadVisible(position, visible);
   }
 
   private void setThreadVisible(int position, boolean visible) {

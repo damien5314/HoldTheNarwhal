@@ -162,13 +162,28 @@ public class LinkCommentsFragment extends Fragment
   }
 
   @Override
+  public void commentsUpdated(int position, int numItems) {
+    mLinkCommentsAdapter.notifyItemRangeChanged(position, numItems);
+  }
+
+  @Override
   public void commentAddedAt(int position) {
     mLinkCommentsAdapter.notifyItemInserted(position + 1);
   }
 
   @Override
+  public void commentsAddedAt(int position, int count) {
+    mLinkCommentsAdapter.notifyItemRangeInserted(position + 1, count);
+  }
+
+  @Override
   public void commentRemovedAt(int position) {
     mLinkCommentsAdapter.notifyItemRemoved(position + 1);
+  }
+
+  @Override
+  public void commentsRemovedAt(int position, int count) {
+    mLinkCommentsAdapter.notifyItemRangeRemoved(position + 1, count);
   }
 
   @Override

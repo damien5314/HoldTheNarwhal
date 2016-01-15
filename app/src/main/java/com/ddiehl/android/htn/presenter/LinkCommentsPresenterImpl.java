@@ -167,9 +167,17 @@ public class LinkCommentsPresenterImpl
   }
 
   @Override
-  public void toggleThreadVisible(@NonNull AbsComment comment) {
+  public void toggleThreadVisible(Comment comment) {
+    int before = mCommentBank.getNumVisible();
+    int position = mCommentBank.visibleIndexOf(comment);
     mCommentBank.toggleThreadVisible(comment);
-    mLinkCommentsView.commentsUpdated();
+    int diff = mCommentBank.getNumVisible() - before;
+    mLinkCommentsView.commentUpdatedAt(position);
+    if (diff > 0) {
+      mLinkCommentsView.commentsAddedAt(position + 1, diff);
+    } else { // diff < 0
+      mLinkCommentsView.commentsRemovedAt(position + 1, diff * -1);
+    }
   }
 
   @Override
@@ -336,11 +344,6 @@ public class LinkCommentsPresenterImpl
   @Override
   public void showCommentThread(
       @NonNull String subreddit, @NonNull String linkId, @NonNull String commentId) {
-    // Calls from a ThreadStubViewHolder will not have subreddit or linkId
-    // so only set if it's not null
-//    mSubreddit = subreddit == null ? mSubreddit : subreddit;
-//    mCommentId = commentId.contains("_") ? commentId.substring(3) : commentId; // Remove type prefix
-//    mLinkCommentsView.showCommentsForLink(mSubreddit, mLinkId, mCommentId);
     mMainView.showCommentsForLink(subreddit, linkId, commentId);
   }
 

@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.ddiehl.android.htn.R;
-import com.ddiehl.android.htn.presenter.CommentPresenter;
 import com.ddiehl.android.htn.presenter.LinkCommentsPresenter;
 import com.ddiehl.android.htn.view.widgets.RedditDateTextView;
 import com.ddiehl.reddit.listings.Comment;
@@ -24,7 +23,7 @@ import butterknife.OnClick;
 public class ThreadCommentViewHolder extends RecyclerView.ViewHolder
     implements View.OnCreateContextMenuListener {
   private Context mContext;
-  private CommentPresenter mCommentPresenter;
+  private LinkCommentsPresenter mLinkCommentsPresenter;
   private Comment mComment;
 
 //  @Bind(R.id.comment_expander_icon) ImageView mExpanderIcon;
@@ -36,18 +35,17 @@ public class ThreadCommentViewHolder extends RecyclerView.ViewHolder
   @Bind(R.id.comment_gilded_text_view) TextView mGildedText;
   @Bind(R.id.comment_controversiality_indicator) View mControversialityIndicator;
 
-  public ThreadCommentViewHolder(View v, CommentPresenter presenter) {
+  public ThreadCommentViewHolder(View v, LinkCommentsPresenter presenter) {
     super(v);
     mContext = v.getContext().getApplicationContext();
-    mCommentPresenter = presenter;
+    mLinkCommentsPresenter = presenter;
     ButterKnife.bind(this, v);
     itemView.setOnCreateContextMenuListener(this);
   }
 
   @OnClick(R.id.comment_metadata)
   void onClickMetadata(View v) {
-    LinkCommentsPresenter p = (LinkCommentsPresenter) mCommentPresenter;
-    p.toggleThreadVisible(mComment);
+    mLinkCommentsPresenter.toggleThreadVisible(mComment);
   }
 
   @OnClick(R.id.comment_body)
@@ -103,21 +101,21 @@ public class ThreadCommentViewHolder extends RecyclerView.ViewHolder
       switch (authorType) {
         case "op":
           mAuthorView.setBackgroundResource(R.drawable.author_op_bg);
-          mAuthorView.setTextColor(mContext.getResources().getColor(R.color.author_op_text));
+          mAuthorView.setTextColor(ContextCompat.getColor(mContext, R.color.author_op_text));
           break;
         case "moderator":
           mAuthorView.setBackgroundResource(R.drawable.author_moderator_bg);
-          mAuthorView.setTextColor(mContext.getResources().getColor(R.color.author_moderator_text));
+          mAuthorView.setTextColor(ContextCompat.getColor(mContext, R.color.author_moderator_text));
           break;
         case "admin":
           mAuthorView.setBackgroundResource(R.drawable.author_admin_bg);
-          mAuthorView.setTextColor(mContext.getResources().getColor(R.color.author_admin_text));
+          mAuthorView.setTextColor(ContextCompat.getColor(mContext, R.color.author_admin_text));
           break;
         default:
       }
     } else {
       mAuthorView.setBackgroundResource(0);
-      mAuthorView.setTextColor(mContext.getResources().getColor(R.color.secondary_text));
+      mAuthorView.setTextColor(ContextCompat.getColor(mContext, R.color.secondary_text));
     }
   }
 
@@ -150,13 +148,7 @@ public class ThreadCommentViewHolder extends RecyclerView.ViewHolder
   }
 
   private void setCollapsed(Comment comment) {
-    if (comment.isCollapsed()) {
-      mBodyView.setVisibility(View.GONE);
-//      mExpanderIcon.setImageResource(R.drawable.ic_thread_expand);
-    } else {
-      mBodyView.setVisibility(View.VISIBLE);
-//      mExpanderIcon.setImageResource(R.drawable.ic_thread_collapse);
-    }
+    mBodyView.setVisibility(comment.isCollapsed() ? View.GONE : View.VISIBLE);
   }
 
   // Set background tint based on isLiked
@@ -193,6 +185,6 @@ public class ThreadCommentViewHolder extends RecyclerView.ViewHolder
 
   @Override
   public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-    mCommentPresenter.showCommentContextMenu(menu, v, menuInfo, mComment);
+    mLinkCommentsPresenter.showCommentContextMenu(menu, v, menuInfo, mComment);
   }
 }
