@@ -178,8 +178,10 @@ public abstract class AbsListingsPresenter
     return (response) -> {
       mMainView.dismissSpinner();
       mListingsRequested = false;
-      // FIXME For some reason 401 responses come back null instead of as errors
-      if (response == null) return;
+      if (response == null) {
+        mMainView.showToast(R.string.error_xxx);
+        return;
+      }
       ListingResponseData data = response.getData();
       List<Listing> listings = data.getChildren();
       if (listings == null) throw new NullPointerException("Listings data is null");

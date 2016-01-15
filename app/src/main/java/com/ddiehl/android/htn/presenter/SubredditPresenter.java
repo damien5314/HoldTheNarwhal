@@ -61,8 +61,8 @@ public class SubredditPresenter extends AbsListingsPresenter {
       if (shouldShowNsfwDialog(mSubredditInfo, user)) {
         mMainView.showNsfwWarningDialog();
       } else {
-        // FIXME Need to check for this while 4xx responses are coming back as successful
         if (mSubredditInfo != null) requestData();
+        else mMainView.showToast(R.string.error_private_subreddit);
       }
       loadHeaderImage();
     };
