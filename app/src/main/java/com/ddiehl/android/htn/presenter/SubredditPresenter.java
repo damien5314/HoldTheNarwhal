@@ -58,14 +58,19 @@ public class SubredditPresenter extends AbsListingsPresenter {
     return info -> {
       mSubredditInfo = info;
       UserIdentity user = getAuthorizedUser();
-      if ((mSubredditInfo != null && mSubredditInfo.isOver18())
-          && (user == null || !user.isOver18())) {
+      if (shouldShowNsfwDialog(mSubredditInfo, user)) {
         mMainView.showNsfwWarningDialog();
       } else {
-        requestData();
+        // FIXME Need to check for this while 4xx responses are coming back as successful
+        if (mSubredditInfo != null) requestData();
       }
       loadHeaderImage();
     };
+  }
+
+  private boolean shouldShowNsfwDialog(Subreddit info, UserIdentity user) {
+    return (info != null && info.isOver18())
+        && (user == null || !user.isOver18());
   }
 
   @Override
