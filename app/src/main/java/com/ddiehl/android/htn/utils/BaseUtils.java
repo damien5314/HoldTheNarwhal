@@ -142,7 +142,7 @@ public class BaseUtils {
     try {
       ApplicationInfo ai = c.getPackageManager().getApplicationInfo(c.getPackageName(), 0);
       zf = new ZipFile(ai.sourceDir);
-      ZipEntry ze = zf.getEntry("classes.dex");
+      ZipEntry ze = zf.getEntry("AndroidManifest.xml");
       return ze.getTime();
     } catch (IOException e) {
       HoldTheNarwhal.getLogger().e("Exception while getting build time", e);
@@ -150,9 +150,7 @@ public class BaseUtils {
       HoldTheNarwhal.getLogger().e("Unable to find package name: " + c.getPackageName(), e);
     } finally {
       try {
-        if (zf != null) {
-          zf.close();
-        }
+        if (zf != null) zf.close();
       } catch (Exception e) {
         HoldTheNarwhal.getLogger().e("Error while closing ZipFile", e);
       }
