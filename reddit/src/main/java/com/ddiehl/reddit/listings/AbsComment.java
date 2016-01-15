@@ -31,6 +31,8 @@ public abstract class AbsComment<T extends AbsComment.Data> extends Listing<T> {
   public abstract void setCollapsed(boolean b);
 
   public String getParentId() {
+    // FIXME Consider trimming the parentId from this before returning, for consistency
+    // with other Listing types
     return data.parentId;
   }
 

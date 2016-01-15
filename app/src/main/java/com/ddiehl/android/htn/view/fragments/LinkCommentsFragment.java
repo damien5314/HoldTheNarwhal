@@ -187,8 +187,8 @@ public class LinkCommentsFragment extends Fragment
 
   @Override
   public void showCommentThread(
-      @Nullable String subreddit, @Nullable String linkId, @NonNull String commentId) {
-    mLinkCommentsPresenter.showCommentThread(subreddit, linkId, commentId);
+      @NonNull String subreddit, @NonNull String linkId, @NonNull String commentId) {
+    mMainView.showCommentsForLink(subreddit, linkId, commentId);
   }
 
   @Override
@@ -381,7 +381,7 @@ public class LinkCommentsFragment extends Fragment
 
   @Override
   public void showCommentsForLink(
-      @Nullable String subreddit, @Nullable String linkId, @Nullable String commentId) {
+      @NonNull String subreddit, @NonNull String linkId, @Nullable String commentId) {
     mMainView.showCommentsForLink(subreddit, linkId, commentId);
   }
 

@@ -1,7 +1,6 @@
 package com.ddiehl.android.htn.presenter;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.view.ContextMenu;
 import android.view.View;
 
@@ -335,18 +334,20 @@ public class LinkCommentsPresenterImpl
   }
 
   @Override
-  public void showCommentThread(@Nullable String subreddit, @Nullable String linkId, @NonNull String commentId) {
+  public void showCommentThread(
+      @NonNull String subreddit, @NonNull String linkId, @NonNull String commentId) {
     // Calls from a ThreadStubViewHolder will not have subreddit or linkId
     // so only set if it's not null
-    mSubreddit = subreddit == null ? mSubreddit : subreddit;
-    mCommentId = commentId.contains("_") ? commentId.substring(3) : commentId; // Remove type prefix
-    mLinkCommentsView.showCommentsForLink(mSubreddit, mLinkId, mCommentId);
+//    mSubreddit = subreddit == null ? mSubreddit : subreddit;
+//    mCommentId = commentId.contains("_") ? commentId.substring(3) : commentId; // Remove type prefix
+//    mLinkCommentsView.showCommentsForLink(mSubreddit, mLinkId, mCommentId);
+    mMainView.showCommentsForLink(subreddit, linkId, commentId);
   }
 
   @Override
   public void openCommentPermalink() {
     Comment comment = (Comment) mListingSelected;
-    showCommentThread(comment.getSubreddit(), comment.getLinkId(), comment.getId());
+    mMainView.showCommentsForLink(comment.getSubreddit(), comment.getLinkId(), comment.getId());
   }
 
   @Override

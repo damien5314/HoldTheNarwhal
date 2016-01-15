@@ -27,6 +27,8 @@ public interface MainView extends AnalyticsDialog.Callbacks, ConfirmSignOutDialo
   void showUserSubreddits();
   void showSubreddit(@Nullable String subreddit, @Nullable String sort);
   void showSubredditIfEmpty(@Nullable String subreddit);
+  void showCommentsForLink(
+      @NonNull String subreddit, @NonNull String linkId, @Nullable String commentId);
   void openURL(@NonNull String url);
   // Methods formerly from BaseView
   void setTitle(@NonNull CharSequence title);
@@ -36,8 +38,6 @@ public interface MainView extends AnalyticsDialog.Callbacks, ConfirmSignOutDialo
   void showToast(@NonNull String msg);
   void showToast(@StringRes int resId);
   void showError(Throwable error, int errorResId);
-  void showCommentsForLink(
-      @Nullable String subreddit, @Nullable String linkId, @Nullable String commentId);
   void showAboutApp();
   void goBack();
   void resetBackNavigation();

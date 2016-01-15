@@ -70,7 +70,10 @@ public class LinkCommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
       ((ThreadCommentViewHolder) holder).bind(link, comment, showControversiality);
     } else if (holder instanceof ThreadStubViewHolder) {
       CommentStub comment = (CommentStub) mLinkCommentsPresenter.getComment(position - 1);
-      ((ThreadStubViewHolder) holder).bind(comment);
+      Link linkContext = mLinkCommentsPresenter.getLinkContext();
+      String subreddit = linkContext.getSubreddit();
+      String linkId = linkContext.getId();
+      ((ThreadStubViewHolder) holder).bind(comment, subreddit, linkId);
     }
   }
 

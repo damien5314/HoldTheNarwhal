@@ -338,9 +338,10 @@ public abstract class AbsListingsPresenter
   }
 
   @Override
-  public void showCommentThread(@Nullable String subreddit, @Nullable String linkId, @NonNull String commentId) {
-    linkId = linkId == null ? null : linkId.substring(3); // Trim type prefix
-    mListingsView.showCommentThread(subreddit, linkId, commentId);
+  public void showCommentThread(
+      @NonNull String subreddit, @NonNull String linkId, @NonNull String commentId) {
+    linkId = linkId.substring(3); // Trim type prefix
+    mMainView.showCommentsForLink(subreddit, linkId, commentId);
   }
 
   @Override
@@ -351,7 +352,7 @@ public abstract class AbsListingsPresenter
   @Override
   public void openCommentPermalink() {
     Comment comment = (Comment) mListingSelected;
-    showCommentThread(comment.getSubreddit(), comment.getLinkId(), comment.getId());
+    mMainView.showCommentsForLink(comment.getSubreddit(), comment.getLinkId(), comment.getId());
   }
 
   @Override
