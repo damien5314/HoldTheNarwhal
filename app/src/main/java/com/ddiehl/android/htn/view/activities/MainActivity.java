@@ -70,18 +70,18 @@ public class MainActivity extends AppCompatActivity implements MainView,
   private static final String EXTRA_CUSTOM_TABS_TOOLBAR_COLOR =
       "android.support.customtabs.extra.TOOLBAR_COLOR";
 
-  private ProgressDialog mLoadingOverlay;
-
   @Bind(R.id.drawer_layout) DrawerLayout mDrawerLayout;
   @Bind(R.id.navigation_view) NavigationView mNavigationView;
   @Bind(R.id.user_account_icon) ImageView mGoldIndicator;
   @Bind(R.id.account_name) TextView mAccountNameView;
   @Bind(R.id.sign_out_button) View mSignOutView;
   @Bind(R.id.navigation_drawer_header_image) ImageView mHeaderImage;
+  private ProgressDialog mLoadingOverlay;
 
   private Logger mLogger = HoldTheNarwhal.getLogger();
   private Analytics mAnalytics = HoldTheNarwhal.getAnalytics();
   private MainPresenter mMainPresenter;
+  private boolean mBackStackReset = true;
 
   @Override @DebugLog
   protected void onCreate(Bundle savedInstanceState) {
@@ -344,6 +344,7 @@ public class MainActivity extends AppCompatActivity implements MainView,
 
   @Override
   public void onSubredditNavigationConfirmed(String subreddit) {
+    resetBackNavigation();
     showSubreddit(subreddit, null);
   }
 
@@ -403,14 +404,15 @@ public class MainActivity extends AppCompatActivity implements MainView,
     @SuppressLint("CommitTransaction")
     FragmentTransaction ft = getFragmentManager().beginTransaction()
         .replace(R.id.fragment_container, f);
-    if (getCurrentDisplayedFragment() != null) ft.addToBackStack(null);
+    if (getCurrentDisplayedFragment() != null && !mBackStackReset) ft.addToBackStack(null);
     ft.commit();
+    mBackStackReset = false;
   }
 
   @Override
   public void resetBackNavigation() {
-//    getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-    // TODO Try this once the memory issues are confirmed fixed
+    mBackStackReset = true;
+    getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
   }
 
   private void setMirroredIcons() {
