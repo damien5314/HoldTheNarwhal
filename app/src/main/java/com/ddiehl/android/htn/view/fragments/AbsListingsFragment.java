@@ -332,13 +332,13 @@ public abstract class AbsListingsFragment extends Fragment
 
   @Override
   public void showCommentsForLink(
-      @Nullable String subreddit, @Nullable String linkId, @Nullable String commentId) {
+      @NonNull String subreddit, @NonNull String linkId, @Nullable String commentId) {
     mMainView.showCommentsForLink(subreddit, linkId, commentId);
   }
 
   @Override
   public void showCommentThread(
-      @Nullable String subreddit, @Nullable String linkId, @NonNull String commentId) {
+      @NonNull String subreddit, @NonNull String linkId, @NonNull String commentId) {
     showCommentsForLink(subreddit, linkId, commentId);
   }
 

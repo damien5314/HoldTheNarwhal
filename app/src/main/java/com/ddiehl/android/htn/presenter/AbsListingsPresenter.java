@@ -331,18 +331,9 @@ public abstract class AbsListingsPresenter
   }
 
   @Override
-  public void showCommentContextMenu(
-      ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, Comment comment) {
-    mListingSelected = comment;
-    mListingsView.showCommentContextMenu(menu, v, comment);
-    menu.findItem(R.id.action_comment_save).setVisible(!comment.isSaved());
-    menu.findItem(R.id.action_comment_unsave).setVisible(comment.isSaved());
-  }
-
-  @Override
   public void showCommentThread(
       @NonNull String subreddit, @NonNull String linkId, @NonNull String commentId) {
-    linkId = linkId.substring(3); // Trim type prefix
+    if (linkId.charAt(2) == '_') linkId = linkId.substring(3); // Trim type prefix
     mMainView.showCommentsForLink(subreddit, linkId, commentId);
   }
 
@@ -352,9 +343,18 @@ public abstract class AbsListingsPresenter
   }
 
   @Override
+  public void showCommentContextMenu(
+      ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, Comment comment) {
+    mListingSelected = comment;
+    mListingsView.showCommentContextMenu(menu, v, comment);
+    menu.findItem(R.id.action_comment_save).setVisible(!comment.isSaved());
+    menu.findItem(R.id.action_comment_unsave).setVisible(comment.isSaved());
+  }
+
+  @Override
   public void openCommentPermalink() {
     Comment comment = (Comment) mListingSelected;
-    mMainView.showCommentsForLink(comment.getSubreddit(), comment.getLinkId(), comment.getId());
+    showCommentThread(comment.getSubreddit(), comment.getLinkId(), comment.getId());
   }
 
   @Override
@@ -440,7 +440,7 @@ public abstract class AbsListingsPresenter
 
   @Override
   public void openCommentLink(@NonNull Comment comment) {
-    mListingsView.showCommentsForLink(comment.getSubreddit(), comment.getLinkId().substring(3), null);
+    mMainView.showCommentsForLink(comment.getSubreddit(), comment.getLinkId(), null);
   }
 
   @Override

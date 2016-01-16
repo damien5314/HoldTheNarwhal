@@ -344,13 +344,14 @@ public class LinkCommentsPresenterImpl
   @Override
   public void showCommentThread(
       @NonNull String subreddit, @NonNull String linkId, @NonNull String commentId) {
+    if (linkId.charAt(2) == '_') linkId = linkId.substring(3); // Trim type prefix
     mMainView.showCommentsForLink(subreddit, linkId, commentId);
   }
 
   @Override
   public void openCommentPermalink() {
     Comment comment = (Comment) mListingSelected;
-    mMainView.showCommentsForLink(comment.getSubreddit(), comment.getLinkId(), comment.getId());
+    showCommentThread(comment.getSubreddit(), comment.getLinkId(), comment.getId());
   }
 
   @Override
