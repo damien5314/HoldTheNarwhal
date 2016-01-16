@@ -14,7 +14,6 @@ import android.text.style.RelativeSizeSpan;
 import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
 import android.text.style.TypefaceSpan;
-import android.text.style.URLSpan;
 import android.util.DisplayMetrics;
 import android.util.Patterns;
 import android.util.TypedValue;
@@ -24,6 +23,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import in.uncod.android.bypass.Element.Type;
 import in.uncod.android.bypass.style.HorizontalLineSpan;
+import in.uncod.android.bypass.style.URLSpanNoUnderline;
 
 public class Bypass {
 	static {
@@ -261,7 +261,7 @@ public class Bypass {
 				if (!TextUtils.isEmpty(link) && Patterns.EMAIL_ADDRESS.matcher(link).matches()) {
 					link = "mailto:" + link;
 				}
-				setSpan(builder, new URLSpan(link));
+				setSpan(builder, new URLSpanNoUnderline(link));
 				break;
 			case BLOCK_QUOTE:
 				// We add two leading margin spans so that when the order is reversed,

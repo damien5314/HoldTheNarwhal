@@ -1,18 +1,18 @@
 package com.ddiehl.android.htn.view.widgets;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
-import android.text.util.Linkify;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
 import com.ddiehl.android.htn.R;
+import com.ddiehl.android.htn.view.Linkify;
 
 import java.util.regex.Pattern;
 
 import in.uncod.android.bypass.Bypass;
-
 
 public class MarkdownTextView extends TextView {
   private CharSequence mRawText;
@@ -78,7 +78,7 @@ public class MarkdownTextView extends TextView {
           if (_instance == null) {
             Bypass.Options o = new Bypass.Options();
             o.setBlockQuoteColor(
-                c.getResources().getColor(R.color.markdown_quote_block));
+                ContextCompat.getColor(c, R.color.markdown_quote_block));
             _instance = new Bypass(c, o);
           }
         }

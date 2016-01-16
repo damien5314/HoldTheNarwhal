@@ -113,6 +113,7 @@
       android:gravity="start"
       android:textSize="@dimen/comment_body_text_size"
       android:textColor="@color/primary_text"
+      android:textColorLink="@color/link_color"
       android:bufferType="spannable"
       tools:text="Lorem ipsum dolor sit amet"
       tools:ignore="UnusedAttribute"/>

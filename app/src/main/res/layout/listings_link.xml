@@ -196,10 +196,12 @@
         android:textAlignment="viewStart"
         android:gravity="start"
         android:textColor="@color/primary_text"
+        android:textColorLink="@color/link_color"
         android:padding="@dimen/link_self_text_padding"
         android:bufferType="spannable"
         android:background="@android:color/white"
-        tools:text="Lorem ipsum dolor sit amet"/>
+        tools:text="Lorem ipsum dolor sit amet"
+        tools:ignore="UnusedAttribute"/>
 
   </LinearLayout>
 
