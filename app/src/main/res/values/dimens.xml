@@ -25,6 +25,7 @@
   <dimen name="comment_expander_margin_horizontal">@dimen/comment_data_margin_horizontal</dimen>
   <dimen name="comment_data_margin_horizontal">8dp</dimen>
   <dimen name="toolbar_elevation">6dp</dimen>
+  <dimen name="link_self_text_size">16sp</dimen>
   <dimen name="link_self_text_padding">8dp</dimen>
   <dimen name="link_list_item_margin_vertical">8dp</dimen>
   <dimen name="link_list_item_margin_horizontal">8dp</dimen>

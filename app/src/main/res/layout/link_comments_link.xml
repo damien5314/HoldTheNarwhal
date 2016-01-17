@@ -144,6 +144,7 @@
         android:paddingRight="@dimen/link_list_item_margin_horizontal"
         android:gravity="start"
         android:textAlignment="viewStart"
+        android:textSize="@dimen/link_self_text_size"
         android:textColor="@color/primary_text"
         android:textColorLink="@color/link_color"
         android:bufferType="spannable"
