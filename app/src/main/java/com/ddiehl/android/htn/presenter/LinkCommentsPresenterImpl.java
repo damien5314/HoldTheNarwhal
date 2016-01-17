@@ -376,7 +376,10 @@ public class LinkCommentsPresenterImpl
           if (parentId.startsWith("t1_")) { // Comment
             comment.setDepth(((Comment) mReplyTarget).getDepth() + 1);
             position = mCommentBank.indexOf((Comment) mListingSelected) + 1;
-          } else position = 0;
+          } else {
+            comment.setDepth(1);
+            position = 0;
+          }
           mCommentBank.add(position, comment);
           mLinkCommentsView.commentAddedAt(position);
         }, e -> mMainView.showError(e, R.string.error_add_comment));
