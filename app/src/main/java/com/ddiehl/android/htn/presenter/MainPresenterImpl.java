@@ -107,6 +107,13 @@ public class MainPresenterImpl implements MainPresenter, IdentityManager.Callbac
   }
 
   @Override
+  public void onShowInbox() {
+    mMainView.resetBackNavigation();
+    mMainView.showInbox();
+    mAnalytics.logDrawerShowInbox();
+  }
+
+  @Override
   public void onShowUserProfile() {
     mMainView.resetBackNavigation();
     String name = mIdentityManager.getUserIdentity().getName();

@@ -133,7 +133,7 @@ public class SettingsFragment extends PreferenceFragment
   @Override
   public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     super.onCreateOptionsMenu(menu, inflater);
-    inflater.inflate(R.menu.settings_menu, menu);
+    inflater.inflate(R.menu.settings, menu);
   }
 
   @Override

@@ -29,8 +29,11 @@
           android:layout_height="wrap_content"
           android:textAlignment="viewStart"
           android:layout_gravity="start"
+          android:fontFamily="sans-serif-light"
+          android:textSize="@dimen/link_title_text_size"
+          android:textColor="@color/primary_text"
           tools:text="The quick brown fox jumped over the white fence"
-          style="@style/LinkTitleTextView"/>
+          tools:ignore="UnusedAttribute"/>
 
       <LinearLayout
           android:layout_width="match_parent"
@@ -85,7 +88,7 @@
             style="@style/LinkMetadataTextViewLight"
             tools:text="573 points"/>
 
-        <com.ddiehl.android.htn.view.widgets.RedditDateTextView
+        <com.ddiehl.timesincetextview.TimeSinceTextView
             android:id="@+id/link_timestamp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

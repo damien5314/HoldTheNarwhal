@@ -13,8 +13,8 @@ import android.widget.TextView;
 
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.presenter.LinkPresenter;
-import com.ddiehl.android.htn.view.widgets.RedditDateTextView;
 import com.ddiehl.reddit.listings.Link;
+import com.ddiehl.timesincetextview.TimeSinceTextView;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -41,7 +41,7 @@ public abstract class AbsLinkViewHolder extends RecyclerView.ViewHolder
   @Bind(R.id.link_self_text) TextView mSelfText;
   @Bind(R.id.link_nsfw_indicator) TextView mNsfwIndicator;
   @Bind(R.id.link_thumbnail) ImageView mLinkThumbnail;
-  @Bind(R.id.link_timestamp) RedditDateTextView mLinkTimestamp;
+  @Bind(R.id.link_timestamp) TimeSinceTextView mLinkTimestamp;
   @Bind(R.id.link_gilded_text_view) TextView mGildedText;
   @Bind(R.id.link_stickied_view) View mStickiedView;
 
@@ -135,12 +135,17 @@ public abstract class AbsLinkViewHolder extends RecyclerView.ViewHolder
         case "":
         case "0":
         case "false":
-          mLinkTimestamp.setEdited(false);
+          setEdited(false);
           break;
         default:
-          mLinkTimestamp.setEdited(true);
+          setEdited(true);
       }
     }
+  }
+
+  private void setEdited(boolean edited) {
+    CharSequence text = mLinkTimestamp.getText();
+    mLinkTimestamp.setText(edited ? text + "*" : text.toString().replace("*", ""));
   }
 
   protected void showSubreddit(@NonNull Link link) {
@@ -206,13 +211,13 @@ public abstract class AbsLinkViewHolder extends RecyclerView.ViewHolder
   }
 
   protected void showSaved(@NonNull Link link) {
-    Boolean saved = link.isSaved();
-    mSavedView.setVisibility(saved != null && saved ? View.VISIBLE : View.INVISIBLE);
+    boolean saved = link.isSaved();
+    mSavedView.setVisibility(saved ? View.VISIBLE : View.INVISIBLE);
   }
 
   protected void showStickied(@NonNull Link link) {
-    Boolean stickied = link.getStickied();
-    mStickiedView.setVisibility(stickied != null && stickied ? View.VISIBLE : View.INVISIBLE);
+    boolean stickied = link.getStickied();
+    mStickiedView.setVisibility(stickied ? View.VISIBLE : View.INVISIBLE);
   }
 
   @Override

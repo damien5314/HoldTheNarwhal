@@ -1,6 +1,8 @@
 package com.ddiehl.android.htn.view;
 
-public interface ListingsView extends LinkView, CommentView {
+public interface ListingsView
+//    extends LinkView, CommentView, PrivateMessageView
+{
   void listingsUpdated();
   void listingUpdatedAt(int position);
   void listingRemovedAt(int position);
@@ -9,4 +11,5 @@ public interface ListingsView extends LinkView, CommentView {
   void onSortChanged();
   void onTimespanChanged();
   void updateTitle();
+  void scrollToBottom();
 }

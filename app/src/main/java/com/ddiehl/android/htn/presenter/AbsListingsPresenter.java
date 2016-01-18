@@ -14,8 +14,12 @@ import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.SettingsManager;
 import com.ddiehl.android.htn.analytics.Analytics;
 import com.ddiehl.android.htn.io.RedditService;
+import com.ddiehl.android.htn.view.CommentView;
+import com.ddiehl.android.htn.view.LinkView;
 import com.ddiehl.android.htn.view.ListingsView;
 import com.ddiehl.android.htn.view.MainView;
+import com.ddiehl.android.htn.view.PrivateMessageView;
+import com.ddiehl.android.htn.view.UserProfileView;
 import com.ddiehl.reddit.Archivable;
 import com.ddiehl.reddit.Hideable;
 import com.ddiehl.reddit.Savable;
@@ -27,6 +31,7 @@ import com.ddiehl.reddit.listings.Link;
 import com.ddiehl.reddit.listings.Listing;
 import com.ddiehl.reddit.listings.ListingResponse;
 import com.ddiehl.reddit.listings.ListingResponseData;
+import com.ddiehl.reddit.listings.PrivateMessage;
 import com.ddiehl.reddit.listings.Subreddit;
 
 import java.util.ArrayList;
@@ -36,7 +41,7 @@ import rx.functions.Action1;
 
 public abstract class AbsListingsPresenter
     implements ListingsPresenter, IdentityManager.Callbacks {
-  protected Logger mLogger = HoldTheNarwhal.getLogger();
+  protected Logger mLog = HoldTheNarwhal.getLogger();
   protected AccessTokenManager mAccessTokenManager = HoldTheNarwhal.getAccessTokenManager();
   protected IdentityManager mIdentityManager = HoldTheNarwhal.getIdentityManager();
   protected SettingsManager mSettingsManager = HoldTheNarwhal.getSettingsManager();
@@ -46,6 +51,10 @@ public abstract class AbsListingsPresenter
   protected List<Listing> mListings = new ArrayList<>();
   protected ListingsView mListingsView;
   protected MainView mMainView;
+  protected LinkView mLinkView;
+  protected CommentView mCommentView;
+  protected UserProfileView mUserProfileView;
+  protected PrivateMessageView mPrivateMessageView;
 
   protected String mShow;
   protected String mUsernameContext;
@@ -59,9 +68,14 @@ public abstract class AbsListingsPresenter
   protected String mNextPageListingId;
 
   public AbsListingsPresenter(
-      MainView main, ListingsView view, String show, String username, String subreddit,
-      String sort, String timespan) {
+      MainView main, ListingsView view, LinkView linkView, CommentView commentView,
+      UserProfileView userProfileView, PrivateMessageView messageView,
+      String show, String username, String subreddit, String sort, String timespan) {
     mListingsView = view;
+    mLinkView = linkView;
+    mCommentView = commentView;
+    mUserProfileView = userProfileView;
+    mPrivateMessageView = messageView;
     mMainView = main;
     mShow = show;
     mUsernameContext = username;
@@ -101,8 +115,6 @@ public abstract class AbsListingsPresenter
   @Override
   public void getMoreData() {
     if (!mListingsRequested) {
-      mListingsRequested = true;
-      mMainView.showSpinner(null);
       requestData();
     }
   }
@@ -113,6 +125,11 @@ public abstract class AbsListingsPresenter
   public void setData(@NonNull List<Listing> data) {
     mListings.clear();
     mListings.addAll(data);
+  }
+
+  @Override
+  public void setSelectedListing(@NonNull Listing listing) {
+    mListingSelected = listing;
   }
 
   @Override
@@ -189,7 +206,7 @@ public abstract class AbsListingsPresenter
   public void showLinkContextMenu(
       ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, Link link) {
     mListingSelected = link;
-    mListingsView.showLinkContextMenu(menu, v, link);
+    mLinkView.showLinkContextMenu(menu, v, link);
     menu.findItem(R.id.action_link_reply).setVisible(false);
     menu.findItem(R.id.action_link_save).setVisible(!link.isSaved());
     menu.findItem(R.id.action_link_unsave).setVisible(link.isSaved());
@@ -198,26 +215,26 @@ public abstract class AbsListingsPresenter
   @Override
   public void openLink(@NonNull Link link) {
     if (link.isSelf()) {
-      mListingsView.showCommentsForLink(link.getSubreddit(), link.getId(), null);
+      mLinkView.showCommentsForLink(link.getSubreddit(), link.getId(), null);
     } else {
-      mListingsView.openLinkInWebView(link);
+      mLinkView.openLinkInWebView(link);
     }
   }
 
   @Override
   public void showCommentsForLink() {
     Link link = (Link) mListingSelected;
-    mListingsView.showCommentsForLink(link.getSubreddit(), link.getId(), null);
+    mLinkView.showCommentsForLink(link.getSubreddit(), link.getId(), null);
   }
 
   @Override
   public void showCommentsForLink(@NonNull Link link) {
-    mListingsView.showCommentsForLink(link.getSubreddit(), link.getId(), null);
+    mLinkView.showCommentsForLink(link.getSubreddit(), link.getId(), null);
   }
 
   @Override
   public void replyToLink() {
-    mListingsView.openReplyView(mListingSelected);
+    mCommentView.openReplyView(mListingSelected);
   }
 
   @Override
@@ -261,31 +278,30 @@ public abstract class AbsListingsPresenter
   @Override
   public void shareLink() {
     Link link = (Link) mListingSelected;
-    mListingsView.openShareView(link);
+    mLinkView.openShareView(link);
   }
 
   @Override
   public void openLinkUserProfile() {
     Link link = (Link) mListingSelected;
-    mListingsView.openUserProfileView(link);
+    mLinkView.openUserProfileView(link);
   }
 
   @Override
   public void openLinkUserProfile(@NonNull Link link) {
-//    String username = link.getAuthor();
-    mListingsView.openUserProfileView(link);
+    mLinkView.openUserProfileView(link);
   }
 
   @Override
   public void openLinkInBrowser() {
     Link link = (Link) mListingSelected;
-    mListingsView.openLinkInBrowser(link);
+    mLinkView.openLinkInBrowser(link);
   }
 
   @Override
   public void openCommentsInBrowser() {
     Link link = (Link) mListingSelected;
-    mListingsView.openCommentsInBrowser(link);
+    mLinkView.openCommentsInBrowser(link);
   }
 
   @Override
@@ -340,7 +356,7 @@ public abstract class AbsListingsPresenter
   public void showCommentContextMenu(
       ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, Comment comment) {
     mListingSelected = comment;
-    mListingsView.showCommentContextMenu(menu, v, comment);
+    mCommentView.showCommentContextMenu(menu, v, comment);
     menu.findItem(R.id.action_comment_save).setVisible(!comment.isSaved());
     menu.findItem(R.id.action_comment_unsave).setVisible(comment.isSaved());
   }
@@ -357,7 +373,7 @@ public abstract class AbsListingsPresenter
     if (comment.isArchived()) {
       mMainView.showToast(R.string.listing_archived);
     } else {
-      mListingsView.openReplyView(comment);
+      mCommentView.openReplyView(comment);
     }
   }
 
@@ -400,24 +416,24 @@ public abstract class AbsListingsPresenter
   @Override
   public void shareComment() {
     Comment comment = (Comment) mListingSelected;
-    mListingsView.openShareView(comment);
+    mCommentView.openShareView(comment);
   }
 
   @Override
   public void openCommentUserProfile() {
     Comment comment = (Comment) mListingSelected;
-    mListingsView.openUserProfileView(comment);
+    mCommentView.openUserProfileView(comment);
   }
 
   @Override
   public void openCommentUserProfile(@NonNull Comment comment) {
-    mListingsView.openUserProfileView(comment);
+    mCommentView.openUserProfileView(comment);
   }
 
   @Override
   public void openCommentInBrowser() {
     Comment comment = (Comment) mListingSelected;
-    mListingsView.openCommentInBrowser(comment);
+    mCommentView.openCommentInBrowser(comment);
   }
 
   @Override
@@ -435,6 +451,12 @@ public abstract class AbsListingsPresenter
   @Override
   public void openCommentLink(@NonNull Comment comment) {
     mMainView.showCommentsForLink(comment.getSubreddit(), comment.getLinkId(), null);
+  }
+
+  @Override
+  public void showMessageContextMenu(
+      ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, PrivateMessage message) {
+    mPrivateMessageView.showPrivateMessageContextMenu(menu, v, message);
   }
 
   @Override
@@ -555,5 +577,38 @@ public abstract class AbsListingsPresenter
     } else {
       return ThumbnailMode.NO_THUMBNAIL;
     }
+  }
+
+  @Override
+  public UserIdentity getUserIdentity() {
+    return mIdentityManager.getUserIdentity();
+  }
+
+  /**
+   * FIXME Figure out the best form of inheritance for these presenters
+   */
+
+  @Override
+  public void showMessagePermalink() {
+  }
+
+  @Override
+  public void reportMessage() {
+
+  }
+
+  @Override
+  public void blockUser() {
+
+  }
+
+  @Override
+  public void markMessageUnread() {
+
+  }
+
+  @Override
+  public void replyToMessage() {
+
   }
 }

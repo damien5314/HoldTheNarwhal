@@ -41,22 +41,25 @@ import com.ddiehl.android.htn.view.dialogs.ConfirmSignOutDialog;
 import com.ddiehl.android.htn.view.dialogs.NsfwWarningDialog;
 import com.ddiehl.android.htn.view.dialogs.SubredditNavigationDialog;
 import com.ddiehl.android.htn.view.fragments.AboutAppFragment;
+import com.ddiehl.android.htn.view.fragments.InboxFragment;
 import com.ddiehl.android.htn.view.fragments.LinkCommentsFragment;
+import com.ddiehl.android.htn.view.fragments.PrivateMessageFragment;
 import com.ddiehl.android.htn.view.fragments.SettingsFragment;
 import com.ddiehl.android.htn.view.fragments.SubredditFragment;
 import com.ddiehl.android.htn.view.fragments.UserProfileFragment;
 import com.ddiehl.android.htn.view.fragments.WebViewFragment;
 import com.ddiehl.reddit.identity.UserIdentity;
+import com.ddiehl.reddit.listings.PrivateMessage;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.UnknownHostException;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import hugo.weaving.DebugLog;
 
 public class MainActivity extends AppCompatActivity implements MainView,
     NavigationView.OnNavigationItemSelectedListener {
@@ -83,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements MainView,
   private MainPresenter mMainPresenter;
   private boolean mBackStackReset = true;
 
-  @Override @DebugLog
+  @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
@@ -131,6 +134,7 @@ public class MainActivity extends AppCompatActivity implements MainView,
   public void updateNavigationItems(boolean isLoggedIn) {
     Menu menu = mNavigationView.getMenu();
     menu.findItem(R.id.drawer_log_in).setVisible(!isLoggedIn);
+    menu.findItem(R.id.drawer_inbox).setVisible(isLoggedIn);
     menu.findItem(R.id.drawer_user_profile).setVisible(isLoggedIn);
     menu.findItem(R.id.drawer_subreddits).setVisible(isLoggedIn);
   }
@@ -149,6 +153,9 @@ public class MainActivity extends AppCompatActivity implements MainView,
         return true;
       case R.id.drawer_log_in:
         mMainPresenter.onLogIn();
+        return true;
+      case R.id.drawer_inbox:
+        mMainPresenter.onShowInbox();
         return true;
       case R.id.drawer_user_profile:
         mMainPresenter.onShowUserProfile();
@@ -172,6 +179,12 @@ public class MainActivity extends AppCompatActivity implements MainView,
   @Override
   public void showLoginView() {
     showWebViewForURL(RedditAuthService.AUTHORIZATION_URL);
+  }
+
+  @Override
+  public void showInbox() {
+    InboxFragment fragment = InboxFragment.newInstance("inbox");
+    showFragment(fragment);
   }
 
   @Override
@@ -413,6 +426,12 @@ public class MainActivity extends AppCompatActivity implements MainView,
   public void resetBackNavigation() {
     mBackStackReset = true;
     getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+  }
+
+  @Override
+  public void showInboxMessages(@NonNull List<PrivateMessage> messages) {
+    PrivateMessageFragment fragment = PrivateMessageFragment.newInstance(messages);
+    showFragment(fragment);
   }
 
   private void setMirroredIcons() {

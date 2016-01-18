@@ -44,8 +44,7 @@ public class LinkCommentsFragment extends Fragment
   private static final String ARG_COMMENT_ID = "arg_comment_id";
 
   @IntDef({REQUEST_CHOOSE_SORT, REQUEST_ADD_COMMENT})
-  public @interface RequestCode {
-  }
+  public @interface RequestCode { }
   private static final int REQUEST_CHOOSE_SORT = 0;
   private static final int REQUEST_ADD_COMMENT = 1;
   private static final String DIALOG_CHOOSE_SORT = "dialog_choose_sort";
@@ -133,7 +132,7 @@ public class LinkCommentsFragment extends Fragment
 
   @Override
   public void showLinkContextMenu(ContextMenu menu, View v, Link link) {
-    getActivity().getMenuInflater().inflate(R.menu.link_context_menu, menu);
+    getActivity().getMenuInflater().inflate(R.menu.link_context, menu);
     String title = String.format(v.getContext().getString(R.string.menu_action_link),
         link.getTitle(), link.getScore());
     menu.setHeaderTitle(title);
@@ -188,7 +187,7 @@ public class LinkCommentsFragment extends Fragment
 
   @Override
   public void showCommentContextMenu(ContextMenu menu, View v, Comment comment) {
-    getActivity().getMenuInflater().inflate(R.menu.comment_context_menu, menu);
+    getActivity().getMenuInflater().inflate(R.menu.comment_context, menu);
     String title = String.format(v.getContext().getString(R.string.menu_action_comment),
         comment.getAuthor(), comment.getScore());
     menu.setHeaderTitle(title);
@@ -353,7 +352,7 @@ public class LinkCommentsFragment extends Fragment
 
   @Override
   public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-    inflater.inflate(R.menu.comments_menu, menu);
+    inflater.inflate(R.menu.comments, menu);
   }
 
   @Override

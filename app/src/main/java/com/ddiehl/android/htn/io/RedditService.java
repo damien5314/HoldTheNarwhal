@@ -59,4 +59,5 @@ public interface RedditService {
   Observable<ResponseBody> hide(@NonNull Hideable listing, boolean toHide);
   Observable<ResponseBody> report(@NonNull String id, @NonNull String reason);
   Observable<Comment> addComment(@NonNull String parentId, @NonNull String text);
+  Observable<ListingResponse> getInbox(@NonNull String show, @Nullable String after);
 }

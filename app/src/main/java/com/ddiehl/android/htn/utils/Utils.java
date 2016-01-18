@@ -81,4 +81,11 @@ public class Utils {
     if (n == 0) return 0;
     return (int) Math.log10(n) + 1;
   }
+
+  /**
+   * Null-safe equivalent of {@code a.equals(b)}.
+   */
+  public static boolean equals(Object a, Object b) {
+    return (a == null) ? (b == null) : a.equals(b);
+  }
 }

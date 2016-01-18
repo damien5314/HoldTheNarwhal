@@ -32,6 +32,7 @@ import com.ddiehl.android.htn.view.dialogs.ChooseTimespanDialog;
 import com.ddiehl.reddit.listings.Comment;
 import com.ddiehl.reddit.listings.Link;
 import com.ddiehl.reddit.listings.Listing;
+import com.ddiehl.reddit.listings.PrivateMessage;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -44,13 +45,14 @@ public abstract class AbsListingsFragment extends Fragment
   private static final String DIALOG_CHOOSE_SORT = "dialog_choose_sort";
   private static final String DIALOG_CHOOSE_TIMESPAN = "dialog_choose_timespan";
 
-  @Bind(R.id.recycler_view) RecyclerView mRecyclerView;
+  @Bind(R.id.recycler_view)
+  protected RecyclerView mRecyclerView;
 
-  Analytics mAnalytics = HoldTheNarwhal.getAnalytics();
-  MainView mMainView;
-  ListingsPresenter mListingsPresenter;
-  ListingsAdapter mListingsAdapter;
-  SwipeRefreshLayout mSwipeRefreshLayout;
+  protected Analytics mAnalytics = HoldTheNarwhal.getAnalytics();
+  protected MainView mMainView;
+  protected ListingsPresenter mListingsPresenter;
+  protected ListingsAdapter mListingsAdapter;
+  protected SwipeRefreshLayout mSwipeRefreshLayout;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -60,16 +62,17 @@ public abstract class AbsListingsFragment extends Fragment
     mMainView = (MainView) getActivity();
   }
 
-  protected abstract int getLayoutResId();
-
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     View view = inflater.inflate(getLayoutResId(), container, false);
     ButterKnife.bind(this, view);
-    mListingsAdapter = new ListingsAdapter(mListingsPresenter);
-    instantiateListView(view);
+    mListingsAdapter = getListingsAdapter();
+    instantiateListView();
     return view;
   }
+
+  protected abstract int getLayoutResId();
+  protected abstract ListingsAdapter getListingsAdapter();
 
   @Override
   public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -78,26 +81,26 @@ public abstract class AbsListingsFragment extends Fragment
     mSwipeRefreshLayout.setOnRefreshListener(this);
   }
 
-  void instantiateListView(View v) {
-    RecyclerView rv = ButterKnife.findById(v, R.id.recycler_view);
+  private void instantiateListView() {
     final LinearLayoutManager mgr = new LinearLayoutManager(getActivity());
-    rv.setLayoutManager(mgr);
-    rv.clearOnScrollListeners();
-    rv.addOnScrollListener(new RecyclerView.OnScrollListener() {
-      int mFirstVisibleItem, mVisibleItemCount, mTotalItemCount;
-      @Override
-      public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-        mVisibleItemCount = mgr.getChildCount();
-        mTotalItemCount = mgr.getItemCount();
-        mFirstVisibleItem = mgr.findFirstVisibleItemPosition();
-        if ((mVisibleItemCount + mFirstVisibleItem) >= mTotalItemCount) {
-          if (mListingsPresenter.getNextPageListingId() != null) {
-            mListingsPresenter.getMoreData();
+    mRecyclerView.setLayoutManager(mgr);
+    mRecyclerView.clearOnScrollListeners();
+    mRecyclerView.addOnScrollListener(
+        new RecyclerView.OnScrollListener() {
+          int mFirstVisibleItem, mVisibleItemCount, mTotalItemCount;
+          @Override
+          public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            mVisibleItemCount = mgr.getChildCount();
+            mTotalItemCount = mgr.getItemCount();
+            mFirstVisibleItem = mgr.findFirstVisibleItemPosition();
+            if ((mVisibleItemCount + mFirstVisibleItem) >= mTotalItemCount) {
+              if (mListingsPresenter.getNextPageListingId() != null) {
+                mListingsPresenter.getMoreData();
+              }
+            }
           }
-        }
-      }
-    });
-    rv.setAdapter(mListingsAdapter);
+        });
+    mRecyclerView.setAdapter(mListingsAdapter);
   }
 
   @Override
@@ -140,10 +143,12 @@ public abstract class AbsListingsFragment extends Fragment
 
   @Override
   public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-    inflater.inflate(R.menu.links_menu, menu);
+    inflater.inflate(R.menu.listings, menu);
     // Disable timespan option if current sort does not support it
     String sort = mListingsPresenter.getSort();
-    if (sort.equals("hot") || sort.equals("new") || sort.equals("rising")) {
+    if (sort == null) {
+      menu.findItem(R.id.action_change_timespan).setVisible(false);
+    } else if (sort.equals("hot") || sort.equals("new") || sort.equals("rising")) {
       menu.findItem(R.id.action_change_timespan).setVisible(false);
     } else { // controversial, top
       menu.findItem(R.id.action_change_timespan).setVisible(true);
@@ -170,8 +175,7 @@ public abstract class AbsListingsFragment extends Fragment
         mAnalytics.logOptionSettings();
         return true;
     }
-
-    return super.onOptionsItemSelected(item);
+    return false;
   }
 
   @Override
@@ -202,9 +206,8 @@ public abstract class AbsListingsFragment extends Fragment
     getActivity().invalidateOptionsMenu();
   }
 
-  @Override
   public void showLinkContextMenu(ContextMenu menu, View v, Link link) {
-    getActivity().getMenuInflater().inflate(R.menu.link_context_menu, menu);
+    getActivity().getMenuInflater().inflate(R.menu.link_context, menu);
     String title = String.format(v.getContext().getString(R.string.menu_action_link),
         link.getTitle(), link.getScore());
     menu.setHeaderTitle(title);
@@ -216,9 +219,8 @@ public abstract class AbsListingsFragment extends Fragment
     menu.findItem(R.id.action_link_view_user_profile).setTitle(username);
   }
 
-  @Override
   public void showCommentContextMenu(ContextMenu menu, View v, Comment comment) {
-    getActivity().getMenuInflater().inflate(R.menu.comment_context_menu, menu);
+    getActivity().getMenuInflater().inflate(R.menu.comment_context, menu);
     String title = String.format(getString(R.string.menu_action_comment),
         comment.getAuthor(), comment.getScore());
     menu.setHeaderTitle(title);
@@ -226,6 +228,11 @@ public abstract class AbsListingsFragment extends Fragment
     String username = String.format(
         getString(R.string.action_view_user_profile), comment.getAuthor());
     menu.findItem(R.id.action_comment_view_user_profile).setTitle(username);
+  }
+
+  public void showPrivateMessageContextMenu(
+      ContextMenu menu, View v, PrivateMessage privateMessage) {
+    getActivity().getMenuInflater().inflate(R.menu.message_context, menu);
   }
 
   @Override
@@ -299,7 +306,6 @@ public abstract class AbsListingsFragment extends Fragment
     }
   }
 
-  @Override
   public void openShareView(@NonNull Link link) {
     Intent i = new Intent(Intent.ACTION_SEND);
     i.setType("text/plain");
@@ -308,7 +314,6 @@ public abstract class AbsListingsFragment extends Fragment
     startActivity(i);
   }
 
-  @Override
   public void openLinkInBrowser(@NonNull Link link) {
     Uri uri = Uri.parse(link.getUrl());
     Intent i = new Intent(Intent.ACTION_VIEW, uri);
@@ -316,7 +321,6 @@ public abstract class AbsListingsFragment extends Fragment
     startActivity(i);
   }
 
-  @Override
   public void openCommentsInBrowser(@NonNull Link link) {
     Uri uri = Uri.parse("http://www.reddit.com" + link.getPermalink());
     Intent i = new Intent(Intent.ACTION_VIEW, uri);
@@ -324,24 +328,20 @@ public abstract class AbsListingsFragment extends Fragment
     startActivity(i);
   }
 
-  @Override
   public void openLinkInWebView(@NonNull Link link) {
     mAnalytics.logOpenLink(link);
     ((MainView) getActivity()).openURL(link.getUrl());
   }
 
-  @Override
   public void showCommentsForLink(
       @NonNull String subreddit, @NonNull String linkId, @Nullable String commentId) {
     mMainView.showCommentsForLink(subreddit, linkId, commentId);
   }
 
-  @Override
   public void openReplyView(@NonNull Listing listing) {
     mMainView.showToast(R.string.implementation_pending);
   }
 
-  @Override
   public void openShareView(@NonNull Comment comment) {
     Intent i = new Intent(Intent.ACTION_SEND);
     i.setType("text/plain");
@@ -350,17 +350,14 @@ public abstract class AbsListingsFragment extends Fragment
     startActivity(i);
   }
 
-  @Override
   public void openUserProfileView(@NonNull Link link) {
     ((MainView) getActivity()).showUserProfile(link.getAuthor(), "summary");
   }
 
-  @Override
   public void openUserProfileView(@NonNull Comment comment) {
     ((MainView) getActivity()).showUserProfile(comment.getAuthor(), "summary");
   }
 
-  @Override
   public void openCommentInBrowser(@NonNull Comment comment) {
     Uri uri = Uri.parse(comment.getUrl());
     Intent i = new Intent(Intent.ACTION_VIEW, uri);
@@ -388,5 +385,10 @@ public abstract class AbsListingsFragment extends Fragment
     mSwipeRefreshLayout.setRefreshing(false);
     mListingsPresenter.refreshData();
     mAnalytics.logOptionRefresh();
+  }
+
+  @Override
+  public void scrollToBottom() {
+    mRecyclerView.smoothScrollToPosition(mListingsAdapter.getItemCount()-1);
   }
 }

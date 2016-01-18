@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent">
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:minHeight="@dimen/private_message_subject_max_height"
+      android:paddingTop="@dimen/link_list_item_margin_vertical"
+      android:paddingBottom="@dimen/link_list_item_margin_vertical"
+      android:paddingLeft="@dimen/link_list_item_margin_horizontal"
+      android:paddingRight="@dimen/link_list_item_margin_horizontal"
+      android:elevation="@dimen/toolbar_elevation"
+      android:gravity="center_vertical"
+      android:orientation="vertical"
+      android:background="@color/primary"
+      tools:ignore="UnusedAttribute">
+
+    <TextView
+        android:id="@+id/conversation_subject"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="viewStart"
+        android:maxLines="2"
+        android:ellipsize="end"
+        android:gravity="start"
+        android:fontFamily="sans-serif-light"
+        android:textAppearance="?android:textAppearanceMedium"
+        android:textColor="@android:color/white"
+        tools:text="The quick brown fox jumped over the white fence"
+        tools:ignore="UnusedAttribute"/>
+
+  </LinearLayout>
+
+  <android.support.v4.widget.SwipeRefreshLayout
+      android:id="@+id/swipe_refresh_layout"
+      android:layout_width="match_parent"
+      android:layout_height="0dp"
+      android:layout_weight="1">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical"/>
+
+  </android.support.v4.widget.SwipeRefreshLayout>
+
+  <android.support.design.widget.TextInputLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_gravity="bottom"
+      android:elevation="@dimen/toolbar_elevation"
+      android:padding="@dimen/baseline_spacing"
+      android:background="@android:color/white"
+      tools:ignore="UnusedAttribute">
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/action_reply"/>
+
+  </android.support.design.widget.TextInputLayout>
+
+</LinearLayout>

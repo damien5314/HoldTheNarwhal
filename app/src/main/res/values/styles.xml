@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
   <!-- Base application theme. -->
   <style name="AppTheme" parent="AppTheme.Base"/>
 
@@ -16,17 +16,6 @@
     <item name="android:textColorPrimary">@color/icons</item>
     <item name="actionMenuTextColor">@color/icons</item>
     <item name="android:textColorSecondary">@color/icons</item>
-  </style>
-
-  <style name="LinkTitleTextView">
-    <item name="android:fontFamily" tools:targetApi="16">sans-serif-light</item>
-    <item name="android:textSize">@dimen/link_title_text_size</item>
-    <item name="android:textColor">@color/primary_text</item>
-  </style>
-
-  <style name="CommentLinkTitleTextView" parent="LinkTitleTextView">
-    <item name="android:textSize">@dimen/comment_body_text_size</item>
-    <item name="android:textColor">@android:color/white</item>
   </style>
 
   <style name="LinkMetadataTextViewLight">

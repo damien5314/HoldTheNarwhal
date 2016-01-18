@@ -8,14 +8,15 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.presenter.LinkCommentsPresenter;
-import com.ddiehl.android.htn.view.widgets.RedditDateTextView;
 import com.ddiehl.reddit.listings.Comment;
 import com.ddiehl.reddit.listings.Link;
+import com.ddiehl.timesincetextview.TimeSinceTextView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -28,8 +29,9 @@ public class ThreadCommentViewHolder extends RecyclerView.ViewHolder
   private Comment mComment;
 
   @Bind(R.id.comment_author) TextView mAuthorView;
+  @Bind(R.id.comment_score_layout) ViewGroup mScoreViewLayout;
   @Bind(R.id.comment_score) TextView mScoreView;
-  @Bind(R.id.comment_timestamp) RedditDateTextView mTimestampView;
+  @Bind(R.id.comment_timestamp) TimeSinceTextView mTimestampView;
   @Bind(R.id.comment_saved_icon) View mSavedView;
   @Bind(R.id.comment_body) TextView mBodyView;
   @Bind(R.id.comment_gilded_text_view) TextView mGildedText;
@@ -123,9 +125,13 @@ public class ThreadCommentViewHolder extends RecyclerView.ViewHolder
   }
 
   private void showScore(Comment comment) {
-    String score = comment.getScore() == null ?
-        mContext.getString(R.string.hidden_score_placeholder) : comment.getScore().toString();
-    mScoreView.setText(String.format(mContext.getString(R.string.comment_score), score));
+    if (comment.getScore() == null) {
+      mScoreViewLayout.setVisibility(View.GONE);
+    } else {
+      mScoreViewLayout.setVisibility(View.VISIBLE);
+      mScoreView.setText(
+          String.format(mContext.getString(R.string.comment_score), comment.getScore()));
+    }
   }
 
   private void showTimestamp(Comment comment) {
@@ -138,12 +144,17 @@ public class ThreadCommentViewHolder extends RecyclerView.ViewHolder
         case "":
         case "0":
         case "false":
-          mTimestampView.setEdited(false);
+          setEdited(false);
           break;
         default:
-          mTimestampView.setEdited(true);
+          setEdited(true);
       }
     }
+  }
+
+  private void setEdited(boolean edited) {
+    CharSequence text = mTimestampView.getText();
+    mTimestampView.setText(edited ? text + "*" : text.toString().replace("*", ""));
   }
 
   private void setCollapsed(Comment comment) {

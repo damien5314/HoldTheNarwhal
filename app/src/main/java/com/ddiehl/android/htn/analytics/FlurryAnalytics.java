@@ -148,6 +148,12 @@ public class FlurryAnalytics implements Analytics {
   }
 
   @Override
+  public void logDrawerShowInbox() {
+    if (!mEnabled) return;
+    FlurryAgent.logEvent("nav drawer - inbox");
+  }
+
+  @Override
   public void logDrawerUserProfile() {
     if (!mEnabled) return;
     FlurryAgent.logEvent("nav drawer - user profile");

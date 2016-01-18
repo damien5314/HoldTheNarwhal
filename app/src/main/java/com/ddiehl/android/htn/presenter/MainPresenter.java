@@ -16,6 +16,7 @@ public interface MainPresenter extends BasePresenter {
   Action1<AccessToken> getUserIdentity();
   void onNavigateToSubreddit();
   void onLogIn();
+  void onShowInbox();
   void onShowUserProfile();
   void onShowSubreddits();
   void onShowFrontPage();

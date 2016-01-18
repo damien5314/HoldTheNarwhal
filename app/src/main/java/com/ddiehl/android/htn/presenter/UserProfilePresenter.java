@@ -5,6 +5,8 @@ import android.text.TextUtils;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
+import com.ddiehl.android.htn.view.CommentView;
+import com.ddiehl.android.htn.view.LinkView;
 import com.ddiehl.android.htn.view.ListingsView;
 import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.android.htn.view.UserProfileView;
@@ -12,16 +14,16 @@ import com.ddiehl.reddit.identity.UserIdentity;
 
 import rx.functions.Action1;
 
-// FIXME This should not extend from AbsListingsPresenter because it doesn't present Listings
-// Have this extend from BasePresenter and hold its own dependencies
 public class UserProfilePresenter extends AbsListingsPresenter {
   private UserProfileView mSummaryView;
 
   public UserProfilePresenter(
-      MainView main, ListingsView view, UserProfileView view2,
+      MainView main, ListingsView listingsView, LinkView linkView,
+      CommentView commentView, UserProfileView userProfileView,
       String show, String username, String sort, String timespan) {
-    super(main, view, show, username, null, sort, timespan);
-    mSummaryView = view2;
+    super(main, listingsView, linkView, commentView, userProfileView,
+        null, show, username, null, sort, timespan);
+    mSummaryView = userProfileView;
   }
 
   @Override
@@ -40,7 +42,26 @@ public class UserProfilePresenter extends AbsListingsPresenter {
     }
   }
 
+  private void getListingData() {
+    mMainView.showSpinner(null);
+    mListingsRequested = true;
+    mRedditService.loadUserProfile(mShow, mUsernameContext, mSort, mTimespan, mNextPageListingId)
+        .doOnTerminate(() -> {
+          mMainView.dismissSpinner();
+          mListingsRequested = false;
+        })
+        .subscribe(onListingsLoaded(),
+            e -> mMainView.showError(e, R.string.error_get_user_profile_listings));
+  }
+
+  public void requestData(String show) {
+    mShow = show;
+    refreshData();
+  }
+
   private void getSummaryData() {
+    mMainView.showSpinner(null);
+    mListingsRequested = true;
     mRedditService.getUserInfo(mUsernameContext)
         .doOnTerminate(() -> {
           mMainView.dismissSpinner();
@@ -101,20 +122,5 @@ public class UserProfilePresenter extends AbsListingsPresenter {
           .subscribe(r -> mMainView.showToast(R.string.user_friend_note_save_confirm),
               e -> mMainView.showError(e, R.string.user_friend_note_save_error));
     }
-  }
-
-  private void getListingData() {
-    mRedditService.loadUserProfile(mShow, mUsernameContext, mSort, mTimespan, mNextPageListingId)
-        .doOnTerminate(() -> {
-          mMainView.dismissSpinner();
-          mListingsRequested = false;
-        })
-        .subscribe(onListingsLoaded(),
-            e -> mMainView.showError(e, R.string.error_get_user_profile_listings));
-  }
-
-  public void requestData(String show) {
-    mShow = show;
-    refreshData();
   }
 }

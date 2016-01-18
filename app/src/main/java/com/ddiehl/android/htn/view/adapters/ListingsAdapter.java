@@ -6,22 +6,26 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ddiehl.android.htn.R;
+import com.ddiehl.android.htn.presenter.InboxPresenter;
 import com.ddiehl.android.htn.presenter.LinkPresenter;
 import com.ddiehl.android.htn.presenter.ListingsPresenter;
 import com.ddiehl.android.htn.view.viewholders.AbsLinkViewHolder;
 import com.ddiehl.android.htn.view.viewholders.ListingsCommentViewHolder;
 import com.ddiehl.android.htn.view.viewholders.ListingsLinkViewHolder;
+import com.ddiehl.android.htn.view.viewholders.ListingsMessageViewHolder;
 import com.ddiehl.reddit.listings.Comment;
 import com.ddiehl.reddit.listings.Link;
 import com.ddiehl.reddit.listings.Listing;
+import com.ddiehl.reddit.listings.PrivateMessage;
 
 public class ListingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-  private static final int TYPE_LINK = 0;
-  private static final int TYPE_COMMENT = 1;
+  private static final int TYPE_LINK = 0x1;
+  private static final int TYPE_COMMENT = 0x2;
+  private static final int TYPE_PRIVATE_MESSAGE = 0x3;
 
-  private ListingsPresenter mListingsPresenter;
-  private boolean mShowNsfwTag;
-  private LinkPresenter.ThumbnailMode mThumbnailMode;
+  protected ListingsPresenter mListingsPresenter;
+  protected boolean mShowNsfwTag;
+  protected LinkPresenter.ThumbnailMode mThumbnailMode;
 
   public ListingsAdapter(ListingsPresenter presenter) {
     mListingsPresenter = presenter;
@@ -33,6 +37,7 @@ public class ListingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     Listing listing = mListingsPresenter.getListing(position);
     if (listing instanceof Link) return TYPE_LINK;
     if (listing instanceof Comment) return TYPE_COMMENT;
+    if (listing instanceof PrivateMessage) return TYPE_PRIVATE_MESSAGE;
     throw new RuntimeException("Item view type not recognized: " + listing.getClass());
   }
 
@@ -47,6 +52,10 @@ public class ListingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         view = LayoutInflater.from(parent.getContext())
             .inflate(R.layout.listings_comment, parent, false);
         return new ListingsCommentViewHolder(view, mListingsPresenter);
+      case TYPE_PRIVATE_MESSAGE:
+        view = LayoutInflater.from(parent.getContext())
+            .inflate(R.layout.listings_message, parent, false);
+        return new ListingsMessageViewHolder(view, mListingsPresenter);
       default:
         throw new RuntimeException("Unexpected ViewHolder type: " + viewType);
     }
@@ -63,6 +72,10 @@ public class ListingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
       boolean showControversiality = mListingsPresenter.getShowControversiality()
           && comment.getControversiality() > 0;
       ((ListingsCommentViewHolder) holder).bind(comment, showControversiality);
+    } else if (holder instanceof ListingsMessageViewHolder) {
+      PrivateMessage message = (PrivateMessage) mListingsPresenter.getListing(position);
+      ((ListingsMessageViewHolder) holder)
+          .bind(message, mListingsPresenter instanceof InboxPresenter);
     }
   }
 

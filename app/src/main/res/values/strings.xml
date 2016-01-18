@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+  <!-- TODO Separate into different files -->
   <!-- Application -->
   <string name="app_name">Hold the Narwhal</string>
   <string name="application_loading">Loading HTN</string>
@@ -7,6 +8,7 @@
   <!-- Navigation drawer -->
   <string name="drawer_navigate_to_subreddit">go to subreddit</string>
   <string name="drawer_log_in">log in</string>
+  <string name="drawer_inbox">inbox</string>
   <string name="drawer_user_profile">user profile</string>
   <string name="drawer_subreddits">subreddits</string>
   <string name="drawer_front_page">front page</string>
@@ -31,7 +33,12 @@
   <string name="continue_thread">continue thread</string>
   <string name="more_comments_s">load 1 more comment</string>
   <string name="more_comments">load %s more comments</string>
-  <string name="listing_comment_title_format">%1$s \nby /u/%2$s on /r/%3$s</string>
+  <string name="listing_comment_subject_format">[%s]</string>
+  <string name="listing_comment_subject_commentreply">comment reply</string>
+  <string name="listing_comment_subject_postreply">post reply</string>
+  <string name="listing_comment_subject_usernamemention">username mention</string>
+  <string name="listing_comment_subtitle_format">by /u/%2$s on /r/%1$s</string>
+  <string name="listing_comment_inbox_subtitle_format">%2$s on /r/%1$s</string>
   <string name="comment_metadata_divider">•</string>
   <string name="comment_controversiality_indicator">†</string>
 
@@ -53,6 +60,19 @@
   <string name="user_friend_note_hint">likes pictures of cats</string>
   <string name="user_friend_empty_note">friend note cannot be empty</string>
   <string name="user_friend_note_save_button">save</string>
+
+  <!-- Inbox -->
+  <string name="inbox_fragment_title">inbox</string>
+  <string name="navigation_tabs_all">all</string>
+  <string name="navigation_tabs_unread">unread</string>
+  <string name="navigation_tabs_messages">messages</string>
+  <string name="navigation_tabs_comment_replies">comment replies</string>
+  <string name="navigation_tabs_post_replies">post replies</string>
+  <string name="navigation_tabs_mentions">mentions</string>
+  <string name="view_more_messages">view %s more messages</string>
+  <string name="message_metadata_from">from %s</string>
+  <string name="message_metadata_to">to %s</string>
+  <string name="message_metadata_sent">sent %s</string>
 
   <!-- Ads -->
   <string name="advertisement">advertisement</string>
@@ -97,7 +117,10 @@
   <string name="action_open_comments_in_browser">view comments in browser</string>
   <string name="action_report">report</string>
   <string name="action_reply">reply</string>
-  <string name="action_comment_permalink">permalink</string>
+  <string name="action_show_permalink">permalink</string>
+  <string name="action_block_user">block user</string>
+  <string name="action_mark_message_unread">mark unread</string>
+  <string name="action_message_reply">reply</string>
 
   <!-- Dialogs -->
   <string name="dialog_sign_out_title">Sign out</string>
@@ -116,31 +139,10 @@
   <string name="dialog_nsfw_decline">Take me back</string>
 
   <!-- Miscellaneous -->
+  <string name="nsfw">nsfw</string>
   <string name="username">/u/%s</string>
   <string name="user_required">you must sign in to do that</string>
   <string name="implementation_pending">coming soon</string>
-  <string name="timespan_years">%s year ago</string>
-  <string name="timespan_months">%s month ago</string>
-  <string name="timespan_weeks">%s week ago</string>
-  <string name="timespan_days">%s day ago</string>
-  <string name="timespan_hours">%s hour ago</string>
-  <string name="timespan_minutes">%s minute ago</string>
-  <string name="timespan_seconds">%s second ago</string>
-  <string name="timespan_years_plural">%s years ago</string>
-  <string name="timespan_months_plural">%s months ago</string>
-  <string name="timespan_weeks_plural">%s weeks ago</string>
-  <string name="timespan_days_plural">%s days ago</string>
-  <string name="timespan_hours_plural">%s hours ago</string>
-  <string name="timespan_minutes_plural">%s minutes ago</string>
-  <string name="timespan_seconds_plural">%s seconds ago</string>
-  <string name="timespan_year_abbr">%syr</string>
-  <string name="timespan_months_abbr">%smo</string>
-  <string name="timespan_weeks_abbr">%swk</string>
-  <string name="timespan_days_abbr">%sd</string>
-  <string name="timespan_hours_abbr">%sh</string>
-  <string name="timespan_minutes_abbr">%sm</string>
-  <string name="timespan_seconds_abbr">%ss</string>
-  <string name="timespan_now">just now</string>
   <string name="welcome_user">welcome, %s</string>
   <string name="user_signed_out">signed out</string>
 
@@ -240,5 +242,5 @@
   <string name="error_get_user_profile_listings">error loading profile listings</string>
   <string name="error_no_network">no network connection</string>
   <string name="error_user_settings_update">error updating settings</string>
-  <string name="nsfw">nsfw</string>
+  <string name="error_get_inbox">error getting inbox</string>
 </resources>

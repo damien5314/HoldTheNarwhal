@@ -35,8 +35,8 @@ public class Bypass {
 	private final int mListItemIndent;
 	private final int mBlockQuoteIndent;
 	private final int mCodeBlockIndent;
+	private final float mCodeBlockTypeScale;
 	private final int mHruleSize;
-
 	private final int mHruleTopBottomPadding;
 
 	// Keeps track of the ordered list number for each LIST element.
@@ -53,6 +53,7 @@ public class Bypass {
 		mListItemIndent = 20;
 		mBlockQuoteIndent = 10;
 		mCodeBlockIndent = 10;
+		mCodeBlockTypeScale = 0.9f;
 		mHruleSize = 2;
 		mHruleTopBottomPadding = 20;
 	}
@@ -74,6 +75,8 @@ public class Bypass {
 
 		mCodeBlockIndent = (int) TypedValue.applyDimension(mOptions.mCodeBlockIndentUnit,
 			mOptions.mCodeBlockIndentSize, dm);
+
+		mCodeBlockTypeScale = mOptions.mCodeBlockTypeScale;
 
 		mHruleSize = (int) TypedValue.applyDimension(mOptions.mHruleUnit,
 			mOptions.mHruleSize, dm);
@@ -250,9 +253,11 @@ public class Bypass {
 				break;
 			case BLOCK_CODE:
 				setSpan(builder, new LeadingMarginSpan.Standard(mCodeBlockIndent));
+				setSpan(builder, new RelativeSizeSpan(mCodeBlockTypeScale));
 				setSpan(builder, new TypefaceSpan("monospace"));
 				break;
 			case CODE_SPAN:
+				setSpan(builder, new RelativeSizeSpan(mCodeBlockTypeScale));
 				setSpan(builder, new TypefaceSpan("monospace"));
 				break;
 			case LINK:
@@ -313,6 +318,7 @@ public class Bypass {
 
 		private int mCodeBlockIndentUnit;
 		private float mCodeBlockIndentSize;
+		private float mCodeBlockTypeScale;
 
 		private int mHruleColor;
 		private int mHruleUnit;
@@ -338,6 +344,7 @@ public class Bypass {
 
 			mCodeBlockIndentUnit = TypedValue.COMPLEX_UNIT_DIP;
 			mCodeBlockIndentSize = 10;
+			mCodeBlockTypeScale = 0.9f;
 
 			mHruleColor = Color.GRAY;
 			mHruleUnit = TypedValue.COMPLEX_UNIT_DIP;
@@ -385,6 +392,11 @@ public class Bypass {
 			return this;
 		}
 
+		public Options setCodeBlockTypeScale(float factor) {
+			mCodeBlockTypeScale = factor;
+			return this;
+		}
+
 		public Options setHruleColor(int color) {
 			mHruleColor = color;
 			return this;
@@ -400,12 +412,10 @@ public class Bypass {
 	/**
 	 * Retrieves images for markdown images.
 	 */
-	public static interface ImageGetter {
-
+	public interface ImageGetter {
 		/**
 		 * This method is called when the parser encounters an image tag.
 		 */
-		public Drawable getDrawable(String source);
-
+		Drawable getDrawable(String source);
 	}
 }

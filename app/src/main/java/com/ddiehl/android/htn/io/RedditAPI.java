@@ -129,4 +129,9 @@ public interface RedditAPI {
   @DELETE("/api/v1/me/friends/{username}")
   Observable<Response<ResponseBody>> deleteFriend(
       @Path("username") String username);
+
+  @GET("/message/{show}")
+  Observable<ListingResponse> getInbox(
+      @Path("show") String show,
+      @Query("after") String after);
 }

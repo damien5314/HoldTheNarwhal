@@ -152,7 +152,7 @@ public class RedditServiceImpl implements RedditService {
     for (String child : children) b.append(child).append(",");
     String childrenString = b.substring(0, Math.max(b.length() - 1, 0));
     return requireAccessToken().flatMap(token ->
-        mAPI.getMoreChildren(link.getName(), childrenString, sort)
+        mAPI.getMoreChildren(link.getFullName(), childrenString, sort)
             .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .map(Response::body));
@@ -258,7 +258,7 @@ public class RedditServiceImpl implements RedditService {
       @NonNull Savable listing, @Nullable String category, boolean toSave) {
     if (toSave) { // Save
       return requireUserAccessToken().flatMap(token ->
-          mAPI.save(listing.getName(), category)
+          mAPI.save(listing.getFullName(), category)
               .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
               .observeOn(AndroidSchedulers.mainThread())
               .flatMap(response -> {
@@ -269,7 +269,7 @@ public class RedditServiceImpl implements RedditService {
               .map(Response::body));
     } else { // Unsave
       return requireUserAccessToken().flatMap(token ->
-          mAPI.unsave(listing.getName())
+          mAPI.unsave(listing.getFullName())
               .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
               .observeOn(AndroidSchedulers.mainThread())
               .flatMap(response -> {
@@ -285,7 +285,7 @@ public class RedditServiceImpl implements RedditService {
   public Observable<ResponseBody> hide(@NonNull Hideable listing, boolean toHide) {
     if (toHide) { // Hide
       return requireUserAccessToken().flatMap(token ->
-          mAPI.hide(listing.getName())
+          mAPI.hide(listing.getFullName())
               .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
               .observeOn(AndroidSchedulers.mainThread())
               .flatMap(response -> {
@@ -296,7 +296,7 @@ public class RedditServiceImpl implements RedditService {
               .map(Response::body));
     } else { // Unhide
       return requireUserAccessToken().flatMap(token ->
-          mAPI.unhide(listing.getName())
+          mAPI.unhide(listing.getFullName())
               .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
               .observeOn(AndroidSchedulers.mainThread())
               .flatMap(response -> {
@@ -321,6 +321,14 @@ public class RedditServiceImpl implements RedditService {
             .observeOn(AndroidSchedulers.mainThread())
             .map(response -> response.body().getComment())
     );
+  }
+
+  @Override
+  public Observable<ListingResponse> getInbox(@NonNull String show, @Nullable String after) {
+    return requireAccessToken().flatMap(token ->
+        mAPI.getInbox(show, after)
+            .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread()));
   }
 
   private Observable<AccessToken> requireAccessToken() {

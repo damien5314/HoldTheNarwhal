@@ -7,7 +7,7 @@ import com.ddiehl.reddit.listings.Listing;
 
 import java.util.List;
 
-public interface UserProfileView {
+public interface UserProfileView extends LinkView, CommentView {
   void showUserInfo(@NonNull UserIdentity user);
   void showFriendNote(@NonNull String note);
   void hideFriendNote();

@@ -7,7 +7,9 @@ import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
 import android.util.DisplayMetrics;
+import android.view.ViewGroup;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
 
@@ -95,5 +97,11 @@ public class AndroidUtils {
     Resources resources = Resources.getSystem();
     DisplayMetrics metrics = resources.getDisplayMetrics();
     return px / (metrics.densityDpi / 160f);
+  }
+
+  public static int getChildrenInTabLayout(TabLayout l) {
+    ViewGroup g = (ViewGroup) l.getChildAt(0);
+    if (g == null) return 0;
+    return g.getChildCount();
   }
 }

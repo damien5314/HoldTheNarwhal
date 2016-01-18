@@ -1,1 +1,1 @@
-include ':app', ':reddit', ':bypass', ':dlogger'
+include ':app', ':bypass', ':dlogger'

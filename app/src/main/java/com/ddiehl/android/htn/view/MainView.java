@@ -9,6 +9,9 @@ import com.ddiehl.android.htn.view.dialogs.ConfirmSignOutDialog;
 import com.ddiehl.android.htn.view.dialogs.SubredditNavigationDialog;
 import com.ddiehl.android.htn.view.fragments.WebViewFragment;
 import com.ddiehl.reddit.identity.UserIdentity;
+import com.ddiehl.reddit.listings.PrivateMessage;
+
+import java.util.List;
 
 public interface MainView extends AnalyticsDialog.Callbacks, ConfirmSignOutDialog.Callbacks,
     SubredditNavigationDialog.Callbacks, WebViewFragment.Callbacks {
@@ -20,6 +23,8 @@ public interface MainView extends AnalyticsDialog.Callbacks, ConfirmSignOutDialo
   void updateNavigationItems(boolean isLoggedIn);
   void closeNavigationDrawer();
   void showLoginView();
+  void showInbox();
+  void showInboxMessages(@NonNull List<PrivateMessage> messages);
   void showUserProfile(@NonNull String username);
   void showUserProfile(@NonNull String username, @NonNull String show);
   void showUserProfile(@NonNull String username, @NonNull String show, @NonNull String sort);
@@ -32,6 +37,7 @@ public interface MainView extends AnalyticsDialog.Callbacks, ConfirmSignOutDialo
   void openURL(@NonNull String url);
   // Methods formerly from BaseView
   void setTitle(@NonNull CharSequence title);
+  void setTitle(@StringRes int id);
   void showSpinner(@Nullable String msg);
   void showSpinner(@StringRes int resId);
   void dismissSpinner();

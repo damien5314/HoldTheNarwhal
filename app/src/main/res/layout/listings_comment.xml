@@ -20,7 +20,7 @@
 
     <LinearLayout
         android:id="@+id/comment_link_metadata"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/link_list_item_margin_vertical"
         android:paddingBottom="@dimen/link_list_item_margin_vertical"
@@ -32,12 +32,26 @@
 
       <TextView
           android:id="@+id/comment_link_title"
-          android:layout_width="fill_parent"
+          android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:textAlignment="viewStart"
           android:gravity="start"
+          android:fontFamily="sans-serif-light"
+          android:textSize="@dimen/comment_link_title_text_size"
+          android:textColor="@android:color/white"
           tools:text="The brown fox jumped over the white fence"
-          style="@style/CommentLinkTitleTextView"
+          tools:ignore="UnusedAttribute"/>
+
+      <TextView
+          android:id="@+id/comment_link_subtitle"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:textAlignment="viewStart"
+          android:gravity="start"
+          android:fontFamily="sans-serif-light"
+          android:textSize="@dimen/comment_link_subtitle_text_size"
+          android:textColor="@android:color/white"
+          tools:text="comment reply on /r/gamedev"
           tools:ignore="UnusedAttribute"/>
 
     </LinearLayout>

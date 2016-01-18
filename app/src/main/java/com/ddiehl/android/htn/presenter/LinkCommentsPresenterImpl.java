@@ -16,6 +16,7 @@ import com.ddiehl.android.htn.model.CommentBankList;
 import com.ddiehl.android.htn.view.LinkCommentsView;
 import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.reddit.Archivable;
+import com.ddiehl.reddit.CommentUtils;
 import com.ddiehl.reddit.Savable;
 import com.ddiehl.reddit.Votable;
 import com.ddiehl.reddit.identity.UserIdentity;
@@ -80,6 +81,7 @@ public class LinkCommentsPresenterImpl
     mLinkContext = null;
     mListingSelected = null;
     mCommentBank.clear();
+    // TODO Check memory is ok with this commented
     mLinkCommentsView.commentsUpdated();
   }
 
@@ -102,11 +104,12 @@ public class LinkCommentsPresenterImpl
         if (mLinkContext != null) mMainView.setTitle(mLinkContext.getTitle());
         ListingResponse commentsResponse = listingResponseList.get(1);
         List<Listing> comments = commentsResponse.getData().getChildren();
-        AbsComment.Utils.flattenCommentList(comments);
+        CommentUtils.flattenCommentList(comments);
         mCommentBank.clear();
         mCommentBank.addAll(comments);
         Integer minScore = mSettingsManager.getMinCommentScore();
         mCommentBank.collapseAllThreadsUnder(minScore);
+        // TODO Specify commentsAdded
         mLinkCommentsView.commentsUpdated();
       };
 
@@ -134,7 +137,7 @@ public class LinkCommentsPresenterImpl
       if (comments == null || comments.size() == 0) {
         mCommentBank.remove(parentStub);
       } else {
-        AbsComment.Utils.setDepthForCommentsList(comments, parentStub.getDepth());
+        CommentUtils.setDepthForCommentsList(comments, parentStub.getDepth());
         int stubIndex = mCommentBank.indexOf(parentStub);
         parentStub.removeChildren(comments);
         parentStub.setCount(parentStub.getChildren().size());
@@ -143,6 +146,7 @@ public class LinkCommentsPresenterImpl
       }
       Integer minScore = mSettingsManager.getMinCommentScore();
       mCommentBank.collapseAllThreadsUnder(minScore);
+      // TODO Specify commentRemoved and commentsAdded
       mLinkCommentsView.commentsUpdated();
     };
   }

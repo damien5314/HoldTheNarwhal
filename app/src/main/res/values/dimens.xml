@@ -21,6 +21,8 @@
   <dimen name="comment_score_text_size">@dimen/comment_secondary_data_text_size</dimen>
   <dimen name="comment_timestamp_text_size">@dimen/comment_secondary_data_text_size</dimen>
   <dimen name="comment_body_text_size">16sp</dimen>
+  <dimen name="comment_link_title_text_size">16sp</dimen>
+  <dimen name="comment_link_subtitle_text_size">12sp</dimen>
   <dimen name="comment_more_text_size">12sp</dimen>
   <dimen name="comment_expander_margin_horizontal">@dimen/comment_data_margin_horizontal</dimen>
   <dimen name="comment_data_margin_horizontal">8dp</dimen>
@@ -61,4 +63,5 @@
   <dimen name="user_trophy_name_text_size">16sp</dimen>
   <dimen name="link_metadata_margin">4dp</dimen>
   <dimen name="comment_link_image_border_width">1dp</dimen>
+  <dimen name="private_message_subject_max_height">48dp</dimen>
 </resources>

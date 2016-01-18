@@ -1,20 +1,18 @@
 package com.ddiehl.android.htn.view.viewholders;
 
-
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.style.RelativeSizeSpan;
 import android.view.ContextMenu;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.presenter.CommentPresenter;
-import com.ddiehl.android.htn.view.widgets.RedditDateTextView;
 import com.ddiehl.reddit.listings.Comment;
+import com.ddiehl.timesincetextview.TimeSinceTextView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -22,15 +20,16 @@ import butterknife.OnClick;
 
 public class ListingsCommentViewHolder extends RecyclerView.ViewHolder
     implements View.OnCreateContextMenuListener {
-  private Context mContext;
+  private Context mContext = HoldTheNarwhal.getContext();
   private CommentPresenter mCommentPresenter;
   private Comment mComment;
 
   @Bind(R.id.comment_link_title) TextView mCommentLinkTitleView;
-//  @Bind(R.id.comment_expander_icon) ImageView mExpanderIcon;
+  @Bind(R.id.comment_link_subtitle) TextView mCommentLinkSubtitleView;
   @Bind(R.id.comment_author) TextView mAuthorView;
+  @Bind(R.id.comment_score_layout) ViewGroup mScoreViewLayout;
   @Bind(R.id.comment_score) TextView mScoreView;
-  @Bind(R.id.comment_timestamp) RedditDateTextView mTimestampView;
+  @Bind(R.id.comment_timestamp) TimeSinceTextView mTimestampView;
   @Bind(R.id.comment_saved_icon) View mSavedView;
   @Bind(R.id.comment_body) TextView mBodyView;
   @Bind(R.id.comment_gilded_text_view) TextView mGildedText;
@@ -38,30 +37,30 @@ public class ListingsCommentViewHolder extends RecyclerView.ViewHolder
 
   public ListingsCommentViewHolder(View v, CommentPresenter presenter) {
     super(v);
-    mContext = v.getContext().getApplicationContext();
     mCommentPresenter = presenter;
     ButterKnife.bind(this, v);
     itemView.setOnCreateContextMenuListener(this);
   }
 
-  @OnClick(R.id.comment_metadata) @SuppressWarnings("unused")
+  @OnClick(R.id.comment_metadata)
   void onClickMetadata(View v) {
     v.showContextMenu();
   }
 
-  @OnClick(R.id.comment_body) @SuppressWarnings("unused")
+  @OnClick(R.id.comment_body)
   void onClickBody(View v) {
     v.showContextMenu();
   }
 
-  @OnClick(R.id.comment_link_title) @SuppressWarnings("unused")
+  @OnClick(R.id.comment_link_title)
   void onClickTitle() {
     mCommentPresenter.openCommentLink(mComment);
   }
 
-  public void bind(final Comment comment, boolean showControversiality) {
+  public void bind(Comment comment, boolean showControversiality) {
     mComment = comment;
-    setLinkTitle(comment);
+    showLinkTitle(comment);
+    showLinkSubtitle(comment);
     showAuthor(comment);
     showBody(comment);
     showScore(comment);
@@ -72,18 +71,37 @@ public class ListingsCommentViewHolder extends RecyclerView.ViewHolder
     showControversiality(comment, showControversiality);
   }
 
-  // Add author and subreddit to link title text
-  private void setLinkTitle(Comment comment) {
-    String linkTitle = comment.getLinkTitle();
+  private void showLinkTitle(Comment comment) {
+    mCommentLinkTitleView.setText(comment.getLinkTitle());
+  }
+
+  private void showLinkSubtitle(Comment comment) {
     String linkAuthor = comment.getLinkAuthor();
     String subreddit = comment.getSubreddit();
-    SpannableString str = new SpannableString(
-        String.format(mContext.getString(R.string.listing_comment_title_format),
-        linkTitle, linkAuthor, subreddit));
-    str.setSpan(
-        new RelativeSizeSpan(0.7f), linkTitle.length(), str.length(),
-        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-    mCommentLinkTitleView.setText(str);
+    String subject = getSubjectAbbreviationForComment(comment);
+    if (subject == null) {
+      String titleFormatter = mContext.getString(R.string.listing_comment_subtitle_format);
+      mCommentLinkSubtitleView.setText(
+          String.format(titleFormatter, subreddit, linkAuthor));
+    } else {
+      String titleFormatter = mContext.getString(R.string.listing_comment_inbox_subtitle_format);
+      mCommentLinkSubtitleView.setText(
+          String.format(titleFormatter, subreddit, subject));
+    }
+  }
+
+  private String getSubjectAbbreviationForComment(Comment comment) {
+    String subject = comment.getSubject();
+    if (subject == null) return null;
+    int resId;
+    if ("comment reply".equals(subject)) {
+      resId = R.string.listing_comment_subject_commentreply;
+    } else if ("post reply".equals(subject)) {
+      resId = R.string.listing_comment_subject_postreply;
+    } else { // if ("username mention".equals(subject)) {
+      resId = R.string.listing_comment_subject_usernamemention;
+    }
+    return mContext.getString(resId);
   }
 
   private void showAuthor(Comment comment) {
@@ -125,8 +143,13 @@ public class ListingsCommentViewHolder extends RecyclerView.ViewHolder
   }
 
   private void showScore(Comment comment) {
-    mScoreView.setText(
-        String.format(mContext.getString(R.string.comment_score), comment.getScore()));
+    if (comment.getScore() == null) {
+      mScoreViewLayout.setVisibility(View.GONE);
+    } else {
+      mScoreViewLayout.setVisibility(View.VISIBLE);
+      mScoreView.setText(
+          String.format(mContext.getString(R.string.comment_score), comment.getScore()));
+    }
   }
 
   private void showTimestamp(Comment comment) {
@@ -136,12 +159,17 @@ public class ListingsCommentViewHolder extends RecyclerView.ViewHolder
         case "":
         case "0":
         case "false":
-          mTimestampView.setEdited(false);
+          setEdited(false);
           break;
         default:
-          mTimestampView.setEdited(true);
+          setEdited(true);
       }
     }
+  }
+
+  private void setEdited(boolean edited) {
+    CharSequence text = mTimestampView.getText();
+    mTimestampView.setText(edited ? text + "*" : text.toString().replace("*", ""));
   }
 
   // Set background tint based on isLiked

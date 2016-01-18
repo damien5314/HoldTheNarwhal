@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+  <item
+      android:id="@+id/action_message_show_permalink"
+      android:title="@string/action_show_permalink"
+      android:icon="@null"
+      app:showAsAction="never"/>
+
+  <item
+      android:id="@+id/action_message_report"
+      android:title="@string/action_report"
+      android:icon="@null"
+      app:showAsAction="never"/>
+
+  <item
+      android:id="@+id/action_block_user"
+      android:title="@string/action_block_user"
+      android:icon="@null"
+      app:showAsAction="never"/>
+
+  <item
+      android:id="@+id/action_mark_message_unread"
+      android:title="@string/action_mark_message_unread"
+      android:icon="@null"
+      app:showAsAction="never"/>
+
+  <item
+      android:id="@+id/action_message_reply"
+      android:title="@string/action_message_reply"
+      android:icon="@null"
+      app:showAsAction="never"/>
+
+</menu>

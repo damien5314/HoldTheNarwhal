@@ -1,6 +1,7 @@
 package com.ddiehl.android.htn.presenter;
 
 import com.ddiehl.android.htn.R;
+import com.ddiehl.android.htn.view.LinkView;
 import com.ddiehl.android.htn.view.ListingsView;
 import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.reddit.identity.UserIdentity;
@@ -8,13 +9,13 @@ import com.ddiehl.reddit.listings.Link;
 import com.ddiehl.reddit.listings.ListingResponse;
 import com.ddiehl.reddit.listings.Subreddit;
 
-import rx.functions.Action0;
 import rx.functions.Action1;
 
 public class SubredditPresenter extends AbsListingsPresenter {
   public SubredditPresenter(
-      MainView main, ListingsView view, String subreddit, String sort, String timespan) {
-    super(main, view, null, null, subreddit, sort, timespan);
+      MainView main, ListingsView listingsView, LinkView view,
+      String subreddit, String sort, String timespan) {
+    super(main, listingsView, view, null, null, null, null, null, subreddit, sort, timespan);
     mMainView.loadImageIntoDrawerHeader(null);
   }
 
@@ -32,26 +33,28 @@ public class SubredditPresenter extends AbsListingsPresenter {
 
   @Override
   public void requestData() {
-    if (mSubreddit == null || mSubreddit.equals("all") || mSubredditInfo != null) {
-      mAnalytics.logLoadSubreddit(mSubreddit, mSort, mTimespan);
-      mRedditService.loadLinks(mSubreddit, mSort, mTimespan, mNextPageListingId)
-          .doOnTerminate(onGetDataCompleted())
-          .subscribe(onListingsLoaded(),
-              e -> mMainView.showError(e, R.string.error_get_links));
-    } else {
-      mListingsRequested = false;
+    if (mSubreddit != null && !mSubreddit.equals("all") && mSubredditInfo == null) {
+      mMainView.showSpinner(null);
+//      mListingsRequested = false;
       mRedditService.getSubredditInfo(mSubreddit)
-          .doOnTerminate(onGetDataCompleted())
+          .doOnTerminate(() -> {
+            if (!mListingsRequested) mMainView.dismissSpinner();
+            mListingsRequested = false;
+          })
           .subscribe(onSubredditInfoLoaded(),
               e -> mMainView.showError(e, R.string.error_get_subreddit_info));
+    } else {
+      mMainView.showSpinner(null);
+      mListingsRequested = true;
+      mAnalytics.logLoadSubreddit(mSubreddit, mSort, mTimespan);
+      mRedditService.loadLinks(mSubreddit, mSort, mTimespan, mNextPageListingId)
+          .doOnTerminate(() -> {
+            mMainView.dismissSpinner();
+            mListingsRequested = false;
+          })
+          .subscribe(onListingsLoaded(),
+              e -> mMainView.showError(e, R.string.error_get_links));
     }
-  }
-
-  private Action0 onGetDataCompleted() {
-    return () -> {
-      mMainView.dismissSpinner();
-      mListingsRequested = false;
-    };
   }
 
   private Action1<Subreddit> onSubredditInfoLoaded() {

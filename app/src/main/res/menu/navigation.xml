@@ -9,6 +9,11 @@
         android:icon="@null" />
 
     <item
+        android:id="@+id/drawer_inbox"
+        android:title="@string/drawer_inbox"
+        android:icon="@null" />
+
+    <item
         android:id="@+id/drawer_user_profile"
         android:title="@string/drawer_user_profile"
         android:icon="@null" />

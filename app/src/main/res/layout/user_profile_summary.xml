@@ -90,21 +90,14 @@
 
     </LinearLayout>
 
-    <!-- Friend/Unfriend button -->
-    <FrameLayout
-        android:id="@+id/user_friend_button_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="@dimen/baseline_spacing"
-        android:paddingBottom="@dimen/baseline_spacing">
-
-      <Button
-          android:id="@+id/user_friend_button"
-          android:layout_width="@dimen/user_friend_button_width"
-          android:layout_height="@dimen/user_friend_button_height"
-          android:layout_gravity="center"/>
-
-    </FrameLayout>
+    <Button
+        android:id="@+id/user_friend_button"
+        android:layout_width="@dimen/user_friend_button_width"
+        android:layout_height="@dimen/user_friend_button_height"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/baseline_spacing"
+        android:layout_marginBottom="@dimen/baseline_spacing"
+        android:gravity="center"/>
 
     <LinearLayout
         android:id="@+id/user_note_layout"

@@ -23,6 +23,7 @@ public interface Analytics {
   void logOptionSettings();
   void logDrawerNavigateToSubreddit();
   void logDrawerLogIn();
+  void logDrawerShowInbox();
   void logDrawerUserProfile();
   void logDrawerUserSubreddits();
   void logDrawerFrontPage();
