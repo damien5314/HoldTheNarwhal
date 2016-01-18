@@ -1,7 +1,7 @@
 package com.ddiehl.android.htn.io;
 
 import com.ddiehl.android.htn.BuildConfig;
-import com.ddiehl.android.htn.utils.BaseUtils;
+import com.ddiehl.android.htn.utils.Utils;
 import com.ddiehl.reddit.identity.AccessToken;
 import com.ddiehl.reddit.identity.ApplicationAccessToken;
 import com.ddiehl.reddit.identity.UserAccessToken;
@@ -15,7 +15,7 @@ public interface RedditAuthService {
   String CLIENT_ID = BuildConfig.REDDIT_APP_ID;
   String RESPONSE_TYPE = "code";
   String DURATION = "permanent";
-  String STATE = BaseUtils.getRandomString();
+  String STATE = Utils.getRandomString();
   String REDIRECT_URI = "http://127.0.0.1/";
   String SCOPE = "identity,mysubreddits,privatemessages,read,report,save," +
       "submit,vote,history,account,subscribe";

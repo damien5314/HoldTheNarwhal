@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.ddiehl.android.htn.R;
-import com.ddiehl.android.htn.utils.BaseUtils;
+import com.ddiehl.android.htn.utils.Utils;
 
 import java.io.InputStream;
 
@@ -31,7 +31,7 @@ public class MarkdownTextFragment extends Fragment {
   }
 
   public static Fragment newInstance(@NonNull InputStream in_s) {
-    String text = BaseUtils.getStringFromInputStream(in_s);
+    String text = Utils.getStringFromInputStream(in_s);
     return newInstance(text);
   }
 

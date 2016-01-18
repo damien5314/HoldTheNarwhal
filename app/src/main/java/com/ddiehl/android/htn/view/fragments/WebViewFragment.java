@@ -26,8 +26,8 @@ import com.ddiehl.android.htn.BuildConfig;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.io.RedditAuthService;
+import com.ddiehl.android.htn.utils.AndroidUtils;
 import com.ddiehl.android.htn.utils.AuthUtils;
-import com.ddiehl.android.htn.utils.BaseUtils;
 import com.ddiehl.android.htn.view.MainView;
 
 import butterknife.Bind;
@@ -109,7 +109,7 @@ public class WebViewFragment extends Fragment {
 
         if (url.startsWith("mailto:")) {
           MailTo mt = MailTo.parse(url);
-          Intent i = BaseUtils.getNewEmailIntent(
+          Intent i = AndroidUtils.getNewEmailIntent(
               mt.getTo(), mt.getSubject(), mt.getBody(), mt.getCc());
           getActivity().startActivity(i);
           return true;

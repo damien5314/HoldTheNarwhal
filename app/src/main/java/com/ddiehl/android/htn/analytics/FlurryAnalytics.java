@@ -9,7 +9,7 @@ import com.ddiehl.android.dlogger.Logger;
 import com.ddiehl.android.htn.BuildConfig;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.SettingsManager;
-import com.ddiehl.android.htn.utils.BaseUtils;
+import com.ddiehl.android.htn.utils.Utils;
 import com.ddiehl.reddit.identity.UserIdentity;
 import com.ddiehl.reddit.listings.Link;
 import com.flurry.android.FlurryAgent;
@@ -65,7 +65,7 @@ public class FlurryAnalytics implements Analytics {
     Map<String, String> params = new HashMap<>();
     UserIdentity identity = HoldTheNarwhal.getIdentityManager().getUserIdentity();
     String userId = identity == null ?
-        "unauthorized" : BaseUtils.getMd5HexString(identity.getName());
+        "unauthorized" : Utils.getMd5HexString(identity.getName());
     params.put("user", userId);
     FlurryAgent.setUserId(userId);
     FlurryAgent.logEvent("session started", params);
@@ -81,7 +81,7 @@ public class FlurryAnalytics implements Analytics {
   public void setUserIdentity(String name) {
 //    if (!mSettingsManager.areAnalyticsEnabled(mContext))
 //      return;
-    String encoded = name == null ? null : BaseUtils.getMd5HexString(name); // Always encode PII
+    String encoded = name == null ? null : Utils.getMd5HexString(name); // Always encode PII
     FlurryAgent.setUserId(encoded);
   }
 
@@ -209,7 +209,7 @@ public class FlurryAnalytics implements Analytics {
   public void logSignIn(@NonNull UserIdentity identity) {
     if (!mEnabled) return;
     Map<String, String> params = new HashMap<>();
-    params.put("user", BaseUtils.getMd5HexString(identity.getName()));
+    params.put("user", Utils.getMd5HexString(identity.getName()));
     Date date = new Date(Double.valueOf(identity.getCreatedUTC() * 1000).longValue());
     params.put("created", date.toString());
     params.put("gold", String.valueOf(identity.isGold()));

@@ -17,7 +17,7 @@ import android.widget.TextView;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.presenter.UserProfilePresenter;
-import com.ddiehl.android.htn.utils.BaseUtils;
+import com.ddiehl.android.htn.utils.AndroidUtils;
 import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.android.htn.view.UserProfileView;
 import com.ddiehl.reddit.identity.UserIdentity;
@@ -165,7 +165,7 @@ public class UserProfileFragment extends AbsListingsFragment implements UserProf
     if (trophies == null || trophies.size() == 0) return; // Nothing to show
     // TODO Clean up trophy width/layout
     final int minDpWidth = 160;
-    final int numColumns = ((int) BaseUtils.getScreenWidth()) / minDpWidth;
+    final int numColumns = ((int) AndroidUtils.getScreenWidth()) / minDpWidth;
     LinearLayout row = null;
     LayoutInflater inflater = getActivity().getLayoutInflater();
     mTrophies.removeAllViews(); // Reset layout

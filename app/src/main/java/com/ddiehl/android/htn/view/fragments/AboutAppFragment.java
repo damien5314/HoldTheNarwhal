@@ -10,7 +10,8 @@ import android.view.ViewGroup;
 
 import com.ddiehl.android.htn.BuildConfig;
 import com.ddiehl.android.htn.R;
-import com.ddiehl.android.htn.utils.BaseUtils;
+import com.ddiehl.android.htn.utils.AndroidUtils;
+import com.ddiehl.android.htn.utils.Utils;
 import com.ddiehl.android.htn.view.widgets.MarkdownTextView;
 
 import java.io.InputStream;
@@ -28,7 +29,7 @@ public class AboutAppFragment extends MarkdownTextFragment {
   }
 
   public static AboutAppFragment newInstance(@NonNull InputStream in_s) {
-    String text = BaseUtils.getStringFromInputStream(in_s);
+    String text = Utils.getStringFromInputStream(in_s);
     return newInstance(text);
   }
 
@@ -38,7 +39,7 @@ public class AboutAppFragment extends MarkdownTextFragment {
     if (v == null) return null;
     CharSequence ins = String.format("Version %1$s\n\nReleased %2$s\n\n",
         BuildConfig.VERSION_NAME,
-        BaseUtils.getBuildTimeFormatted(v.getContext()));
+        AndroidUtils.getBuildTimeFormatted(v.getContext()));
     MarkdownTextView tv = ButterKnife.findById(v, R.id.markdown_text_view);
     tv.setText(TextUtils.concat(ins, tv.getText()));
     return v;

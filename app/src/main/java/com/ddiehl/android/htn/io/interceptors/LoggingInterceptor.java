@@ -1,6 +1,6 @@
 package com.ddiehl.android.htn.io.interceptors;
 
-import com.ddiehl.android.htn.utils.BaseUtils;
+import com.ddiehl.android.htn.utils.AndroidUtils;
 
 import java.io.IOException;
 
@@ -13,7 +13,7 @@ public class LoggingInterceptor implements Interceptor {
   public Response intercept(Chain chain) throws IOException {
     Request request = chain.request();
     Response response = chain.proceed(request);
-    if (response != null) BaseUtils.printResponseStatus(response);
+    if (response != null) AndroidUtils.printResponseStatus(response);
     return response;
   }
 }
