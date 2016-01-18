@@ -3,6 +3,7 @@ package com.ddiehl.android.htn.view.fragments;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,13 +35,14 @@ public class AboutAppFragment extends MarkdownTextFragment {
 
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    View v = super.onCreateView(inflater, container, savedInstanceState);
-    if (v == null) return null;
+    View view = super.onCreateView(inflater, container, savedInstanceState);
+    if (view == null) return null;
+    view.setBackgroundColor(ContextCompat.getColor(getActivity(), android.R.color.white));
     CharSequence ins = String.format("Version %1$s\n\nReleased %2$s\n\n",
         BuildConfig.VERSION_NAME,
-        AndroidUtils.getBuildTimeFormatted(v.getContext()));
-    MarkdownTextView tv = ButterKnife.findById(v, R.id.markdown_text_view);
+        AndroidUtils.getBuildTimeFormatted(view.getContext()));
+    MarkdownTextView tv = ButterKnife.findById(view, R.id.markdown_text_view);
     tv.setText(TextUtils.concat(ins, tv.getText()));
-    return v;
+    return view;
   }
 }
