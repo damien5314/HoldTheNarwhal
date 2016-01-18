@@ -16,7 +16,6 @@ public class SettingsManagerImpl implements SettingsManager {
   public static final String PREFS_USER = "prefs_user";
 
   // app settings
-  public static final String PREF_ENABLE_ADS = "pref_enable_ads";
   public static final String PREFS_DEVICE_ID = "prefs_device_id";
   public static final String PREF_DEVICE_ID = "pref_device_id";
   public static final String PREF_ALLOW_ANALYTICS = "pref_allow_analytics";
@@ -300,11 +299,6 @@ public class SettingsManagerImpl implements SettingsManager {
     mContext.getSharedPreferences(PREFS_USER, Context.MODE_PRIVATE).edit()
         .putBoolean(PREF_ALLOW_ANALYTICS_ASKED, b)
         .apply();
-  }
-
-  @Override
-  public boolean getAdsEnabled() {
-    return mSharedPreferences.getBoolean(PREF_ENABLE_ADS, false);
   }
 
   @Override

@@ -10,6 +10,7 @@ import android.view.ContextMenu;
 import android.view.View;
 import android.widget.TextView;
 
+import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.presenter.LinkCommentsPresenter;
 import com.ddiehl.android.htn.view.widgets.RedditDateTextView;
@@ -22,11 +23,10 @@ import butterknife.OnClick;
 
 public class ThreadCommentViewHolder extends RecyclerView.ViewHolder
     implements View.OnCreateContextMenuListener {
-  private Context mContext;
+  private Context mContext = HoldTheNarwhal.getContext();
   private LinkCommentsPresenter mLinkCommentsPresenter;
   private Comment mComment;
 
-//  @Bind(R.id.comment_expander_icon) ImageView mExpanderIcon;
   @Bind(R.id.comment_author) TextView mAuthorView;
   @Bind(R.id.comment_score) TextView mScoreView;
   @Bind(R.id.comment_timestamp) RedditDateTextView mTimestampView;
@@ -37,7 +37,6 @@ public class ThreadCommentViewHolder extends RecyclerView.ViewHolder
 
   public ThreadCommentViewHolder(View v, LinkCommentsPresenter presenter) {
     super(v);
-    mContext = v.getContext().getApplicationContext();
     mLinkCommentsPresenter = presenter;
     ButterKnife.bind(this, v);
     itemView.setOnCreateContextMenuListener(this);

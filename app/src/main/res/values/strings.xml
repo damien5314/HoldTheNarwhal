@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
   <!-- Application -->
   <string name="app_name">Hold the Narwhal</string>
   <string name="application_loading">Loading HTN</string>
@@ -242,5 +241,4 @@
   <string name="error_no_network">no network connection</string>
   <string name="error_user_settings_update">error updating settings</string>
   <string name="nsfw">nsfw</string>
-
 </resources>

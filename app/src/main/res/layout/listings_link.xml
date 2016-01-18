@@ -32,7 +32,8 @@
           android:textAlignment="viewStart"
           android:layout_gravity="start"
           style="@style/LinkTitleTextView"
-          tools:text="The brown fox jumped over the white fence"/>
+          tools:text="The brown fox jumped over the white fence"
+          tools:ignore="UnusedAttribute"/>
 
       <LinearLayout
           android:layout_width="fill_parent"

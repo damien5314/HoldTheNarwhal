@@ -19,7 +19,6 @@ import java.io.InputStream;
 import butterknife.ButterKnife;
 
 public class AboutAppFragment extends MarkdownTextFragment {
-
   public static AboutAppFragment newInstance(@NonNull String text) {
     AboutAppFragment f = new AboutAppFragment();
     Bundle args = new Bundle();

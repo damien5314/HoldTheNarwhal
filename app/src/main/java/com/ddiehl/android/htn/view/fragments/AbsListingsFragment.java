@@ -337,12 +337,6 @@ public abstract class AbsListingsFragment extends Fragment
   }
 
   @Override
-  public void showCommentThread(
-      @NonNull String subreddit, @NonNull String linkId, @NonNull String commentId) {
-    showCommentsForLink(subreddit, linkId, commentId);
-  }
-
-  @Override
   public void openReplyView(@NonNull Listing listing) {
     mMainView.showToast(R.string.implementation_pending);
   }

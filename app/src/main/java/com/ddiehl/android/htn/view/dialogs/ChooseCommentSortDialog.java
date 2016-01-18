@@ -11,7 +11,7 @@ import android.support.v7.app.AlertDialog;
 import com.ddiehl.android.htn.R;
 
 public class ChooseCommentSortDialog extends DialogFragment {
-  private static final String ARG_SETTING = "setting";
+  private static final String ARG_SETTING = "arg_setting";
   public static final String EXTRA_SORT = "com.ddiehl.android.htn.extra_sort";
 
   public ChooseCommentSortDialog() { }

@@ -12,13 +12,12 @@ import com.ddiehl.android.htn.R;
 import butterknife.ButterKnife;
 
 public class SubredditNavigationDialog extends DialogFragment {
+  private Callbacks mListener;
 
   public interface Callbacks {
     void onSubredditNavigationConfirmed(String subreddit);
     void onSubredditNavigationCancelled();
   }
-
-  private Callbacks mListener;
 
   @Override
   public Dialog onCreateDialog(Bundle savedInstanceState) {

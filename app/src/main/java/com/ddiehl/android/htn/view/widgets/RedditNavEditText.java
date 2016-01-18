@@ -16,7 +16,6 @@ import butterknife.OnFocusChange;
 import butterknife.OnTextChanged;
 
 public class RedditNavEditText extends EditText {
-
   public RedditNavEditText(Context context) {
     this(context, null);
   }
@@ -73,7 +72,6 @@ public class RedditNavEditText extends EditText {
   @OnEditorAction
   boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
     if (actionId == EditorInfo.IME_ACTION_DONE) {
-//      mSubmitView.performClick();
       return true;
     }
     return false;

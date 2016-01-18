@@ -1,21 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--<shape xmlns:android="http://schemas.android.com/apk/res/android">
-
-  <stroke
-    android:width="1dp"
-    android:color="@color/primary" />
-
-  &lt;!&ndash;android:left="1dp"&ndash;&gt;
-  &lt;!&ndash;android:right="1dp"&ndash;&gt;
-  <padding
-    android:top="1dp"
-    android:bottom="1dp"/>
-
-  <solid
-    android:color="@color/transparent" />
-
-</shape>-->
-
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
 
   <item>

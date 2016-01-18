@@ -73,7 +73,6 @@ public class ThreadStubViewHolder extends RecyclerView.ViewHolder {
   void onClick() {
     if (mCommentStub.getCount() == 0) {
       String commentId = mCommentStub.getParentId();
-      commentId = commentId.substring(3, commentId.length()); // Trim type prefix
       mCommentPresenter.showCommentThread(mSubreddit, mLinkId, commentId);
     } else {
       mCommentPresenter.getMoreComments(mCommentStub);

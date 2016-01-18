@@ -49,13 +49,13 @@ public class SettingsFragment extends PreferenceFragment
     super.onResume();
     mSettingsPresenter.onResume();
     getActivity().getSharedPreferences(SettingsManagerImpl.PREFS_USER, Context.MODE_PRIVATE)
-            .registerOnSharedPreferenceChangeListener(this);
+        .registerOnSharedPreferenceChangeListener(this);
   }
 
   @Override
   public void onPause() {
     getActivity().getSharedPreferences(SettingsManagerImpl.PREFS_USER, Context.MODE_PRIVATE)
-            .unregisterOnSharedPreferenceChangeListener(this);
+        .unregisterOnSharedPreferenceChangeListener(this);
     mSettingsPresenter.onPause();
     super.onPause();
   }

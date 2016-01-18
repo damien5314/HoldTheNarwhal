@@ -4,18 +4,10 @@
   <PreferenceCategory
     android:title="gold options">
 
-<!--  <CheckBoxPreference
-      android:key="hide_ads"
-      android:title="@string/pref_hide_ads"/>-->
-
     <CheckBoxPreference
       android:key="store_visits"
       android:title="@string/pref_store_visits"
       android:defaultValue="false"/>
-
-<!--  <CheckBoxPreference
-      android:key="highlight_new_comments"
-      android:title="@string/pref_highlight_new_comments"/>-->
 
     <CheckBoxPreference
       android:key="show_gold_expiration"

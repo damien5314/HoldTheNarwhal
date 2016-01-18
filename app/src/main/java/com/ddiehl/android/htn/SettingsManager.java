@@ -14,7 +14,6 @@ public interface SettingsManager extends SharedPreferences.OnSharedPreferenceCha
   boolean customTabsEnabled();
   boolean askedForAnalytics();
   void setAskedForAnalytics(boolean b);
-  boolean getAdsEnabled();
   String getCommentSort();
   void saveCommentSort(String pref);
   Integer getMinCommentScore();

@@ -39,9 +39,9 @@ import butterknife.ButterKnife;
 
 public class LinkCommentsFragment extends Fragment
     implements LinkCommentsView, SwipeRefreshLayout.OnRefreshListener {
-  private static final String ARG_SUBREDDIT = "subreddit";
-  private static final String ARG_ARTICLE = "article";
-  private static final String ARG_COMMENT_ID = "comment_id";
+  private static final String ARG_SUBREDDIT = "arg_subreddit";
+  private static final String ARG_ARTICLE = "arg_article";
+  private static final String ARG_COMMENT_ID = "arg_comment_id";
 
   @IntDef({REQUEST_CHOOSE_SORT, REQUEST_ADD_COMMENT})
   public @interface RequestCode {
@@ -198,12 +198,6 @@ public class LinkCommentsFragment extends Fragment
     // Set username for listing in the user profile menu item
     String username = String.format(getString(R.string.action_view_user_profile), comment.getAuthor());
     menu.findItem(R.id.action_comment_view_user_profile).setTitle(username);
-  }
-
-  @Override
-  public void showCommentThread(
-      @NonNull String subreddit, @NonNull String linkId, @NonNull String commentId) {
-    mMainView.showCommentsForLink(subreddit, linkId, commentId);
   }
 
   @Override

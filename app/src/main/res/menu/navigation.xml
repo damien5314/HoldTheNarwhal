@@ -4,39 +4,39 @@
   <group android:checkableBehavior="single">
 
     <item
-      android:id="@+id/drawer_log_in"
-      android:title="@string/drawer_log_in"
-      android:icon="@null" />
+        android:id="@+id/drawer_log_in"
+        android:title="@string/drawer_log_in"
+        android:icon="@null" />
 
     <item
-      android:id="@+id/drawer_user_profile"
-      android:title="@string/drawer_user_profile"
-      android:icon="@null" />
+        android:id="@+id/drawer_user_profile"
+        android:title="@string/drawer_user_profile"
+        android:icon="@null" />
 
     <item
-      android:id="@+id/drawer_subreddits"
-      android:title="@string/drawer_subreddits"
-      android:icon="@null" />
+        android:id="@+id/drawer_subreddits"
+        android:title="@string/drawer_subreddits"
+        android:icon="@null" />
 
     <item
-      android:id="@+id/drawer_navigate_to_subreddit"
-      android:title="@string/drawer_navigate_to_subreddit"
-      android:icon="@null" />
+        android:id="@+id/drawer_navigate_to_subreddit"
+        android:title="@string/drawer_navigate_to_subreddit"
+        android:icon="@null" />
 
     <item
-      android:id="@+id/drawer_front_page"
-      android:title="@string/drawer_front_page"
-      android:icon="@null" />
+        android:id="@+id/drawer_front_page"
+        android:title="@string/drawer_front_page"
+        android:icon="@null" />
 
     <item
-      android:id="@+id/drawer_r_all"
-      android:title="@string/drawer_r_all"
-      android:icon="@null" />
+        android:id="@+id/drawer_r_all"
+        android:title="@string/drawer_r_all"
+        android:icon="@null" />
 
     <item
-      android:id="@+id/drawer_random_subreddit"
-      android:title="@string/drawer_random_subreddit"
-      android:icon="@null" />
+        android:id="@+id/drawer_random_subreddit"
+        android:title="@string/drawer_random_subreddit"
+        android:icon="@null" />
 
   </group>
 

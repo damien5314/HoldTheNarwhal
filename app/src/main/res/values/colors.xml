@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
   <!-- Icon height in navigation drawer is 20dp w/ 6dp padding -->
   <!-- http://www.materialpalette.com/blue-grey/red -->
   <color name="primary_light">#CFD8DC</color>
@@ -29,5 +28,4 @@
   <color name="comment_controversiality_indicator">#FF5252</color>
   <color name="nsfw_tag_color">#d10023</color>
   <color name="link_color">#0000ee</color>
-
 </resources>

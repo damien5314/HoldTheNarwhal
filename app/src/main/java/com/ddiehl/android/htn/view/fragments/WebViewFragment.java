@@ -34,7 +34,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class WebViewFragment extends Fragment {
-  private static final String ARG_URL = "url";
+  private static final String ARG_URL = "arg_url";
 
   private Logger mLogger = HoldTheNarwhal.getLogger();
   private MainView mMainView;
@@ -77,8 +77,7 @@ public class WebViewFragment extends Fragment {
 
   @Override @SuppressWarnings("SetJavaScriptEnabled")
   public View onCreateView(
-      LayoutInflater inflater, @Nullable ViewGroup container,
-      @Nullable Bundle savedInstanceState) {
+      LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
     View v = inflater.inflate(R.layout.web_view_fragment, container, false);
 
     final ProgressBar progressBar = ButterKnife.findById(v, R.id.progress_bar);

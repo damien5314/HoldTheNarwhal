@@ -22,7 +22,6 @@ import butterknife.OnClick;
 
 public class ListingsCommentViewHolder extends RecyclerView.ViewHolder
     implements View.OnCreateContextMenuListener {
-
   private Context mContext;
   private CommentPresenter mCommentPresenter;
   private Comment mComment;
@@ -67,7 +66,6 @@ public class ListingsCommentViewHolder extends RecyclerView.ViewHolder
     showBody(comment);
     showScore(comment);
     showTimestamp(comment);
-    showExpanderIcon();
     showLiked(comment);
     showSaved(comment);
     showGilded(comment);
@@ -79,10 +77,12 @@ public class ListingsCommentViewHolder extends RecyclerView.ViewHolder
     String linkTitle = comment.getLinkTitle();
     String linkAuthor = comment.getLinkAuthor();
     String subreddit = comment.getSubreddit();
-    SpannableString str = new SpannableString(String.format(mContext.getString(R.string.listing_comment_title_format),
+    SpannableString str = new SpannableString(
+        String.format(mContext.getString(R.string.listing_comment_title_format),
         linkTitle, linkAuthor, subreddit));
-    str.setSpan(new RelativeSizeSpan(0.7f), linkTitle.length(), str.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-//    str.setSpan(new StyleSpan(Typeface.BOLD), linkAuthor.length(), author.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+    str.setSpan(
+        new RelativeSizeSpan(0.7f), linkTitle.length(), str.length(),
+        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
     mCommentLinkTitleView.setText(str);
   }
 
@@ -97,32 +97,36 @@ public class ListingsCommentViewHolder extends RecyclerView.ViewHolder
       switch (authorType) {
         case "op":
           mAuthorView.setBackgroundResource(R.drawable.author_op_bg);
-          mAuthorView.setTextColor(mContext.getResources().getColor(R.color.author_op_text));
+          mAuthorView.setTextColor(
+              ContextCompat.getColor(mContext, R.color.author_op_text));
           break;
         case "moderator":
           mAuthorView.setBackgroundResource(R.drawable.author_moderator_bg);
-          mAuthorView.setTextColor(mContext.getResources().getColor(R.color.author_moderator_text));
+          mAuthorView.setTextColor(
+              ContextCompat.getColor(mContext, R.color.author_moderator_text));
           break;
         case "admin":
           mAuthorView.setBackgroundResource(R.drawable.author_admin_bg);
-          mAuthorView.setTextColor(mContext.getResources().getColor(R.color.author_admin_text));
+          mAuthorView.setTextColor(
+              ContextCompat.getColor(mContext, R.color.author_admin_text));
           break;
         default:
       }
     } else {
       mAuthorView.setBackgroundResource(0);
-      mAuthorView.setTextColor(mContext.getResources().getColor(R.color.secondary_text));
+      mAuthorView.setTextColor(
+          ContextCompat.getColor(mContext, R.color.secondary_text));
     }
     mAuthorView.setText(comment.getAuthor());
   }
 
   private void showBody(Comment comment) {
-//    mBodyView.setVisibility(View.VISIBLE);
     mBodyView.setText(comment.getBody().trim());
   }
 
   private void showScore(Comment comment) {
-    mScoreView.setText(String.format(mContext.getString(R.string.comment_score), comment.getScore()));
+    mScoreView.setText(
+        String.format(mContext.getString(R.string.comment_score), comment.getScore()));
   }
 
   private void showTimestamp(Comment comment) {
@@ -138,10 +142,6 @@ public class ListingsCommentViewHolder extends RecyclerView.ViewHolder
           mTimestampView.setEdited(true);
       }
     }
-  }
-
-  private void showExpanderIcon() {
-//    mExpanderIcon.setImageResource(0);
   }
 
   // Set background tint based on isLiked

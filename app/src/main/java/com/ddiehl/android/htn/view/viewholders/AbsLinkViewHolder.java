@@ -4,6 +4,7 @@ package com.ddiehl.android.htn.view.viewholders;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu;
 import android.view.View;
@@ -114,12 +115,12 @@ public abstract class AbsLinkViewHolder extends RecyclerView.ViewHolder
         case "moderator":
           mLinkAuthor.setBackgroundResource(R.drawable.author_moderator_bg);
           mLinkAuthor.setTextColor(
-              mContext.getResources().getColor(R.color.author_moderator_text));
+              ContextCompat.getColor(mContext, R.color.author_moderator_text));
           break;
         case "admin":
           mLinkAuthor.setBackgroundResource(R.drawable.author_admin_bg);
           mLinkAuthor.setTextColor(
-              mContext.getResources().getColor(R.color.author_admin_text));
+              ContextCompat.getColor(mContext, R.color.author_admin_text));
           break;
         default:
       }

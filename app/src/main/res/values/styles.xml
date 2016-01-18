@@ -1,5 +1,4 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-
   <!-- Base application theme. -->
   <style name="AppTheme" parent="AppTheme.Base"/>
 
@@ -62,5 +61,4 @@
     <item name="android:topBright">@color/transparent</item>
     <item name="android:topDark">@color/transparent</item>
   </style>
-
 </resources>

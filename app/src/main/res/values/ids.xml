@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
   <!-- Navigation drawer -->
   <item type="id" name="drawer_log_in" />
   <item type="id" name="drawer_user_profile" />
@@ -8,5 +7,4 @@
   <item type="id" name="drawer_r_all" />
   <item type="id" name="drawer_subreddits" />
   <item type="id" name="drawer_random_subreddit" />
-
 </resources>

@@ -15,7 +15,6 @@ import com.ddiehl.android.htn.utils.Utils;
 import java.io.InputStream;
 
 public class MarkdownTextFragment extends Fragment {
-
   public static final String ARG_TEXT = "arg_text";
 
   private String mText;
