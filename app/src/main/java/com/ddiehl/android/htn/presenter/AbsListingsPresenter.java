@@ -85,7 +85,6 @@ public abstract class AbsListingsPresenter
 
   @Override
   public void onViewDestroyed() {
-    mLogger.d("Clearing data for view: " + mMainView.toString());
     mListingSelected = null;
     mListings.clear();
     mListingsView.listingsUpdated();
@@ -166,14 +165,6 @@ public abstract class AbsListingsPresenter
     return mSettingsManager.getShowControversiality();
   }
 
-  @Override
-  public void updateSubreddit(@Nullable String subreddit) {
-    mSubreddit = subreddit;
-    mSort = "hot";
-    mTimespan = "all";
-    refreshData();
-  }
-
   protected Action1<ListingResponse> onListingsLoaded() {
     return (response) -> {
       mMainView.dismissSpinner();
@@ -184,7 +175,10 @@ public abstract class AbsListingsPresenter
       }
       ListingResponseData data = response.getData();
       List<Listing> listings = data.getChildren();
-      if (listings == null) throw new NullPointerException("Listings data is null");
+      if (listings == null) {
+        mMainView.showError(new NullPointerException(), R.string.error_get_links);
+        return;
+      }
       mListings.addAll(listings);
       mListingsView.listingsUpdated();
       mNextPageListingId = data.getAfter();

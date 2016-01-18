@@ -12,7 +12,6 @@ import retrofit2.http.POST;
 import rx.Observable;
 
 public interface RedditAuthAPI {
-
   @FormUrlEncoded @POST("/api/v1/access_token")
   Observable<Response<ApplicationAccessToken>> getApplicationAuthToken(
       @Field("grant_type") String grantType,
@@ -34,5 +33,4 @@ public interface RedditAuthAPI {
   Observable<Response<ResponseBody>> revokeUserAuthToken(
       @Field("token") String token,
       @Field("token_type_hint") String tokenTypeHint);
-
 }

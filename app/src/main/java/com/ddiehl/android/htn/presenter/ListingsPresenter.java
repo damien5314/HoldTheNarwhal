@@ -21,7 +21,6 @@ public interface ListingsPresenter extends BasePresenter, LinkPresenter, Comment
   String getTimespan();
   String getShow();
   boolean getShowControversiality();
-  void updateSubreddit(@Nullable String subreddit);
   void onSortChanged();
   UserIdentity getAuthorizedUser();
   void onSortSelected(@Nullable String sort);

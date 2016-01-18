@@ -116,11 +116,6 @@ public class CommentBankList implements CommentBank {
     }
   }
 
-//  @Override
-//  public void toggleThreadVisible(int index, boolean visible) {
-//    setThreadVisible(index, visible);
-//  }
-
   @Override
   public void toggleThreadVisible(Comment comment) {
     int position = indexOf(comment);

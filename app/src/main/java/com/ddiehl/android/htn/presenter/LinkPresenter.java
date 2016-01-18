@@ -7,6 +7,7 @@ import android.view.View;
 import com.ddiehl.reddit.listings.Link;
 
 public interface LinkPresenter extends BasePresenter {
+  enum ThumbnailMode { NO_THUMBNAIL, VARIANT, FULL }
   void showLinkContextMenu(
       ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, Link link);
   void openLink(@NonNull Link link);
@@ -27,6 +28,4 @@ public interface LinkPresenter extends BasePresenter {
   void reportLink();
   boolean shouldShowNsfwTag();
   ThumbnailMode getThumbnailMode();
-
-  enum ThumbnailMode { NO_THUMBNAIL, VARIANT, FULL }
 }

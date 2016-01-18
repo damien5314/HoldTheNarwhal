@@ -203,6 +203,7 @@ public class MainPresenterImpl implements MainPresenter, IdentityManager.Callbac
 
   @Override
   public void processDeepLink(@NonNull Uri data) {
+    // TODO Deep link analytics
     mDeepLink = null;
     mLogger.d("Deep Link: " + data.toString());
     List<String> segments = data.getPathSegments();

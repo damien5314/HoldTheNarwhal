@@ -315,7 +315,6 @@ public class RedditServiceImpl implements RedditService {
 
   @Override
   public Observable<Comment> addComment(@NonNull String parentId, @NonNull String text) {
-//    String fullname = String.format("%1$s_%2$s", listing.getKind(), listing.getId());
     return requireUserAccessToken().flatMap(token ->
         mAPI.addComment(parentId, text)
             .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
