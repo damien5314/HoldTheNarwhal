@@ -12,8 +12,8 @@ android {
     applicationId "com.ddiehl.android.htn"
     minSdkVersion 15
     targetSdkVersion 23
-    versionCode 5
-    versionName '0.3.1'
+    versionCode 6
+    versionName '0.4'
   }
   signingConfigs {
     release {
