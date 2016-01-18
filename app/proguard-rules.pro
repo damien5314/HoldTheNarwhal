@@ -26,20 +26,13 @@
 #  public static int e(...);
 #}
 
-### Otto ###
--keepattributes *Annotation*
--keepclassmembers class ** {
-  @com.squareup.otto.Subscribe public *;
-  @com.squareup.otto.Produce public *;
-}
-
 ### Okio, OkHttp, Retrofit ###
 -dontwarn okio.**
 -keep class com.squareup.okhttp.** { *; }
 -keep interface com.squareup.okhttp.** { *; }
 -dontwarn com.squareup.okhttp.**
--dontwarn retrofit.**
--keep class retrofit.** { *; }
+-dontwarn retrofit2.**
+-keep class retrofit2.** { *; }
 -keepattributes Signature
 -keepattributes Exceptions
 -keepclasseswithmembers class * { # Do we need this one?
@@ -75,14 +68,6 @@
 
 ### Retrolambda and RxAndroid ###
 -dontwarn java.lang.invoke.*
-
-### InMobi ###
--keep class com.google.android.gms.ads.identifier.AdvertisingIdClient {
-   public *;
-}
--keep class com.google.android.gms.ads.identifier.AdvertisingIdClient$Info {
-   public *;
-}
 
 ### Stetho ###
 -keep class com.facebook.stetho.** { *; }
