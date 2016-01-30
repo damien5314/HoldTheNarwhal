@@ -4,10 +4,10 @@ import android.support.annotation.NonNull;
 import android.view.ContextMenu;
 import android.view.View;
 
+import com.ddiehl.android.htn.ThumbnailMode;
 import com.ddiehl.reddit.listings.Link;
 
 public interface LinkPresenter extends BasePresenter {
-  enum ThumbnailMode { NO_THUMBNAIL, VARIANT, FULL }
   void showLinkContextMenu(
       ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, Link link);
   void openLink(@NonNull Link link);

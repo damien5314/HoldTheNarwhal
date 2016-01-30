@@ -11,7 +11,7 @@ import com.ddiehl.reddit.listings.Subreddit;
 
 import rx.functions.Action1;
 
-public class SubredditPresenter extends AbsListingsPresenter {
+public class SubredditPresenter extends AbsListingsPresenter implements LinkPresenter {
   public SubredditPresenter(
       MainView main, ListingsView listingsView, LinkView view,
       String subreddit, String sort, String timespan) {

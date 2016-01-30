@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ddiehl.android.htn.R;
+import com.ddiehl.android.htn.ThumbnailMode;
 import com.ddiehl.android.htn.presenter.LinkPresenter;
 import com.ddiehl.reddit.listings.Link;
 import com.ddiehl.timesincetextview.TimeSinceTextView;
@@ -65,7 +66,7 @@ public abstract class AbsLinkViewHolder extends RecyclerView.ViewHolder
   }
 
   public void bind(
-      @NonNull Link link, boolean showSelfText, LinkPresenter.ThumbnailMode mode, boolean showNsfw) {
+      @NonNull Link link, boolean showSelfText, ThumbnailMode mode, boolean showNsfw) {
     mLink = link;
     showSelfText(link, showSelfText);
     showScore(link);
@@ -182,7 +183,7 @@ public abstract class AbsLinkViewHolder extends RecyclerView.ViewHolder
   }
 
   abstract protected void showThumbnail(
-      @NonNull Link link, @NonNull LinkPresenter.ThumbnailMode mode);
+      @NonNull Link link, @NonNull ThumbnailMode mode);
 
   protected void loadThumbnail(@Nullable String url) {
     Picasso.with(mContext)

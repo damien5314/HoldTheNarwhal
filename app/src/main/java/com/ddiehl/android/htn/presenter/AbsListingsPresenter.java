@@ -12,6 +12,7 @@ import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.SettingsManager;
+import com.ddiehl.android.htn.ThumbnailMode;
 import com.ddiehl.android.htn.analytics.Analytics;
 import com.ddiehl.android.htn.io.RedditService;
 import com.ddiehl.android.htn.view.CommentView;
@@ -202,7 +203,6 @@ public abstract class AbsListingsPresenter
     };
   }
 
-  @Override
   public void showLinkContextMenu(
       ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, Link link) {
     mListingSelected = link;
@@ -212,7 +212,6 @@ public abstract class AbsListingsPresenter
     menu.findItem(R.id.action_link_unsave).setVisible(link.isSaved());
   }
 
-  @Override
   public void openLink(@NonNull Link link) {
     if (link.isSelf()) {
       mLinkView.showCommentsForLink(link.getSubreddit(), link.getId(), null);
@@ -221,90 +220,75 @@ public abstract class AbsListingsPresenter
     }
   }
 
-  @Override
   public void showCommentsForLink() {
     Link link = (Link) mListingSelected;
     mLinkView.showCommentsForLink(link.getSubreddit(), link.getId(), null);
   }
 
-  @Override
   public void showCommentsForLink(@NonNull Link link) {
     mLinkView.showCommentsForLink(link.getSubreddit(), link.getId(), null);
   }
 
-  @Override
   public void replyToLink() {
     mCommentView.openReplyView(mListingSelected);
   }
 
-  @Override
   public void upvoteLink() {
     Votable votable = (Votable) mListingSelected;
     int dir = (votable.isLiked() == null || !votable.isLiked()) ? 1 : 0;
     vote(dir);
   }
 
-  @Override
   public void downvoteLink() {
     Votable votable = (Votable) mListingSelected;
     int dir = (votable.isLiked() == null || votable.isLiked()) ? -1 : 0;
     vote(dir);
   }
 
-  @Override
   public void saveLink() {
     if (!mAccessTokenManager.isUserAuthorized()) {
       mMainView.showToast(R.string.user_required);
       return;
     }
-
     Link link = (Link) mListingSelected;
     save(link, true);
     mAnalytics.logSave(link.getKind(), null, true);
   }
 
-  @Override
   public void unsaveLink() {
     if (!mAccessTokenManager.isUserAuthorized()) {
       mMainView.showToast(R.string.user_required);
       return;
     }
-
     Link link = (Link) mListingSelected;
     save(link, false);
     mAnalytics.logSave(link.getKind(), null, false);
   }
 
-  @Override
   public void shareLink() {
     Link link = (Link) mListingSelected;
     mLinkView.openShareView(link);
   }
 
-  @Override
   public void openLinkUserProfile() {
     Link link = (Link) mListingSelected;
     mLinkView.openUserProfileView(link);
   }
 
-  @Override
   public void openLinkUserProfile(@NonNull Link link) {
     mLinkView.openUserProfileView(link);
   }
 
-  @Override
   public void openLinkInBrowser() {
     Link link = (Link) mListingSelected;
     mLinkView.openLinkInBrowser(link);
   }
 
-  @Override
   public void openCommentsInBrowser() {
     Link link = (Link) mListingSelected;
     mLinkView.openCommentsInBrowser(link);
   }
 
-  @Override
   public void hideLink() {
     if (!mAccessTokenManager.isUserAuthorized()) {
       mMainView.showToast(R.string.user_required);
@@ -316,7 +300,6 @@ public abstract class AbsListingsPresenter
     mAnalytics.logHide(link.getKind(), true);
   }
 
-  @Override
   public void unhideLink() {
     if (!mAccessTokenManager.isUserAuthorized()) {
       mMainView.showToast(R.string.user_required);
@@ -328,7 +311,6 @@ public abstract class AbsListingsPresenter
     mAnalytics.logHide(link.getKind(), false);
   }
 
-  @Override
   public void reportLink() {
     Listing listing = mListingSelected;
     if (((Archivable) listing).isArchived()) {
@@ -340,19 +322,16 @@ public abstract class AbsListingsPresenter
     }
   }
 
-  @Override
   public void showCommentThread(
       @NonNull String subreddit, @NonNull String linkId, @NonNull String commentId) {
     if (linkId.charAt(2) == '_') linkId = linkId.substring(3); // Trim type prefix
     mMainView.showCommentsForLink(subreddit, linkId, commentId);
   }
 
-  @Override
   public void getMoreComments(@NonNull CommentStub comment) {
     // Comment stubs cannot appear in a listing view
   }
 
-  @Override
   public void showCommentContextMenu(
       ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, Comment comment) {
     mListingSelected = comment;
@@ -361,13 +340,11 @@ public abstract class AbsListingsPresenter
     menu.findItem(R.id.action_comment_unsave).setVisible(comment.isSaved());
   }
 
-  @Override
   public void openCommentPermalink() {
     Comment comment = (Comment) mListingSelected;
     showCommentThread(comment.getSubreddit(), comment.getLinkId(), comment.getId());
   }
 
-  @Override
   public void replyToComment() {
     Comment comment = (Comment) mListingSelected;
     if (comment.isArchived()) {
@@ -377,21 +354,18 @@ public abstract class AbsListingsPresenter
     }
   }
 
-  @Override
   public void upvoteComment() {
     Votable votable = (Votable) mListingSelected;
     int dir = (votable.isLiked() == null || !votable.isLiked()) ? 1 : 0;
     vote(dir);
   }
 
-  @Override
   public void downvoteComment() {
     Votable votable = (Votable) mListingSelected;
     int dir = (votable.isLiked() == null || votable.isLiked()) ? -1 : 0;
     vote(dir);
   }
 
-  @Override
   public void saveComment() {
     if (!mAccessTokenManager.isUserAuthorized()) {
       mMainView.showToast(R.string.user_required);
@@ -402,7 +376,6 @@ public abstract class AbsListingsPresenter
     mAnalytics.logSave(comment.getKind(), null, true);
   }
 
-  @Override
   public void unsaveComment() {
     if (!mAccessTokenManager.isUserAuthorized()) {
       mMainView.showToast(R.string.user_required);
@@ -413,30 +386,25 @@ public abstract class AbsListingsPresenter
     mAnalytics.logSave(comment.getKind(), null, false);
   }
 
-  @Override
   public void shareComment() {
     Comment comment = (Comment) mListingSelected;
     mCommentView.openShareView(comment);
   }
 
-  @Override
   public void openCommentUserProfile() {
     Comment comment = (Comment) mListingSelected;
     mCommentView.openUserProfileView(comment);
   }
 
-  @Override
   public void openCommentUserProfile(@NonNull Comment comment) {
     mCommentView.openUserProfileView(comment);
   }
 
-  @Override
   public void openCommentInBrowser() {
     Comment comment = (Comment) mListingSelected;
     mCommentView.openCommentInBrowser(comment);
   }
 
-  @Override
   public void reportComment() {
     Listing listing = mListingSelected;
     if (((Archivable) listing).isArchived()) {
@@ -448,12 +416,10 @@ public abstract class AbsListingsPresenter
     }
   }
 
-  @Override
   public void openCommentLink(@NonNull Comment comment) {
     mMainView.showCommentsForLink(comment.getSubreddit(), comment.getLinkId(), null);
   }
 
-  @Override
   public void showMessageContextMenu(
       ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, PrivateMessage message) {
     mPrivateMessageView.showPrivateMessageContextMenu(menu, v, message);
@@ -552,13 +518,11 @@ public abstract class AbsListingsPresenter
     }
   }
 
-  @Override
   public boolean shouldShowNsfwTag() {
     return !mSettingsManager.getOver18() || !(mSubredditInfo != null && mSubredditInfo.isOver18())
         && (mSettingsManager.getNoProfanity() || mSettingsManager.getLabelNsfw());
   }
 
-  @Override
   public ThumbnailMode getThumbnailMode() {
     if (mSettingsManager.getOver18()) {
       if (mSubredditInfo != null && mSubredditInfo.isOver18()) {
@@ -579,35 +543,26 @@ public abstract class AbsListingsPresenter
     }
   }
 
-  @Override
   public UserIdentity getUserIdentity() {
     return mIdentityManager.getUserIdentity();
   }
 
-  /**
-   * FIXME Figure out the best form of inheritance for these presenters
-   */
-
-  @Override
   public void showMessagePermalink() {
+
   }
 
-  @Override
   public void reportMessage() {
 
   }
 
-  @Override
   public void blockUser() {
 
   }
 
-  @Override
   public void markMessageUnread() {
 
   }
 
-  @Override
   public void replyToMessage() {
 
   }

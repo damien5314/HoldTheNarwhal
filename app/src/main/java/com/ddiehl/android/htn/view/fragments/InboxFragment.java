@@ -46,6 +46,9 @@ public class InboxFragment extends AbsListingsFragment
       show = getArguments().getString(ARG_SHOW);
     }
     mInboxPresenter = new InboxPresenter(mMainView, this, this, this, this, show);
+    mLinkPresenter = mInboxPresenter;
+    mCommentPresenter = mInboxPresenter;
+    mMessagePresenter = mInboxPresenter;
     mListingsPresenter = mInboxPresenter;
   }
 
@@ -59,7 +62,8 @@ public class InboxFragment extends AbsListingsFragment
 
   @Override
   public ListingsAdapter getListingsAdapter() {
-    return new ListingsAdapter(mListingsPresenter);
+    return new ListingsAdapter(
+        mListingsPresenter, mLinkPresenter, mCommentPresenter, mMessagePresenter);
   }
 
   @Override

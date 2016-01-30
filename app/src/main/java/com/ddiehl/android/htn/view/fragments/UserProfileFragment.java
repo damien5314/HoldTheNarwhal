@@ -82,6 +82,8 @@ public class UserProfileFragment extends AbsListingsFragment
     String sort = args.getString(ARG_SORT);
     mUserProfilePresenter =
         new UserProfilePresenter(mMainView, this, this, this, this, show, username, sort, "all");
+    mLinkPresenter = mUserProfilePresenter;
+    mCommentPresenter = mUserProfilePresenter;
     mListingsPresenter = mUserProfilePresenter;
   }
 
@@ -101,7 +103,8 @@ public class UserProfileFragment extends AbsListingsFragment
 
   @Override
   public ListingsAdapter getListingsAdapter() {
-    return new ListingsAdapter(mListingsPresenter);
+    return new ListingsAdapter(
+        mListingsPresenter, mLinkPresenter, mCommentPresenter, mMessagePresenter);
   }
 
   @Override

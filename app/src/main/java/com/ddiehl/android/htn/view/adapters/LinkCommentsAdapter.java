@@ -6,8 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ddiehl.android.htn.R;
+import com.ddiehl.android.htn.ThumbnailMode;
 import com.ddiehl.android.htn.presenter.LinkCommentsPresenter;
-import com.ddiehl.android.htn.presenter.LinkPresenter;
 import com.ddiehl.android.htn.view.viewholders.AbsLinkViewHolder;
 import com.ddiehl.android.htn.view.viewholders.CommentsLinkViewHolder;
 import com.ddiehl.android.htn.view.viewholders.ThreadCommentViewHolder;
@@ -60,7 +60,7 @@ public class LinkCommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
   public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
     if (holder instanceof AbsLinkViewHolder) {
       Link link = mLinkCommentsPresenter.getLinkContext();
-      LinkPresenter.ThumbnailMode mode = mLinkCommentsPresenter.getThumbnailMode();
+      ThumbnailMode mode = mLinkCommentsPresenter.getThumbnailMode();
       boolean showNsfw = mLinkCommentsPresenter.shouldShowNsfwTag();
       ((AbsLinkViewHolder) holder).bind(link, true, mode, showNsfw);
     } else if (holder instanceof ThreadCommentViewHolder) {

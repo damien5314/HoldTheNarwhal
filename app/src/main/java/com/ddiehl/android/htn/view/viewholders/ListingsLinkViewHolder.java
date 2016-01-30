@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import android.view.View;
 
 import com.ddiehl.android.htn.R;
+import com.ddiehl.android.htn.ThumbnailMode;
 import com.ddiehl.android.htn.presenter.LinkPresenter;
 import com.ddiehl.reddit.listings.Link;
 import com.squareup.picasso.Picasso;
@@ -32,14 +33,14 @@ public class ListingsLinkViewHolder extends AbsLinkViewHolder {
   }
 
   @Override
-  protected void showThumbnail(@NonNull Link link, @NonNull LinkPresenter.ThumbnailMode mode) {
+  protected void showThumbnail(@NonNull Link link, @NonNull ThumbnailMode mode) {
     String url = null;
     if (link.getOver18()) {
-      if (mode == LinkPresenter.ThumbnailMode.NO_THUMBNAIL) {
+      if (mode == ThumbnailMode.NO_THUMBNAIL) {
         mLinkThumbnail.setVisibility(View.GONE);
       } else {
         mLinkThumbnail.setVisibility(View.VISIBLE);
-        if (mode == LinkPresenter.ThumbnailMode.VARIANT) {
+        if (mode == ThumbnailMode.VARIANT) {
           url = getPreviewUrl(link);
         } else { // ThumbnailMode.FULL
           url = link.getThumbnail();

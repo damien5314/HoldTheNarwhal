@@ -14,7 +14,8 @@ import com.ddiehl.reddit.identity.UserIdentity;
 
 import rx.functions.Action1;
 
-public class UserProfilePresenter extends AbsListingsPresenter {
+public class UserProfilePresenter extends AbsListingsPresenter
+    implements LinkPresenter, CommentPresenter {
   private UserProfileView mSummaryView;
 
   public UserProfilePresenter(

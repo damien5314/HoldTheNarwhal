@@ -24,7 +24,7 @@ import butterknife.Bind;
 public class PrivateMessageFragment extends AbsListingsFragment implements PrivateMessageView {
   private static final String ARG_MESSAGES = "arg_messages";
 
-  private PrivateMessagePresenter mMessagePresenter;
+  private PrivateMessagePresenter mPrivateMessagePresenter;
 
   @Bind(R.id.conversation_subject)
   TextView mConversationSubject;
@@ -44,12 +44,14 @@ public class PrivateMessageFragment extends AbsListingsFragment implements Priva
     if (getArguments() != null) {
       messages = Parcels.unwrap(getArguments().getParcelable(ARG_MESSAGES));
     }
-    mMessagePresenter = new PrivateMessagePresenter(mMainView, this, this, messages);
-    mListingsPresenter = mMessagePresenter;
+    mPrivateMessagePresenter = new PrivateMessagePresenter(mMainView, this, this, messages);
+    mMessagePresenter = mPrivateMessagePresenter;
+    mListingsPresenter = mPrivateMessagePresenter;
   }
 
   @Nullable @Override
-  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+  public View onCreateView(
+      LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     View v = super.onCreateView(inflater, container, savedInstanceState);
     updateTitle();
     return v;
@@ -57,7 +59,7 @@ public class PrivateMessageFragment extends AbsListingsFragment implements Priva
 
   @Override
   public ListingsAdapter getListingsAdapter() {
-    return new PrivateMessageAdapter(mListingsPresenter);
+    return new PrivateMessageAdapter(mListingsPresenter, mMessagePresenter);
   }
 
   @Override

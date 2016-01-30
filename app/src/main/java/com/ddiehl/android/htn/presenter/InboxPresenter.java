@@ -16,7 +16,8 @@ import com.ddiehl.reddit.listings.PrivateMessage;
 import java.util.ArrayList;
 import java.util.List;
 
-public class InboxPresenter extends AbsListingsPresenter {
+public class InboxPresenter extends AbsListingsPresenter
+    implements LinkPresenter, CommentPresenter, MessagePresenter {
   private InboxView mInboxView;
   private String mShow = null;
 

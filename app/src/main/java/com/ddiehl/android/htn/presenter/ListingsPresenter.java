@@ -8,11 +8,11 @@ import com.ddiehl.reddit.listings.Listing;
 
 import java.util.List;
 
-public interface ListingsPresenter
-    extends BasePresenter, LinkPresenter, CommentPresenter, MessagePresenter {
+public interface ListingsPresenter extends BasePresenter {
   void refreshData();
   void setData(@NonNull List<Listing> data);
   void getMoreData();
+  void setSelectedListing(@NonNull Listing listing);
   int getNumListings();
   Listing getListing(int position);
   String getUsernameContext();

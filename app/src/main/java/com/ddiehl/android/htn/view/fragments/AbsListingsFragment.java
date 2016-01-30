@@ -22,7 +22,10 @@ import android.view.ViewGroup;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.analytics.Analytics;
+import com.ddiehl.android.htn.presenter.CommentPresenter;
+import com.ddiehl.android.htn.presenter.LinkPresenter;
 import com.ddiehl.android.htn.presenter.ListingsPresenter;
+import com.ddiehl.android.htn.presenter.MessagePresenter;
 import com.ddiehl.android.htn.view.ListingsView;
 import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.android.htn.view.activities.MainActivity;
@@ -51,6 +54,9 @@ public abstract class AbsListingsFragment extends Fragment
   protected Analytics mAnalytics = HoldTheNarwhal.getAnalytics();
   protected MainView mMainView;
   protected ListingsPresenter mListingsPresenter;
+  protected LinkPresenter mLinkPresenter;
+  protected CommentPresenter mCommentPresenter;
+  protected MessagePresenter mMessagePresenter;
   protected ListingsAdapter mListingsAdapter;
   protected SwipeRefreshLayout mSwipeRefreshLayout;
 
@@ -239,67 +245,67 @@ public abstract class AbsListingsFragment extends Fragment
   public boolean onContextItemSelected(MenuItem item) {
     switch (item.getItemId()) {
       case R.id.action_link_upvote:
-        mListingsPresenter.upvoteLink();
+        mLinkPresenter.upvoteLink();
         return true;
       case R.id.action_link_downvote:
-        mListingsPresenter.downvoteLink();
+        mLinkPresenter.downvoteLink();
         return true;
       case R.id.action_link_show_comments:
-        mListingsPresenter.showCommentsForLink();
+        mLinkPresenter.showCommentsForLink();
         return true;
       case R.id.action_link_save:
-        mListingsPresenter.saveLink();
+        mLinkPresenter.saveLink();
         return true;
       case R.id.action_link_unsave:
-        mListingsPresenter.unsaveLink();
+        mLinkPresenter.unsaveLink();
         return true;
       case R.id.action_link_share:
-        mListingsPresenter.shareLink();
+        mLinkPresenter.shareLink();
         return true;
       case R.id.action_link_view_user_profile:
-        mListingsPresenter.openLinkUserProfile();
+        mLinkPresenter.openLinkUserProfile();
         return true;
       case R.id.action_link_open_in_browser:
-        mListingsPresenter.openLinkInBrowser();
+        mLinkPresenter.openLinkInBrowser();
         return true;
       case R.id.action_link_open_comments_in_browser:
-        mListingsPresenter.openCommentsInBrowser();
+        mLinkPresenter.openCommentsInBrowser();
         return true;
       case R.id.action_link_hide:
-        mListingsPresenter.hideLink();
+        mLinkPresenter.hideLink();
         return true;
       case R.id.action_link_unhide:
-        mListingsPresenter.unhideLink();
+        mLinkPresenter.unhideLink();
         return true;
       case R.id.action_link_report:
-        mListingsPresenter.reportLink();
+        mLinkPresenter.reportLink();
         return true;
       case R.id.action_comment_permalink:
-        mListingsPresenter.openCommentPermalink();
+        mCommentPresenter.openCommentPermalink();
         return true;
       case R.id.action_comment_reply:
-        mListingsPresenter.replyToComment();
+        mCommentPresenter.replyToComment();
         return true;
       case R.id.action_comment_upvote:
-        mListingsPresenter.upvoteComment();
+        mCommentPresenter.upvoteComment();
         return true;
       case R.id.action_comment_downvote:
-        mListingsPresenter.downvoteComment();
+        mCommentPresenter.downvoteComment();
         return true;
       case R.id.action_comment_save:
-        mListingsPresenter.saveComment();
+        mCommentPresenter.saveComment();
         return true;
       case R.id.action_comment_unsave:
-        mListingsPresenter.unsaveComment();
+        mCommentPresenter.unsaveComment();
         return true;
       case R.id.action_comment_share:
-        mListingsPresenter.shareComment();
+        mCommentPresenter.shareComment();
         return true;
       case R.id.action_comment_open_in_browser:
-        mListingsPresenter.openCommentInBrowser();
+        mCommentPresenter.openCommentInBrowser();
         return true;
       case R.id.action_comment_report:
-        mListingsPresenter.reportComment();
+        mCommentPresenter.reportComment();
         return true;
       default:
         return false;

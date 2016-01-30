@@ -9,6 +9,7 @@ import android.util.DisplayMetrics;
 import android.view.View;
 
 import com.ddiehl.android.htn.R;
+import com.ddiehl.android.htn.ThumbnailMode;
 import com.ddiehl.android.htn.presenter.LinkPresenter;
 import com.ddiehl.reddit.listings.Link;
 import com.squareup.picasso.Picasso;
@@ -41,7 +42,7 @@ public class CommentsLinkViewHolder extends AbsLinkViewHolder {
   }
 
   @Override
-  protected void showThumbnail(@NonNull Link link, @NonNull LinkPresenter.ThumbnailMode mode) {
+  protected void showThumbnail(@NonNull Link link, @NonNull ThumbnailMode mode) {
     // Nsfw/ThumbnailMode is inconsequential here, just show the best preview for screen size
     String url = null;
     if (link.getPreviewImages() != null) {

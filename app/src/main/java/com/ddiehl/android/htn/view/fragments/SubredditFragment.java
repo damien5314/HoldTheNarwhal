@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ddiehl.android.htn.R;
+import com.ddiehl.android.htn.presenter.ListingsPresenter;
 import com.ddiehl.android.htn.presenter.SubredditPresenter;
 import com.ddiehl.android.htn.view.LinkView;
 import com.ddiehl.android.htn.view.adapters.ListingsAdapter;
@@ -35,7 +36,8 @@ public class SubredditFragment extends AbsListingsFragment implements LinkView {
     String subreddit = args.getString(ARG_SUBREDDIT);
     String sort = args.getString(ARG_SORT);
     if (TextUtils.isEmpty(sort)) sort = "hot";
-    mListingsPresenter = new SubredditPresenter(mMainView, this, this, subreddit, sort, "all");
+    mLinkPresenter = new SubredditPresenter(mMainView, this, this, subreddit, sort, "all");
+    mListingsPresenter = (ListingsPresenter) mLinkPresenter;
   }
 
   @Override
@@ -52,7 +54,8 @@ public class SubredditFragment extends AbsListingsFragment implements LinkView {
 
   @Override
   public ListingsAdapter getListingsAdapter() {
-    return new ListingsAdapter(mListingsPresenter);
+    return new ListingsAdapter(
+        mListingsPresenter, mLinkPresenter, mCommentPresenter, mMessagePresenter);
   }
 
   @Override

@@ -6,9 +6,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ddiehl.android.htn.R;
+import com.ddiehl.android.htn.ThumbnailMode;
+import com.ddiehl.android.htn.presenter.CommentPresenter;
 import com.ddiehl.android.htn.presenter.InboxPresenter;
 import com.ddiehl.android.htn.presenter.LinkPresenter;
 import com.ddiehl.android.htn.presenter.ListingsPresenter;
+import com.ddiehl.android.htn.presenter.MessagePresenter;
 import com.ddiehl.android.htn.view.viewholders.AbsLinkViewHolder;
 import com.ddiehl.android.htn.view.viewholders.ListingsCommentViewHolder;
 import com.ddiehl.android.htn.view.viewholders.ListingsLinkViewHolder;
@@ -24,11 +27,19 @@ public class ListingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
   private static final int TYPE_PRIVATE_MESSAGE = 0x3;
 
   protected ListingsPresenter mListingsPresenter;
+  protected LinkPresenter mLinkPresenter;
+  protected CommentPresenter mCommentPresenter;
+  protected MessagePresenter mMessagePresenter;
   protected boolean mShowNsfwTag;
-  protected LinkPresenter.ThumbnailMode mThumbnailMode;
+  protected ThumbnailMode mThumbnailMode;
 
-  public ListingsAdapter(ListingsPresenter presenter) {
+  public ListingsAdapter(
+      ListingsPresenter presenter, LinkPresenter linkPresenter,
+      CommentPresenter commentPresenter, MessagePresenter messagePresenter) {
     mListingsPresenter = presenter;
+    mLinkPresenter = linkPresenter;
+    mCommentPresenter = commentPresenter;
+    mMessagePresenter = messagePresenter;
     getSettings();
   }
 
@@ -47,15 +58,15 @@ public class ListingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
       case TYPE_LINK:
         View view = LayoutInflater.from(parent.getContext())
             .inflate(R.layout.listings_link, parent, false);
-        return new ListingsLinkViewHolder(view, mListingsPresenter);
+        return new ListingsLinkViewHolder(view, mLinkPresenter);
       case TYPE_COMMENT:
         view = LayoutInflater.from(parent.getContext())
             .inflate(R.layout.listings_comment, parent, false);
-        return new ListingsCommentViewHolder(view, mListingsPresenter);
+        return new ListingsCommentViewHolder(view, mCommentPresenter);
       case TYPE_PRIVATE_MESSAGE:
         view = LayoutInflater.from(parent.getContext())
             .inflate(R.layout.listings_message, parent, false);
-        return new ListingsMessageViewHolder(view, mListingsPresenter);
+        return new ListingsMessageViewHolder(view, mMessagePresenter);
       default:
         throw new RuntimeException("Unexpected ViewHolder type: " + viewType);
     }
@@ -84,8 +95,8 @@ public class ListingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     return mListingsPresenter.getNumListings();
   }
 
-  private void getSettings() {
-    mShowNsfwTag = mListingsPresenter.shouldShowNsfwTag();
-    mThumbnailMode = mListingsPresenter.getThumbnailMode();
+  protected void getSettings() {
+    mShowNsfwTag = mLinkPresenter.shouldShowNsfwTag();
+    mThumbnailMode = mLinkPresenter.getThumbnailMode();
   }
 }
