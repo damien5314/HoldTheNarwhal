@@ -145,17 +145,11 @@
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/baseline_spacing">
 
-      <!--<TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/secondary_text"
-        android:textSize="@dimen/user_trophies_label_text_size"
-        android:text="@string/user_trophies_label"/>-->
-
-      <TableLayout
+      <GridLayout
           android:id="@+id/user_trophies"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content" />
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center"/>
 
     </LinearLayout>
 

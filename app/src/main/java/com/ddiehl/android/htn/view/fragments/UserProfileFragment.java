@@ -9,9 +9,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TableLayout;
 import android.widget.TextView;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
@@ -52,7 +52,7 @@ public class UserProfileFragment extends AbsListingsFragment
   @Bind(R.id.user_friend_button) Button mFriendButton;
   @Bind(R.id.user_friend_note_edit) TextView mFriendNote;
   @Bind(R.id.user_friend_note_confirm) Button mFriendNoteSave;
-  @Bind(R.id.user_trophies) LinearLayout mTrophies;
+  @Bind(R.id.user_trophies) GridLayout mTrophies;
 
   private TabLayout.Tab mTabSummary, mTabOverview, mTabComments, mTabSubmitted, mTabGilded,
       mTabUpvoted, mTabDownvoted, mTabHidden, mTabSaved;
@@ -168,40 +168,21 @@ public class UserProfileFragment extends AbsListingsFragment
 
   @Override
   public void showTrophies(List<Listing> trophies) {
+    mTrophies.removeAllViews();
     if (trophies == null || trophies.size() == 0) return; // Nothing to show
-    // TODO Clean up trophy width/layout
-    final int minDpWidth = 160;
-    final int numColumns = ((int) AndroidUtils.getScreenWidth()) / minDpWidth;
-    LinearLayout row = null;
     LayoutInflater inflater = getActivity().getLayoutInflater();
-    mTrophies.removeAllViews(); // Reset layout
-    for (int i = 0; i < trophies.size(); i++) {
-      if (i % numColumns == 0) {
-        row = (LinearLayout) inflater.inflate(R.layout.trophy_row, mTrophies, false);
-        mTrophies.addView(row);
-      }
-
-      Trophy trophy = (Trophy) trophies.get(i);
-
-      String name = trophy.getName();
-      String description = trophy.getDescription();
-      if (description != null) {
-        name += "\n" + description;
-      }
-
-      LinearLayout v = (LinearLayout) inflater.inflate(R.layout.trophy_layout, row, false);
-      if (row != null) row.addView(v);
-
-      // FIXME Use ButterKnife.findViewById?
+    for (Listing listing : trophies) {
+      LinearLayout v = (LinearLayout) inflater.inflate(R.layout.trophy_layout, mTrophies, false);
+//      // FIXME Use ButterKnife.findViewById?
       TextView trophyNameView = (TextView) v.findViewById(R.id.trophy_name);
+      Trophy trophy = (Trophy) listing;
+      String name = trophy.getName();
       trophyNameView.setText(name);
       Picasso.with(getActivity())
           .load(trophy.getIcon70())
           .into(((ImageView) v.findViewById(R.id.trophy_icon)));
+      mTrophies.addView(v);
     }
-    int lastIndex = mTrophies.getChildCount() - 1;
-    ((TableLayout.LayoutParams) mTrophies.getChildAt(lastIndex).getLayoutParams())
-        .bottomMargin = 0;
   }
 
   private void initializeUserProfileTabs() {

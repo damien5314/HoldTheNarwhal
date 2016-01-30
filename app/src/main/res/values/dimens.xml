@@ -44,9 +44,6 @@
   <dimen name="comment_text_margin">6dp</dimen>
   <dimen name="comment_author_background_corner">3dp</dimen>
   <dimen name="comment_author_background_padding">3dp</dimen>
-  <dimen name="banner_ad_margin">4dp</dimen>
-  <dimen name="banner_ad_text_size">14sp</dimen>
-  <dimen name="banner_ad_header_text_size">10sp</dimen>
   <dimen name="about_app_text_size">18sp</dimen>
   <dimen name="user_created_text_size">16sp</dimen>
   <dimen name="user_karma_text_size">36sp</dimen>
@@ -59,6 +56,7 @@
   <dimen name="user_trophies_label_text_size">@dimen/user_note_label_text_size</dimen>
   <dimen name="user_trophy_row_padding">12dp</dimen>
   <dimen name="user_trophy_icon_width">72dp</dimen>
+  <dimen name="user_trophy_name_text_width">80dp</dimen>
   <dimen name="user_trophy_icon_height">@dimen/user_trophy_icon_width</dimen>
   <dimen name="user_trophy_name_text_size">16sp</dimen>
   <dimen name="link_metadata_margin">4dp</dimen>
