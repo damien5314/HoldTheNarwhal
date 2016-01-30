@@ -44,6 +44,17 @@ public class Comment extends AbsComment implements Votable, Savable {
   }
 
   public String getLinkId() {
+    // This is a hack to get the linkId from the context
+    // because comments in the inbox do not have the linkId for some reason
+    String linkId = data.linkId;
+    if (linkId == null) {
+      String linkUrl = data.context;
+      int i = linkUrl.indexOf("/comments/") + 10; // Add length of string
+      int j = linkUrl.indexOf("/", i + 1);
+      data.linkId = linkUrl.substring(i, j);
+    }
+    int i = data.linkId.indexOf('_');
+    if (i != -1) return data.linkId.substring(i + 1);
     return data.linkId;
   }
 
@@ -220,6 +231,10 @@ public class Comment extends AbsComment implements Votable, Savable {
     return data.subject;
   }
 
+  public String getContext() {
+    return data.context;
+  }
+
   public static class Data extends AbsComment.Data {
     // Attributes specific to listing views
     @Expose @SerializedName("link_title")
@@ -286,6 +301,8 @@ public class Comment extends AbsComment implements Votable, Savable {
     private String distinguished;
     @Expose
     private String subject;
+    @Expose
+    private String context;
   }
 
   @Override

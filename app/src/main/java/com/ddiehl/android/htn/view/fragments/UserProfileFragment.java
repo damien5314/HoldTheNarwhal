@@ -88,7 +88,8 @@ public class UserProfileFragment extends AbsListingsFragment
   }
 
   @Nullable @Override
-  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+  public View onCreateView(
+      LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     View v = super.onCreateView(inflater, container, savedInstanceState);
     initializeUserProfileTabs();
     mKarmaLayout.setVisibility(View.GONE);

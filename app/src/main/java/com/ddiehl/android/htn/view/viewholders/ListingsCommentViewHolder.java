@@ -42,6 +42,11 @@ public class ListingsCommentViewHolder extends RecyclerView.ViewHolder
     itemView.setOnCreateContextMenuListener(this);
   }
 
+  @OnClick(R.id.comment_link_title)
+  void onClickTitle() {
+    mCommentPresenter.openCommentLink(mComment);
+  }
+
   @OnClick(R.id.comment_metadata)
   void onClickMetadata(View v) {
     v.showContextMenu();
@@ -50,11 +55,6 @@ public class ListingsCommentViewHolder extends RecyclerView.ViewHolder
   @OnClick(R.id.comment_body)
   void onClickBody(View v) {
     v.showContextMenu();
-  }
-
-  @OnClick(R.id.comment_link_title)
-  void onClickTitle() {
-    mCommentPresenter.openCommentLink(mComment);
   }
 
   public void bind(Comment comment, boolean showControversiality) {
