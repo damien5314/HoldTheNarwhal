@@ -32,6 +32,7 @@ import java.util.Date;
 import java.util.List;
 
 import butterknife.Bind;
+import butterknife.ButterKnife;
 
 public class UserProfileFragment extends AbsListingsFragment
     implements UserProfileView, TabLayout.OnTabSelectedListener {
@@ -172,16 +173,15 @@ public class UserProfileFragment extends AbsListingsFragment
     if (trophies == null || trophies.size() == 0) return; // Nothing to show
     LayoutInflater inflater = getActivity().getLayoutInflater();
     for (Listing listing : trophies) {
-      LinearLayout v = (LinearLayout) inflater.inflate(R.layout.trophy_layout, mTrophies, false);
-//      // FIXME Use ButterKnife.findViewById?
-      TextView trophyNameView = (TextView) v.findViewById(R.id.trophy_name);
+      LinearLayout view = (LinearLayout) inflater.inflate(R.layout.trophy_layout, mTrophies, false);
+      TextView trophyNameView = ButterKnife.findById(view, R.id.trophy_name);
       Trophy trophy = (Trophy) listing;
       String name = trophy.getName();
       trophyNameView.setText(name);
       Picasso.with(getActivity())
           .load(trophy.getIcon70())
-          .into(((ImageView) v.findViewById(R.id.trophy_icon)));
-      mTrophies.addView(v);
+          .into(ButterKnife.<ImageView>findById(view, R.id.trophy_icon));
+      mTrophies.addView(view);
     }
   }
 
