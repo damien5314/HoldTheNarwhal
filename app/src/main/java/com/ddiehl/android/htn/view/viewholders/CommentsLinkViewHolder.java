@@ -16,7 +16,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-public class CommentsLinkViewHolder extends AbsLinkViewHolder {
+public class CommentsLinkViewHolder extends BaseLinkViewHolder {
   public CommentsLinkViewHolder(View v, LinkPresenter presenter) {
     super(v, presenter);
   }

@@ -13,7 +13,7 @@ import com.google.gson.JsonParseException;
 
 import java.lang.reflect.Type;
 
-public class AbsCommentDeserializer implements JsonDeserializer<Listing> {
+public class CommentDeserializer implements JsonDeserializer<Listing> {
   private Logger mLog = HoldTheNarwhal.getLogger();
 
   @Override

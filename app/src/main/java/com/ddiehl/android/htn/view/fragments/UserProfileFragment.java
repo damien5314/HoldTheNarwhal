@@ -34,7 +34,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class UserProfileFragment extends AbsListingsFragment
+public class UserProfileFragment extends BaseListingsFragment
     implements UserProfileView, TabLayout.OnTabSelectedListener {
   private static final String ARG_SHOW = "arg_show";
   private static final String ARG_USERNAME = "arg_username";

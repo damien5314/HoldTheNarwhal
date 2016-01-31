@@ -14,7 +14,7 @@ import com.ddiehl.android.htn.view.LinkView;
 import com.ddiehl.android.htn.view.adapters.ListingsAdapter;
 import com.ddiehl.reddit.listings.Link;
 
-public class SubredditFragment extends AbsListingsFragment implements LinkView {
+public class SubredditFragment extends BaseListingsFragment implements LinkView {
   private static final String ARG_SUBREDDIT = "arg_subreddit";
   private static final String ARG_SORT = "arg_sort";
 

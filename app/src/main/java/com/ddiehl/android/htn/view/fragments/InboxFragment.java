@@ -19,7 +19,7 @@ import com.ddiehl.android.htn.view.adapters.ListingsAdapter;
 
 import butterknife.Bind;
 
-public class InboxFragment extends AbsListingsFragment
+public class InboxFragment extends BaseListingsFragment
     implements InboxView, TabLayout.OnTabSelectedListener {
   private static final String ARG_SHOW = "arg_show";
 

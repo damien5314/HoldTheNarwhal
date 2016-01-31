@@ -7,7 +7,7 @@ import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.reddit.Hideable;
 import com.ddiehl.reddit.Savable;
 import com.ddiehl.reddit.Votable;
-import com.ddiehl.reddit.adapters.AbsCommentDeserializer;
+import com.ddiehl.reddit.adapters.CommentDeserializer;
 import com.ddiehl.reddit.adapters.ListingDeserializer;
 import com.ddiehl.reddit.adapters.ListingResponseDeserializer;
 import com.ddiehl.reddit.identity.FriendInfo;
@@ -50,7 +50,7 @@ public class RedditServiceMock implements RedditService {
         .excludeFieldsWithoutExposeAnnotation()
         .registerTypeAdapter(ListingResponse.class, new ListingResponseDeserializer())
         .registerTypeAdapter(Listing.class, new ListingDeserializer())
-        .registerTypeAdapter(AbsComment.class, new AbsCommentDeserializer())
+        .registerTypeAdapter(AbsComment.class, new CommentDeserializer())
         .create();
   }
 

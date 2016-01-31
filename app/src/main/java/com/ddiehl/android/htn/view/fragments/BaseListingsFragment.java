@@ -40,7 +40,7 @@ import com.ddiehl.reddit.listings.PrivateMessage;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public abstract class AbsListingsFragment extends Fragment
+public abstract class BaseListingsFragment extends Fragment
     implements ListingsView, SwipeRefreshLayout.OnRefreshListener {
   private static final String LINK_BASE_URL = "http://www.reddit.com";
   private static final int REQUEST_CHOOSE_SORT = 0x2;

@@ -12,7 +12,7 @@ import com.ddiehl.android.htn.presenter.InboxPresenter;
 import com.ddiehl.android.htn.presenter.LinkPresenter;
 import com.ddiehl.android.htn.presenter.ListingsPresenter;
 import com.ddiehl.android.htn.presenter.MessagePresenter;
-import com.ddiehl.android.htn.view.viewholders.AbsLinkViewHolder;
+import com.ddiehl.android.htn.view.viewholders.BaseLinkViewHolder;
 import com.ddiehl.android.htn.view.viewholders.ListingsCommentViewHolder;
 import com.ddiehl.android.htn.view.viewholders.ListingsLinkViewHolder;
 import com.ddiehl.android.htn.view.viewholders.ListingsMessageViewHolder;
@@ -75,9 +75,9 @@ public class ListingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
   @Override
   public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
     if (position % 25 == 0) getSettings();
-    if (holder instanceof AbsLinkViewHolder) {
+    if (holder instanceof BaseLinkViewHolder) {
       Link link = (Link) mListingsPresenter.getListing(position);
-      ((AbsLinkViewHolder) holder).bind(link, false, mThumbnailMode, mShowNsfwTag);
+      ((BaseLinkViewHolder) holder).bind(link, false, mThumbnailMode, mShowNsfwTag);
     } else if (holder instanceof ListingsCommentViewHolder) {
       Comment comment = (Comment) mListingsPresenter.getListing(position);
       boolean showControversiality = mListingsPresenter.getShowControversiality()

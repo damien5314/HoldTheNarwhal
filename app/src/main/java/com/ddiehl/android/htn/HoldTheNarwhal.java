@@ -14,7 +14,6 @@ import com.ddiehl.android.htn.io.RedditService;
 import com.ddiehl.android.htn.io.RedditServiceImpl;
 import com.facebook.stetho.Stetho;
 import com.squareup.leakcanary.LeakCanary;
-import com.squareup.picasso.Cache;
 import com.squareup.picasso.Picasso;
 
 
@@ -36,8 +35,8 @@ public class HoldTheNarwhal extends Application {
     if (BuildConfig.DEBUG) {
       Picasso.setSingletonInstance(
           new Picasso.Builder(this)
-              .memoryCache(Cache.NONE)
-              .indicatorsEnabled(true)
+//              .memoryCache(Cache.NONE)
+//              .indicatorsEnabled(true)
               .loggingEnabled(false)
               .build());
     }

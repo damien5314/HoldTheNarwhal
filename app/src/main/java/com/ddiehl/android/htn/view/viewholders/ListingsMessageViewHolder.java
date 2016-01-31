@@ -51,17 +51,17 @@ public class ListingsMessageViewHolder extends RecyclerView.ViewHolder
     itemView.setOnCreateContextMenuListener(this);
   }
 
-  public void bind(PrivateMessage message, boolean showCollapsed) {
+  public void bind(PrivateMessage message, boolean showReplies) {
     mMessage = message;
     List<Listing> replies = null;
     if (message.getReplies() != null) {
       replies = message.getReplies().getData().getChildren();
     }
     PrivateMessage messageToShow;
-    if (!showCollapsed) {
+    if (!showReplies) {
       ((View) mConversationSubject.getParent()).setVisibility(View.GONE);
     }
-    if (!showCollapsed || replies == null || replies.size() == 0) {
+    if (!showReplies || replies == null || replies.size() == 0) {
       messageToShow = mMessage;
       // Collapse the "view more messages" view
       mCollapsedMessagesLayout.setVisibility(View.GONE);
@@ -104,6 +104,7 @@ public class ListingsMessageViewHolder extends RecyclerView.ViewHolder
 
   @OnClick({ R.id.last_message_layout })
   void onClick(View v) {
+    mInboxPresenter.setSelectedListing(mMessage);
     v.showContextMenu();
   }
 

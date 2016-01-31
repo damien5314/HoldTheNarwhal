@@ -21,7 +21,7 @@ import java.util.List;
 
 import butterknife.Bind;
 
-public class PrivateMessageFragment extends AbsListingsFragment implements PrivateMessageView {
+public class PrivateMessageFragment extends BaseListingsFragment implements PrivateMessageView {
   private static final String ARG_MESSAGES = "arg_messages";
 
   private PrivateMessagePresenter mPrivateMessagePresenter;

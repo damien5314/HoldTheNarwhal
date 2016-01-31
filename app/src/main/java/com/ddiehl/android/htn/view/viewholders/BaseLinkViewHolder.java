@@ -24,7 +24,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public abstract class AbsLinkViewHolder extends RecyclerView.ViewHolder
+public abstract class BaseLinkViewHolder extends RecyclerView.ViewHolder
     implements View.OnCreateContextMenuListener {
   protected Context mContext;
   protected LinkPresenter mLinkPresenter;
@@ -46,7 +46,7 @@ public abstract class AbsLinkViewHolder extends RecyclerView.ViewHolder
   @Bind(R.id.link_gilded_text_view) TextView mGildedText;
   @Bind(R.id.link_stickied_view) View mStickiedView;
 
-  public AbsLinkViewHolder(View v, LinkPresenter presenter) {
+  public BaseLinkViewHolder(View v, LinkPresenter presenter) {
     super(v);
     mContext = v.getContext().getApplicationContext();
     mLinkPresenter = presenter;

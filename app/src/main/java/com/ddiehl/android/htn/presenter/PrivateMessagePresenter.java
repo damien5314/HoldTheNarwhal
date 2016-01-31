@@ -11,7 +11,7 @@ import com.ddiehl.reddit.listings.PrivateMessage;
 
 import java.util.List;
 
-public class PrivateMessagePresenter extends AbsListingsPresenter implements MessagePresenter {
+public class PrivateMessagePresenter extends BaseListingsPresenter implements MessagePresenter {
   private PrivateMessageView mMessageView;
   private List<Listing> mMessageList;
 

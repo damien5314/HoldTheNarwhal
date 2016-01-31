@@ -11,7 +11,7 @@ import com.squareup.picasso.Picasso;
 
 import butterknife.OnClick;
 
-public class ListingsLinkViewHolder extends AbsLinkViewHolder {
+public class ListingsLinkViewHolder extends BaseLinkViewHolder {
   public ListingsLinkViewHolder(View v, LinkPresenter presenter) {
     super(v, presenter);
   }

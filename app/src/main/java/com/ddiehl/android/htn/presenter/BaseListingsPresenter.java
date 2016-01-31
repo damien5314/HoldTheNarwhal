@@ -40,7 +40,7 @@ import java.util.List;
 
 import rx.functions.Action1;
 
-public abstract class AbsListingsPresenter
+public abstract class BaseListingsPresenter
     implements ListingsPresenter, IdentityManager.Callbacks {
   protected Logger mLog = HoldTheNarwhal.getLogger();
   protected AccessTokenManager mAccessTokenManager = HoldTheNarwhal.getAccessTokenManager();
@@ -68,7 +68,7 @@ public abstract class AbsListingsPresenter
   protected boolean mListingsRequested = false;
   protected String mNextPageListingId;
 
-  public AbsListingsPresenter(
+  public BaseListingsPresenter(
       MainView main, ListingsView view, LinkView linkView, CommentView commentView,
       UserProfileView userProfileView, PrivateMessageView messageView,
       String show, String username, String subreddit, String sort, String timespan) {
