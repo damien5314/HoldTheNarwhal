@@ -4,6 +4,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
   <item
+      android:id="@+id/action_message_reply"
+      android:title="@string/action_message_reply"
+      android:icon="@null"
+      app:showAsAction="never"/>
+
+  <item
+      android:id="@+id/action_message_mark_unread"
+      android:title="@string/action_mark_message_unread"
+      android:icon="@null"
+      app:showAsAction="never"/>
+
+  <item
       android:id="@+id/action_message_show_permalink"
       android:title="@string/action_show_permalink"
       android:icon="@null"
@@ -16,20 +28,8 @@
       app:showAsAction="never"/>
 
   <item
-      android:id="@+id/action_block_user"
+      android:id="@+id/action_message_block_user"
       android:title="@string/action_block_user"
-      android:icon="@null"
-      app:showAsAction="never"/>
-
-  <item
-      android:id="@+id/action_mark_message_unread"
-      android:title="@string/action_mark_message_unread"
-      android:icon="@null"
-      app:showAsAction="never"/>
-
-  <item
-      android:id="@+id/action_message_reply"
-      android:title="@string/action_message_reply"
       android:icon="@null"
       app:showAsAction="never"/>
 

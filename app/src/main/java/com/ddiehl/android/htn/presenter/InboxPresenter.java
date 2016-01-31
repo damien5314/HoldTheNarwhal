@@ -9,12 +9,6 @@ import com.ddiehl.android.htn.view.InboxView;
 import com.ddiehl.android.htn.view.LinkView;
 import com.ddiehl.android.htn.view.ListingsView;
 import com.ddiehl.android.htn.view.MainView;
-import com.ddiehl.reddit.listings.Listing;
-import com.ddiehl.reddit.listings.ListingResponse;
-import com.ddiehl.reddit.listings.PrivateMessage;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class InboxPresenter extends BaseListingsPresenter
     implements LinkPresenter, CommentPresenter, MessagePresenter {
@@ -56,19 +50,5 @@ public class InboxPresenter extends BaseListingsPresenter
   public void requestData(String show) {
     mShow = show;
     refreshData();
-  }
-
-  @Override
-  public void showMessagePermalink() {
-    PrivateMessage message = (PrivateMessage) mListingSelected;
-    ListingResponse listingResponse = message.getReplies();
-    List<PrivateMessage> messages = new ArrayList<>();
-    if (listingResponse != null) {
-      for (Listing item : listingResponse.getData().getChildren()) {
-        messages.add((PrivateMessage) item);
-      }
-    }
-    messages.add(0, message);
-    mMainView.showInboxMessages(messages);
   }
 }

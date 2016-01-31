@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.ddiehl.android.dlogger.Logger;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.analytics.Analytics;
@@ -51,6 +52,7 @@ public abstract class BaseListingsFragment extends Fragment
   @Bind(R.id.recycler_view)
   protected RecyclerView mRecyclerView;
 
+  protected Logger mLog = HoldTheNarwhal.getLogger();
   protected Analytics mAnalytics = HoldTheNarwhal.getAnalytics();
   protected MainView mMainView;
   protected ListingsPresenter mListingsPresenter;
@@ -307,7 +309,23 @@ public abstract class BaseListingsFragment extends Fragment
       case R.id.action_comment_report:
         mCommentPresenter.reportComment();
         return true;
+      case R.id.action_message_show_permalink:
+        mMessagePresenter.showMessagePermalink();
+        return true;
+      case R.id.action_message_report:
+        mMessagePresenter.reportMessage();
+        return true;
+      case R.id.action_message_block_user:
+        mMessagePresenter.blockUser();
+        return true;
+      case R.id.action_message_mark_unread:
+        mMessagePresenter.markMessageUnread();
+        return true;
+      case R.id.action_message_reply:
+        mMessagePresenter.replyToMessage();
+        return true;
       default:
+        mLog.w("No action registered to this context item");
         return false;
     }
   }

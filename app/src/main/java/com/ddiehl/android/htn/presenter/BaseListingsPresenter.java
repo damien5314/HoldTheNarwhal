@@ -547,23 +547,36 @@ public abstract class BaseListingsPresenter
     return mIdentityManager.getUserIdentity();
   }
 
-  public void showMessagePermalink() {
-
-  }
-
-  public void reportMessage() {
-
-  }
-
-  public void blockUser() {
-
+  public void replyToMessage() {
+    PrivateMessage message = (PrivateMessage) mListingSelected;
+    mMainView.showToast(R.string.implementation_pending);
   }
 
   public void markMessageUnread() {
-
+    PrivateMessage message = (PrivateMessage) mListingSelected;
+    mMainView.showToast(R.string.implementation_pending);
   }
 
-  public void replyToMessage() {
+  public void showMessagePermalink() {
+    PrivateMessage message = (PrivateMessage) mListingSelected;
+    ListingResponse listingResponse = message.getReplies();
+    List<PrivateMessage> messages = new ArrayList<>();
+    if (listingResponse != null) {
+      for (Listing item : listingResponse.getData().getChildren()) {
+        messages.add((PrivateMessage) item);
+      }
+    }
+    messages.add(0, message);
+    mMainView.showInboxMessages(messages);
+  }
 
+  public void reportMessage() {
+    PrivateMessage message = (PrivateMessage) mListingSelected;
+    mMainView.showToast(R.string.implementation_pending);
+  }
+
+  public void blockUser() {
+    PrivateMessage message = (PrivateMessage) mListingSelected;
+    mMainView.showToast(R.string.implementation_pending);
   }
 }

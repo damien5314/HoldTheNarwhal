@@ -14,9 +14,9 @@ public interface MessagePresenter {
   void showMessageContextMenu(
       ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, PrivateMessage message);
   UserIdentity getUserIdentity();
+  void replyToMessage();
+  void markMessageUnread();
   void showMessagePermalink();
   void reportMessage();
   void blockUser();
-  void markMessageUnread();
-  void replyToMessage();
 }
