@@ -60,5 +60,7 @@ public interface RedditService {
   Observable<ResponseBody> report(@NonNull String id, @NonNull String reason);
   Observable<Comment> addComment(@NonNull String parentId, @NonNull String text);
   Observable<ListingResponse> getInbox(@NonNull String show, @Nullable String after);
-  Observable<Void> markMessageUnread(@NonNull String commaSeparatedFullnames);
+  Observable<Void> markAllMessagesRead();
+  Observable<Void> markMessagesRead(@NonNull String commaSeparatedFullnames);
+  Observable<Void> markMessagesUnread(@NonNull String commaSeparatedFullnames);
 }

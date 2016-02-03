@@ -135,7 +135,14 @@ public interface RedditAPI {
       @Path("show") String show,
       @Query("after") String after);
 
+  @POST("/api/read_all_messages")
+  Observable<Void> markAllMessagesRead();
+
+  @POST("/api/read_message")
+  Observable<Void> markMessagesRead(
+      @Query("id") String commaSeparatedFullnames);
+
   @POST("/api/unread_message")
-  Observable<Void> markMessageUnread(
+  Observable<Void> markMessagesUnread(
       @Query("id") String commaSeparatedFullnames);
 }

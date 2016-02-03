@@ -332,9 +332,26 @@ public class RedditServiceImpl implements RedditService {
   }
 
   @Override
-  public Observable<Void> markMessageUnread(@NonNull String commaSeparatedFullnames) {
+  public Observable<Void> markAllMessagesRead() {
     return requireAccessToken().flatMap(token ->
-        mAPI.markMessageUnread(commaSeparatedFullnames)
+        mAPI.markAllMessagesRead()
+            .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread()));
+  }
+
+  @Override
+  public Observable<Void> markMessagesRead(@NonNull String commaSeparatedFullnames) {
+    return requireAccessToken().flatMap(token ->
+        mAPI.markMessagesRead(commaSeparatedFullnames)
+            .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+    );
+  }
+
+  @Override
+  public Observable<Void> markMessagesUnread(@NonNull String commaSeparatedFullnames) {
+    return requireAccessToken().flatMap(token ->
+        mAPI.markMessagesUnread(commaSeparatedFullnames)
             .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
     );

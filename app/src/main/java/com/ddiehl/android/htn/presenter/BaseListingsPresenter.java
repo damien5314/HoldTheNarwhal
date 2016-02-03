@@ -557,7 +557,7 @@ public abstract class BaseListingsPresenter
   public void markMessageUnread() {
     PrivateMessage message = (PrivateMessage) mListingSelected;
     String fullname = message.getFullName();
-    mRedditService.markMessageUnread(fullname)
+    mRedditService.markMessagesUnread(fullname)
         .subscribe(
             _void -> {
               message.markUnread(true);

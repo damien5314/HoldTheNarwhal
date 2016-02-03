@@ -191,7 +191,7 @@ public class RedditServiceMock implements RedditService {
   }
 
   @Override
-  public Observable<Void> markMessageUnread(@NonNull String commaSeparatedFullnames) {
+  public Observable<Void> markMessagesUnread(@NonNull String commaSeparatedFullnames) {
     return delay(Observable.just(null));
   }
 
