@@ -121,6 +121,7 @@
   <string name="action_block_user">block user</string>
   <string name="action_mark_message_unread">mark unread</string>
   <string name="action_message_reply">reply</string>
+  <string name="action_mark_messages_read">mark messages read</string>
 
   <!-- Dialogs -->
   <string name="dialog_sign_out_title">Sign out</string>

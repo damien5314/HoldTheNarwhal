@@ -9,6 +9,8 @@ import com.ddiehl.android.htn.view.InboxView;
 import com.ddiehl.android.htn.view.LinkView;
 import com.ddiehl.android.htn.view.ListingsView;
 import com.ddiehl.android.htn.view.MainView;
+import com.ddiehl.reddit.listings.Listing;
+import com.ddiehl.reddit.listings.PrivateMessage;
 
 public class InboxPresenter extends BaseListingsPresenter
     implements LinkPresenter, CommentPresenter, MessagePresenter {
@@ -50,5 +52,19 @@ public class InboxPresenter extends BaseListingsPresenter
   public void requestData(String show) {
     mShow = show;
     refreshData();
+  }
+
+  public void onMarkMessagesRead() {
+    mRedditService.markAllMessagesRead()
+        .subscribe(
+            _void -> {
+              for (Listing listing : mListings) {
+                if (listing instanceof PrivateMessage) {
+                  ((PrivateMessage) listing).markUnread(false);
+                }
+              }
+              mListingsView.listingsUpdated();
+            },
+            error -> mMainView.showError(error, R.string.error_xxx));
   }
 }

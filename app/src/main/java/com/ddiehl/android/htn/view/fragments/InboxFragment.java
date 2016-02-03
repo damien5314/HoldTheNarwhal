@@ -126,22 +126,17 @@ public class InboxFragment extends BaseListingsFragment
 
   @Override
   public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-    inflater.inflate(R.menu.inbox, menu);
+    inflater.inflate(R.menu.listings_inbox, menu);
   }
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
-      case R.id.action_refresh:
-        mListingsPresenter.refreshData();
-        mAnalytics.logOptionRefresh();
-        return true;
-      case R.id.action_settings:
-        mMainView.showSettings();
-        mAnalytics.logOptionSettings();
+      case R.id.action_mark_messages_read:
+        mInboxPresenter.onMarkMessagesRead();
         return true;
     }
-    return false;
+    return super.onOptionsItemSelected(item);
   }
 
   @Override
