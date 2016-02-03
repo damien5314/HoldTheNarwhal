@@ -41,6 +41,8 @@ public class ListingsMessageViewHolder extends RecyclerView.ViewHolder
   View mMessageIndentation;
   @Bind(R.id.last_message_metadata)
   TextView mLastMessageMetadata;
+  @Bind(R.id.unread_message_indicator)
+  View mUnreadMessageIndicator;
   @Bind(R.id.last_message_body)
   TextView mLastMessageBody;
 
@@ -95,6 +97,8 @@ public class ListingsMessageViewHolder extends RecyclerView.ViewHolder
     String text = from + " " + sent;
     mLastMessageMetadata.setText(text);
     mLastMessageBody.setText(messageToShow.getBody());
+    mUnreadMessageIndicator.setVisibility(
+        message.isUnread() ? View.VISIBLE : View.GONE);
   }
 
   @Override

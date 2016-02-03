@@ -85,11 +85,19 @@
 
           <TextView
               android:id="@+id/last_message_metadata"
-              android:layout_width="wrap_content"
+              android:layout_width="0dp"
               android:layout_height="wrap_content"
+              android:layout_weight="1"
               android:textColor="@color/secondary_text"
               android:textAppearance="?android:textAppearanceSmall"
               tools:text="from simpleredditreader sent 8 days ago"/>
+
+          <ImageView
+              android:id="@+id/unread_message_indicator"
+              android:layout_width="wrap_content"
+              android:layout_height="16dp"
+              android:layout_gravity="top"
+              android:src="@drawable/ic_unread_message"/>
 
         </LinearLayout>
 
