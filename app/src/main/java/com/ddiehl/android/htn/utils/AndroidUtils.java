@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -15,6 +17,7 @@ import com.ddiehl.android.htn.HoldTheNarwhal;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -64,7 +67,7 @@ public class AndroidUtils {
   @NonNull
   public static String getBuildTimeFormatted(@NonNull Context c) {
     long t = getBuildTime(c);
-    return SimpleDateFormat.getDateInstance().format(new java.util.Date(t));
+    return SimpleDateFormat.getDateInstance().format(new Date(t));
   }
 
   public static float getScreenWidth() {
@@ -103,5 +106,12 @@ public class AndroidUtils {
     ViewGroup g = (ViewGroup) l.getChildAt(0);
     if (g == null) return 0;
     return g.getChildCount();
+  }
+
+  public static boolean isConnectedToNetwork(Context context) {
+    ConnectivityManager cm =
+        (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+    NetworkInfo info = cm.getActiveNetworkInfo();
+    return info != null && info.isConnectedOrConnecting();
   }
 }

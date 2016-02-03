@@ -13,6 +13,7 @@ import com.ddiehl.android.htn.io.interceptors.AuthorizationInterceptor;
 import com.ddiehl.android.htn.io.interceptors.LoggingInterceptor;
 import com.ddiehl.android.htn.io.interceptors.RawResponseInterceptor;
 import com.ddiehl.android.htn.io.interceptors.UserAgentInterceptor;
+import com.ddiehl.android.htn.utils.AndroidUtils;
 import com.ddiehl.reddit.Hideable;
 import com.ddiehl.reddit.Savable;
 import com.ddiehl.reddit.Votable;
@@ -94,6 +95,7 @@ public class RedditServiceImpl implements RedditService {
 
   @Override
   public Observable<UserIdentity> getUserIdentity() {
+    if (!connectedToNetwork()) return Observable.error(new NetworkUnavailableException());
     return requireUserAccessToken().flatMap(token ->
         mAPI.getUserIdentity()
             .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
@@ -104,6 +106,7 @@ public class RedditServiceImpl implements RedditService {
 
   @Override
   public Observable<UserSettings> getUserSettings() {
+    if (!connectedToNetwork()) return Observable.error(new NetworkUnavailableException());
     return requireUserAccessToken().flatMap(token ->
         mAPI.getUserSettings()
             .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
@@ -113,6 +116,7 @@ public class RedditServiceImpl implements RedditService {
 
   @Override
   public Observable<ResponseBody> updateUserSettings(Map<String, String> settings) {
+    if (!connectedToNetwork()) return Observable.error(new NetworkUnavailableException());
     String json = new Gson().toJson(settings);
     RequestBody body = RequestBody.create(MediaType.parse("application/json"), json);
     return requireUserAccessToken().flatMap(token ->
@@ -126,6 +130,7 @@ public class RedditServiceImpl implements RedditService {
   public Observable<ListingResponse> loadLinks(
       @Nullable String subreddit, @Nullable String sort,
       @Nullable String timespan, @Nullable String after) {
+    if (!connectedToNetwork()) return Observable.error(new NetworkUnavailableException());
     return requireAccessToken().flatMap(token ->
         mAPI.getLinks(sort, subreddit, timespan, after)
             .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
@@ -137,6 +142,7 @@ public class RedditServiceImpl implements RedditService {
   public Observable<List<ListingResponse>> loadLinkComments(
       @NonNull String subreddit, @NonNull String article,
       @Nullable String sort, @Nullable String commentId) {
+    if (!connectedToNetwork()) return Observable.error(new NetworkUnavailableException());
     return requireAccessToken().flatMap(token ->
         mAPI.getComments(subreddit, article, sort, commentId)
             .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
@@ -147,9 +153,10 @@ public class RedditServiceImpl implements RedditService {
   @Override
   public Observable<MoreChildrenResponse> loadMoreChildren(
       @NonNull Link link, @NonNull CommentStub parentStub,
-      @NonNull List<String> children, @Nullable String sort) {
+      @NonNull List<String> childrenIds, @Nullable String sort) {
+    if (!connectedToNetwork()) return Observable.error(new NetworkUnavailableException());
     StringBuilder b = new StringBuilder();
-    for (String child : children) b.append(child).append(",");
+    for (String child : childrenIds) b.append(child).append(",");
     String childrenString = b.substring(0, Math.max(b.length() - 1, 0));
     return requireAccessToken().flatMap(token ->
         mAPI.getMoreChildren(link.getFullName(), childrenString, sort)
@@ -160,6 +167,7 @@ public class RedditServiceImpl implements RedditService {
 
   @Override
   public Observable<UserIdentity> getUserInfo(@NonNull String username) {
+    if (!connectedToNetwork()) return Observable.error(new NetworkUnavailableException());
     return requireAccessToken().flatMap(token ->
         mAPI.getUserInfo(username)
             .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
@@ -169,6 +177,7 @@ public class RedditServiceImpl implements RedditService {
 
   @Override
   public Observable<FriendInfo> getFriendInfo(String username) {
+    if (!connectedToNetwork()) return Observable.error(new NetworkUnavailableException());
     return requireUserAccessToken().flatMap(token ->
         mAPI.getFriendInfo(username)
             .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
@@ -178,6 +187,7 @@ public class RedditServiceImpl implements RedditService {
 
   @Override
   public Observable<List<Listing>> getUserTrophies(@NonNull String username) {
+    if (!connectedToNetwork()) return Observable.error(new NetworkUnavailableException());
     return requireAccessToken().flatMap(token ->
         mAPI.getUserTrophies(username)
             .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
@@ -189,6 +199,7 @@ public class RedditServiceImpl implements RedditService {
   public Observable<ListingResponse> loadUserProfile(
       @NonNull String show, @NonNull String username, @Nullable String sort,
       @Nullable String timespan, @Nullable String after) {
+    if (!connectedToNetwork()) return Observable.error(new NetworkUnavailableException());
     return requireAccessToken().flatMap(token ->
         mAPI.getUserProfile(show, username, sort, timespan, after)
             .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
@@ -198,6 +209,7 @@ public class RedditServiceImpl implements RedditService {
 
   @Override
   public Observable<ResponseBody> addFriend(@NonNull String username) {
+    if (!connectedToNetwork()) return Observable.error(new NetworkUnavailableException());
     String json = "{}";
     RequestBody body = RequestBody.create(MediaType.parse("application/json"), json);
     return requireUserAccessToken().flatMap(token ->
@@ -209,6 +221,7 @@ public class RedditServiceImpl implements RedditService {
 
   @Override
   public Observable<ResponseBody> deleteFriend(@NonNull String username) {
+    if (!connectedToNetwork()) return Observable.error(new NetworkUnavailableException());
     return requireUserAccessToken().flatMap(token ->
         mAPI.deleteFriend(username)
             .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
@@ -221,6 +234,7 @@ public class RedditServiceImpl implements RedditService {
     if (TextUtils.isEmpty(note)) {
       return Observable.error(new RuntimeException("User note should be non-empty"));
     }
+    if (!connectedToNetwork()) return Observable.error(new NetworkUnavailableException());
     String json = new Gson().toJson(new Friend(note));
     return requireUserAccessToken().flatMap(token ->
         mAPI.addFriend(username, RequestBody.create(MediaType.parse("application/json"), json))
@@ -231,6 +245,7 @@ public class RedditServiceImpl implements RedditService {
 
   @Override
   public Observable<Subreddit> getSubredditInfo(@NonNull String subreddit) {
+    if (!connectedToNetwork()) return Observable.error(new NetworkUnavailableException());
     return requireAccessToken().flatMap(token ->
         mAPI.getSubredditInfo(subreddit)
             .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
@@ -240,6 +255,7 @@ public class RedditServiceImpl implements RedditService {
 
   @Override
   public Observable<ResponseBody> vote(@NonNull Votable listing, int direction) {
+    if (!connectedToNetwork()) return Observable.error(new NetworkUnavailableException());
     String fullname = String.format("%s_%s", listing.getKind(), listing.getId());
     return requireUserAccessToken().flatMap(token ->
         mAPI.vote(fullname, direction)
@@ -256,6 +272,7 @@ public class RedditServiceImpl implements RedditService {
   @Override
   public Observable<ResponseBody> save(
       @NonNull Savable listing, @Nullable String category, boolean toSave) {
+    if (!connectedToNetwork()) return Observable.error(new NetworkUnavailableException());
     if (toSave) { // Save
       return requireUserAccessToken().flatMap(token ->
           mAPI.save(listing.getFullName(), category)
@@ -283,6 +300,7 @@ public class RedditServiceImpl implements RedditService {
 
   @Override
   public Observable<ResponseBody> hide(@NonNull Hideable listing, boolean toHide) {
+    if (!connectedToNetwork()) return Observable.error(new NetworkUnavailableException());
     if (toHide) { // Hide
       return requireUserAccessToken().flatMap(token ->
           mAPI.hide(listing.getFullName())
@@ -315,6 +333,7 @@ public class RedditServiceImpl implements RedditService {
 
   @Override
   public Observable<Comment> addComment(@NonNull String parentId, @NonNull String text) {
+    if (!connectedToNetwork()) return Observable.error(new NetworkUnavailableException());
     return requireUserAccessToken().flatMap(token ->
         mAPI.addComment(parentId, text)
             .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
@@ -325,6 +344,7 @@ public class RedditServiceImpl implements RedditService {
 
   @Override
   public Observable<ListingResponse> getInbox(@NonNull String show, @Nullable String after) {
+    if (!connectedToNetwork()) return Observable.error(new NetworkUnavailableException());
     return requireAccessToken().flatMap(token ->
         mAPI.getInbox(show, after)
             .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
@@ -333,6 +353,7 @@ public class RedditServiceImpl implements RedditService {
 
   @Override
   public Observable<Void> markAllMessagesRead() {
+    if (!connectedToNetwork()) return Observable.error(new NetworkUnavailableException());
     return requireAccessToken().flatMap(token ->
         mAPI.markAllMessagesRead()
             .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
@@ -341,6 +362,7 @@ public class RedditServiceImpl implements RedditService {
 
   @Override
   public Observable<Void> markMessagesRead(@NonNull String commaSeparatedFullnames) {
+    if (!connectedToNetwork()) return Observable.error(new NetworkUnavailableException());
     return requireAccessToken().flatMap(token ->
         mAPI.markMessagesRead(commaSeparatedFullnames)
             .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
@@ -350,6 +372,7 @@ public class RedditServiceImpl implements RedditService {
 
   @Override
   public Observable<Void> markMessagesUnread(@NonNull String commaSeparatedFullnames) {
+    if (!connectedToNetwork()) return Observable.error(new NetworkUnavailableException());
     return requireAccessToken().flatMap(token ->
         mAPI.markMessagesUnread(commaSeparatedFullnames)
             .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
@@ -365,6 +388,11 @@ public class RedditServiceImpl implements RedditService {
   private Observable<UserAccessToken> requireUserAccessToken() {
     return mAccessTokenManager.getUserAccessToken()
         .doOnError(error -> mLogger.e("No user access token available"));
+  }
+
+  private boolean connectedToNetwork() {
+    return AndroidUtils.isConnectedToNetwork(
+        HoldTheNarwhal.getContext());
   }
 
   ///////////////

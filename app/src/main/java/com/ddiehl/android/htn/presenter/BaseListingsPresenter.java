@@ -1,5 +1,6 @@
 package com.ddiehl.android.htn.presenter;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -15,6 +16,7 @@ import com.ddiehl.android.htn.SettingsManager;
 import com.ddiehl.android.htn.ThumbnailMode;
 import com.ddiehl.android.htn.analytics.Analytics;
 import com.ddiehl.android.htn.io.RedditService;
+import com.ddiehl.android.htn.utils.AndroidUtils;
 import com.ddiehl.android.htn.view.CommentView;
 import com.ddiehl.android.htn.view.LinkView;
 import com.ddiehl.android.htn.view.ListingsView;
@@ -43,6 +45,7 @@ import rx.functions.Action1;
 public abstract class BaseListingsPresenter
     implements ListingsPresenter, IdentityManager.Callbacks {
   protected Logger mLog = HoldTheNarwhal.getLogger();
+  protected Context mContext = HoldTheNarwhal.getContext();
   protected AccessTokenManager mAccessTokenManager = HoldTheNarwhal.getAccessTokenManager();
   protected IdentityManager mIdentityManager = HoldTheNarwhal.getIdentityManager();
   protected SettingsManager mSettingsManager = HoldTheNarwhal.getSettingsManager();
@@ -116,7 +119,11 @@ public abstract class BaseListingsPresenter
   @Override
   public void getMoreData() {
     if (!mListingsRequested) {
-      requestData();
+      if (AndroidUtils.isConnectedToNetwork(mContext)) {
+        requestData();
+      } else {
+        mMainView.showToast(R.string.error_network_unavailable);
+      }
     }
   }
 

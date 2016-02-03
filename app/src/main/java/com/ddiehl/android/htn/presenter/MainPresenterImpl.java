@@ -1,8 +1,6 @@
 package com.ddiehl.android.htn.presenter;
 
 import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 
@@ -15,6 +13,7 @@ import com.ddiehl.android.htn.SettingsManager;
 import com.ddiehl.android.htn.analytics.Analytics;
 import com.ddiehl.android.htn.io.RedditAuthService;
 import com.ddiehl.android.htn.io.RedditService;
+import com.ddiehl.android.htn.utils.AndroidUtils;
 import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.reddit.identity.AccessToken;
 import com.ddiehl.reddit.identity.UserIdentity;
@@ -101,8 +100,8 @@ public class MainPresenterImpl implements MainPresenter, IdentityManager.Callbac
 
   @Override
   public void onLogIn() {
-    if (isConnectedToNetwork()) mMainView.showLoginView();
-    else mMainView.showToast(R.string.error_no_network);
+    if (AndroidUtils.isConnectedToNetwork(mContext)) mMainView.showLoginView();
+    else mMainView.showToast(R.string.error_network_unavailable);
     mAnalytics.logDrawerLogIn();
   }
 
@@ -146,13 +145,6 @@ public class MainPresenterImpl implements MainPresenter, IdentityManager.Callbac
     mMainView.resetBackNavigation();
     mMainView.showSubreddit("random", null);
     mAnalytics.logDrawerRandomSubreddit();
-  }
-
-  private boolean isConnectedToNetwork() {
-    ConnectivityManager cm =
-        (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
-    NetworkInfo info = cm.getActiveNetworkInfo();
-    return info != null && info.isConnectedOrConnecting();
   }
 
   @Override

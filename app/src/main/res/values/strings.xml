@@ -224,7 +224,7 @@
   <string name="user_friend_delete_confirm">user removed from friends</string>
   <string name="user_friend_delete_error">error removing friend</string>
   <string name="error_xxx">an error has occurred</string>
-  <string name="error_network_unavailable">network is unavailable</string>
+  <string name="error_network_unavailable">no network connection</string>
   <string name="error_private_subreddit">this subreddit is private</string>
   <string name="error_404">page not found</string>
   <string name="error_500">reddit is experiencing issues, try again later</string>
@@ -242,7 +242,6 @@
   <string name="error_get_user_trophies">error getting user trophies</string>
   <string name="error_get_friend_info">error getting friend info</string>
   <string name="error_get_user_profile_listings">error loading profile listings</string>
-  <string name="error_no_network">no network connection</string>
   <string name="error_user_settings_update">error updating settings</string>
   <string name="error_get_inbox">error getting inbox</string>
 </resources>

@@ -1,10 +1,10 @@
 package com.ddiehl.android.htn.io;
 
-
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.io.interceptors.AuthorizationInterceptor;
 import com.ddiehl.android.htn.io.interceptors.LoggingInterceptor;
 import com.ddiehl.android.htn.io.interceptors.UserAgentInterceptor;
+import com.ddiehl.android.htn.utils.AndroidUtils;
 import com.ddiehl.reddit.identity.AccessToken;
 import com.ddiehl.reddit.identity.ApplicationAccessToken;
 import com.ddiehl.reddit.identity.UserAccessToken;
@@ -50,6 +50,7 @@ public class RedditAuthServiceImpl implements RedditAuthService {
 
   @Override
   public Observable<ApplicationAccessToken> authorizeApplication() {
+    if (!connectedToNetwork()) return Observable.error(new NetworkUnavailableException());
     String grantType = "https://oauth.reddit.com/grants/installed_client";
     String deviceId = HoldTheNarwhal.getSettingsManager().getDeviceId();
     return mAuthService.getApplicationAuthToken(grantType, deviceId)
@@ -60,6 +61,7 @@ public class RedditAuthServiceImpl implements RedditAuthService {
   @Override
   public Observable<UserAccessToken> getUserAccessToken(
       String grantType, String authCode, String redirectUri) {
+    if (!connectedToNetwork()) return Observable.error(new NetworkUnavailableException());
     return mAuthService.getUserAuthToken(grantType, authCode, redirectUri)
         .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
         .map(Response::body);
@@ -67,6 +69,7 @@ public class RedditAuthServiceImpl implements RedditAuthService {
 
   @Override
   public Observable<UserAccessToken> refreshUserAccessToken(String refreshToken) {
+    if (!connectedToNetwork()) return Observable.error(new NetworkUnavailableException());
     String grantType = "refresh_token";
     return mAuthService.refreshUserAuthToken(grantType, refreshToken)
         .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
@@ -75,11 +78,17 @@ public class RedditAuthServiceImpl implements RedditAuthService {
 
   @Override
   public Observable<ResponseBody> revokeAuthToken(AccessToken token) {
+    if (!connectedToNetwork()) return Observable.error(new NetworkUnavailableException());
     return Observable.merge(
         mAuthService.revokeUserAuthToken(token.getToken(), "access_token"),
         mAuthService.revokeUserAuthToken(token.getRefreshToken(), "refresh_token"))
         .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
         .map(Response::body);
+  }
+
+  private boolean connectedToNetwork() {
+    return AndroidUtils.isConnectedToNetwork(
+        HoldTheNarwhal.getContext());
   }
 
   ///////////////
