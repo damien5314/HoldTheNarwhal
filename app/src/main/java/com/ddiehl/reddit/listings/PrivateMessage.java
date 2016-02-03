@@ -71,8 +71,12 @@ public class PrivateMessage extends Listing {
     return data.replies;
   }
 
-  public Boolean isNew() {
-    return data.isNew;
+  public Boolean isUnread() {
+    return data.isUnread;
+  }
+
+  public void markUnread(boolean b) {
+    data.isUnread = b;
   }
 
   public String getDistinguished() {
@@ -113,7 +117,7 @@ public class PrivateMessage extends Listing {
     @Expose
     ListingResponse replies;
     @Expose @SerializedName("new")
-    Boolean isNew;
+    Boolean isUnread;
     @Expose
     String distinguished;
     @Expose

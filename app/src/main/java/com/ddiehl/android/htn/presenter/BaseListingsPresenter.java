@@ -477,7 +477,8 @@ public abstract class BaseListingsPresenter
       mRedditService.vote(votable, direction)
           .subscribe(response -> {
             votable.applyVote(direction);
-            mListingsView.listingUpdatedAt(mListings.indexOf(listing));
+            mListingsView.listingUpdatedAt(
+                mListings.indexOf(listing));
           }, e -> mMainView.showError(e, R.string.vote_failed));
       mAnalytics.logVote(votable.getKind(), direction);
     }
@@ -488,7 +489,8 @@ public abstract class BaseListingsPresenter
     mRedditService.save(savable, null, toSave)
         .subscribe(response -> {
           savable.isSaved(toSave);
-          mListingsView.listingUpdatedAt(mListings.indexOf(listing));
+          mListingsView.listingUpdatedAt(
+              mListings.indexOf(listing));
         }, e -> mMainView.showError(e, R.string.save_failed));
   }
 
@@ -554,7 +556,16 @@ public abstract class BaseListingsPresenter
 
   public void markMessageUnread() {
     PrivateMessage message = (PrivateMessage) mListingSelected;
-    mMainView.showToast(R.string.implementation_pending);
+    String fullname = message.getFullName();
+    mRedditService.markMessageUnread(fullname)
+        .subscribe(
+            _void -> {
+              message.markUnread(true);
+              mListingsView.listingUpdatedAt(
+                  mListings.indexOf(message));
+            },
+            error -> mMainView.showError(error, R.string.error_xxx)
+        );
   }
 
   public void showMessagePermalink() {

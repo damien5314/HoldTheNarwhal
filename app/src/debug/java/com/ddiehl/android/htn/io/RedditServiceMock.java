@@ -190,6 +190,11 @@ public class RedditServiceMock implements RedditService {
     return delay(Observable.just(response));
   }
 
+  @Override
+  public Observable<Void> markMessageUnread(@NonNull String commaSeparatedFullnames) {
+    return delay(Observable.just(null));
+  }
+
   private static Reader getReaderForFile(String filename) {
     InputStream is;
     try {

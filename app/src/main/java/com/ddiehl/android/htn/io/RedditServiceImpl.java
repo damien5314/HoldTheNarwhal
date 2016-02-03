@@ -331,6 +331,15 @@ public class RedditServiceImpl implements RedditService {
             .observeOn(AndroidSchedulers.mainThread()));
   }
 
+  @Override
+  public Observable<Void> markMessageUnread(@NonNull String commaSeparatedFullnames) {
+    return requireAccessToken().flatMap(token ->
+        mAPI.markMessageUnread(commaSeparatedFullnames)
+            .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+    );
+  }
+
   private Observable<AccessToken> requireAccessToken() {
     return mAccessTokenManager.getAccessToken()
         .doOnError(error -> mLogger.e("No access token available"));

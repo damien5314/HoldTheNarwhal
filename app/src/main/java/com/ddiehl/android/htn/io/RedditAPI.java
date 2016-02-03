@@ -134,4 +134,8 @@ public interface RedditAPI {
   Observable<ListingResponse> getInbox(
       @Path("show") String show,
       @Query("after") String after);
+
+  @POST("/api/unread_message")
+  Observable<Void> markMessageUnread(
+      @Query("id") String commaSeparatedFullnames);
 }
