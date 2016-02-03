@@ -216,7 +216,7 @@ public abstract class BaseListingsFragment extends Fragment
 
   public void showLinkContextMenu(ContextMenu menu, View v, Link link) {
     getActivity().getMenuInflater().inflate(R.menu.link_context, menu);
-    String title = String.format(v.getContext().getString(R.string.menu_action_link),
+    String title = String.format(getString(R.string.menu_action_link),
         link.getTitle(), link.getScore());
     menu.setHeaderTitle(title);
     menu.findItem(R.id.action_link_hide).setVisible(!link.isHidden());
@@ -317,6 +317,9 @@ public abstract class BaseListingsFragment extends Fragment
         return true;
       case R.id.action_message_block_user:
         mMessagePresenter.blockUser();
+        return true;
+      case R.id.action_message_mark_read:
+        mMessagePresenter.markMessageRead();
         return true;
       case R.id.action_message_mark_unread:
         mMessagePresenter.markMessageUnread();

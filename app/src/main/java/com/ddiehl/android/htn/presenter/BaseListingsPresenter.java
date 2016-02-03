@@ -423,6 +423,10 @@ public abstract class BaseListingsPresenter
   public void showMessageContextMenu(
       ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, PrivateMessage message) {
     mPrivateMessageView.showPrivateMessageContextMenu(menu, v, message);
+    menu.findItem(R.id.action_message_mark_read)
+        .setVisible(message.isUnread());
+    menu.findItem(R.id.action_message_mark_unread)
+        .setVisible(!message.isUnread());
   }
 
   @Override
@@ -552,6 +556,20 @@ public abstract class BaseListingsPresenter
   public void replyToMessage() {
     PrivateMessage message = (PrivateMessage) mListingSelected;
     mMainView.showToast(R.string.implementation_pending);
+  }
+
+  public void markMessageRead() {
+    PrivateMessage message = (PrivateMessage) mListingSelected;
+    String fullname = message.getFullName();
+    mRedditService.markMessagesRead(fullname)
+        .subscribe(
+            _void -> {
+              message.markUnread(false);
+              mListingsView.listingUpdatedAt(
+                  mListings.indexOf(message));
+            },
+            error -> mMainView.showError(error, R.string.error_xxx)
+        );
   }
 
   public void markMessageUnread() {
