@@ -95,10 +95,13 @@ public class UserProfileFragment extends BaseListingsFragment
     mKarmaLayout.setVisibility(View.GONE);
     mFriendButton.setVisibility(View.GONE);
     mFriendNoteLayout.setVisibility(View.GONE);
-    mFriendNoteSave.setOnClickListener((view) -> {
+    mFriendNoteSave.setOnClickListener(view -> {
       String note = mFriendNote.getText().toString();
       mUserProfilePresenter.saveFriendNote(note);
     });
+    TabLayout.Tab currentTab = mUserProfileTabs.getTabAt(
+        mUserProfileTabs.getSelectedTabPosition());
+    showViewForTab(currentTab);
     return v;
   }
 
@@ -131,6 +134,7 @@ public class UserProfileFragment extends BaseListingsFragment
     mLinkKarma.setText(NumberFormat.getInstance().format(user.getLinkKarma()));
     mCommentKarma.setText(NumberFormat.getInstance().format(user.getCommentKarma()));
     // If user is not self, show friend button
+    // TODO This should come from presenter
     UserIdentity self = HoldTheNarwhal.getIdentityManager().getUserIdentity();
     if (self != null && !user.getName().equals(self.getName())) {
       mFriendButton.setVisibility(View.VISIBLE);
@@ -232,27 +236,6 @@ public class UserProfileFragment extends BaseListingsFragment
     mUserProfileTabs.setOnTabSelectedListener(this);
   }
 
-  public void updateUserProfileTabs() {
-    UserIdentity id = mUserProfilePresenter.getAuthorizedUser();
-    boolean showAuthorizedTabs = id != null &&
-        id.getName().equals(mUserProfilePresenter.getUsernameContext());
-    if (showAuthorizedTabs) {
-      if (AndroidUtils.getChildrenInTabLayout(mUserProfileTabs) != 9) {
-        while (AndroidUtils.getChildrenInTabLayout(mUserProfileTabs) > 5) {
-          mUserProfileTabs.removeTabAt(5);
-        }
-        mUserProfileTabs.addTab(mTabUpvoted);
-        mUserProfileTabs.addTab(mTabDownvoted);
-        mUserProfileTabs.addTab(mTabHidden);
-        mUserProfileTabs.addTab(mTabSaved);
-      }
-    } else {
-      while (AndroidUtils.getChildrenInTabLayout(mUserProfileTabs) > 5) {
-        mUserProfileTabs.removeTabAt(5);
-      }
-    }
-  }
-
   @Override
   public void selectTab(String show) {
     mUserProfileTabs.setOnTabSelectedListener(null);
@@ -262,6 +245,7 @@ public class UserProfileFragment extends BaseListingsFragment
         String tag = (String) tab.getTag();
         if (tag != null && tag.equals(show)) {
           tab.select();
+          showViewForTab(tab);
           break;
         }
       }
@@ -274,6 +258,11 @@ public class UserProfileFragment extends BaseListingsFragment
 
   @Override
   public void onTabSelected(TabLayout.Tab tab) {
+    showViewForTab(tab);
+    mUserProfilePresenter.requestData((String) tab.getTag());
+  }
+
+  private void showViewForTab(TabLayout.Tab tab) {
     String tag = (String) tab.getTag();
     if (tag != null && tag.equals("summary")) {
       mListView.setVisibility(View.GONE);
@@ -282,7 +271,6 @@ public class UserProfileFragment extends BaseListingsFragment
       mUserProfileSummary.setVisibility(View.GONE);
       mListView.setVisibility(View.VISIBLE);
     }
-    mUserProfilePresenter.requestData(tag);
   }
 
   @Override

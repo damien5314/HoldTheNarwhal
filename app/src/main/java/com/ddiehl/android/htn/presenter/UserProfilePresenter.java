@@ -29,8 +29,8 @@ public class UserProfilePresenter extends BaseListingsPresenter
 
   @Override
   public void onResume() {
-    super.onResume();
     mSummaryView.selectTab(mShow);
+    super.onResume();
   }
 
   @Override
