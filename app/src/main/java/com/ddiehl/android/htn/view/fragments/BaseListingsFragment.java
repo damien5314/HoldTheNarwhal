@@ -130,7 +130,6 @@ public abstract class BaseListingsFragment extends Fragment
     mRecyclerView.setAdapter(null);
   }
 
-  // TODO Annotate requestCode with a @RequestCode annotation like we have in LinkCommentsFragment
   @Override
   public void onActivityResult(int requestCode, int resultCode, Intent data) {
     switch (requestCode) {
@@ -378,11 +377,11 @@ public abstract class BaseListingsFragment extends Fragment
   }
 
   public void openUserProfileView(@NonNull Link link) {
-    ((MainView) getActivity()).showUserProfile(link.getAuthor(), "summary");
+    ((MainView) getActivity()).showUserProfile(link.getAuthor(), null, null);
   }
 
   public void openUserProfileView(@NonNull Comment comment) {
-    ((MainView) getActivity()).showUserProfile(comment.getAuthor(), "summary");
+    ((MainView) getActivity()).showUserProfile(comment.getAuthor(), null, null);
   }
 
   public void openCommentInBrowser(@NonNull Comment comment) {

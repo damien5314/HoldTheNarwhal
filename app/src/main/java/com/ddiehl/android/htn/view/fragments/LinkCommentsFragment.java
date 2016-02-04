@@ -6,7 +6,6 @@ import android.app.FragmentManager;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -43,8 +42,6 @@ public class LinkCommentsFragment extends Fragment
   private static final String ARG_ARTICLE = "arg_article";
   private static final String ARG_COMMENT_ID = "arg_comment_id";
 
-  @IntDef({REQUEST_CHOOSE_SORT, REQUEST_ADD_COMMENT})
-  public @interface RequestCode { }
   private static final int REQUEST_CHOOSE_SORT = 0;
   private static final int REQUEST_ADD_COMMENT = 1;
   private static final String DIALOG_CHOOSE_SORT = "dialog_choose_sort";
@@ -227,12 +224,12 @@ public class LinkCommentsFragment extends Fragment
 
   @Override
   public void openUserProfileView(@NonNull Link link) {
-    ((MainView) getActivity()).showUserProfile(link.getAuthor(), "summary");
+    ((MainView) getActivity()).showUserProfile(link.getAuthor(), null, null);
   }
 
   @Override
   public void openUserProfileView(@NonNull Comment comment) {
-    ((MainView) getActivity()).showUserProfile(comment.getAuthor(), "summary");
+    ((MainView) getActivity()).showUserProfile(comment.getAuthor(), null, null);
   }
 
   @Override
@@ -330,7 +327,7 @@ public class LinkCommentsFragment extends Fragment
   }
 
   @Override
-  public void onActivityResult(@RequestCode int requestCode, int resultCode, Intent data) {
+  public void onActivityResult(int requestCode, int resultCode, Intent data) {
     switch (requestCode) {
       case REQUEST_CHOOSE_SORT:
         if (resultCode == Activity.RESULT_OK) {

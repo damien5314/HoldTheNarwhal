@@ -15,13 +15,12 @@ import com.ddiehl.reddit.listings.PrivateMessage;
 public class InboxPresenter extends BaseListingsPresenter
     implements LinkPresenter, CommentPresenter, MessagePresenter {
   private InboxView mInboxView;
-  private String mShow = null;
 
   public InboxPresenter(
       @NonNull MainView main, @NonNull ListingsView listingsView,
       @NonNull LinkView linkView, @NonNull CommentView commentView,
       @NonNull InboxView inboxView, @Nullable String show) {
-    super(main, listingsView, linkView, commentView, null, inboxView, null, null, null, null, null);
+    super(main, listingsView, linkView, commentView, null, inboxView, show, null, null, null, null);
     mInboxView = inboxView;
     mShow = show;
   }

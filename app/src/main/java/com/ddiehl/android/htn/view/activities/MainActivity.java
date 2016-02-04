@@ -181,23 +181,14 @@ public class MainActivity extends AppCompatActivity implements MainView,
 
   @Override
   public void showInbox() {
-    InboxFragment fragment = InboxFragment.newInstance("inbox");
+    InboxFragment fragment = InboxFragment.newInstance(null);
     showFragment(fragment);
   }
 
   @Override
-  public void showUserProfile(@NonNull String username) {
-    showUserProfile(username, "summary");
-  }
-
-  @Override
-  public void showUserProfile(@NonNull String username, @NonNull String show) {
-    showUserProfile(username, show, "new");
-  }
-
-  @Override
-  public void showUserProfile(@NonNull String username, @NonNull String show, @NonNull String sort) {
-    Fragment f = UserProfileFragment.newInstance(show, username, sort);
+  public void showUserProfile(
+      @NonNull String username, @Nullable String show, @Nullable String sort) {
+    Fragment f = UserProfileFragment.newInstance(username, show, sort);
     showFragment(f);
   }
 

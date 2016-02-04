@@ -25,9 +25,7 @@ public interface MainView extends AnalyticsDialog.Callbacks, ConfirmSignOutDialo
   void showLoginView();
   void showInbox();
   void showInboxMessages(@NonNull List<PrivateMessage> messages);
-  void showUserProfile(@NonNull String username);
-  void showUserProfile(@NonNull String username, @NonNull String show);
-  void showUserProfile(@NonNull String username, @NonNull String show, @NonNull String sort);
+  void showUserProfile(@NonNull String username, @Nullable String show, @Nullable String sort);
   void showSubredditNavigationView();
   void showUserSubreddits();
   void showSubreddit(@Nullable String subreddit, @Nullable String sort);

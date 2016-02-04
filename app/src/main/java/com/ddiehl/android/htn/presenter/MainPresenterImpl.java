@@ -116,7 +116,7 @@ public class MainPresenterImpl implements MainPresenter, IdentityManager.Callbac
   public void onShowUserProfile() {
     mMainView.resetBackNavigation();
     String name = mIdentityManager.getUserIdentity().getName();
-    mMainView.showUserProfile(name);
+    mMainView.showUserProfile(name, "summary", "new");
     mAnalytics.logDrawerUserProfile();
   }
 
@@ -251,11 +251,11 @@ public class MainPresenterImpl implements MainPresenter, IdentityManager.Callbac
           return;
         } else {
           // Profile view default sort
-          mMainView.showUserProfile(segments.get(1), segments.get(2));
+          mMainView.showUserProfile(segments.get(1), segments.get(2), null);
           return;
         }
       } else {
-        mMainView.showUserProfile(segments.get(1));
+        mMainView.showUserProfile(segments.get(1), null, null);
         return;
       }
     }

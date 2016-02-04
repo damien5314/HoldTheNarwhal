@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,6 +40,7 @@ public class UserProfileFragment extends BaseListingsFragment
   private static final String ARG_SHOW = "arg_show";
   private static final String ARG_USERNAME = "arg_username";
   private static final String ARG_SORT = "arg_sort";
+  private static final String ARG_TIMESPAN = "arg_timespan";
 
   @Bind(R.id.tab_layout) TabLayout mUserProfileTabs;
   @Bind(R.id.user_profile_summary) View mUserProfileSummary;
@@ -63,11 +65,13 @@ public class UserProfileFragment extends BaseListingsFragment
   public UserProfileFragment() { }
 
   public static UserProfileFragment newInstance(
-      @NonNull String show, @NonNull String username, @NonNull String sort) {
+      @NonNull String username, @Nullable String show, @Nullable String sort) {
     UserProfileFragment f = new UserProfileFragment();
     Bundle args = new Bundle();
-    args.putString(ARG_SHOW, show);
     args.putString(ARG_USERNAME, username);
+    if (TextUtils.isEmpty(show)) show = "summary";
+    args.putString(ARG_SHOW, show);
+    if (TextUtils.isEmpty(sort)) sort = "new";
     args.putString(ARG_SORT, sort);
     f.setArguments(args);
     return f;
@@ -77,11 +81,13 @@ public class UserProfileFragment extends BaseListingsFragment
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     Bundle args = getArguments();
-    String show = args.getString(ARG_SHOW);
     String username = args.getString(ARG_USERNAME);
+    String show = args.getString(ARG_SHOW);
     String sort = args.getString(ARG_SORT);
+    String timespan = args.getString(ARG_TIMESPAN);
+    if (TextUtils.isEmpty(timespan)) timespan = "all";
     mUserProfilePresenter =
-        new UserProfilePresenter(mMainView, this, this, this, this, show, username, sort, "all");
+        new UserProfilePresenter(mMainView, this, this, this, this, show, username, sort, timespan);
     mLinkPresenter = mUserProfilePresenter;
     mCommentPresenter = mUserProfilePresenter;
     mListingsPresenter = mUserProfilePresenter;
@@ -114,12 +120,20 @@ public class UserProfileFragment extends BaseListingsFragment
   @Override
   public void onActivityCreated(@Nullable Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
-    updateTitle();
+    updateTitle(); // FIXME Why does this have to go in onActivityCreated?
   }
 
   @Override
   protected int getLayoutResId() {
     return R.layout.listings_fragment_user_profile;
+  }
+
+  @Override
+  public void onPause() {
+    getArguments().putString(ARG_SHOW, mListingsPresenter.getShow());
+    getArguments().putString(ARG_SORT, mListingsPresenter.getSort());
+    getArguments().putString(ARG_TIMESPAN, mListingsPresenter.getTimespan());
+    super.onPause();
   }
 
   @Override

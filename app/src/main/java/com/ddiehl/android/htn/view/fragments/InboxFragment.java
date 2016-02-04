@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -33,6 +34,7 @@ public class InboxFragment extends BaseListingsFragment
   public static InboxFragment newInstance(@Nullable String show) {
     InboxFragment fragment = new InboxFragment();
     Bundle args = new Bundle();
+    if (TextUtils.isEmpty(show)) show = "inbox";
     args.putString(ARG_SHOW, show);
     fragment.setArguments(args);
     return fragment;
@@ -41,15 +43,18 @@ public class InboxFragment extends BaseListingsFragment
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    String show = null;
-    if (getArguments() != null) {
-      show = getArguments().getString(ARG_SHOW);
-    }
+    String show = getArguments().getString(ARG_SHOW);
     mInboxPresenter = new InboxPresenter(mMainView, this, this, this, this, show);
     mLinkPresenter = mInboxPresenter;
     mCommentPresenter = mInboxPresenter;
     mMessagePresenter = mInboxPresenter;
     mListingsPresenter = mInboxPresenter;
+  }
+
+  @Override
+  public void onPause() {
+    getArguments().putString(ARG_SHOW, mListingsPresenter.getShow());
+    super.onPause();
   }
 
   @Nullable @Override
