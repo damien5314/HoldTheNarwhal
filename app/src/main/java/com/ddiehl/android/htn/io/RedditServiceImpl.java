@@ -261,11 +261,7 @@ public class RedditServiceImpl implements RedditService {
         mAPI.vote(fullname, direction)
             .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .flatMap(response -> {
-              if (response.message().contains("USER_REQUIRED")) {
-                return Observable.error(new RuntimeException("Sign in required"));
-              } else return Observable.just(response);
-            })
+            .flatMap(this::checkForUserRequiredError)
             .map(Response::body));
   }
 
@@ -278,22 +274,14 @@ public class RedditServiceImpl implements RedditService {
           mAPI.save(listing.getFullName(), category)
               .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
               .observeOn(AndroidSchedulers.mainThread())
-              .flatMap(response -> {
-                if (response.message().contains("USER_REQUIRED")) {
-                  return Observable.error(new RuntimeException("Sign in required"));
-                } else return Observable.just(response);
-              })
+              .flatMap(this::checkForUserRequiredError)
               .map(Response::body));
     } else { // Unsave
       return requireUserAccessToken().flatMap(token ->
           mAPI.unsave(listing.getFullName())
               .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
               .observeOn(AndroidSchedulers.mainThread())
-              .flatMap(response -> {
-                if (response.message().contains("USER_REQUIRED")) {
-                  return Observable.error(new RuntimeException("Sign in required"));
-                } else return Observable.just(response);
-              })
+              .flatMap(this::checkForUserRequiredError)
               .map(Response::body));
     }
   }
@@ -306,22 +294,14 @@ public class RedditServiceImpl implements RedditService {
           mAPI.hide(listing.getFullName())
               .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
               .observeOn(AndroidSchedulers.mainThread())
-              .flatMap(response -> {
-                if (response.message().contains("USER_REQUIRED")) {
-                  return Observable.error(new RuntimeException("Sign in required"));
-                } else return Observable.just(response);
-              })
+              .flatMap(this::checkForUserRequiredError)
               .map(Response::body));
     } else { // Unhide
       return requireUserAccessToken().flatMap(token ->
           mAPI.unhide(listing.getFullName())
               .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
               .observeOn(AndroidSchedulers.mainThread())
-              .flatMap(response -> {
-                if (response.message().contains("USER_REQUIRED")) {
-                  return Observable.error(new RuntimeException("Sign in required"));
-                } else return Observable.just(response);
-              })
+              .flatMap(this::checkForUserRequiredError)
               .map(Response::body));
     }
   }
@@ -393,6 +373,13 @@ public class RedditServiceImpl implements RedditService {
   private boolean connectedToNetwork() {
     return AndroidUtils.isConnectedToNetwork(
         HoldTheNarwhal.getContext());
+  }
+
+  private Observable<Response<ResponseBody>> checkForUserRequiredError(
+      Response<ResponseBody> response) {
+    if (response.message().contains("USER_REQUIRED")) {
+      return Observable.error(new RuntimeException("Sign in required"));
+    } else return Observable.just(response);
   }
 
   ///////////////
