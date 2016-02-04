@@ -17,6 +17,7 @@ import com.ddiehl.reddit.listings.Link;
 public class SubredditFragment extends BaseListingsFragment implements LinkView {
   private static final String ARG_SUBREDDIT = "arg_subreddit";
   private static final String ARG_SORT = "arg_sort";
+  private static final String ARG_TIMESPAN = "arg_timespan";
 
   public SubredditFragment() { }
 
@@ -36,7 +37,9 @@ public class SubredditFragment extends BaseListingsFragment implements LinkView 
     String subreddit = args.getString(ARG_SUBREDDIT);
     String sort = args.getString(ARG_SORT);
     if (TextUtils.isEmpty(sort)) sort = "hot";
-    mLinkPresenter = new SubredditPresenter(mMainView, this, this, subreddit, sort, "all");
+    String timespan = args.getString(ARG_TIMESPAN);
+    if (TextUtils.isEmpty(timespan)) timespan = "all";
+    mLinkPresenter = new SubredditPresenter(mMainView, this, this, subreddit, sort, timespan);
     mListingsPresenter = (ListingsPresenter) mLinkPresenter;
   }
 
@@ -54,9 +57,9 @@ public class SubredditFragment extends BaseListingsFragment implements LinkView 
 
   @Override
   public void onPause() {
-    String sub = mListingsPresenter.getSubreddit();
-//    getArguments().remove(ARG_SUBREDDIT);
-    getArguments().putString(ARG_SUBREDDIT, sub);
+    getArguments().putString(ARG_SUBREDDIT, mListingsPresenter.getSubreddit());
+    getArguments().putString(ARG_SORT, mListingsPresenter.getSort());
+    getArguments().putString(ARG_TIMESPAN, mListingsPresenter.getTimespan());
     super.onPause();
   }
 

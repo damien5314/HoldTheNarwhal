@@ -26,8 +26,8 @@ public class SubredditPresenter extends BaseListingsPresenter implements LinkPre
 
   @Override
   public void onPause() {
-    super.onPause();
     mMainView.loadImageIntoDrawerHeader(null);
+    super.onPause();
   }
 
   @Override
