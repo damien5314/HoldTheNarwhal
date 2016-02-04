@@ -211,9 +211,7 @@ public class LinkCommentsPresenterImpl
 
   @Override
   public void openLink(@NonNull Link link) {
-    if (link.isSelf()) {
-      mLinkCommentsView.showCommentsForLink(link.getSubreddit(), link.getId(), null);
-    } else {
+    if (!link.isSelf()) {
       mLinkCommentsView.openLinkInWebView(link);
     }
   }

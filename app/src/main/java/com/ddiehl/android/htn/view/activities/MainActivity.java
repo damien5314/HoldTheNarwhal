@@ -395,12 +395,6 @@ public class MainActivity extends AppCompatActivity implements MainView,
     showFragment(fragment);
   }
 
-  private void showAboutAppHtml() {
-    WebViewFragment fragment =
-        WebViewFragment.newInstance("file:///android_asset/htn_about_app.html");
-    showFragment(fragment);
-  }
-
   private Fragment getCurrentDisplayedFragment() {
     return getFragmentManager().findFragmentById(R.id.fragment_container);
   }

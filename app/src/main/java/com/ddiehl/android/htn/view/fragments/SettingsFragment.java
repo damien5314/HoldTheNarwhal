@@ -94,7 +94,7 @@ public class SettingsFragment extends PreferenceFragment
     addPreferencesFromResource(R.xml.preferences_all); // Required for getSharedPreferences()
     Preference prefAboutApp = findPreference("pref_about_app");
     prefAboutApp.setOnPreferenceClickListener(preference -> {
-      showAboutApp();
+      mMainView.showAboutApp();
       return false;
     });
   }
@@ -150,10 +150,5 @@ public class SettingsFragment extends PreferenceFragment
         return true;
     }
     return super.onOptionsItemSelected(item);
-  }
-
-  @Override
-  public void showAboutApp() {
-    mMainView.showAboutApp();
   }
 }
