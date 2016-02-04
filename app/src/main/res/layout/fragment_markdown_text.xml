@@ -12,7 +12,8 @@
       android:id="@+id/markdown_text_view"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:textSize="@dimen/about_app_text_size"
+      android:textAppearance="?android:textAppearanceMedium"
+      android:textColor="@color/primary_text"
       android:textColorLink="@color/link_color"/>
 
 </ScrollView>

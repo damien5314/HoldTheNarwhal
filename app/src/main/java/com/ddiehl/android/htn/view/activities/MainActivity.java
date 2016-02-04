@@ -52,8 +52,6 @@ import com.ddiehl.reddit.identity.UserIdentity;
 import com.ddiehl.reddit.listings.PrivateMessage;
 import com.squareup.picasso.Picasso;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.UnknownHostException;
 import java.util.List;
 
@@ -393,14 +391,8 @@ public class MainActivity extends AppCompatActivity implements MainView,
 
   @Override
   public void showAboutApp() {
-    InputStream text;
-    try {
-      text = getAssets().open("htn_about_app.md");
-      Fragment fragment = AboutAppFragment.newInstance(text);
-      showFragment(fragment);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+    Fragment fragment = AboutAppFragment.newInstance();
+    showFragment(fragment);
   }
 
   private void showAboutAppHtml() {
