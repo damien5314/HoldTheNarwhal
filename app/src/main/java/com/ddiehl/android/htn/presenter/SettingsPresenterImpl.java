@@ -1,5 +1,6 @@
 package com.ddiehl.android.htn.presenter;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.ddiehl.android.htn.AccessTokenManager;
@@ -7,7 +8,9 @@ import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.SettingsManager;
+import com.ddiehl.android.htn.io.NetworkUnavailableException;
 import com.ddiehl.android.htn.io.RedditService;
+import com.ddiehl.android.htn.utils.AndroidUtils;
 import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.android.htn.view.SettingsView;
 import com.ddiehl.reddit.identity.UserIdentity;
@@ -56,7 +59,12 @@ public class SettingsPresenterImpl implements SettingsPresenter, IdentityManager
     boolean showUser = mSettingsManager.hasFromRemote();
     mSettingsView.showPreferences(showUser);
     if (pullFromServer) {
-      getData();
+      Context context = HoldTheNarwhal.getContext();
+      if (AndroidUtils.isConnectedToNetwork(context)) {
+        getData();
+      } else {
+        mMainView.showError(new NetworkUnavailableException(), R.string.error_network_unavailable);
+      }
     }
   }
 
