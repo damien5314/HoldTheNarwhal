@@ -53,6 +53,14 @@ public class SubredditFragment extends BaseListingsFragment implements LinkView 
   }
 
   @Override
+  public void onPause() {
+    String sub = mListingsPresenter.getSubreddit();
+//    getArguments().remove(ARG_SUBREDDIT);
+    getArguments().putString(ARG_SUBREDDIT, sub);
+    super.onPause();
+  }
+
+  @Override
   public ListingsAdapter getListingsAdapter() {
     return new ListingsAdapter(
         mListingsPresenter, mLinkPresenter, mCommentPresenter, mMessagePresenter);
