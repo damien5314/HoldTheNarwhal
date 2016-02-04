@@ -32,28 +32,38 @@ public class SubredditPresenter extends BaseListingsPresenter implements LinkPre
 
   @Override
   public void requestData() {
-    if (mSubreddit != null && !mSubreddit.equals("all") && mSubredditInfo == null) {
-      mMainView.showSpinner(null);
-//      mListingsRequested = false;
-      mRedditService.getSubredditInfo(mSubreddit)
-          .doOnTerminate(() -> {
-            if (!mListingsRequested) mMainView.dismissSpinner();
-            mListingsRequested = false;
-          })
-          .subscribe(onSubredditInfoLoaded(),
-              e -> mMainView.showError(e, R.string.error_get_subreddit_info));
+    if (mSubreddit != null
+        && !mSubreddit.equals("all")
+        && !mSubreddit.equals("random")
+        && mSubredditInfo == null) {
+      getSubredditInfo();
     } else {
-      mMainView.showSpinner(null);
-      mListingsRequested = true;
-      mAnalytics.logLoadSubreddit(mSubreddit, mSort, mTimespan);
-      mRedditService.loadLinks(mSubreddit, mSort, mTimespan, mNextPageListingId)
-          .doOnTerminate(() -> {
-            mMainView.dismissSpinner();
-            mListingsRequested = false;
-          })
-          .subscribe(onListingsLoaded(),
-              e -> mMainView.showError(e, R.string.error_get_links));
+      getSubredditLinks();
     }
+  }
+
+  private void getSubredditInfo() {
+    mMainView.showSpinner(null);
+    mRedditService.getSubredditInfo(mSubreddit)
+        .doOnTerminate(() -> {
+          if (!mListingsRequested) mMainView.dismissSpinner();
+          mListingsRequested = false;
+        })
+        .subscribe(onSubredditInfoLoaded(),
+            e -> mMainView.showError(e, R.string.error_get_subreddit_info));
+  }
+
+  private void getSubredditLinks() {
+    mMainView.showSpinner(null);
+    mListingsRequested = true;
+    mAnalytics.logLoadSubreddit(mSubreddit, mSort, mTimespan);
+    mRedditService.loadLinks(mSubreddit, mSort, mTimespan, mNextPageListingId)
+        .doOnTerminate(() -> {
+          mMainView.dismissSpinner();
+          mListingsRequested = false;
+        })
+        .subscribe(onListingsLoaded(),
+            e -> mMainView.showError(e, R.string.error_get_links));
   }
 
   private Action1<Subreddit> onSubredditInfoLoaded() {
