@@ -377,6 +377,7 @@ public class LinkCommentsPresenterImpl
     mRedditService.addComment(parentId, commentText)
         .subscribe(comment -> {
           mMainView.showToast("Comment successful");
+          // TODO Optimize this logic, it probably takes a long time in large threads
           int position;
           if (parentId.startsWith("t1_")) { // Comment
             comment.setDepth(((Comment) mReplyTarget).getDepth() + 1);
@@ -386,7 +387,8 @@ public class LinkCommentsPresenterImpl
             position = 0;
           }
           mCommentBank.add(position, comment);
-          mLinkCommentsView.commentAddedAt(position);
+          mLinkCommentsView.commentAddedAt(
+              mCommentBank.visibleIndexOf(comment));
         }, e -> mMainView.showError(e, R.string.error_add_comment));
   }
 
