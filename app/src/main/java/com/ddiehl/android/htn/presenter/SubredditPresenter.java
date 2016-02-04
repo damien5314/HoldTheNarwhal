@@ -16,7 +16,6 @@ public class SubredditPresenter extends BaseListingsPresenter implements LinkPre
       MainView main, ListingsView listingsView, LinkView view,
       String subreddit, String sort, String timespan) {
     super(main, listingsView, view, null, null, null, null, null, subreddit, sort, timespan);
-    mMainView.loadImageIntoDrawerHeader(null);
   }
 
   @Override
@@ -88,8 +87,7 @@ public class SubredditPresenter extends BaseListingsPresenter implements LinkPre
   }
 
   private void loadHeaderImage() {
-    if (mSubredditInfo != null) {
-      mMainView.loadImageIntoDrawerHeader(mSubredditInfo.getHeaderImageUrl());
-    }
+    mMainView.loadImageIntoDrawerHeader(
+        mSubredditInfo == null ? null : mSubredditInfo.getHeaderImageUrl());
   }
 }
