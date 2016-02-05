@@ -93,6 +93,23 @@ public class UserProfileFragment extends BaseListingsFragment
     mListingsPresenter = mUserProfilePresenter;
   }
 
+  @Override
+  public void refreshTabs(boolean showAuthenticatedTabs) {
+    if (showAuthenticatedTabs) {
+      if (mUserProfileTabs.getTabCount() == 4) {
+        mUserProfileTabs.addTab(mTabUpvoted);
+        mUserProfileTabs.addTab(mTabDownvoted);
+        mUserProfileTabs.addTab(mTabHidden);
+        mUserProfileTabs.addTab(mTabSaved);
+      }
+    } else {
+      if (mUserProfileTabs.getTabCount() > 4)
+        for (int i = mUserProfileTabs.getTabCount() - 1; i >= 4; i--) {
+          mUserProfileTabs.removeTabAt(i);
+        }
+    }
+  }
+
   @Nullable @Override
   public View onCreateView(
       LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -105,9 +122,6 @@ public class UserProfileFragment extends BaseListingsFragment
       String note = mFriendNote.getText().toString();
       mUserProfilePresenter.saveFriendNote(note);
     });
-    TabLayout.Tab currentTab = mUserProfileTabs.getTabAt(
-        mUserProfileTabs.getSelectedTabPosition());
-    showViewForTab(currentTab);
     return v;
   }
 
@@ -208,8 +222,6 @@ public class UserProfileFragment extends BaseListingsFragment
   }
 
   private void initializeUserProfileTabs() {
-    mUserProfileTabs.setOnTabSelectedListener(null);
-
     mTabSummary = mUserProfileTabs.newTab()
         .setText(R.string.navigation_tabs_summary).setTag("summary");
     mTabOverview = mUserProfileTabs.newTab()
@@ -228,26 +240,16 @@ public class UserProfileFragment extends BaseListingsFragment
         .setText(R.string.navigation_tabs_hidden).setTag("hidden");
     mTabSaved = mUserProfileTabs.newTab()
         .setText(R.string.navigation_tabs_saved).setTag("saved");
-
-    // Normal tabs
+    mUserProfileTabs.removeAllTabs();
     mUserProfileTabs.addTab(mTabSummary);
     mUserProfileTabs.addTab(mTabOverview);
     mUserProfileTabs.addTab(mTabComments);
     mUserProfileTabs.addTab(mTabSubmitted);
-    mUserProfileTabs.addTab(mTabGilded);
+  }
 
-    // Authorized tabs
-    UserIdentity id = mUserProfilePresenter.getAuthorizedUser();
-    boolean showAuthorizedTabs = id != null &&
-        id.getName().equals(mUserProfilePresenter.getUsernameContext());
-    if (showAuthorizedTabs) {
-      mUserProfileTabs.addTab(mTabUpvoted);
-      mUserProfileTabs.addTab(mTabDownvoted);
-      mUserProfileTabs.addTab(mTabHidden);
-      mUserProfileTabs.addTab(mTabSaved);
-    }
-
-    mUserProfileTabs.setOnTabSelectedListener(this);
+  private TabLayout.Tab getCurrentSelectedTab() {
+    return mUserProfileTabs.getTabAt(
+        mUserProfileTabs.getSelectedTabPosition());
   }
 
   @Override

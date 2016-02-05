@@ -5,6 +5,7 @@ import android.text.TextUtils;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
+import com.ddiehl.android.htn.utils.Utils;
 import com.ddiehl.android.htn.view.CommentView;
 import com.ddiehl.android.htn.view.LinkView;
 import com.ddiehl.android.htn.view.ListingsView;
@@ -29,8 +30,27 @@ public class UserProfilePresenter extends BaseListingsPresenter
 
   @Override
   public void onResume() {
+    mSummaryView.refreshTabs(isAuthenticatedUser());
     mSummaryView.selectTab(mShow);
     super.onResume();
+  }
+
+  private boolean isAuthenticatedUser() {
+    UserIdentity authenticatedUser = mIdentityManager.getUserIdentity();
+    if (authenticatedUser == null) return false;
+    return Utils.equals(mUsernameContext, authenticatedUser.getName());
+  }
+
+  @Override
+  public Action1<UserIdentity> onUserIdentityChanged() {
+    return identity -> {
+      if (isInAuthenticatedView()) {
+        mShow = "summary";
+        mUserProfileView.selectTab(mShow);
+      }
+      mUserProfileView.refreshTabs(isAuthenticatedUser());
+      super.onUserIdentityChanged().call(identity);
+    };
   }
 
   @Override
@@ -123,5 +143,12 @@ public class UserProfilePresenter extends BaseListingsPresenter
           .subscribe(r -> mMainView.showToast(R.string.user_friend_note_save_confirm),
               e -> mMainView.showError(e, R.string.user_friend_note_save_error));
     }
+  }
+
+  private boolean isInAuthenticatedView() {
+    return mShow.equals("upvoted")
+        || mShow.equals("downvoted")
+        || mShow.equals("hidden")
+        || mShow.equals("saved");
   }
 }

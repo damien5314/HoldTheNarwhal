@@ -14,4 +14,5 @@ public interface UserProfileView extends LinkView, CommentView {
   void showTrophies(List<Listing> trophies);
   void setFriendButtonState(boolean isFriend);
   void selectTab(String show);
+  void refreshTabs(boolean showAuthenticatedTabs);
 }
