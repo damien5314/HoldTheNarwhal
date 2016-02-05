@@ -85,7 +85,7 @@ public abstract class BaseLinkViewHolder extends RecyclerView.ViewHolder
   }
 
   protected void showSelfText(@NonNull Link link, boolean showSelfText) {
-    mLinkView.setVisibility(View.VISIBLE);
+//    mLinkView.setVisibility(View.VISIBLE);
     if (link.getSelftext() != null && !link.getSelftext().equals("") && showSelfText) {
       mSelfText.setText(link.getSelftext());
       mSelfText.setVisibility(View.VISIBLE);
