@@ -62,4 +62,5 @@
   <dimen name="link_metadata_margin">4dp</dimen>
   <dimen name="comment_link_image_border_width">1dp</dimen>
   <dimen name="private_message_subject_max_height">48dp</dimen>
+  <dimen name="unread_message_indicator_size">16dp</dimen>
 </resources>

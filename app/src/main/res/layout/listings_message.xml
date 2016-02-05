@@ -1,10 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_marginTop="@dimen/link_card_margin"
     android:layout_marginBottom="@dimen/link_card_margin"
     card_view:cardElevation="@dimen/link_card_elevation"
@@ -12,122 +10,14 @@
     card_view:cardUseCompatPadding="true">
 
   <LinearLayout
+      xmlns:android="http://schemas.android.com/apk/res/android"
       android:id="@+id/item_row"
       android:orientation="vertical"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:background="@drawable/listings_card_bg">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="@dimen/link_list_item_margin_vertical"
-        android:paddingBottom="@dimen/link_list_item_margin_vertical"
-        android:paddingLeft="@dimen/link_list_item_margin_horizontal"
-        android:paddingRight="@dimen/link_list_item_margin_horizontal"
-        android:gravity="center_vertical"
-        android:orientation="vertical"
-        android:background="@color/primary_dark">
-
-      <TextView
-          android:id="@+id/conversation_subject"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:textAlignment="viewStart"
-          android:gravity="start"
-          android:fontFamily="sans-serif-light"
-          android:textSize="@dimen/comment_link_title_text_size"
-          android:textColor="@android:color/white"
-          tools:text="The brown fox jumped over the white fence"
-          tools:ignore="UnusedAttribute"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/conversation_body_layout"
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-      <LinearLayout
-          android:id="@+id/collapsed_messages_layout"
-          android:orientation="horizontal"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content">
-
-        <TextView
-            android:id="@+id/collapsed_messages_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:textColor="@color/secondary_text"
-            android:textAppearance="?android:textAppearanceSmall"
-            tools:text="view 9 more messages"/>
-
-      </LinearLayout>
-
-      <LinearLayout
-          android:id="@+id/last_message_layout"
-          android:orientation="horizontal"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:background="@drawable/thread_comment_bg">
-
-        <View
-            android:id="@+id/message_indentation"
-            android:layout_width="@dimen/comment_indentation_margin"
-            android:layout_height="match_parent"
-            android:background="@color/primary_dark"/>
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-          <LinearLayout
-              android:orientation="horizontal"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:layout_marginTop="8dp"
-              android:layout_marginBottom="4dp"
-              android:layout_marginLeft="8dp"
-              android:layout_marginRight="8dp">
-
-            <TextView
-                android:id="@+id/last_message_metadata"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textColor="@color/secondary_text"
-                android:textAppearance="?android:textAppearanceSmall"
-                tools:text="from simpleredditreader sent 8 days ago"/>
-
-            <ImageView
-                android:id="@+id/unread_message_indicator"
-                android:layout_width="wrap_content"
-                android:layout_height="16dp"
-                android:layout_gravity="top"
-                android:src="@drawable/ic_unread_message"/>
-
-          </LinearLayout>
-
-          <com.ddiehl.android.htn.view.widgets.MarkdownTextView
-              android:id="@+id/last_message_body"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:layout_marginTop="4dp"
-              android:layout_marginBottom="8dp"
-              android:layout_marginLeft="8dp"
-              android:layout_marginRight="8dp"
-              android:textColor="@color/primary_text"
-              android:textAppearance="?android:textAppearanceSmall"
-              tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod."/>
-
-        </LinearLayout>
-
-      </LinearLayout>
-
-    </LinearLayout>
+    <include layout="@layout/message_layout"/>
 
   </LinearLayout>
 
