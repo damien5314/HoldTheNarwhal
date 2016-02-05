@@ -37,8 +37,8 @@ public class UserProfilePresenter extends BaseListingsPresenter
 
   private boolean isAuthenticatedUser() {
     UserIdentity authenticatedUser = mIdentityManager.getUserIdentity();
-    if (authenticatedUser == null) return false;
-    return Utils.equals(mUsernameContext, authenticatedUser.getName());
+    return authenticatedUser != null
+        && Utils.equals(mUsernameContext, authenticatedUser.getName());
   }
 
   @Override

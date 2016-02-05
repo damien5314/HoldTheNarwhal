@@ -33,7 +33,7 @@ public class RedditNavEditText extends EditText {
   }
 
   @OnTextChanged(callback = OnTextChanged.Callback.TEXT_CHANGED)
-  void onTextChanged2(CharSequence s, int start, int before, int count) {
+  void duringTextChange(CharSequence s, int start, int before, int count) {
 
   }
 
@@ -71,9 +71,6 @@ public class RedditNavEditText extends EditText {
   // Causes submit button to be clicked on keyboard "done" button click
   @OnEditorAction
   boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-    if (actionId == EditorInfo.IME_ACTION_DONE) {
-      return true;
-    }
-    return false;
+    return actionId == EditorInfo.IME_ACTION_DONE;
   }
 }
