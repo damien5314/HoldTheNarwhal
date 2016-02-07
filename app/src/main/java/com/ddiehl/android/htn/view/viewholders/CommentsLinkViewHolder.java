@@ -16,9 +16,16 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import butterknife.OnClick;
+
 public class CommentsLinkViewHolder extends BaseLinkViewHolder {
   public CommentsLinkViewHolder(View v, LinkPresenter presenter) {
     super(v, presenter);
+  }
+
+  @OnClick(R.id.link_comment_count)
+  void showCommentsForLink() {
+    /* no-op */
   }
 
   @Override

@@ -1,6 +1,7 @@
 package com.ddiehl.android.htn.view.viewholders;
 
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 
 import com.ddiehl.android.htn.R;
@@ -24,11 +25,16 @@ public class ListingsLinkViewHolder extends BaseLinkViewHolder {
   @Override
   protected void showLiked(@NonNull Link link) {
     if (link.isLiked() == null) {
-      mLinkView.setBackgroundResource(R.drawable.listings_card_bg);
+//      mLinkView.setBackgroundResource(R.drawable.listings_card_bg);
+      mLinkView.setBackgroundColor(
+              ContextCompat.getColor(mContext, R.color.transparent));
     } else if (link.isLiked()) {
-      mLinkView.setBackgroundResource(R.drawable.listings_card_upvoted_bg);
+//      mLinkView.setBackgroundResource(R.drawable.listings_card_upvoted_bg);
+      mLinkView.setBackgroundColor(
+              ContextCompat.getColor(mContext, R.color.reddit_orange_lighter));
     } else {
-      mLinkView.setBackgroundResource(R.drawable.listings_card_downvoted_bg);
+      mLinkView.setBackgroundColor(
+              ContextCompat.getColor(mContext, R.color.reddit_blue_lighter));
     }
   }
 

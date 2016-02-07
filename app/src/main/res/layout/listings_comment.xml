@@ -5,18 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_marginTop="@dimen/link_card_margin"
-    android:layout_marginBottom="@dimen/link_card_margin"
     card_view:cardElevation="@dimen/link_card_elevation"
-    card_view:cardCornerRadius="@dimen/link_card_corner_radius"
     card_view:cardUseCompatPadding="true">
 
   <LinearLayout
       android:id="@+id/comment_item_row"
       android:orientation="vertical"
       android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:background="@drawable/listings_card_bg">
+      android:layout_height="wrap_content">
 
     <LinearLayout
         android:id="@+id/comment_link_metadata"
