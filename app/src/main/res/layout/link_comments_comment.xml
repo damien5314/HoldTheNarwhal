@@ -1,18 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/comment_item_row"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@drawable/thread_comment_bg">
+    android:layout_height="wrap_content">
 
   <View
-      android:id="@+id/indentation"
-      android:background="@color/indentation"
-      android:layout_width="@dimen/comment_indentation_margin"
-      android:layout_height="match_parent" />
+      android:layout_width="match_parent"
+      android:layout_height="1dp"
+      android:background="@color/primary"/>
 
-  <include layout="@layout/comment_layout" />
+  <LinearLayout
+      android:id="@+id/comment_item_row"
+      android:orientation="horizontal"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:background="@color/white">
+
+    <View
+        android:id="@+id/indentation"
+        android:background="@color/indentation"
+        android:layout_width="@dimen/comment_indentation_margin"
+        android:layout_height="match_parent" />
+
+    <include layout="@layout/comment_layout" />
+
+  </LinearLayout>
 
 </LinearLayout>

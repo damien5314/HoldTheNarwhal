@@ -27,7 +27,7 @@
           android:layout_height="wrap_content"
           android:textColor="@color/secondary_text"
           android:textStyle="bold"
-          android:textSize="@dimen/comment_author_text_size"
+          android:textAppearance="?android:textAppearanceSmall"
           android:ellipsize="end"
           android:maxLines="1"
           tools:text="andrewsmith1984"/>
@@ -43,7 +43,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/comment_secondary_data_margin"
             android:layout_marginRight="@dimen/comment_secondary_data_margin"
-            android:textSize="@dimen/comment_secondary_data_text_size"
+            android:textAppearance="?android:textAppearanceSmall"
             android:text="@string/comment_metadata_divider"/>
 
         <TextView
@@ -51,7 +51,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/secondary_text"
-            android:textSize="@dimen/comment_score_text_size"
+            android:textAppearance="?android:textAppearanceSmall"
             android:maxLines="1"
             tools:text="573"/>
 
@@ -61,6 +61,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:text="@string/comment_controversiality_indicator"
+            android:textAppearance="?android:textAppearanceSmall"
             android:textColor="@color/comment_controversiality_indicator"/>
 
       </LinearLayout>
@@ -76,7 +77,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/comment_secondary_data_margin"
             android:layout_marginRight="@dimen/comment_secondary_data_margin"
-            android:textSize="@dimen/comment_secondary_data_text_size"
+            android:textAppearance="?android:textAppearanceSmall"
             android:text="@string/comment_metadata_divider"/>
 
         <com.ddiehl.timesincetextview.TimeSinceTextView
@@ -84,7 +85,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/secondary_text"
-            android:textSize="@dimen/comment_timestamp_text_size"
+            android:textAppearance="?android:textAppearanceSmall"
             android:maxLines="1"
             app:abbreviated="true"
             tools:text="2 days ago"/>
@@ -127,7 +128,7 @@
       android:layout_marginBottom="@dimen/comment_text_margin"
       android:textAlignment="viewStart"
       android:gravity="start"
-      android:textSize="@dimen/comment_body_text_size"
+      android:textAppearance="?android:textAppearanceSmall"
       android:textColor="@color/primary_text"
       android:textColorLink="@color/link_color"
       android:bufferType="spannable"

@@ -69,14 +69,12 @@ public class ListingsMessageViewHolder extends RecyclerView.ViewHolder
       mCollapsedMessagesLayout.setVisibility(View.GONE);
       // Hide the indentation and remove background
       mMessageIndentation.setVisibility(View.GONE);
-      mLastMessageLayout.setBackgroundResource(0);
     } else {
       messageToShow = (PrivateMessage) replies.get(replies.size()-1);
       // Expand the "view more messages" view
       mCollapsedMessagesLayout.setVisibility(View.VISIBLE);
       // Show the indentation and set background
       mMessageIndentation.setVisibility(View.VISIBLE);
-      mLastMessageLayout.setBackgroundResource(R.drawable.thread_comment_bg);
     }
     // Show message metadata and text
     mConversationSubject.setText(messageToShow.getSubject());

@@ -27,9 +27,9 @@
           android:textAlignment="viewStart"
           android:layout_gravity="start"
           android:fontFamily="sans-serif-light"
-          android:textAppearance="?android:textAppearanceLarge"
+          android:textAppearance="?android:textAppearanceMedium"
           android:textColor="@color/primary_text"
-          tools:text="The brown fox jumped over the white fence"
+          tools:text="The quick brown fox jumped over the white fence"
           tools:ignore="UnusedAttribute"/>
 
       <LinearLayout

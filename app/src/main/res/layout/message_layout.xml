@@ -20,7 +20,7 @@
         android:textAlignment="viewStart"
         android:gravity="start"
         android:fontFamily="sans-serif-light"
-        android:textSize="@dimen/comment_link_title_text_size"
+        android:textAppearance="?android:textAppearanceMedium"
         android:textColor="@android:color/white"
         tools:text="The brown fox jumped over the white fence"
         tools:ignore="UnusedAttribute"/>
@@ -50,12 +50,16 @@
 
     </LinearLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/primary_dark"/>
+
     <LinearLayout
         android:id="@+id/last_message_layout"
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/thread_comment_bg">
+        android:layout_height="wrap_content">
 
       <View
           android:id="@+id/message_indentation"
@@ -66,8 +70,7 @@
       <LinearLayout
           android:orientation="vertical"
           android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:background="@drawable/thread_comment_bg">
+          android:layout_height="wrap_content">
 
         <LinearLayout
             android:orientation="horizontal"
@@ -105,6 +108,7 @@
             android:layout_marginLeft="@dimen/baseline_spacing"
             android:layout_marginRight="@dimen/baseline_spacing"
             android:textColor="@color/primary_text"
+            android:textColorLink="@color/link_color"
             android:textAppearance="?android:textAppearanceSmall"
             tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod."/>
 
