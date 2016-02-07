@@ -22,6 +22,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -434,5 +435,17 @@ public class MainActivity extends AppCompatActivity implements MainView,
         }
       }
     }
+  }
+
+  @Override
+  public boolean onKeyUp(int keycode, KeyEvent e) {
+    switch (keycode) {
+      case KeyEvent.KEYCODE_MENU:
+        if ( getSupportActionBar() != null ) {
+          getSupportActionBar().openOptionsMenu();
+          return true;
+        }
+    }
+    return super.onKeyUp(keycode, e);
   }
 }
