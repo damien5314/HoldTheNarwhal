@@ -108,15 +108,18 @@ public class AccessTokenManagerImpl implements AccessTokenManager {
   private Observable<UserAccessToken> refreshUserAccessToken(AccessToken accessToken) {
     String refreshToken = accessToken.getRefreshToken();
     if (refreshToken == null) {
+      mClearIdentity.call(null);
       return Observable.error(new RuntimeException("No refresh token available"));
     }
     return mServiceAuth.refreshUserAccessToken(refreshToken)
         .doOnNext(saveUserAccessToken())
-        .doOnError(error -> {
-          clearSavedUserAccessToken();
-          mIdentityManager.clearSavedUserIdentity();
-        });
+        .doOnError(mClearIdentity);
   }
+
+  private Action1<Throwable> mClearIdentity = error -> {
+    clearSavedUserAccessToken();
+    mIdentityManager.clearSavedUserIdentity();
+  };
 
   private UserAccessToken getSavedUserAccessToken() {
     if (mUserAccessToken != null) return mUserAccessToken;
