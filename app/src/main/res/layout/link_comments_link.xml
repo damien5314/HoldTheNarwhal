@@ -182,13 +182,13 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_gravity="center_vertical"
-          android:src="@drawable/ic_saved"/>
+          android:src="@drawable/ic_saved_dark"/>
 
       <ImageView
           android:id="@+id/link_stickied_view"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:src="@drawable/ic_stickied"/>
+          android:src="@drawable/ic_stickied_dark"/>
 
     </LinearLayout>
 
