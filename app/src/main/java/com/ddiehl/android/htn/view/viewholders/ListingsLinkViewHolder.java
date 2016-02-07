@@ -25,11 +25,9 @@ public class ListingsLinkViewHolder extends BaseLinkViewHolder {
   @Override
   protected void showLiked(@NonNull Link link) {
     if (link.isLiked() == null) {
-//      mLinkView.setBackgroundResource(R.drawable.listings_card_bg);
       mLinkView.setBackgroundColor(
               ContextCompat.getColor(mContext, R.color.transparent));
     } else if (link.isLiked()) {
-//      mLinkView.setBackgroundResource(R.drawable.listings_card_upvoted_bg);
       mLinkView.setBackgroundColor(
               ContextCompat.getColor(mContext, R.color.reddit_orange_lighter));
     } else {

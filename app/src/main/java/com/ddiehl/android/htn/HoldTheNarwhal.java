@@ -13,7 +13,6 @@ import com.ddiehl.android.htn.io.RedditAuthServiceImpl;
 import com.ddiehl.android.htn.io.RedditService;
 import com.ddiehl.android.htn.io.RedditServiceImpl;
 import com.facebook.stetho.Stetho;
-import com.squareup.leakcanary.LeakCanary;
 import com.squareup.picasso.Picasso;
 
 
@@ -23,7 +22,7 @@ public class HoldTheNarwhal extends Application {
   @Override
   public void onCreate() {
     super.onCreate();
-    LeakCanary.install(this);
+//    LeakCanary.install(this);
     Logger logger = getLogger(); // Ensure the logger is loaded on application start
 
     Stetho.initialize(

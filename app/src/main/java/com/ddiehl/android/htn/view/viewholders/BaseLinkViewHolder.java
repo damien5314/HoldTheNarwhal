@@ -55,7 +55,7 @@ public abstract class BaseLinkViewHolder extends RecyclerView.ViewHolder
     mAuthorTextColor = mLinkAuthor.getCurrentTextColor();
   }
 
-  @OnClick(R.id.link_view)
+  @OnClick({ R.id.link_view, R.id.link_thumbnail })
   void openLink() {
     mLinkPresenter.openLink(mLink);
   }
