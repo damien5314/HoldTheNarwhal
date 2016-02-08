@@ -26,14 +26,19 @@
 #  public static int e(...);
 #}
 
-### Retrofit ###
+### Okio, OkHttp, Retrofit ###
+-dontwarn okio.**
+-keep class com.squareup.okhttp3.** { *; }
+-keep interface com.squareup.okhttp3.** { *; }
+-dontwarn com.squareup.okhttp3.**
 -dontwarn retrofit2.**
 -keep class retrofit2.** { *; }
 -keepattributes Signature
 -keepattributes Exceptions
-#-keepclasseswithmembers class * { # Do we need this one?
-#  @retrofit.http.* <methods>;
-#}
+-keepclasseswithmembers class * { # Do we need this one?
+  @retrofit2.http.* <methods>;
+}
+-dontwarn com.squareup.picasso.**
 
 ### Gson models ###
 -keep class com.ddiehl.reddit.** { *; }
