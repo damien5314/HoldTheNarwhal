@@ -81,7 +81,6 @@
         android:id="@+id/link_metadata"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/baseline_spacing"
         android:background="@color/primary_dark"
         android:orientation="horizontal">
 
@@ -89,8 +88,7 @@
           android:layout_width="0dp"
           android:layout_height="wrap_content"
           android:layout_weight="1"
-          android:layout_marginEnd="@dimen/link_data_margin"
-          android:layout_marginRight="@dimen/link_data_margin"
+          android:padding="@dimen/baseline_spacing"
           android:orientation="vertical">
 
         <RelativeLayout
@@ -175,12 +173,11 @@
 
       </LinearLayout>
 
-      <ImageView
+      <com.ddiehl.android.htn.view.widgets.SquareImageView
           android:id="@+id/link_thumbnail"
-          android:layout_width="@dimen/link_image_small_size"
-          android:layout_height="@dimen/link_image_small_size"
+          android:layout_width="wrap_content"
+          android:layout_height="match_parent"
           android:layout_gravity="center"
-          android:background="@drawable/thumbnail_bg"
           android:src="@drawable/ic_thumbnail_placeholder"/>
 
     </LinearLayout>
