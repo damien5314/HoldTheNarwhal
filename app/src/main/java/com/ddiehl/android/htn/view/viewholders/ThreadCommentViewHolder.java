@@ -125,13 +125,10 @@ public class ThreadCommentViewHolder extends RecyclerView.ViewHolder
   }
 
   private void showScore(Comment comment) {
-    if (comment.getScore() == null) {
-      mScoreViewLayout.setVisibility(View.GONE);
-    } else {
-      mScoreViewLayout.setVisibility(View.VISIBLE);
-      mScoreView.setText(
-          String.format(mContext.getString(R.string.comment_score), comment.getScore()));
-    }
+    String score = comment.isScoreHidden() ?
+        mContext.getString(R.string.hidden_score_placeholder) : comment.getScore().toString();
+    mScoreView.setText(
+        String.format(mContext.getString(R.string.comment_score), score));
   }
 
   private void showTimestamp(Comment comment) {
