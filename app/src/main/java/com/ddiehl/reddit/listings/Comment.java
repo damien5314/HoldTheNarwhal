@@ -120,7 +120,7 @@ public class Comment extends AbsComment implements Votable, Savable {
   }
 
   public Integer getScore() {
-    return data.score;
+    return isScoreHidden() ? null : data.score;
   }
 
   public void setScore(Integer score) {
