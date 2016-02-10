@@ -90,14 +90,14 @@ public abstract class BaseListingsFragment extends Fragment
   }
 
   private void instantiateListView() {
-    final LinearLayoutManager mgr = new LinearLayoutManager(getActivity());
-    mRecyclerView.setLayoutManager(mgr);
+    mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     mRecyclerView.clearOnScrollListeners();
     mRecyclerView.addOnScrollListener(
         new RecyclerView.OnScrollListener() {
           int mFirstVisibleItem, mVisibleItemCount, mTotalItemCount;
           @Override
           public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            LinearLayoutManager mgr = (LinearLayoutManager) recyclerView.getLayoutManager();
             mVisibleItemCount = mgr.getChildCount();
             mTotalItemCount = mgr.getItemCount();
             mFirstVisibleItem = mgr.findFirstVisibleItemPosition();
