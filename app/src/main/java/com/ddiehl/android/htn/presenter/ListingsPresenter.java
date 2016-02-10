@@ -11,13 +11,15 @@ import java.util.List;
 public interface ListingsPresenter extends BasePresenter {
   void refreshData();
   void setData(@NonNull List<Listing> data);
-  void getMoreData();
+  void getPreviousData();
+  void getNextData();
   void setSelectedListing(@NonNull Listing listing);
   int getNumListings();
   Listing getListing(int position);
   String getUsernameContext();
   String getSubreddit();
-  String getNextPageListingId();
+  boolean hasPreviousListings();
+  boolean hasNextListings();
   String getSort();
   String getTimespan();
   String getShow();

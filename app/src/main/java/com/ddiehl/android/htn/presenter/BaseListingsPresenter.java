@@ -69,7 +69,7 @@ public abstract class BaseListingsPresenter
 
   protected Listing mListingSelected;
   protected boolean mListingsRequested = false;
-  protected String mNextPageListingId;
+  protected String mPrevPageListingId, mNextPageListingId;
 
   public BaseListingsPresenter(
       MainView main, ListingsView view, LinkView linkView, CommentView commentView,
@@ -113,21 +113,33 @@ public abstract class BaseListingsPresenter
     mListings.clear();
     mListingsView.listingsUpdated();
     mNextPageListingId = null;
-    getMoreData();
+    getNextData();
   }
 
   @Override
-  public void getMoreData() {
+  public void getPreviousData() {
     if (!mListingsRequested) {
       if (AndroidUtils.isConnectedToNetwork(mContext)) {
-        requestData();
+        requestPreviousData();
       } else {
         mMainView.showToast(R.string.error_network_unavailable);
       }
     }
   }
 
-  abstract void requestData();
+  @Override
+  public void getNextData() {
+    if (!mListingsRequested) {
+      if (AndroidUtils.isConnectedToNetwork(mContext)) {
+        requestNextData();
+      } else {
+        mMainView.showToast(R.string.error_network_unavailable);
+      }
+    }
+  }
+
+  abstract void requestPreviousData();
+  abstract void requestNextData();
 
   @Override
   public void setData(@NonNull List<Listing> data) {
@@ -181,8 +193,13 @@ public abstract class BaseListingsPresenter
   }
 
   @Override
-  public String getNextPageListingId() {
-    return mNextPageListingId;
+  public boolean hasPreviousListings() {
+    return mPrevPageListingId != null;
+  }
+
+  @Override
+  public boolean hasNextListings() {
+    return mNextPageListingId != null;
   }
 
   @Override

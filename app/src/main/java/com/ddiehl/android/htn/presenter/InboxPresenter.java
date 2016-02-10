@@ -32,7 +32,12 @@ public class InboxPresenter extends BaseListingsPresenter
   }
 
   @Override
-  void requestData() {
+  void requestPreviousData() {
+
+  }
+
+  @Override
+  void requestNextData() {
     mMainView.showSpinner(null);
     mListingsRequested = true;
 

@@ -31,14 +31,26 @@ public class SubredditPresenter extends BaseListingsPresenter implements LinkPre
   }
 
   @Override
-  public void requestData() {
+  void requestPreviousData() {
     if (mSubreddit != null
         && !mSubreddit.equals("all")
         && !mSubreddit.equals("random")
         && mSubredditInfo == null) {
       getSubredditInfo();
     } else {
-      getSubredditLinks();
+      getSubredditLinks(false);
+    }
+  }
+
+  @Override
+  public void requestNextData() {
+    if (mSubreddit != null
+        && !mSubreddit.equals("all")
+        && !mSubreddit.equals("random")
+        && mSubredditInfo == null) {
+      getSubredditInfo();
+    } else {
+      getSubredditLinks(true);
     }
   }
 
@@ -53,11 +65,13 @@ public class SubredditPresenter extends BaseListingsPresenter implements LinkPre
             e -> mMainView.showError(e, R.string.error_get_subreddit_info));
   }
 
-  private void getSubredditLinks() {
+  private void getSubredditLinks(boolean next) {
     mMainView.showSpinner(null);
     mListingsRequested = true;
     mAnalytics.logLoadSubreddit(mSubreddit, mSort, mTimespan);
-    mRedditService.loadLinks(mSubreddit, mSort, mTimespan, mNextPageListingId)
+    mRedditService.loadLinks(mSubreddit, mSort, mTimespan,
+        next ? null : mPrevPageListingId,
+        next ? mNextPageListingId : null)
         .doOnTerminate(() -> {
           mMainView.dismissSpinner();
           mListingsRequested = false;
@@ -73,7 +87,7 @@ public class SubredditPresenter extends BaseListingsPresenter implements LinkPre
       if (shouldShowNsfwDialog(mSubredditInfo, user)) {
         mMainView.showNsfwWarningDialog();
       } else {
-        if (mSubredditInfo != null) requestData();
+        if (mSubredditInfo != null) requestNextData();
         else mMainView.showToast(R.string.error_private_subreddit);
       }
       loadHeaderImage();

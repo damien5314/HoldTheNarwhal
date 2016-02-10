@@ -101,10 +101,12 @@ public abstract class BaseListingsFragment extends Fragment
             mVisibleItemCount = mgr.getChildCount();
             mTotalItemCount = mgr.getItemCount();
             mFirstVisibleItem = mgr.findFirstVisibleItemPosition();
-            if ((mVisibleItemCount + mFirstVisibleItem) >= mTotalItemCount) {
-              if (mListingsPresenter.getNextPageListingId() != null) {
-                mListingsPresenter.getMoreData();
-              }
+            if (mListingsPresenter.hasPreviousListings() &&
+                mFirstVisibleItem == 0) {
+              mListingsPresenter.getPreviousData();
+            } else if (mListingsPresenter.hasNextListings()
+                && (mVisibleItemCount + mFirstVisibleItem) >= mTotalItemCount) {
+              mListingsPresenter.getNextData();
             }
           }
         });
