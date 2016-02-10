@@ -223,6 +223,7 @@ public abstract class BaseListingsPresenter
       }
       mListings.addAll(listings);
       mListingsView.listingsUpdated();
+      mPrevPageListingId = data.getBefore();
       mNextPageListingId = data.getAfter();
     };
   }

@@ -92,26 +92,30 @@ public abstract class BaseListingsFragment extends Fragment
   private void instantiateListView() {
     mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     mRecyclerView.clearOnScrollListeners();
-    mRecyclerView.addOnScrollListener(
-        new RecyclerView.OnScrollListener() {
-          int mFirstVisibleItem, mVisibleItemCount, mTotalItemCount;
-          @Override
-          public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-            LinearLayoutManager mgr = (LinearLayoutManager) recyclerView.getLayoutManager();
-            mVisibleItemCount = mgr.getChildCount();
-            mTotalItemCount = mgr.getItemCount();
-            mFirstVisibleItem = mgr.findFirstVisibleItemPosition();
-            if (mListingsPresenter.hasPreviousListings() &&
-                mFirstVisibleItem == 0) {
-              mListingsPresenter.getPreviousData();
-            } else if (mListingsPresenter.hasNextListings()
-                && (mVisibleItemCount + mFirstVisibleItem) >= mTotalItemCount) {
-              mListingsPresenter.getNextData();
-            }
-          }
-        });
+    mRecyclerView.addOnScrollListener(mOnScrollListener);
     mRecyclerView.setAdapter(mListingsAdapter);
   }
+
+  private RecyclerView.OnScrollListener mOnScrollListener = new RecyclerView.OnScrollListener() {
+    int mFirstVisibleItem, mVisibleItemCount, mTotalItemCount;
+    @Override
+    public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+      LinearLayoutManager mgr = (LinearLayoutManager) recyclerView.getLayoutManager();
+      mVisibleItemCount = mgr.getChildCount();
+      mTotalItemCount = mgr.getItemCount();
+      mFirstVisibleItem = mgr.findFirstVisibleItemPosition();
+      mLog.d("First Visible: " + mFirstVisibleItem);
+      if (mListingsPresenter.hasPreviousListings() &&
+          mFirstVisibleItem == 0) {
+        mLog.d("Get PREVIOUS");
+        mListingsPresenter.getPreviousData();
+      } else if (mListingsPresenter.hasNextListings()
+          && (mVisibleItemCount + mFirstVisibleItem) >= mTotalItemCount) {
+        mLog.d("Get NEXT");
+        mListingsPresenter.getNextData();
+      }
+    }
+  };
 
   @Override
   public void onResume() {
