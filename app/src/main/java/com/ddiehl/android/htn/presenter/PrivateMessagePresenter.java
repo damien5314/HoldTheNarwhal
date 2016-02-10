@@ -24,10 +24,15 @@ public class PrivateMessagePresenter extends BaseListingsPresenter implements Me
   }
 
   @Override
-  void requestData() {
+  void requestPreviousData() {
+
+  }
+
+  @Override
+  void requestNextData() {
     // We already have the data, just display it
     ListingResponse response = new ListingResponse(mMessageList);
-    super.onListingsLoaded().call(response);
+    super.onListingsLoaded(true).call(response);
     // Scroll to bottom so user sees the latest message
     new Handler().post(mListingsView::scrollToBottom);
     mMessageView.showSubject(

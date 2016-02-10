@@ -61,6 +61,7 @@ public abstract class BaseListingsFragment extends Fragment
   protected MessagePresenter mMessagePresenter;
   protected ListingsAdapter mListingsAdapter;
   protected SwipeRefreshLayout mSwipeRefreshLayout;
+  protected Callbacks mCallbacks;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -92,24 +93,30 @@ public abstract class BaseListingsFragment extends Fragment
   private void instantiateListView() {
     mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     mRecyclerView.clearOnScrollListeners();
-    mRecyclerView.addOnScrollListener(
-        new RecyclerView.OnScrollListener() {
-          int mFirstVisibleItem, mVisibleItemCount, mTotalItemCount;
-          @Override
-          public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-            LinearLayoutManager mgr = (LinearLayoutManager) recyclerView.getLayoutManager();
-            mVisibleItemCount = mgr.getChildCount();
-            mTotalItemCount = mgr.getItemCount();
-            mFirstVisibleItem = mgr.findFirstVisibleItemPosition();
-            if ((mVisibleItemCount + mFirstVisibleItem) >= mTotalItemCount) {
-              if (mListingsPresenter.getNextPageListingId() != null) {
-                mListingsPresenter.getMoreData();
-              }
-            }
-          }
-        });
+    mRecyclerView.addOnScrollListener(mOnScrollListener);
     mRecyclerView.setAdapter(mListingsAdapter);
   }
+
+  private RecyclerView.OnScrollListener mOnScrollListener = new RecyclerView.OnScrollListener() {
+    int mFirstVisibleItem, mVisibleItemCount, mTotalItemCount;
+    @Override
+    public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+      LinearLayoutManager mgr = (LinearLayoutManager) recyclerView.getLayoutManager();
+      mVisibleItemCount = mgr.getChildCount();
+      mTotalItemCount = mgr.getItemCount();
+      mFirstVisibleItem = mgr.findFirstVisibleItemPosition();
+//      mLog.d("First Visible: " + mFirstVisibleItem);
+      if (mFirstVisibleItem == 0) {
+//        mLog.d("Get PREVIOUS");
+//        mListingsPresenter.getPreviousData();
+        mCallbacks.onFirstItemShown();
+      } else if ((mVisibleItemCount + mFirstVisibleItem) >= mTotalItemCount) {
+//        mLog.d("Get NEXT");
+//        mListingsPresenter.getNextData();
+        mCallbacks.onLastItemShown();
+      }
+    }
+  };
 
   @Override
   public void onResume() {
@@ -392,18 +399,43 @@ public abstract class BaseListingsFragment extends Fragment
   }
 
   @Override
-  public void listingsUpdated() {
+  public void notifyDataSetChanged() {
     mListingsAdapter.notifyDataSetChanged();
   }
 
   @Override
-  public void listingUpdatedAt(int position) {
+  public void notifyItemChanged(int position) {
     mListingsAdapter.notifyItemChanged(position);
   }
 
   @Override
-  public void listingRemovedAt(int position) {
+  public void notifyItemInserted(int position) {
+    mListingsAdapter.notifyItemInserted(position);
+  }
+
+  @Override
+  public void notifyItemRemoved(int position) {
     mListingsAdapter.notifyItemRemoved(position);
+  }
+
+  @Override
+  public void notifyItemRangeChanged(int position, int number) {
+    mListingsAdapter.notifyItemRangeChanged(position, number);
+  }
+
+  @Override
+  public void notifyItemRangeInserted(int position, int number) {
+    mListingsAdapter.notifyItemRangeInserted(position, number);
+  }
+
+  @Override
+  public void notifyItemRangeRemoved(int position, int number) {
+    mListingsAdapter.notifyItemRangeRemoved(position, number);
+  }
+
+  @Override
+  public void updateTitle() {
+
   }
 
   @Override

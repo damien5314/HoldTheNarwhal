@@ -49,6 +49,7 @@ public class InboxFragment extends BaseListingsFragment
     mCommentPresenter = mInboxPresenter;
     mMessagePresenter = mInboxPresenter;
     mListingsPresenter = mInboxPresenter;
+    mCallbacks = mInboxPresenter;
   }
 
   @Override

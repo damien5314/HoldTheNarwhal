@@ -37,7 +37,7 @@ public interface RedditService {
   Observable<ResponseBody> updateUserSettings(Map<String, String> settings);
   Observable<ListingResponse> loadLinks(
       @Nullable String subreddit, @Nullable String sort,
-      @Nullable String timespan, @Nullable String after);
+      @Nullable String timespan, @Nullable String before, @Nullable String after);
   Observable<List<ListingResponse>> loadLinkComments(
       @NonNull String subreddit, @NonNull String article,
       @Nullable String sort, @Nullable String commentId);

@@ -32,7 +32,12 @@ public class InboxPresenter extends BaseListingsPresenter
   }
 
   @Override
-  void requestData() {
+  void requestPreviousData() {
+
+  }
+
+  @Override
+  void requestNextData() {
     mMainView.showSpinner(null);
     mListingsRequested = true;
 
@@ -44,7 +49,7 @@ public class InboxPresenter extends BaseListingsPresenter
           mMainView.dismissSpinner();
           mListingsRequested = false;
         })
-        .subscribe(onListingsLoaded(),
+        .subscribe(onListingsLoaded(true),
             e -> mMainView.showError(e, R.string.error_get_inbox));
   }
 
@@ -62,7 +67,7 @@ public class InboxPresenter extends BaseListingsPresenter
                   ((PrivateMessage) listing).markUnread(false);
                 }
               }
-              mListingsView.listingsUpdated();
+              mListingsView.notifyDataSetChanged();
             },
             error -> mMainView.showError(error, R.string.error_xxx));
   }

@@ -128,11 +128,11 @@ public class RedditServiceImpl implements RedditService {
 
   @Override
   public Observable<ListingResponse> loadLinks(
-      @Nullable String subreddit, @Nullable String sort,
-      @Nullable String timespan, @Nullable String after) {
+      @Nullable String subreddit, @Nullable String sort, @Nullable String timespan,
+      @Nullable String before, @Nullable String after) {
     if (!connectedToNetwork()) return Observable.error(new NetworkUnavailableException());
     return requireAccessToken().flatMap(token ->
-        mAPI.getLinks(sort, subreddit, timespan, after)
+        mAPI.getLinks(sort, subreddit, timespan, before, after)
             .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .map(Response::body));

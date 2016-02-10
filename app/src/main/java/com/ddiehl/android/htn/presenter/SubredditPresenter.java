@@ -31,14 +31,26 @@ public class SubredditPresenter extends BaseListingsPresenter implements LinkPre
   }
 
   @Override
-  public void requestData() {
+  void requestPreviousData() {
     if (mSubreddit != null
         && !mSubreddit.equals("all")
         && !mSubreddit.equals("random")
         && mSubredditInfo == null) {
       getSubredditInfo();
     } else {
-      getSubredditLinks();
+      getSubredditLinks(false);
+    }
+  }
+
+  @Override
+  public void requestNextData() {
+    if (mSubreddit != null
+        && !mSubreddit.equals("all")
+        && !mSubreddit.equals("random")
+        && mSubredditInfo == null) {
+      getSubredditInfo();
+    } else {
+      getSubredditLinks(true);
     }
   }
 
@@ -53,16 +65,18 @@ public class SubredditPresenter extends BaseListingsPresenter implements LinkPre
             e -> mMainView.showError(e, R.string.error_get_subreddit_info));
   }
 
-  private void getSubredditLinks() {
+  private void getSubredditLinks(boolean append) {
     mMainView.showSpinner(null);
     mListingsRequested = true;
     mAnalytics.logLoadSubreddit(mSubreddit, mSort, mTimespan);
-    mRedditService.loadLinks(mSubreddit, mSort, mTimespan, mNextPageListingId)
+    mRedditService.loadLinks(mSubreddit, mSort, mTimespan,
+        append ? null : mPrevPageListingId,
+        append ? mNextPageListingId : null)
         .doOnTerminate(() -> {
           mMainView.dismissSpinner();
           mListingsRequested = false;
         })
-        .subscribe(onListingsLoaded(),
+        .subscribe(onListingsLoaded(append),
             e -> mMainView.showError(e, R.string.error_get_links));
   }
 
@@ -73,7 +87,7 @@ public class SubredditPresenter extends BaseListingsPresenter implements LinkPre
       if (shouldShowNsfwDialog(mSubredditInfo, user)) {
         mMainView.showNsfwWarningDialog();
       } else {
-        if (mSubredditInfo != null) requestData();
+        if (mSubredditInfo != null) requestNextData();
         else mMainView.showToast(R.string.error_private_subreddit);
       }
       loadHeaderImage();
@@ -86,9 +100,9 @@ public class SubredditPresenter extends BaseListingsPresenter implements LinkPre
   }
 
   @Override
-  protected Action1<ListingResponse> onListingsLoaded() {
+  protected Action1<ListingResponse> onListingsLoaded(boolean append) {
     return (response) -> {
-      super.onListingsLoaded().call(response);
+      super.onListingsLoaded(append).call(response);
       if (mSubreddit != null && mSubreddit.equals("random")) {
         mSubreddit = ((Link) mListings.get(0)).getSubreddit();
         mListingsView.updateTitle();

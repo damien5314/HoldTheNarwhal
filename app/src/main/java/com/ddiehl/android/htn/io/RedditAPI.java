@@ -53,6 +53,7 @@ public interface RedditAPI {
       @Path("sort") String sort,
       @Query("r") String subreddit,
       @Query("t") String timespan,
+      @Query("before") String before,
       @Query("after") String after);
 
   @GET("/r/{subreddit}/comments/{articleId}.json")

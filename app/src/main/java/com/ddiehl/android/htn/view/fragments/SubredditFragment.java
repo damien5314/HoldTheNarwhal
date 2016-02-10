@@ -41,6 +41,7 @@ public class SubredditFragment extends BaseListingsFragment implements LinkView 
     if (TextUtils.isEmpty(timespan)) timespan = "all";
     mLinkPresenter = new SubredditPresenter(mMainView, this, this, subreddit, sort, timespan);
     mListingsPresenter = (ListingsPresenter) mLinkPresenter;
+    mCallbacks = (Callbacks) mListingsPresenter;
   }
 
   @Override

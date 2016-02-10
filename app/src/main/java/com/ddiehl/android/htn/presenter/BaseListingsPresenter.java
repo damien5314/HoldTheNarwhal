@@ -16,6 +16,7 @@ import com.ddiehl.android.htn.SettingsManager;
 import com.ddiehl.android.htn.ThumbnailMode;
 import com.ddiehl.android.htn.analytics.Analytics;
 import com.ddiehl.android.htn.io.RedditService;
+import com.ddiehl.android.htn.model.ListingList;
 import com.ddiehl.android.htn.utils.AndroidUtils;
 import com.ddiehl.android.htn.view.CommentView;
 import com.ddiehl.android.htn.view.LinkView;
@@ -43,7 +44,7 @@ import java.util.List;
 import rx.functions.Action1;
 
 public abstract class BaseListingsPresenter
-    implements ListingsPresenter, IdentityManager.Callbacks {
+    implements ListingsPresenter, IdentityManager.Callbacks, ListingsView.Callbacks {
   protected Logger mLog = HoldTheNarwhal.getLogger();
   protected Context mContext = HoldTheNarwhal.getContext();
   protected AccessTokenManager mAccessTokenManager = HoldTheNarwhal.getAccessTokenManager();
@@ -52,7 +53,7 @@ public abstract class BaseListingsPresenter
   protected RedditService mRedditService = HoldTheNarwhal.getRedditService();
   protected Analytics mAnalytics = HoldTheNarwhal.getAnalytics();
 
-  protected List<Listing> mListings = new ArrayList<>();
+  protected ListingList mListings = new ListingList();
   protected ListingsView mListingsView;
   protected MainView mMainView;
   protected LinkView mLinkView;
@@ -69,7 +70,7 @@ public abstract class BaseListingsPresenter
 
   protected Listing mListingSelected;
   protected boolean mListingsRequested = false;
-  protected String mNextPageListingId;
+  protected String mPrevPageListingId, mNextPageListingId;
 
   public BaseListingsPresenter(
       MainView main, ListingsView view, LinkView linkView, CommentView commentView,
@@ -92,7 +93,15 @@ public abstract class BaseListingsPresenter
   public void onResume() {
     mIdentityManager.registerUserIdentityChangeListener(this);
     if (!mListingsRequested && mListings.size() == 0) {
-      refreshData();
+//      if (mListingSelected != null) {
+      if (mListingSelected != null) {
+        mListings.add(mListingSelected);
+        mPrevPageListingId = mListingSelected.getFullName();
+        mNextPageListingId = mListingSelected.getFullName();
+        getNextData();
+      } else {
+        refreshData();
+      }
     }
   }
 
@@ -103,31 +112,64 @@ public abstract class BaseListingsPresenter
 
   @Override
   public void onViewDestroyed() {
-    mListingSelected = null;
+//    mListingSelected = null; // FIXME Analyze memory footprint when keeping this reference
     mListings.clear();
-    mListingsView.listingsUpdated();
+    mListingsView.notifyDataSetChanged();
+//    if (mListingSelected != null) {
+//      mListings.add(mListingSelected);
+//      mPrevPageListingId = mListingSelected.getFullName();
+//      mNextPageListingId = mListingSelected.getFullName();
+//    }
   }
 
   @Override
   public void refreshData() {
     mListings.clear();
-    mListingsView.listingsUpdated();
-    mNextPageListingId = null;
-    getMoreData();
+    mListingsView.notifyDataSetChanged();
+//    mNextPageListingId = null;
+    getNextData();
   }
 
   @Override
-  public void getMoreData() {
+  public void getPreviousData() {
     if (!mListingsRequested) {
       if (AndroidUtils.isConnectedToNetwork(mContext)) {
-        requestData();
+        requestPreviousData();
       } else {
         mMainView.showToast(R.string.error_network_unavailable);
       }
     }
   }
 
-  abstract void requestData();
+  @Override
+  public void getNextData() {
+    if (!mListingsRequested) {
+      if (AndroidUtils.isConnectedToNetwork(mContext)) {
+        requestNextData();
+      } else {
+        mMainView.showToast(R.string.error_network_unavailable);
+      }
+    }
+  }
+
+  abstract void requestPreviousData();
+  abstract void requestNextData();
+
+  @Override
+  public void onFirstItemShown() {
+    if (!mListingsRequested && hasPreviousListings()) {
+      mLog.d("Get PREVIOUS data");
+      getPreviousData();
+    }
+  }
+
+  @Override
+  public void onLastItemShown() {
+    if (!mListingsRequested && hasNextListings()) {
+      mLog.d("Get NEXT data");
+      getNextData();
+    }
+  }
 
   @Override
   public void setData(@NonNull List<Listing> data) {
@@ -181,8 +223,13 @@ public abstract class BaseListingsPresenter
   }
 
   @Override
-  public String getNextPageListingId() {
-    return mNextPageListingId;
+  public boolean hasPreviousListings() {
+    return mPrevPageListingId != null;
+  }
+
+  @Override
+  public boolean hasNextListings() {
+    return mNextPageListingId != null;
   }
 
   @Override
@@ -190,7 +237,7 @@ public abstract class BaseListingsPresenter
     return mSettingsManager.getShowControversiality();
   }
 
-  protected Action1<ListingResponse> onListingsLoaded() {
+  protected Action1<ListingResponse> onListingsLoaded(boolean append) {
     return (response) -> {
       mMainView.dismissSpinner();
       mListingsRequested = false;
@@ -204,9 +251,16 @@ public abstract class BaseListingsPresenter
         mMainView.showError(new NullPointerException(), R.string.error_get_links);
         return;
       }
-      mListings.addAll(listings);
-      mListingsView.listingsUpdated();
-      mNextPageListingId = data.getAfter();
+      if (append) {
+        int lastIndex = mListings.size()-1;
+        mListings.addAll(listings);
+        mNextPageListingId = data.getAfter();
+        mListingsView.notifyItemRangeInserted(lastIndex + 1, listings.size());
+      } else {
+        mListings.addAll(0, listings);
+        mPrevPageListingId = data.getBefore();
+        mListingsView.notifyItemRangeInserted(0, listings.size());
+      }
     };
   }
 
@@ -229,10 +283,11 @@ public abstract class BaseListingsPresenter
 
   public void showCommentsForLink() {
     Link link = (Link) mListingSelected;
-    mLinkView.showCommentsForLink(link.getSubreddit(), link.getId(), null);
+    showCommentsForLink(link);
   }
 
   public void showCommentsForLink(@NonNull Link link) {
+//    mNextPageListingId = link.getFullName();
     mLinkView.showCommentsForLink(link.getSubreddit(), link.getId(), null);
   }
 
@@ -488,7 +543,7 @@ public abstract class BaseListingsPresenter
       mRedditService.vote(votable, direction)
           .subscribe(response -> {
             votable.applyVote(direction);
-            mListingsView.listingUpdatedAt(
+            mListingsView.notifyItemChanged(
                 mListings.indexOf(listing));
           }, e -> mMainView.showError(e, R.string.vote_failed));
       mAnalytics.logVote(votable.getKind(), direction);
@@ -500,7 +555,7 @@ public abstract class BaseListingsPresenter
     mRedditService.save(savable, null, toSave)
         .subscribe(response -> {
           savable.isSaved(toSave);
-          mListingsView.listingUpdatedAt(
+          mListingsView.notifyItemChanged(
               mListings.indexOf(listing));
         }, e -> mMainView.showError(e, R.string.save_failed));
   }
@@ -513,9 +568,9 @@ public abstract class BaseListingsPresenter
           if (toHide) {
             mMainView.showToast(R.string.link_hidden);
             mListings.remove(pos);
-            mListingsView.listingRemovedAt(pos);
+            mListingsView.notifyItemRemoved(pos);
           } else {
-            mListingsView.listingRemovedAt(pos);
+            mListingsView.notifyItemRemoved(pos);
           }
         }, e -> mMainView.showError(e, R.string.hide_failed));
   }
@@ -572,7 +627,7 @@ public abstract class BaseListingsPresenter
         .subscribe(
             _void -> {
               message.markUnread(false);
-              mListingsView.listingUpdatedAt(
+              mListingsView.notifyItemChanged(
                   mListings.indexOf(message));
             },
             error -> mMainView.showError(error, R.string.error_xxx)
@@ -586,7 +641,7 @@ public abstract class BaseListingsPresenter
         .subscribe(
             _void -> {
               message.markUnread(true);
-              mListingsView.listingUpdatedAt(
+              mListingsView.notifyItemChanged(
                   mListings.indexOf(message));
             },
             error -> mMainView.showError(error, R.string.error_xxx)

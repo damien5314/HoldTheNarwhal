@@ -76,7 +76,7 @@ public class RedditServiceMock implements RedditService {
   @Override
   public Observable<ListingResponse> loadLinks(
       @Nullable String subreddit, @Nullable String sort,
-      @Nullable String timespan, @Nullable String after) {
+      @Nullable String timespan, @Nullable String before, @Nullable String after) {
     ListingResponse response = mGson.fromJson(
         getReaderForFile("all_subreddits.json"), ListingResponse.class);
     return delay(Observable.just(response));
