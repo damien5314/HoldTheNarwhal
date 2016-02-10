@@ -41,8 +41,8 @@
   <dimen name="link_image_full_size">256dp</dimen>
   <dimen name="comment_data_height">32dp</dimen>
   <dimen name="comment_text_margin">6dp</dimen>
-  <dimen name="comment_author_background_corner">3dp</dimen>
-  <dimen name="comment_author_background_padding">3dp</dimen>
+  <dimen name="distinguished_author_bg_corners">4dp</dimen>
+  <dimen name="distinguished_author_bg_padding">4dp</dimen>
   <dimen name="user_created_text_size">16sp</dimen>
   <dimen name="user_karma_text_size">36sp</dimen>
   <dimen name="user_karma_label_text_size">16sp</dimen>
