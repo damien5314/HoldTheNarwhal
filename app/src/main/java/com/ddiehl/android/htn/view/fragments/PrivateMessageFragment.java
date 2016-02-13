@@ -47,6 +47,7 @@ public class PrivateMessageFragment extends BaseListingsFragment implements Priv
     mPrivateMessagePresenter = new PrivateMessagePresenter(mMainView, this, this, messages);
     mMessagePresenter = mPrivateMessagePresenter;
     mListingsPresenter = mPrivateMessagePresenter;
+    mCallbacks = mPrivateMessagePresenter;
   }
 
   @Nullable @Override

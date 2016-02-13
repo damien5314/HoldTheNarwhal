@@ -91,6 +91,7 @@ public class UserProfileFragment extends BaseListingsFragment
     mLinkPresenter = mUserProfilePresenter;
     mCommentPresenter = mUserProfilePresenter;
     mListingsPresenter = mUserProfilePresenter;
+    mCallbacks = mUserProfilePresenter;
   }
 
   @Override

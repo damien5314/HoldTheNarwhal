@@ -76,7 +76,7 @@ public class UserProfilePresenter extends BaseListingsPresenter
           mMainView.dismissSpinner();
           mListingsRequested = false;
         })
-        .subscribe(onListingsLoaded(),
+        .subscribe(onListingsLoaded(true),
             e -> mMainView.showError(e, R.string.error_get_user_profile_listings));
   }
 

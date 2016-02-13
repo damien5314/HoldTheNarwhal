@@ -61,6 +61,7 @@ public abstract class BaseListingsFragment extends Fragment
   protected MessagePresenter mMessagePresenter;
   protected ListingsAdapter mListingsAdapter;
   protected SwipeRefreshLayout mSwipeRefreshLayout;
+  protected Callbacks mCallbacks;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -104,15 +105,15 @@ public abstract class BaseListingsFragment extends Fragment
       mVisibleItemCount = mgr.getChildCount();
       mTotalItemCount = mgr.getItemCount();
       mFirstVisibleItem = mgr.findFirstVisibleItemPosition();
-      mLog.d("First Visible: " + mFirstVisibleItem);
-      if (mListingsPresenter.hasPreviousListings() &&
-          mFirstVisibleItem == 0) {
-        mLog.d("Get PREVIOUS");
-        mListingsPresenter.getPreviousData();
-      } else if (mListingsPresenter.hasNextListings()
-          && (mVisibleItemCount + mFirstVisibleItem) >= mTotalItemCount) {
-        mLog.d("Get NEXT");
-        mListingsPresenter.getNextData();
+//      mLog.d("First Visible: " + mFirstVisibleItem);
+      if (mFirstVisibleItem == 0) {
+//        mLog.d("Get PREVIOUS");
+//        mListingsPresenter.getPreviousData();
+        mCallbacks.onFirstItemShown();
+      } else if ((mVisibleItemCount + mFirstVisibleItem) >= mTotalItemCount) {
+//        mLog.d("Get NEXT");
+//        mListingsPresenter.getNextData();
+        mCallbacks.onLastItemShown();
       }
     }
   };
@@ -398,18 +399,43 @@ public abstract class BaseListingsFragment extends Fragment
   }
 
   @Override
-  public void listingsUpdated() {
+  public void notifyDataSetChanged() {
     mListingsAdapter.notifyDataSetChanged();
   }
 
   @Override
-  public void listingUpdatedAt(int position) {
+  public void notifyItemChanged(int position) {
     mListingsAdapter.notifyItemChanged(position);
   }
 
   @Override
-  public void listingRemovedAt(int position) {
+  public void notifyItemInserted(int position) {
+    mListingsAdapter.notifyItemInserted(position);
+  }
+
+  @Override
+  public void notifyItemRemoved(int position) {
     mListingsAdapter.notifyItemRemoved(position);
+  }
+
+  @Override
+  public void notifyItemRangeChanged(int position, int number) {
+    mListingsAdapter.notifyItemRangeChanged(position, number);
+  }
+
+  @Override
+  public void notifyItemRangeInserted(int position, int number) {
+    mListingsAdapter.notifyItemRangeInserted(position, number);
+  }
+
+  @Override
+  public void notifyItemRangeRemoved(int position, int number) {
+    mListingsAdapter.notifyItemRangeRemoved(position, number);
+  }
+
+  @Override
+  public void updateTitle() {
+
   }
 
   @Override
