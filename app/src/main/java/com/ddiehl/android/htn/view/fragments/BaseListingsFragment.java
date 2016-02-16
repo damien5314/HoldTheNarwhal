@@ -222,8 +222,9 @@ public abstract class BaseListingsFragment extends Fragment
 
   public void showLinkContextMenu(ContextMenu menu, View v, Link link) {
     getActivity().getMenuInflater().inflate(R.menu.link_context, menu);
-    String title = String.format(getString(R.string.menu_action_link),
-        link.getTitle(), link.getScore());
+    String score = link.getScore() == null ?
+        v.getContext().getString(R.string.hidden_score_placeholder) : link.getScore().toString();
+    String title = String.format(getString(R.string.menu_action_link), link.getTitle(), score);
     menu.setHeaderTitle(title);
     menu.findItem(R.id.action_link_hide).setVisible(!link.isHidden());
     menu.findItem(R.id.action_link_unhide).setVisible(link.isHidden());
@@ -231,17 +232,25 @@ public abstract class BaseListingsFragment extends Fragment
     String username = String.format(
         getString(R.string.action_view_user_profile), link.getAuthor());
     menu.findItem(R.id.action_link_view_user_profile).setTitle(username);
+    if ("[deleted]".equalsIgnoreCase(link.getAuthor())) {
+      menu.findItem(R.id.action_link_view_user_profile).setVisible(false);
+    }
   }
 
   public void showCommentContextMenu(ContextMenu menu, View v, Comment comment) {
     getActivity().getMenuInflater().inflate(R.menu.comment_context, menu);
+    String score = comment.getScore() == null ?
+        v.getContext().getString(R.string.hidden_score_placeholder) : comment.getScore().toString();
     String title = String.format(getString(R.string.menu_action_comment),
-        comment.getAuthor(), comment.getScore());
+        comment.getAuthor(), score);
     menu.setHeaderTitle(title);
     // Set username for listing in the user profile menu item
     String username = String.format(
         getString(R.string.action_view_user_profile), comment.getAuthor());
     menu.findItem(R.id.action_comment_view_user_profile).setTitle(username);
+    if ("[deleted]".equalsIgnoreCase(comment.getAuthor())) {
+      menu.findItem(R.id.action_comment_view_user_profile).setVisible(false);
+    }
   }
 
   public void showPrivateMessageContextMenu(

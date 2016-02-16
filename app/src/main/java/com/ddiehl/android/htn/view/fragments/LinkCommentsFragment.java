@@ -130,8 +130,9 @@ public class LinkCommentsFragment extends Fragment
   @Override
   public void showLinkContextMenu(ContextMenu menu, View v, Link link) {
     getActivity().getMenuInflater().inflate(R.menu.link_context, menu);
-    String title = String.format(v.getContext().getString(R.string.menu_action_link),
-        link.getTitle(), link.getScore());
+    String score = link.getScore() == null ?
+        v.getContext().getString(R.string.hidden_score_placeholder) : link.getScore().toString();
+    String title = String.format(getString(R.string.menu_action_link), link.getTitle(), score);
     menu.setHeaderTitle(title);
     menu.findItem(R.id.action_link_reply).setVisible(true);
     menu.findItem(R.id.action_link_show_comments).setVisible(false);
@@ -140,6 +141,9 @@ public class LinkCommentsFragment extends Fragment
     // Set username for listing in the user profile menu item
     String username = String.format(getString(R.string.action_view_user_profile), link.getAuthor());
     menu.findItem(R.id.action_link_view_user_profile).setTitle(username);
+    if ("[deleted]".equalsIgnoreCase(link.getAuthor())) {
+      menu.findItem(R.id.action_link_view_user_profile).setVisible(false);
+    }
   }
 
   @Override
@@ -185,8 +189,10 @@ public class LinkCommentsFragment extends Fragment
   @Override
   public void showCommentContextMenu(ContextMenu menu, View v, Comment comment) {
     getActivity().getMenuInflater().inflate(R.menu.comment_context, menu);
-    String title = String.format(v.getContext().getString(R.string.menu_action_comment),
-        comment.getAuthor(), comment.getScore());
+    String score = comment.getScore() == null ?
+        v.getContext().getString(R.string.hidden_score_placeholder) : comment.getScore().toString();
+    String title = String.format(getString(R.string.menu_action_comment),
+        comment.getAuthor(), score);
     menu.setHeaderTitle(title);
     if (comment.isArchived()) {
       menu.findItem(R.id.action_comment_report).setVisible(false);
@@ -194,6 +200,9 @@ public class LinkCommentsFragment extends Fragment
     // Set username for listing in the user profile menu item
     String username = String.format(getString(R.string.action_view_user_profile), comment.getAuthor());
     menu.findItem(R.id.action_comment_view_user_profile).setTitle(username);
+    if ("[deleted]".equalsIgnoreCase(comment.getAuthor())) {
+      menu.findItem(R.id.action_comment_view_user_profile).setVisible(false);
+    }
   }
 
   @Override
