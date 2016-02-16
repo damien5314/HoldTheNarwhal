@@ -16,7 +16,6 @@ import com.ddiehl.android.htn.SettingsManager;
 import com.ddiehl.android.htn.ThumbnailMode;
 import com.ddiehl.android.htn.analytics.Analytics;
 import com.ddiehl.android.htn.io.RedditService;
-import com.ddiehl.android.htn.model.ListingList;
 import com.ddiehl.android.htn.utils.AndroidUtils;
 import com.ddiehl.android.htn.view.CommentView;
 import com.ddiehl.android.htn.view.LinkView;
@@ -53,7 +52,7 @@ public abstract class BaseListingsPresenter
   protected RedditService mRedditService = HoldTheNarwhal.getRedditService();
   protected Analytics mAnalytics = HoldTheNarwhal.getAnalytics();
 
-  protected ListingList mListings = new ListingList();
+  protected List<Listing> mListings = new ArrayList<>();
   protected ListingsView mListingsView;
   protected MainView mMainView;
   protected LinkView mLinkView;
@@ -69,7 +68,7 @@ public abstract class BaseListingsPresenter
   protected Subreddit mSubredditInfo;
 
   protected Listing mListingSelected;
-  protected boolean mListingsRequested = false;
+  protected boolean mBeforeRequested, mNextRequested = false;
   protected String mPrevPageListingId, mNextPageListingId;
 
   public BaseListingsPresenter(
@@ -92,12 +91,13 @@ public abstract class BaseListingsPresenter
   @Override
   public void onResume() {
     mIdentityManager.registerUserIdentityChangeListener(this);
-    if (!mListingsRequested && mListings.size() == 0) {
-//      if (mListingSelected != null) {
+    // FIXME Do we need to check mNextRequested here?
+    if (!mNextRequested && mListings.size() == 0) {
       if (mListingSelected != null) {
         mListings.add(mListingSelected);
         mPrevPageListingId = mListingSelected.getFullName();
         mNextPageListingId = mListingSelected.getFullName();
+        getPreviousData();
         getNextData();
       } else {
         refreshData();
@@ -112,27 +112,24 @@ public abstract class BaseListingsPresenter
 
   @Override
   public void onViewDestroyed() {
-//    mListingSelected = null; // FIXME Analyze memory footprint when keeping this reference
+    // To disable the memory dereferencing functionality just comment these lines
     mListings.clear();
     mListingsView.notifyDataSetChanged();
-//    if (mListingSelected != null) {
-//      mListings.add(mListingSelected);
-//      mPrevPageListingId = mListingSelected.getFullName();
-//      mNextPageListingId = mListingSelected.getFullName();
-//    }
   }
 
   @Override
   public void refreshData() {
+    mPrevPageListingId = null;
+    mNextPageListingId = null;
+    int numItems = mListings.size();
     mListings.clear();
-    mListingsView.notifyDataSetChanged();
-//    mNextPageListingId = null;
+    mListingsView.notifyItemRangeRemoved(0, numItems);
     getNextData();
   }
 
   @Override
   public void getPreviousData() {
-    if (!mListingsRequested) {
+    if (!mBeforeRequested) {
       if (AndroidUtils.isConnectedToNetwork(mContext)) {
         requestPreviousData();
       } else {
@@ -143,7 +140,7 @@ public abstract class BaseListingsPresenter
 
   @Override
   public void getNextData() {
-    if (!mListingsRequested) {
+    if (!mNextRequested) {
       if (AndroidUtils.isConnectedToNetwork(mContext)) {
         requestNextData();
       } else {
@@ -157,7 +154,7 @@ public abstract class BaseListingsPresenter
 
   @Override
   public void onFirstItemShown() {
-    if (!mListingsRequested && hasPreviousListings()) {
+    if (!mBeforeRequested && hasPreviousListings()) {
       mLog.d("Get PREVIOUS data");
       getPreviousData();
     }
@@ -165,7 +162,7 @@ public abstract class BaseListingsPresenter
 
   @Override
   public void onLastItemShown() {
-    if (!mListingsRequested && hasNextListings()) {
+    if (!mNextRequested && hasNextListings()) {
       mLog.d("Get NEXT data");
       getNextData();
     }
@@ -175,11 +172,6 @@ public abstract class BaseListingsPresenter
   public void setData(@NonNull List<Listing> data) {
     mListings.clear();
     mListings.addAll(data);
-  }
-
-  @Override
-  public void setSelectedListing(@NonNull Listing listing) {
-    mListingSelected = listing;
   }
 
   @Override
@@ -240,7 +232,8 @@ public abstract class BaseListingsPresenter
   protected Action1<ListingResponse> onListingsLoaded(boolean append) {
     return (response) -> {
       mMainView.dismissSpinner();
-      mListingsRequested = false;
+      if (append) mNextRequested = false;
+      else mBeforeRequested = false;
       if (response == null) {
         mMainView.showToast(R.string.error_xxx);
         return;
@@ -248,18 +241,20 @@ public abstract class BaseListingsPresenter
       ListingResponseData data = response.getData();
       List<Listing> listings = data.getChildren();
       if (listings == null) {
+        mPrevPageListingId = null;
+        mNextPageListingId = null;
         mMainView.showError(new NullPointerException(), R.string.error_get_links);
-        return;
-      }
-      if (append) {
-        int lastIndex = mListings.size()-1;
-        mListings.addAll(listings);
-        mNextPageListingId = data.getAfter();
-        mListingsView.notifyItemRangeInserted(lastIndex + 1, listings.size());
       } else {
-        mListings.addAll(0, listings);
-        mPrevPageListingId = data.getBefore();
-        mListingsView.notifyItemRangeInserted(0, listings.size());
+        if (append) {
+          int lastIndex = mListings.size()-1;
+          mListings.addAll(listings);
+          mNextPageListingId = data.getAfter();
+          mListingsView.notifyItemRangeInserted(lastIndex + 1, listings.size());
+        } else {
+          mListings.addAll(0, listings);
+          mPrevPageListingId = listings.size() == 0 ? null : listings.get(0).getFullName();
+          mListingsView.notifyItemRangeInserted(0, listings.size());
+        }
       }
     };
   }
@@ -274,6 +269,7 @@ public abstract class BaseListingsPresenter
   }
 
   public void openLink(@NonNull Link link) {
+    mListingSelected = link;
     if (link.isSelf()) {
       mLinkView.showCommentsForLink(link.getSubreddit(), link.getId(), null);
     } else {
@@ -287,7 +283,7 @@ public abstract class BaseListingsPresenter
   }
 
   public void showCommentsForLink(@NonNull Link link) {
-//    mNextPageListingId = link.getFullName();
+    mListingSelected = link; // Save selected listing so we can restore the view on back navigation
     mLinkView.showCommentsForLink(link.getSubreddit(), link.getId(), null);
   }
 
@@ -455,10 +451,11 @@ public abstract class BaseListingsPresenter
 
   public void openCommentUserProfile() {
     Comment comment = (Comment) mListingSelected;
-    mCommentView.openUserProfileView(comment);
+    openCommentUserProfile(comment);
   }
 
   public void openCommentUserProfile(@NonNull Comment comment) {
+    mListingSelected = comment;
     mCommentView.openUserProfileView(comment);
   }
 
@@ -479,11 +476,13 @@ public abstract class BaseListingsPresenter
   }
 
   public void openCommentLink(@NonNull Comment comment) {
+    mListingSelected = comment;
     mMainView.showCommentsForLink(comment.getSubreddit(), comment.getLinkId(), null);
   }
 
   public void showMessageContextMenu(
       ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, PrivateMessage message) {
+    mListingSelected = message;
     mPrivateMessageView.showPrivateMessageContextMenu(menu, v, message);
     menu.findItem(R.id.action_message_mark_read)
         .setVisible(message.isUnread());
@@ -649,7 +648,11 @@ public abstract class BaseListingsPresenter
   }
 
   public void showMessagePermalink() {
-    PrivateMessage message = (PrivateMessage) mListingSelected;
+    showMessagePermalink((PrivateMessage) mListingSelected);
+  }
+
+  public void showMessagePermalink(PrivateMessage message) {
+    mListingSelected = message;
     ListingResponse listingResponse = message.getReplies();
     List<PrivateMessage> messages = new ArrayList<>();
     if (listingResponse != null) {

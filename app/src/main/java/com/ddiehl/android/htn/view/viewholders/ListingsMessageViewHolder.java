@@ -105,14 +105,12 @@ public class ListingsMessageViewHolder extends RecyclerView.ViewHolder
   }
 
   @OnClick({ R.id.last_message_layout })
-  void onClick(View v) {
-    mInboxPresenter.setSelectedListing(mMessage);
-    v.showContextMenu();
+  void onClick(View view) {
+    view.showContextMenu();
   }
 
   @OnClick({ R.id.conversation_subject, R.id.collapsed_messages_layout })
   void showMessageView() {
-    mInboxPresenter.setSelectedListing(mMessage);
-    mInboxPresenter.showMessagePermalink();
+    mInboxPresenter.showMessagePermalink(mMessage);
   }
 }

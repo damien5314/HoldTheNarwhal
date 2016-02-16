@@ -125,8 +125,8 @@ public class RedditServiceMock implements RedditService {
 
   @Override
   public Observable<ListingResponse> loadUserProfile(
-      @NonNull String show, @NonNull String username,
-      @Nullable String sort, @Nullable String timespan, @Nullable String after) {
+      @NonNull String show, @NonNull String username, @Nullable String sort,
+      @Nullable String timespan, @Nullable String before, @Nullable String after) {
     ListingResponse response = mGson.fromJson(
         getReaderForFile("user_profile_" + show + ".json"), ListingResponse.class);
     return delay(Observable.just(response));
@@ -184,7 +184,8 @@ public class RedditServiceMock implements RedditService {
   }
 
   @Override
-  public Observable<ListingResponse> getInbox(@NonNull String show, @Nullable String after) {
+  public Observable<ListingResponse> getInbox(
+      @NonNull String show, @Nullable String before, @Nullable String after) {
     ListingResponse response = mGson.fromJson(
         getReaderForFile("inbox_" + show + ".json"), ListingResponse.class);
     return delay(Observable.just(response));

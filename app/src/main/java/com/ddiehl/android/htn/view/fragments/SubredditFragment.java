@@ -3,16 +3,12 @@ package com.ddiehl.android.htn.view.fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.presenter.ListingsPresenter;
 import com.ddiehl.android.htn.presenter.SubredditPresenter;
 import com.ddiehl.android.htn.view.LinkView;
 import com.ddiehl.android.htn.view.adapters.ListingsAdapter;
-import com.ddiehl.reddit.listings.Link;
 
 public class SubredditFragment extends BaseListingsFragment implements LinkView {
   private static final String ARG_SUBREDDIT = "arg_subreddit";
@@ -49,13 +45,6 @@ public class SubredditFragment extends BaseListingsFragment implements LinkView 
     return R.layout.listings_fragment;
   }
 
-  @Nullable @Override
-  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    View v = super.onCreateView(inflater, container, savedInstanceState);
-    updateTitle();
-    return v;
-  }
-
   @Override
   public void onPause() {
     getArguments().putString(ARG_SUBREDDIT, mListingsPresenter.getSubreddit());
@@ -68,20 +57,5 @@ public class SubredditFragment extends BaseListingsFragment implements LinkView 
   public ListingsAdapter getListingsAdapter() {
     return new ListingsAdapter(
         mListingsPresenter, mLinkPresenter, mCommentPresenter, mMessagePresenter);
-  }
-
-  @Override
-  public void updateTitle() {
-    String subreddit = mListingsPresenter.getSubreddit();
-    if (subreddit != null) {
-      if (subreddit.equals("random")) {
-        if (mListingsPresenter.getNumListings() > 0) {
-          subreddit = ((Link) mListingsPresenter.getListing(0)).getSubreddit();
-        }
-      }
-      mMainView.setTitle(String.format(getString(R.string.link_subreddit), subreddit));
-    } else {
-      mMainView.setTitle(getString(R.string.front_page_title));
-    }
   }
 }

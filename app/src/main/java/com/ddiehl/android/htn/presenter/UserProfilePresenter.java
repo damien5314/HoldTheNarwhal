@@ -30,9 +30,11 @@ public class UserProfilePresenter extends BaseListingsPresenter
 
   @Override
   public void onResume() {
+    super.onResume();
     mSummaryView.refreshTabs(isAuthenticatedUser());
     mSummaryView.selectTab(mShow);
-    super.onResume();
+    mMainView.setTitle(
+        String.format(mContext.getString(R.string.username_formatter), mUsernameContext));
   }
 
   private boolean isAuthenticatedUser() {
@@ -55,7 +57,12 @@ public class UserProfilePresenter extends BaseListingsPresenter
 
   @Override
   void requestPreviousData() {
-
+    mAnalytics.logLoadUserProfile(mShow, mSort, mTimespan);
+    if (mShow.equals("summary")) {
+      getSummaryData();
+    } else {
+      getListingData(false);
+    }
   }
 
   @Override
@@ -64,19 +71,25 @@ public class UserProfilePresenter extends BaseListingsPresenter
     if (mShow.equals("summary")) {
       getSummaryData();
     } else {
-      getListingData();
+      getListingData(true);
     }
   }
 
-  private void getListingData() {
-    mMainView.showSpinner(null);
-    mListingsRequested = true;
-    mRedditService.loadUserProfile(mShow, mUsernameContext, mSort, mTimespan, mNextPageListingId)
+  private void getListingData(boolean append) {
+    mRedditService.loadUserProfile(mShow, mUsernameContext, mSort, mTimespan,
+        append ? null : mPrevPageListingId,
+        append ? mNextPageListingId : null)
+        .doOnSubscribe(() -> {
+          mMainView.showSpinner(null);
+          if (append) mNextRequested = true;
+          else mBeforeRequested = true;
+        })
         .doOnTerminate(() -> {
           mMainView.dismissSpinner();
-          mListingsRequested = false;
+          if (append) mNextRequested = false;
+          else mBeforeRequested = false;
         })
-        .subscribe(onListingsLoaded(true),
+        .subscribe(onListingsLoaded(append),
             e -> mMainView.showError(e, R.string.error_get_user_profile_listings));
   }
 
@@ -86,12 +99,14 @@ public class UserProfilePresenter extends BaseListingsPresenter
   }
 
   private void getSummaryData() {
-    mMainView.showSpinner(null);
-    mListingsRequested = true;
     mRedditService.getUserInfo(mUsernameContext)
+        .doOnSubscribe(() -> {
+          mMainView.showSpinner(null);
+          mNextRequested = true;
+        })
         .doOnTerminate(() -> {
           mMainView.dismissSpinner();
-          mListingsRequested = false;
+          mNextRequested = false;
         })
         .doOnNext(getFriendInfo())
         .subscribe(mSummaryView::showUserInfo,

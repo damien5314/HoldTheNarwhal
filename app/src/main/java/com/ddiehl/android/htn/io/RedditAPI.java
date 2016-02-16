@@ -75,6 +75,7 @@ public interface RedditAPI {
       @Path("username") String username,
       @Query("sort") String sort,
       @Query("t") String timespan,
+      @Query("before") String before,
       @Query("after") String after);
 
   @GET("/user/{username}/about")
@@ -134,6 +135,7 @@ public interface RedditAPI {
   @GET("/message/{show}")
   Observable<ListingResponse> getInbox(
       @Path("show") String show,
+      @Query("before") String before,
       @Query("after") String after);
 
   @POST("/api/read_all_messages")

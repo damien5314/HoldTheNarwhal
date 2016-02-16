@@ -133,12 +133,6 @@ public class UserProfileFragment extends BaseListingsFragment
   }
 
   @Override
-  public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-    super.onActivityCreated(savedInstanceState);
-    updateTitle(); // FIXME Why does this have to go in onActivityCreated?
-  }
-
-  @Override
   protected int getLayoutResId() {
     return R.layout.listings_fragment_user_profile;
   }
@@ -281,18 +275,12 @@ public class UserProfileFragment extends BaseListingsFragment
 
   private void showViewForTab(TabLayout.Tab tab) {
     String tag = (String) tab.getTag();
-    if (tag != null && tag.equals("summary")) {
+    if ("summary".equals(tag)) {
       mListView.setVisibility(View.GONE);
       mUserProfileSummary.setVisibility(View.VISIBLE);
     } else {
       mUserProfileSummary.setVisibility(View.GONE);
       mListView.setVisibility(View.VISIBLE);
     }
-  }
-
-  @Override
-  public void updateTitle() {
-    mMainView.setTitle(String.format(getString(R.string.username),
-        mUserProfilePresenter.getUsernameContext()));
   }
 }

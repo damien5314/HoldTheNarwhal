@@ -2,10 +2,6 @@ package com.ddiehl.android.htn.view.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.ddiehl.android.htn.R;
@@ -50,14 +46,6 @@ public class PrivateMessageFragment extends BaseListingsFragment implements Priv
     mCallbacks = mPrivateMessagePresenter;
   }
 
-  @Nullable @Override
-  public View onCreateView(
-      LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    View v = super.onCreateView(inflater, container, savedInstanceState);
-    updateTitle();
-    return v;
-  }
-
   @Override
   public ListingsAdapter getListingsAdapter() {
     return new PrivateMessageAdapter(mListingsPresenter, mMessagePresenter);
@@ -71,10 +59,5 @@ public class PrivateMessageFragment extends BaseListingsFragment implements Priv
   @Override
   public void showSubject(@NonNull String subject) {
     mConversationSubject.setText(subject);
-  }
-
-  @Override
-  public void updateTitle() {
-
   }
 }

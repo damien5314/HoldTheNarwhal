@@ -13,7 +13,6 @@ public interface ListingsPresenter extends BasePresenter {
   void setData(@NonNull List<Listing> data);
   void getPreviousData();
   void getNextData();
-  void setSelectedListing(@NonNull Listing listing);
   int getNumListings();
   Listing getListing(int position);
   String getUsernameContext();
