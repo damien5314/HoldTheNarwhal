@@ -14,7 +14,6 @@ public interface ListingsView
   void showTimespanOptionsMenu();
   void onSortChanged();
   void onTimespanChanged();
-  void updateTitle();
   void scrollToBottom();
 
   interface Callbacks {

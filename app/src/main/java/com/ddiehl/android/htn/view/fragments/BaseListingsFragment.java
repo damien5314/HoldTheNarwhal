@@ -105,14 +105,9 @@ public abstract class BaseListingsFragment extends Fragment
       mVisibleItemCount = mgr.getChildCount();
       mTotalItemCount = mgr.getItemCount();
       mFirstVisibleItem = mgr.findFirstVisibleItemPosition();
-//      mLog.d("First Visible: " + mFirstVisibleItem);
       if (mFirstVisibleItem == 0) {
-//        mLog.d("Get PREVIOUS");
-//        mListingsPresenter.getPreviousData();
         mCallbacks.onFirstItemShown();
       } else if ((mVisibleItemCount + mFirstVisibleItem) >= mTotalItemCount) {
-//        mLog.d("Get NEXT");
-//        mListingsPresenter.getNextData();
         mCallbacks.onLastItemShown();
       }
     }
@@ -428,23 +423,18 @@ public abstract class BaseListingsFragment extends Fragment
   }
 
   @Override
-  public void notifyItemRangeChanged(int position, int number) {
-    mListingsAdapter.notifyItemRangeChanged(position, number);
+  public void notifyItemRangeChanged(int position, int count) {
+    mListingsAdapter.notifyItemRangeChanged(position, count);
   }
 
   @Override
-  public void notifyItemRangeInserted(int position, int number) {
-    mListingsAdapter.notifyItemRangeInserted(position, number);
+  public void notifyItemRangeInserted(int position, int count) {
+    mListingsAdapter.notifyItemRangeInserted(position, count);
   }
 
   @Override
-  public void notifyItemRangeRemoved(int position, int number) {
-    mListingsAdapter.notifyItemRangeRemoved(position, number);
-  }
-
-  @Override
-  public void updateTitle() {
-
+  public void notifyItemRangeRemoved(int position, int count) {
+    mListingsAdapter.notifyItemRangeRemoved(position, count);
   }
 
   @Override

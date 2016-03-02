@@ -12,6 +12,7 @@ import com.ddiehl.reddit.listings.Subreddit;
 import rx.functions.Action1;
 
 public class SubredditPresenter extends BaseListingsPresenter implements LinkPresenter {
+
   public SubredditPresenter(
       MainView main, ListingsView listingsView, LinkView view,
       String subreddit, String sort, String timespan) {
@@ -107,11 +108,17 @@ public class SubredditPresenter extends BaseListingsPresenter implements LinkPre
   protected Action1<ListingResponse> onListingsLoaded(boolean append) {
     return (response) -> {
       super.onListingsLoaded(append).call(response);
-      if (mSubreddit != null && mSubreddit.equals("random")) {
+      if ("random".equals(mSubreddit)) {
         mSubreddit = ((Link) mListings.get(0)).getSubreddit();
-        mListingsView.updateTitle();
       }
+      updateTitle();
     };
+  }
+
+  private void updateTitle() {
+    if (mSubreddit == null) mMainView.setTitle(R.string.front_page_title);
+    else mMainView.setTitle(
+        String.format(mContext.getString(R.string.link_subreddit), mSubreddit));
   }
 
   private void loadHeaderImage() {

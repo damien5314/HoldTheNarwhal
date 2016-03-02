@@ -30,9 +30,11 @@ public class UserProfilePresenter extends BaseListingsPresenter
 
   @Override
   public void onResume() {
+    super.onResume();
     mSummaryView.refreshTabs(isAuthenticatedUser());
     mSummaryView.selectTab(mShow);
-    super.onResume();
+    mMainView.setTitle(
+        String.format(mContext.getString(R.string.username_formatter), mUsernameContext));
   }
 
   private boolean isAuthenticatedUser() {

@@ -62,7 +62,7 @@ public class InboxFragment extends BaseListingsFragment
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     View view = super.onCreateView(inflater, container, savedInstanceState);
     initializeTabs();
-    updateTitle();
+    mMainView.setTitle(R.string.inbox_fragment_title);
     return view;
   }
 
@@ -124,11 +124,6 @@ public class InboxFragment extends BaseListingsFragment
 
   @Override public void onTabUnselected(TabLayout.Tab tab) { }
   @Override public void onTabReselected(TabLayout.Tab tab) { }
-
-  @Override
-  public void updateTitle() {
-    mMainView.setTitle(R.string.inbox_fragment_title);
-  }
 
   @Override
   public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
