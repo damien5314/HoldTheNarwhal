@@ -243,8 +243,11 @@ public class MainActivity extends AppCompatActivity implements MainView,
     return false;
   }
 
+  private int mDialogCount = 0;
+
   @Override
   public void showSpinner(@Nullable String message) {
+    mDialogCount++;
     if (mLoadingOverlay == null) {
       mLoadingOverlay = new ProgressDialog(this, R.style.ProgressDialog);
       mLoadingOverlay.setCancelable(false);
@@ -261,7 +264,9 @@ public class MainActivity extends AppCompatActivity implements MainView,
 
   @Override
   public void dismissSpinner() {
-    if (mLoadingOverlay != null && mLoadingOverlay.isShowing()) {
+    mDialogCount--;
+    if (mDialogCount < 0) mDialogCount = 0;
+    if (mLoadingOverlay != null && mLoadingOverlay.isShowing() && mDialogCount == 0) {
       mLoadingOverlay.dismiss();
     }
   }

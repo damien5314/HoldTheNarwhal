@@ -69,12 +69,14 @@ public class UserProfilePresenter extends BaseListingsPresenter
   }
 
   private void getListingData() {
-    mMainView.showSpinner(null);
-    mListingsRequested = true;
     mRedditService.loadUserProfile(mShow, mUsernameContext, mSort, mTimespan, mNextPageListingId)
+        .doOnSubscribe(() -> {
+          mMainView.showSpinner(null);
+          mNextRequested = true;
+        })
         .doOnTerminate(() -> {
           mMainView.dismissSpinner();
-          mListingsRequested = false;
+          mNextRequested = false;
         })
         .subscribe(onListingsLoaded(true),
             e -> mMainView.showError(e, R.string.error_get_user_profile_listings));
@@ -86,12 +88,14 @@ public class UserProfilePresenter extends BaseListingsPresenter
   }
 
   private void getSummaryData() {
-    mMainView.showSpinner(null);
-    mListingsRequested = true;
     mRedditService.getUserInfo(mUsernameContext)
+        .doOnSubscribe(() -> {
+          mMainView.showSpinner(null);
+          mNextRequested = true;
+        })
         .doOnTerminate(() -> {
           mMainView.dismissSpinner();
-          mListingsRequested = false;
+          mNextRequested = false;
         })
         .doOnNext(getFriendInfo())
         .subscribe(mSummaryView::showUserInfo,

@@ -69,7 +69,7 @@ public abstract class BaseListingsPresenter
   protected Subreddit mSubredditInfo;
 
   protected Listing mListingSelected;
-  protected boolean mListingsRequested = false;
+  protected boolean mBeforeRequested, mNextRequested = false;
   protected String mPrevPageListingId, mNextPageListingId;
 
   public BaseListingsPresenter(
@@ -92,7 +92,8 @@ public abstract class BaseListingsPresenter
   @Override
   public void onResume() {
     mIdentityManager.registerUserIdentityChangeListener(this);
-    if (!mListingsRequested && mListings.size() == 0) {
+    // FIXME Do we need to check mNextRequested here?
+    if (!mNextRequested && mListings.size() == 0) {
       if (mListingSelected != null) {
         mListings.add(mListingSelected);
         mPrevPageListingId = mListingSelected.getFullName();
@@ -127,7 +128,7 @@ public abstract class BaseListingsPresenter
 
   @Override
   public void getPreviousData() {
-    if (!mListingsRequested) {
+    if (!mBeforeRequested) {
       if (AndroidUtils.isConnectedToNetwork(mContext)) {
         requestPreviousData();
       } else {
@@ -138,7 +139,7 @@ public abstract class BaseListingsPresenter
 
   @Override
   public void getNextData() {
-    if (!mListingsRequested) {
+    if (!mNextRequested) {
       if (AndroidUtils.isConnectedToNetwork(mContext)) {
         requestNextData();
       } else {
@@ -152,7 +153,7 @@ public abstract class BaseListingsPresenter
 
   @Override
   public void onFirstItemShown() {
-    if (!mListingsRequested && hasPreviousListings()) {
+    if (!mBeforeRequested && hasPreviousListings()) {
       mLog.d("Get PREVIOUS data");
       getPreviousData();
     }
@@ -160,7 +161,7 @@ public abstract class BaseListingsPresenter
 
   @Override
   public void onLastItemShown() {
-    if (!mListingsRequested && hasNextListings()) {
+    if (!mNextRequested && hasNextListings()) {
       mLog.d("Get NEXT data");
       getNextData();
     }
@@ -235,7 +236,8 @@ public abstract class BaseListingsPresenter
   protected Action1<ListingResponse> onListingsLoaded(boolean append) {
     return (response) -> {
       mMainView.dismissSpinner();
-      mListingsRequested = false;
+      if (append) mNextRequested = false;
+      else mBeforeRequested = false;
       if (response == null) {
         mMainView.showToast(R.string.error_xxx);
         return;

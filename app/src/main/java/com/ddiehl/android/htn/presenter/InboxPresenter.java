@@ -38,16 +38,15 @@ public class InboxPresenter extends BaseListingsPresenter
 
   @Override
   void requestNextData() {
-    mMainView.showSpinner(null);
-    mListingsRequested = true;
-
     // TODO Analytics
-    mLog.d("Data requested for tab: " + mShow);
-
     mRedditService.getInbox(mShow, mNextPageListingId)
+        .doOnSubscribe(() -> {
+          mMainView.showSpinner(null);
+          mNextRequested = true;
+        })
         .doOnTerminate(() -> {
           mMainView.dismissSpinner();
-          mListingsRequested = false;
+          mNextRequested = false;
         })
         .subscribe(onListingsLoaded(true),
             e -> mMainView.showError(e, R.string.error_get_inbox));
