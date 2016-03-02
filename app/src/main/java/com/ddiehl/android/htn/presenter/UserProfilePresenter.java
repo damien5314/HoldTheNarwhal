@@ -55,7 +55,12 @@ public class UserProfilePresenter extends BaseListingsPresenter
 
   @Override
   void requestPreviousData() {
-
+    mAnalytics.logLoadUserProfile(mShow, mSort, mTimespan);
+    if (mShow.equals("summary")) {
+      getSummaryData();
+    } else {
+      getListingData(false);
+    }
   }
 
   @Override
@@ -64,21 +69,25 @@ public class UserProfilePresenter extends BaseListingsPresenter
     if (mShow.equals("summary")) {
       getSummaryData();
     } else {
-      getListingData();
+      getListingData(true);
     }
   }
 
-  private void getListingData() {
-    mRedditService.loadUserProfile(mShow, mUsernameContext, mSort, mTimespan, mNextPageListingId)
+  private void getListingData(boolean append) {
+    mRedditService.loadUserProfile(mShow, mUsernameContext, mSort, mTimespan,
+        append ? null : mPrevPageListingId,
+        append ? mNextPageListingId : null)
         .doOnSubscribe(() -> {
           mMainView.showSpinner(null);
-          mNextRequested = true;
+          if (append) mNextRequested = true;
+          else mBeforeRequested = true;
         })
         .doOnTerminate(() -> {
           mMainView.dismissSpinner();
-          mNextRequested = false;
+          if (append) mNextRequested = false;
+          else mBeforeRequested = false;
         })
-        .subscribe(onListingsLoaded(true),
+        .subscribe(onListingsLoaded(append),
             e -> mMainView.showError(e, R.string.error_get_user_profile_listings));
   }
 

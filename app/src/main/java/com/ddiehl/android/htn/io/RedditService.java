@@ -49,7 +49,7 @@ public interface RedditService {
   Observable<List<Listing>> getUserTrophies(@NonNull String username);
   Observable<ListingResponse> loadUserProfile(
       @NonNull String show, @NonNull String username, @Nullable String sort,
-      @Nullable String timespan, @Nullable String after);
+      @Nullable String timespan, @Nullable String before, @Nullable String after);
   Observable<ResponseBody> addFriend(@NonNull String username);
   Observable<ResponseBody> deleteFriend(@NonNull String username);
   Observable<ResponseBody> saveFriendNote(@NonNull String username, @NonNull String note);

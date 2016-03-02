@@ -198,10 +198,10 @@ public class RedditServiceImpl implements RedditService {
   @Override
   public Observable<ListingResponse> loadUserProfile(
       @NonNull String show, @NonNull String username, @Nullable String sort,
-      @Nullable String timespan, @Nullable String after) {
+      @Nullable String timespan, @Nullable String before, @Nullable String after) {
     if (!connectedToNetwork()) return Observable.error(new NetworkUnavailableException());
     return requireAccessToken().flatMap(token ->
-        mAPI.getUserProfile(show, username, sort, timespan, after)
+        mAPI.getUserProfile(show, username, sort, timespan, before, after)
             .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .map(Response::body));

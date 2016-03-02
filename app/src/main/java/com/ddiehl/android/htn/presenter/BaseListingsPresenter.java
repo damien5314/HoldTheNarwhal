@@ -121,8 +121,9 @@ public abstract class BaseListingsPresenter
   public void refreshData() {
     mPrevPageListingId = null;
     mNextPageListingId = null;
+    int numItems = mListings.size();
     mListings.clear();
-    mListingsView.notifyDataSetChanged();
+    mListingsView.notifyItemRangeRemoved(0, numItems);
     getNextData();
   }
 

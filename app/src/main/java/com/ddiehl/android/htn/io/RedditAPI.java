@@ -75,6 +75,7 @@ public interface RedditAPI {
       @Path("username") String username,
       @Query("sort") String sort,
       @Query("t") String timespan,
+      @Query("before") String before,
       @Query("after") String after);
 
   @GET("/user/{username}/about")
