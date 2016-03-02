@@ -55,8 +55,8 @@ public class SubredditPresenter extends BaseListingsPresenter implements LinkPre
   }
 
   private void getSubredditInfo() {
-    mMainView.showSpinner(null);
     mRedditService.getSubredditInfo(mSubreddit)
+        .doOnSubscribe(() -> mMainView.showSpinner(null))
         .doOnTerminate(() -> {
           mMainView.dismissSpinner();
           mNextRequested = false;
@@ -66,13 +66,15 @@ public class SubredditPresenter extends BaseListingsPresenter implements LinkPre
   }
 
   private void getSubredditLinks(boolean append) {
-    mMainView.showSpinner(null);
-    if (append) mNextRequested = true;
-    else mBeforeRequested = true;
     mAnalytics.logLoadSubreddit(mSubreddit, mSort, mTimespan);
     mRedditService.loadLinks(mSubreddit, mSort, mTimespan,
         append ? null : mPrevPageListingId,
         append ? mNextPageListingId : null)
+        .doOnSubscribe(() -> {
+          mMainView.showSpinner(null);
+          if (append) mNextRequested = true;
+          else mBeforeRequested = true;
+        })
         .doOnTerminate(() -> {
           mMainView.dismissSpinner();
           if (append) mNextRequested = false;
