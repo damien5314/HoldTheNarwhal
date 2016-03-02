@@ -93,11 +93,11 @@ public abstract class BaseListingsPresenter
   public void onResume() {
     mIdentityManager.registerUserIdentityChangeListener(this);
     if (!mListingsRequested && mListings.size() == 0) {
-//      if (mListingSelected != null) {
       if (mListingSelected != null) {
         mListings.add(mListingSelected);
         mPrevPageListingId = mListingSelected.getFullName();
         mNextPageListingId = mListingSelected.getFullName();
+        getPreviousData();
         getNextData();
       } else {
         refreshData();
@@ -112,21 +112,16 @@ public abstract class BaseListingsPresenter
 
   @Override
   public void onViewDestroyed() {
-//    mListingSelected = null; // FIXME Analyze memory footprint when keeping this reference
     mListings.clear();
     mListingsView.notifyDataSetChanged();
-//    if (mListingSelected != null) {
-//      mListings.add(mListingSelected);
-//      mPrevPageListingId = mListingSelected.getFullName();
-//      mNextPageListingId = mListingSelected.getFullName();
-//    }
   }
 
   @Override
   public void refreshData() {
+    mPrevPageListingId = null;
+    mNextPageListingId = null;
     mListings.clear();
     mListingsView.notifyDataSetChanged();
-//    mNextPageListingId = null;
     getNextData();
   }
 
@@ -287,7 +282,7 @@ public abstract class BaseListingsPresenter
   }
 
   public void showCommentsForLink(@NonNull Link link) {
-//    mNextPageListingId = link.getFullName();
+    mListingSelected = link; // Save selected listing so we can restore the view on back navigation
     mLinkView.showCommentsForLink(link.getSubreddit(), link.getId(), null);
   }
 
