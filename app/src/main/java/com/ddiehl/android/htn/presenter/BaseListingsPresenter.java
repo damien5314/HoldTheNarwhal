@@ -175,11 +175,6 @@ public abstract class BaseListingsPresenter
   }
 
   @Override
-  public void setSelectedListing(@NonNull Listing listing) {
-    mListingSelected = listing;
-  }
-
-  @Override
   public Action1<UserIdentity> onUserIdentityChanged() {
     return identity -> refreshData();
   }
@@ -454,7 +449,7 @@ public abstract class BaseListingsPresenter
 
   public void openCommentUserProfile() {
     Comment comment = (Comment) mListingSelected;
-    mCommentView.openUserProfileView(comment);
+    openCommentUserProfile(comment);
   }
 
   public void openCommentUserProfile(@NonNull Comment comment) {
@@ -485,6 +480,7 @@ public abstract class BaseListingsPresenter
 
   public void showMessageContextMenu(
       ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, PrivateMessage message) {
+    mListingSelected = message;
     mPrivateMessageView.showPrivateMessageContextMenu(menu, v, message);
     menu.findItem(R.id.action_message_mark_read)
         .setVisible(message.isUnread());
@@ -650,7 +646,11 @@ public abstract class BaseListingsPresenter
   }
 
   public void showMessagePermalink() {
-    PrivateMessage message = (PrivateMessage) mListingSelected;
+    showMessagePermalink((PrivateMessage) mListingSelected);
+  }
+
+  public void showMessagePermalink(PrivateMessage message) {
+    mListingSelected = message;
     ListingResponse listingResponse = message.getReplies();
     List<PrivateMessage> messages = new ArrayList<>();
     if (listingResponse != null) {
