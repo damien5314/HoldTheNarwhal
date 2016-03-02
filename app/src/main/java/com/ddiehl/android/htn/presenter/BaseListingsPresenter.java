@@ -271,6 +271,7 @@ public abstract class BaseListingsPresenter
   }
 
   public void openLink(@NonNull Link link) {
+    mListingSelected = link;
     if (link.isSelf()) {
       mLinkView.showCommentsForLink(link.getSubreddit(), link.getId(), null);
     } else {
@@ -456,6 +457,7 @@ public abstract class BaseListingsPresenter
   }
 
   public void openCommentUserProfile(@NonNull Comment comment) {
+    mListingSelected = comment;
     mCommentView.openUserProfileView(comment);
   }
 
@@ -476,6 +478,7 @@ public abstract class BaseListingsPresenter
   }
 
   public void openCommentLink(@NonNull Comment comment) {
+    mListingSelected = comment;
     mMainView.showCommentsForLink(comment.getSubreddit(), comment.getLinkId(), null);
   }
 

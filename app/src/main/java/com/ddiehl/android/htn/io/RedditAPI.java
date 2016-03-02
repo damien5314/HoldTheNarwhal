@@ -134,6 +134,7 @@ public interface RedditAPI {
   @GET("/message/{show}")
   Observable<ListingResponse> getInbox(
       @Path("show") String show,
+      @Query("before") String before,
       @Query("after") String after);
 
   @POST("/api/read_all_messages")

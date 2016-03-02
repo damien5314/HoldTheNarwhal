@@ -106,12 +106,14 @@ public class ListingsMessageViewHolder extends RecyclerView.ViewHolder
 
   @OnClick({ R.id.last_message_layout })
   void onClick(View v) {
+    // FIXME Factor out `setSelectedListing`, let the presenter set itself
     mInboxPresenter.setSelectedListing(mMessage);
     v.showContextMenu();
   }
 
   @OnClick({ R.id.conversation_subject, R.id.collapsed_messages_layout })
   void showMessageView() {
+    // FIXME Factor out `setSelectedListing`, let the presenter set itself
     mInboxPresenter.setSelectedListing(mMessage);
     mInboxPresenter.showMessagePermalink();
   }

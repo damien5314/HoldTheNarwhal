@@ -323,10 +323,11 @@ public class RedditServiceImpl implements RedditService {
   }
 
   @Override
-  public Observable<ListingResponse> getInbox(@NonNull String show, @Nullable String after) {
+  public Observable<ListingResponse> getInbox(
+      @NonNull String show, @Nullable String before, @Nullable String after) {
     if (!connectedToNetwork()) return Observable.error(new NetworkUnavailableException());
     return requireAccessToken().flatMap(token ->
-        mAPI.getInbox(show, after)
+        mAPI.getInbox(show, before, after)
             .subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread()));
   }
