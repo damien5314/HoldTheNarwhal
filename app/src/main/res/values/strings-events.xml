@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="listing_archived">sorry, this is archived</string>
+  <string name="vote_failed">vote failed, please try again</string>
+  <string name="save_failed">save failed, please try again</string>
+  <string name="hide_failed">hide failed, please try again</string>
+  <string name="link_hidden">link hidden</string>
+  <string name="user_settings_update_confirm">settings updated</string>
+  <string name="user_friend_note_save_confirm">friend note saved</string>
+  <string name="user_friend_note_save_error">error saving friend note</string>
+  <string name="user_friend_add_button_text">add to friends</string>
+  <string name="user_friend_add_confirm">user added to friends</string>
+  <string name="user_friend_add_error">error adding to friends</string>
+  <string name="user_friend_delete_button_text">remove from friends</string>
+  <string name="user_friend_delete_confirm">user removed from friends</string>
+  <string name="user_friend_delete_error">error removing friend</string>
+  <string name="error_xxx">an error has occurred</string>
+  <string name="error_network_unavailable">no network connection</string>
+  <string name="error_private_subreddit">this subreddit is private</string>
+  <string name="error_404">page not found</string>
+  <string name="error_500">reddit is experiencing issues, try again later</string>
+  <string name="error_503">reddit is unavailable, try again soon</string>
+  <string name="error_520">reddit is in maintenance</string>
+  <string name="error_authentication">error during authentication</string>
+  <string name="error_get_user_identity">error getting user identity</string>
+  <string name="error_get_user_settings">error loading settings</string>
+  <string name="error_get_link_comments">error loading link comments</string>
+  <string name="error_get_more_comments">error loading comments</string>
+  <string name="error_add_comment">error adding comment</string>
+  <string name="error_get_links">error loading links</string>
+  <string name="error_get_subreddit_info">error loading subreddit info</string>
+  <string name="error_get_user_info">error loading user info</string>
+  <string name="error_get_user_trophies">error getting user trophies</string>
+  <string name="error_get_friend_info">error getting friend info</string>
+  <string name="error_get_user_profile_listings">error loading profile listings</string>
+  <string name="error_user_settings_update">error updating settings</string>
+  <string name="error_get_inbox">error getting inbox</string>
+</resources>

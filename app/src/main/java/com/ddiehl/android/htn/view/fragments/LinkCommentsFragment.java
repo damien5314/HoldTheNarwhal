@@ -1,23 +1,17 @@
 package com.ddiehl.android.htn.view.fragments;
 
 import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
@@ -27,33 +21,23 @@ import com.ddiehl.android.htn.presenter.LinkCommentsPresenterImpl;
 import com.ddiehl.android.htn.view.LinkCommentsView;
 import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.android.htn.view.adapters.LinkCommentsAdapter;
+import com.ddiehl.android.htn.view.adapters.ListingsAdapter;
 import com.ddiehl.android.htn.view.dialogs.AddCommentDialog;
-import com.ddiehl.android.htn.view.dialogs.ChooseCommentSortDialog;
 import com.ddiehl.reddit.listings.Comment;
 import com.ddiehl.reddit.listings.Link;
 import com.ddiehl.reddit.listings.Listing;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
-
-public class LinkCommentsFragment extends Fragment
+public class LinkCommentsFragment extends BaseListingsFragment
     implements LinkCommentsView, SwipeRefreshLayout.OnRefreshListener {
   private static final String ARG_SUBREDDIT = "arg_subreddit";
   private static final String ARG_ARTICLE = "arg_article";
   private static final String ARG_COMMENT_ID = "arg_comment_id";
 
-  private static final int REQUEST_CHOOSE_SORT = 0;
-  private static final int REQUEST_ADD_COMMENT = 1;
-  private static final String DIALOG_CHOOSE_SORT = "dialog_choose_sort";
+  private static final int REQUEST_ADD_COMMENT = 0x00000001;
   private static final String DIALOG_ADD_COMMENT = "add_comment_dialog";
 
-  @Bind(R.id.recycler_view) RecyclerView mRecyclerView;
-  @Bind(R.id.swipe_refresh_layout) SwipeRefreshLayout mSwipeRefreshLayout;
-
   private Analytics mAnalytics = HoldTheNarwhal.getAnalytics();
-  private MainView mMainView;
   private LinkCommentsPresenter mLinkCommentsPresenter;
-  private LinkCommentsAdapter mLinkCommentsAdapter;
 
   public LinkCommentsFragment() { /* Default constructor */ }
 
@@ -79,111 +63,18 @@ public class LinkCommentsFragment extends Fragment
     mMainView = (MainView) getActivity();
     mLinkCommentsPresenter = new LinkCommentsPresenterImpl(
         mMainView, this, subreddit, articleId, commentId);
+    mListingsPresenter = mLinkCommentsPresenter;
+    mCallbacks = (Callbacks) mListingsPresenter;
   }
 
   @Override
-  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    View view = inflater.inflate(R.layout.link_comments_fragment, container, false);
-    ButterKnife.bind(this, view);
-    mLinkCommentsAdapter = new LinkCommentsAdapter(mLinkCommentsPresenter);
-    mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-    mRecyclerView.setAdapter(mLinkCommentsAdapter);
-    updateTitle();
-    return view;
+  protected int getLayoutResId() {
+    return R.layout.link_comments_fragment;
   }
 
   @Override
-  public void onViewCreated(View view, Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
-    mSwipeRefreshLayout = ButterKnife.findById(view, R.id.swipe_refresh_layout);
-    mSwipeRefreshLayout.setOnRefreshListener(this);
-  }
-
-  @Override
-  public void onDestroyView() {
-    super.onDestroyView();
-    mLinkCommentsPresenter.onViewDestroyed();
-    mRecyclerView.setAdapter(null);
-  }
-
-  private void updateTitle() {
-    Link link = mLinkCommentsPresenter.getLinkContext();
-    if (link != null) {
-      mMainView.setTitle(link.getTitle());
-    } else {
-      mMainView.setTitle(getString(R.string.comments_fragment_title));
-    }
-  }
-
-  @Override
-  public void onResume() {
-    super.onResume();
-    mLinkCommentsPresenter.onResume();
-  }
-
-  @Override
-  public void onPause() {
-    mLinkCommentsPresenter.onPause();
-    super.onPause();
-  }
-
-  @Override
-  public void showLinkContextMenu(ContextMenu menu, View v, Link link) {
-    getActivity().getMenuInflater().inflate(R.menu.link_context, menu);
-    String score = link.getScore() == null ?
-        v.getContext().getString(R.string.hidden_score_placeholder) : link.getScore().toString();
-    String title = String.format(getString(R.string.menu_action_link), link.getTitle(), score);
-    menu.setHeaderTitle(title);
-    menu.findItem(R.id.action_link_reply).setVisible(true);
-    menu.findItem(R.id.action_link_show_comments).setVisible(false);
-    menu.findItem(R.id.action_link_hide).setVisible(false);
-    menu.findItem(R.id.action_link_unhide).setVisible(false);
-    // Set username for listing in the user profile menu item
-    String username = String.format(getString(R.string.action_view_user_profile), link.getAuthor());
-    menu.findItem(R.id.action_link_view_user_profile).setTitle(username);
-    if ("[deleted]".equalsIgnoreCase(link.getAuthor())) {
-      menu.findItem(R.id.action_link_view_user_profile).setVisible(false);
-    }
-  }
-
-  @Override
-  public void linkUpdated() {
-    mLinkCommentsAdapter.notifyItemChanged(0);
-  }
-
-  @Override
-  public void commentsUpdated() {
-    mLinkCommentsAdapter.notifyDataSetChanged();
-  }
-
-  @Override
-  public void commentUpdatedAt(int position) {
-    mLinkCommentsAdapter.notifyItemChanged(position + 1);
-  }
-
-  @Override
-  public void commentsUpdated(int position, int numItems) {
-    mLinkCommentsAdapter.notifyItemRangeChanged(position, numItems);
-  }
-
-  @Override
-  public void commentAddedAt(int position) {
-    mLinkCommentsAdapter.notifyItemInserted(position + 1);
-  }
-
-  @Override
-  public void commentsAddedAt(int position, int count) {
-    mLinkCommentsAdapter.notifyItemRangeInserted(position + 1, count);
-  }
-
-  @Override
-  public void commentRemovedAt(int position) {
-    mLinkCommentsAdapter.notifyItemRemoved(position + 1);
-  }
-
-  @Override
-  public void commentsRemovedAt(int position, int count) {
-    mLinkCommentsAdapter.notifyItemRangeRemoved(position + 1, count);
+  protected ListingsAdapter getListingsAdapter() {
+    return new LinkCommentsAdapter(mLinkCommentsPresenter);
   }
 
   @Override
@@ -338,14 +229,6 @@ public class LinkCommentsFragment extends Fragment
   @Override
   public void onActivityResult(int requestCode, int resultCode, Intent data) {
     switch (requestCode) {
-      case REQUEST_CHOOSE_SORT:
-        if (resultCode == Activity.RESULT_OK) {
-          String sort = data.getStringExtra(ChooseCommentSortDialog.EXTRA_SORT);
-          mAnalytics.logOptionChangeSort(sort);
-          mLinkCommentsPresenter.updateSort(sort);
-        }
-        getActivity().invalidateOptionsMenu();
-        break;
       case REQUEST_ADD_COMMENT:
         if (resultCode == Activity.RESULT_OK) {
           String parentId = data.getStringExtra(AddCommentDialog.EXTRA_PARENT_ID);
@@ -359,33 +242,6 @@ public class LinkCommentsFragment extends Fragment
   @Override
   public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     inflater.inflate(R.menu.comments, menu);
-  }
-
-  @Override
-  public boolean onOptionsItemSelected(MenuItem item) {
-    switch (item.getItemId()) {
-      case R.id.action_change_sort:
-        showChooseCommentSortDialog();
-        mAnalytics.logOptionChangeSort();
-        return true;
-      case R.id.action_refresh:
-        mLinkCommentsPresenter.requestData();
-        mAnalytics.logOptionRefresh();
-        return true;
-      case R.id.action_settings:
-        mMainView.showSettings();
-        mAnalytics.logOptionSettings();
-        return true;
-    }
-    return super.onOptionsItemSelected(item);
-  }
-
-  private void showChooseCommentSortDialog() {
-    FragmentManager fm = getActivity().getFragmentManager();
-    String currentSort = HoldTheNarwhal.getSettingsManager().getCommentSort();
-    ChooseCommentSortDialog chooseCommentSortDialog = ChooseCommentSortDialog.newInstance(currentSort);
-    chooseCommentSortDialog.setTargetFragment(this, REQUEST_CHOOSE_SORT);
-    chooseCommentSortDialog.show(fm, DIALOG_CHOOSE_SORT);
   }
 
   @Override
@@ -410,7 +266,47 @@ public class LinkCommentsFragment extends Fragment
   @Override
   public void onRefresh() {
     mSwipeRefreshLayout.setRefreshing(false);
-    mLinkCommentsPresenter.requestData();
+    mLinkCommentsPresenter.refreshData();
     mAnalytics.logOptionRefresh();
+  }
+
+  @Override
+  public void linkUpdated() {
+    mListingsAdapter.notifyItemChanged(0);
+  }
+
+  /**
+   * Overriding the below methods to account for the presence
+   * of a link at the top of the adapter
+   */
+
+  @Override
+  public void notifyItemChanged(int position) {
+    super.notifyItemChanged(position+1);
+  }
+
+  @Override
+  public void notifyItemInserted(int position) {
+    super.notifyItemInserted(position+1);
+  }
+
+  @Override
+  public void notifyItemRemoved(int position) {
+    super.notifyItemRemoved(position+1);
+  }
+
+  @Override
+  public void notifyItemRangeChanged(int position, int count) {
+    super.notifyItemRangeChanged(position+1, count);
+  }
+
+  @Override
+  public void notifyItemRangeInserted(int position, int count) {
+    super.notifyItemRangeInserted(position+1, count);
+  }
+
+  @Override
+  public void notifyItemRangeRemoved(int position, int count) {
+    super.notifyItemRangeRemoved(position+1, count);
   }
 }

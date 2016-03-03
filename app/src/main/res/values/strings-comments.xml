@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="comments_fragment_title">comments</string>
+  <string name="comment_score">%s</string>
+  <string name="continue_thread">continue thread</string>
+  <string name="more_comments_s">load 1 more comment</string>
+  <string name="more_comments">load %s more comments</string>
+  <string name="listing_comment_subject_commentreply">comment reply</string>
+  <string name="listing_comment_subject_postreply">post reply</string>
+  <string name="listing_comment_subject_usernamemention">username mention</string>
+  <string name="listing_comment_subtitle_format">by /u/%2$s on /r/%1$s</string>
+  <string name="listing_comment_inbox_subtitle_format">%2$s on /r/%1$s</string>
+  <string name="comment_metadata_divider">•</string>
+  <string name="comment_controversiality_indicator">†</string>
+  <string name="comment_edit_text_hint">markdown supported</string>
+  <string name="comment_add_submit">submit</string>
+</resources>

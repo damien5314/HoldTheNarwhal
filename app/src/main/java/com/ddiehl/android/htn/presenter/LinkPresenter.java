@@ -8,8 +8,7 @@ import com.ddiehl.android.htn.ThumbnailMode;
 import com.ddiehl.reddit.listings.Link;
 
 public interface LinkPresenter extends BasePresenter {
-  void showLinkContextMenu(
-      ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, Link link);
+  void showLinkContextMenu(ContextMenu menu, View view, Link link);
   void openLink(@NonNull Link link);
   void showCommentsForLink(@NonNull Link link);
   void showCommentsForLink();

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="front_page_title">front page</string>
+  <string name="link_score">%s points</string>
+  <string name="link_gilded_text">&#160;× %s</string>
+  <string name="link_subreddit">/r/%s</string>
+  <string name="link_author">/u/%s</string>
+  <string name="link_domain">%s</string>
+  <string name="link_comment_count">%s comments</string>
+  <string name="hidden_score_placeholder">\?</string>
+</resources>
