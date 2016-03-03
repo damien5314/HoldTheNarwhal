@@ -16,7 +16,6 @@ import com.ddiehl.android.htn.SettingsManager;
 import com.ddiehl.android.htn.ThumbnailMode;
 import com.ddiehl.android.htn.analytics.Analytics;
 import com.ddiehl.android.htn.io.RedditService;
-import com.ddiehl.android.htn.model.ListingList;
 import com.ddiehl.android.htn.utils.AndroidUtils;
 import com.ddiehl.android.htn.view.CommentView;
 import com.ddiehl.android.htn.view.LinkView;
@@ -53,7 +52,7 @@ public abstract class BaseListingsPresenter
   protected RedditService mRedditService = HoldTheNarwhal.getRedditService();
   protected Analytics mAnalytics = HoldTheNarwhal.getAnalytics();
 
-  protected ListingList mListings = new ListingList();
+  protected List<Listing> mListings = new ArrayList<>();
   protected ListingsView mListingsView;
   protected MainView mMainView;
   protected LinkView mLinkView;
