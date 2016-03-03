@@ -112,6 +112,7 @@ public abstract class BaseListingsPresenter
 
   @Override
   public void onViewDestroyed() {
+    // To disable the memory dereferencing functionality just comment these lines
     mListings.clear();
     mListingsView.notifyDataSetChanged();
   }
@@ -240,18 +241,20 @@ public abstract class BaseListingsPresenter
       ListingResponseData data = response.getData();
       List<Listing> listings = data.getChildren();
       if (listings == null) {
+        mPrevPageListingId = null;
+        mNextPageListingId = null;
         mMainView.showError(new NullPointerException(), R.string.error_get_links);
-        return;
-      }
-      if (append) {
-        int lastIndex = mListings.size()-1;
-        mListings.addAll(listings);
-        mNextPageListingId = data.getAfter();
-        mListingsView.notifyItemRangeInserted(lastIndex + 1, listings.size());
       } else {
-        mListings.addAll(0, listings);
-        mPrevPageListingId = data.getBefore();
-        mListingsView.notifyItemRangeInserted(0, listings.size());
+        if (append) {
+          int lastIndex = mListings.size()-1;
+          mListings.addAll(listings);
+          mNextPageListingId = data.getAfter();
+          mListingsView.notifyItemRangeInserted(lastIndex + 1, listings.size());
+        } else {
+          mListings.addAll(0, listings);
+          mPrevPageListingId = listings.size() == 0 ? null : listings.get(0).getFullName();
+          mListingsView.notifyItemRangeInserted(0, listings.size());
+        }
       }
     };
   }
