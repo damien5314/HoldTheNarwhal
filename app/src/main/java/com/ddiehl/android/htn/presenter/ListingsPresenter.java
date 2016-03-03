@@ -14,7 +14,7 @@ public interface ListingsPresenter extends BasePresenter {
   void getPreviousData();
   void getNextData();
   int getNumListings();
-  Listing getListing(int position);
+  Listing getListingAt(int position);
   String getUsernameContext();
   String getSubreddit();
   boolean hasPreviousListings();

@@ -25,7 +25,6 @@ public interface CommentBank {
   boolean isVisible(int position);
   int getNumVisible();
   AbsComment getVisibleComment(int position);
-//  void toggleThreadVisible(int index, boolean visible);
   void toggleThreadVisible(Comment comment);
   void collapseAllThreadsUnder(@Nullable Integer score);
 }

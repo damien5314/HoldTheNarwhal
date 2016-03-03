@@ -185,7 +185,7 @@ public abstract class BaseListingsPresenter
   }
 
   @Override
-  public Listing getListing(int position) {
+  public Listing getListingAt(int position) {
     return mListings.get(position);
   }
 
@@ -260,9 +260,9 @@ public abstract class BaseListingsPresenter
   }
 
   public void showLinkContextMenu(
-      ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, Link link) {
+      ContextMenu menu, View view, Link link) {
     mListingSelected = link;
-    mLinkView.showLinkContextMenu(menu, v, link);
+    mLinkView.showLinkContextMenu(menu, view, link);
     menu.findItem(R.id.action_link_reply).setVisible(false);
     menu.findItem(R.id.action_link_save).setVisible(!link.isSaved());
     menu.findItem(R.id.action_link_unsave).setVisible(link.isSaved());
@@ -542,11 +542,14 @@ public abstract class BaseListingsPresenter
       mRedditService.vote(votable, direction)
           .subscribe(response -> {
             votable.applyVote(direction);
-            mListingsView.notifyItemChanged(
-                mListings.indexOf(listing));
+            mListingsView.notifyItemChanged(getIndexOf(listing));
           }, e -> mMainView.showError(e, R.string.vote_failed));
       mAnalytics.logVote(votable.getKind(), direction);
     }
+  }
+
+  protected int getIndexOf(Listing listing) {
+    return mListings.indexOf(listing);
   }
 
   private void save(Savable savable, boolean toSave) {
@@ -554,8 +557,7 @@ public abstract class BaseListingsPresenter
     mRedditService.save(savable, null, toSave)
         .subscribe(response -> {
           savable.isSaved(toSave);
-          mListingsView.notifyItemChanged(
-              mListings.indexOf(listing));
+          mListingsView.notifyItemChanged(getIndexOf(listing));
         }, e -> mMainView.showError(e, R.string.save_failed));
   }
 
@@ -626,8 +628,7 @@ public abstract class BaseListingsPresenter
         .subscribe(
             _void -> {
               message.markUnread(false);
-              mListingsView.notifyItemChanged(
-                  mListings.indexOf(message));
+              mListingsView.notifyItemChanged(getIndexOf(message));
             },
             error -> mMainView.showError(error, R.string.error_xxx)
         );
@@ -640,8 +641,7 @@ public abstract class BaseListingsPresenter
         .subscribe(
             _void -> {
               message.markUnread(true);
-              mListingsView.notifyItemChanged(
-                  mListings.indexOf(message));
+              mListingsView.notifyItemChanged(getIndexOf(message));
             },
             error -> mMainView.showError(error, R.string.error_xxx)
         );

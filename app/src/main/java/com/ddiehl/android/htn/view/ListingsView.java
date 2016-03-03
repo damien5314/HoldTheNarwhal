@@ -1,8 +1,6 @@
 package com.ddiehl.android.htn.view;
 
-public interface ListingsView
-//    extends LinkView, CommentView, PrivateMessageView
-{
+public interface ListingsView {
   void notifyDataSetChanged();
   void notifyItemChanged(int position);
   void notifyItemInserted(int position);
