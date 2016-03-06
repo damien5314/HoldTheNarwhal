@@ -65,11 +65,11 @@ dependencies {
   compile project(':bypass')
   compile project(':dlogger')
   // 23.1.1 breaks header view functionality in NavigationView
-  compile 'com.android.support:appcompat-v7:23.0.0'
-  compile 'com.android.support:support-v4:23.0.0'
-  compile 'com.android.support:design:23.0.0'
-  compile 'com.android.support:recyclerview-v7:23.0.0'
-  compile 'com.android.support:cardview-v7:23.0.0'
+  compile 'com.android.support:appcompat-v7:23.2.0'
+  compile 'com.android.support:support-v4:23.2.0'
+  compile 'com.android.support:design:23.2.0'
+  compile 'com.android.support:recyclerview-v7:23.2.0'
+  compile 'com.android.support:cardview-v7:23.2.0'
   compile 'com.google.android.gms:play-services-analytics:8.4.0' // Required for Flurry
   compile 'com.squareup.retrofit2:retrofit:2.0.0-beta4'
   compile 'com.squareup.retrofit2:converter-gson:2.0.0-beta4'

@@ -58,7 +58,6 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 public class MainActivity extends AppCompatActivity implements MainView,
     NavigationView.OnNavigationItemSelectedListener {
@@ -74,10 +73,14 @@ public class MainActivity extends AppCompatActivity implements MainView,
 
   @Bind(R.id.drawer_layout) DrawerLayout mDrawerLayout;
   @Bind(R.id.navigation_view) NavigationView mNavigationView;
-  @Bind(R.id.user_account_icon) ImageView mGoldIndicator;
-  @Bind(R.id.account_name) TextView mAccountNameView;
-  @Bind(R.id.sign_out_button) View mSignOutView;
-  @Bind(R.id.navigation_drawer_header_image) ImageView mHeaderImage;
+//  @Bind(R.id.user_account_icon)
+  ImageView mGoldIndicator;
+//  @Bind(R.id.account_name)
+  TextView mAccountNameView;
+//  @Bind(R.id.sign_out_button)
+  View mSignOutView;
+//  @Bind(R.id.navigation_drawer_header_image)
+  ImageView mHeaderImage;
   private ProgressDialog mLoadingOverlay;
 
   private Logger mLogger = HoldTheNarwhal.getLogger();
@@ -89,6 +92,7 @@ public class MainActivity extends AppCompatActivity implements MainView,
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
+    initNavigationView();
     ButterKnife.bind(this);
 
     // Listen to events from the navigation drawer
@@ -106,6 +110,18 @@ public class MainActivity extends AppCompatActivity implements MainView,
     // Initialize dependencies
     Uri data = getIntent().getData();
     mMainPresenter = new MainPresenterImpl(this, data);
+  }
+
+  // Workaround for bug in support lib 23.1.0 - 23.2.0
+  // https://code.google.com/p/android/issues/detail?id=190226
+  private void initNavigationView() {
+    mNavigationView = ButterKnife.findById(this, R.id.navigation_view);
+    View header = mNavigationView.inflateHeaderView(R.layout.navigation_drawer_header);
+    mGoldIndicator = (ImageView) header.findViewById(R.id.user_account_icon);
+    mAccountNameView = (TextView) header.findViewById(R.id.account_name);
+    mSignOutView = header.findViewById(R.id.sign_out_button);
+    mSignOutView.setOnClickListener(view -> onSignOut());
+    mHeaderImage = (ImageView) header.findViewById(R.id.navigation_drawer_header_image);
   }
 
   @Override
@@ -227,7 +243,7 @@ public class MainActivity extends AppCompatActivity implements MainView,
     showToast(R.string.implementation_pending);
   }
 
-  @OnClick(R.id.sign_out_button)
+//  @OnClick(R.id.sign_out_button)
   void onSignOut() {
     new ConfirmSignOutDialog().show(getFragmentManager(), DIALOG_CONFIRM_SIGN_OUT);
     mAnalytics.logClickedSignOut();
