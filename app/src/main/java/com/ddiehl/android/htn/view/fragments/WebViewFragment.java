@@ -21,9 +21,7 @@ import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 import android.widget.ZoomButtonsController;
 
-import com.ddiehl.android.dlogger.Logger;
 import com.ddiehl.android.htn.BuildConfig;
-import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.io.RedditAuthService;
 import com.ddiehl.android.htn.utils.AndroidUtils;
@@ -32,11 +30,11 @@ import com.ddiehl.android.htn.view.MainView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
 public class WebViewFragment extends Fragment {
   private static final String ARG_URL = "arg_url";
 
-  private Logger mLogger = HoldTheNarwhal.getLogger();
   private MainView mMainView;
   private String mUrl;
 
@@ -95,7 +93,7 @@ public class WebViewFragment extends Fragment {
     mWebView.setWebViewClient(new WebViewClient() {
       @Override
       public boolean shouldOverrideUrlLoading(WebView view, String url) {
-        mLogger.d("Loading URL: " + url);
+        Timber.d("Loading URL: %s", url);
 
         if (url.contains(RedditAuthService.REDIRECT_URI)
             && !url.equals(RedditAuthService.AUTHORIZATION_URL)) {

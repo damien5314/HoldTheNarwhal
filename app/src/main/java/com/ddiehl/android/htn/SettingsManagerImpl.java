@@ -3,7 +3,6 @@ package com.ddiehl.android.htn;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.ddiehl.android.dlogger.Logger;
 import com.ddiehl.android.htn.analytics.Analytics;
 import com.ddiehl.android.htn.io.RedditService;
 import com.ddiehl.reddit.identity.UserSettings;
@@ -11,6 +10,8 @@ import com.ddiehl.reddit.identity.UserSettings;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+
+import timber.log.Timber;
 
 public class SettingsManagerImpl implements SettingsManager {
   public static final String PREFS_USER = "prefs_user";
@@ -79,7 +80,6 @@ public class SettingsManagerImpl implements SettingsManager {
       "highlight_new_comments, default_comment_sort, hide_locationbar";
 
   private Context mContext = HoldTheNarwhal.getContext();
-  private Logger mLogger = HoldTheNarwhal.getLogger();
   private RedditService mRedditService = HoldTheNarwhal.getRedditService();
   private Analytics mAnalytics = HoldTheNarwhal.getAnalytics();
   private SharedPreferences mSharedPreferences;
@@ -142,8 +142,8 @@ public class SettingsManagerImpl implements SettingsManager {
         HoldTheNarwhal.getAccessTokenManager().isUserAuthorized()) {
       // Post SettingsUpdate event with changed keys and values
       mRedditService.updateUserSettings(changedSettings)
-          .subscribe(r -> mLogger.d("Settings updated successfully"),
-              e -> mLogger.e(e, "Error updating settings"));
+          .subscribe(r -> Timber.d("Settings updated successfully"),
+              e -> Timber.e(e, "Error updating settings"));
     }
 
     Map prefs = sp.getAll();

@@ -2,8 +2,9 @@ package com.ddiehl.android.htn.utils;
 
 import android.net.Uri;
 
-import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.io.RedditAuthService;
+
+import timber.log.Timber;
 
 public class AuthUtils {
   public static String getUserAuthCodeFromRedirectUri(String url) {
@@ -14,7 +15,7 @@ public class AuthUtils {
     // Verify state parameter is correct
     String returnedState = getValueFromQuery(params[0]);
     if (!returnedState.equals(RedditAuthService.STATE)) {
-      HoldTheNarwhal.getLogger().e("STATE does not match: %s (EXPECTED: %s)",
+      Timber.e("STATE does not match: %s (EXPECTED: %s)",
           returnedState, RedditAuthService.STATE);
       return null;
     }
@@ -26,7 +27,7 @@ public class AuthUtils {
       return getValueFromQuery(params[1]);
     } else { // User declined to authorize application, or an error occurred
       String error = getValueFromQuery(params[1]);
-      HoldTheNarwhal.getLogger().e("Error during authorization flow: " + error);
+      Timber.e("Error during authorization flow: %s", error);
       return null;
     }
   }

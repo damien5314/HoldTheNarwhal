@@ -6,6 +6,7 @@ import com.ddiehl.reddit.identity.AccessToken;
 
 import okhttp3.Interceptor;
 import okhttp3.Request;
+import timber.log.Timber;
 
 public class AuthorizationInterceptor {
   public enum Type { HTTP_AUTH, TOKEN_AUTH }
@@ -27,8 +28,7 @@ public class AuthorizationInterceptor {
         return chain -> {
           Request originalRequest = chain.request();
           AccessToken token = HoldTheNarwhal.getAccessTokenManager().getValidAccessToken();
-          HoldTheNarwhal.getLogger()
-              .d("Access token expires in " + token.secondsUntilExpiration() + " seconds");
+          Timber.d("Access token expires in " + token.secondsUntilExpiration() + " seconds");
           Request newRequest = originalRequest.newBuilder()
               .removeHeader("Authorization")
               .addHeader("Authorization", "bearer " + token.getToken())

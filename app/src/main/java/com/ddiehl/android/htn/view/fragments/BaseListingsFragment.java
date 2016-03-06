@@ -19,7 +19,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.ddiehl.android.dlogger.Logger;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.analytics.Analytics;
@@ -40,6 +39,7 @@ import com.ddiehl.reddit.listings.PrivateMessage;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
 public abstract class BaseListingsFragment extends Fragment
     implements ListingsView, SwipeRefreshLayout.OnRefreshListener {
@@ -52,7 +52,6 @@ public abstract class BaseListingsFragment extends Fragment
   @Bind(R.id.recycler_view)
   protected RecyclerView mRecyclerView;
 
-  protected Logger mLog = HoldTheNarwhal.getLogger();
   protected Analytics mAnalytics = HoldTheNarwhal.getAnalytics();
   protected MainView mMainView;
   protected ListingsPresenter mListingsPresenter;
@@ -338,7 +337,7 @@ public abstract class BaseListingsFragment extends Fragment
         mMessagePresenter.replyToMessage();
         return true;
       default:
-        mLog.w("No action registered to this context item");
+        Timber.w("No action registered to this context item");
         return false;
     }
   }

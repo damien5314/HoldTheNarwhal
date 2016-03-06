@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
-import com.ddiehl.android.dlogger.Logger;
 import com.ddiehl.android.htn.AccessTokenManager;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.analytics.Analytics;
@@ -54,9 +53,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import timber.log.Timber;
 
 public class RedditServiceImpl implements RedditService {
-  private Logger mLogger = HoldTheNarwhal.getLogger();
   private AccessTokenManager mAccessTokenManager = HoldTheNarwhal.getAccessTokenManager();
   private Analytics mAnalytics = HoldTheNarwhal.getAnalytics();
   private RedditAPI mAPI = buildApi();
@@ -363,12 +362,12 @@ public class RedditServiceImpl implements RedditService {
 
   private Observable<AccessToken> requireAccessToken() {
     return mAccessTokenManager.getAccessToken()
-        .doOnError(error -> mLogger.e("No access token available"));
+        .doOnError(error -> Timber.e("No access token available"));
   }
 
   private Observable<UserAccessToken> requireUserAccessToken() {
     return mAccessTokenManager.getUserAccessToken()
-        .doOnError(error -> mLogger.e("No user access token available"));
+        .doOnError(error -> Timber.e("No user access token available"));
   }
 
   private boolean connectedToNetwork() {
