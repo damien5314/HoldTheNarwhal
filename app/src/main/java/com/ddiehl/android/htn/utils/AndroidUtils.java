@@ -13,8 +13,6 @@ import android.support.design.widget.TabLayout;
 import android.util.DisplayMetrics;
 import android.view.ViewGroup;
 
-import com.ddiehl.android.htn.HoldTheNarwhal;
-
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -22,12 +20,13 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 import okhttp3.Response;
+import timber.log.Timber;
 
 public class AndroidUtils {
   public static void printResponseStatus(@Nullable Response response) {
     if (response != null) {
-      HoldTheNarwhal.getLogger().d(String.format("URL: %s (STATUS: %s)",
-          response.request().url().toString(), response.code()));
+      Timber.d("URL: %s (STATUS: %s)",
+          response.request().url().toString(), response.code());
     }
   }
 
@@ -51,14 +50,14 @@ public class AndroidUtils {
       ZipEntry ze = zf.getEntry("AndroidManifest.xml");
       return ze.getTime();
     } catch (IOException e) {
-      HoldTheNarwhal.getLogger().e("Exception while getting build time", e);
+      Timber.e(e, "Exception while getting build time");
     } catch (PackageManager.NameNotFoundException e) {
-      HoldTheNarwhal.getLogger().e("Unable to find package name: " + c.getPackageName(), e);
+      Timber.e(e, "Unable to find package name: %s", c.getPackageName());
     } finally {
       try {
         if (zf != null) zf.close();
       } catch (Exception e) {
-        HoldTheNarwhal.getLogger().e("Error while closing ZipFile", e);
+        Timber.e(e, "Error while closing ZipFile");
       }
     }
     return -1;

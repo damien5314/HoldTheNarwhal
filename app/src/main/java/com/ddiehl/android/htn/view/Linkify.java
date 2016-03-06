@@ -26,8 +26,6 @@ import android.util.Patterns;
 import android.webkit.WebView;
 import android.widget.TextView;
 
-import com.ddiehl.android.htn.HoldTheNarwhal;
-
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -38,6 +36,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import in.uncod.android.bypass.style.URLSpanNoUnderline;
+import timber.log.Timber;
 
 /**
  *  Linkify take a piece of text and a regular expression and turns all of the
@@ -449,7 +448,7 @@ public class Linkify {
     }
 
     private static final void gatherTelLinks(ArrayList<LinkSpec> links, Spannable s) {
-        HoldTheNarwhal.getLogger().w("This modification of Linkify does not have phone link support");
+        Timber.w("This modification of Linkify does not have phone link support");
     }
 
     private static final void gatherMapLinks(ArrayList<LinkSpec> links, Spannable s) {

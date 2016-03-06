@@ -3,8 +3,6 @@ package com.ddiehl.android.htn.utils;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.ddiehl.android.htn.HoldTheNarwhal;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -15,6 +13,8 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Scanner;
 import java.util.UUID;
+
+import timber.log.Timber;
 
 public class Utils {
 
@@ -41,7 +41,7 @@ public class Utils {
         br.close();
       }
     } catch (FileNotFoundException e) {
-      HoldTheNarwhal.getLogger().e("Unable to find file: " + file.getAbsolutePath());
+      Timber.e("Unable to find file: %s", file.getAbsolutePath());
       e.printStackTrace();
     }
     return null;
@@ -68,7 +68,7 @@ public class Utils {
 
       return sb.toString();
     } catch (NoSuchAlgorithmException e) {
-      HoldTheNarwhal.getLogger().w("Unable to obtain MD5 hash");
+      Timber.w("Unable to obtain MD5 hash");
       e.printStackTrace();
     }
 

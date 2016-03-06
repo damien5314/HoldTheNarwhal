@@ -1,7 +1,5 @@
 package com.ddiehl.reddit.adapters;
 
-import com.ddiehl.android.dlogger.Logger;
-import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.reddit.listings.Comment;
 import com.ddiehl.reddit.listings.CommentStub;
 import com.ddiehl.reddit.listings.Listing;
@@ -13,8 +11,9 @@ import com.google.gson.JsonParseException;
 
 import java.lang.reflect.Type;
 
+import timber.log.Timber;
+
 public class CommentDeserializer implements JsonDeserializer<Listing> {
-  private Logger mLog = HoldTheNarwhal.getLogger();
 
   @Override
   public Listing deserialize(
@@ -30,7 +29,7 @@ public class CommentDeserializer implements JsonDeserializer<Listing> {
         listing = context.deserialize(json, CommentStub.class);
         return listing;
       default:
-        mLog.e("No deserialization class set for listing type: " + kind);
+        Timber.e("No deserialization class set for listing type: " + kind);
         return null;
     }
   }

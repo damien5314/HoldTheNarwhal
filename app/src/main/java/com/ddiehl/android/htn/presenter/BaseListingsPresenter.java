@@ -7,7 +7,6 @@ import android.text.TextUtils;
 import android.view.ContextMenu;
 import android.view.View;
 
-import com.ddiehl.android.dlogger.Logger;
 import com.ddiehl.android.htn.AccessTokenManager;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.IdentityManager;
@@ -41,10 +40,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import rx.functions.Action1;
+import timber.log.Timber;
 
 public abstract class BaseListingsPresenter
     implements ListingsPresenter, IdentityManager.Callbacks, ListingsView.Callbacks {
-  protected Logger mLog = HoldTheNarwhal.getLogger();
   protected Context mContext = HoldTheNarwhal.getContext();
   protected AccessTokenManager mAccessTokenManager = HoldTheNarwhal.getAccessTokenManager();
   protected IdentityManager mIdentityManager = HoldTheNarwhal.getIdentityManager();
@@ -155,7 +154,7 @@ public abstract class BaseListingsPresenter
   @Override
   public void onFirstItemShown() {
     if (!mBeforeRequested && hasPreviousListings()) {
-      mLog.d("Get PREVIOUS data");
+      Timber.d("Get PREVIOUS data");
       getPreviousData();
     }
   }
@@ -163,7 +162,7 @@ public abstract class BaseListingsPresenter
   @Override
   public void onLastItemShown() {
     if (!mNextRequested && hasNextListings()) {
-      mLog.d("Get NEXT data");
+      Timber.d("Get NEXT data");
       getNextData();
     }
   }

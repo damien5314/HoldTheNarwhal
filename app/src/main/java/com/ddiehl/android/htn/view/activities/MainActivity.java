@@ -29,7 +29,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.ddiehl.android.dlogger.Logger;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.analytics.Analytics;
@@ -58,6 +57,7 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
 public class MainActivity extends AppCompatActivity implements MainView,
     NavigationView.OnNavigationItemSelectedListener {
@@ -83,7 +83,6 @@ public class MainActivity extends AppCompatActivity implements MainView,
   ImageView mHeaderImage;
   private ProgressDialog mLoadingOverlay;
 
-  private Logger mLogger = HoldTheNarwhal.getLogger();
   private Analytics mAnalytics = HoldTheNarwhal.getAnalytics();
   private MainPresenter mMainPresenter;
   private boolean mBackStackReset = true;
@@ -383,7 +382,7 @@ public class MainActivity extends AppCompatActivity implements MainView,
   @Override
   public void showError(Throwable error, int errorResId) {
     String message = getString(errorResId);
-    mLogger.e(error, message);
+    Timber.e(error, message);
     if (error instanceof UnknownHostException) {
       message = getString(R.string.error_network_unavailable);
     }

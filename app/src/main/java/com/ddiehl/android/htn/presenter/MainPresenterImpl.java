@@ -4,7 +4,6 @@ import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 
-import com.ddiehl.android.dlogger.Logger;
 import com.ddiehl.android.htn.AccessTokenManager;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.IdentityManager;
@@ -21,9 +20,9 @@ import com.ddiehl.reddit.identity.UserIdentity;
 import java.util.List;
 
 import rx.functions.Action1;
+import timber.log.Timber;
 
 public class MainPresenterImpl implements MainPresenter, IdentityManager.Callbacks {
-  private Logger mLogger = HoldTheNarwhal.getLogger();
   private Context mContext = HoldTheNarwhal.getContext();
   private RedditService mRedditService = HoldTheNarwhal.getRedditService();
   private RedditAuthService mRedditAuthService = HoldTheNarwhal.getRedditServiceAuth();
@@ -204,7 +203,7 @@ public class MainPresenterImpl implements MainPresenter, IdentityManager.Callbac
   public void processDeepLink(@NonNull Uri data) {
     // TODO Deep link analytics
     mDeepLink = null;
-    mLogger.d("Deep Link: " + data.toString());
+    Timber.d("Deep Link: " + data.toString());
     List<String> segments = data.getPathSegments();
     if (segments.size() == 0) {
       // Front page
@@ -259,7 +258,7 @@ public class MainPresenterImpl implements MainPresenter, IdentityManager.Callbac
         return;
       }
     }
-    mLogger.w("Deep link fell through without redirection: " + data.toString());
+    Timber.w("Deep link fell through without redirection: " + data.toString());
     mMainView.showSubreddit(null, null); // Show front page
   }
 

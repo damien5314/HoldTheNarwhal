@@ -3,7 +3,6 @@ package com.ddiehl.android.htn;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.ddiehl.android.dlogger.Logger;
 import com.ddiehl.android.htn.io.RedditAuthService;
 import com.ddiehl.reddit.identity.AccessToken;
 import com.ddiehl.reddit.identity.ApplicationAccessToken;
@@ -12,6 +11,7 @@ import com.ddiehl.reddit.identity.UserAccessToken;
 import rx.Observable;
 import rx.functions.Action1;
 import rx.functions.Func1;
+import timber.log.Timber;
 
 public class AccessTokenManagerImpl implements AccessTokenManager {
   private static final String PREFS_USER_ACCESS_TOKEN = "prefs_user_access_token";
@@ -25,7 +25,6 @@ public class AccessTokenManagerImpl implements AccessTokenManager {
   // Seconds within expiration we should try to retrieve a new auth token
   private static final int EXPIRATION_THRESHOLD = 60;
 
-  private Logger mLogger = HoldTheNarwhal.getLogger();
   private Context mContext = HoldTheNarwhal.getContext();
   private RedditAuthService mServiceAuth = HoldTheNarwhal.getRedditServiceAuth();
   private IdentityManager mIdentityManager = HoldTheNarwhal.getIdentityManager();
@@ -154,7 +153,7 @@ public class AccessTokenManagerImpl implements AccessTokenManager {
   @Override
   public Action1<UserAccessToken> saveUserAccessToken() {
     return token -> {
-      mLogger.d(String.format("--ACCESS TOKEN RESPONSE--\nAccess Token: %s\nRefresh Token: %s",
+      Timber.d(String.format("--ACCESS TOKEN RESPONSE--\nAccess Token: %s\nRefresh Token: %s",
           token.getToken(), token.getRefreshToken()));
       mUserAccessToken = token;
       SharedPreferences sp =
@@ -175,7 +174,7 @@ public class AccessTokenManagerImpl implements AccessTokenManager {
   @Override
   public Action1<ApplicationAccessToken> saveApplicationAccessToken() {
     return token -> {
-      mLogger.d(String.format("--ACCESS TOKEN RESPONSE--\nAccess Token: %s\nRefresh Token: %s",
+      Timber.d(String.format("--ACCESS TOKEN RESPONSE--\nAccess Token: %s\nRefresh Token: %s",
           token.getToken(), token.getRefreshToken()));
       mApplicationAccessToken = token;
       SharedPreferences sp = mContext.getSharedPreferences(

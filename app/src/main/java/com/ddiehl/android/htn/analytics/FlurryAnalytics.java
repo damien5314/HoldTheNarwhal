@@ -5,7 +5,6 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.ddiehl.android.dlogger.Logger;
 import com.ddiehl.android.htn.BuildConfig;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.SettingsManager;
@@ -19,11 +18,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import okhttp3.Response;
+import timber.log.Timber;
 
 public class FlurryAnalytics implements Analytics {
   private static final int FLURRY_SESSION_TIMEOUT_SECONDS = 30;
 
-  private Logger mLogger = HoldTheNarwhal.getLogger();
   private Context mContext = HoldTheNarwhal.getContext();
   private boolean mEnabled = false;
   private boolean mInitialized = false;
@@ -31,7 +30,7 @@ public class FlurryAnalytics implements Analytics {
   @Override
   public void initialize() {
     if (mInitialized) {
-      mLogger.e("Analytics already initialized");
+      Timber.e("Analytics already initialized");
       return;
     }
     // Set this in init to avoid circular dependency
