@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="inbox_fragment_title">inbox</string>
+  <string name="navigation_tabs_all">all</string>
+  <string name="navigation_tabs_unread">unread</string>
+  <string name="navigation_tabs_messages">messages</string>
+  <string name="navigation_tabs_comment_replies">comment replies</string>
+  <string name="navigation_tabs_post_replies">post replies</string>
+  <string name="navigation_tabs_mentions">mentions</string>
+  <string name="view_more_messages">view %s more messages</string>
+  <string name="message_metadata_from">from %s</string>
+  <string name="message_metadata_to">to %s</string>
+  <string name="message_metadata_sent">sent %s</string>
+</resources>

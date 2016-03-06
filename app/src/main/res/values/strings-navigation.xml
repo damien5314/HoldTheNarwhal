@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="drawer_navigate_to_subreddit">go to subreddit</string>
+  <string name="drawer_log_in">log in</string>
+  <string name="drawer_inbox">inbox</string>
+  <string name="drawer_user_profile">user profile</string>
+  <string name="drawer_subreddits">subreddits</string>
+  <string name="drawer_front_page">front page</string>
+  <string name="drawer_r_all">/r/all</string>
+  <string name="drawer_random_subreddit">/r/random</string>
+  <string name="account_name_unauthorized">not signed in</string>
+</resources>
