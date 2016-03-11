@@ -93,7 +93,7 @@ public class WebViewFragment extends Fragment {
     mWebView.setWebViewClient(new WebViewClient() {
       @Override
       public boolean shouldOverrideUrlLoading(WebView view, String url) {
-        Timber.d("Loading URL: " + url);
+        Timber.d("Loading URL: %s", url);
 
         if (url.contains(RedditAuthService.REDIRECT_URI)
             && !url.equals(RedditAuthService.AUTHORIZATION_URL)) {
