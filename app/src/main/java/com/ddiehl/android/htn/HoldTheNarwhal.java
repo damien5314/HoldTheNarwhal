@@ -9,7 +9,6 @@ import com.ddiehl.android.htn.io.RedditAuthService;
 import com.ddiehl.android.htn.io.RedditAuthServiceImpl;
 import com.ddiehl.android.htn.io.RedditService;
 import com.ddiehl.android.htn.io.RedditServiceImpl;
-import com.facebook.stetho.Stetho;
 import com.squareup.picasso.Picasso;
 
 import timber.log.Timber;
@@ -22,12 +21,6 @@ public class HoldTheNarwhal extends Application {
     super.onCreate();
 //    LeakCanary.install(this);
     Timber.plant(new Timber.DebugTree());
-
-    Stetho.initialize(
-        Stetho.newInitializerBuilder(this)
-            .enableDumpapp(Stetho.defaultDumperPluginsProvider(this))
-            .enableWebKitInspector(Stetho.defaultInspectorModulesProvider(this))
-            .build());
 
     if (BuildConfig.DEBUG) {
       Picasso.setSingletonInstance(
