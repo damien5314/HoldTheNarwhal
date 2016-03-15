@@ -77,7 +77,7 @@ public class ListingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     if (position % 25 == 0) getSettings();
     if (holder instanceof BaseLinkViewHolder) {
       Link link = (Link) mListingsPresenter.getListingAt(position);
-      ((BaseLinkViewHolder) holder).bind(link, false, mThumbnailMode, mShowNsfwTag);
+      ((BaseLinkViewHolder) holder).bind(link, false, mThumbnailMode, mShowNsfwTag, false);
     } else if (holder instanceof ListingsCommentViewHolder) {
       Comment comment = (Comment) mListingsPresenter.getListingAt(position);
       boolean showControversiality = mListingsPresenter.getShowControversiality()

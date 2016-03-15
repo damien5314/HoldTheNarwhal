@@ -205,7 +205,7 @@ public class LinkCommentsPresenterImpl extends BaseListingsPresenter
     String parentId = String.format("%1$s_%2$s", mReplyTarget.getKind(), mReplyTarget.getId());
     mRedditService.addComment(parentId, commentText)
         .subscribe(comment -> {
-          mMainView.showToast("Comment successful");
+          mMainView.showToast("Comment successful"); // FIXME Port to strings.xml
           // TODO Optimize this logic, it probably takes a long time in large threads
           int position;
           if (parentId.startsWith("t1_")) { // Comment
@@ -224,5 +224,10 @@ public class LinkCommentsPresenterImpl extends BaseListingsPresenter
   @Override
   public void openCommentLink(@NonNull Comment comment) {
     // Link is already being displayed with this presenter
+  }
+
+  @Override
+  public boolean shouldShowParentLink() {
+    return mCommentId != null;
   }
 }

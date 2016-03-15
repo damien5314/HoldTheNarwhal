@@ -192,6 +192,25 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/link_parent_view"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="@dimen/baseline_spacing"
+          android:paddingLeft="@dimen/baseline_spacing"
+          android:paddingRight="@dimen/baseline_spacing"
+          android:textAppearance="@android:style/TextAppearance.Small"
+          android:drawableLeft="@drawable/ic_info"
+          android:drawablePadding="@dimen/baseline_spacing"
+          android:text="@string/link_parent_text"/>
+
+    </LinearLayout>
+
   </LinearLayout>
 
 </LinearLayout>

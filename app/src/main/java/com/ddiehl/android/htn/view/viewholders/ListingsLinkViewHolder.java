@@ -70,4 +70,9 @@ public class ListingsLinkViewHolder extends BaseLinkViewHolder {
         loadThumbnail(url);
     }
   }
+
+  @Override
+  protected void showParentLink(@NonNull boolean link) {
+    // No-op; parent link does not exist in this ViewHolder
+  }
 }

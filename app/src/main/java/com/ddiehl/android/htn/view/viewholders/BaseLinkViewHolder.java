@@ -66,7 +66,7 @@ public abstract class BaseLinkViewHolder extends RecyclerView.ViewHolder
   }
 
   public void bind(
-      @NonNull Link link, boolean showSelfText, ThumbnailMode mode, boolean showNsfw) {
+      @NonNull Link link, boolean showSelfText, ThumbnailMode mode, boolean showNsfw, boolean showParentLink) {
     mLink = link;
     showSelfText(link, showSelfText);
     showScore(link);
@@ -82,6 +82,7 @@ public abstract class BaseLinkViewHolder extends RecyclerView.ViewHolder
     showGilded(link);
     showSaved(link);
     showStickied(link);
+    showParentLink(showParentLink);
   }
 
   protected void showSelfText(@NonNull Link link, boolean showSelfText) {
@@ -220,6 +221,8 @@ public abstract class BaseLinkViewHolder extends RecyclerView.ViewHolder
     boolean stickied = link.getStickied();
     mStickiedView.setVisibility(stickied ? View.VISIBLE : View.INVISIBLE);
   }
+
+  protected abstract void showParentLink(boolean link);
 
   @Override
   public void onCreateContextMenu(
