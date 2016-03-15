@@ -12,4 +12,5 @@ public interface LinkCommentsPresenter
   void getMoreComments(@NonNull CommentStub comment);
   void toggleThreadVisible(Comment comment);
   void onCommentSubmitted(@NonNull String commentText);
+  boolean shouldShowParentLink();
 }

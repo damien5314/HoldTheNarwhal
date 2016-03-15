@@ -63,7 +63,8 @@ public class LinkCommentsAdapter extends ListingsAdapter {
       Link link = mLinkCommentsPresenter.getLinkContext();
       ThumbnailMode mode = mLinkCommentsPresenter.getThumbnailMode();
       boolean showNsfw = mLinkCommentsPresenter.shouldShowNsfwTag();
-      ((BaseLinkViewHolder) holder).bind(link, true, mode, showNsfw);
+      boolean showParentLink = mLinkCommentsPresenter.shouldShowParentLink();
+      ((BaseLinkViewHolder) holder).bind(link, true, mode, showNsfw, showParentLink);
     } else if (holder instanceof ThreadCommentViewHolder) {
       Link link = mLinkCommentsPresenter.getLinkContext();
       Comment comment = (Comment) mLinkCommentsPresenter.getListingAt(position - 1);

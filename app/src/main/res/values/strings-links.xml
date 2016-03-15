@@ -8,4 +8,6 @@
   <string name="link_domain">%s</string>
   <string name="link_comment_count">%s comments</string>
   <string name="hidden_score_placeholder">\?</string>
+  <string name="link_parent_text">you are viewing a single comment\'s thread, tap here to view
+    the full list of comments</string>
 </resources>
