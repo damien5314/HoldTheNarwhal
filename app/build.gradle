@@ -15,6 +15,7 @@ android {
     targetSdkVersion 23
     versionCode 8
     versionName '0.6'
+    resConfigs "en"
   }
   signingConfigs {
     release {
