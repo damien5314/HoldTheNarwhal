@@ -79,9 +79,9 @@ public class ListingsMessageViewHolder extends RecyclerView.ViewHolder
     // Show message metadata and text
     mConversationSubject.setText(messageToShow.getSubject());
     if (replies != null) {
-      String formatter = mContext.getString(R.string.view_more_messages);
+      int n = replies.size();
       mCollapsedMessagesText.setText(
-          String.format(formatter, replies.size()));
+          mContext.getResources().getQuantityString(R.plurals.view_more_messages, n, n));
     }
     boolean isToMe = Utils.equals(
         mInboxPresenter.getUserIdentity().getName(), messageToShow.getDestination());

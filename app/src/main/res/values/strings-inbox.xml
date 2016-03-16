@@ -7,7 +7,10 @@
   <string name="navigation_tabs_comment_replies">comment replies</string>
   <string name="navigation_tabs_post_replies">post replies</string>
   <string name="navigation_tabs_mentions">mentions</string>
-  <string name="view_more_messages">view %s more messages</string>
+  <plurals name="view_more_messages">
+    <item quantity="one">view %d more message</item>
+    <item quantity="other">view %d more messages</item>
+  </plurals>
   <string name="message_metadata_from">from %s</string>
   <string name="message_metadata_to">to %s</string>
   <string name="message_metadata_sent">sent %s</string>

@@ -96,9 +96,14 @@ public abstract class BaseLinkViewHolder extends RecyclerView.ViewHolder
   }
 
   protected void showScore(@NonNull Link link) {
-    String score = link.getScore() == null ?
-        mContext.getString(R.string.hidden_score_placeholder) : link.getScore().toString();
-    mLinkScore.setText(String.format(mContext.getString(R.string.link_score), score));
+    Integer score = link.getScore();
+    if (score == null) {
+      mLinkScore.setText(
+          mContext.getString(R.string.hidden_score_placeholder));
+    } else {
+      mLinkScore.setText(
+          mContext.getResources().getQuantityString(R.plurals.link_score, score, score));
+    }
   }
 
   protected void showTitle(@NonNull Link link) {
@@ -161,8 +166,9 @@ public abstract class BaseLinkViewHolder extends RecyclerView.ViewHolder
   }
 
   protected void showCommentCount(@NonNull Link link) {
+    int n = link.getNumComments();
     mLinkComments.setText(
-        String.format(mContext.getString(R.string.link_comment_count), link.getNumComments()));
+            mContext.getResources().getQuantityString(R.plurals.link_comment_count, n, n));
   }
 
   protected String getPreviewUrl(@NonNull Link link) {
