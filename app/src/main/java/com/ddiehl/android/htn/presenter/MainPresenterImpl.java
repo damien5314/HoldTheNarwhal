@@ -203,7 +203,7 @@ public class MainPresenterImpl implements MainPresenter, IdentityManager.Callbac
   public void processDeepLink(@NonNull Uri data) {
     // TODO Deep link analytics
     mDeepLink = null;
-    Timber.d("Deep Link: " + data.toString());
+    Timber.d("Deep Link: %s", data.toString());
     List<String> segments = data.getPathSegments();
     if (segments.size() == 0) {
       // Front page
@@ -258,7 +258,7 @@ public class MainPresenterImpl implements MainPresenter, IdentityManager.Callbac
         return;
       }
     }
-    Timber.w("Deep link fell through without redirection: " + data.toString());
+    Timber.w("Deep link fell through without redirection: %s", data.toString());
     mMainView.showSubreddit(null, null); // Show front page
   }
 

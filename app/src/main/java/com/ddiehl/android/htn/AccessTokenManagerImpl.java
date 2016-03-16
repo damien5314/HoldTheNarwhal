@@ -9,8 +9,8 @@ import com.ddiehl.reddit.identity.ApplicationAccessToken;
 import com.ddiehl.reddit.identity.UserAccessToken;
 
 import rx.Observable;
+import rx.functions.Action0;
 import rx.functions.Action1;
-import rx.functions.Func1;
 import timber.log.Timber;
 
 public class AccessTokenManagerImpl implements AccessTokenManager {
@@ -60,62 +60,44 @@ public class AccessTokenManagerImpl implements AccessTokenManager {
   public Observable<AccessToken> getAccessToken() {
     return getUserAccessToken()
         .map(userAccessToken -> (AccessToken) userAccessToken)
-        .onErrorResumeNext(mGetApplicationAccessToken);
+        .onErrorResumeNext(
+            Observable.defer(() -> {
+              ApplicationAccessToken token = getSavedApplicationAccessToken();
+              return refreshApplicationAccessToken(token);
+            }));
   }
 
   @Override
   public Observable<UserAccessToken> getUserAccessToken() {
-    return mGetUserAccessToken;
+    return Observable.defer(() -> {
+      UserAccessToken token = getSavedUserAccessToken();
+      if (token == null) {
+        return Observable.error(new RuntimeException("No user access token available"));
+      }
+      if (token.secondsUntilExpiration() > EXPIRATION_THRESHOLD) {
+        return Observable.just(token);
+      }
+      String refreshToken = token.getRefreshToken();
+      if (refreshToken == null) {
+        mClearIdentity.call();
+        return Observable.error(new RuntimeException("No refresh token available"));
+      }
+      return mServiceAuth.refreshUserAccessToken(refreshToken)
+          .doOnNext(saveUserAccessToken())
+          .doOnError(e -> mClearIdentity.call());
+    });
   }
 
-  private Func1<UserAccessToken, Observable<UserAccessToken>> refreshUserAccessToken =
-      accessToken -> {
-        if (accessToken.secondsUntilExpiration() > EXPIRATION_THRESHOLD) {
-          return Observable.just(accessToken);
-        } else return refreshUserAccessToken(accessToken);
-      };
-
-  private Func1<ApplicationAccessToken, Observable<ApplicationAccessToken>> refreshApplicationAccessToken =
-      accessToken -> {
-        if (accessToken != null
-            && accessToken.secondsUntilExpiration() > EXPIRATION_THRESHOLD) {
-          return Observable.just(accessToken);
-        } else {
-          return mServiceAuth.authorizeApplication()
-              .doOnNext(saveApplicationAccessToken());
-        }
-      };
-
-  private Observable<UserAccessToken> mGetUserAccessToken =
-      Observable.create(subscriber -> {
-        UserAccessToken token = getSavedUserAccessToken();
-        if (token == null) {
-          subscriber.onError(new RuntimeException("No user access token available"));
-        } else {
-          refreshUserAccessToken.call(token)
-              .subscribe(subscriber::onNext, subscriber::onError, subscriber::onCompleted);
-        }
-      });
-
-  private Observable<ApplicationAccessToken> mGetApplicationAccessToken =
-      Observable.create(subscriber -> {
-        ApplicationAccessToken token = getSavedApplicationAccessToken();
-        refreshApplicationAccessToken.call(token)
-            .subscribe(subscriber::onNext, subscriber::onError, subscriber::onCompleted);
-      });
-
-  private Observable<UserAccessToken> refreshUserAccessToken(AccessToken accessToken) {
-    String refreshToken = accessToken.getRefreshToken();
-    if (refreshToken == null) {
-      mClearIdentity.call(null);
-      return Observable.error(new RuntimeException("No refresh token available"));
+  private Observable<ApplicationAccessToken> refreshApplicationAccessToken(ApplicationAccessToken token) {
+    if (token != null && token.secondsUntilExpiration() > EXPIRATION_THRESHOLD) {
+      return Observable.just(token);
+    } else {
+      return mServiceAuth.authorizeApplication()
+          .doOnNext(saveApplicationAccessToken());
     }
-    return mServiceAuth.refreshUserAccessToken(refreshToken)
-        .doOnNext(saveUserAccessToken())
-        .doOnError(mClearIdentity);
   }
 
-  private Action1<Throwable> mClearIdentity = error -> {
+  private Action0 mClearIdentity = () -> {
     clearSavedUserAccessToken();
     mIdentityManager.clearSavedUserIdentity();
   };
@@ -153,21 +135,20 @@ public class AccessTokenManagerImpl implements AccessTokenManager {
   @Override
   public Action1<UserAccessToken> saveUserAccessToken() {
     return token -> {
+      // Swap in the saved refresh token if we didn't get a new one
+      if (token.getRefreshToken() == null && mUserAccessToken != null) {
+        token.setRefreshToken(mUserAccessToken.getRefreshToken());
+      }
       Timber.d(String.format("--ACCESS TOKEN RESPONSE--\nAccess Token: %s\nRefresh Token: %s",
           token.getToken(), token.getRefreshToken()));
       mUserAccessToken = token;
-      SharedPreferences sp =
-          mContext.getSharedPreferences(PREFS_USER_ACCESS_TOKEN, Context.MODE_PRIVATE);
-      sp.edit()
+      mContext.getSharedPreferences(PREFS_USER_ACCESS_TOKEN, Context.MODE_PRIVATE).edit()
           .putString(PREF_ACCESS_TOKEN, token.getToken())
+          .putString(PREF_REFRESH_TOKEN, token.getRefreshToken())
           .putString(PREF_TOKEN_TYPE, token.getTokenType())
           .putLong(PREF_EXPIRATION, token.getExpiration())
           .putString(PREF_SCOPE, token.getScope())
           .apply();
-      // Don't overwrite the refresh token if we didn't get a fresh one
-      if (token.getRefreshToken() != null) {
-        sp.edit().putString(PREF_REFRESH_TOKEN, token.getRefreshToken()).apply();
-      }
     };
   }
 

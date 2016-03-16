@@ -56,8 +56,8 @@
             android:textAppearance="?android:textAppearanceSmall"
             android:textColor="@color/secondary_text"
             android:gravity="center"
-            android:drawableStart="@drawable/ic_gilded_2"
-            android:drawableLeft="@drawable/ic_gilded_2"
+            android:drawableStart="@drawable/ic_gilded_101"
+            android:drawableLeft="@drawable/ic_gilded_101"
             tools:targetApi="16"
             tools:text="× 2"/>
 
@@ -81,7 +81,6 @@
         android:id="@+id/link_metadata"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="@color/primary_dark"
         android:orientation="horizontal">
 
       <LinearLayout
@@ -89,6 +88,7 @@
           android:layout_width="0dp"
           android:layout_height="wrap_content"
           android:layout_weight="1"
+          android:background="@color/primary_dark"
           android:padding="@dimen/baseline_spacing">
 
         <RelativeLayout
@@ -117,7 +117,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-          <TextView
+          <com.ddiehl.android.htn.view.widgets.ColorSwapTextView
               android:id="@+id/link_author"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
