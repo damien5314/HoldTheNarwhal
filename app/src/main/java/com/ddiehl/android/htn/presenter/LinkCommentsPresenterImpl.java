@@ -202,7 +202,7 @@ public class LinkCommentsPresenterImpl extends BaseListingsPresenter
 
   @Override
   public void onCommentSubmitted(@NonNull String commentText) {
-    String parentId = String.format("%1$s_%2$s", mReplyTarget.getKind(), mReplyTarget.getId());
+    String parentId = mReplyTarget.getFullName();
     mRedditService.addComment(parentId, commentText)
         .subscribe(comment -> {
           mMainView.showToast("Comment successful"); // FIXME Port to strings.xml

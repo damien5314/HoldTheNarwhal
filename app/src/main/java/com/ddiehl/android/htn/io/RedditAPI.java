@@ -17,6 +17,8 @@ import okhttp3.ResponseBody;
 import retrofit2.Response;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.PATCH;
 import retrofit2.http.POST;
@@ -118,10 +120,11 @@ public interface RedditAPI {
       @Query("reason") String reason,
       @Query("otherReason") String otherReason);
 
+  @FormUrlEncoded
   @POST("/api/comment?api_type=json")
   Observable<Response<AddCommentResponse>> addComment(
-      @Query("parent") String parentId,
-      @Query("text") String commentText);
+      @Field("parent") String parentId,
+      @Field("text") String commentText);
 
   @PUT("/api/v1/me/friends/{username}")
   Observable<Response<ResponseBody>> addFriend(
