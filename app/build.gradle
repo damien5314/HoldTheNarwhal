@@ -61,7 +61,7 @@ retrolambda {
 }
 
 def appCompatVersion = "23.2.0"
-def retrofitVersion = "2.0.0-beta4"
+def retrofitVersion = "2.0.0"
 
 dependencies {
   compile fileTree(include: '*.jar', dir: 'libs')
