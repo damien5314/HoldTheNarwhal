@@ -381,7 +381,6 @@ public abstract class BaseListingsPresenter
 
   public void showCommentThread(
       @NonNull String subreddit, @NonNull String linkId, @NonNull String commentId) {
-    if (linkId.charAt(2) == '_') linkId = linkId.substring(3); // Trim type prefix
     mMainView.showCommentsForLink(subreddit, linkId, commentId);
   }
 

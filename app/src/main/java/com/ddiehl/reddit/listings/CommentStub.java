@@ -16,9 +16,10 @@ public class CommentStub extends AbsComment {
 
   @Override
   public String getParentId() {
-    // FIXME Consider trimming the parentId from this before returning, for consistency
-    // with other Listing types
-    return data.parentId;
+    if (data.parentId == null) return null;
+    if (data.parentId.contains("_")) {
+      return data.parentId.substring(3);
+    } else return data.parentId;
   }
 
   public Integer getCount() {
