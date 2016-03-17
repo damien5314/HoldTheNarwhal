@@ -1,6 +1,8 @@
 package com.ddiehl.android.htn.presenter;
 
 import android.support.annotation.NonNull;
+import android.view.ContextMenu;
+import android.view.View;
 
 import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
@@ -229,5 +231,11 @@ public class LinkCommentsPresenterImpl extends BaseListingsPresenter
   @Override
   public boolean shouldShowParentLink() {
     return mCommentId != null;
+  }
+
+  @Override
+  public void showLinkContextMenu(ContextMenu menu, View view, Link link) {
+    super.showLinkContextMenu(menu, view, link);
+    menu.findItem(R.id.action_link_reply).setVisible(true);
   }
 }
