@@ -153,21 +153,20 @@ public class AccessTokenManagerImpl implements AccessTokenManager {
   @Override
   public Action1<UserAccessToken> saveUserAccessToken() {
     return token -> {
+      // Swap in the saved refresh token if we didn't get a new one
+      if (token.getRefreshToken() == null && mUserAccessToken != null) {
+        token.setRefreshToken(mUserAccessToken.getRefreshToken());
+      }
       Timber.d(String.format("--ACCESS TOKEN RESPONSE--\nAccess Token: %s\nRefresh Token: %s",
           token.getToken(), token.getRefreshToken()));
       mUserAccessToken = token;
-      SharedPreferences sp =
-          mContext.getSharedPreferences(PREFS_USER_ACCESS_TOKEN, Context.MODE_PRIVATE);
-      sp.edit()
+      mContext.getSharedPreferences(PREFS_USER_ACCESS_TOKEN, Context.MODE_PRIVATE).edit()
           .putString(PREF_ACCESS_TOKEN, token.getToken())
+          .putString(PREF_REFRESH_TOKEN, token.getRefreshToken())
           .putString(PREF_TOKEN_TYPE, token.getTokenType())
           .putLong(PREF_EXPIRATION, token.getExpiration())
           .putString(PREF_SCOPE, token.getScope())
           .apply();
-      // Don't overwrite the refresh token if we didn't get a fresh one
-      if (token.getRefreshToken() != null) {
-        sp.edit().putString(PREF_REFRESH_TOKEN, token.getRefreshToken()).apply();
-      }
     };
   }
 
