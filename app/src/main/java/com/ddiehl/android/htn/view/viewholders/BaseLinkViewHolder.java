@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.ThumbnailMode;
 import com.ddiehl.android.htn.presenter.LinkPresenter;
+import com.ddiehl.android.htn.view.widgets.ColorSwapTextView;
 import com.ddiehl.reddit.listings.Link;
 import com.ddiehl.timesincetextview.TimeSinceTextView;
 import com.squareup.picasso.Picasso;
@@ -29,14 +30,13 @@ public abstract class BaseLinkViewHolder extends RecyclerView.ViewHolder
   protected Context mContext;
   protected LinkPresenter mLinkPresenter;
   protected Link mLink;
-  protected int mAuthorTextColor; // FIXME Move this into the implementation classes
 
   @Bind(R.id.link_view) View mLinkView;
   @Bind(R.id.link_saved_view) View mSavedView;
   @Bind(R.id.link_title) TextView mLinkTitle;
   @Bind(R.id.link_domain) TextView mLinkDomain;
   @Bind(R.id.link_score) TextView mLinkScore;
-  @Bind(R.id.link_author) TextView mLinkAuthor;
+  @Bind(R.id.link_author) ColorSwapTextView mLinkAuthor;
   @Bind(R.id.link_subreddit) TextView mLinkSubreddit;
   @Bind(R.id.link_comment_count) TextView mLinkComments;
   @Bind(R.id.link_self_text) TextView mSelfText;
@@ -52,7 +52,6 @@ public abstract class BaseLinkViewHolder extends RecyclerView.ViewHolder
     mLinkPresenter = presenter;
     ButterKnife.bind(this, v);
     itemView.setOnCreateContextMenuListener(this);
-    mAuthorTextColor = mLinkAuthor.getCurrentTextColor();
   }
 
   @OnClick({ R.id.link_view, R.id.link_thumbnail })
@@ -115,8 +114,9 @@ public abstract class BaseLinkViewHolder extends RecyclerView.ViewHolder
         String.format(mContext.getString(R.string.link_author), link.getAuthor()));
     String distinguished = link.getDistinguished();
     if (distinguished == null || distinguished.equals("")) {
-      mLinkAuthor.setBackgroundResource(0);
-      mLinkAuthor.setTextColor(mAuthorTextColor);
+      // noinspection deprecation
+      mLinkAuthor.setBackgroundDrawable(mLinkAuthor.getOriginalBackground());
+      mLinkAuthor.setTextColor(mLinkAuthor.getOriginalTextColor());
     } else {
       switch (distinguished) {
         case "moderator":

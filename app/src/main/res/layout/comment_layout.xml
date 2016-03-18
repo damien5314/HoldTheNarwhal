@@ -21,7 +21,7 @@
         android:layout_gravity="start|center"
         android:gravity="bottom">
 
-      <TextView
+      <com.ddiehl.android.htn.view.widgets.ColorSwapTextView
           android:id="@+id/comment_author"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
