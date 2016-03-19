@@ -8,7 +8,7 @@ import com.ddiehl.android.htn.analytics.FlurryAnalytics;
 import com.ddiehl.android.htn.io.RedditAuthService;
 import com.ddiehl.android.htn.io.RedditAuthServiceImpl;
 import com.ddiehl.android.htn.io.RedditService;
-import com.ddiehl.android.htn.io.RedditServiceMock;
+import com.ddiehl.android.htn.io.RedditServiceImpl;
 import com.squareup.picasso.Picasso;
 
 import timber.log.Timber;
@@ -85,8 +85,8 @@ public class HoldTheNarwhal extends Application {
    * @return Instance of {@link RedditService}
    */
   public static RedditService getRedditService() {
-//    return RedditServiceImpl.getInstance();
-    return RedditServiceMock.getInstance();
+    return RedditServiceImpl.getInstance();
+//    return RedditServiceMock.getInstance();
   }
 
   /**
