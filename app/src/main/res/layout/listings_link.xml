@@ -81,7 +81,6 @@
         android:id="@+id/link_metadata"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="@color/primary_dark"
         android:orientation="horizontal">
 
       <LinearLayout
@@ -89,6 +88,7 @@
           android:layout_width="0dp"
           android:layout_height="wrap_content"
           android:layout_weight="1"
+          android:background="@color/primary_dark"
           android:padding="@dimen/baseline_spacing">
 
         <RelativeLayout
