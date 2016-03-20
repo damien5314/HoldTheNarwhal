@@ -9,13 +9,13 @@ import com.ddiehl.android.htn.presenter.PrivateMessagePresenter;
 import com.ddiehl.android.htn.view.PrivateMessageView;
 import com.ddiehl.android.htn.view.adapters.ListingsAdapter;
 import com.ddiehl.android.htn.view.adapters.PrivateMessageAdapter;
-import com.ddiehl.reddit.listings.Listing;
 
 import org.parceler.Parcels;
 
 import java.util.List;
 
 import butterknife.Bind;
+import rxreddit.model.Listing;
 
 public class PrivateMessageFragment extends BaseListingsFragment implements PrivateMessageView {
   private static final String ARG_MESSAGES = "arg_messages";

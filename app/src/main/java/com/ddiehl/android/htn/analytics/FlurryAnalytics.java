@@ -9,8 +9,6 @@ import com.ddiehl.android.htn.BuildConfig;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.SettingsManager;
 import com.ddiehl.android.htn.utils.Utils;
-import com.ddiehl.reddit.identity.UserIdentity;
-import com.ddiehl.reddit.listings.Link;
 import com.flurry.android.FlurryAgent;
 
 import java.util.Date;
@@ -18,6 +16,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import okhttp3.Response;
+import rxreddit.model.Link;
+import rxreddit.model.UserIdentity;
 import timber.log.Timber;
 
 public class FlurryAnalytics implements Analytics {

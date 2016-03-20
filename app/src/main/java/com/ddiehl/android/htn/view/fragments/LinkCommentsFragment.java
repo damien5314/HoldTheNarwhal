@@ -23,9 +23,10 @@ import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.android.htn.view.adapters.LinkCommentsAdapter;
 import com.ddiehl.android.htn.view.adapters.ListingsAdapter;
 import com.ddiehl.android.htn.view.dialogs.AddCommentDialog;
-import com.ddiehl.reddit.listings.Comment;
-import com.ddiehl.reddit.listings.Link;
-import com.ddiehl.reddit.listings.Listing;
+
+import rxreddit.model.Comment;
+import rxreddit.model.Link;
+import rxreddit.model.Listing;
 
 public class LinkCommentsFragment extends BaseListingsFragment
     implements LinkCommentsView, SwipeRefreshLayout.OnRefreshListener {

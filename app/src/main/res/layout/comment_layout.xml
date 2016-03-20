@@ -87,7 +87,7 @@
             android:textColor="@color/secondary_text"
             android:textAppearance="?android:textAppearanceSmall"
             android:maxLines="1"
-            app:abbreviated="true"
+            app:tstv_abbreviated="true"
             tools:text="2 days ago"/>
 
       </LinearLayout>

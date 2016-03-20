@@ -22,14 +22,18 @@ import android.widget.ProgressBar;
 import android.widget.ZoomButtonsController;
 
 import com.ddiehl.android.htn.BuildConfig;
+import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
-import com.ddiehl.android.htn.io.RedditAuthService;
 import com.ddiehl.android.htn.utils.AndroidUtils;
-import com.ddiehl.android.htn.utils.AuthUtils;
 import com.ddiehl.android.htn.view.MainView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.schedulers.Schedulers;
+import rxreddit.api.RedditService;
+import rxreddit.model.UserAccessToken;
 import timber.log.Timber;
 
 public class WebViewFragment extends Fragment {
@@ -37,6 +41,7 @@ public class WebViewFragment extends Fragment {
 
   private MainView mMainView;
   private String mUrl;
+  private RedditService mRedditService = HoldTheNarwhal.getRedditService();
 
   @Bind(R.id.web_view) WebView mWebView;
 
@@ -44,10 +49,6 @@ public class WebViewFragment extends Fragment {
     if (BuildConfig.DEBUG && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
       WebView.setWebContentsDebuggingEnabled(true);
     }
-  }
-
-  public interface Callbacks {
-    void onAuthCodeReceived(String authCode);
   }
 
   public WebViewFragment() { }
@@ -95,11 +96,13 @@ public class WebViewFragment extends Fragment {
       public boolean shouldOverrideUrlLoading(WebView view, String url) {
         Timber.d("Loading URL: %s", url);
 
-        if (url.contains(RedditAuthService.REDIRECT_URI)
-            && !url.equals(RedditAuthService.AUTHORIZATION_URL)) {
-          // Pass auth code back to the Activity, which will pop this fragment
-          String authCode = AuthUtils.getUserAuthCodeFromRedirectUri(url);
-          mMainView.onAuthCodeReceived(authCode);
+        if (url.contains(mRedditService.getRedirectUri())
+            && !url.equals(mRedditService.getAuthorizationUrl())) {
+          mRedditService.processAuthenticationCallback(url)
+              .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+              .subscribe(
+                  getUserIdentity(),
+                  e -> mMainView.showError(e, R.string.error_get_user_identity));
           mMainView.goBack();
           return true; // Can we do this to prevent the page from loading at all?
         }
@@ -153,6 +156,14 @@ public class WebViewFragment extends Fragment {
     });
 
     return v;
+  }
+
+  private Action1<UserAccessToken> getUserIdentity() {
+    return token -> mRedditService.getUserIdentity()
+        .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        .doOnNext(identity -> HoldTheNarwhal.getIdentityManager().saveUserIdentity(identity))
+        .subscribe(mMainView::updateUserIdentity,
+            e -> mMainView.showError(e, R.string.error_get_user_identity));
   }
 
   @Override

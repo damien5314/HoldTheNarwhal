@@ -7,14 +7,12 @@ import android.text.TextUtils;
 import android.view.ContextMenu;
 import android.view.View;
 
-import com.ddiehl.android.htn.AccessTokenManager;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.SettingsManager;
 import com.ddiehl.android.htn.ThumbnailMode;
 import com.ddiehl.android.htn.analytics.Analytics;
-import com.ddiehl.android.htn.io.RedditService;
 import com.ddiehl.android.htn.utils.AndroidUtils;
 import com.ddiehl.android.htn.view.CommentView;
 import com.ddiehl.android.htn.view.LinkView;
@@ -22,30 +20,32 @@ import com.ddiehl.android.htn.view.ListingsView;
 import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.android.htn.view.PrivateMessageView;
 import com.ddiehl.android.htn.view.UserProfileView;
-import com.ddiehl.reddit.Archivable;
-import com.ddiehl.reddit.Hideable;
-import com.ddiehl.reddit.Savable;
-import com.ddiehl.reddit.Votable;
-import com.ddiehl.reddit.identity.UserIdentity;
-import com.ddiehl.reddit.listings.Comment;
-import com.ddiehl.reddit.listings.CommentStub;
-import com.ddiehl.reddit.listings.Link;
-import com.ddiehl.reddit.listings.Listing;
-import com.ddiehl.reddit.listings.ListingResponse;
-import com.ddiehl.reddit.listings.ListingResponseData;
-import com.ddiehl.reddit.listings.PrivateMessage;
-import com.ddiehl.reddit.listings.Subreddit;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
+import rx.schedulers.Schedulers;
+import rxreddit.api.RedditService;
+import rxreddit.model.Archivable;
+import rxreddit.model.Comment;
+import rxreddit.model.CommentStub;
+import rxreddit.model.Hideable;
+import rxreddit.model.Link;
+import rxreddit.model.Listing;
+import rxreddit.model.ListingResponse;
+import rxreddit.model.ListingResponseData;
+import rxreddit.model.PrivateMessage;
+import rxreddit.model.Savable;
+import rxreddit.model.Subreddit;
+import rxreddit.model.UserIdentity;
+import rxreddit.model.Votable;
 import timber.log.Timber;
 
 public abstract class BaseListingsPresenter
     implements ListingsPresenter, IdentityManager.Callbacks, ListingsView.Callbacks {
   protected Context mContext = HoldTheNarwhal.getContext();
-  protected AccessTokenManager mAccessTokenManager = HoldTheNarwhal.getAccessTokenManager();
   protected IdentityManager mIdentityManager = HoldTheNarwhal.getIdentityManager();
   protected SettingsManager mSettingsManager = HoldTheNarwhal.getSettingsManager();
   protected RedditService mRedditService = HoldTheNarwhal.getRedditService();
@@ -303,7 +303,7 @@ public abstract class BaseListingsPresenter
   }
 
   public void saveLink() {
-    if (!mAccessTokenManager.isUserAuthorized()) {
+    if (!mRedditService.isUserAuthorized()) {
       mMainView.showToast(R.string.user_required);
       return;
     }
@@ -313,7 +313,7 @@ public abstract class BaseListingsPresenter
   }
 
   public void unsaveLink() {
-    if (!mAccessTokenManager.isUserAuthorized()) {
+    if (!mRedditService.isUserAuthorized()) {
       mMainView.showToast(R.string.user_required);
       return;
     }
@@ -347,7 +347,7 @@ public abstract class BaseListingsPresenter
   }
 
   public void hideLink() {
-    if (!mAccessTokenManager.isUserAuthorized()) {
+    if (!mRedditService.isUserAuthorized()) {
       mMainView.showToast(R.string.user_required);
       return;
     }
@@ -358,7 +358,7 @@ public abstract class BaseListingsPresenter
   }
 
   public void unhideLink() {
-    if (!mAccessTokenManager.isUserAuthorized()) {
+    if (!mRedditService.isUserAuthorized()) {
       mMainView.showToast(R.string.user_required);
       return;
     }
@@ -372,7 +372,7 @@ public abstract class BaseListingsPresenter
     Listing listing = mListingSelected;
     if (((Archivable) listing).isArchived()) {
       mMainView.showToast(R.string.listing_archived);
-    } else if (!mAccessTokenManager.isUserAuthorized()) {
+    } else if (!mRedditService.isUserAuthorized()) {
       mMainView.showToast(R.string.user_required);
     } else {
       mMainView.showToast(R.string.implementation_pending);
@@ -423,7 +423,7 @@ public abstract class BaseListingsPresenter
   }
 
   public void saveComment() {
-    if (!mAccessTokenManager.isUserAuthorized()) {
+    if (!mRedditService.isUserAuthorized()) {
       mMainView.showToast(R.string.user_required);
       return;
     }
@@ -433,7 +433,7 @@ public abstract class BaseListingsPresenter
   }
 
   public void unsaveComment() {
-    if (!mAccessTokenManager.isUserAuthorized()) {
+    if (!mRedditService.isUserAuthorized()) {
       mMainView.showToast(R.string.user_required);
       return;
     }
@@ -466,7 +466,7 @@ public abstract class BaseListingsPresenter
     Listing listing = mListingSelected;
     if (((Archivable) listing).isArchived()) {
       mMainView.showToast(R.string.listing_archived);
-    } else if (!mAccessTokenManager.isUserAuthorized()) {
+    } else if (!mRedditService.isUserAuthorized()) {
       mMainView.showToast(R.string.user_required);
     } else {
       mMainView.showToast(R.string.implementation_pending);
@@ -533,11 +533,12 @@ public abstract class BaseListingsPresenter
     Listing listing = mListingSelected;
     if (((Archivable) listing).isArchived()) {
       mMainView.showToast(R.string.listing_archived);
-    } else if (!mAccessTokenManager.isUserAuthorized()) {
+    } else if (!mRedditService.isUserAuthorized()) {
       mMainView.showToast(R.string.user_required);
     } else {
       Votable votable = (Votable) listing;
-      mRedditService.vote(votable, direction)
+      mRedditService.vote(votable.getKind() + "_" + votable.getId(), direction)
+          .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
           .subscribe(response -> {
             votable.applyVote(direction);
             mListingsView.notifyItemChanged(getIndexOf(listing));
@@ -552,7 +553,8 @@ public abstract class BaseListingsPresenter
 
   private void save(Savable savable, boolean toSave) {
     Listing listing = mListingSelected;
-    mRedditService.save(savable, null, toSave)
+    mRedditService.save(savable.getFullName(), null, toSave)
+        .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
         .subscribe(response -> {
           savable.isSaved(toSave);
           mListingsView.notifyItemChanged(getIndexOf(listing));
@@ -561,7 +563,8 @@ public abstract class BaseListingsPresenter
 
   private void hide(Hideable hideable, boolean toHide) {
     Listing listing = mListingSelected;
-    mRedditService.hide(hideable, toHide)
+    mRedditService.hide(hideable.getFullName(), toHide)
+        .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
         .subscribe(response -> {
           int pos = mListings.indexOf(listing);
           if (toHide) {
@@ -623,6 +626,7 @@ public abstract class BaseListingsPresenter
     PrivateMessage message = (PrivateMessage) mListingSelected;
     String fullname = message.getFullName();
     mRedditService.markMessagesRead(fullname)
+        .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
         .subscribe(
             _void -> {
               message.markUnread(false);
@@ -636,6 +640,7 @@ public abstract class BaseListingsPresenter
     PrivateMessage message = (PrivateMessage) mListingSelected;
     String fullname = message.getFullName();
     mRedditService.markMessagesUnread(fullname)
+        .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
         .subscribe(
             _void -> {
               message.markUnread(true);

@@ -1,6 +1,7 @@
 package com.ddiehl.android.htn.view.activities;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -32,7 +33,6 @@ import android.widget.TextView;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.analytics.Analytics;
-import com.ddiehl.android.htn.io.RedditAuthService;
 import com.ddiehl.android.htn.presenter.MainPresenter;
 import com.ddiehl.android.htn.presenter.MainPresenterImpl;
 import com.ddiehl.android.htn.view.MainView;
@@ -48,8 +48,6 @@ import com.ddiehl.android.htn.view.fragments.SettingsFragment;
 import com.ddiehl.android.htn.view.fragments.SubredditFragment;
 import com.ddiehl.android.htn.view.fragments.UserProfileFragment;
 import com.ddiehl.android.htn.view.fragments.WebViewFragment;
-import com.ddiehl.reddit.identity.UserIdentity;
-import com.ddiehl.reddit.listings.PrivateMessage;
 import com.squareup.picasso.Picasso;
 
 import java.net.UnknownHostException;
@@ -57,11 +55,15 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import rxreddit.android.SignInActivity;
+import rxreddit.model.PrivateMessage;
+import rxreddit.model.UserIdentity;
 import timber.log.Timber;
 
 public class MainActivity extends AppCompatActivity implements MainView,
     NavigationView.OnNavigationItemSelectedListener {
-  public static final int REQUEST_NSFW_WARNING = 0x1;
+  public static final int REQUEST_NSFW_WARNING = 0x00000001;
+  public static final int REQUEST_SIGN_IN = 0x00000002;
   private static final String DIALOG_NSFW_WARNING = "dialog_nsfw_warning";
   private static final String DIALOG_CONFIRM_SIGN_OUT = "dialog_confirm_sign_out";
   private static final String DIALOG_ANALYTICS = "dialog_analytics";
@@ -71,8 +73,10 @@ public class MainActivity extends AppCompatActivity implements MainView,
   private static final String EXTRA_CUSTOM_TABS_TOOLBAR_COLOR =
       "android.support.customtabs.extra.TOOLBAR_COLOR";
 
-  @Bind(R.id.drawer_layout) DrawerLayout mDrawerLayout;
-  @Bind(R.id.navigation_view) NavigationView mNavigationView;
+  @Bind(R.id.drawer_layout)
+  DrawerLayout mDrawerLayout;
+  @Bind(R.id.navigation_view)
+  NavigationView mNavigationView;
 //  @Bind(R.id.user_account_icon)
   ImageView mGoldIndicator;
 //  @Bind(R.id.account_name)
@@ -192,7 +196,10 @@ public class MainActivity extends AppCompatActivity implements MainView,
 
   @Override
   public void showLoginView() {
-    showWebViewForURL(RedditAuthService.AUTHORIZATION_URL);
+//    showWebViewForURL(mMainPresenter.getAuthorizationUrl());
+    Intent data = new Intent(this, SignInActivity.class);
+    data.putExtra(SignInActivity.EXTRA_AUTH_URL, mMainPresenter.getAuthorizationUrl());
+    startActivityForResult(data, REQUEST_SIGN_IN);
   }
 
   @Override
@@ -375,11 +382,6 @@ public class MainActivity extends AppCompatActivity implements MainView,
   public void onSubredditNavigationCancelled() { /* no-op */ }
 
   @Override
-  public void onAuthCodeReceived(String authCode) {
-    mMainPresenter.onAuthCodeReceived(authCode);
-  }
-
-  @Override
   public void showError(Throwable error, int errorResId) {
     String message = getString(errorResId);
     Timber.e(error, message);
@@ -405,6 +407,19 @@ public class MainActivity extends AppCompatActivity implements MainView,
   public void showAboutApp() {
     Fragment fragment = AboutAppFragment.newInstance();
     showFragment(fragment);
+  }
+
+  @Override
+  protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+    switch (requestCode) {
+      case REQUEST_SIGN_IN:
+        if (resultCode == Activity.RESULT_OK) {
+          String callbackUrl = data.getStringExtra(SignInActivity.EXTRA_CALLBACK_URL);
+          mMainPresenter.onSignIn(callbackUrl);
+        }
+        break;
+    }
   }
 
   private Fragment getCurrentDisplayedFragment() {

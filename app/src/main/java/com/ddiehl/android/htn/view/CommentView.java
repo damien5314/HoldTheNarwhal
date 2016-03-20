@@ -4,8 +4,8 @@ import android.support.annotation.NonNull;
 import android.view.ContextMenu;
 import android.view.View;
 
-import com.ddiehl.reddit.listings.Comment;
-import com.ddiehl.reddit.listings.Listing;
+import rxreddit.model.Comment;
+import rxreddit.model.Listing;
 
 public interface CommentView {
   void showCommentContextMenu(ContextMenu menu, View v, Comment comment);

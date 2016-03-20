@@ -22,9 +22,6 @@ import com.ddiehl.android.htn.utils.AndroidUtils;
 import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.android.htn.view.UserProfileView;
 import com.ddiehl.android.htn.view.adapters.ListingsAdapter;
-import com.ddiehl.reddit.identity.UserIdentity;
-import com.ddiehl.reddit.listings.Listing;
-import com.ddiehl.reddit.listings.Trophy;
 import com.squareup.picasso.Picasso;
 
 import java.text.NumberFormat;
@@ -34,6 +31,9 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import rxreddit.model.Listing;
+import rxreddit.model.Trophy;
+import rxreddit.model.UserIdentity;
 
 public class UserProfileFragment extends BaseListingsFragment
     implements UserProfileView, TabLayout.OnTabSelectedListener {
@@ -42,20 +42,25 @@ public class UserProfileFragment extends BaseListingsFragment
   private static final String ARG_SORT = "arg_sort";
   private static final String ARG_TIMESPAN = "arg_timespan";
 
-  @Bind(R.id.tab_layout) TabLayout mUserProfileTabs;
-  @Bind(R.id.user_profile_summary) View mUserProfileSummary;
+  @Bind(R.id.tab_layout)
+  TabLayout mUserProfileTabs;
+  @Bind(R.id.user_profile_summary)
+  View mUserProfileSummary;
   @Bind(R.id.recycler_view) View mListView;
   @Bind(R.id.user_note_layout) View mFriendNoteLayout;
 
   // Views for user profile summary elements
-  @Bind(R.id.user_created) TextView mCreateDate;
+  @Bind(R.id.user_created)
+  TextView mCreateDate;
   @Bind(R.id.user_karma_layout) View mKarmaLayout;
   @Bind(R.id.user_link_karma) TextView mLinkKarma;
   @Bind(R.id.user_comment_karma) TextView mCommentKarma;
-  @Bind(R.id.user_friend_button) Button mFriendButton;
+  @Bind(R.id.user_friend_button)
+  Button mFriendButton;
   @Bind(R.id.user_friend_note_edit) TextView mFriendNote;
   @Bind(R.id.user_friend_note_confirm) Button mFriendNoteSave;
-  @Bind(R.id.user_trophies) GridLayout mTrophies;
+  @Bind(R.id.user_trophies)
+  GridLayout mTrophies;
 
   private TabLayout.Tab mTabSummary, mTabOverview, mTabComments, mTabSubmitted, mTabGilded,
       mTabUpvoted, mTabDownvoted, mTabHidden, mTabSaved;

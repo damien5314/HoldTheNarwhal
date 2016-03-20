@@ -1,6 +1,5 @@
 package com.ddiehl.android.htn.view.viewholders;
 
-
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Build;
@@ -11,11 +10,11 @@ import android.widget.TextView;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.presenter.CommentPresenter;
-import com.ddiehl.reddit.listings.CommentStub;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import rxreddit.model.CommentStub;
 
 public class ThreadStubViewHolder extends RecyclerView.ViewHolder {
   private CommentPresenter mCommentPresenter;
@@ -23,7 +22,8 @@ public class ThreadStubViewHolder extends RecyclerView.ViewHolder {
   private String mSubreddit;
   private String mLinkId;
 
-  @Bind(R.id.comment_more) TextView mMoreCommentsView;
+  @Bind(R.id.comment_more)
+  TextView mMoreCommentsView;
 
   public ThreadStubViewHolder(View v, CommentPresenter presenter) {
     super(v);

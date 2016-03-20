@@ -12,10 +12,11 @@ import com.ddiehl.android.htn.view.viewholders.BaseLinkViewHolder;
 import com.ddiehl.android.htn.view.viewholders.CommentsLinkViewHolder;
 import com.ddiehl.android.htn.view.viewholders.ThreadCommentViewHolder;
 import com.ddiehl.android.htn.view.viewholders.ThreadStubViewHolder;
-import com.ddiehl.reddit.listings.Comment;
-import com.ddiehl.reddit.listings.CommentStub;
-import com.ddiehl.reddit.listings.Link;
-import com.ddiehl.reddit.listings.Listing;
+
+import rxreddit.model.Comment;
+import rxreddit.model.CommentStub;
+import rxreddit.model.Link;
+import rxreddit.model.Listing;
 
 public class LinkCommentsAdapter extends ListingsAdapter {
   private static final int TYPE_LINK = 0;

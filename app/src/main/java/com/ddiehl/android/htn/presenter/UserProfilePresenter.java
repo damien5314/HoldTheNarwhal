@@ -11,9 +11,11 @@ import com.ddiehl.android.htn.view.LinkView;
 import com.ddiehl.android.htn.view.ListingsView;
 import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.android.htn.view.UserProfileView;
-import com.ddiehl.reddit.identity.UserIdentity;
 
+import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
+import rx.schedulers.Schedulers;
+import rxreddit.model.UserIdentity;
 
 public class UserProfilePresenter extends BaseListingsPresenter
     implements LinkPresenter, CommentPresenter {
@@ -79,6 +81,7 @@ public class UserProfilePresenter extends BaseListingsPresenter
     mRedditService.loadUserProfile(mShow, mUsernameContext, mSort, mTimespan,
         append ? null : mPrevPageListingId,
         append ? mNextPageListingId : null)
+        .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
         .doOnSubscribe(() -> {
           mMainView.showSpinner(null);
           if (append) mNextRequested = true;
@@ -100,6 +103,7 @@ public class UserProfilePresenter extends BaseListingsPresenter
 
   private void getSummaryData() {
     mRedditService.getUserInfo(mUsernameContext)
+        .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
         .doOnSubscribe(() -> {
           mMainView.showSpinner(null);
           mNextRequested = true;
@@ -112,6 +116,7 @@ public class UserProfilePresenter extends BaseListingsPresenter
         .subscribe(mSummaryView::showUserInfo,
             e -> mMainView.showError(e, R.string.error_get_user_info));
     mRedditService.getUserTrophies(mUsernameContext)
+        .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
         .subscribe(mSummaryView::showTrophies,
             e -> mMainView.showError(e, R.string.error_get_user_trophies));
   }
@@ -120,6 +125,7 @@ public class UserProfilePresenter extends BaseListingsPresenter
     return user -> {
       if (user.isFriend()) {
         mRedditService.getFriendInfo(user.getName())
+            .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
             .subscribe(response -> {
               UserIdentity self = HoldTheNarwhal.getIdentityManager().getUserIdentity();
               if (self != null && self.isGold()) {
@@ -132,6 +138,7 @@ public class UserProfilePresenter extends BaseListingsPresenter
 
   public void addFriend() {
     mRedditService.addFriend(mUsernameContext)
+        .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
         .doOnTerminate(mMainView::dismissSpinner)
         .subscribe(response -> {
           mSummaryView.setFriendButtonState(true);
@@ -145,6 +152,7 @@ public class UserProfilePresenter extends BaseListingsPresenter
 
   public void deleteFriend() {
     mRedditService.deleteFriend(mUsernameContext)
+        .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
         .doOnTerminate(mMainView::dismissSpinner)
         .subscribe(response -> {
           mSummaryView.setFriendButtonState(false);
@@ -159,6 +167,7 @@ public class UserProfilePresenter extends BaseListingsPresenter
     else {
       mMainView.showSpinner(null);
       mRedditService.saveFriendNote(mUsernameContext, note)
+          .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
           .doOnTerminate(mMainView::dismissSpinner)
           .subscribe(r -> mMainView.showToast(R.string.user_friend_note_save_confirm),
               e -> mMainView.showError(e, R.string.user_friend_note_save_error));

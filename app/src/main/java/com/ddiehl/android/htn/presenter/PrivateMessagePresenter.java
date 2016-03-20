@@ -5,11 +5,12 @@ import android.os.Handler;
 import com.ddiehl.android.htn.view.ListingsView;
 import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.android.htn.view.PrivateMessageView;
-import com.ddiehl.reddit.listings.Listing;
-import com.ddiehl.reddit.listings.ListingResponse;
-import com.ddiehl.reddit.listings.PrivateMessage;
 
 import java.util.List;
+
+import rxreddit.model.Listing;
+import rxreddit.model.ListingResponse;
+import rxreddit.model.PrivateMessage;
 
 public class PrivateMessagePresenter extends BaseListingsPresenter implements MessagePresenter {
   private PrivateMessageView mMessageView;

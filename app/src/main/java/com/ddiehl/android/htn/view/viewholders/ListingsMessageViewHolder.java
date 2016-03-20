@@ -11,15 +11,15 @@ import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.presenter.MessagePresenter;
 import com.ddiehl.android.htn.utils.Utils;
-import com.ddiehl.reddit.listings.Listing;
-import com.ddiehl.reddit.listings.PrivateMessage;
-import com.ddiehl.timesincetextview.TimeSinceTextView;
+import com.ddiehl.timesincetextview.TimeSince;
 
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import rxreddit.model.Listing;
+import rxreddit.model.PrivateMessage;
 
 public class ListingsMessageViewHolder extends RecyclerView.ViewHolder
     implements View.OnCreateContextMenuListener {
@@ -90,7 +90,7 @@ public class ListingsMessageViewHolder extends RecyclerView.ViewHolder
     from = String.format(from,
         isToMe ? messageToShow.getAuthor() : messageToShow.getDestination());
     String sent = mContext.getString(R.string.message_metadata_sent);
-    sent = String.format(sent, TimeSinceTextView.getFormattedDateString(
+    sent = String.format(sent, TimeSince.getFormattedDateString(
         messageToShow.getCreatedUtc(), false, mContext));
     String text = from + " " + sent;
     mLastMessageMetadata.setText(text);

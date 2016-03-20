@@ -3,8 +3,8 @@ package com.ddiehl.android.htn.presenter;
 import android.view.ContextMenu;
 import android.view.View;
 
-import com.ddiehl.reddit.identity.UserIdentity;
-import com.ddiehl.reddit.listings.PrivateMessage;
+import rxreddit.model.PrivateMessage;
+import rxreddit.model.UserIdentity;
 
 public interface MessagePresenter {
   // FIXME Change this to onItemSelected or something

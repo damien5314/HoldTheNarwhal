@@ -32,13 +32,13 @@ import com.ddiehl.android.htn.view.activities.MainActivity;
 import com.ddiehl.android.htn.view.adapters.ListingsAdapter;
 import com.ddiehl.android.htn.view.dialogs.ChooseLinkSortDialog;
 import com.ddiehl.android.htn.view.dialogs.ChooseTimespanDialog;
-import com.ddiehl.reddit.listings.Comment;
-import com.ddiehl.reddit.listings.Link;
-import com.ddiehl.reddit.listings.Listing;
-import com.ddiehl.reddit.listings.PrivateMessage;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import rxreddit.model.Comment;
+import rxreddit.model.Link;
+import rxreddit.model.Listing;
+import rxreddit.model.PrivateMessage;
 import timber.log.Timber;
 
 public abstract class BaseListingsFragment extends Fragment
@@ -70,7 +70,8 @@ public abstract class BaseListingsFragment extends Fragment
     mMainView = (MainView) getActivity();
   }
 
-  @Nullable @Override
+  @Nullable
+  @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     View view = inflater.inflate(getLayoutResId(), container, false);
     ButterKnife.bind(this, view);

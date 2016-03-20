@@ -10,20 +10,22 @@ import com.ddiehl.android.htn.model.CommentBank;
 import com.ddiehl.android.htn.model.CommentBankList;
 import com.ddiehl.android.htn.view.LinkCommentsView;
 import com.ddiehl.android.htn.view.MainView;
-import com.ddiehl.reddit.Archivable;
-import com.ddiehl.reddit.CommentUtils;
-import com.ddiehl.reddit.identity.UserIdentity;
-import com.ddiehl.reddit.listings.AbsComment;
-import com.ddiehl.reddit.listings.Comment;
-import com.ddiehl.reddit.listings.CommentStub;
-import com.ddiehl.reddit.listings.Link;
-import com.ddiehl.reddit.listings.Listing;
-import com.ddiehl.reddit.listings.ListingResponse;
-import com.ddiehl.reddit.listings.MoreChildrenResponse;
 
 import java.util.List;
 
+import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
+import rx.schedulers.Schedulers;
+import rxreddit.RxRedditUtil;
+import rxreddit.model.AbsComment;
+import rxreddit.model.Archivable;
+import rxreddit.model.Comment;
+import rxreddit.model.CommentStub;
+import rxreddit.model.Link;
+import rxreddit.model.Listing;
+import rxreddit.model.ListingResponse;
+import rxreddit.model.MoreChildrenResponse;
+import rxreddit.model.UserIdentity;
 
 public class LinkCommentsPresenterImpl extends BaseListingsPresenter
     implements LinkCommentsPresenter, IdentityManager.Callbacks {
@@ -63,6 +65,7 @@ public class LinkCommentsPresenterImpl extends BaseListingsPresenter
   void requestNextData() {
     mMainView.showSpinner(null);
     mRedditService.loadLinkComments(mSubreddit, mLinkId, mSort, mCommentId)
+        .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
         .doOnTerminate(mMainView::dismissSpinner)
         .subscribe(showLinkComments,
             e -> mMainView.showError(e, R.string.error_get_link_comments));
@@ -78,7 +81,7 @@ public class LinkCommentsPresenterImpl extends BaseListingsPresenter
         if (mLinkContext != null) mMainView.setTitle(mLinkContext.getTitle());
         ListingResponse commentsResponse = listingResponseList.get(1);
         List<Listing> comments = commentsResponse.getData().getChildren();
-        CommentUtils.flattenCommentList(comments);
+        RxRedditUtil.flattenCommentList(comments);
         mCommentBank.clear();
         mCommentBank.addAll(comments);
         Integer minScore = mSettingsManager.getMinCommentScore();
@@ -97,7 +100,8 @@ public class LinkCommentsPresenterImpl extends BaseListingsPresenter
     List<String> children = parentStub.getChildren();
     // Truncate list of children to 20
     children = children.subList(0, Math.min(MAX_CHILDREN_PER_REQUEST, children.size()));
-    mRedditService.loadMoreChildren(mLinkContext, parentStub, children, mSort)
+    mRedditService.loadMoreChildren(mLinkContext.getId(), children, mSort)
+        .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
         .doOnSubscribe(() -> mMainView.showSpinner(null))
         .doOnTerminate(mMainView::dismissSpinner)
         .subscribe(showMoreComments(parentStub),
@@ -111,7 +115,7 @@ public class LinkCommentsPresenterImpl extends BaseListingsPresenter
       if (comments == null || comments.size() == 0) {
         mCommentBank.remove(parentStub);
       } else {
-        CommentUtils.setDepthForCommentsList(comments, parentStub.getDepth());
+        RxRedditUtil.setDepthForCommentsList(comments, parentStub.getDepth());
         int stubIndex = mCommentBank.indexOf(parentStub);
         parentStub.removeChildren(comments);
         parentStub.setCount(parentStub.getChildren().size());
@@ -182,7 +186,7 @@ public class LinkCommentsPresenterImpl extends BaseListingsPresenter
   public void replyToLink() {
     if (((Archivable) mListingSelected).isArchived()) {
       mMainView.showToast(R.string.listing_archived);
-    } else if (!mAccessTokenManager.isUserAuthorized()) {
+    } else if (!mRedditService.isUserAuthorized()) {
       mMainView.showToast(R.string.user_required);
     } else {
       mReplyTarget = mLinkContext;
@@ -194,7 +198,7 @@ public class LinkCommentsPresenterImpl extends BaseListingsPresenter
   public void replyToComment() {
     if (((Archivable) mListingSelected).isArchived()) {
       mMainView.showToast(R.string.listing_archived);
-    } else if (!mAccessTokenManager.isUserAuthorized()) {
+    } else if (!mRedditService.isUserAuthorized()) {
       mMainView.showToast(R.string.user_required);
     } else {
       mReplyTarget = mListingSelected;
@@ -206,6 +210,7 @@ public class LinkCommentsPresenterImpl extends BaseListingsPresenter
   public void onCommentSubmitted(@NonNull String commentText) {
     String parentId = mReplyTarget.getFullName();
     mRedditService.addComment(parentId, commentText)
+        .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
         .subscribe(comment -> {
           mMainView.showToast("Comment successful"); // FIXME Port to strings.xml
           // TODO Optimize this logic, it probably takes a long time in large threads

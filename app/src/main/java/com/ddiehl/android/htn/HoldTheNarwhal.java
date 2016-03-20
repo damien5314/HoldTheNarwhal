@@ -5,12 +5,9 @@ import android.content.Context;
 
 import com.ddiehl.android.htn.analytics.Analytics;
 import com.ddiehl.android.htn.analytics.FlurryAnalytics;
-import com.ddiehl.android.htn.io.RedditAuthService;
-import com.ddiehl.android.htn.io.RedditAuthServiceImpl;
-import com.ddiehl.android.htn.io.RedditService;
-import com.ddiehl.android.htn.io.RedditServiceImpl;
 import com.squareup.picasso.Picasso;
 
+import rxreddit.api.RedditService;
 import timber.log.Timber;
 
 public class HoldTheNarwhal extends Application {
@@ -34,7 +31,6 @@ public class HoldTheNarwhal extends Application {
     mContext = this;
 
     // Initialize static dependencies
-    AccessTokenManager accessTokenManager = getAccessTokenManager();
     IdentityManager identityManager = getIdentityManager();
     SettingsManager settingsManager = getSettingsManager();
     RedditService api = getRedditService();
@@ -44,14 +40,6 @@ public class HoldTheNarwhal extends Application {
 
   public static Context getContext() {
     return mContext;
-  }
-
-  /**
-   * Provides an instance of {@link AccessTokenManager} with which to manage OAuth tokens.
-   * @return Instance of {@link AccessTokenManager}
-   */
-  public static AccessTokenManager getAccessTokenManager() {
-    return AccessTokenManagerImpl.getInstance();
   }
 
   /**
@@ -73,19 +61,12 @@ public class HoldTheNarwhal extends Application {
   }
 
   /**
-   * Provides an instance of {@link RedditAuthServiceImpl} with which to retrieve OAuth2 tokens
-   * @return Instance of {@link RedditAuthServiceImpl}
-   */
-  public static RedditAuthService getRedditServiceAuth() {
-    return RedditAuthServiceImpl.getInstance();
-  }
-
-  /**
    * Provides an instance of {@link RedditService} with which to call the reddit API
    * @return Instance of {@link RedditService}
    */
   public static RedditService getRedditService() {
-    return RedditServiceImpl.getInstance();
+//    return RedditService.getInstance();
+    return RedditServiceProvider.getInstance();
 //    return RedditServiceMock.getInstance();
   }
 

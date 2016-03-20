@@ -4,12 +4,14 @@ import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.view.LinkView;
 import com.ddiehl.android.htn.view.ListingsView;
 import com.ddiehl.android.htn.view.MainView;
-import com.ddiehl.reddit.identity.UserIdentity;
-import com.ddiehl.reddit.listings.Link;
-import com.ddiehl.reddit.listings.ListingResponse;
-import com.ddiehl.reddit.listings.Subreddit;
 
+import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
+import rx.schedulers.Schedulers;
+import rxreddit.model.Link;
+import rxreddit.model.ListingResponse;
+import rxreddit.model.Subreddit;
+import rxreddit.model.UserIdentity;
 
 public class SubredditPresenter extends BaseListingsPresenter implements LinkPresenter {
 
@@ -57,6 +59,7 @@ public class SubredditPresenter extends BaseListingsPresenter implements LinkPre
 
   private void getSubredditInfo() {
     mRedditService.getSubredditInfo(mSubreddit)
+        .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
         .doOnSubscribe(() -> mMainView.showSpinner(null))
         .doOnTerminate(() -> {
           mMainView.dismissSpinner();
@@ -71,6 +74,7 @@ public class SubredditPresenter extends BaseListingsPresenter implements LinkPre
     mRedditService.loadLinks(mSubreddit, mSort, mTimespan,
         append ? null : mPrevPageListingId,
         append ? mNextPageListingId : null)
+        .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
         .doOnSubscribe(() -> {
           mMainView.showSpinner(null);
           if (append) mNextRequested = true;
@@ -81,7 +85,8 @@ public class SubredditPresenter extends BaseListingsPresenter implements LinkPre
           if (append) mNextRequested = false;
           else mBeforeRequested = false;
         })
-        .subscribe(onListingsLoaded(append),
+        .subscribe(
+            onListingsLoaded(append),
             e -> mMainView.showError(e, R.string.error_get_links));
   }
 

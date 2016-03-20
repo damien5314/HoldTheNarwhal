@@ -1,9 +1,10 @@
 package com.ddiehl.android.htn.view.widgets;
 
-import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
@@ -15,20 +16,27 @@ public class ColorSwapTextView extends TextView {
   private Drawable mOriginalBackground;
 
   public ColorSwapTextView(Context context) {
-    this(context, null, 0, 0);
+    super(context);
+    init();
   }
 
   public ColorSwapTextView(Context context, AttributeSet attrs) {
-    this(context, attrs, 0, 0);
+    super(context, attrs);
+    init();
   }
 
   public ColorSwapTextView(Context context, AttributeSet attrs, int defStyleAttr) {
-    this(context, attrs, defStyleAttr, 0);
+    super(context, attrs, defStyleAttr);
+    init();
   }
 
-  @SuppressLint("NewApi")
+  @TargetApi(Build.VERSION_CODES.LOLLIPOP)
   public ColorSwapTextView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
     super(context, attrs, defStyleAttr, defStyleRes);
+    init();
+  }
+
+  private void init() {
     mOriginalTextColor = getTextColors();
     mOriginalHintTextColor = getHintTextColors();
     mOriginalLinkTextColor = getLinkTextColors();

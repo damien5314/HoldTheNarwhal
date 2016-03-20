@@ -1,6 +1,5 @@
 package com.ddiehl.android.htn.view.viewholders;
 
-
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,7 +14,6 @@ import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.ThumbnailMode;
 import com.ddiehl.android.htn.presenter.LinkPresenter;
 import com.ddiehl.android.htn.view.widgets.ColorSwapTextView;
-import com.ddiehl.reddit.listings.Link;
 import com.ddiehl.timesincetextview.TimeSinceTextView;
 import com.squareup.picasso.Picasso;
 
@@ -24,6 +22,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import rxreddit.model.Link;
 
 public abstract class BaseLinkViewHolder extends RecyclerView.ViewHolder
     implements View.OnCreateContextMenuListener {
@@ -33,16 +32,20 @@ public abstract class BaseLinkViewHolder extends RecyclerView.ViewHolder
 
   @Bind(R.id.link_view) View mLinkView;
   @Bind(R.id.link_saved_view) View mSavedView;
-  @Bind(R.id.link_title) TextView mLinkTitle;
+  @Bind(R.id.link_title)
+  TextView mLinkTitle;
   @Bind(R.id.link_domain) TextView mLinkDomain;
   @Bind(R.id.link_score) TextView mLinkScore;
-  @Bind(R.id.link_author) ColorSwapTextView mLinkAuthor;
+  @Bind(R.id.link_author)
+  ColorSwapTextView mLinkAuthor;
   @Bind(R.id.link_subreddit) TextView mLinkSubreddit;
   @Bind(R.id.link_comment_count) TextView mLinkComments;
   @Bind(R.id.link_self_text) TextView mSelfText;
   @Bind(R.id.link_nsfw_indicator) TextView mNsfwIndicator;
-  @Bind(R.id.link_thumbnail) ImageView mLinkThumbnail;
-  @Bind(R.id.link_timestamp) TimeSinceTextView mLinkTimestamp;
+  @Bind(R.id.link_thumbnail)
+  ImageView mLinkThumbnail;
+  @Bind(R.id.link_timestamp)
+  TimeSinceTextView mLinkTimestamp;
   @Bind(R.id.link_gilded_text_view) TextView mGildedText;
   @Bind(R.id.link_stickied_view) View mStickiedView;
 
