@@ -16,10 +16,11 @@ import com.ddiehl.android.htn.view.viewholders.BaseLinkViewHolder;
 import com.ddiehl.android.htn.view.viewholders.ListingsCommentViewHolder;
 import com.ddiehl.android.htn.view.viewholders.ListingsLinkViewHolder;
 import com.ddiehl.android.htn.view.viewholders.ListingsMessageViewHolder;
-import com.ddiehl.reddit.listings.Comment;
-import com.ddiehl.reddit.listings.Link;
-import com.ddiehl.reddit.listings.Listing;
-import com.ddiehl.reddit.listings.PrivateMessage;
+
+import rxreddit.model.Comment;
+import rxreddit.model.Link;
+import rxreddit.model.Listing;
+import rxreddit.model.PrivateMessage;
 
 public class ListingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
   private static final int TYPE_LINK = 0x00000001;

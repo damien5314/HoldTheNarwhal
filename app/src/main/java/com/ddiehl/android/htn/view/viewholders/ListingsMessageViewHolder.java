@@ -11,8 +11,6 @@ import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.presenter.MessagePresenter;
 import com.ddiehl.android.htn.utils.Utils;
-import com.ddiehl.reddit.listings.Listing;
-import com.ddiehl.reddit.listings.PrivateMessage;
 import com.ddiehl.timesincetextview.TimeSinceTextView;
 
 import java.util.List;
@@ -20,6 +18,8 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import rxreddit.model.Listing;
+import rxreddit.model.PrivateMessage;
 
 public class ListingsMessageViewHolder extends RecyclerView.ViewHolder
     implements View.OnCreateContextMenuListener {

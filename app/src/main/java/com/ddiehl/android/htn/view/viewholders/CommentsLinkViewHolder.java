@@ -11,13 +11,13 @@ import android.view.View;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.ThumbnailMode;
 import com.ddiehl.android.htn.presenter.LinkPresenter;
-import com.ddiehl.reddit.listings.Link;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.OnClick;
+import rxreddit.model.Link;
 
 public class CommentsLinkViewHolder extends BaseLinkViewHolder {
 

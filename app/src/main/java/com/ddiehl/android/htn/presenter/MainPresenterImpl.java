@@ -4,28 +4,28 @@ import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 
-import com.ddiehl.android.htn.AccessTokenManager;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.SettingsManager;
 import com.ddiehl.android.htn.analytics.Analytics;
-import com.ddiehl.android.htn.io.RedditAuthService;
-import com.ddiehl.android.htn.io.RedditService;
 import com.ddiehl.android.htn.utils.AndroidUtils;
 import com.ddiehl.android.htn.view.MainView;
-import com.ddiehl.reddit.identity.AccessToken;
-import com.ddiehl.reddit.identity.UserIdentity;
 
 import java.util.List;
 
+import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
+import rx.schedulers.Schedulers;
+import rxreddit.api.AccessTokenManager;
+import rxreddit.api.RedditService;
+import rxreddit.model.AccessToken;
+import rxreddit.model.UserIdentity;
 import timber.log.Timber;
 
 public class MainPresenterImpl implements MainPresenter, IdentityManager.Callbacks {
   private Context mContext = HoldTheNarwhal.getContext();
   private RedditService mRedditService = HoldTheNarwhal.getRedditService();
-  private RedditAuthService mRedditAuthService = HoldTheNarwhal.getRedditServiceAuth();
   private AccessTokenManager mAccessTokenManager = HoldTheNarwhal.getAccessTokenManager();
   private IdentityManager mIdentityManager = HoldTheNarwhal.getIdentityManager();
   private SettingsManager mSettingsManager = HoldTheNarwhal.getSettingsManager();
@@ -149,7 +149,7 @@ public class MainPresenterImpl implements MainPresenter, IdentityManager.Callbac
   @Override
   public void signOutUser() {
     mMainView.closeNavigationDrawer();
-    mAccessTokenManager.clearSavedUserAccessToken();
+    mRedditService.revokeAuthentication();
     mIdentityManager.clearSavedUserIdentity();
     mAnalytics.logSignOut();
   }
@@ -184,16 +184,9 @@ public class MainPresenterImpl implements MainPresenter, IdentityManager.Callbac
   }
 
   @Override
-  public void onAuthCodeReceived(String authCode) {
-    String grantType = "authorization_code";
-    mRedditAuthService.getUserAccessToken(grantType, authCode, RedditAuthService.REDIRECT_URI)
-        .doOnNext(mAccessTokenManager.saveUserAccessToken())
-        .subscribe(getUserIdentity(), error -> mMainView.showToast(R.string.error_authentication));
-  }
-
-  @Override
   public Action1<AccessToken> getUserIdentity() {
     return token -> mRedditService.getUserIdentity()
+        .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
         .doOnNext(mIdentityManager::saveUserIdentity)
         .subscribe(mMainView::updateUserIdentity,
             e -> mMainView.showError(e, R.string.error_get_user_identity));
@@ -269,6 +262,11 @@ public class MainPresenterImpl implements MainPresenter, IdentityManager.Callbac
         || s.equals("controversial")
         || s.equals("top")
         || s.equals("gilded");
+  }
+
+  @Override
+  public String getAuthorizationUrl() {
+    return mRedditService.getAuthorizationUrl();
   }
 
   private UserIdentity getAuthorizedUser() {

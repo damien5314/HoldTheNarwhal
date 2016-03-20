@@ -7,10 +7,10 @@ import android.view.View;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.ThumbnailMode;
 import com.ddiehl.android.htn.presenter.LinkPresenter;
-import com.ddiehl.reddit.listings.Link;
 import com.squareup.picasso.Picasso;
 
 import butterknife.OnClick;
+import rxreddit.model.Link;
 
 public class ListingsLinkViewHolder extends BaseLinkViewHolder {
   public ListingsLinkViewHolder(View v, LinkPresenter presenter) {

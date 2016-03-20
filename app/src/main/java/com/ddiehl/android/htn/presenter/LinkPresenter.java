@@ -5,7 +5,8 @@ import android.view.ContextMenu;
 import android.view.View;
 
 import com.ddiehl.android.htn.ThumbnailMode;
-import com.ddiehl.reddit.listings.Link;
+
+import rxreddit.model.Link;
 
 public interface LinkPresenter extends BasePresenter {
   void showLinkContextMenu(ContextMenu menu, View view, Link link);

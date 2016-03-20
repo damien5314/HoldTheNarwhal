@@ -2,15 +2,16 @@ package com.ddiehl.android.htn.model;
 
 import android.support.annotation.Nullable;
 
-import com.ddiehl.reddit.listings.AbsComment;
-import com.ddiehl.reddit.listings.Comment;
-import com.ddiehl.reddit.listings.Listing;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import rxreddit.model.AbsComment;
+import rxreddit.model.Comment;
+import rxreddit.model.Listing;
+
 public class CommentBankList implements CommentBank {
+
   private List<Listing> mData;
   private List<Listing> mVisibleData;
 

@@ -3,11 +3,11 @@ package com.ddiehl.android.htn;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.ddiehl.reddit.identity.UserIdentity;
-
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+
+import rxreddit.model.UserIdentity;
 
 public class IdentityManagerImpl implements IdentityManager {
   private static final String PREFS_USER_IDENTITY = "prefs_user_identity";

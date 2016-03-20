@@ -1,6 +1,5 @@
 package com.ddiehl.android.htn.view.viewholders;
 
-
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Build;
@@ -15,13 +14,13 @@ import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.presenter.LinkCommentsPresenter;
 import com.ddiehl.android.htn.view.widgets.ColorSwapTextView;
-import com.ddiehl.reddit.listings.Comment;
-import com.ddiehl.reddit.listings.Link;
 import com.ddiehl.timesincetextview.TimeSinceTextView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import rxreddit.model.Comment;
+import rxreddit.model.Link;
 
 public class ThreadCommentViewHolder extends RecyclerView.ViewHolder
     implements View.OnCreateContextMenuListener {
@@ -29,10 +28,14 @@ public class ThreadCommentViewHolder extends RecyclerView.ViewHolder
   private LinkCommentsPresenter mLinkCommentsPresenter;
   private Comment mComment;
 
-  @Bind(R.id.comment_author) ColorSwapTextView mAuthorView;
-  @Bind(R.id.comment_score_layout) ViewGroup mScoreViewLayout;
-  @Bind(R.id.comment_score) TextView mScoreView;
-  @Bind(R.id.comment_timestamp) TimeSinceTextView mTimestampView;
+  @Bind(R.id.comment_author)
+  ColorSwapTextView mAuthorView;
+  @Bind(R.id.comment_score_layout)
+  ViewGroup mScoreViewLayout;
+  @Bind(R.id.comment_score)
+  TextView mScoreView;
+  @Bind(R.id.comment_timestamp)
+  TimeSinceTextView mTimestampView;
   @Bind(R.id.comment_saved_icon) View mSavedView;
   @Bind(R.id.comment_body) TextView mBodyView;
   @Bind(R.id.comment_gilded_text_view) TextView mGildedText;

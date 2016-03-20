@@ -24,10 +24,12 @@ import com.ddiehl.android.htn.presenter.SettingsPresenter;
 import com.ddiehl.android.htn.presenter.SettingsPresenterImpl;
 import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.android.htn.view.SettingsView;
-import com.ddiehl.reddit.identity.UserIdentity;
+
+import rxreddit.model.UserIdentity;
 
 public class SettingsFragment extends PreferenceFragment
     implements SettingsView, SharedPreferences.OnSharedPreferenceChangeListener {
+
   private MainView mMainView;
   private SettingsPresenter mSettingsPresenter;
 

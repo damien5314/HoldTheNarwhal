@@ -11,12 +11,12 @@ import android.widget.TextView;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.presenter.CommentPresenter;
-import com.ddiehl.reddit.listings.Comment;
 import com.ddiehl.timesincetextview.TimeSinceTextView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import rxreddit.model.Comment;
 
 public class ListingsCommentViewHolder extends RecyclerView.ViewHolder
     implements View.OnCreateContextMenuListener {
@@ -24,12 +24,15 @@ public class ListingsCommentViewHolder extends RecyclerView.ViewHolder
   private CommentPresenter mCommentPresenter;
   private Comment mComment;
 
-  @Bind(R.id.comment_link_title) TextView mCommentLinkTitleView;
+  @Bind(R.id.comment_link_title)
+  TextView mCommentLinkTitleView;
   @Bind(R.id.comment_link_subtitle) TextView mCommentLinkSubtitleView;
   @Bind(R.id.comment_author) TextView mAuthorView;
-  @Bind(R.id.comment_score_layout) ViewGroup mScoreViewLayout;
+  @Bind(R.id.comment_score_layout)
+  ViewGroup mScoreViewLayout;
   @Bind(R.id.comment_score) TextView mScoreView;
-  @Bind(R.id.comment_timestamp) TimeSinceTextView mTimestampView;
+  @Bind(R.id.comment_timestamp)
+  TimeSinceTextView mTimestampView;
   @Bind(R.id.comment_saved_icon) View mSavedView;
   @Bind(R.id.comment_body) TextView mBodyView;
   @Bind(R.id.comment_gilded_text_view) TextView mGildedText;

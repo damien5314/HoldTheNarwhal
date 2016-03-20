@@ -7,14 +7,15 @@ import android.support.annotation.StringRes;
 import com.ddiehl.android.htn.view.dialogs.AnalyticsDialog;
 import com.ddiehl.android.htn.view.dialogs.ConfirmSignOutDialog;
 import com.ddiehl.android.htn.view.dialogs.SubredditNavigationDialog;
-import com.ddiehl.android.htn.view.fragments.WebViewFragment;
-import com.ddiehl.reddit.identity.UserIdentity;
-import com.ddiehl.reddit.listings.PrivateMessage;
 
 import java.util.List;
 
+import rxreddit.model.PrivateMessage;
+import rxreddit.model.UserIdentity;
+
 public interface MainView extends AnalyticsDialog.Callbacks, ConfirmSignOutDialog.Callbacks,
-    SubredditNavigationDialog.Callbacks, WebViewFragment.Callbacks {
+    SubredditNavigationDialog.Callbacks {
+
   void updateUserIdentity(@Nullable UserIdentity identity);
   void loadImageIntoDrawerHeader(@Nullable String url);
   void showAnalyticsRequestDialog();
@@ -45,4 +46,5 @@ public interface MainView extends AnalyticsDialog.Callbacks, ConfirmSignOutDialo
   void showAboutApp();
   void goBack();
   void resetBackNavigation();
+
 }

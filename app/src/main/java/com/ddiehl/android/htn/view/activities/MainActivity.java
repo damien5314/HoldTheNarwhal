@@ -32,7 +32,6 @@ import android.widget.TextView;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.analytics.Analytics;
-import com.ddiehl.android.htn.io.RedditAuthService;
 import com.ddiehl.android.htn.presenter.MainPresenter;
 import com.ddiehl.android.htn.presenter.MainPresenterImpl;
 import com.ddiehl.android.htn.view.MainView;
@@ -48,8 +47,6 @@ import com.ddiehl.android.htn.view.fragments.SettingsFragment;
 import com.ddiehl.android.htn.view.fragments.SubredditFragment;
 import com.ddiehl.android.htn.view.fragments.UserProfileFragment;
 import com.ddiehl.android.htn.view.fragments.WebViewFragment;
-import com.ddiehl.reddit.identity.UserIdentity;
-import com.ddiehl.reddit.listings.PrivateMessage;
 import com.squareup.picasso.Picasso;
 
 import java.net.UnknownHostException;
@@ -57,6 +54,8 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import rxreddit.model.PrivateMessage;
+import rxreddit.model.UserIdentity;
 import timber.log.Timber;
 
 public class MainActivity extends AppCompatActivity implements MainView,
@@ -71,8 +70,10 @@ public class MainActivity extends AppCompatActivity implements MainView,
   private static final String EXTRA_CUSTOM_TABS_TOOLBAR_COLOR =
       "android.support.customtabs.extra.TOOLBAR_COLOR";
 
-  @Bind(R.id.drawer_layout) DrawerLayout mDrawerLayout;
-  @Bind(R.id.navigation_view) NavigationView mNavigationView;
+  @Bind(R.id.drawer_layout)
+  DrawerLayout mDrawerLayout;
+  @Bind(R.id.navigation_view)
+  NavigationView mNavigationView;
 //  @Bind(R.id.user_account_icon)
   ImageView mGoldIndicator;
 //  @Bind(R.id.account_name)
@@ -192,7 +193,7 @@ public class MainActivity extends AppCompatActivity implements MainView,
 
   @Override
   public void showLoginView() {
-    showWebViewForURL(RedditAuthService.AUTHORIZATION_URL);
+    showWebViewForURL(mMainPresenter.getAuthorizationUrl());
   }
 
   @Override
@@ -373,11 +374,6 @@ public class MainActivity extends AppCompatActivity implements MainView,
 
   @Override
   public void onSubredditNavigationCancelled() { /* no-op */ }
-
-  @Override
-  public void onAuthCodeReceived(String authCode) {
-    mMainPresenter.onAuthCodeReceived(authCode);
-  }
 
   @Override
   public void showError(Throwable error, int errorResId) {
