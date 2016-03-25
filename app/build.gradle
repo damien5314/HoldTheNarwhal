@@ -75,9 +75,9 @@ dependencies {
   compile "com.google.android.gms:play-services-analytics:8.4.0" // Required for Flurry
   compile "com.squareup.picasso:picasso:2.5.2"
   compile "com.jakewharton:butterknife:7.0.1"
-  compile "io.reactivex:rxjava:1.1.0"
+  compile "com.github.damien5314:RxReddit:6dad170e9d464c36143755cfbca530bbc5cc9130"
   compile "io.reactivex:rxandroid:1.1.0"
-  compile "com.github.damien5314:rxreddit:0.1"
+  compile "io.reactivex:rxjava:1.1.0"
   compile "com.github.damien5314:TimeSinceTextView:1.1.1"
   compile "org.parceler:parceler-api:1.0.4"
   apt "org.parceler:parceler:1.0.4"

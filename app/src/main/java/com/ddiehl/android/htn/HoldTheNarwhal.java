@@ -7,7 +7,6 @@ import com.ddiehl.android.htn.analytics.Analytics;
 import com.ddiehl.android.htn.analytics.FlurryAnalytics;
 import com.squareup.picasso.Picasso;
 
-import rxreddit.api.AccessTokenManager;
 import rxreddit.api.RedditService;
 import timber.log.Timber;
 
@@ -32,7 +31,6 @@ public class HoldTheNarwhal extends Application {
     mContext = this;
 
     // Initialize static dependencies
-    AccessTokenManager accessTokenManager = getAccessTokenManager();
     IdentityManager identityManager = getIdentityManager();
     SettingsManager settingsManager = getSettingsManager();
     RedditService api = getRedditService();
@@ -42,14 +40,6 @@ public class HoldTheNarwhal extends Application {
 
   public static Context getContext() {
     return mContext;
-  }
-
-  /**
-   * Provides an instance of {@link AccessTokenManager} with which to manage OAuth tokens.
-   * @return Instance of {@link AccessTokenManager}
-   */
-  public static AccessTokenManager getAccessTokenManager() {
-    return AccessTokenManagerImpl.getInstance();
   }
 
   /**

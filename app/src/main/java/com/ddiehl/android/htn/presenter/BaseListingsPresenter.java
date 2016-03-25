@@ -27,7 +27,6 @@ import java.util.List;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
-import rxreddit.api.AccessTokenManager;
 import rxreddit.api.RedditService;
 import rxreddit.model.Archivable;
 import rxreddit.model.Comment;
@@ -47,7 +46,6 @@ import timber.log.Timber;
 public abstract class BaseListingsPresenter
     implements ListingsPresenter, IdentityManager.Callbacks, ListingsView.Callbacks {
   protected Context mContext = HoldTheNarwhal.getContext();
-  protected AccessTokenManager mAccessTokenManager = HoldTheNarwhal.getAccessTokenManager();
   protected IdentityManager mIdentityManager = HoldTheNarwhal.getIdentityManager();
   protected SettingsManager mSettingsManager = HoldTheNarwhal.getSettingsManager();
   protected RedditService mRedditService = HoldTheNarwhal.getRedditService();

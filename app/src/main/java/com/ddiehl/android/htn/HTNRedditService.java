@@ -21,7 +21,7 @@ public class HTNRedditService {
         BuildConfig.REDDIT_REDIRECT_URI,
         HoldTheNarwhal.getSettingsManager().getDeviceId(),
         USER_AGENT,
-        HoldTheNarwhal.getAccessTokenManager());
+        new AndroidAccessTokenManager(HoldTheNarwhal.getContext()));
   }
 
   public static RedditService getInstance() {
