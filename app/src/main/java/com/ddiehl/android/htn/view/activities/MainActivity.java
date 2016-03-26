@@ -1,6 +1,7 @@
 package com.ddiehl.android.htn.view.activities;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -54,13 +55,15 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import rxreddit.android.SignInActivity;
 import rxreddit.model.PrivateMessage;
 import rxreddit.model.UserIdentity;
 import timber.log.Timber;
 
 public class MainActivity extends AppCompatActivity implements MainView,
     NavigationView.OnNavigationItemSelectedListener {
-  public static final int REQUEST_NSFW_WARNING = 0x1;
+  public static final int REQUEST_NSFW_WARNING = 0x00000001;
+  public static final int REQUEST_SIGN_IN = 0x00000002;
   private static final String DIALOG_NSFW_WARNING = "dialog_nsfw_warning";
   private static final String DIALOG_CONFIRM_SIGN_OUT = "dialog_confirm_sign_out";
   private static final String DIALOG_ANALYTICS = "dialog_analytics";
@@ -193,7 +196,10 @@ public class MainActivity extends AppCompatActivity implements MainView,
 
   @Override
   public void showLoginView() {
-    showWebViewForURL(mMainPresenter.getAuthorizationUrl());
+//    showWebViewForURL(mMainPresenter.getAuthorizationUrl());
+    Intent data = new Intent(this, SignInActivity.class);
+    data.putExtra(SignInActivity.EXTRA_AUTH_URL, mMainPresenter.getAuthorizationUrl());
+    startActivityForResult(data, REQUEST_SIGN_IN);
   }
 
   @Override
@@ -401,6 +407,19 @@ public class MainActivity extends AppCompatActivity implements MainView,
   public void showAboutApp() {
     Fragment fragment = AboutAppFragment.newInstance();
     showFragment(fragment);
+  }
+
+  @Override
+  protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+    switch (requestCode) {
+      case REQUEST_SIGN_IN:
+        if (resultCode == Activity.RESULT_OK) {
+          String callbackUrl = data.getStringExtra(SignInActivity.EXTRA_CALLBACK_URL);
+          mMainPresenter.onSignIn(callbackUrl);
+        }
+        break;
+    }
   }
 
   private Fragment getCurrentDisplayedFragment() {

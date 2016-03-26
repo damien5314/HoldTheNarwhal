@@ -62,11 +62,10 @@ retrolambda {
   javaVersion JavaVersion.VERSION_1_7
 }
 
-def appCompatVersion = "23.2.0"
-
 dependencies {
   compile fileTree(include: '*.jar', dir: 'libs')
   compile project(':bypass')
+  def appCompatVersion = "23.2.0"
   compile "com.android.support:appcompat-v7:$appCompatVersion"
   compile "com.android.support:support-v4:$appCompatVersion"
   compile "com.android.support:design:$appCompatVersion"
@@ -75,7 +74,9 @@ dependencies {
   compile "com.google.android.gms:play-services-analytics:8.4.0" // Required for Flurry
   compile "com.squareup.picasso:picasso:2.5.2"
   compile "com.jakewharton:butterknife:7.0.1"
-  compile "com.github.damien5314:RxReddit:6dad170e9d464c36143755cfbca530bbc5cc9130"
+  def rxreddit_version = "0.4"
+  compile "com.github.damien5314.RxReddit:library:$rxreddit_version"
+  compile "com.github.damien5314.RxReddit:android:$rxreddit_version"
   compile "io.reactivex:rxandroid:1.1.0"
   compile "io.reactivex:rxjava:1.1.0"
   compile "com.github.damien5314:TimeSinceTextView:1.1.1"

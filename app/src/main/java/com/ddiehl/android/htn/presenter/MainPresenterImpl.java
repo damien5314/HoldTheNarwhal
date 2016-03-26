@@ -179,6 +179,15 @@ public class MainPresenterImpl implements MainPresenter, IdentityManager.Callbac
   }
 
   @Override
+  public void onSignIn(String callbackUrl) {
+    mRedditService.processAuthenticationCallback(callbackUrl)
+        .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        .subscribe(getUserIdentity(), error -> {
+          mMainView.showError(error, R.string.error_get_user_identity);
+        });
+  }
+
+  @Override
   public Action1<AccessToken> getUserIdentity() {
     return token -> mRedditService.getUserIdentity()
         .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())

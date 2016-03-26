@@ -16,7 +16,7 @@ import java.util.List;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
-import rxreddit.Util;
+import rxreddit.RxRedditUtil;
 import rxreddit.model.AbsComment;
 import rxreddit.model.Archivable;
 import rxreddit.model.Comment;
@@ -81,7 +81,7 @@ public class LinkCommentsPresenterImpl extends BaseListingsPresenter
         if (mLinkContext != null) mMainView.setTitle(mLinkContext.getTitle());
         ListingResponse commentsResponse = listingResponseList.get(1);
         List<Listing> comments = commentsResponse.getData().getChildren();
-        Util.flattenCommentList(comments);
+        RxRedditUtil.flattenCommentList(comments);
         mCommentBank.clear();
         mCommentBank.addAll(comments);
         Integer minScore = mSettingsManager.getMinCommentScore();
@@ -115,7 +115,7 @@ public class LinkCommentsPresenterImpl extends BaseListingsPresenter
       if (comments == null || comments.size() == 0) {
         mCommentBank.remove(parentStub);
       } else {
-        Util.setDepthForCommentsList(comments, parentStub.getDepth());
+        RxRedditUtil.setDepthForCommentsList(comments, parentStub.getDepth());
         int stubIndex = mCommentBank.indexOf(parentStub);
         parentStub.removeChildren(comments);
         parentStub.setCount(parentStub.getChildren().size());

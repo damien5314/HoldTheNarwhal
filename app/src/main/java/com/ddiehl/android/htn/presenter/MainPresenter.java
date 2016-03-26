@@ -8,6 +8,8 @@ import rxreddit.model.AccessToken;
 
 public interface MainPresenter extends BasePresenter {
 
+  String getAuthorizationUrl();
+  void onSignIn(String callbackUrl);
   void signOutUser();
   void onAnalyticsAccepted();
   void onAnalyticsDeclined();
@@ -22,5 +24,5 @@ public interface MainPresenter extends BasePresenter {
   void onShowAllListings();
   void onShowRandomSubreddit();
   void processDeepLink(@NonNull Uri data);
-  String getAuthorizationUrl();
+
 }
