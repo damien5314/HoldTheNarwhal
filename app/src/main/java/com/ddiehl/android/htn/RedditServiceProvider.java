@@ -1,11 +1,11 @@
 package com.ddiehl.android.htn;
 
+import rxreddit.RxRedditUtil;
+import rxreddit.android.AndroidAccessTokenManager;
+import rxreddit.android.AndroidUtil;
 import rxreddit.api.RedditService;
 
-public class HTNRedditService {
-  public static final String USER_AGENT = String.format(
-      "android:com.ddiehl.android.htn:v%s (by /u/damien5314)",
-      BuildConfig.VERSION_NAME);
+public class RedditServiceProvider {
 
   private RedditService mRedditService;
 
@@ -13,22 +13,23 @@ public class HTNRedditService {
   // Singleton //
   ///////////////
 
-  private static HTNRedditService _instance;
+  private static RedditServiceProvider _instance;
 
-  private HTNRedditService() {
+  private RedditServiceProvider() {
     mRedditService = new RedditService(
         BuildConfig.REDDIT_APP_ID,
         BuildConfig.REDDIT_REDIRECT_URI,
-        HoldTheNarwhal.getSettingsManager().getDeviceId(),
-        USER_AGENT,
+        AndroidUtil.getDeviceId(HoldTheNarwhal.getContext()),
+        RxRedditUtil.getUserAgent(
+            "android", "com.ddiehl.android.htn", BuildConfig.VERSION_NAME, "damien5314"),
         new AndroidAccessTokenManager(HoldTheNarwhal.getContext()));
   }
 
   public static RedditService getInstance() {
     if (_instance == null) {
-      synchronized (HTNRedditService.class) {
+      synchronized (RedditServiceProvider.class) {
         if (_instance == null) {
-          _instance = new HTNRedditService();
+          _instance = new RedditServiceProvider();
         }
       }
     }

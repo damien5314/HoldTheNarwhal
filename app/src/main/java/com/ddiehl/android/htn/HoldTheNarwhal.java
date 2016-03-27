@@ -66,7 +66,7 @@ public class HoldTheNarwhal extends Application {
    */
   public static RedditService getRedditService() {
 //    return RedditService.getInstance();
-    return HTNRedditService.getInstance();
+    return RedditServiceProvider.getInstance();
 //    return RedditServiceMock.getInstance();
   }
 
