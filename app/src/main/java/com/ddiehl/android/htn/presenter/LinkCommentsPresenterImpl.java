@@ -100,7 +100,7 @@ public class LinkCommentsPresenterImpl extends BaseListingsPresenter
     List<String> children = parentStub.getChildren();
     // Truncate list of children to 20
     children = children.subList(0, Math.min(MAX_CHILDREN_PER_REQUEST, children.size()));
-    mRedditService.loadMoreChildren(mLinkContext, parentStub, children, mSort)
+    mRedditService.loadMoreChildren(mLinkContext.getId(), children, mSort)
         .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
         .doOnSubscribe(() -> mMainView.showSpinner(null))
         .doOnTerminate(mMainView::dismissSpinner)

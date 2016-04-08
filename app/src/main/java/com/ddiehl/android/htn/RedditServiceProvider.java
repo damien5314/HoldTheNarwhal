@@ -16,13 +16,14 @@ public class RedditServiceProvider {
   private static RedditServiceProvider _instance;
 
   private RedditServiceProvider() {
-    mRedditService = new RedditService(
-        BuildConfig.REDDIT_APP_ID,
-        BuildConfig.REDDIT_REDIRECT_URI,
-        AndroidUtil.getDeviceId(HoldTheNarwhal.getContext()),
-        RxRedditUtil.getUserAgent(
-            "android", "com.ddiehl.android.htn", BuildConfig.VERSION_NAME, "damien5314"),
-        new AndroidAccessTokenManager(HoldTheNarwhal.getContext()));
+    mRedditService = new RedditService.Builder()
+        .appId(BuildConfig.REDDIT_APP_ID)
+        .redirectUri(BuildConfig.REDDIT_REDIRECT_URI)
+        .deviceId(AndroidUtil.getDeviceId(HoldTheNarwhal.getContext()))
+        .userAgent(RxRedditUtil.getUserAgent(
+            "android", "com.ddiehl.android.htn", BuildConfig.VERSION_NAME, "damien5314"))
+        .accessTokenManager(new AndroidAccessTokenManager(HoldTheNarwhal.getContext()))
+        .build();
   }
 
   public static RedditService getInstance() {

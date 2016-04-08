@@ -74,7 +74,7 @@ dependencies {
   compile "com.google.android.gms:play-services-analytics:8.4.0" // Required for Flurry
   compile "com.squareup.picasso:picasso:2.5.2"
   compile "com.jakewharton:butterknife:7.0.1"
-  def rxreddit_version = "0.6"
+  def rxreddit_version = "1411b443bd869d4602617903ece02cc076354201"
   compile "com.github.damien5314.RxReddit:library:$rxreddit_version"
   compile "com.github.damien5314.RxReddit:android:$rxreddit_version"
   debugCompile "com.github.damien5314.RxReddit:mock:$rxreddit_version"

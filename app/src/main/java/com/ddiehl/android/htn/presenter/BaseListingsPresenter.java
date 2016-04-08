@@ -537,7 +537,7 @@ public abstract class BaseListingsPresenter
       mMainView.showToast(R.string.user_required);
     } else {
       Votable votable = (Votable) listing;
-      mRedditService.vote(votable, direction)
+      mRedditService.vote(votable.getKind() + "_" + votable.getId(), direction)
           .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
           .subscribe(response -> {
             votable.applyVote(direction);
@@ -553,7 +553,7 @@ public abstract class BaseListingsPresenter
 
   private void save(Savable savable, boolean toSave) {
     Listing listing = mListingSelected;
-    mRedditService.save(savable, null, toSave)
+    mRedditService.save(savable.getFullName(), null, toSave)
         .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
         .subscribe(response -> {
           savable.isSaved(toSave);
@@ -563,7 +563,7 @@ public abstract class BaseListingsPresenter
 
   private void hide(Hideable hideable, boolean toHide) {
     Listing listing = mListingSelected;
-    mRedditService.hide(hideable, toHide)
+    mRedditService.hide(hideable.getFullName(), toHide)
         .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
         .subscribe(response -> {
           int pos = mListings.indexOf(listing);
