@@ -85,7 +85,8 @@ public class SubredditPresenter extends BaseListingsPresenter implements LinkPre
           if (append) mNextRequested = false;
           else mBeforeRequested = false;
         })
-        .subscribe(onListingsLoaded(append),
+        .subscribe(
+            onListingsLoaded(append),
             e -> mMainView.showError(e, R.string.error_get_links));
   }
 
