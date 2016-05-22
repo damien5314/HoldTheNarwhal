@@ -24,6 +24,8 @@ import com.ddiehl.android.htn.view.UserProfileView;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
@@ -45,11 +47,12 @@ import timber.log.Timber;
 
 public abstract class BaseListingsPresenter
     implements ListingsPresenter, IdentityManager.Callbacks, ListingsView.Callbacks {
-  protected Context mContext = HoldTheNarwhal.getContext();
-  protected IdentityManager mIdentityManager = HoldTheNarwhal.getIdentityManager();
-  protected SettingsManager mSettingsManager = HoldTheNarwhal.getSettingsManager();
-  protected RedditService mRedditService = HoldTheNarwhal.getRedditService();
-  protected Analytics mAnalytics = HoldTheNarwhal.getAnalytics();
+
+  @Inject protected Context mContext;
+  @Inject protected IdentityManager mIdentityManager;
+  @Inject protected SettingsManager mSettingsManager;
+  @Inject protected RedditService mRedditService;
+  @Inject protected Analytics mAnalytics;
 
   protected List<Listing> mListings = new ArrayList<>();
   protected ListingsView mListingsView;
@@ -74,6 +77,7 @@ public abstract class BaseListingsPresenter
       MainView main, ListingsView view, LinkView linkView, CommentView commentView,
       UserProfileView userProfileView, PrivateMessageView messageView,
       String show, String username, String subreddit, String sort, String timespan) {
+    HoldTheNarwhal.getApplicationComponent().inject(this);
     mListingsView = view;
     mLinkView = linkView;
     mCommentView = commentView;

@@ -5,7 +5,7 @@
     <item quantity="one">%d point</item>
     <item quantity="other">%d points</item>
   </plurals>
-  <string name="link_gilded_text">&#160;× %s</string>
+  <string name="link_gilded_text">&#160;× %d</string>
   <string name="link_subreddit">/r/%s</string>
   <string name="link_author">/u/%s</string>
   <string name="link_domain">%s</string>

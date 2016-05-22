@@ -1,6 +1,5 @@
 package com.ddiehl.android.htn.view.fragments;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -16,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
+import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.presenter.UserProfilePresenter;
 import com.ddiehl.android.htn.utils.AndroidUtils;
@@ -29,6 +29,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import rxreddit.model.Listing;
@@ -37,30 +39,28 @@ import rxreddit.model.UserIdentity;
 
 public class UserProfileFragment extends BaseListingsFragment
     implements UserProfileView, TabLayout.OnTabSelectedListener {
+
   private static final String ARG_SHOW = "arg_show";
   private static final String ARG_USERNAME = "arg_username";
   private static final String ARG_SORT = "arg_sort";
   private static final String ARG_TIMESPAN = "arg_timespan";
 
-  @Bind(R.id.tab_layout)
-  TabLayout mUserProfileTabs;
-  @Bind(R.id.user_profile_summary)
-  View mUserProfileSummary;
+  @Bind(R.id.tab_layout) TabLayout mUserProfileTabs;
+  @Bind(R.id.user_profile_summary) View mUserProfileSummary;
   @Bind(R.id.recycler_view) View mListView;
   @Bind(R.id.user_note_layout) View mFriendNoteLayout;
 
   // Views for user profile summary elements
-  @Bind(R.id.user_created)
-  TextView mCreateDate;
+  @Bind(R.id.user_created) TextView mCreateDate;
   @Bind(R.id.user_karma_layout) View mKarmaLayout;
   @Bind(R.id.user_link_karma) TextView mLinkKarma;
   @Bind(R.id.user_comment_karma) TextView mCommentKarma;
-  @Bind(R.id.user_friend_button)
-  Button mFriendButton;
+  @Bind(R.id.user_friend_button) Button mFriendButton;
   @Bind(R.id.user_friend_note_edit) TextView mFriendNote;
   @Bind(R.id.user_friend_note_confirm) Button mFriendNoteSave;
-  @Bind(R.id.user_trophies)
-  GridLayout mTrophies;
+  @Bind(R.id.user_trophies) GridLayout mTrophies;
+
+  @Inject protected IdentityManager mIdentityManager;
 
   private TabLayout.Tab mTabSummary, mTabOverview, mTabComments, mTabSubmitted, mTabGilded,
       mTabUpvoted, mTabDownvoted, mTabHidden, mTabSaved;
@@ -85,6 +85,7 @@ public class UserProfileFragment extends BaseListingsFragment
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    HoldTheNarwhal.getApplicationComponent().inject(this);
     Bundle args = getArguments();
     String username = args.getString(ARG_USERNAME);
     String show = args.getString(ARG_SHOW);
@@ -153,9 +154,8 @@ public class UserProfileFragment extends BaseListingsFragment
   @Override
   public void showUserInfo(@NonNull UserIdentity user) {
     Date createDate = new Date(user.getCreatedUTC() * 1000);
-    Context context = HoldTheNarwhal.getContext();
     String created = String.format(
-        context.getString(R.string.user_profile_summary_created),
+        getContext().getString(R.string.user_profile_summary_created),
         SimpleDateFormat.getDateInstance().format(createDate));
     mCreateDate.setText(created);
     mKarmaLayout.setVisibility(View.VISIBLE);
@@ -163,7 +163,7 @@ public class UserProfileFragment extends BaseListingsFragment
     mCommentKarma.setText(NumberFormat.getInstance().format(user.getCommentKarma()));
     // If user is not self, show friend button
     // TODO This should come from presenter
-    UserIdentity self = HoldTheNarwhal.getIdentityManager().getUserIdentity();
+    UserIdentity self = mIdentityManager.getUserIdentity();
     if (self != null && !user.getName().equals(self.getName())) {
       mFriendButton.setVisibility(View.VISIBLE);
       if (user.isFriend()) {

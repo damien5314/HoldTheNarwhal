@@ -14,6 +14,8 @@ import com.ddiehl.android.htn.view.MainView;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
@@ -23,17 +25,28 @@ import rxreddit.model.UserIdentity;
 import timber.log.Timber;
 
 public class MainPresenterImpl implements MainPresenter, IdentityManager.Callbacks {
-  private Context mContext = HoldTheNarwhal.getContext();
-  private RedditService mRedditService = HoldTheNarwhal.getRedditService();
-  private IdentityManager mIdentityManager = HoldTheNarwhal.getIdentityManager();
-  private SettingsManager mSettingsManager = HoldTheNarwhal.getSettingsManager();
-  private Analytics mAnalytics = HoldTheNarwhal.getAnalytics();
+
+  @Inject protected Context mContext;
+  @Inject protected RedditService mRedditService;
+  @Inject protected IdentityManager mIdentityManager;
+  @Inject protected SettingsManager mSettingsManager;
+  @Inject protected Analytics mAnalytics;
   private MainView mMainView;
   private Uri mDeepLink;
 
-  public MainPresenterImpl(MainView view, Uri deepLink) {
+  public MainPresenterImpl(
+      MainView view, Uri deepLink
+//      Context context, RedditService service,
+//      IdentityManager identityManager, SettingsManager settingsManager, Analytics analytics
+  ) {
+    HoldTheNarwhal.getApplicationComponent().inject(this);
     mMainView = view;
     mDeepLink = deepLink;
+//    mAppContext = context;
+//    mRedditService = service;
+//    mIdentityManager = identityManager;
+//    mSettingsManager = settingsManager;
+//    mAnalytics = analytics;
   }
 
   @Override
@@ -77,9 +90,8 @@ public class MainPresenterImpl implements MainPresenter, IdentityManager.Callbac
         mMainView.showToast(R.string.user_signed_out);
       } else {
         // FIXME Ensure we only show this when the user changes
-        Context context = HoldTheNarwhal.getContext();
         String name = identity.getName();
-        String formatter = context.getString(R.string.welcome_user);
+        String formatter = mContext.getString(R.string.welcome_user);
         String toast = String.format(formatter, name);
         mMainView.showToast(toast);
       }

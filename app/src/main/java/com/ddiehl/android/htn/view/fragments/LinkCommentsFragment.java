@@ -13,7 +13,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.analytics.Analytics;
 import com.ddiehl.android.htn.presenter.LinkCommentsPresenter;
@@ -23,6 +22,8 @@ import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.android.htn.view.adapters.LinkCommentsAdapter;
 import com.ddiehl.android.htn.view.adapters.ListingsAdapter;
 import com.ddiehl.android.htn.view.dialogs.AddCommentDialog;
+
+import javax.inject.Inject;
 
 import rxreddit.model.Comment;
 import rxreddit.model.Link;
@@ -37,7 +38,7 @@ public class LinkCommentsFragment extends BaseListingsFragment
   private static final int REQUEST_ADD_COMMENT = 0x00000001;
   private static final String DIALOG_ADD_COMMENT = "add_comment_dialog";
 
-  private Analytics mAnalytics = HoldTheNarwhal.getAnalytics();
+  @Inject protected Analytics mAnalytics;
   private LinkCommentsPresenter mLinkCommentsPresenter;
 
   public LinkCommentsFragment() { /* Default constructor */ }

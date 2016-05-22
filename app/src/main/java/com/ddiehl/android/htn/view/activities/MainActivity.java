@@ -2,10 +2,7 @@ package com.ddiehl.android.htn.view.activities;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.DialogFragment;
-import android.app.Fragment;
 import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -17,6 +14,9 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -44,7 +44,6 @@ import com.ddiehl.android.htn.view.fragments.AboutAppFragment;
 import com.ddiehl.android.htn.view.fragments.InboxFragment;
 import com.ddiehl.android.htn.view.fragments.LinkCommentsFragment;
 import com.ddiehl.android.htn.view.fragments.PrivateMessageFragment;
-import com.ddiehl.android.htn.view.fragments.SettingsFragment;
 import com.ddiehl.android.htn.view.fragments.SubredditFragment;
 import com.ddiehl.android.htn.view.fragments.UserProfileFragment;
 import com.ddiehl.android.htn.view.fragments.WebViewFragment;
@@ -52,6 +51,8 @@ import com.squareup.picasso.Picasso;
 
 import java.net.UnknownHostException;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -87,13 +88,14 @@ public class MainActivity extends AppCompatActivity implements MainView,
   ImageView mHeaderImage;
   private ProgressDialog mLoadingOverlay;
 
-  private Analytics mAnalytics = HoldTheNarwhal.getAnalytics();
+  @Inject protected Analytics mAnalytics;
   private MainPresenter mMainPresenter;
   private boolean mBackStackReset = true;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    HoldTheNarwhal.getApplicationComponent().inject(this);
     setContentView(R.layout.activity_main);
     initNavigationView();
     ButterKnife.bind(this);
@@ -251,7 +253,7 @@ public class MainActivity extends AppCompatActivity implements MainView,
 
 //  @OnClick(R.id.sign_out_button)
   void onSignOut() {
-    new ConfirmSignOutDialog().show(getFragmentManager(), DIALOG_CONFIRM_SIGN_OUT);
+    new ConfirmSignOutDialog().show(getSupportFragmentManager(), DIALOG_CONFIRM_SIGN_OUT);
     mAnalytics.logClickedSignOut();
   }
 
@@ -322,12 +324,13 @@ public class MainActivity extends AppCompatActivity implements MainView,
   public void showNsfwWarningDialog() {
     DialogFragment dialog = new NsfwWarningDialog();
     dialog.setTargetFragment(getCurrentDisplayedFragment(), REQUEST_NSFW_WARNING);
-    dialog.show(getFragmentManager(), DIALOG_NSFW_WARNING);
+    dialog.show(getSupportFragmentManager(), DIALOG_NSFW_WARNING);
   }
 
   @Override
   public void showSettings() {
-    showFragment(new SettingsFragment());
+    // TODO Convert SettingsFragment to support Fragment
+//    showFragment(new SettingsFragment());
   }
 
   @Override
@@ -359,7 +362,7 @@ public class MainActivity extends AppCompatActivity implements MainView,
 
   @Override
   public void showAnalyticsRequestDialog() {
-    new AnalyticsDialog().show(getFragmentManager(), DIALOG_ANALYTICS);
+    new AnalyticsDialog().show(getSupportFragmentManager(), DIALOG_ANALYTICS);
   }
 
   @Override
@@ -393,7 +396,7 @@ public class MainActivity extends AppCompatActivity implements MainView,
 
   @Override
   public void showSubredditNavigationView() {
-    new SubredditNavigationDialog().show(getFragmentManager(), DIALOG_SUBREDDIT_NAVIGATION);
+    new SubredditNavigationDialog().show(getSupportFragmentManager(), DIALOG_SUBREDDIT_NAVIGATION);
   }
 
   @Override
@@ -405,7 +408,7 @@ public class MainActivity extends AppCompatActivity implements MainView,
 
   @Override
   public void showAboutApp() {
-    Fragment fragment = AboutAppFragment.newInstance();
+    Fragment fragment = AboutAppFragment.newInstance(this);
     showFragment(fragment);
   }
 
@@ -423,12 +426,12 @@ public class MainActivity extends AppCompatActivity implements MainView,
   }
 
   private Fragment getCurrentDisplayedFragment() {
-    return getFragmentManager().findFragmentById(R.id.fragment_container);
+    return getSupportFragmentManager().findFragmentById(R.id.fragment_container);
   }
 
   private void showFragment(@NonNull Fragment f) {
     @SuppressLint("CommitTransaction")
-    FragmentTransaction ft = getFragmentManager().beginTransaction()
+    FragmentTransaction ft = getSupportFragmentManager().beginTransaction()
         .replace(R.id.fragment_container, f);
     if (getCurrentDisplayedFragment() != null && !mBackStackReset) ft.addToBackStack(null);
     ft.commit();
@@ -438,7 +441,7 @@ public class MainActivity extends AppCompatActivity implements MainView,
   @Override
   public void resetBackNavigation() {
     mBackStackReset = true;
-    getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+    getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
   }
 
   @Override
