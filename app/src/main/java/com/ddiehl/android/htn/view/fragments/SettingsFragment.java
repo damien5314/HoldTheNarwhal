@@ -17,7 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.ddiehl.android.htn.HoldTheNarwhal;
+import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.SettingsManagerImpl;
 import com.ddiehl.android.htn.presenter.SettingsPresenter;
@@ -25,11 +25,14 @@ import com.ddiehl.android.htn.presenter.SettingsPresenterImpl;
 import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.android.htn.view.SettingsView;
 
+import javax.inject.Inject;
+
 import rxreddit.model.UserIdentity;
 
 public class SettingsFragment extends PreferenceFragment
     implements SettingsView, SharedPreferences.OnSharedPreferenceChangeListener {
 
+  @Inject protected IdentityManager mIdentityManager;
   private MainView mMainView;
   private SettingsPresenter mSettingsPresenter;
 
@@ -103,7 +106,7 @@ public class SettingsFragment extends PreferenceFragment
 
   private void addUserPreferences() {
     addPreferencesFromResource(R.xml.preferences_user);
-    UserIdentity user = HoldTheNarwhal.getIdentityManager().getUserIdentity();
+    UserIdentity user = mIdentityManager.getUserIdentity();
     if (user != null && user.isGold()) {
       addPreferencesFromResource(R.xml.preferences_user_gold);
     }

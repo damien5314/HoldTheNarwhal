@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
+import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.utils.Utils;
 import com.ddiehl.android.htn.view.CommentView;
@@ -12,6 +13,8 @@ import com.ddiehl.android.htn.view.ListingsView;
 import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.android.htn.view.UserProfileView;
 
+import javax.inject.Inject;
+
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
@@ -19,6 +22,8 @@ import rxreddit.model.UserIdentity;
 
 public class UserProfilePresenter extends BaseListingsPresenter
     implements LinkPresenter, CommentPresenter {
+
+  @Inject protected IdentityManager mIdentityManager;
   private UserProfileView mSummaryView;
 
   public UserProfilePresenter(
@@ -27,6 +32,7 @@ public class UserProfilePresenter extends BaseListingsPresenter
       String show, String username, String sort, String timespan) {
     super(main, listingsView, linkView, commentView, userProfileView,
         null, show, username, null, sort, timespan);
+    HoldTheNarwhal.getApplicationComponent().inject(this);
     mSummaryView = userProfileView;
   }
 
@@ -127,7 +133,7 @@ public class UserProfilePresenter extends BaseListingsPresenter
         mRedditService.getFriendInfo(user.getName())
             .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
             .subscribe(response -> {
-              UserIdentity self = HoldTheNarwhal.getIdentityManager().getUserIdentity();
+              UserIdentity self = mIdentityManager.getUserIdentity();
               if (self != null && self.isGold()) {
                 mSummaryView.showFriendNote(response.getNote());
               }
@@ -142,7 +148,7 @@ public class UserProfilePresenter extends BaseListingsPresenter
         .doOnTerminate(mMainView::dismissSpinner)
         .subscribe(response -> {
           mSummaryView.setFriendButtonState(true);
-          UserIdentity self = HoldTheNarwhal.getIdentityManager().getUserIdentity();
+          UserIdentity self = mIdentityManager.getUserIdentity();
           if (self != null && self.isGold()) {
             mSummaryView.showFriendNote("");
           }

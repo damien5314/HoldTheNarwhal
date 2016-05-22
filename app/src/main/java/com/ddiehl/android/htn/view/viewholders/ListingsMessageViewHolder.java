@@ -15,6 +15,8 @@ import com.ddiehl.timesincetextview.TimeSince;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -23,31 +25,24 @@ import rxreddit.model.PrivateMessage;
 
 public class ListingsMessageViewHolder extends RecyclerView.ViewHolder
     implements View.OnCreateContextMenuListener {
-  private Context mContext = HoldTheNarwhal.getContext();
+
+  @Inject protected Context mAppContext;
   private MessagePresenter mInboxPresenter;
   private PrivateMessage mMessage;
 
-  @Bind(R.id.conversation_subject)
-  TextView mConversationSubject;
-  @Bind(R.id.conversation_body_layout)
-  ViewGroup mConversationBodyLayout;
-  @Bind(R.id.collapsed_messages_layout)
-  ViewGroup mCollapsedMessagesLayout;
-  @Bind(R.id.collapsed_messages_text)
-  TextView mCollapsedMessagesText;
-  @Bind(R.id.last_message_layout)
-  ViewGroup mLastMessageLayout;
-  @Bind(R.id.message_indentation)
-  View mMessageIndentation;
-  @Bind(R.id.last_message_metadata)
-  TextView mLastMessageMetadata;
-  @Bind(R.id.unread_message_indicator)
-  View mUnreadMessageIndicator;
-  @Bind(R.id.last_message_body)
-  TextView mLastMessageBody;
+  @Bind(R.id.conversation_subject) TextView mConversationSubject;
+  @Bind(R.id.conversation_body_layout) ViewGroup mConversationBodyLayout;
+  @Bind(R.id.collapsed_messages_layout) ViewGroup mCollapsedMessagesLayout;
+  @Bind(R.id.collapsed_messages_text) TextView mCollapsedMessagesText;
+  @Bind(R.id.last_message_layout) ViewGroup mLastMessageLayout;
+  @Bind(R.id.message_indentation) View mMessageIndentation;
+  @Bind(R.id.last_message_metadata) TextView mLastMessageMetadata;
+  @Bind(R.id.unread_message_indicator) View mUnreadMessageIndicator;
+  @Bind(R.id.last_message_body) TextView mLastMessageBody;
 
   public ListingsMessageViewHolder(View view, MessagePresenter presenter) {
     super(view);
+    HoldTheNarwhal.getApplicationComponent().inject(this);
     mInboxPresenter = presenter;
     ButterKnife.bind(this, view);
     itemView.setOnCreateContextMenuListener(this);
@@ -81,17 +76,17 @@ public class ListingsMessageViewHolder extends RecyclerView.ViewHolder
     if (replies != null) {
       int n = replies.size();
       mCollapsedMessagesText.setText(
-          mContext.getResources().getQuantityString(R.plurals.view_more_messages, n, n));
+          mAppContext.getResources().getQuantityString(R.plurals.view_more_messages, n, n));
     }
     boolean isToMe = Utils.equals(
         mInboxPresenter.getUserIdentity().getName(), messageToShow.getDestination());
-    String from = mContext.getString(
+    String from = mAppContext.getString(
         isToMe ? R.string.message_metadata_from : R.string.message_metadata_to);
     from = String.format(from,
         isToMe ? messageToShow.getAuthor() : messageToShow.getDestination());
-    String sent = mContext.getString(R.string.message_metadata_sent);
+    String sent = mAppContext.getString(R.string.message_metadata_sent);
     sent = String.format(sent, TimeSince.getFormattedDateString(
-        messageToShow.getCreatedUtc(), false, mContext));
+        messageToShow.getCreatedUtc(), false, mAppContext));
     String text = from + " " + sent;
     mLastMessageMetadata.setText(text);
     mLastMessageBody.setText(messageToShow.getBody());

@@ -9,7 +9,7 @@ import rxreddit.model.UserIdentity;
 
 public interface Analytics {
 
-  void initialize();
+  void initialize(String userId);
   void setEnabled(boolean b);
   void startSession();
   void endSession();

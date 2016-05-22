@@ -1,13 +1,13 @@
 package com.ddiehl.android.htn.view.fragments;
 
 import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -33,6 +33,8 @@ import com.ddiehl.android.htn.view.adapters.ListingsAdapter;
 import com.ddiehl.android.htn.view.dialogs.ChooseLinkSortDialog;
 import com.ddiehl.android.htn.view.dialogs.ChooseTimespanDialog;
 
+import javax.inject.Inject;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import rxreddit.model.Comment;
@@ -52,7 +54,7 @@ public abstract class BaseListingsFragment extends Fragment
   @Bind(R.id.recycler_view)
   protected RecyclerView mRecyclerView;
 
-  protected Analytics mAnalytics = HoldTheNarwhal.getAnalytics();
+  @Inject protected Analytics mAnalytics;
   protected MainView mMainView;
   protected ListingsPresenter mListingsPresenter;
   protected LinkPresenter mLinkPresenter;
@@ -60,11 +62,12 @@ public abstract class BaseListingsFragment extends Fragment
   protected MessagePresenter mMessagePresenter;
   protected ListingsAdapter mListingsAdapter;
   protected SwipeRefreshLayout mSwipeRefreshLayout;
-  protected Callbacks mCallbacks;
+  protected ListingsView.Callbacks mCallbacks;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    HoldTheNarwhal.getApplicationComponent().inject(this);
     setRetainInstance(true);
     setHasOptionsMenu(true);
     mMainView = (MainView) getActivity();
@@ -189,7 +192,7 @@ public abstract class BaseListingsFragment extends Fragment
 
   @Override
   public void showSortOptionsMenu() {
-    FragmentManager fm = getActivity().getFragmentManager();
+    FragmentManager fm = getActivity().getSupportFragmentManager();
     ChooseLinkSortDialog chooseLinkSortDialog =
         ChooseLinkSortDialog.newInstance(mListingsPresenter.getSort());
     chooseLinkSortDialog.setTargetFragment(this, REQUEST_CHOOSE_SORT);
@@ -198,7 +201,7 @@ public abstract class BaseListingsFragment extends Fragment
 
   @Override
   public void showTimespanOptionsMenu() {
-    FragmentManager fm = getActivity().getFragmentManager();
+    FragmentManager fm = getActivity().getSupportFragmentManager();
     ChooseTimespanDialog chooseTimespanDialog =
         ChooseTimespanDialog.newInstance(mListingsPresenter.getTimespan());
     chooseTimespanDialog.setTargetFragment(this, REQUEST_CHOOSE_TIMESPAN);

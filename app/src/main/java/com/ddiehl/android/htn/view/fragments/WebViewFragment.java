@@ -1,12 +1,12 @@
 package com.ddiehl.android.htn.view.fragments;
 
-import android.app.Fragment;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.MailTo;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -22,10 +22,12 @@ import android.widget.ProgressBar;
 import android.widget.ZoomButtonsController;
 
 import com.ddiehl.android.htn.BuildConfig;
-import com.ddiehl.android.htn.HoldTheNarwhal;
+import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.utils.AndroidUtils;
 import com.ddiehl.android.htn.view.MainView;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -37,11 +39,13 @@ import rxreddit.model.UserAccessToken;
 import timber.log.Timber;
 
 public class WebViewFragment extends Fragment {
+
   private static final String ARG_URL = "arg_url";
 
   private MainView mMainView;
   private String mUrl;
-  private RedditService mRedditService = HoldTheNarwhal.getRedditService();
+  @Inject protected IdentityManager mIdentityManager;
+  @Inject protected RedditService mRedditService;
 
   @Bind(R.id.web_view) WebView mWebView;
 
@@ -161,7 +165,7 @@ public class WebViewFragment extends Fragment {
   private Action1<UserAccessToken> getUserIdentity() {
     return token -> mRedditService.getUserIdentity()
         .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(identity -> HoldTheNarwhal.getIdentityManager().saveUserIdentity(identity))
+        .doOnNext(identity -> mIdentityManager.saveUserIdentity(identity))
         .subscribe(mMainView::updateUserIdentity,
             e -> mMainView.showError(e, R.string.error_get_user_identity));
   }

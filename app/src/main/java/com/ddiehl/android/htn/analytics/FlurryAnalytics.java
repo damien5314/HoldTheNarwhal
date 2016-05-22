@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 
 import com.ddiehl.android.htn.BuildConfig;
 import com.ddiehl.android.htn.HoldTheNarwhal;
+import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.SettingsManager;
 import com.ddiehl.android.htn.utils.Utils;
 import com.flurry.android.FlurryAgent;
@@ -15,33 +16,37 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import okhttp3.Response;
 import rxreddit.model.Link;
 import rxreddit.model.UserIdentity;
 import timber.log.Timber;
 
 public class FlurryAnalytics implements Analytics {
+
   private static final int FLURRY_SESSION_TIMEOUT_SECONDS = 30;
 
-  private Context mContext = HoldTheNarwhal.getContext();
+  @Inject protected Context mContext;
+  @Inject protected IdentityManager mIdentityManager;
+  @Inject protected SettingsManager mSettingsManager;
   private boolean mEnabled = false;
   private boolean mInitialized = false;
 
   @Override
-  public void initialize() {
+  public void initialize(String userId) {
     if (mInitialized) {
       Timber.e("Analytics already initialized");
       return;
     }
-    // Set this in init to avoid circular dependency
-    SettingsManager sm = HoldTheNarwhal.getSettingsManager();
-    setEnabled(sm.areAnalyticsEnabled());
+    HoldTheNarwhal.getApplicationComponent().inject(this);
+    setEnabled(mSettingsManager.areAnalyticsEnabled());
     String apiKey = BuildConfig.FLURRY_API_KEY;
     FlurryAgent.init(mContext, apiKey);
     FlurryAgent.setContinueSessionMillis(FLURRY_SESSION_TIMEOUT_SECONDS * 1000);
     FlurryAgent.setCaptureUncaughtExceptions(true);
     FlurryAgent.setLogEnabled(BuildConfig.DEBUG); // Disable Flurry logging for release builds
-    FlurryAgent.setFlurryAgentListener(this::onStartSession);
+    FlurryAgent.setFlurryAgentListener(() -> onStartSession(userId));
     mInitialized = true;
   }
 
@@ -58,15 +63,16 @@ public class FlurryAnalytics implements Analytics {
     FlurryAgent.onStartSession(mContext);
   }
 
-  private void onStartSession() {
+  private void onStartSession(String userId) {
     if (!mEnabled) return;
     // Log initial Flurry event
     Map<String, String> params = new HashMap<>();
-    UserIdentity identity = HoldTheNarwhal.getIdentityManager().getUserIdentity();
-    String userId = identity == null ?
-        "unauthorized" : Utils.getMd5HexString(identity.getName());
-    params.put("user", userId);
-    FlurryAgent.setUserId(userId);
+//    UserIdentity identity = mIdentityManager.getUserIdentity();
+//    String userId = identity == null ?
+//        "unauthorized" : Utils.getMd5HexString(identity.getName());
+    String md5 = Utils.getMd5HexString(userId);
+    params.put("user", md5);
+    FlurryAgent.setUserId(md5);
     FlurryAgent.logEvent("session started", params);
   }
 
@@ -78,7 +84,7 @@ public class FlurryAnalytics implements Analytics {
 
   @Override
   public void setUserIdentity(String name) {
-//    if (!mSettingsManager.areAnalyticsEnabled(mContext))
+//    if (!mSettingsManager.areAnalyticsEnabled(mAppContext))
 //      return;
     String encoded = name == null ? null : Utils.getMd5HexString(name); // Always encode PII
     FlurryAgent.setUserId(encoded);
@@ -302,24 +308,5 @@ public class FlurryAnalytics implements Analytics {
   public void logReport() {
     if (!mEnabled) return;
     // TODO: Implement analytics event once feature is implemented
-  }
-
-  ///////////////
-  // Singleton //
-  ///////////////
-
-  private static FlurryAnalytics _instance;
-
-  private FlurryAnalytics() { }
-
-  public static FlurryAnalytics getInstance() {
-    if (_instance == null) {
-      synchronized (FlurryAnalytics.class) {
-        if (_instance == null) {
-          _instance = new FlurryAnalytics();
-        }
-      }
-    }
-    return _instance;
   }
 }
