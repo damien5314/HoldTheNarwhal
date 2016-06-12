@@ -113,14 +113,12 @@ public class MainPresenterImpl implements MainPresenter, IdentityManager.Callbac
 
   @Override
   public void onShowInbox() {
-    mMainView.resetBackNavigation();
     mMainView.showInbox();
     mAnalytics.logDrawerShowInbox();
   }
 
   @Override
   public void onShowUserProfile() {
-    mMainView.resetBackNavigation();
     String name = mIdentityManager.getUserIdentity().getName();
     mMainView.showUserProfile(name, "summary", "new");
     mAnalytics.logDrawerUserProfile();
@@ -134,22 +132,19 @@ public class MainPresenterImpl implements MainPresenter, IdentityManager.Callbac
 
   @Override
   public void onShowFrontPage() {
-    mMainView.resetBackNavigation();
-    mMainView.showSubreddit(null, null);
+    mMainView.showSubreddit(null, null, null);
     mAnalytics.logDrawerFrontPage();
   }
 
   @Override
   public void onShowAllListings() {
-    mMainView.resetBackNavigation();
-    mMainView.showSubreddit("all", null);
+    mMainView.showSubreddit("all", null, null);
     mAnalytics.logDrawerAllSubreddits();
   }
 
   @Override
   public void onShowRandomSubreddit() {
-    mMainView.resetBackNavigation();
-    mMainView.showSubreddit("random", null);
+    mMainView.showSubreddit("random", null, null);
     mAnalytics.logDrawerRandomSubreddit();
   }
 
@@ -216,11 +211,11 @@ public class MainPresenterImpl implements MainPresenter, IdentityManager.Callbac
     List<String> segments = data.getPathSegments();
     if (segments.size() == 0) {
       // Front page
-      mMainView.showSubreddit(null, null);
+      mMainView.showSubreddit(null, null, null);
       return;
     } else if (isSubredditSort(segments.get(0))) {
       // Sorted front page
-      mMainView.showSubreddit(null, segments.get(0));
+      mMainView.showSubreddit(null, segments.get(0), null);
       return;
     } else if (segments.get(0).equals("r")) {
       // Subreddit navigation
@@ -240,12 +235,12 @@ public class MainPresenterImpl implements MainPresenter, IdentityManager.Callbac
           }
         } else if (isSubredditSort(segments.get(2))) {
           // Subreddit sorted
-          mMainView.showSubreddit(subreddit, segments.get(2));
+          mMainView.showSubreddit(subreddit, segments.get(2), null);
           return;
         }
       } else {
         // Subreddit default sort
-        mMainView.showSubreddit(subreddit, null);
+        mMainView.showSubreddit(subreddit, null, null);
         return;
       }
     } else if (segments.get(0).equals("u") || segments.get(0).equals("user")) {
@@ -268,7 +263,7 @@ public class MainPresenterImpl implements MainPresenter, IdentityManager.Callbac
       }
     }
     Timber.w("Deep link fell through without redirection: %s", data.toString());
-    mMainView.showSubreddit(null, null); // Show front page
+    mMainView.showSubreddit(null, null, null); // Show front page
   }
 
   private boolean isSubredditSort(String s) {

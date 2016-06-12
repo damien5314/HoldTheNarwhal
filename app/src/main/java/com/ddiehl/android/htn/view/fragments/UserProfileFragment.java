@@ -22,6 +22,9 @@ import com.ddiehl.android.htn.utils.AndroidUtils;
 import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.android.htn.view.UserProfileView;
 import com.ddiehl.android.htn.view.adapters.ListingsAdapter;
+import com.hannesdorfmann.fragmentargs.FragmentArgs;
+import com.hannesdorfmann.fragmentargs.annotation.Arg;
+import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs;
 import com.squareup.picasso.Picasso;
 
 import java.text.NumberFormat;
@@ -37,13 +40,11 @@ import rxreddit.model.Listing;
 import rxreddit.model.Trophy;
 import rxreddit.model.UserIdentity;
 
+@FragmentWithArgs
 public class UserProfileFragment extends BaseListingsFragment
     implements UserProfileView, TabLayout.OnTabSelectedListener {
 
-  private static final String ARG_SHOW = "arg_show";
-  private static final String ARG_USERNAME = "arg_username";
-  private static final String ARG_SORT = "arg_sort";
-  private static final String ARG_TIMESPAN = "arg_timespan";
+  public static final String TAG = UserProfileFragment.class.getSimpleName();
 
   @Bind(R.id.tab_layout) TabLayout mUserProfileTabs;
   @Bind(R.id.user_profile_summary) View mUserProfileSummary;
@@ -62,6 +63,11 @@ public class UserProfileFragment extends BaseListingsFragment
 
   @Inject protected IdentityManager mIdentityManager;
 
+  @Arg String mUsername;
+  @Arg String mShow;
+  @Arg String mSort;
+  @Arg String mTimespan;
+
   private TabLayout.Tab mTabSummary, mTabOverview, mTabComments, mTabSubmitted, mTabGilded,
       mTabUpvoted, mTabDownvoted, mTabHidden, mTabSaved;
 
@@ -69,31 +75,16 @@ public class UserProfileFragment extends BaseListingsFragment
 
   public UserProfileFragment() { }
 
-  public static UserProfileFragment newInstance(
-      @NonNull String username, @Nullable String show, @Nullable String sort) {
-    UserProfileFragment f = new UserProfileFragment();
-    Bundle args = new Bundle();
-    args.putString(ARG_USERNAME, username);
-    if (TextUtils.isEmpty(show)) show = "summary";
-    args.putString(ARG_SHOW, show);
-    if (TextUtils.isEmpty(sort)) sort = "new";
-    args.putString(ARG_SORT, sort);
-    f.setArguments(args);
-    return f;
-  }
-
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     HoldTheNarwhal.getApplicationComponent().inject(this);
-    Bundle args = getArguments();
-    String username = args.getString(ARG_USERNAME);
-    String show = args.getString(ARG_SHOW);
-    String sort = args.getString(ARG_SORT);
-    String timespan = args.getString(ARG_TIMESPAN);
-    if (TextUtils.isEmpty(timespan)) timespan = "all";
-    mUserProfilePresenter =
-        new UserProfilePresenter(mMainView, this, this, this, this, show, username, sort, timespan);
+    FragmentArgs.inject(this);
+    if (TextUtils.isEmpty(mShow)) mShow = "summary";
+    if (TextUtils.isEmpty(mSort)) mSort = "new";
+    if (TextUtils.isEmpty(mTimespan)) mTimespan = "all";
+    mUserProfilePresenter = new UserProfilePresenter(
+        mMainView, this, this, this, this, mShow, mUsername, mSort, mTimespan);
     mLinkPresenter = mUserProfilePresenter;
     mCommentPresenter = mUserProfilePresenter;
     mListingsPresenter = mUserProfilePresenter;
@@ -145,9 +136,9 @@ public class UserProfileFragment extends BaseListingsFragment
 
   @Override
   public void onPause() {
-    getArguments().putString(ARG_SHOW, mListingsPresenter.getShow());
-    getArguments().putString(ARG_SORT, mListingsPresenter.getSort());
-    getArguments().putString(ARG_TIMESPAN, mListingsPresenter.getTimespan());
+    mShow = mListingsPresenter.getShow();
+    mSort = mListingsPresenter.getSort();
+    mTimespan = mListingsPresenter.getTimespan();
     super.onPause();
   }
 

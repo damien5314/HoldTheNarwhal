@@ -1,7 +1,6 @@
 package com.ddiehl.android.htn.view.fragments;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.ddiehl.android.htn.R;
@@ -9,33 +8,28 @@ import com.ddiehl.android.htn.presenter.ListingsPresenter;
 import com.ddiehl.android.htn.presenter.SubredditPresenter;
 import com.ddiehl.android.htn.view.LinkView;
 import com.ddiehl.android.htn.view.adapters.ListingsAdapter;
+import com.hannesdorfmann.fragmentargs.FragmentArgs;
+import com.hannesdorfmann.fragmentargs.annotation.Arg;
+import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs;
 
+@FragmentWithArgs
 public class SubredditFragment extends BaseListingsFragment implements LinkView {
-  private static final String ARG_SUBREDDIT = "arg_subreddit";
-  private static final String ARG_SORT = "arg_sort";
-  private static final String ARG_TIMESPAN = "arg_timespan";
+
+  public static final String TAG = SubredditFragment.class.getSimpleName();
+
+  @Arg String mSubreddit;
+  @Arg String mSort;
+  @Arg String mTimespan;
 
   public SubredditFragment() { }
-
-  public static SubredditFragment newInstance(@Nullable String subreddit, @Nullable String sort) {
-    Bundle args = new Bundle();
-    args.putString(ARG_SUBREDDIT, subreddit);
-    args.putString(ARG_SORT, sort);
-    SubredditFragment fragment = new SubredditFragment();
-    fragment.setArguments(args);
-    return fragment;
-  }
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    Bundle args = getArguments();
-    String subreddit = args.getString(ARG_SUBREDDIT);
-    String sort = args.getString(ARG_SORT);
-    if (TextUtils.isEmpty(sort)) sort = "hot";
-    String timespan = args.getString(ARG_TIMESPAN);
-    if (TextUtils.isEmpty(timespan)) timespan = "all";
-    mLinkPresenter = new SubredditPresenter(mMainView, this, this, subreddit, sort, timespan);
+    FragmentArgs.inject(this);
+    if (TextUtils.isEmpty(mSort)) mSort = "hot";
+    if (TextUtils.isEmpty(mTimespan)) mTimespan = "all";
+    mLinkPresenter = new SubredditPresenter(mMainView, this, this, mSubreddit, mSort, mTimespan);
     mListingsPresenter = (ListingsPresenter) mLinkPresenter;
     mCallbacks = (Callbacks) mListingsPresenter;
   }
@@ -47,9 +41,9 @@ public class SubredditFragment extends BaseListingsFragment implements LinkView 
 
   @Override
   public void onPause() {
-    getArguments().putString(ARG_SUBREDDIT, mListingsPresenter.getSubreddit());
-    getArguments().putString(ARG_SORT, mListingsPresenter.getSort());
-    getArguments().putString(ARG_TIMESPAN, mListingsPresenter.getTimespan());
+    mSubreddit = mListingsPresenter.getSubreddit();
+    mSort = mListingsPresenter.getSort();
+    mTimespan = mListingsPresenter.getTimespan();
     super.onPause();
   }
 

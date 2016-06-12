@@ -29,6 +29,7 @@ import rxreddit.model.UserIdentity;
 
 public class LinkCommentsPresenterImpl extends BaseListingsPresenter
     implements LinkCommentsPresenter, IdentityManager.Callbacks {
+
   private static final int MAX_CHILDREN_PER_REQUEST = 20;
 
   private LinkCommentsView mLinkCommentsView;
@@ -56,6 +57,13 @@ public class LinkCommentsPresenterImpl extends BaseListingsPresenter
     mListingsView.notifyDataSetChanged();
   }
 
+  @Override /** The check for loaded comments fails for this screen, so check comment bank before calling base implementation */
+  public void getNextData() {
+    if (mCommentBank.size() == 0) {
+      super.getNextData();
+    }
+  }
+
   @Override
   void requestPreviousData() {
 
@@ -67,28 +75,29 @@ public class LinkCommentsPresenterImpl extends BaseListingsPresenter
     mRedditService.loadLinkComments(mSubreddit, mLinkId, mSort, mCommentId)
         .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
         .doOnTerminate(mMainView::dismissSpinner)
-        .subscribe(showLinkComments,
+        .subscribe(showLinkComments(),
             e -> mMainView.showError(e, R.string.error_get_link_comments));
     mAnalytics.logLoadLinkComments(mSort);
   }
 
-  private Action1<List<ListingResponse>> showLinkComments =
-      listingResponseList -> {
-        // Link is responseList.get(0), comments are responseList.get(1)
-        if (listingResponseList == null) return;
-        ListingResponse linkResponse = listingResponseList.get(0);
-        mLinkContext = (Link) linkResponse.getData().getChildren().get(0);
-        if (mLinkContext != null) mMainView.setTitle(mLinkContext.getTitle());
-        ListingResponse commentsResponse = listingResponseList.get(1);
-        List<Listing> comments = commentsResponse.getData().getChildren();
-        RxRedditUtil.flattenCommentList(comments);
-        mCommentBank.clear();
-        mCommentBank.addAll(comments);
-        Integer minScore = mSettingsManager.getMinCommentScore();
-        mCommentBank.collapseAllThreadsUnder(minScore);
-        // TODO Specify commentsAdded
-        mListingsView.notifyDataSetChanged();
-      };
+  private Action1<List<ListingResponse>> showLinkComments() {
+    return listingResponseList -> {
+      // Link is responseList.get(0), comments are responseList.get(1)
+      if (listingResponseList == null) return;
+      ListingResponse linkResponse = listingResponseList.get(0);
+      mLinkContext = (Link) linkResponse.getData().getChildren().get(0);
+      if (mLinkContext != null) mMainView.setTitle(mLinkContext.getTitle());
+      ListingResponse commentsResponse = listingResponseList.get(1);
+      List<Listing> comments = commentsResponse.getData().getChildren();
+      RxRedditUtil.flattenCommentList(comments);
+      mCommentBank.clear();
+      mCommentBank.addAll(comments);
+      Integer minScore = mSettingsManager.getMinCommentScore();
+      mCommentBank.collapseAllThreadsUnder(minScore);
+      // TODO Specify commentsAdded
+      mListingsView.notifyDataSetChanged();
+    };
+  }
 
   @Override
   public Action1<UserIdentity> onUserIdentityChanged() {

@@ -9,6 +9,7 @@ import com.ddiehl.android.htn.SettingsManager;
 import com.ddiehl.android.htn.SettingsManagerImpl;
 import com.ddiehl.android.htn.analytics.Analytics;
 import com.ddiehl.android.htn.analytics.FlurryAnalytics;
+import com.google.gson.Gson;
 
 import javax.inject.Singleton;
 
@@ -58,5 +59,10 @@ public class ApplicationModule {
             "android", "com.ddiehl.android.htn", BuildConfig.VERSION_NAME, "damien5314"))
         .accessTokenManager(new AndroidAccessTokenManager(context))
         .build();
+  }
+
+  @Provides
+  Gson providesGson(RedditService redditService) {
+    return redditService.getGson();
   }
 }

@@ -28,7 +28,7 @@ import com.ddiehl.android.htn.presenter.ListingsPresenter;
 import com.ddiehl.android.htn.presenter.MessagePresenter;
 import com.ddiehl.android.htn.view.ListingsView;
 import com.ddiehl.android.htn.view.MainView;
-import com.ddiehl.android.htn.view.activities.MainActivity;
+import com.ddiehl.android.htn.view.activities.BaseActivity;
 import com.ddiehl.android.htn.view.adapters.ListingsAdapter;
 import com.ddiehl.android.htn.view.dialogs.ChooseLinkSortDialog;
 import com.ddiehl.android.htn.view.dialogs.ChooseTimespanDialog;
@@ -146,7 +146,7 @@ public abstract class BaseListingsFragment extends Fragment
         String timespan = data.getStringExtra(ChooseTimespanDialog.EXTRA_TIMESPAN);
         mListingsPresenter.onTimespanSelected(timespan);
         break;
-      case MainActivity.REQUEST_NSFW_WARNING:
+      case BaseActivity.REQUEST_NSFW_WARNING:
         boolean result = resultCode == Activity.RESULT_OK;
         mListingsPresenter.onNsfwSelected(result);
         break;

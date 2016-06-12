@@ -4,31 +4,39 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.widget.TextView;
 
+import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.presenter.PrivateMessagePresenter;
 import com.ddiehl.android.htn.view.PrivateMessageView;
 import com.ddiehl.android.htn.view.adapters.ListingsAdapter;
 import com.ddiehl.android.htn.view.adapters.PrivateMessageAdapter;
+import com.google.gson.Gson;
 
-import org.parceler.Parcels;
-
+import java.util.Arrays;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import rxreddit.model.Listing;
+import rxreddit.model.PrivateMessage;
 
-public class PrivateMessageFragment extends BaseListingsFragment implements PrivateMessageView {
+public class PrivateMessageFragment extends BaseListingsFragment
+    implements PrivateMessageView {
+
+  public static final String TAG = PrivateMessageFragment.class.getSimpleName();
+
   private static final String ARG_MESSAGES = "arg_messages";
 
   private PrivateMessagePresenter mPrivateMessagePresenter;
 
-  @Bind(R.id.conversation_subject)
-  TextView mConversationSubject;
+  @Inject protected Gson mGson;
+  @Bind(R.id.conversation_subject) TextView mConversationSubject;
 
-  public static PrivateMessageFragment newInstance(List<? extends Listing> messages) {
+  public static PrivateMessageFragment newInstance(Gson gson, List<? extends Listing> messages) {
     PrivateMessageFragment fragment = new PrivateMessageFragment();
     Bundle args = new Bundle();
-    args.putParcelable(ARG_MESSAGES, Parcels.wrap(messages));
+    args.putString(ARG_MESSAGES, gson.toJson(messages));
     fragment.setArguments(args);
     return fragment;
   }
@@ -36,9 +44,11 @@ public class PrivateMessageFragment extends BaseListingsFragment implements Priv
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    HoldTheNarwhal.getApplicationComponent().inject(this);
     List<Listing> messages = null;
     if (getArguments() != null) {
-      messages = Parcels.unwrap(getArguments().getParcelable(ARG_MESSAGES));
+      String json = getArguments().getString(ARG_MESSAGES);
+      messages = Arrays.asList(mGson.fromJson(json, PrivateMessage[].class));
     }
     mPrivateMessagePresenter = new PrivateMessagePresenter(mMainView, this, this, messages);
     mMessagePresenter = mPrivateMessagePresenter;

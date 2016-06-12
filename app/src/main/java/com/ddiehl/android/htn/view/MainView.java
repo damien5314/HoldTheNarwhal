@@ -29,7 +29,7 @@ public interface MainView extends AnalyticsDialog.Callbacks, ConfirmSignOutDialo
   void showUserProfile(@NonNull String username, @Nullable String show, @Nullable String sort);
   void showSubredditNavigationView();
   void showUserSubreddits();
-  void showSubreddit(@Nullable String subreddit, @Nullable String sort);
+  void showSubreddit(@Nullable String subreddit, @Nullable String sort, String timespan);
   void showSubredditIfEmpty(@Nullable String subreddit);
   void showCommentsForLink(
       @NonNull String subreddit, @NonNull String linkId, @Nullable String commentId);
@@ -45,6 +45,4 @@ public interface MainView extends AnalyticsDialog.Callbacks, ConfirmSignOutDialo
   void showError(Throwable error, int errorResId);
   void showAboutApp();
   void goBack();
-  void resetBackNavigation();
-
 }

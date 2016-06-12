@@ -22,6 +22,9 @@ import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.android.htn.view.adapters.LinkCommentsAdapter;
 import com.ddiehl.android.htn.view.adapters.ListingsAdapter;
 import com.ddiehl.android.htn.view.dialogs.AddCommentDialog;
+import com.hannesdorfmann.fragmentargs.FragmentArgs;
+import com.hannesdorfmann.fragmentargs.annotation.Arg;
+import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs;
 
 import javax.inject.Inject;
 
@@ -29,11 +32,11 @@ import rxreddit.model.Comment;
 import rxreddit.model.Link;
 import rxreddit.model.Listing;
 
+@FragmentWithArgs
 public class LinkCommentsFragment extends BaseListingsFragment
     implements LinkCommentsView, SwipeRefreshLayout.OnRefreshListener {
-  private static final String ARG_SUBREDDIT = "arg_subreddit";
-  private static final String ARG_ARTICLE = "arg_article";
-  private static final String ARG_COMMENT_ID = "arg_comment_id";
+
+  public static final String TAG = LinkCommentsFragment.class.getSimpleName();
 
   private static final int REQUEST_ADD_COMMENT = 0x00000001;
   private static final String DIALOG_ADD_COMMENT = "add_comment_dialog";
@@ -41,30 +44,21 @@ public class LinkCommentsFragment extends BaseListingsFragment
   @Inject protected Analytics mAnalytics;
   private LinkCommentsPresenter mLinkCommentsPresenter;
 
-  public LinkCommentsFragment() { /* Default constructor */ }
+  @Arg String mSubreddit;
+  @Arg String mArticleId;
+  @Arg String mCommentId;
 
-  public static LinkCommentsFragment newInstance(String subreddit, String article, String commentId) {
-    Bundle args = new Bundle();
-    args.putString(ARG_SUBREDDIT, subreddit);
-    args.putString(ARG_ARTICLE, article);
-    args.putString(ARG_COMMENT_ID, commentId);
-    LinkCommentsFragment fragment = new LinkCommentsFragment();
-    fragment.setArguments(args);
-    return fragment;
-  }
+  public LinkCommentsFragment() { }
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    FragmentArgs.inject(this);
     setRetainInstance(true);
     setHasOptionsMenu(true);
-    Bundle args = getArguments();
-    String subreddit = args.getString(ARG_SUBREDDIT);
-    String articleId = args.getString(ARG_ARTICLE);
-    String commentId = args.getString(ARG_COMMENT_ID);
     mMainView = (MainView) getActivity();
     mLinkCommentsPresenter = new LinkCommentsPresenterImpl(
-        mMainView, this, subreddit, articleId, commentId);
+        mMainView, this, mSubreddit, mArticleId, mCommentId);
     mListingsPresenter = mLinkCommentsPresenter;
     mCallbacks = (Callbacks) mListingsPresenter;
   }

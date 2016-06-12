@@ -1,5 +1,6 @@
 package com.ddiehl.android.htn.view.fragments;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.MailTo;
@@ -26,6 +27,9 @@ import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.utils.AndroidUtils;
 import com.ddiehl.android.htn.view.MainView;
+import com.hannesdorfmann.fragmentargs.FragmentArgs;
+import com.hannesdorfmann.fragmentargs.annotation.Arg;
+import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs;
 
 import javax.inject.Inject;
 
@@ -38,12 +42,15 @@ import rxreddit.api.RedditService;
 import rxreddit.model.UserAccessToken;
 import timber.log.Timber;
 
+@FragmentWithArgs
 public class WebViewFragment extends Fragment {
+
+  public static final String TAG = WebViewFragment.class.getSimpleName();
 
   private static final String ARG_URL = "arg_url";
 
   private MainView mMainView;
-  private String mUrl;
+  @Arg String mUrl;
   @Inject protected IdentityManager mIdentityManager;
   @Inject protected RedditService mRedditService;
 
@@ -66,15 +73,17 @@ public class WebViewFragment extends Fragment {
   }
 
   @Override
+  public void onAttach(Context context) {
+    super.onAttach(context);
+    mMainView = (MainView) context;
+  }
+
+  @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    FragmentArgs.inject(this);
     setRetainInstance(true);
     setHasOptionsMenu(true);
-
-    mMainView = (MainView) getActivity();
-    Bundle args = getArguments();
-
-    mUrl = args.getString(ARG_URL);
     getActivity().setTitle(R.string.app_name);
   }
 
