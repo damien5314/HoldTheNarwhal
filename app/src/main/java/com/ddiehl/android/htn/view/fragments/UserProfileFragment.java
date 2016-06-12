@@ -44,6 +44,7 @@ public class UserProfileFragment extends BaseListingsFragment
   private static final String ARG_USERNAME = "arg_username";
   private static final String ARG_SORT = "arg_sort";
   private static final String ARG_TIMESPAN = "arg_timespan";
+  public static final String TAG = UserProfileFragment.class.getSimpleName();
 
   @Bind(R.id.tab_layout) TabLayout mUserProfileTabs;
   @Bind(R.id.user_profile_summary) View mUserProfileSummary;

@@ -15,7 +15,6 @@ import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -39,12 +38,6 @@ import com.ddiehl.android.htn.view.dialogs.AnalyticsDialog;
 import com.ddiehl.android.htn.view.dialogs.ConfirmSignOutDialog;
 import com.ddiehl.android.htn.view.dialogs.NsfwWarningDialog;
 import com.ddiehl.android.htn.view.dialogs.SubredditNavigationDialog;
-import com.ddiehl.android.htn.view.fragments.AboutAppFragment;
-import com.ddiehl.android.htn.view.fragments.InboxFragment;
-import com.ddiehl.android.htn.view.fragments.LinkCommentsFragment;
-import com.ddiehl.android.htn.view.fragments.PrivateMessageFragment;
-import com.ddiehl.android.htn.view.fragments.UserProfileFragment;
-import com.ddiehl.android.htn.view.fragments.WebViewFragment;
 import com.squareup.picasso.Picasso;
 
 import java.net.UnknownHostException;
@@ -216,15 +209,14 @@ public abstract class BaseActivity extends AppCompatActivity implements MainView
 
   @Override
   public void showInbox() {
-    InboxFragment fragment = InboxFragment.newInstance(null);
-    showFragment(fragment);
+    // TODO
   }
 
   @Override
   public void showUserProfile(
       @NonNull String username, @Nullable String show, @Nullable String sort) {
-    Fragment f = UserProfileFragment.newInstance(username, show, sort);
-    showFragment(f);
+    Intent intent = UserProfileActivity.getIntent(this, username, show, sort);
+    startActivity(intent);
   }
 
   @Override
@@ -248,8 +240,7 @@ public abstract class BaseActivity extends AppCompatActivity implements MainView
   }
 
   private void showWebViewForURL(@NonNull String url) {
-    Fragment f = WebViewFragment.newInstance(url);
-    showFragment(f);
+    // TODO
   }
 
   private boolean canUseCustomTabs() {
@@ -412,14 +403,12 @@ public abstract class BaseActivity extends AppCompatActivity implements MainView
   @Override
   public void showCommentsForLink(
       @Nullable String subreddit, @Nullable String linkId, @Nullable String commentId) {
-    Fragment fragment = LinkCommentsFragment.newInstance(subreddit, linkId, commentId);
-    showFragment(fragment);
+    // TODO
   }
 
   @Override
   public void showAboutApp() {
-    Fragment fragment = AboutAppFragment.newInstance(this);
-    showFragment(fragment);
+    // TODO
   }
 
   @Override
@@ -439,14 +428,14 @@ public abstract class BaseActivity extends AppCompatActivity implements MainView
     return getSupportFragmentManager().findFragmentById(R.id.fragment_container);
   }
 
-  private void showFragment(@NonNull Fragment f) {
-    @SuppressLint("CommitTransaction")
-    FragmentTransaction ft = getSupportFragmentManager().beginTransaction()
-        .replace(R.id.fragment_container, f);
-    if (getCurrentDisplayedFragment() != null && !mBackStackReset) ft.addToBackStack(null);
-    ft.commit();
-    mBackStackReset = false;
-  }
+//  private void showFragment(@NonNull Fragment f) {
+//    @SuppressLint("CommitTransaction")
+//    FragmentTransaction ft = getSupportFragmentManager().beginTransaction()
+//        .replace(R.id.fragment_container, f);
+//    if (getCurrentDisplayedFragment() != null && !mBackStackReset) ft.addToBackStack(null);
+//    ft.commit();
+//    mBackStackReset = false;
+//  }
 
   @Override
   public void resetBackNavigation() {
@@ -456,8 +445,7 @@ public abstract class BaseActivity extends AppCompatActivity implements MainView
 
   @Override
   public void showInboxMessages(@NonNull List<PrivateMessage> messages) {
-    PrivateMessageFragment fragment = PrivateMessageFragment.newInstance(messages);
-    showFragment(fragment);
+    // TODO
   }
 
   @Override
