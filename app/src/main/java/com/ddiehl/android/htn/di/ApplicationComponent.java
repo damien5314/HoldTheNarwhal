@@ -4,7 +4,7 @@ import com.ddiehl.android.htn.analytics.FlurryAnalytics;
 import com.ddiehl.android.htn.presenter.BaseListingsPresenter;
 import com.ddiehl.android.htn.presenter.MainPresenterImpl;
 import com.ddiehl.android.htn.presenter.UserProfilePresenter;
-import com.ddiehl.android.htn.view.activities.MainActivity;
+import com.ddiehl.android.htn.view.activities.BaseActivity;
 import com.ddiehl.android.htn.view.fragments.BaseListingsFragment;
 import com.ddiehl.android.htn.view.fragments.UserProfileFragment;
 import com.ddiehl.android.htn.view.viewholders.ListingsCommentViewHolder;
@@ -26,7 +26,7 @@ public interface ApplicationComponent {
   void inject(FlurryAnalytics analytics);
 
   // Activities
-  void inject(MainActivity activity);
+  void inject(BaseActivity activity);
 
   // Fragments
   void inject(BaseListingsFragment fragment);

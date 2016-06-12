@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -44,7 +43,6 @@ import com.ddiehl.android.htn.view.fragments.AboutAppFragment;
 import com.ddiehl.android.htn.view.fragments.InboxFragment;
 import com.ddiehl.android.htn.view.fragments.LinkCommentsFragment;
 import com.ddiehl.android.htn.view.fragments.PrivateMessageFragment;
-import com.ddiehl.android.htn.view.fragments.SubredditFragment;
 import com.ddiehl.android.htn.view.fragments.UserProfileFragment;
 import com.ddiehl.android.htn.view.fragments.WebViewFragment;
 import com.squareup.picasso.Picasso;
@@ -61,10 +59,12 @@ import rxreddit.model.PrivateMessage;
 import rxreddit.model.UserIdentity;
 import timber.log.Timber;
 
-public class MainActivity extends AppCompatActivity implements MainView,
+public abstract class BaseActivity extends AppCompatActivity implements MainView,
     NavigationView.OnNavigationItemSelectedListener {
-  public static final int REQUEST_NSFW_WARNING = 0x00000001;
-  public static final int REQUEST_SIGN_IN = 0x00000002;
+
+  public static final int REQUEST_NSFW_WARNING = 1;
+  public static final int REQUEST_SIGN_IN = 2;
+
   private static final String DIALOG_NSFW_WARNING = "dialog_nsfw_warning";
   private static final String DIALOG_CONFIRM_SIGN_OUT = "dialog_confirm_sign_out";
   private static final String DIALOG_ANALYTICS = "dialog_analytics";
@@ -74,10 +74,8 @@ public class MainActivity extends AppCompatActivity implements MainView,
   private static final String EXTRA_CUSTOM_TABS_TOOLBAR_COLOR =
       "android.support.customtabs.extra.TOOLBAR_COLOR";
 
-  @Bind(R.id.drawer_layout)
-  DrawerLayout mDrawerLayout;
-  @Bind(R.id.navigation_view)
-  NavigationView mNavigationView;
+  @Bind(R.id.drawer_layout) DrawerLayout mDrawerLayout;
+  @Bind(R.id.navigation_view) NavigationView mNavigationView;
 //  @Bind(R.id.user_account_icon)
   ImageView mGoldIndicator;
 //  @Bind(R.id.account_name)
@@ -91,6 +89,9 @@ public class MainActivity extends AppCompatActivity implements MainView,
   @Inject protected Analytics mAnalytics;
   private MainPresenter mMainPresenter;
   private boolean mBackStackReset = true;
+
+  abstract Fragment getFragment();
+  abstract String getFragmentTag();
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -127,6 +128,16 @@ public class MainActivity extends AppCompatActivity implements MainView,
     mSignOutView = header.findViewById(R.id.sign_out_button);
     mSignOutView.setOnClickListener(view -> onSignOut());
     mHeaderImage = (ImageView) header.findViewById(R.id.navigation_drawer_header_image);
+  }
+
+  @Override
+  protected void onStart() {
+    super.onStart();
+    if (getSupportFragmentManager().findFragmentByTag(getFragmentTag()) == null) {
+      getSupportFragmentManager().beginTransaction()
+          .add(R.id.fragment_container, getFragment(), getFragmentTag())
+          .commit();
+    }
   }
 
   @Override
@@ -198,7 +209,6 @@ public class MainActivity extends AppCompatActivity implements MainView,
 
   @Override
   public void showLoginView() {
-//    showWebViewForURL(mMainPresenter.getAuthorizationUrl());
     Intent data = new Intent(this, SignInActivity.class);
     data.putExtra(SignInActivity.EXTRA_AUTH_URL, mMainPresenter.getAuthorizationUrl());
     startActivityForResult(data, REQUEST_SIGN_IN);
@@ -219,8 +229,8 @@ public class MainActivity extends AppCompatActivity implements MainView,
 
   @Override
   public void showSubreddit(@Nullable String subreddit, @Nullable String sort) {
-    Fragment f = SubredditFragment.newInstance(subreddit, sort);
-    showFragment(f);
+    Intent intent = SubredditActivity.getIntent(this, subreddit, sort);
+    startActivity(intent);
   }
 
   @Override @SuppressLint("NewApi")
@@ -448,31 +458,6 @@ public class MainActivity extends AppCompatActivity implements MainView,
   public void showInboxMessages(@NonNull List<PrivateMessage> messages) {
     PrivateMessageFragment fragment = PrivateMessageFragment.newInstance(messages);
     showFragment(fragment);
-  }
-
-  private void setMirroredIcons() {
-    if (Build.VERSION.SDK_INT >= 19) {
-      int[] ids = new int[] {
-          R.drawable.ic_action_refresh,
-          R.drawable.ic_sign_out,
-          R.drawable.ic_action_reply,
-          R.drawable.ic_action_save,
-          R.drawable.ic_action_share,
-          R.drawable.ic_action_show_comments,
-          R.drawable.ic_change_sort,
-          R.drawable.ic_change_timespan,
-          R.drawable.ic_navigation_go,
-          R.drawable.ic_saved,
-          R.drawable.ic_saved_dark
-      };
-
-      for (int id : ids) {
-        Drawable res = ContextCompat.getDrawable(this, id);
-        if (res != null) {
-          res.setAutoMirrored(true);
-        }
-      }
-    }
   }
 
   @Override

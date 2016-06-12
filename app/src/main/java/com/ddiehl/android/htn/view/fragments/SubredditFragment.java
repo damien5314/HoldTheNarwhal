@@ -11,6 +11,9 @@ import com.ddiehl.android.htn.view.LinkView;
 import com.ddiehl.android.htn.view.adapters.ListingsAdapter;
 
 public class SubredditFragment extends BaseListingsFragment implements LinkView {
+
+  public static final String TAG = SubredditFragment.class.getSimpleName();
+
   private static final String ARG_SUBREDDIT = "arg_subreddit";
   private static final String ARG_SORT = "arg_sort";
   private static final String ARG_TIMESPAN = "arg_timespan";
