@@ -209,7 +209,8 @@ public abstract class BaseActivity extends AppCompatActivity implements MainView
 
   @Override
   public void showInbox() {
-    // TODO
+    Intent intent = InboxActivity.getIntent(this, null);
+    startActivity(intent);
   }
 
   @Override

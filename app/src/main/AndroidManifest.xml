@@ -43,6 +43,8 @@
     <activity
         android:name=".view.activities.LinkCommentsActivity"/>
     <activity
+        android:name=".view.activities.InboxActivity"/>
+    <activity
         android:name=".view.activities.UserProfileActivity">
       <intent-filter>
         <action android:name="android.intent.action.VIEW" />

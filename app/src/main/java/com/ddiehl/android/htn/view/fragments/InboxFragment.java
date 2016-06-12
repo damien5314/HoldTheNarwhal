@@ -17,11 +17,18 @@ import com.ddiehl.android.htn.presenter.InboxPresenter;
 import com.ddiehl.android.htn.utils.AndroidUtils;
 import com.ddiehl.android.htn.view.InboxView;
 import com.ddiehl.android.htn.view.adapters.ListingsAdapter;
+import com.hannesdorfmann.fragmentargs.FragmentArgs;
+import com.hannesdorfmann.fragmentargs.annotation.Arg;
+import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs;
 
 import butterknife.Bind;
 
+@FragmentWithArgs
 public class InboxFragment extends BaseListingsFragment
     implements InboxView, TabLayout.OnTabSelectedListener {
+
+  public static final String TAG = InboxFragment.class.getSimpleName();
+
   private static final String ARG_SHOW = "arg_show";
 
   @Bind(R.id.tab_layout) TabLayout mTabs;
@@ -29,22 +36,14 @@ public class InboxFragment extends BaseListingsFragment
       mTabCommentReplies, mTabPostReplies, mTabMentions;
 
   private InboxPresenter mInboxPresenter;
-
-  @NonNull
-  public static InboxFragment newInstance(@Nullable String show) {
-    InboxFragment fragment = new InboxFragment();
-    Bundle args = new Bundle();
-    if (TextUtils.isEmpty(show)) show = "inbox";
-    args.putString(ARG_SHOW, show);
-    fragment.setArguments(args);
-    return fragment;
-  }
+  @Arg String mShow;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    String show = getArguments().getString(ARG_SHOW);
-    mInboxPresenter = new InboxPresenter(mMainView, this, this, this, this, show);
+    FragmentArgs.inject(this);
+    if (TextUtils.isEmpty(mShow)) mShow = "inbox";
+    mInboxPresenter = new InboxPresenter(mMainView, this, this, this, this, mShow);
     mLinkPresenter = mInboxPresenter;
     mCommentPresenter = mInboxPresenter;
     mMessagePresenter = mInboxPresenter;
