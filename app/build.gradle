@@ -65,7 +65,7 @@ retrolambda {
 dependencies {
   compile fileTree(include: '*.jar', dir: 'libs')
   compile project(':bypass')
-  def appcompat_version = "23.2.0"
+  def appcompat_version = "23.4.0"
   compile "com.android.support:appcompat-v7:$appcompat_version"
   compile "com.android.support:support-v4:$appcompat_version"
   compile "com.android.support:design:$appcompat_version"
