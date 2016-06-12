@@ -240,7 +240,8 @@ public abstract class BaseActivity extends AppCompatActivity implements MainView
   }
 
   private void showWebViewForURL(@NonNull String url) {
-    // TODO
+    Intent intent = WebViewActivity.getIntent(this, url);
+    startActivity(intent);
   }
 
   private boolean canUseCustomTabs() {
