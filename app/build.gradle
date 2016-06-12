@@ -89,4 +89,7 @@ dependencies {
   // Debugging dependencies
   debugCompile "com.squareup.leakcanary:leakcanary-android:1.3.1"
   releaseCompile "com.squareup.leakcanary:leakcanary-android-no-op:1.3.1"
+  def fragmentargs_version = "3.0.2"
+  compile "com.hannesdorfmann.fragmentargs:annotation:$fragmentargs_version"
+  apt "com.hannesdorfmann.fragmentargs:processor:$fragmentargs_version"
 }

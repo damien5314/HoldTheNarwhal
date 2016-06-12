@@ -403,7 +403,8 @@ public abstract class BaseActivity extends AppCompatActivity implements MainView
   @Override
   public void showCommentsForLink(
       @Nullable String subreddit, @Nullable String linkId, @Nullable String commentId) {
-    // TODO
+    Intent intent = LinkCommentsActivity.getIntent(this, subreddit, linkId, commentId);
+    startActivity(intent);
   }
 
   @Override
