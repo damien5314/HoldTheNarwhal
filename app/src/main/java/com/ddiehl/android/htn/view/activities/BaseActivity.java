@@ -220,8 +220,8 @@ public abstract class BaseActivity extends AppCompatActivity implements MainView
   }
 
   @Override
-  public void showSubreddit(@Nullable String subreddit, @Nullable String sort) {
-    Intent intent = SubredditActivity.getIntent(this, subreddit, sort);
+  public void showSubreddit(@Nullable String subreddit, @Nullable String sort, String timespan) {
+    Intent intent = SubredditActivity.getIntent(this, subreddit, sort, timespan);
     startActivity(intent);
   }
 
@@ -357,7 +357,7 @@ public abstract class BaseActivity extends AppCompatActivity implements MainView
   @Override
   public void showSubredditIfEmpty(@Nullable String subreddit) {
     if (getCurrentDisplayedFragment() == null) {
-      showSubreddit(subreddit, null);
+      showSubreddit(subreddit, null, null);
     }
   }
 
@@ -379,7 +379,7 @@ public abstract class BaseActivity extends AppCompatActivity implements MainView
   @Override
   public void onSubredditNavigationConfirmed(String subreddit) {
     resetBackNavigation();
-    showSubreddit(subreddit, null);
+    showSubreddit(subreddit, null, null);
   }
 
   @Override

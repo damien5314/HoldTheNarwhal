@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.v4.app.Fragment;
 
 import com.ddiehl.android.htn.view.fragments.SubredditFragment;
+import com.ddiehl.android.htn.view.fragments.SubredditFragmentBuilder;
 
 public class SubredditActivity extends BaseActivity {
 
@@ -12,19 +13,20 @@ public class SubredditActivity extends BaseActivity {
 
   private static final String EXTRA_SUBREDDIT = "EXTRA_SUBREDDIT";
   private static final String EXTRA_SORT = "EXTRA_SORT";
+  private static final String EXTRA_TIMESPAN = "EXTRA_TIMESPAN";
 
-  public static Intent getIntent(Context context, String subreddit, String sort) {
+  public static Intent getIntent(Context context, String subreddit, String sort, String timespan) {
     Intent intent = new Intent(context, SubredditActivity.class);
     intent.putExtra(EXTRA_SUBREDDIT, subreddit);
     intent.putExtra(EXTRA_SORT, sort);
+    intent.putExtra(EXTRA_TIMESPAN, timespan);
     return intent;
   }
 
   @Override
   Fragment getFragment() {
-    String subreddit = getSubreddit();
-    String sort = getSort();
-    return SubredditFragment.newInstance(subreddit, sort);
+    return new SubredditFragmentBuilder(getSort(), getSubreddit(), getTimespan())
+        .build();
   }
 
   @Override
@@ -38,5 +40,9 @@ public class SubredditActivity extends BaseActivity {
 
   private String getSort() {
     return getIntent().getStringExtra(EXTRA_SORT);
+  }
+
+  private String getTimespan() {
+    return getIntent().getStringExtra(EXTRA_TIMESPAN);
   }
 }
