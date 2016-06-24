@@ -448,7 +448,8 @@ public abstract class BaseActivity extends AppCompatActivity implements MainView
 
   @Override
   public void showInboxMessages(@NonNull List<PrivateMessage> messages) {
-    // TODO
+    Intent intent = PrivateMessageActivity.getIntent(this, messages);
+    startActivity(intent);
   }
 
   @Override

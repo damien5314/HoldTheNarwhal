@@ -17,7 +17,11 @@ import java.util.List;
 import butterknife.Bind;
 import rxreddit.model.Listing;
 
-public class PrivateMessageFragment extends BaseListingsFragment implements PrivateMessageView {
+public class PrivateMessageFragment extends BaseListingsFragment
+    implements PrivateMessageView {
+
+  public static final String TAG = PrivateMessageFragment.class.getSimpleName();
+
   private static final String ARG_MESSAGES = "arg_messages";
 
   private PrivateMessagePresenter mPrivateMessagePresenter;

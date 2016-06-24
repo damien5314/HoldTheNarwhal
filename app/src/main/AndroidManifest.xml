@@ -58,6 +58,8 @@
         <data android:pathPattern="/user/.*" />
       </intent-filter>
     </activity>
+    <activity
+        android:name=".view.activities.PrivateMessageActivity"/>
 
     <activity android:name="rxreddit.android.SignInActivity" />
 
