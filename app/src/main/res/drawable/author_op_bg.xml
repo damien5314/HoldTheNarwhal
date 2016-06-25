@@ -5,10 +5,10 @@
       android:color="@color/author_op_background"/>
 
   <corners
-      android:radius="@dimen/comment_author_background_corner"/>
+      android:radius="@dimen/distinguished_author_bg_corners"/>
 
   <padding
-      android:left="@dimen/comment_author_background_padding"
-      android:right="@dimen/comment_author_background_padding"/>
+      android:left="@dimen/distinguished_author_bg_padding"
+      android:right="@dimen/distinguished_author_bg_padding"/>
 
 </shape>

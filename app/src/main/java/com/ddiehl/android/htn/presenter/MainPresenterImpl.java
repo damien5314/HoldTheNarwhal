@@ -4,39 +4,49 @@ import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 
-import com.ddiehl.android.dlogger.Logger;
-import com.ddiehl.android.htn.AccessTokenManager;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.SettingsManager;
 import com.ddiehl.android.htn.analytics.Analytics;
-import com.ddiehl.android.htn.io.RedditAuthService;
-import com.ddiehl.android.htn.io.RedditService;
 import com.ddiehl.android.htn.utils.AndroidUtils;
 import com.ddiehl.android.htn.view.MainView;
-import com.ddiehl.reddit.identity.AccessToken;
-import com.ddiehl.reddit.identity.UserIdentity;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
+import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
+import rx.schedulers.Schedulers;
+import rxreddit.api.RedditService;
+import rxreddit.model.AccessToken;
+import rxreddit.model.UserIdentity;
+import timber.log.Timber;
 
 public class MainPresenterImpl implements MainPresenter, IdentityManager.Callbacks {
-  private Logger mLogger = HoldTheNarwhal.getLogger();
-  private Context mContext = HoldTheNarwhal.getContext();
-  private RedditService mRedditService = HoldTheNarwhal.getRedditService();
-  private RedditAuthService mRedditAuthService = HoldTheNarwhal.getRedditServiceAuth();
-  private AccessTokenManager mAccessTokenManager = HoldTheNarwhal.getAccessTokenManager();
-  private IdentityManager mIdentityManager = HoldTheNarwhal.getIdentityManager();
-  private SettingsManager mSettingsManager = HoldTheNarwhal.getSettingsManager();
-  private Analytics mAnalytics = HoldTheNarwhal.getAnalytics();
+
+  @Inject protected Context mContext;
+  @Inject protected RedditService mRedditService;
+  @Inject protected IdentityManager mIdentityManager;
+  @Inject protected SettingsManager mSettingsManager;
+  @Inject protected Analytics mAnalytics;
   private MainView mMainView;
   private Uri mDeepLink;
 
-  public MainPresenterImpl(MainView view, Uri deepLink) {
+  public MainPresenterImpl(
+      MainView view, Uri deepLink
+//      Context context, RedditService service,
+//      IdentityManager identityManager, SettingsManager settingsManager, Analytics analytics
+  ) {
+    HoldTheNarwhal.getApplicationComponent().inject(this);
     mMainView = view;
     mDeepLink = deepLink;
+//    mAppContext = context;
+//    mRedditService = service;
+//    mIdentityManager = identityManager;
+//    mSettingsManager = settingsManager;
+//    mAnalytics = analytics;
   }
 
   @Override
@@ -60,9 +70,6 @@ public class MainPresenterImpl implements MainPresenter, IdentityManager.Callbac
       processDeepLink(mDeepLink);
     } else {
       mMainView.showSubredditIfEmpty(null);
-//      mMainView.showCommentsForLink("damien5314apitest", "3xfn0h", null);
-//      mMainView.showCommentsForLink("Android", "3zke4v", null); // Check thumbnail border
-//      mMainView.showSubreddit("damien5314apitest", null); // Wide image test
     }
   }
 
@@ -83,9 +90,8 @@ public class MainPresenterImpl implements MainPresenter, IdentityManager.Callbac
         mMainView.showToast(R.string.user_signed_out);
       } else {
         // FIXME Ensure we only show this when the user changes
-        Context context = HoldTheNarwhal.getContext();
         String name = identity.getName();
-        String formatter = context.getString(R.string.welcome_user);
+        String formatter = mContext.getString(R.string.welcome_user);
         String toast = String.format(formatter, name);
         mMainView.showToast(toast);
       }
@@ -129,28 +135,28 @@ public class MainPresenterImpl implements MainPresenter, IdentityManager.Callbac
   @Override
   public void onShowFrontPage() {
     mMainView.resetBackNavigation();
-    mMainView.showSubreddit(null, null);
+    mMainView.showSubreddit(null, null, null);
     mAnalytics.logDrawerFrontPage();
   }
 
   @Override
   public void onShowAllListings() {
     mMainView.resetBackNavigation();
-    mMainView.showSubreddit("all", null);
+    mMainView.showSubreddit("all", null, null);
     mAnalytics.logDrawerAllSubreddits();
   }
 
   @Override
   public void onShowRandomSubreddit() {
     mMainView.resetBackNavigation();
-    mMainView.showSubreddit("random", null);
+    mMainView.showSubreddit("random", null, null);
     mAnalytics.logDrawerRandomSubreddit();
   }
 
   @Override
   public void signOutUser() {
     mMainView.closeNavigationDrawer();
-    mAccessTokenManager.clearSavedUserAccessToken();
+    mRedditService.revokeAuthentication();
     mIdentityManager.clearSavedUserIdentity();
     mAnalytics.logSignOut();
   }
@@ -185,16 +191,18 @@ public class MainPresenterImpl implements MainPresenter, IdentityManager.Callbac
   }
 
   @Override
-  public void onAuthCodeReceived(String authCode) {
-    String grantType = "authorization_code";
-    mRedditAuthService.getUserAccessToken(grantType, authCode, RedditAuthService.REDIRECT_URI)
-        .doOnNext(mAccessTokenManager.saveUserAccessToken())
-        .subscribe(getUserIdentity(), error -> mMainView.showToast(R.string.error_authentication));
+  public void onSignIn(String callbackUrl) {
+    mRedditService.processAuthenticationCallback(callbackUrl)
+        .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        .subscribe(getUserIdentity(), error -> {
+          mMainView.showError(error, R.string.error_get_user_identity);
+        });
   }
 
   @Override
   public Action1<AccessToken> getUserIdentity() {
     return token -> mRedditService.getUserIdentity()
+        .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
         .doOnNext(mIdentityManager::saveUserIdentity)
         .subscribe(mMainView::updateUserIdentity,
             e -> mMainView.showError(e, R.string.error_get_user_identity));
@@ -204,15 +212,15 @@ public class MainPresenterImpl implements MainPresenter, IdentityManager.Callbac
   public void processDeepLink(@NonNull Uri data) {
     // TODO Deep link analytics
     mDeepLink = null;
-    mLogger.d("Deep Link: " + data.toString());
+    Timber.d("Deep Link: %s", data.toString());
     List<String> segments = data.getPathSegments();
     if (segments.size() == 0) {
       // Front page
-      mMainView.showSubreddit(null, null);
+      mMainView.showSubreddit(null, null, null);
       return;
     } else if (isSubredditSort(segments.get(0))) {
       // Sorted front page
-      mMainView.showSubreddit(null, segments.get(0));
+      mMainView.showSubreddit(null, segments.get(0), null);
       return;
     } else if (segments.get(0).equals("r")) {
       // Subreddit navigation
@@ -232,12 +240,12 @@ public class MainPresenterImpl implements MainPresenter, IdentityManager.Callbac
           }
         } else if (isSubredditSort(segments.get(2))) {
           // Subreddit sorted
-          mMainView.showSubreddit(subreddit, segments.get(2));
+          mMainView.showSubreddit(subreddit, segments.get(2), null);
           return;
         }
       } else {
         // Subreddit default sort
-        mMainView.showSubreddit(subreddit, null);
+        mMainView.showSubreddit(subreddit, null, null);
         return;
       }
     } else if (segments.get(0).equals("u") || segments.get(0).equals("user")) {
@@ -259,8 +267,8 @@ public class MainPresenterImpl implements MainPresenter, IdentityManager.Callbac
         return;
       }
     }
-    mLogger.w("Deep link fell through without redirection: " + data.toString());
-    mMainView.showSubreddit(null, null); // Show front page
+    Timber.w("Deep link fell through without redirection: %s", data.toString());
+    mMainView.showSubreddit(null, null, null); // Show front page
   }
 
   private boolean isSubredditSort(String s) {
@@ -270,6 +278,11 @@ public class MainPresenterImpl implements MainPresenter, IdentityManager.Callbac
         || s.equals("controversial")
         || s.equals("top")
         || s.equals("gilded");
+  }
+
+  @Override
+  public String getAuthorizationUrl() {
+    return mRedditService.getAuthorizationUrl();
   }
 
   private UserIdentity getAuthorizedUser() {

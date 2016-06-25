@@ -1,8 +1,7 @@
 package com.ddiehl.android.htn;
 
-import com.ddiehl.reddit.identity.UserIdentity;
-
 import rx.functions.Action1;
+import rxreddit.model.UserIdentity;
 
 public interface IdentityManager {
   UserIdentity getUserIdentity();

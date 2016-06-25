@@ -15,11 +15,9 @@
   <color name="black">#ff000000</color>
   <color name="transparent">#0000</color>
   <color name="indentation">@color/primary</color>
-  <color name="reddit_orange">#60ff8b60</color>
-  <color name="reddit_orange_full">#ff8b60</color>
+  <color name="reddit_orange_full">@color/reddit_orange</color>
   <color name="reddit_orange_lighter">#ffcbb8</color>
-  <color name="reddit_blue">#609494ff</color>
-  <color name="reddit_blue_full">#9494ff</color>
+  <color name="reddit_blue_full">@color/reddit_downvote</color>
   <color name="reddit_blue_lighter">#c9c9ff</color>
   <color name="reddit_gold">#f6e600</color>
   <color name="author_op_background">#0055df</color>
@@ -32,4 +30,16 @@
   <color name="comment_controversiality_indicator">#ff5252</color>
   <color name="nsfw_tag_color">#d10023</color>
   <color name="link_color">#0000ee</color>
+
+  <!-- reddit color scheme -->
+  <!-- https://www.reddit.com/about/alien/ -->
+  <color name="reddit_orange">#ff5700</color>
+  <color name="reddit_orangered">#ff4500</color>
+  <color name="reddit_upvote">#ff8b60</color>
+  <color name="reddit_neutral">#c6c6c6</color>
+  <color name="reddit_downvote">#9494ff</color>
+  <color name="reddit_light_bg">#eff7ff</color>
+  <color name="reddit_header">#cee3f8</color>
+  <color name="reddit_ui_text">#336699</color>
+
 </resources>

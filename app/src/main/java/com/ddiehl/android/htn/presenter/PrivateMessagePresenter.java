@@ -5,11 +5,12 @@ import android.os.Handler;
 import com.ddiehl.android.htn.view.ListingsView;
 import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.android.htn.view.PrivateMessageView;
-import com.ddiehl.reddit.listings.Listing;
-import com.ddiehl.reddit.listings.ListingResponse;
-import com.ddiehl.reddit.listings.PrivateMessage;
 
 import java.util.List;
+
+import rxreddit.model.Listing;
+import rxreddit.model.ListingResponse;
+import rxreddit.model.PrivateMessage;
 
 public class PrivateMessagePresenter extends BaseListingsPresenter implements MessagePresenter {
   private PrivateMessageView mMessageView;
@@ -24,10 +25,15 @@ public class PrivateMessagePresenter extends BaseListingsPresenter implements Me
   }
 
   @Override
-  void requestData() {
+  void requestPreviousData() {
+
+  }
+
+  @Override
+  void requestNextData() {
     // We already have the data, just display it
     ListingResponse response = new ListingResponse(mMessageList);
-    super.onListingsLoaded().call(response);
+    super.onListingsLoaded(true).call(response);
     // Scroll to bottom so user sees the latest message
     new Handler().post(mListingsView::scrollToBottom);
     mMessageView.showSubject(

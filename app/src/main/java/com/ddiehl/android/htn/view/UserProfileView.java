@@ -2,10 +2,10 @@ package com.ddiehl.android.htn.view;
 
 import android.support.annotation.NonNull;
 
-import com.ddiehl.reddit.identity.UserIdentity;
-import com.ddiehl.reddit.listings.Listing;
-
 import java.util.List;
+
+import rxreddit.model.Listing;
+import rxreddit.model.UserIdentity;
 
 public interface UserProfileView extends LinkView, CommentView {
   void showUserInfo(@NonNull UserIdentity user);

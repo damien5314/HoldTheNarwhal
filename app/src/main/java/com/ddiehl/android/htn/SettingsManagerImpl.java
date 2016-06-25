@@ -3,14 +3,17 @@ package com.ddiehl.android.htn;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.ddiehl.android.dlogger.Logger;
 import com.ddiehl.android.htn.analytics.Analytics;
-import com.ddiehl.android.htn.io.RedditService;
-import com.ddiehl.reddit.identity.UserSettings;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+import rxreddit.api.RedditService;
+import rxreddit.model.UserSettings;
+import timber.log.Timber;
 
 public class SettingsManagerImpl implements SettingsManager {
   public static final String PREFS_USER = "prefs_user";
@@ -78,15 +81,17 @@ public class SettingsManagerImpl implements SettingsManager {
       "mark_messages_read, hide_ads, min_link_score, newwindow, numsites, num_comments, " +
       "highlight_new_comments, default_comment_sort, hide_locationbar";
 
-  private Context mContext = HoldTheNarwhal.getContext();
-  private Logger mLogger = HoldTheNarwhal.getLogger();
-  private RedditService mRedditService = HoldTheNarwhal.getRedditService();
-  private Analytics mAnalytics = HoldTheNarwhal.getAnalytics();
+  private Context mContext;
+  private Analytics mAnalytics;
+  private RedditService mRedditService; // FIXME: Bad dependency
   private SharedPreferences mSharedPreferences;
 
   private boolean mIsChanging = false;
 
-  private SettingsManagerImpl() {
+  public SettingsManagerImpl(Context context, Analytics analytics, RedditService service) {
+    mContext = context;
+    mAnalytics = analytics;
+    mRedditService = service;
     mSharedPreferences = mContext.getSharedPreferences(PREFS_USER, Context.MODE_PRIVATE);
     mSharedPreferences.registerOnSharedPreferenceChangeListener(this);
   }
@@ -138,12 +143,12 @@ public class SettingsManagerImpl implements SettingsManager {
       }
     }
 
-    if (changedSettings.size() > 0 &&
-        HoldTheNarwhal.getAccessTokenManager().isUserAuthorized()) {
+    if (changedSettings.size() > 0 && mRedditService.isUserAuthorized()) {
       // Post SettingsUpdate event with changed keys and values
       mRedditService.updateUserSettings(changedSettings)
-          .subscribe(r -> mLogger.d("Settings updated successfully"),
-              e -> mLogger.e(e, "Error updating settings"));
+          .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+          .subscribe(r -> Timber.d("Settings updated successfully"),
+              e -> Timber.e(e, "Error updating settings"));
     }
 
     Map prefs = sp.getAll();
@@ -363,22 +368,5 @@ public class SettingsManagerImpl implements SettingsManager {
   @Override
   public boolean getLabelNsfw() {
     return mSharedPreferences.getBoolean(PREF_LABEL_NSFW, true);
-  }
-
-  ///////////////
-  // Singleton //
-  ///////////////
-
-  private static SettingsManagerImpl _instance;
-
-  public static SettingsManagerImpl getInstance() {
-    if (_instance == null) {
-      synchronized (SettingsManagerImpl.class) {
-        if (_instance == null) {
-          _instance = new SettingsManagerImpl();
-        }
-      }
-    }
-    return _instance;
   }
 }

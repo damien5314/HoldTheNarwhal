@@ -1,12 +1,13 @@
 package com.ddiehl.android.htn.view.fragments;
 
-import android.app.Fragment;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.MailTo;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -21,24 +22,37 @@ import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 import android.widget.ZoomButtonsController;
 
-import com.ddiehl.android.dlogger.Logger;
 import com.ddiehl.android.htn.BuildConfig;
-import com.ddiehl.android.htn.HoldTheNarwhal;
+import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
-import com.ddiehl.android.htn.io.RedditAuthService;
 import com.ddiehl.android.htn.utils.AndroidUtils;
-import com.ddiehl.android.htn.utils.AuthUtils;
 import com.ddiehl.android.htn.view.MainView;
+import com.hannesdorfmann.fragmentargs.FragmentArgs;
+import com.hannesdorfmann.fragmentargs.annotation.Arg;
+import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.schedulers.Schedulers;
+import rxreddit.api.RedditService;
+import rxreddit.model.UserAccessToken;
+import timber.log.Timber;
 
+@FragmentWithArgs
 public class WebViewFragment extends Fragment {
+
+  public static final String TAG = WebViewFragment.class.getSimpleName();
+
   private static final String ARG_URL = "arg_url";
 
-  private Logger mLogger = HoldTheNarwhal.getLogger();
   private MainView mMainView;
-  private String mUrl;
+  @Arg String mUrl;
+  @Inject protected IdentityManager mIdentityManager;
+  @Inject protected RedditService mRedditService;
 
   @Bind(R.id.web_view) WebView mWebView;
 
@@ -46,10 +60,6 @@ public class WebViewFragment extends Fragment {
     if (BuildConfig.DEBUG && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
       WebView.setWebContentsDebuggingEnabled(true);
     }
-  }
-
-  public interface Callbacks {
-    void onAuthCodeReceived(String authCode);
   }
 
   public WebViewFragment() { }
@@ -63,15 +73,17 @@ public class WebViewFragment extends Fragment {
   }
 
   @Override
+  public void onAttach(Context context) {
+    super.onAttach(context);
+    mMainView = (MainView) context;
+  }
+
+  @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    FragmentArgs.inject(this);
     setRetainInstance(true);
     setHasOptionsMenu(true);
-
-    mMainView = (MainView) getActivity();
-    Bundle args = getArguments();
-
-    mUrl = args.getString(ARG_URL);
     getActivity().setTitle(R.string.app_name);
   }
 
@@ -95,13 +107,15 @@ public class WebViewFragment extends Fragment {
     mWebView.setWebViewClient(new WebViewClient() {
       @Override
       public boolean shouldOverrideUrlLoading(WebView view, String url) {
-        mLogger.d("Loading URL: " + url);
+        Timber.d("Loading URL: %s", url);
 
-        if (url.contains(RedditAuthService.REDIRECT_URI)
-            && !url.equals(RedditAuthService.AUTHORIZATION_URL)) {
-          // Pass auth code back to the Activity, which will pop this fragment
-          String authCode = AuthUtils.getUserAuthCodeFromRedirectUri(url);
-          mMainView.onAuthCodeReceived(authCode);
+        if (url.contains(mRedditService.getRedirectUri())
+            && !url.equals(mRedditService.getAuthorizationUrl())) {
+          mRedditService.processAuthenticationCallback(url)
+              .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+              .subscribe(
+                  getUserIdentity(),
+                  e -> mMainView.showError(e, R.string.error_get_user_identity));
           mMainView.goBack();
           return true; // Can we do this to prevent the page from loading at all?
         }
@@ -155,6 +169,14 @@ public class WebViewFragment extends Fragment {
     });
 
     return v;
+  }
+
+  private Action1<UserAccessToken> getUserIdentity() {
+    return token -> mRedditService.getUserIdentity()
+        .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        .doOnNext(identity -> mIdentityManager.saveUserIdentity(identity))
+        .subscribe(mMainView::updateUserIdentity,
+            e -> mMainView.showError(e, R.string.error_get_user_identity));
   }
 
   @Override

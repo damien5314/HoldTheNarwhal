@@ -1,6 +1,5 @@
 package com.ddiehl.android.htn.view.viewholders;
 
-
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Build;
@@ -14,21 +13,25 @@ import android.widget.TextView;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.presenter.LinkCommentsPresenter;
-import com.ddiehl.reddit.listings.Comment;
-import com.ddiehl.reddit.listings.Link;
+import com.ddiehl.android.htn.view.widgets.ColorSwapTextView;
 import com.ddiehl.timesincetextview.TimeSinceTextView;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import rxreddit.model.Comment;
+import rxreddit.model.Link;
 
 public class ThreadCommentViewHolder extends RecyclerView.ViewHolder
     implements View.OnCreateContextMenuListener {
-  private Context mContext = HoldTheNarwhal.getContext();
+
+  @Inject protected Context mContext;
   private LinkCommentsPresenter mLinkCommentsPresenter;
   private Comment mComment;
 
-  @Bind(R.id.comment_author) TextView mAuthorView;
+  @Bind(R.id.comment_author) ColorSwapTextView mAuthorView;
   @Bind(R.id.comment_score_layout) ViewGroup mScoreViewLayout;
   @Bind(R.id.comment_score) TextView mScoreView;
   @Bind(R.id.comment_timestamp) TimeSinceTextView mTimestampView;
@@ -39,6 +42,7 @@ public class ThreadCommentViewHolder extends RecyclerView.ViewHolder
 
   public ThreadCommentViewHolder(View v, LinkCommentsPresenter presenter) {
     super(v);
+    HoldTheNarwhal.getApplicationComponent().inject(this);
     mLinkCommentsPresenter = presenter;
     ButterKnife.bind(this, v);
     itemView.setOnCreateContextMenuListener(this);
@@ -115,7 +119,8 @@ public class ThreadCommentViewHolder extends RecyclerView.ViewHolder
         default:
       }
     } else {
-      mAuthorView.setBackgroundResource(0);
+      //noinspection deprecation
+      mAuthorView.setBackgroundDrawable(mAuthorView.getOriginalBackground());
       mAuthorView.setTextColor(ContextCompat.getColor(mContext, R.color.secondary_text));
     }
   }
@@ -125,13 +130,10 @@ public class ThreadCommentViewHolder extends RecyclerView.ViewHolder
   }
 
   private void showScore(Comment comment) {
-    if (comment.getScore() == null) {
-      mScoreViewLayout.setVisibility(View.GONE);
-    } else {
-      mScoreViewLayout.setVisibility(View.VISIBLE);
-      mScoreView.setText(
-          String.format(mContext.getString(R.string.comment_score), comment.getScore()));
-    }
+    String score = comment.isScoreHidden() ?
+        mContext.getString(R.string.hidden_score_placeholder) : comment.getScore().toString();
+    mScoreView.setText(
+        String.format(mContext.getString(R.string.comment_score), score));
   }
 
   private void showTimestamp(Comment comment) {

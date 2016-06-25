@@ -5,7 +5,7 @@ import android.support.annotation.Nullable;
 import android.view.ContextMenu;
 import android.view.View;
 
-import com.ddiehl.reddit.listings.Link;
+import rxreddit.model.Link;
 
 public interface LinkView {
   void showLinkContextMenu(ContextMenu menu, View v, Link link);

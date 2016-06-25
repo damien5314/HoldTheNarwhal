@@ -3,13 +3,13 @@ package com.ddiehl.android.htn.analytics;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.ddiehl.reddit.identity.UserIdentity;
-import com.ddiehl.reddit.listings.Link;
-
 import okhttp3.Response;
+import rxreddit.model.Link;
+import rxreddit.model.UserIdentity;
 
 public interface Analytics {
-  void initialize();
+
+  void initialize(String userId);
   void setEnabled(boolean b);
   void startSession();
   void endSession();
@@ -42,4 +42,5 @@ public interface Analytics {
   void logSave(@NonNull String type, @Nullable String category, boolean isSaving);
   void logHide(@NonNull String type, boolean isHiding);
   void logReport();
+
 }

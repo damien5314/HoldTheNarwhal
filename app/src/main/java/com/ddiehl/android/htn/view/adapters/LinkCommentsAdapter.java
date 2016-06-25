@@ -12,12 +12,13 @@ import com.ddiehl.android.htn.view.viewholders.BaseLinkViewHolder;
 import com.ddiehl.android.htn.view.viewholders.CommentsLinkViewHolder;
 import com.ddiehl.android.htn.view.viewholders.ThreadCommentViewHolder;
 import com.ddiehl.android.htn.view.viewholders.ThreadStubViewHolder;
-import com.ddiehl.reddit.listings.AbsComment;
-import com.ddiehl.reddit.listings.Comment;
-import com.ddiehl.reddit.listings.CommentStub;
-import com.ddiehl.reddit.listings.Link;
 
-public class LinkCommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+import rxreddit.model.Comment;
+import rxreddit.model.CommentStub;
+import rxreddit.model.Link;
+import rxreddit.model.Listing;
+
+public class LinkCommentsAdapter extends ListingsAdapter {
   private static final int TYPE_LINK = 0;
   private static final int TYPE_COMMENT = 1;
   private static final int TYPE_COMMENT_STUB = 2;
@@ -25,13 +26,14 @@ public class LinkCommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
   private LinkCommentsPresenter mLinkCommentsPresenter;
 
   public LinkCommentsAdapter(LinkCommentsPresenter presenter) {
+    super(presenter, presenter, presenter, null);
     mLinkCommentsPresenter = presenter;
   }
 
   @Override
   public int getItemViewType(int position) {
     if (position == 0) return TYPE_LINK;
-    AbsComment comment = mLinkCommentsPresenter.getComment(position - 1);
+    Listing comment = mListingsPresenter.getListingAt(position - 1);
     if (comment instanceof Comment) return TYPE_COMMENT;
     else return TYPE_COMMENT_STUB;
   }
@@ -62,14 +64,15 @@ public class LinkCommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
       Link link = mLinkCommentsPresenter.getLinkContext();
       ThumbnailMode mode = mLinkCommentsPresenter.getThumbnailMode();
       boolean showNsfw = mLinkCommentsPresenter.shouldShowNsfwTag();
-      ((BaseLinkViewHolder) holder).bind(link, true, mode, showNsfw);
+      boolean showParentLink = mLinkCommentsPresenter.shouldShowParentLink();
+      ((BaseLinkViewHolder) holder).bind(link, true, mode, showNsfw, showParentLink);
     } else if (holder instanceof ThreadCommentViewHolder) {
       Link link = mLinkCommentsPresenter.getLinkContext();
-      Comment comment = (Comment) mLinkCommentsPresenter.getComment(position - 1);
+      Comment comment = (Comment) mLinkCommentsPresenter.getListingAt(position - 1);
       boolean showControversiality = mLinkCommentsPresenter.getShowControversiality();
       ((ThreadCommentViewHolder) holder).bind(link, comment, showControversiality);
     } else if (holder instanceof ThreadStubViewHolder) {
-      CommentStub comment = (CommentStub) mLinkCommentsPresenter.getComment(position - 1);
+      CommentStub comment = (CommentStub) mLinkCommentsPresenter.getListingAt(position - 1);
       Link linkContext = mLinkCommentsPresenter.getLinkContext();
       String subreddit = linkContext.getSubreddit();
       String linkId = linkContext.getId();
@@ -79,7 +82,7 @@ public class LinkCommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
   @Override
   public int getItemCount() {
-    return mLinkCommentsPresenter.getNumComments()
+    return mLinkCommentsPresenter.getNumListings()
         + (mLinkCommentsPresenter.getLinkContext() == null ? 0 : 1);
   }
 }

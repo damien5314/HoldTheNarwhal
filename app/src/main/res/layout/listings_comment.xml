@@ -33,7 +33,7 @@
           android:textAlignment="viewStart"
           android:gravity="start"
           android:fontFamily="sans-serif-light"
-          android:textSize="@dimen/comment_link_title_text_size"
+          android:textAppearance="?android:textAppearanceMedium"
           android:textColor="@android:color/white"
           tools:text="The brown fox jumped over the white fence"
           tools:ignore="UnusedAttribute"/>
@@ -45,8 +45,8 @@
           android:textAlignment="viewStart"
           android:gravity="start"
           android:fontFamily="sans-serif-light"
-          android:textSize="@dimen/comment_link_subtitle_text_size"
-          android:textColor="@android:color/white"
+          android:textAppearance="?android:textAppearanceSmall"
+          android:textColor="@color/white"
           tools:text="comment reply on /r/gamedev"
           tools:ignore="UnusedAttribute"/>
 

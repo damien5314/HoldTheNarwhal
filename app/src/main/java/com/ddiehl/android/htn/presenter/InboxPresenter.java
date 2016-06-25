@@ -9,11 +9,15 @@ import com.ddiehl.android.htn.view.InboxView;
 import com.ddiehl.android.htn.view.LinkView;
 import com.ddiehl.android.htn.view.ListingsView;
 import com.ddiehl.android.htn.view.MainView;
-import com.ddiehl.reddit.listings.Listing;
-import com.ddiehl.reddit.listings.PrivateMessage;
+
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+import rxreddit.model.Listing;
+import rxreddit.model.PrivateMessage;
 
 public class InboxPresenter extends BaseListingsPresenter
     implements LinkPresenter, CommentPresenter, MessagePresenter {
+
   private InboxView mInboxView;
 
   public InboxPresenter(
@@ -32,19 +36,30 @@ public class InboxPresenter extends BaseListingsPresenter
   }
 
   @Override
-  void requestData() {
-    mMainView.showSpinner(null);
-    mListingsRequested = true;
+  void requestPreviousData() {
+    requestData(false);
+  }
 
+  @Override
+  void requestNextData() {
+    requestData(true);
+  }
+
+  private void requestData(boolean append) {
     // TODO Analytics
-    mLog.d("Data requested for tab: " + mShow);
-
-    mRedditService.getInbox(mShow, mNextPageListingId)
+    mRedditService.getInbox(mShow,
+        append ? null : mPrevPageListingId,
+        append ? mNextPageListingId : null)
+        .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        .doOnSubscribe(() -> {
+          mMainView.showSpinner(null);
+          mNextRequested = true;
+        })
         .doOnTerminate(() -> {
           mMainView.dismissSpinner();
-          mListingsRequested = false;
+          mNextRequested = false;
         })
-        .subscribe(onListingsLoaded(),
+        .subscribe(onListingsLoaded(append),
             e -> mMainView.showError(e, R.string.error_get_inbox));
   }
 
@@ -55,6 +70,7 @@ public class InboxPresenter extends BaseListingsPresenter
 
   public void onMarkMessagesRead() {
     mRedditService.markAllMessagesRead()
+        .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
         .subscribe(
             _void -> {
               for (Listing listing : mListings) {
@@ -62,7 +78,7 @@ public class InboxPresenter extends BaseListingsPresenter
                   ((PrivateMessage) listing).markUnread(false);
                 }
               }
-              mListingsView.listingsUpdated();
+              mListingsView.notifyDataSetChanged();
             },
             error -> mMainView.showError(error, R.string.error_xxx));
   }

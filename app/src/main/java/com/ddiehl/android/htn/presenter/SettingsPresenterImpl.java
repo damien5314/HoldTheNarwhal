@@ -1,31 +1,32 @@
 package com.ddiehl.android.htn.presenter;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 
-import com.ddiehl.android.htn.AccessTokenManager;
-import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.SettingsManager;
-import com.ddiehl.android.htn.io.NetworkUnavailableException;
-import com.ddiehl.android.htn.io.RedditService;
 import com.ddiehl.android.htn.utils.AndroidUtils;
 import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.android.htn.view.SettingsView;
-import com.ddiehl.reddit.identity.UserIdentity;
 
+import javax.inject.Inject;
+
+import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
+import rx.schedulers.Schedulers;
+import rxreddit.api.RedditService;
+import rxreddit.model.UserIdentity;
 
 public class SettingsPresenterImpl implements SettingsPresenter, IdentityManager.Callbacks {
-  private RedditService mRedditService = HoldTheNarwhal.getRedditService();
-  private AccessTokenManager mAccessTokenManager = HoldTheNarwhal.getAccessTokenManager();
-  private IdentityManager mIdentityManager = HoldTheNarwhal.getIdentityManager();
-  private SettingsManager mSettingsManager = HoldTheNarwhal.getSettingsManager();
+
+  @Inject protected Context mApplicationContext;
+  @Inject protected RedditService mRedditService;
+  @Inject protected IdentityManager mIdentityManager;
+  @Inject protected SettingsManager mSettingsManager;
   private MainView mMainView;
   private SettingsView mSettingsView;
 
-  public SettingsPresenterImpl(@NonNull MainView mainView, @NonNull SettingsView settingsView) {
+  public SettingsPresenterImpl(MainView mainView, SettingsView settingsView) {
     mMainView = mainView;
     mSettingsView = settingsView;
   }
@@ -33,7 +34,7 @@ public class SettingsPresenterImpl implements SettingsPresenter, IdentityManager
   @Override
   public void onResume() {
     mIdentityManager.registerUserIdentityChangeListener(this);
-    if (mAccessTokenManager.isUserAuthorized()) {
+    if (mRedditService.isUserAuthorized()) {
       refresh(true);
     }
   }
@@ -59,11 +60,10 @@ public class SettingsPresenterImpl implements SettingsPresenter, IdentityManager
     boolean showUser = mSettingsManager.hasFromRemote();
     mSettingsView.showPreferences(showUser);
     if (pullFromServer) {
-      Context context = HoldTheNarwhal.getContext();
-      if (AndroidUtils.isConnectedToNetwork(context)) {
+      if (AndroidUtils.isConnectedToNetwork(mApplicationContext)) {
         getData();
       } else {
-        mMainView.showError(new NetworkUnavailableException(), R.string.error_network_unavailable);
+        mMainView.showToast(R.string.error_network_unavailable);
       }
     }
   }
@@ -71,6 +71,7 @@ public class SettingsPresenterImpl implements SettingsPresenter, IdentityManager
   private void getData() {
     mMainView.showSpinner(null);
     mRedditService.getUserSettings()
+        .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
         .doOnTerminate(mMainView::dismissSpinner)
         .doOnNext(mSettingsManager::saveUserSettings)
         .subscribe(settings -> refresh(false),

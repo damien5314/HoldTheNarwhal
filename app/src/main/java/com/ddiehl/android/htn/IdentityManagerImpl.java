@@ -3,11 +3,11 @@ package com.ddiehl.android.htn;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.ddiehl.reddit.identity.UserIdentity;
-
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+
+import rxreddit.model.UserIdentity;
 
 public class IdentityManagerImpl implements IdentityManager {
   private static final String PREFS_USER_IDENTITY = "prefs_user_identity";
@@ -28,11 +28,14 @@ public class IdentityManagerImpl implements IdentityManager {
   private static final String PREF_ID = "pref_id";
   private static final String PREF_INBOX_COUNT = "pref_inbox_count";
 
-  private Context mContext = HoldTheNarwhal.getContext();
+  private Context mContext;
+  private SettingsManager mSettingsManager;
   private UserIdentity mUserIdentity;
   private Set<Callbacks> mListeners = new HashSet<>();
 
-  private IdentityManagerImpl() {
+  public IdentityManagerImpl(Context context, SettingsManager settingsManager) {
+    mContext = context.getApplicationContext();
+    mSettingsManager = settingsManager;
     mUserIdentity = getSavedUserIdentity();
   }
 
@@ -114,7 +117,7 @@ public class IdentityManagerImpl implements IdentityManager {
     mUserIdentity = null;
     mContext.getSharedPreferences(PREFS_USER_IDENTITY, Context.MODE_PRIVATE)
         .edit().clear().apply();
-    HoldTheNarwhal.getSettingsManager().clearUserSettings();
+    mSettingsManager.clearUserSettings();
     notifyListeners();
   }
 
@@ -132,22 +135,5 @@ public class IdentityManagerImpl implements IdentityManager {
     for (Callbacks listener : mListeners) {
       listener.onUserIdentityChanged().call(mUserIdentity);
     }
-  }
-
-  ///////////////
-  // Singleton //
-  ///////////////
-
-  private static IdentityManagerImpl _instance;
-
-  public static IdentityManagerImpl getInstance() {
-    if (_instance == null) {
-      synchronized (IdentityManagerImpl.class) {
-        if (_instance == null) {
-          _instance = new IdentityManagerImpl();
-        }
-      }
-    }
-    return _instance;
   }
 }

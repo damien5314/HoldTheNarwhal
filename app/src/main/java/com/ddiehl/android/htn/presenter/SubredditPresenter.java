@@ -4,14 +4,17 @@ import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.view.LinkView;
 import com.ddiehl.android.htn.view.ListingsView;
 import com.ddiehl.android.htn.view.MainView;
-import com.ddiehl.reddit.identity.UserIdentity;
-import com.ddiehl.reddit.listings.Link;
-import com.ddiehl.reddit.listings.ListingResponse;
-import com.ddiehl.reddit.listings.Subreddit;
 
+import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
+import rx.schedulers.Schedulers;
+import rxreddit.model.Link;
+import rxreddit.model.ListingResponse;
+import rxreddit.model.Subreddit;
+import rxreddit.model.UserIdentity;
 
 public class SubredditPresenter extends BaseListingsPresenter implements LinkPresenter {
+
   public SubredditPresenter(
       MainView main, ListingsView listingsView, LinkView view,
       String subreddit, String sort, String timespan) {
@@ -31,38 +34,59 @@ public class SubredditPresenter extends BaseListingsPresenter implements LinkPre
   }
 
   @Override
-  public void requestData() {
+  void requestPreviousData() {
     if (mSubreddit != null
         && !mSubreddit.equals("all")
         && !mSubreddit.equals("random")
         && mSubredditInfo == null) {
       getSubredditInfo();
     } else {
-      getSubredditLinks();
+      getSubredditLinks(false);
+    }
+  }
+
+  @Override
+  public void requestNextData() {
+    if (mSubreddit != null
+        && !mSubreddit.equals("all")
+        && !mSubreddit.equals("random")
+        && mSubredditInfo == null) {
+      getSubredditInfo();
+    } else {
+      getSubredditLinks(true);
     }
   }
 
   private void getSubredditInfo() {
-    mMainView.showSpinner(null);
     mRedditService.getSubredditInfo(mSubreddit)
+        .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        .doOnSubscribe(() -> mMainView.showSpinner(null))
         .doOnTerminate(() -> {
-          if (!mListingsRequested) mMainView.dismissSpinner();
-          mListingsRequested = false;
+          mMainView.dismissSpinner();
+          mNextRequested = false;
         })
         .subscribe(onSubredditInfoLoaded(),
             e -> mMainView.showError(e, R.string.error_get_subreddit_info));
   }
 
-  private void getSubredditLinks() {
-    mMainView.showSpinner(null);
-    mListingsRequested = true;
+  private void getSubredditLinks(boolean append) {
     mAnalytics.logLoadSubreddit(mSubreddit, mSort, mTimespan);
-    mRedditService.loadLinks(mSubreddit, mSort, mTimespan, mNextPageListingId)
+    mRedditService.loadLinks(mSubreddit, mSort, mTimespan,
+        append ? null : mPrevPageListingId,
+        append ? mNextPageListingId : null)
+        .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        .doOnSubscribe(() -> {
+          mMainView.showSpinner(null);
+          if (append) mNextRequested = true;
+          else mBeforeRequested = true;
+        })
         .doOnTerminate(() -> {
           mMainView.dismissSpinner();
-          mListingsRequested = false;
+          if (append) mNextRequested = false;
+          else mBeforeRequested = false;
         })
-        .subscribe(onListingsLoaded(),
+        .subscribe(
+            onListingsLoaded(append),
             e -> mMainView.showError(e, R.string.error_get_links));
   }
 
@@ -73,7 +97,7 @@ public class SubredditPresenter extends BaseListingsPresenter implements LinkPre
       if (shouldShowNsfwDialog(mSubredditInfo, user)) {
         mMainView.showNsfwWarningDialog();
       } else {
-        if (mSubredditInfo != null) requestData();
+        if (mSubredditInfo != null) requestNextData();
         else mMainView.showToast(R.string.error_private_subreddit);
       }
       loadHeaderImage();
@@ -86,14 +110,20 @@ public class SubredditPresenter extends BaseListingsPresenter implements LinkPre
   }
 
   @Override
-  protected Action1<ListingResponse> onListingsLoaded() {
+  protected Action1<ListingResponse> onListingsLoaded(boolean append) {
     return (response) -> {
-      super.onListingsLoaded().call(response);
-      if (mSubreddit != null && mSubreddit.equals("random")) {
+      super.onListingsLoaded(append).call(response);
+      if ("random".equals(mSubreddit)) {
         mSubreddit = ((Link) mListings.get(0)).getSubreddit();
-        mListingsView.updateTitle();
       }
+      updateTitle();
     };
+  }
+
+  private void updateTitle() {
+    if (mSubreddit == null) mMainView.setTitle(R.string.front_page_title);
+    else mMainView.setTitle(
+        String.format(mContext.getString(R.string.link_subreddit), mSubreddit));
   }
 
   private void loadHeaderImage() {

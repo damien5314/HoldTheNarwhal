@@ -1,13 +1,13 @@
 package com.ddiehl.android.htn.view.fragments;
 
 import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,7 +19,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.ddiehl.android.dlogger.Logger;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.analytics.Analytics;
@@ -29,17 +28,20 @@ import com.ddiehl.android.htn.presenter.ListingsPresenter;
 import com.ddiehl.android.htn.presenter.MessagePresenter;
 import com.ddiehl.android.htn.view.ListingsView;
 import com.ddiehl.android.htn.view.MainView;
-import com.ddiehl.android.htn.view.activities.MainActivity;
+import com.ddiehl.android.htn.view.activities.BaseActivity;
 import com.ddiehl.android.htn.view.adapters.ListingsAdapter;
 import com.ddiehl.android.htn.view.dialogs.ChooseLinkSortDialog;
 import com.ddiehl.android.htn.view.dialogs.ChooseTimespanDialog;
-import com.ddiehl.reddit.listings.Comment;
-import com.ddiehl.reddit.listings.Link;
-import com.ddiehl.reddit.listings.Listing;
-import com.ddiehl.reddit.listings.PrivateMessage;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import rxreddit.model.Comment;
+import rxreddit.model.Link;
+import rxreddit.model.Listing;
+import rxreddit.model.PrivateMessage;
+import timber.log.Timber;
 
 public abstract class BaseListingsFragment extends Fragment
     implements ListingsView, SwipeRefreshLayout.OnRefreshListener {
@@ -52,8 +54,7 @@ public abstract class BaseListingsFragment extends Fragment
   @Bind(R.id.recycler_view)
   protected RecyclerView mRecyclerView;
 
-  protected Logger mLog = HoldTheNarwhal.getLogger();
-  protected Analytics mAnalytics = HoldTheNarwhal.getAnalytics();
+  @Inject protected Analytics mAnalytics;
   protected MainView mMainView;
   protected ListingsPresenter mListingsPresenter;
   protected LinkPresenter mLinkPresenter;
@@ -61,16 +62,19 @@ public abstract class BaseListingsFragment extends Fragment
   protected MessagePresenter mMessagePresenter;
   protected ListingsAdapter mListingsAdapter;
   protected SwipeRefreshLayout mSwipeRefreshLayout;
+  protected ListingsView.Callbacks mCallbacks;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    HoldTheNarwhal.getApplicationComponent().inject(this);
     setRetainInstance(true);
     setHasOptionsMenu(true);
     mMainView = (MainView) getActivity();
   }
 
-  @Nullable @Override
+  @Nullable
+  @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     View view = inflater.inflate(getLayoutResId(), container, false);
     ButterKnife.bind(this, view);
@@ -90,26 +94,27 @@ public abstract class BaseListingsFragment extends Fragment
   }
 
   private void instantiateListView() {
-    final LinearLayoutManager mgr = new LinearLayoutManager(getActivity());
-    mRecyclerView.setLayoutManager(mgr);
+    mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     mRecyclerView.clearOnScrollListeners();
-    mRecyclerView.addOnScrollListener(
-        new RecyclerView.OnScrollListener() {
-          int mFirstVisibleItem, mVisibleItemCount, mTotalItemCount;
-          @Override
-          public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-            mVisibleItemCount = mgr.getChildCount();
-            mTotalItemCount = mgr.getItemCount();
-            mFirstVisibleItem = mgr.findFirstVisibleItemPosition();
-            if ((mVisibleItemCount + mFirstVisibleItem) >= mTotalItemCount) {
-              if (mListingsPresenter.getNextPageListingId() != null) {
-                mListingsPresenter.getMoreData();
-              }
-            }
-          }
-        });
+    mRecyclerView.addOnScrollListener(mOnScrollListener);
     mRecyclerView.setAdapter(mListingsAdapter);
   }
+
+  private RecyclerView.OnScrollListener mOnScrollListener = new RecyclerView.OnScrollListener() {
+    int mFirstVisibleItem, mVisibleItemCount, mTotalItemCount;
+    @Override
+    public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+      LinearLayoutManager mgr = (LinearLayoutManager) recyclerView.getLayoutManager();
+      mVisibleItemCount = mgr.getChildCount();
+      mTotalItemCount = mgr.getItemCount();
+      mFirstVisibleItem = mgr.findFirstVisibleItemPosition();
+      if (mFirstVisibleItem == 0) {
+        mCallbacks.onFirstItemShown();
+      } else if ((mVisibleItemCount + mFirstVisibleItem) >= mTotalItemCount) {
+        mCallbacks.onLastItemShown();
+      }
+    }
+  };
 
   @Override
   public void onResume() {
@@ -141,7 +146,7 @@ public abstract class BaseListingsFragment extends Fragment
         String timespan = data.getStringExtra(ChooseTimespanDialog.EXTRA_TIMESPAN);
         mListingsPresenter.onTimespanSelected(timespan);
         break;
-      case MainActivity.REQUEST_NSFW_WARNING:
+      case BaseActivity.REQUEST_NSFW_WARNING:
         boolean result = resultCode == Activity.RESULT_OK;
         mListingsPresenter.onNsfwSelected(result);
         break;
@@ -187,7 +192,7 @@ public abstract class BaseListingsFragment extends Fragment
 
   @Override
   public void showSortOptionsMenu() {
-    FragmentManager fm = getActivity().getFragmentManager();
+    FragmentManager fm = getActivity().getSupportFragmentManager();
     ChooseLinkSortDialog chooseLinkSortDialog =
         ChooseLinkSortDialog.newInstance(mListingsPresenter.getSort());
     chooseLinkSortDialog.setTargetFragment(this, REQUEST_CHOOSE_SORT);
@@ -196,7 +201,7 @@ public abstract class BaseListingsFragment extends Fragment
 
   @Override
   public void showTimespanOptionsMenu() {
-    FragmentManager fm = getActivity().getFragmentManager();
+    FragmentManager fm = getActivity().getSupportFragmentManager();
     ChooseTimespanDialog chooseTimespanDialog =
         ChooseTimespanDialog.newInstance(mListingsPresenter.getTimespan());
     chooseTimespanDialog.setTargetFragment(this, REQUEST_CHOOSE_TIMESPAN);
@@ -215,8 +220,9 @@ public abstract class BaseListingsFragment extends Fragment
 
   public void showLinkContextMenu(ContextMenu menu, View v, Link link) {
     getActivity().getMenuInflater().inflate(R.menu.link_context, menu);
-    String title = String.format(getString(R.string.menu_action_link),
-        link.getTitle(), link.getScore());
+    String score = link.getScore() == null ?
+        v.getContext().getString(R.string.hidden_score_placeholder) : link.getScore().toString();
+    String title = String.format(getString(R.string.menu_action_link), link.getTitle(), score);
     menu.setHeaderTitle(title);
     menu.findItem(R.id.action_link_hide).setVisible(!link.isHidden());
     menu.findItem(R.id.action_link_unhide).setVisible(link.isHidden());
@@ -224,17 +230,25 @@ public abstract class BaseListingsFragment extends Fragment
     String username = String.format(
         getString(R.string.action_view_user_profile), link.getAuthor());
     menu.findItem(R.id.action_link_view_user_profile).setTitle(username);
+    if ("[deleted]".equalsIgnoreCase(link.getAuthor())) {
+      menu.findItem(R.id.action_link_view_user_profile).setVisible(false);
+    }
   }
 
   public void showCommentContextMenu(ContextMenu menu, View v, Comment comment) {
     getActivity().getMenuInflater().inflate(R.menu.comment_context, menu);
+    String score = comment.getScore() == null ?
+        v.getContext().getString(R.string.hidden_score_placeholder) : comment.getScore().toString();
     String title = String.format(getString(R.string.menu_action_comment),
-        comment.getAuthor(), comment.getScore());
+        comment.getAuthor(), score);
     menu.setHeaderTitle(title);
     // Set username for listing in the user profile menu item
     String username = String.format(
         getString(R.string.action_view_user_profile), comment.getAuthor());
     menu.findItem(R.id.action_comment_view_user_profile).setTitle(username);
+    if ("[deleted]".equalsIgnoreCase(comment.getAuthor())) {
+      menu.findItem(R.id.action_comment_view_user_profile).setVisible(false);
+    }
   }
 
   public void showPrivateMessageContextMenu(
@@ -327,7 +341,7 @@ public abstract class BaseListingsFragment extends Fragment
         mMessagePresenter.replyToMessage();
         return true;
       default:
-        mLog.w("No action registered to this context item");
+        Timber.w("No action registered to this context item");
         return false;
     }
   }
@@ -392,18 +406,38 @@ public abstract class BaseListingsFragment extends Fragment
   }
 
   @Override
-  public void listingsUpdated() {
+  public void notifyDataSetChanged() {
     mListingsAdapter.notifyDataSetChanged();
   }
 
   @Override
-  public void listingUpdatedAt(int position) {
+  public void notifyItemChanged(int position) {
     mListingsAdapter.notifyItemChanged(position);
   }
 
   @Override
-  public void listingRemovedAt(int position) {
+  public void notifyItemInserted(int position) {
+    mListingsAdapter.notifyItemInserted(position);
+  }
+
+  @Override
+  public void notifyItemRemoved(int position) {
     mListingsAdapter.notifyItemRemoved(position);
+  }
+
+  @Override
+  public void notifyItemRangeChanged(int position, int count) {
+    mListingsAdapter.notifyItemRangeChanged(position, count);
+  }
+
+  @Override
+  public void notifyItemRangeInserted(int position, int count) {
+    mListingsAdapter.notifyItemRangeInserted(position, count);
+  }
+
+  @Override
+  public void notifyItemRangeRemoved(int position, int count) {
+    mListingsAdapter.notifyItemRangeRemoved(position, count);
   }
 
   @Override

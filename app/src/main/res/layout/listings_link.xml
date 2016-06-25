@@ -56,8 +56,8 @@
             android:textAppearance="?android:textAppearanceSmall"
             android:textColor="@color/secondary_text"
             android:gravity="center"
-            android:drawableStart="@drawable/ic_gilded_2"
-            android:drawableLeft="@drawable/ic_gilded_2"
+            android:drawableStart="@drawable/ic_gilded_101"
+            android:drawableLeft="@drawable/ic_gilded_101"
             tools:targetApi="16"
             tools:text="× 2"/>
 
@@ -81,17 +81,15 @@
         android:id="@+id/link_metadata"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/baseline_spacing"
-        android:background="@color/primary_dark"
         android:orientation="horizontal">
 
       <LinearLayout
+          android:orientation="vertical"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
           android:layout_weight="1"
-          android:layout_marginEnd="@dimen/link_data_margin"
-          android:layout_marginRight="@dimen/link_data_margin"
-          android:orientation="vertical">
+          android:background="@color/primary_dark"
+          android:padding="@dimen/baseline_spacing">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -119,7 +117,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-          <TextView
+          <com.ddiehl.android.htn.view.widgets.ColorSwapTextView
               android:id="@+id/link_author"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
@@ -175,12 +173,11 @@
 
       </LinearLayout>
 
-      <ImageView
+      <com.ddiehl.android.htn.view.widgets.SquareImageView
           android:id="@+id/link_thumbnail"
-          android:layout_width="@dimen/link_image_small_size"
-          android:layout_height="@dimen/link_image_small_size"
+          android:layout_width="wrap_content"
+          android:layout_height="match_parent"
           android:layout_gravity="center"
-          android:background="@drawable/thumbnail_bg"
           android:src="@drawable/ic_thumbnail_placeholder"/>
 
     </LinearLayout>

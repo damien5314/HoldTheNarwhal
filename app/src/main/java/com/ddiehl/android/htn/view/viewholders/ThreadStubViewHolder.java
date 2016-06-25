@@ -1,6 +1,5 @@
 package com.ddiehl.android.htn.view.viewholders;
 
-
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Build;
@@ -11,22 +10,28 @@ import android.widget.TextView;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.presenter.CommentPresenter;
-import com.ddiehl.reddit.listings.CommentStub;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import rxreddit.model.CommentStub;
 
 public class ThreadStubViewHolder extends RecyclerView.ViewHolder {
+
+  @Inject protected Context mAppContext;
   private CommentPresenter mCommentPresenter;
   private CommentStub mCommentStub;
   private String mSubreddit;
   private String mLinkId;
 
-  @Bind(R.id.comment_more) TextView mMoreCommentsView;
+  @Bind(R.id.comment_more)
+  TextView mMoreCommentsView;
 
   public ThreadStubViewHolder(View v, CommentPresenter presenter) {
     super(v);
+    HoldTheNarwhal.getApplicationComponent().inject(this);
     mCommentPresenter = presenter;
     ButterKnife.bind(this, v);
   }
@@ -41,11 +46,10 @@ public class ThreadStubViewHolder extends RecyclerView.ViewHolder {
 
   // Add padding views to indentation_wrapper based on depth of comment
   private void addPaddingViews(CommentStub comment) {
-    Context context = HoldTheNarwhal.getContext();
     int viewMargin = (comment.getDepth() - 2)
-        * (int) context.getResources().getDimension(R.dimen.comment_indentation_margin);
+        * (int) mAppContext.getResources().getDimension(R.dimen.comment_indentation_margin);
     RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) itemView.getLayoutParams();
-    Configuration config = context.getResources().getConfiguration();
+    Configuration config = mAppContext.getResources().getConfiguration();
     if (Build.VERSION.SDK_INT >= 17
         && config.getLayoutDirection() == View.LAYOUT_DIRECTION_RTL) {
       params.setMargins(0, 0, viewMargin, 0);
@@ -56,16 +60,14 @@ public class ThreadStubViewHolder extends RecyclerView.ViewHolder {
 
   private void setMoreCommentsText(CommentStub comment) {
     int count = comment.getCount();
-    Context context = HoldTheNarwhal.getContext();
     switch (count) {
       case 0:
-        mMoreCommentsView.setText(context.getString(R.string.continue_thread));
-        break;
-      case 1:
-        mMoreCommentsView.setText(context.getString(R.string.more_comments_s));
+        mMoreCommentsView.setText(
+            mAppContext.getString(R.string.continue_thread));
         break;
       default:
-        mMoreCommentsView.setText(String.format(context.getString(R.string.more_comments), count));
+        mMoreCommentsView.setText(
+            mAppContext.getResources().getQuantityString(R.plurals.more_comments, count, count));
     }
   }
 

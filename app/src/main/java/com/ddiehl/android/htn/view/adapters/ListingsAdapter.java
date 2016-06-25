@@ -16,15 +16,16 @@ import com.ddiehl.android.htn.view.viewholders.BaseLinkViewHolder;
 import com.ddiehl.android.htn.view.viewholders.ListingsCommentViewHolder;
 import com.ddiehl.android.htn.view.viewholders.ListingsLinkViewHolder;
 import com.ddiehl.android.htn.view.viewholders.ListingsMessageViewHolder;
-import com.ddiehl.reddit.listings.Comment;
-import com.ddiehl.reddit.listings.Link;
-import com.ddiehl.reddit.listings.Listing;
-import com.ddiehl.reddit.listings.PrivateMessage;
+
+import rxreddit.model.Comment;
+import rxreddit.model.Link;
+import rxreddit.model.Listing;
+import rxreddit.model.PrivateMessage;
 
 public class ListingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-  private static final int TYPE_LINK = 0x1;
-  private static final int TYPE_COMMENT = 0x2;
-  private static final int TYPE_PRIVATE_MESSAGE = 0x3;
+  private static final int TYPE_LINK = 0x00000001;
+  private static final int TYPE_COMMENT = 0x00000002;
+  private static final int TYPE_PRIVATE_MESSAGE = 0x00000004;
 
   protected ListingsPresenter mListingsPresenter;
   protected LinkPresenter mLinkPresenter;
@@ -45,7 +46,7 @@ public class ListingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
   @Override
   public int getItemViewType(int position) {
-    Listing listing = mListingsPresenter.getListing(position);
+    Listing listing = mListingsPresenter.getListingAt(position);
     if (listing instanceof Link) return TYPE_LINK;
     if (listing instanceof Comment) return TYPE_COMMENT;
     if (listing instanceof PrivateMessage) return TYPE_PRIVATE_MESSAGE;
@@ -76,15 +77,15 @@ public class ListingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
   public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
     if (position % 25 == 0) getSettings();
     if (holder instanceof BaseLinkViewHolder) {
-      Link link = (Link) mListingsPresenter.getListing(position);
-      ((BaseLinkViewHolder) holder).bind(link, false, mThumbnailMode, mShowNsfwTag);
+      Link link = (Link) mListingsPresenter.getListingAt(position);
+      ((BaseLinkViewHolder) holder).bind(link, false, mThumbnailMode, mShowNsfwTag, false);
     } else if (holder instanceof ListingsCommentViewHolder) {
-      Comment comment = (Comment) mListingsPresenter.getListing(position);
+      Comment comment = (Comment) mListingsPresenter.getListingAt(position);
       boolean showControversiality = mListingsPresenter.getShowControversiality()
           && comment.getControversiality() > 0;
       ((ListingsCommentViewHolder) holder).bind(comment, showControversiality);
     } else if (holder instanceof ListingsMessageViewHolder) {
-      PrivateMessage message = (PrivateMessage) mListingsPresenter.getListing(position);
+      PrivateMessage message = (PrivateMessage) mListingsPresenter.getListingAt(position);
       ((ListingsMessageViewHolder) holder)
           .bind(message, mListingsPresenter instanceof InboxPresenter);
     }

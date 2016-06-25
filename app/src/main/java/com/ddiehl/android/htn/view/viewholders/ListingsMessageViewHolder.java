@@ -11,43 +11,38 @@ import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.presenter.MessagePresenter;
 import com.ddiehl.android.htn.utils.Utils;
-import com.ddiehl.reddit.listings.Listing;
-import com.ddiehl.reddit.listings.PrivateMessage;
-import com.ddiehl.timesincetextview.TimeSinceTextView;
+import com.ddiehl.timesincetextview.TimeSince;
 
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import rxreddit.model.Listing;
+import rxreddit.model.PrivateMessage;
 
 public class ListingsMessageViewHolder extends RecyclerView.ViewHolder
     implements View.OnCreateContextMenuListener {
-  private Context mContext = HoldTheNarwhal.getContext();
+
+  @Inject protected Context mAppContext;
   private MessagePresenter mInboxPresenter;
   private PrivateMessage mMessage;
 
-  @Bind(R.id.conversation_subject)
-  TextView mConversationSubject;
-  @Bind(R.id.conversation_body_layout)
-  ViewGroup mConversationBodyLayout;
-  @Bind(R.id.collapsed_messages_layout)
-  ViewGroup mCollapsedMessagesLayout;
-  @Bind(R.id.collapsed_messages_text)
-  TextView mCollapsedMessagesText;
-  @Bind(R.id.last_message_layout)
-  ViewGroup mLastMessageLayout;
-  @Bind(R.id.message_indentation)
-  View mMessageIndentation;
-  @Bind(R.id.last_message_metadata)
-  TextView mLastMessageMetadata;
-  @Bind(R.id.unread_message_indicator)
-  View mUnreadMessageIndicator;
-  @Bind(R.id.last_message_body)
-  TextView mLastMessageBody;
+  @Bind(R.id.conversation_subject) TextView mConversationSubject;
+  @Bind(R.id.conversation_body_layout) ViewGroup mConversationBodyLayout;
+  @Bind(R.id.collapsed_messages_layout) ViewGroup mCollapsedMessagesLayout;
+  @Bind(R.id.collapsed_messages_text) TextView mCollapsedMessagesText;
+  @Bind(R.id.last_message_layout) ViewGroup mLastMessageLayout;
+  @Bind(R.id.message_indentation) View mMessageIndentation;
+  @Bind(R.id.last_message_metadata) TextView mLastMessageMetadata;
+  @Bind(R.id.unread_message_indicator) View mUnreadMessageIndicator;
+  @Bind(R.id.last_message_body) TextView mLastMessageBody;
 
   public ListingsMessageViewHolder(View view, MessagePresenter presenter) {
     super(view);
+    HoldTheNarwhal.getApplicationComponent().inject(this);
     mInboxPresenter = presenter;
     ButterKnife.bind(this, view);
     itemView.setOnCreateContextMenuListener(this);
@@ -79,19 +74,19 @@ public class ListingsMessageViewHolder extends RecyclerView.ViewHolder
     // Show message metadata and text
     mConversationSubject.setText(messageToShow.getSubject());
     if (replies != null) {
-      String formatter = mContext.getString(R.string.view_more_messages);
+      int n = replies.size();
       mCollapsedMessagesText.setText(
-          String.format(formatter, replies.size()));
+          mAppContext.getResources().getQuantityString(R.plurals.view_more_messages, n, n));
     }
     boolean isToMe = Utils.equals(
         mInboxPresenter.getUserIdentity().getName(), messageToShow.getDestination());
-    String from = mContext.getString(
+    String from = mAppContext.getString(
         isToMe ? R.string.message_metadata_from : R.string.message_metadata_to);
     from = String.format(from,
         isToMe ? messageToShow.getAuthor() : messageToShow.getDestination());
-    String sent = mContext.getString(R.string.message_metadata_sent);
-    sent = String.format(sent, TimeSinceTextView.getFormattedDateString(
-        messageToShow.getCreatedUtc(), false, mContext));
+    String sent = mAppContext.getString(R.string.message_metadata_sent);
+    sent = String.format(sent, TimeSince.getFormattedDateString(
+        messageToShow.getCreatedUtc(), false, mAppContext));
     String text = from + " " + sent;
     mLastMessageMetadata.setText(text);
     mLastMessageBody.setText(messageToShow.getBody());
@@ -105,14 +100,12 @@ public class ListingsMessageViewHolder extends RecyclerView.ViewHolder
   }
 
   @OnClick({ R.id.last_message_layout })
-  void onClick(View v) {
-    mInboxPresenter.setSelectedListing(mMessage);
-    v.showContextMenu();
+  void onClick(View view) {
+    view.showContextMenu();
   }
 
   @OnClick({ R.id.conversation_subject, R.id.collapsed_messages_layout })
   void showMessageView() {
-    mInboxPresenter.setSelectedListing(mMessage);
-    mInboxPresenter.showMessagePermalink();
+    mInboxPresenter.showMessagePermalink(mMessage);
   }
 }

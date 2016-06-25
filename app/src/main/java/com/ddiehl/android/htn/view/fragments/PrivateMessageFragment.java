@@ -2,10 +2,6 @@ package com.ddiehl.android.htn.view.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.ddiehl.android.htn.R;
@@ -13,15 +9,19 @@ import com.ddiehl.android.htn.presenter.PrivateMessagePresenter;
 import com.ddiehl.android.htn.view.PrivateMessageView;
 import com.ddiehl.android.htn.view.adapters.ListingsAdapter;
 import com.ddiehl.android.htn.view.adapters.PrivateMessageAdapter;
-import com.ddiehl.reddit.listings.Listing;
 
 import org.parceler.Parcels;
 
 import java.util.List;
 
 import butterknife.Bind;
+import rxreddit.model.Listing;
 
-public class PrivateMessageFragment extends BaseListingsFragment implements PrivateMessageView {
+public class PrivateMessageFragment extends BaseListingsFragment
+    implements PrivateMessageView {
+
+  public static final String TAG = PrivateMessageFragment.class.getSimpleName();
+
   private static final String ARG_MESSAGES = "arg_messages";
 
   private PrivateMessagePresenter mPrivateMessagePresenter;
@@ -47,14 +47,7 @@ public class PrivateMessageFragment extends BaseListingsFragment implements Priv
     mPrivateMessagePresenter = new PrivateMessagePresenter(mMainView, this, this, messages);
     mMessagePresenter = mPrivateMessagePresenter;
     mListingsPresenter = mPrivateMessagePresenter;
-  }
-
-  @Nullable @Override
-  public View onCreateView(
-      LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    View v = super.onCreateView(inflater, container, savedInstanceState);
-    updateTitle();
-    return v;
+    mCallbacks = mPrivateMessagePresenter;
   }
 
   @Override
@@ -70,10 +63,5 @@ public class PrivateMessageFragment extends BaseListingsFragment implements Priv
   @Override
   public void showSubject(@NonNull String subject) {
     mConversationSubject.setText(subject);
-  }
-
-  @Override
-  public void updateTitle() {
-
   }
 }

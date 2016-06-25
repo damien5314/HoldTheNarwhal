@@ -2,10 +2,10 @@ package com.ddiehl.android.htn.view.dialogs;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.app.DialogFragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.DialogFragment;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;

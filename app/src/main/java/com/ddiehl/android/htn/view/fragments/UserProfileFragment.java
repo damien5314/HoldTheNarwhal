@@ -1,6 +1,5 @@
 package com.ddiehl.android.htn.view.fragments;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -16,15 +15,16 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
+import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.presenter.UserProfilePresenter;
 import com.ddiehl.android.htn.utils.AndroidUtils;
 import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.android.htn.view.UserProfileView;
 import com.ddiehl.android.htn.view.adapters.ListingsAdapter;
-import com.ddiehl.reddit.identity.UserIdentity;
-import com.ddiehl.reddit.listings.Listing;
-import com.ddiehl.reddit.listings.Trophy;
+import com.hannesdorfmann.fragmentargs.FragmentArgs;
+import com.hannesdorfmann.fragmentargs.annotation.Arg;
+import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs;
 import com.squareup.picasso.Picasso;
 
 import java.text.NumberFormat;
@@ -32,15 +32,19 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import rxreddit.model.Listing;
+import rxreddit.model.Trophy;
+import rxreddit.model.UserIdentity;
 
+@FragmentWithArgs
 public class UserProfileFragment extends BaseListingsFragment
     implements UserProfileView, TabLayout.OnTabSelectedListener {
-  private static final String ARG_SHOW = "arg_show";
-  private static final String ARG_USERNAME = "arg_username";
-  private static final String ARG_SORT = "arg_sort";
-  private static final String ARG_TIMESPAN = "arg_timespan";
+
+  public static final String TAG = UserProfileFragment.class.getSimpleName();
 
   @Bind(R.id.tab_layout) TabLayout mUserProfileTabs;
   @Bind(R.id.user_profile_summary) View mUserProfileSummary;
@@ -57,6 +61,13 @@ public class UserProfileFragment extends BaseListingsFragment
   @Bind(R.id.user_friend_note_confirm) Button mFriendNoteSave;
   @Bind(R.id.user_trophies) GridLayout mTrophies;
 
+  @Inject protected IdentityManager mIdentityManager;
+
+  @Arg String mUsername;
+  @Arg String mShow;
+  @Arg String mSort;
+  @Arg String mTimespan;
+
   private TabLayout.Tab mTabSummary, mTabOverview, mTabComments, mTabSubmitted, mTabGilded,
       mTabUpvoted, mTabDownvoted, mTabHidden, mTabSaved;
 
@@ -64,33 +75,20 @@ public class UserProfileFragment extends BaseListingsFragment
 
   public UserProfileFragment() { }
 
-  public static UserProfileFragment newInstance(
-      @NonNull String username, @Nullable String show, @Nullable String sort) {
-    UserProfileFragment f = new UserProfileFragment();
-    Bundle args = new Bundle();
-    args.putString(ARG_USERNAME, username);
-    if (TextUtils.isEmpty(show)) show = "summary";
-    args.putString(ARG_SHOW, show);
-    if (TextUtils.isEmpty(sort)) sort = "new";
-    args.putString(ARG_SORT, sort);
-    f.setArguments(args);
-    return f;
-  }
-
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    Bundle args = getArguments();
-    String username = args.getString(ARG_USERNAME);
-    String show = args.getString(ARG_SHOW);
-    String sort = args.getString(ARG_SORT);
-    String timespan = args.getString(ARG_TIMESPAN);
-    if (TextUtils.isEmpty(timespan)) timespan = "all";
-    mUserProfilePresenter =
-        new UserProfilePresenter(mMainView, this, this, this, this, show, username, sort, timespan);
+    HoldTheNarwhal.getApplicationComponent().inject(this);
+    FragmentArgs.inject(this);
+    if (TextUtils.isEmpty(mShow)) mShow = "summary";
+    if (TextUtils.isEmpty(mSort)) mSort = "new";
+    if (TextUtils.isEmpty(mTimespan)) mTimespan = "all";
+    mUserProfilePresenter = new UserProfilePresenter(
+        mMainView, this, this, this, this, mShow, mUsername, mSort, mTimespan);
     mLinkPresenter = mUserProfilePresenter;
     mCommentPresenter = mUserProfilePresenter;
     mListingsPresenter = mUserProfilePresenter;
+    mCallbacks = mUserProfilePresenter;
   }
 
   @Override
@@ -132,30 +130,23 @@ public class UserProfileFragment extends BaseListingsFragment
   }
 
   @Override
-  public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-    super.onActivityCreated(savedInstanceState);
-    updateTitle(); // FIXME Why does this have to go in onActivityCreated?
-  }
-
-  @Override
   protected int getLayoutResId() {
     return R.layout.listings_fragment_user_profile;
   }
 
   @Override
   public void onPause() {
-    getArguments().putString(ARG_SHOW, mListingsPresenter.getShow());
-    getArguments().putString(ARG_SORT, mListingsPresenter.getSort());
-    getArguments().putString(ARG_TIMESPAN, mListingsPresenter.getTimespan());
+    mShow = mListingsPresenter.getShow();
+    mSort = mListingsPresenter.getSort();
+    mTimespan = mListingsPresenter.getTimespan();
     super.onPause();
   }
 
   @Override
   public void showUserInfo(@NonNull UserIdentity user) {
     Date createDate = new Date(user.getCreatedUTC() * 1000);
-    Context context = HoldTheNarwhal.getContext();
     String created = String.format(
-        context.getString(R.string.user_profile_summary_created),
+        getContext().getString(R.string.user_profile_summary_created),
         SimpleDateFormat.getDateInstance().format(createDate));
     mCreateDate.setText(created);
     mKarmaLayout.setVisibility(View.VISIBLE);
@@ -163,7 +154,7 @@ public class UserProfileFragment extends BaseListingsFragment
     mCommentKarma.setText(NumberFormat.getInstance().format(user.getCommentKarma()));
     // If user is not self, show friend button
     // TODO This should come from presenter
-    UserIdentity self = HoldTheNarwhal.getIdentityManager().getUserIdentity();
+    UserIdentity self = mIdentityManager.getUserIdentity();
     if (self != null && !user.getName().equals(self.getName())) {
       mFriendButton.setVisibility(View.VISIBLE);
       if (user.isFriend()) {
@@ -280,18 +271,12 @@ public class UserProfileFragment extends BaseListingsFragment
 
   private void showViewForTab(TabLayout.Tab tab) {
     String tag = (String) tab.getTag();
-    if (tag != null && tag.equals("summary")) {
+    if ("summary".equals(tag)) {
       mListView.setVisibility(View.GONE);
       mUserProfileSummary.setVisibility(View.VISIBLE);
     } else {
       mUserProfileSummary.setVisibility(View.GONE);
       mListView.setVisibility(View.VISIBLE);
     }
-  }
-
-  @Override
-  public void updateTitle() {
-    mMainView.setTitle(String.format(getString(R.string.username),
-        mUserProfilePresenter.getUsernameContext()));
   }
 }

@@ -62,8 +62,8 @@
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:gravity="center"
-              android:drawableStart="@drawable/ic_gilded_2"
-              android:drawableLeft="@drawable/ic_gilded_2"
+              android:drawableStart="@drawable/ic_gilded_101"
+              android:drawableLeft="@drawable/ic_gilded_101"
               android:textSize="@dimen/link_metadata_text_size"
               android:textColor="@color/secondary_text"
               tools:targetApi="16"
@@ -107,7 +107,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-          <TextView
+          <com.ddiehl.android.htn.view.widgets.ColorSwapTextView
               android:id="@+id/link_author"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
@@ -189,6 +189,25 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:src="@drawable/ic_stickied_dark"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/link_parent_view"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="@dimen/baseline_spacing"
+          android:paddingLeft="@dimen/baseline_spacing"
+          android:paddingRight="@dimen/baseline_spacing"
+          android:textAppearance="@android:style/TextAppearance.Small"
+          android:drawableLeft="@drawable/ic_info"
+          android:drawablePadding="@dimen/baseline_spacing"
+          android:text="@string/link_parent_text"/>
 
     </LinearLayout>
 

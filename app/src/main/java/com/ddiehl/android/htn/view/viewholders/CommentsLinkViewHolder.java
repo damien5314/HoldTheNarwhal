@@ -11,14 +11,19 @@ import android.view.View;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.ThumbnailMode;
 import com.ddiehl.android.htn.presenter.LinkPresenter;
-import com.ddiehl.reddit.listings.Link;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import butterknife.Bind;
 import butterknife.OnClick;
+import rxreddit.model.Link;
 
 public class CommentsLinkViewHolder extends BaseLinkViewHolder {
+
+  @Bind(R.id.link_parent_view)
+  View mParentLinkView;
+
   public CommentsLinkViewHolder(View v, LinkPresenter presenter) {
     super(v, presenter);
   }
@@ -78,5 +83,12 @@ public class CommentsLinkViewHolder extends BaseLinkViewHolder {
         mLinkThumbnail.setVisibility(View.VISIBLE);
         loadThumbnail(url);
     }
+  }
+
+  @Override
+  protected void showParentLink(boolean visible) {
+    mParentLinkView.setVisibility(visible ? View.VISIBLE : View.GONE);
+    mParentLinkView.setOnClickListener(
+        view -> mLinkPresenter.showCommentsForLink(mLink));
   }
 }

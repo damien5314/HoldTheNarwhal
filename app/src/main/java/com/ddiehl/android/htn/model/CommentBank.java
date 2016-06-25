@@ -2,12 +2,12 @@ package com.ddiehl.android.htn.model;
 
 import android.support.annotation.Nullable;
 
-import com.ddiehl.reddit.listings.AbsComment;
-import com.ddiehl.reddit.listings.Comment;
-import com.ddiehl.reddit.listings.Listing;
-
 import java.util.Collection;
 import java.util.List;
+
+import rxreddit.model.AbsComment;
+import rxreddit.model.Comment;
+import rxreddit.model.Listing;
 
 public interface CommentBank {
   void add(AbsComment comment);
@@ -25,7 +25,6 @@ public interface CommentBank {
   boolean isVisible(int position);
   int getNumVisible();
   AbsComment getVisibleComment(int position);
-//  void toggleThreadVisible(int index, boolean visible);
   void toggleThreadVisible(Comment comment);
   void collapseAllThreadsUnder(@Nullable Integer score);
 }

@@ -3,21 +3,22 @@ package com.ddiehl.android.htn.presenter;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.ddiehl.reddit.identity.UserIdentity;
-import com.ddiehl.reddit.listings.Listing;
-
 import java.util.List;
+
+import rxreddit.model.Listing;
+import rxreddit.model.UserIdentity;
 
 public interface ListingsPresenter extends BasePresenter {
   void refreshData();
   void setData(@NonNull List<Listing> data);
-  void getMoreData();
-  void setSelectedListing(@NonNull Listing listing);
+  void getPreviousData();
+  void getNextData();
   int getNumListings();
-  Listing getListing(int position);
+  Listing getListingAt(int position);
   String getUsernameContext();
   String getSubreddit();
-  String getNextPageListingId();
+  boolean hasPreviousListings();
+  boolean hasNextListings();
   String getSort();
   String getTimespan();
   String getShow();

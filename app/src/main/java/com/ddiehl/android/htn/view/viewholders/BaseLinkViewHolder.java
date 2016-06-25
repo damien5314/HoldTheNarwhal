@@ -1,6 +1,5 @@
 package com.ddiehl.android.htn.view.viewholders;
 
-
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -14,7 +13,7 @@ import android.widget.TextView;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.ThumbnailMode;
 import com.ddiehl.android.htn.presenter.LinkPresenter;
-import com.ddiehl.reddit.listings.Link;
+import com.ddiehl.android.htn.view.widgets.ColorSwapTextView;
 import com.ddiehl.timesincetextview.TimeSinceTextView;
 import com.squareup.picasso.Picasso;
 
@@ -23,26 +22,30 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import rxreddit.model.Link;
 
 public abstract class BaseLinkViewHolder extends RecyclerView.ViewHolder
     implements View.OnCreateContextMenuListener {
   protected Context mContext;
   protected LinkPresenter mLinkPresenter;
   protected Link mLink;
-  protected int mAuthorTextColor; // FIXME Move this into the implementation classes
 
   @Bind(R.id.link_view) View mLinkView;
   @Bind(R.id.link_saved_view) View mSavedView;
-  @Bind(R.id.link_title) TextView mLinkTitle;
+  @Bind(R.id.link_title)
+  TextView mLinkTitle;
   @Bind(R.id.link_domain) TextView mLinkDomain;
   @Bind(R.id.link_score) TextView mLinkScore;
-  @Bind(R.id.link_author) TextView mLinkAuthor;
+  @Bind(R.id.link_author)
+  ColorSwapTextView mLinkAuthor;
   @Bind(R.id.link_subreddit) TextView mLinkSubreddit;
   @Bind(R.id.link_comment_count) TextView mLinkComments;
   @Bind(R.id.link_self_text) TextView mSelfText;
   @Bind(R.id.link_nsfw_indicator) TextView mNsfwIndicator;
-  @Bind(R.id.link_thumbnail) ImageView mLinkThumbnail;
-  @Bind(R.id.link_timestamp) TimeSinceTextView mLinkTimestamp;
+  @Bind(R.id.link_thumbnail)
+  ImageView mLinkThumbnail;
+  @Bind(R.id.link_timestamp)
+  TimeSinceTextView mLinkTimestamp;
   @Bind(R.id.link_gilded_text_view) TextView mGildedText;
   @Bind(R.id.link_stickied_view) View mStickiedView;
 
@@ -52,7 +55,6 @@ public abstract class BaseLinkViewHolder extends RecyclerView.ViewHolder
     mLinkPresenter = presenter;
     ButterKnife.bind(this, v);
     itemView.setOnCreateContextMenuListener(this);
-    mAuthorTextColor = mLinkAuthor.getCurrentTextColor();
   }
 
   @OnClick({ R.id.link_view, R.id.link_thumbnail })
@@ -66,7 +68,7 @@ public abstract class BaseLinkViewHolder extends RecyclerView.ViewHolder
   }
 
   public void bind(
-      @NonNull Link link, boolean showSelfText, ThumbnailMode mode, boolean showNsfw) {
+      @NonNull Link link, boolean showSelfText, ThumbnailMode mode, boolean showNsfw, boolean showParentLink) {
     mLink = link;
     showSelfText(link, showSelfText);
     showScore(link);
@@ -82,6 +84,7 @@ public abstract class BaseLinkViewHolder extends RecyclerView.ViewHolder
     showGilded(link);
     showSaved(link);
     showStickied(link);
+    showParentLink(showParentLink);
   }
 
   protected void showSelfText(@NonNull Link link, boolean showSelfText) {
@@ -95,9 +98,14 @@ public abstract class BaseLinkViewHolder extends RecyclerView.ViewHolder
   }
 
   protected void showScore(@NonNull Link link) {
-    String score = link.getScore() == null ?
-        mContext.getString(R.string.hidden_score_placeholder) : link.getScore().toString();
-    mLinkScore.setText(String.format(mContext.getString(R.string.link_score), score));
+    Integer score = link.getScore();
+    if (score == null) {
+      mLinkScore.setText(
+          mContext.getString(R.string.hidden_score_placeholder));
+    } else {
+      mLinkScore.setText(
+          mContext.getResources().getQuantityString(R.plurals.link_score, score, score));
+    }
   }
 
   protected void showTitle(@NonNull Link link) {
@@ -109,8 +117,9 @@ public abstract class BaseLinkViewHolder extends RecyclerView.ViewHolder
         String.format(mContext.getString(R.string.link_author), link.getAuthor()));
     String distinguished = link.getDistinguished();
     if (distinguished == null || distinguished.equals("")) {
-      mLinkAuthor.setBackgroundResource(0);
-      mLinkAuthor.setTextColor(mAuthorTextColor);
+      // noinspection deprecation
+      mLinkAuthor.setBackgroundDrawable(mLinkAuthor.getOriginalBackground());
+      mLinkAuthor.setTextColor(mLinkAuthor.getOriginalTextColor());
     } else {
       switch (distinguished) {
         case "moderator":
@@ -160,8 +169,9 @@ public abstract class BaseLinkViewHolder extends RecyclerView.ViewHolder
   }
 
   protected void showCommentCount(@NonNull Link link) {
+    int n = link.getNumComments();
     mLinkComments.setText(
-        String.format(mContext.getString(R.string.link_comment_count), link.getNumComments()));
+            mContext.getResources().getQuantityString(R.plurals.link_comment_count, n, n));
   }
 
   protected String getPreviewUrl(@NonNull Link link) {
@@ -188,7 +198,7 @@ public abstract class BaseLinkViewHolder extends RecyclerView.ViewHolder
   protected void loadThumbnail(@Nullable String url) {
     Picasso.with(mContext)
         .load(url)
-        .placeholder(R.drawable.ic_thumbnail_placeholder)
+//        .placeholder(R.drawable.ic_thumbnail_placeholder)
         .fit()
         .centerCrop()
         .error(R.drawable.ic_alert_error)
@@ -221,8 +231,11 @@ public abstract class BaseLinkViewHolder extends RecyclerView.ViewHolder
     mStickiedView.setVisibility(stickied ? View.VISIBLE : View.INVISIBLE);
   }
 
+  protected abstract void showParentLink(boolean link);
+
   @Override
-  public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-    mLinkPresenter.showLinkContextMenu(menu, v, menuInfo, mLink);
+  public void onCreateContextMenu(
+      ContextMenu menu, View view, ContextMenu.ContextMenuInfo menuInfo) {
+    mLinkPresenter.showLinkContextMenu(menu, view, mLink);
   }
 }
