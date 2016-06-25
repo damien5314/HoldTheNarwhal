@@ -81,7 +81,6 @@ public abstract class BaseActivity extends AppCompatActivity implements MainView
 
   @Inject protected Analytics mAnalytics;
   private MainPresenter mMainPresenter;
-  private boolean mBackStackReset = true;
 
   abstract Fragment getFragment();
   abstract String getFragmentTag();
@@ -429,21 +428,6 @@ public abstract class BaseActivity extends AppCompatActivity implements MainView
 
   private Fragment getCurrentDisplayedFragment() {
     return getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-  }
-
-//  private void showFragment(@NonNull Fragment f) {
-//    @SuppressLint("CommitTransaction")
-//    FragmentTransaction ft = getSupportFragmentManager().beginTransaction()
-//        .replace(R.id.fragment_container, f);
-//    if (getCurrentDisplayedFragment() != null && !mBackStackReset) ft.addToBackStack(null);
-//    ft.commit();
-//    mBackStackReset = false;
-//  }
-
-  @Override
-  public void resetBackNavigation() {
-    mBackStackReset = true;
-    getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
   }
 
   @Override
