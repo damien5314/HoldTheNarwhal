@@ -23,9 +23,10 @@ import rxreddit.model.Listing;
 import rxreddit.model.PrivateMessage;
 
 public class ListingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-  private static final int TYPE_LINK = 0x00000001;
-  private static final int TYPE_COMMENT = 0x00000002;
-  private static final int TYPE_PRIVATE_MESSAGE = 0x00000004;
+
+  private static final int TYPE_LINK = 1;
+  private static final int TYPE_COMMENT = 2;
+  private static final int TYPE_PRIVATE_MESSAGE = 3;
 
   protected ListingsPresenter mListingsPresenter;
   protected LinkPresenter mLinkPresenter;

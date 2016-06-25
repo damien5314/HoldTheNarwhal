@@ -7,7 +7,7 @@ import android.support.v4.app.Fragment;
 import com.ddiehl.android.htn.view.fragments.LinkCommentsFragment;
 import com.ddiehl.android.htn.view.fragments.LinkCommentsFragmentBuilder;
 
-public class LinkCommentsActivity extends BaseActivity {
+public class LinkCommentsActivity extends FragmentActivityCompat {
 
   private static final String EXTRA_SUBREDDIT = "EXTRA_SUBREDDIT";
   private static final String EXTRA_ARTICLE_ID = "EXTRA_ARTICLE_ID";

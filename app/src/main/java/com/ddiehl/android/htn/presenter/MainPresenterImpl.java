@@ -34,19 +34,10 @@ public class MainPresenterImpl implements MainPresenter, IdentityManager.Callbac
   private MainView mMainView;
   private Uri mDeepLink;
 
-  public MainPresenterImpl(
-      MainView view, Uri deepLink
-//      Context context, RedditService service,
-//      IdentityManager identityManager, SettingsManager settingsManager, Analytics analytics
-  ) {
+  public MainPresenterImpl(MainView view, Uri deepLink) {
     HoldTheNarwhal.getApplicationComponent().inject(this);
     mMainView = view;
     mDeepLink = deepLink;
-//    mAppContext = context;
-//    mRedditService = service;
-//    mIdentityManager = identityManager;
-//    mSettingsManager = settingsManager;
-//    mAnalytics = analytics;
   }
 
   @Override
@@ -69,7 +60,7 @@ public class MainPresenterImpl implements MainPresenter, IdentityManager.Callbac
     if (mDeepLink != null) {
       processDeepLink(mDeepLink);
     } else {
-      mMainView.showSubredditIfEmpty(null);
+      mMainView.showFragment();
     }
   }
 

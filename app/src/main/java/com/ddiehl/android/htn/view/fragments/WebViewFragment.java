@@ -84,7 +84,6 @@ public class WebViewFragment extends Fragment {
     FragmentArgs.inject(this);
     setRetainInstance(true);
     setHasOptionsMenu(true);
-    getActivity().setTitle(R.string.app_name);
   }
 
   @Override @SuppressWarnings("SetJavaScriptEnabled")

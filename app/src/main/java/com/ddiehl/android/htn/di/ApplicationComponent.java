@@ -3,11 +3,14 @@ package com.ddiehl.android.htn.di;
 import com.ddiehl.android.htn.analytics.FlurryAnalytics;
 import com.ddiehl.android.htn.presenter.BaseListingsPresenter;
 import com.ddiehl.android.htn.presenter.MainPresenterImpl;
+import com.ddiehl.android.htn.presenter.SettingsPresenterImpl;
 import com.ddiehl.android.htn.presenter.UserProfilePresenter;
 import com.ddiehl.android.htn.view.activities.BaseActivity;
 import com.ddiehl.android.htn.view.activities.PrivateMessageActivity;
+import com.ddiehl.android.htn.view.activities.SettingsActivity;
 import com.ddiehl.android.htn.view.fragments.BaseListingsFragment;
 import com.ddiehl.android.htn.view.fragments.PrivateMessageFragment;
+import com.ddiehl.android.htn.view.fragments.SettingsFragment;
 import com.ddiehl.android.htn.view.fragments.UserProfileFragment;
 import com.ddiehl.android.htn.view.viewholders.ListingsCommentViewHolder;
 import com.ddiehl.android.htn.view.viewholders.ListingsMessageViewHolder;
@@ -31,10 +34,14 @@ public interface ApplicationComponent {
   void inject(BaseActivity activity);
   void inject(PrivateMessageActivity activity);
 
+  void inject(SettingsActivity activity);
+
   // Fragments
   void inject(BaseListingsFragment fragment);
   void inject(UserProfileFragment fragment);
   void inject(PrivateMessageFragment fragment);
+
+  void inject(SettingsFragment fragment);
 
   // ViewHolders
   void inject(ThreadCommentViewHolder vh);
@@ -46,5 +53,5 @@ public interface ApplicationComponent {
   void inject(MainPresenterImpl mainPresenter);
   void inject(BaseListingsPresenter presenter);
   void inject(UserProfilePresenter presenter);
-
+  void inject(SettingsPresenterImpl settingsPresenter);
 }

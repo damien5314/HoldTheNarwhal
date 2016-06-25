@@ -7,7 +7,7 @@ import android.support.v4.app.Fragment;
 import com.ddiehl.android.htn.view.fragments.SubredditFragment;
 import com.ddiehl.android.htn.view.fragments.SubredditFragmentBuilder;
 
-public class SubredditActivity extends BaseActivity {
+public class SubredditActivity extends FragmentActivityCompat {
 
   public static final String TAG = SubredditActivity.class.getSimpleName();
 

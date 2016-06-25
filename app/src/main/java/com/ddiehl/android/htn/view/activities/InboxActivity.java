@@ -7,7 +7,7 @@ import android.support.v4.app.Fragment;
 import com.ddiehl.android.htn.view.fragments.InboxFragment;
 import com.ddiehl.android.htn.view.fragments.InboxFragmentBuilder;
 
-public class InboxActivity extends BaseActivity {
+public class InboxActivity extends FragmentActivityCompat {
 
   private static final String EXTRA_SHOW = "EXTRA_SHOW";
 

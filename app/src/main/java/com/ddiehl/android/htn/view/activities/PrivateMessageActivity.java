@@ -16,7 +16,7 @@ import javax.inject.Inject;
 
 import rxreddit.model.PrivateMessage;
 
-public class PrivateMessageActivity extends BaseActivity {
+public class PrivateMessageActivity extends FragmentActivityCompat {
 
   private static final String EXTRA_MESSAGES = "EXTRA_MESSAGES";
 

@@ -11,16 +11,10 @@ import com.ddiehl.android.htn.presenter.MessagePresenter;
 import com.ddiehl.android.htn.view.viewholders.ListingsMessageViewHolder;
 
 public class PrivateMessageAdapter extends ListingsAdapter {
-  private static final int TYPE_MESSAGE = 0x1;
 
   public PrivateMessageAdapter(
       ListingsPresenter listingsPresenter, MessagePresenter messagePresenter) {
     super(listingsPresenter, null, null, messagePresenter);
-  }
-
-  @Override
-  public int getItemViewType(int position) {
-    return TYPE_MESSAGE;
   }
 
   @Override

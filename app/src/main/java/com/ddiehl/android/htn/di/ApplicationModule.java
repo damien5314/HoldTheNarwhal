@@ -11,6 +11,8 @@ import com.ddiehl.android.htn.analytics.Analytics;
 import com.ddiehl.android.htn.analytics.FlurryAnalytics;
 import com.google.gson.Gson;
 
+import java.io.File;
+
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -51,6 +53,8 @@ public class ApplicationModule {
 
   @Singleton @Provides
   RedditService providesRedditService(Context context) {
+    final int cacheSize = 10 * 1024 * 1024; // 10 MiB
+    File path = new File(context.getCacheDir().getAbsolutePath(), "htn-http-cache");
     return new RedditService.Builder()
         .appId(BuildConfig.REDDIT_APP_ID)
         .redirectUri(BuildConfig.REDDIT_REDIRECT_URI)
@@ -58,6 +62,7 @@ public class ApplicationModule {
         .userAgent(RxRedditUtil.getUserAgent(
             "android", "com.ddiehl.android.htn", BuildConfig.VERSION_NAME, "damien5314"))
         .accessTokenManager(new AndroidAccessTokenManager(context))
+        .cache(cacheSize, path)
         .build();
   }
 

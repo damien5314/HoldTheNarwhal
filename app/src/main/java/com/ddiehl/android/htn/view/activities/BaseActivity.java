@@ -2,7 +2,6 @@ package com.ddiehl.android.htn.view.activities;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
@@ -15,6 +14,7 @@ import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -53,8 +53,8 @@ import rxreddit.model.PrivateMessage;
 import rxreddit.model.UserIdentity;
 import timber.log.Timber;
 
-public abstract class BaseActivity extends AppCompatActivity implements MainView,
-    NavigationView.OnNavigationItemSelectedListener {
+public abstract class BaseActivity extends AppCompatActivity
+    implements MainView, NavigationView.OnNavigationItemSelectedListener {
 
   public static final int REQUEST_NSFW_WARNING = 1;
   public static final int REQUEST_SIGN_IN = 2;
@@ -84,8 +84,7 @@ public abstract class BaseActivity extends AppCompatActivity implements MainView
   @Inject protected Gson mGson;
   private MainPresenter mMainPresenter;
 
-  abstract Fragment getFragment();
-  abstract String getFragmentTag();
+  public abstract void showFragment();
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -101,11 +100,14 @@ public abstract class BaseActivity extends AppCompatActivity implements MainView
     // Initialize app toolbar
     Toolbar toolbar = ButterKnife.findById(this, R.id.toolbar);
     setSupportActionBar(toolbar);
+
     ActionBar actionBar = getSupportActionBar();
     if (actionBar != null) {
       actionBar.setHomeAsUpIndicator(R.drawable.ic_navigation_menu);
       actionBar.setDisplayHomeAsUpEnabled(true);
     }
+
+    setTitle(null);
 
     // Initialize dependencies
     Uri data = getIntent().getData();
@@ -122,16 +124,6 @@ public abstract class BaseActivity extends AppCompatActivity implements MainView
     mSignOutView = header.findViewById(R.id.sign_out_button);
     mSignOutView.setOnClickListener(view -> onSignOut());
     mHeaderImage = (ImageView) header.findViewById(R.id.navigation_drawer_header_image);
-  }
-
-  @Override
-  protected void onStart() {
-    super.onStart();
-    if (getSupportFragmentManager().findFragmentByTag(getFragmentTag()) == null) {
-      getSupportFragmentManager().beginTransaction()
-          .add(R.id.fragment_container, getFragment(), getFragmentTag())
-          .commit();
-    }
   }
 
   @Override
@@ -333,8 +325,8 @@ public abstract class BaseActivity extends AppCompatActivity implements MainView
 
   @Override
   public void showSettings() {
-    // TODO Convert SettingsFragment to support Fragment
-//    showFragment(new SettingsFragment());
+    Intent intent = SettingsActivity.getIntent(this);
+    startActivity(intent);
   }
 
   @Override
@@ -343,7 +335,7 @@ public abstract class BaseActivity extends AppCompatActivity implements MainView
       closeNavigationDrawer();
       return;
     }
-    FragmentManager fm = getFragmentManager();
+    FragmentManager fm = getSupportFragmentManager();
     if (fm.getBackStackEntryCount() > 0) {
       fm.popBackStack();
     } else {
@@ -407,11 +399,6 @@ public abstract class BaseActivity extends AppCompatActivity implements MainView
       @Nullable String subreddit, @Nullable String linkId, @Nullable String commentId) {
     Intent intent = LinkCommentsActivity.getIntent(this, subreddit, linkId, commentId);
     startActivity(intent);
-  }
-
-  @Override
-  public void showAboutApp() {
-    // TODO
   }
 
   @Override

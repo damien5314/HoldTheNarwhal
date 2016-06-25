@@ -7,7 +7,7 @@ import android.support.v4.app.Fragment;
 import com.ddiehl.android.htn.view.fragments.UserProfileFragment;
 import com.ddiehl.android.htn.view.fragments.UserProfileFragmentBuilder;
 
-public class UserProfileActivity extends BaseActivity {
+public class UserProfileActivity extends FragmentActivityCompat {
 
   private static final String EXTRA_USERNAME = "EXTRA_USERNAME";
   private static final String EXTRA_SHOW = "EXTRA_SHOW";

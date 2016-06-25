@@ -2,11 +2,11 @@ package com.ddiehl.android.htn.presenter;
 
 import android.content.Context;
 
+import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.SettingsManager;
 import com.ddiehl.android.htn.utils.AndroidUtils;
-import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.android.htn.view.SettingsView;
 
 import javax.inject.Inject;
@@ -23,12 +23,11 @@ public class SettingsPresenterImpl implements SettingsPresenter, IdentityManager
   @Inject protected RedditService mRedditService;
   @Inject protected IdentityManager mIdentityManager;
   @Inject protected SettingsManager mSettingsManager;
-  private MainView mMainView;
   private SettingsView mSettingsView;
 
-  public SettingsPresenterImpl(MainView mainView, SettingsView settingsView) {
-    mMainView = mainView;
+  public SettingsPresenterImpl(SettingsView settingsView) {
     mSettingsView = settingsView;
+    HoldTheNarwhal.getApplicationComponent().inject(this);
   }
 
   @Override
@@ -63,19 +62,19 @@ public class SettingsPresenterImpl implements SettingsPresenter, IdentityManager
       if (AndroidUtils.isConnectedToNetwork(mApplicationContext)) {
         getData();
       } else {
-        mMainView.showToast(R.string.error_network_unavailable);
+        mSettingsView.showToast(R.string.error_network_unavailable);
       }
     }
   }
 
   private void getData() {
-    mMainView.showSpinner(null);
+    mSettingsView.showSpinner(null);
     mRedditService.getUserSettings()
         .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-        .doOnTerminate(mMainView::dismissSpinner)
+        .doOnTerminate(mSettingsView::dismissSpinner)
         .doOnNext(mSettingsManager::saveUserSettings)
         .subscribe(settings -> refresh(false),
-            e -> mMainView.showError(e, R.string.error_get_user_settings));
+            e -> mSettingsView.showError(e, R.string.error_get_user_settings));
   }
 
   @Override

@@ -16,6 +16,7 @@ import rxreddit.model.UserIdentity;
 public interface MainView extends AnalyticsDialog.Callbacks, ConfirmSignOutDialog.Callbacks,
     SubredditNavigationDialog.Callbacks {
 
+  void showFragment();
   void updateUserIdentity(@Nullable UserIdentity identity);
   void loadImageIntoDrawerHeader(@Nullable String url);
   void showAnalyticsRequestDialog();
@@ -43,6 +44,5 @@ public interface MainView extends AnalyticsDialog.Callbacks, ConfirmSignOutDialo
   void showToast(@NonNull String msg);
   void showToast(@StringRes int resId);
   void showError(Throwable error, int errorResId);
-  void showAboutApp();
   void goBack();
 }

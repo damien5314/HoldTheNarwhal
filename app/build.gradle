@@ -6,13 +6,13 @@ apply plugin: 'com.github.ben-manes.versions'
 apply plugin: 'com.neenbedankt.android-apt'
 
 android {
-  compileSdkVersion 23
+  compileSdkVersion 24
   buildToolsVersion "23.0.3"
   useLibrary 'org.apache.http.legacy'
   defaultConfig {
     applicationId "com.ddiehl.android.htn"
     minSdkVersion 15
-    targetSdkVersion 23
+    targetSdkVersion 24
     versionCode 8
     versionName '0.6'
     resConfigs "en"
@@ -65,7 +65,7 @@ retrolambda {
 dependencies {
   compile fileTree(include: '*.jar', dir: 'libs')
   compile project(':bypass')
-  def appcompat_version = "23.4.0"
+  def appcompat_version = "24.0.0"
   compile "com.android.support:appcompat-v7:$appcompat_version"
   compile "com.android.support:support-v4:$appcompat_version"
   compile "com.android.support:design:$appcompat_version"
@@ -74,7 +74,7 @@ dependencies {
   compile "com.google.android.gms:play-services-analytics:9.0.2" // Required for Flurry
   compile "com.squareup.picasso:picasso:2.5.2"
   compile "com.jakewharton:butterknife:7.0.1"
-  def rxreddit_version = "626cf1e397b6cbad798920abeaa194638c1e382c"
+  def rxreddit_version = "0.8"
   compile "com.github.damien5314.RxReddit:library:$rxreddit_version"
   compile "com.github.damien5314.RxReddit:android:$rxreddit_version"
   debugCompile "com.github.damien5314.RxReddit:mock:$rxreddit_version"

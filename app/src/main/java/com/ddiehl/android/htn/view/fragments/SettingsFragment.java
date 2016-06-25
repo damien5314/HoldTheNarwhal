@@ -9,6 +9,7 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
+import android.support.annotation.StringRes;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -17,12 +18,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.SettingsManagerImpl;
 import com.ddiehl.android.htn.presenter.SettingsPresenter;
 import com.ddiehl.android.htn.presenter.SettingsPresenterImpl;
-import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.android.htn.view.SettingsView;
 
 import javax.inject.Inject;
@@ -32,17 +33,18 @@ import rxreddit.model.UserIdentity;
 public class SettingsFragment extends PreferenceFragment
     implements SettingsView, SharedPreferences.OnSharedPreferenceChangeListener {
 
+  public static final String TAG = SettingsFragment.class.getSimpleName();
+
   @Inject protected IdentityManager mIdentityManager;
-  private MainView mMainView;
   private SettingsPresenter mSettingsPresenter;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    HoldTheNarwhal.getApplicationComponent().inject(this);
     setRetainInstance(true);
     setHasOptionsMenu(true);
-    mMainView = (MainView) getActivity();
-    mSettingsPresenter = new SettingsPresenterImpl(mMainView, this);
+    mSettingsPresenter = new SettingsPresenterImpl(this);
     getPreferenceManager().setSharedPreferencesName(SettingsManagerImpl.PREFS_USER);
     addDefaultPreferences();
   }
@@ -99,7 +101,7 @@ public class SettingsFragment extends PreferenceFragment
     addPreferencesFromResource(R.xml.preferences_all); // Required for getSharedPreferences()
     Preference prefAboutApp = findPreference("pref_about_app");
     prefAboutApp.setOnPreferenceClickListener(preference -> {
-      mMainView.showAboutApp();
+      showAboutApp();
       return false;
     });
   }
@@ -155,5 +157,29 @@ public class SettingsFragment extends PreferenceFragment
         return true;
     }
     return super.onOptionsItemSelected(item);
+  }
+
+  private void showAboutApp() {
+    // TODO
+  }
+
+  @Override
+  public void showToast(@StringRes int messageResId) {
+
+  }
+
+  @Override
+  public void showError(Throwable e, @StringRes int messageResId) {
+
+  }
+
+  @Override
+  public void showSpinner(String message) {
+
+  }
+
+  @Override
+  public void dismissSpinner() {
+
   }
 }

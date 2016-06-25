@@ -7,7 +7,7 @@ import android.support.v4.app.Fragment;
 import com.ddiehl.android.htn.view.fragments.WebViewFragment;
 import com.ddiehl.android.htn.view.fragments.WebViewFragmentBuilder;
 
-public class WebViewActivity extends BaseActivity {
+public class WebViewActivity extends FragmentActivityCompat {
 
   private static final String EXTRA_URL = "EXTRA_URL";
 
