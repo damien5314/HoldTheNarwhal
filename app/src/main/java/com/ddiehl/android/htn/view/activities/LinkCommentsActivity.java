@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 
+import com.ddiehl.android.htn.view.fragments.LinkCommentsFragment;
 import com.ddiehl.android.htn.view.fragments.LinkCommentsFragmentBuilder;
 
 public class LinkCommentsActivity extends BaseActivity {
@@ -28,7 +29,7 @@ public class LinkCommentsActivity extends BaseActivity {
 
   @Override
   String getFragmentTag() {
-    return null;
+    return LinkCommentsFragment.TAG;
   }
 
   public String getSubreddit() {

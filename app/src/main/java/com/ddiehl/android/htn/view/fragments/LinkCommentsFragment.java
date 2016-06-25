@@ -36,6 +36,8 @@ import rxreddit.model.Listing;
 public class LinkCommentsFragment extends BaseListingsFragment
     implements LinkCommentsView, SwipeRefreshLayout.OnRefreshListener {
 
+  public static final String TAG = LinkCommentsFragment.class.getSimpleName();
+
   private static final int REQUEST_ADD_COMMENT = 0x00000001;
   private static final String DIALOG_ADD_COMMENT = "add_comment_dialog";
 
