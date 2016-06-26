@@ -32,11 +32,6 @@ public class RedditNavEditText extends EditText {
     before = s.subSequence(0, s.length());
   }
 
-  @OnTextChanged(callback = OnTextChanged.Callback.TEXT_CHANGED)
-  void duringTextChange(CharSequence s, int start, int before, int count) {
-
-  }
-
   @OnTextChanged(callback = OnTextChanged.Callback.AFTER_TEXT_CHANGED)
   void afterTextChanged(Editable s) {
     if (s.length() == 0) { // Blank field

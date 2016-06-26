@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <string name="comments_fragment_title">comments</string>
-  <string name="comment_score">%s</string>
+  <string name="comment_score">%d</string>
   <string name="continue_thread">continue thread</string>
   <plurals name="more_comments">
     <item quantity="one">load %d more comment</item>

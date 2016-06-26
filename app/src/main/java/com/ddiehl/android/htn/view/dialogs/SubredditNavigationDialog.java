@@ -1,8 +1,9 @@
 package com.ddiehl.android.htn.view.dialogs;
 
-import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.view.Window;
 import android.widget.EditText;
@@ -19,7 +20,7 @@ public class SubredditNavigationDialog extends DialogFragment {
     void onSubredditNavigationCancelled();
   }
 
-  @Override
+  @NonNull @Override
   public Dialog onCreateDialog(Bundle savedInstanceState) {
     Dialog dialog = new Dialog(getActivity());
     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -41,13 +42,13 @@ public class SubredditNavigationDialog extends DialogFragment {
   }
 
   @Override
-  public void onAttach(Activity activity) {
-    super.onAttach(activity);
+  public void onAttach(Context context) {
+    super.onAttach(context);
     try {
-      mListener = (Callbacks) activity;
+      mListener = (Callbacks) context;
     } catch (ClassCastException e) {
-      throw new ClassCastException(activity.toString()
-          + " must implement SubredditNavigationDialog.Callbacks");
+      throw new ClassCastException(context.getClass().getSimpleName()
+          + " must implement AnalyticsDialog.Callbacks");
     }
   }
 }

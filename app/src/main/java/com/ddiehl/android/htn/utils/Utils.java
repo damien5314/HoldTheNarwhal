@@ -38,7 +38,9 @@ public class Utils {
         }
         return sb.toString();
       } finally {
-        br.close();
+        try {
+          br.close();
+        } catch (IOException ignored) { }
       }
     } catch (FileNotFoundException e) {
       Timber.e("Unable to find file: %s", file.getAbsolutePath());

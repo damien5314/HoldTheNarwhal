@@ -11,8 +11,8 @@
   <color name="icons">#ffffff</color>
   <color name="divider">#b6b6b6</color>
 
-  <color name="white">#ffffffff</color>
-  <color name="black">#ff000000</color>
+  <color name="white">#fff</color>
+  <color name="black">#000</color>
   <color name="transparent">#0000</color>
   <color name="indentation">@color/primary</color>
   <color name="reddit_orange_full">@color/reddit_orange</color>

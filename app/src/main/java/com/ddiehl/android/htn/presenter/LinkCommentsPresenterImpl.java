@@ -11,6 +11,7 @@ import com.ddiehl.android.htn.model.CommentBankList;
 import com.ddiehl.android.htn.view.LinkCommentsView;
 import com.ddiehl.android.htn.view.MainView;
 
+import java.util.HashMap;
 import java.util.List;
 
 import rx.android.schedulers.AndroidSchedulers;
@@ -32,12 +33,12 @@ public class LinkCommentsPresenterImpl extends BaseListingsPresenter
 
   private static final int MAX_CHILDREN_PER_REQUEST = 20;
 
-  private LinkCommentsView mLinkCommentsView;
-  private CommentBank mCommentBank;
+  private final LinkCommentsView mLinkCommentsView;
+  private final CommentBank mCommentBank;
   private Link mLinkContext;
   private Listing mReplyTarget = null;
-  private String mLinkId;
-  private String mCommentId;
+  private final String mLinkId;
+  private final String mCommentId;
 
   public LinkCommentsPresenterImpl(
       MainView main, LinkCommentsView view, String subreddit, String linkId, String commentId) {
@@ -50,6 +51,14 @@ public class LinkCommentsPresenterImpl extends BaseListingsPresenter
   }
 
   @Override
+  public void onResume() {
+    mIdentityManager.registerUserIdentityChangeListener(this);
+    if (mCommentBank.size() == 0) {
+      getNextData();
+    }
+  }
+
+  @Override
   public void onViewDestroyed() {
     mLinkContext = null;
     mListingSelected = null;
@@ -57,11 +66,12 @@ public class LinkCommentsPresenterImpl extends BaseListingsPresenter
     mListingsView.notifyDataSetChanged();
   }
 
-  @Override /** The check for loaded comments fails for this screen, so check comment bank before calling base implementation */
-  public void getNextData() {
-    if (mCommentBank.size() == 0) {
-      super.getNextData();
-    }
+  @Override
+  public void refreshData() {
+    int numItems = mListings.size();
+    mCommentBank.clear();
+    mLinkCommentsView.notifyItemRangeRemoved(0, numItems);
+    getNextData();
   }
 
   @Override
@@ -124,7 +134,7 @@ public class LinkCommentsPresenterImpl extends BaseListingsPresenter
       if (comments == null || comments.size() == 0) {
         mCommentBank.remove(parentStub);
       } else {
-        RxRedditUtil.setDepthForCommentsList(comments, parentStub.getDepth());
+        setDepthForCommentsList(comments, parentStub);
         int stubIndex = mCommentBank.indexOf(parentStub);
         parentStub.removeChildren(comments);
         parentStub.setCount(parentStub.getChildren().size());
@@ -136,6 +146,28 @@ public class LinkCommentsPresenterImpl extends BaseListingsPresenter
       // TODO Specify commentRemoved and commentsAdded
       mListingsView.notifyDataSetChanged();
     };
+  }
+
+  /**
+   * Sets depth for comments in a flat comments list
+   *
+   * BUG: When we load additional comments, the relative depth is lost somewhere before calling this method
+   *   We should account for the depth currently set to the comment when we call this
+   */
+  public static void setDepthForCommentsList(List<Listing> comments, CommentStub parentStub) {
+    HashMap<String, Integer> depthMap = new HashMap<>();
+    depthMap.put(parentStub.getId(), parentStub.getDepth());
+
+    for (Listing listing : comments) {
+      AbsComment comment = (AbsComment) listing;
+      if (depthMap.containsKey(comment.getParentId())) {
+        int parentDepth = depthMap.get(comment.getParentId());
+        comment.setDepth(parentDepth+1);
+      } else {
+        comment.setDepth(parentStub.getDepth());
+      }
+      depthMap.put(comment.getId(), comment.getDepth());
+    }
   }
 
   @Override

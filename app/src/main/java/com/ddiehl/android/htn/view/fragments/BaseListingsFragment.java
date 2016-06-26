@@ -100,7 +100,7 @@ public abstract class BaseListingsFragment extends Fragment
     mRecyclerView.setAdapter(mListingsAdapter);
   }
 
-  private RecyclerView.OnScrollListener mOnScrollListener = new RecyclerView.OnScrollListener() {
+  private final RecyclerView.OnScrollListener mOnScrollListener = new RecyclerView.OnScrollListener() {
     int mFirstVisibleItem, mVisibleItemCount, mTotalItemCount;
     @Override
     public void onScrolled(RecyclerView recyclerView, int dx, int dy) {

@@ -12,6 +12,7 @@ import com.ddiehl.android.htn.view.fragments.BaseListingsFragment;
 import com.ddiehl.android.htn.view.fragments.PrivateMessageFragment;
 import com.ddiehl.android.htn.view.fragments.SettingsFragment;
 import com.ddiehl.android.htn.view.fragments.UserProfileFragment;
+import com.ddiehl.android.htn.view.fragments.WebViewFragment;
 import com.ddiehl.android.htn.view.viewholders.ListingsCommentViewHolder;
 import com.ddiehl.android.htn.view.viewholders.ListingsMessageViewHolder;
 import com.ddiehl.android.htn.view.viewholders.ThreadCommentViewHolder;
@@ -33,15 +34,14 @@ public interface ApplicationComponent {
   // Activities
   void inject(BaseActivity activity);
   void inject(PrivateMessageActivity activity);
-
   void inject(SettingsActivity activity);
 
   // Fragments
   void inject(BaseListingsFragment fragment);
   void inject(UserProfileFragment fragment);
   void inject(PrivateMessageFragment fragment);
-
   void inject(SettingsFragment fragment);
+  void inject(WebViewFragment fragment);
 
   // ViewHolders
   void inject(ThreadCommentViewHolder vh);
@@ -50,8 +50,9 @@ public interface ApplicationComponent {
   void inject(ListingsCommentViewHolder vh);
 
   // Presenters
-  void inject(MainPresenterImpl mainPresenter);
+  void inject(MainPresenterImpl presenter);
   void inject(BaseListingsPresenter presenter);
   void inject(UserProfilePresenter presenter);
-  void inject(SettingsPresenterImpl settingsPresenter);
+  void inject(SettingsPresenterImpl presenter);
+
 }

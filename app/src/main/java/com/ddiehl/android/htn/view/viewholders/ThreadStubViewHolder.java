@@ -21,7 +21,7 @@ import rxreddit.model.CommentStub;
 public class ThreadStubViewHolder extends RecyclerView.ViewHolder {
 
   @Inject protected Context mAppContext;
-  private CommentPresenter mCommentPresenter;
+  private final CommentPresenter mCommentPresenter;
   private CommentStub mCommentStub;
   private String mSubreddit;
   private String mLinkId;

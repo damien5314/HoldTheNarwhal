@@ -23,7 +23,7 @@ public class SettingsPresenterImpl implements SettingsPresenter, IdentityManager
   @Inject protected RedditService mRedditService;
   @Inject protected IdentityManager mIdentityManager;
   @Inject protected SettingsManager mSettingsManager;
-  private SettingsView mSettingsView;
+  private final SettingsView mSettingsView;
 
   public SettingsPresenterImpl(SettingsView settingsView) {
     mSettingsView = settingsView;

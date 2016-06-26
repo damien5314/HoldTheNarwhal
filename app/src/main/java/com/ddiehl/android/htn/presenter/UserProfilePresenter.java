@@ -24,7 +24,7 @@ public class UserProfilePresenter extends BaseListingsPresenter
     implements LinkPresenter, CommentPresenter {
 
   @Inject protected IdentityManager mIdentityManager;
-  private UserProfileView mSummaryView;
+  private final UserProfileView mSummaryView;
 
   public UserProfilePresenter(
       MainView main, ListingsView listingsView, LinkView linkView,

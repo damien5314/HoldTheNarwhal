@@ -31,7 +31,7 @@ public class MainPresenterImpl implements MainPresenter, IdentityManager.Callbac
   @Inject protected IdentityManager mIdentityManager;
   @Inject protected SettingsManager mSettingsManager;
   @Inject protected Analytics mAnalytics;
-  private MainView mMainView;
+  private final MainView mMainView;
   private Uri mDeepLink;
 
   public MainPresenterImpl(MainView view, Uri deepLink) {

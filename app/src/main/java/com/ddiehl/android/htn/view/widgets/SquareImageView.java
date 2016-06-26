@@ -18,6 +18,7 @@ public class SquareImageView  extends ImageView {
   protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
     super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     int height = getMeasuredHeight();
+    //noinspection SuspiciousNameCombination
     setMeasuredDimension(height, height);
   }
 }

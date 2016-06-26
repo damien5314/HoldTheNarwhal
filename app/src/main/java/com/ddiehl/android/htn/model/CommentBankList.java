@@ -12,8 +12,8 @@ import rxreddit.model.Listing;
 
 public class CommentBankList implements CommentBank {
 
-  private List<Listing> mData;
-  private List<Listing> mVisibleData;
+  private final List<Listing> mData;
+  private final List<Listing> mVisibleData;
 
   public CommentBankList() {
     mData = new ArrayList<>();

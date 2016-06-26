@@ -1,8 +1,9 @@
 package com.ddiehl.android.htn.view.dialogs;
 
-import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 
@@ -17,7 +18,7 @@ public class AnalyticsDialog extends DialogFragment {
     void onAnalyticsDeclined();
   }
 
-  @Override
+  @NonNull @Override
   public Dialog onCreateDialog(Bundle savedInstanceState) {
     return new AlertDialog.Builder(getActivity())
         .setTitle(R.string.dialog_analytics_title)
@@ -30,12 +31,12 @@ public class AnalyticsDialog extends DialogFragment {
   }
 
   @Override
-  public void onAttach(Activity a) {
-    super.onAttach(a);
+  public void onAttach(Context context) {
+    super.onAttach(context);
     try {
-      mListener = (Callbacks) a;
+      mListener = (Callbacks) context;
     } catch (ClassCastException e) {
-      throw new ClassCastException(a.getLocalClassName()
+      throw new ClassCastException(context.getClass().getSimpleName()
           + " must implement AnalyticsDialog.Callbacks");
     }
   }

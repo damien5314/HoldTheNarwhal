@@ -77,7 +77,7 @@ public class InboxFragment extends BaseListingsFragment
   }
 
   private void initializeTabs() {
-    mTabs.setOnTabSelectedListener(null);
+    mTabs.removeOnTabSelectedListener(this);
     mTabAll = mTabs.newTab()
         .setText(R.string.navigation_tabs_all).setTag("inbox");
     mTabUnread = mTabs.newTab()
@@ -96,12 +96,12 @@ public class InboxFragment extends BaseListingsFragment
     mTabs.addTab(mTabCommentReplies);
     mTabs.addTab(mTabPostReplies);
     mTabs.addTab(mTabMentions);
-    mTabs.setOnTabSelectedListener(this);
+    mTabs.addOnTabSelectedListener(this);
   }
 
   @Override
   public void selectTab(@NonNull String show) {
-    mTabs.setOnTabSelectedListener(null);
+    mTabs.removeOnTabSelectedListener(this);
     for (int i = 0; i < AndroidUtils.getChildrenInTabLayout(mTabs); i++) {
       TabLayout.Tab tab = mTabs.getTabAt(i);
       if (tab != null) {
@@ -112,7 +112,7 @@ public class InboxFragment extends BaseListingsFragment
         }
       }
     }
-    mTabs.setOnTabSelectedListener(this);
+    mTabs.addOnTabSelectedListener(this);
   }
 
   @Override

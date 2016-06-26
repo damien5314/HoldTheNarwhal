@@ -245,7 +245,7 @@ public class UserProfileFragment extends BaseListingsFragment
 
   @Override
   public void selectTab(String show) {
-    mUserProfileTabs.setOnTabSelectedListener(null);
+    mUserProfileTabs.removeOnTabSelectedListener(this);
     for (int i = 0; i < AndroidUtils.getChildrenInTabLayout(mUserProfileTabs); i++) {
       TabLayout.Tab tab = mUserProfileTabs.getTabAt(i);
       if (tab != null) {
@@ -257,7 +257,7 @@ public class UserProfileFragment extends BaseListingsFragment
         }
       }
     }
-    mUserProfileTabs.setOnTabSelectedListener(this);
+    mUserProfileTabs.addOnTabSelectedListener(this);
   }
   
   @Override public void onTabUnselected(TabLayout.Tab tab) {}

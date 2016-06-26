@@ -72,7 +72,7 @@ public class ListingsLinkViewHolder extends BaseLinkViewHolder {
   }
 
   @Override
-  protected void showParentLink(@NonNull boolean link) {
+  protected void showParentLink(boolean link) {
     // No-op; parent link does not exist in this ViewHolder
   }
 }

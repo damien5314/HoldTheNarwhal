@@ -13,8 +13,8 @@ import rxreddit.model.ListingResponse;
 import rxreddit.model.PrivateMessage;
 
 public class PrivateMessagePresenter extends BaseListingsPresenter implements MessagePresenter {
-  private PrivateMessageView mMessageView;
-  private List<Listing> mMessageList;
+  private final PrivateMessageView mMessageView;
+  private final List<Listing> mMessageList;
 
   public PrivateMessagePresenter(
       MainView main, ListingsView listingsView, PrivateMessageView messageView,

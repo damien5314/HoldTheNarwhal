@@ -35,6 +35,7 @@ import com.ddiehl.android.htn.presenter.MainPresenter;
 import com.ddiehl.android.htn.presenter.MainPresenterImpl;
 import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.android.htn.view.dialogs.AnalyticsDialog;
+import com.ddiehl.android.htn.view.dialogs.ConfirmExitDialog;
 import com.ddiehl.android.htn.view.dialogs.ConfirmSignOutDialog;
 import com.ddiehl.android.htn.view.dialogs.NsfwWarningDialog;
 import com.ddiehl.android.htn.view.dialogs.SubredditNavigationDialog;
@@ -54,7 +55,7 @@ import rxreddit.model.UserIdentity;
 import timber.log.Timber;
 
 public abstract class BaseActivity extends AppCompatActivity
-    implements MainView, NavigationView.OnNavigationItemSelectedListener {
+    implements MainView, NavigationView.OnNavigationItemSelectedListener, ConfirmExitDialog.Callbacks {
 
   public static final int REQUEST_NSFW_WARNING = 1;
   public static final int REQUEST_SIGN_IN = 2;
@@ -339,10 +340,22 @@ public abstract class BaseActivity extends AppCompatActivity
     if (fm.getBackStackEntryCount() > 0) {
       fm.popBackStack();
     } else {
-      // TODO Exit confirmation dialog
-      super.onBackPressed();
+      if (isTaskRoot()) showExitConfirmation();
+      else super.onBackPressed();
     }
   }
+
+  private void showExitConfirmation() {
+    new ConfirmExitDialog().show(getSupportFragmentManager(), ConfirmExitDialog.TAG);
+  }
+
+  @Override
+  public void onConfirmExit() {
+    super.onBackPressed();
+  }
+
+  @Override
+  public void onCancelExit() { }
 
   @Override
   public void goBack() {

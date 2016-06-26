@@ -28,7 +28,7 @@ public class ThreadCommentViewHolder extends RecyclerView.ViewHolder
     implements View.OnCreateContextMenuListener {
 
   @Inject protected Context mContext;
-  private LinkCommentsPresenter mLinkCommentsPresenter;
+  private final LinkCommentsPresenter mLinkCommentsPresenter;
   private Comment mComment;
 
   @Bind(R.id.comment_author) ColorSwapTextView mAuthorView;
@@ -130,10 +130,11 @@ public class ThreadCommentViewHolder extends RecyclerView.ViewHolder
   }
 
   private void showScore(Comment comment) {
-    String score = comment.isScoreHidden() ?
-        mContext.getString(R.string.hidden_score_placeholder) : comment.getScore().toString();
-    mScoreView.setText(
-        String.format(mContext.getString(R.string.comment_score), score));
+    String text;
+    if (comment.getScore() == null) {
+      text = mContext.getString(R.string.hidden_score_placeholder);
+    } else text = String.format(mContext.getString(R.string.comment_score), comment.getScore());
+    mScoreView.setText(text);
   }
 
   private void showTimestamp(Comment comment) {

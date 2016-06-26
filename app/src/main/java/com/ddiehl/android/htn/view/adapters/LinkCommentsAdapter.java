@@ -23,7 +23,7 @@ public class LinkCommentsAdapter extends ListingsAdapter {
   private static final int TYPE_COMMENT = 1;
   private static final int TYPE_COMMENT_STUB = 2;
 
-  private LinkCommentsPresenter mLinkCommentsPresenter;
+  private final LinkCommentsPresenter mLinkCommentsPresenter;
 
   public LinkCommentsAdapter(LinkCommentsPresenter presenter) {
     super(presenter, presenter, presenter, null);

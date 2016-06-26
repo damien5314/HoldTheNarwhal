@@ -26,8 +26,8 @@ import rxreddit.model.Link;
 
 public abstract class BaseLinkViewHolder extends RecyclerView.ViewHolder
     implements View.OnCreateContextMenuListener {
-  protected Context mContext;
-  protected LinkPresenter mLinkPresenter;
+  protected final Context mContext;
+  protected final LinkPresenter mLinkPresenter;
   protected Link mLink;
 
   @Bind(R.id.link_view) View mLinkView;

@@ -61,6 +61,10 @@
         android:name=".view.activities.PrivateMessageActivity"/>
     <activity
         android:name=".view.activities.SettingsActivity"/>
+    <activity
+        android:name=".view.activities.AboutAppActivity"/>
+    <activity
+        android:name=".view.activities.WebViewActivity"/>
 
     <activity android:name="rxreddit.android.SignInActivity" />
 

@@ -67,9 +67,6 @@ public class FlurryAnalytics implements Analytics {
     if (!mEnabled) return;
     // Log initial Flurry event
     Map<String, String> params = new HashMap<>();
-//    UserIdentity identity = mIdentityManager.getUserIdentity();
-//    String userId = identity == null ?
-//        "unauthorized" : Utils.getMd5HexString(identity.getName());
     String md5 = Utils.getMd5HexString(userId);
     params.put("user", md5);
     FlurryAgent.setUserId(md5);
@@ -84,8 +81,6 @@ public class FlurryAnalytics implements Analytics {
 
   @Override
   public void setUserIdentity(String name) {
-//    if (!mSettingsManager.areAnalyticsEnabled(mAppContext))
-//      return;
     String encoded = name == null ? null : Utils.getMd5HexString(name); // Always encode PII
     FlurryAgent.setUserId(encoded);
   }

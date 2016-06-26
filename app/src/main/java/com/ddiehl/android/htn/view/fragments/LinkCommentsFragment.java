@@ -14,7 +14,6 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.ddiehl.android.htn.R;
-import com.ddiehl.android.htn.analytics.Analytics;
 import com.ddiehl.android.htn.presenter.LinkCommentsPresenter;
 import com.ddiehl.android.htn.presenter.LinkCommentsPresenterImpl;
 import com.ddiehl.android.htn.view.LinkCommentsView;
@@ -25,8 +24,6 @@ import com.ddiehl.android.htn.view.dialogs.AddCommentDialog;
 import com.hannesdorfmann.fragmentargs.FragmentArgs;
 import com.hannesdorfmann.fragmentargs.annotation.Arg;
 import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs;
-
-import javax.inject.Inject;
 
 import rxreddit.model.Comment;
 import rxreddit.model.Link;
@@ -41,7 +38,6 @@ public class LinkCommentsFragment extends BaseListingsFragment
   private static final int REQUEST_ADD_COMMENT = 0x00000001;
   private static final String DIALOG_ADD_COMMENT = "add_comment_dialog";
 
-  @Inject protected Analytics mAnalytics;
   private LinkCommentsPresenter mLinkCommentsPresenter;
 
   @Arg String mSubreddit;

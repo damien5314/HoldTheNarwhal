@@ -2,8 +2,6 @@ package com.ddiehl.android.htn.utils;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -13,11 +11,10 @@ import android.support.design.widget.TabLayout;
 import android.util.DisplayMetrics;
 import android.view.ViewGroup;
 
-import java.io.IOException;
+import com.ddiehl.android.htn.BuildConfig;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 
 import okhttp3.Response;
 import timber.log.Timber;
@@ -42,30 +39,13 @@ public class AndroidUtils {
     return intent;
   }
 
-  public static long getBuildTime(@NonNull Context c) {
-    ZipFile zf = null;
-    try {
-      ApplicationInfo ai = c.getPackageManager().getApplicationInfo(c.getPackageName(), 0);
-      zf = new ZipFile(ai.sourceDir);
-      ZipEntry ze = zf.getEntry("AndroidManifest.xml");
-      return ze.getTime();
-    } catch (IOException e) {
-      Timber.e(e, "Exception while getting build time");
-    } catch (PackageManager.NameNotFoundException e) {
-      Timber.e(e, "Unable to find package name: %s", c.getPackageName());
-    } finally {
-      try {
-        if (zf != null) zf.close();
-      } catch (Exception e) {
-        Timber.e(e, "Error while closing ZipFile");
-      }
-    }
-    return -1;
+  public static long getBuildTime() {
+    return BuildConfig.BUILD_TIME_UTC;
   }
 
   @NonNull
-  public static String getBuildTimeFormatted(@NonNull Context c) {
-    long t = getBuildTime(c);
+  public static String getBuildTimeFormatted() {
+    long t = getBuildTime() * 1000; // convert to ms
     return SimpleDateFormat.getDateInstance().format(new Date(t));
   }
 

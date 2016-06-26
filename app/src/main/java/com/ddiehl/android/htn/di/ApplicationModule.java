@@ -25,7 +25,7 @@ import rxreddit.api.RedditService;
 @Module
 public class ApplicationModule {
 
-  private Context mContext;
+  private final Context mContext;
 
   public ApplicationModule(Context context) {
     mContext = context.getApplicationContext();

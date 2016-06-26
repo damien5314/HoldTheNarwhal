@@ -28,10 +28,10 @@ public class IdentityManagerImpl implements IdentityManager {
   private static final String PREF_ID = "pref_id";
   private static final String PREF_INBOX_COUNT = "pref_inbox_count";
 
-  private Context mContext;
-  private SettingsManager mSettingsManager;
+  private final Context mContext;
+  private final SettingsManager mSettingsManager;
   private UserIdentity mUserIdentity;
-  private Set<Callbacks> mListeners = new HashSet<>();
+  private final Set<Callbacks> mListeners = new HashSet<>();
 
   public IdentityManagerImpl(Context context, SettingsManager settingsManager) {
     mContext = context.getApplicationContext();

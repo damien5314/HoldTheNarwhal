@@ -28,10 +28,10 @@ public class ListingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
   private static final int TYPE_COMMENT = 2;
   private static final int TYPE_PRIVATE_MESSAGE = 3;
 
-  protected ListingsPresenter mListingsPresenter;
-  protected LinkPresenter mLinkPresenter;
-  protected CommentPresenter mCommentPresenter;
-  protected MessagePresenter mMessagePresenter;
+  protected final ListingsPresenter mListingsPresenter;
+  protected final LinkPresenter mLinkPresenter;
+  protected final CommentPresenter mCommentPresenter;
+  protected final MessagePresenter mMessagePresenter;
   protected boolean mShowNsfwTag;
   protected ThumbnailMode mThumbnailMode;
 

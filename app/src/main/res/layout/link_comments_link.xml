@@ -205,6 +205,7 @@
           android:paddingLeft="@dimen/baseline_spacing"
           android:paddingRight="@dimen/baseline_spacing"
           android:textAppearance="@android:style/TextAppearance.Small"
+          android:drawableStart="@drawable/ic_info"
           android:drawableLeft="@drawable/ic_info"
           android:drawablePadding="@dimen/baseline_spacing"
           android:text="@string/link_parent_text"/>

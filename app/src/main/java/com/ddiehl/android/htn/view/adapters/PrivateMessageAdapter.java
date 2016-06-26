@@ -25,11 +25,6 @@ public class PrivateMessageAdapter extends ListingsAdapter {
   }
 
   @Override
-  public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-    super.onBindViewHolder(holder, position);
-  }
-
-  @Override
   protected void getSettings() {
     /* no-op */
   }

@@ -1,6 +1,5 @@
 package com.ddiehl.android.htn.view.fragments;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -15,26 +14,18 @@ import com.ddiehl.android.htn.utils.AndroidUtils;
 import com.ddiehl.android.htn.utils.Utils;
 import com.ddiehl.android.htn.view.widgets.MarkdownTextView;
 
-import java.io.IOException;
 import java.io.InputStream;
 
 import butterknife.ButterKnife;
-import timber.log.Timber;
 
 public class AboutAppFragment extends MarkdownTextFragment {
 
-  private static final String TAG = AboutAppFragment.class.getSimpleName();
+  public static final String TAG = AboutAppFragment.class.getSimpleName();
 
-  public static AboutAppFragment newInstance(Context context) {
+  public static AboutAppFragment newInstance() {
     // Get input
-    String text = "";
-    try {
-      InputStream in_s;
-      in_s = context.getAssets().open("htn_about_app.md");
-      text = Utils.getStringFromInputStream(in_s);
-    } catch (IOException e) {
-      Timber.e(e, "Error while retrieving About screen text");
-    }
+    InputStream in_s = AboutAppFragment.class.getResourceAsStream("/assets/htn_about_app.md");
+    String text = Utils.getStringFromInputStream(in_s);
     // Pass to Fragment
     AboutAppFragment f = new AboutAppFragment();
     Bundle args = new Bundle();
@@ -50,7 +41,7 @@ public class AboutAppFragment extends MarkdownTextFragment {
     view.setBackgroundColor(ContextCompat.getColor(getActivity(), android.R.color.white));
     CharSequence ins = String.format("Version %1$s\n\nReleased %2$s\n\n",
         BuildConfig.VERSION_NAME,
-        AndroidUtils.getBuildTimeFormatted(view.getContext()));
+        AndroidUtils.getBuildTimeFormatted());
     MarkdownTextView tv = ButterKnife.findById(view, R.id.markdown_text_view);
     tv.setText(TextUtils.concat(ins, tv.getText()));
     return view;

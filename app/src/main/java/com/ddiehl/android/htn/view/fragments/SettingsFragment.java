@@ -1,6 +1,7 @@
 package com.ddiehl.android.htn.view.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
@@ -25,6 +26,7 @@ import com.ddiehl.android.htn.SettingsManagerImpl;
 import com.ddiehl.android.htn.presenter.SettingsPresenter;
 import com.ddiehl.android.htn.presenter.SettingsPresenterImpl;
 import com.ddiehl.android.htn.view.SettingsView;
+import com.ddiehl.android.htn.view.activities.AboutAppActivity;
 
 import javax.inject.Inject;
 
@@ -160,7 +162,8 @@ public class SettingsFragment extends PreferenceFragment
   }
 
   private void showAboutApp() {
-    // TODO
+    Intent intent = AboutAppActivity.getIntent(getActivity());
+    startActivity(intent);
   }
 
   @Override

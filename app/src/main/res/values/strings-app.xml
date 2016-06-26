@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <string name="app_name">Hold the Narwhal</string>
+  <string name="confirm_exit_dialog_title">Exit app?</string>
+  <string name="confirm_exit_dialog_confirm">Exit</string>
+  <string name="confirm_exit_dialog_cancel">Cancel</string>
 </resources>

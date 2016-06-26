@@ -27,7 +27,7 @@ public class ListingsMessageViewHolder extends RecyclerView.ViewHolder
     implements View.OnCreateContextMenuListener {
 
   @Inject protected Context mAppContext;
-  private MessagePresenter mInboxPresenter;
+  private final MessagePresenter mInboxPresenter;
   private PrivateMessage mMessage;
 
   @Bind(R.id.conversation_subject) TextView mConversationSubject;

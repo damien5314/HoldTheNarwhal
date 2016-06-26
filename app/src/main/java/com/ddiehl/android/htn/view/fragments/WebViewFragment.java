@@ -23,6 +23,7 @@ import android.widget.ProgressBar;
 import android.widget.ZoomButtonsController;
 
 import com.ddiehl.android.htn.BuildConfig;
+import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.utils.AndroidUtils;
@@ -81,6 +82,7 @@ public class WebViewFragment extends Fragment {
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    HoldTheNarwhal.getApplicationComponent().inject(this);
     FragmentArgs.inject(this);
     setRetainInstance(true);
     setHasOptionsMenu(true);

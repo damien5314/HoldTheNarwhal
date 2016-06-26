@@ -19,8 +19,8 @@ public class AddCommentDialog extends DialogFragment {
   public static final String EXTRA_PARENT_ID = "extra_parent_id";
   public static final String EXTRA_COMMENT_TEXT = "extra_comment_text";
 
-  @Bind(R.id.comment_edit_text) EditText mCommentEditText;
-  @Bind(R.id.comment_submit) Button mCommentSubmit;
+  @Bind(R.id.comment_edit_text) protected EditText mCommentEditText;
+  @Bind(R.id.comment_submit) protected Button mCommentSubmit;
 
   private String mParentFullName;
 
@@ -41,7 +41,7 @@ public class AddCommentDialog extends DialogFragment {
     mParentFullName = getArguments().getString(EXTRA_PARENT_ID);
   }
 
-  @Override
+  @NonNull @Override
   public Dialog onCreateDialog(Bundle savedInstanceState) {
     Dialog dialog = new Dialog(getActivity());
     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
