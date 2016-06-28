@@ -50,10 +50,8 @@ public class MainPresenterImpl implements MainPresenter, IdentityManager.Callbac
     boolean b = user != null && user.getName() != null;
     mMainView.updateNavigationItems(b);
 
-    if (!showAnalyticsRequestIfNeverShown()) {
-      mAnalytics.startSession();
-      showFirstView();
-    }
+    mAnalytics.startSession();
+    showFirstView();
   }
 
   private void showFirstView() {

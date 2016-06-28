@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen
     xmlns:android="http://schemas.android.com/apk/res/android">
+
   <!-- Show these to all users -->
-  <!-- Ensure any preferences here get synced with preferences_user.xml -->
   <PreferenceCategory
     android:title="@string/preferences_app">
 
     <CheckBoxPreference
       android:key="pref_allow_analytics"
       android:title="@string/pref_allow_analytics"
-      android:defaultValue="true"/>
+      android:defaultValue="false"/>
 
     <CheckBoxPreference
       android:key="pref_use_chrome_tabs"
@@ -21,4 +21,5 @@
       android:title="@string/pref_about_app"/>
 
   </PreferenceCategory>
+
 </PreferenceScreen>
