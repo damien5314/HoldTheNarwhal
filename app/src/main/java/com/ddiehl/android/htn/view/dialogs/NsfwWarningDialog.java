@@ -14,6 +14,8 @@ import static android.app.Activity.RESULT_OK;
 
 public class NsfwWarningDialog extends DialogFragment {
 
+  public static final String TAG = NsfwWarningDialog.class.getSimpleName();
+
   @NonNull @Override
   public Dialog onCreateDialog(Bundle savedInstanceState) {
     return new AlertDialog.Builder(getActivity())

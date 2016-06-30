@@ -2,15 +2,18 @@ package com.ddiehl.android.htn.view.dialogs;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.app.DialogFragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 
 import com.ddiehl.android.htn.R;
 
 public class ChooseCommentSortDialog extends DialogFragment {
+
+  public static final String TAG = ChooseCommentSortDialog.class.getSimpleName();
+
   private static final String ARG_SETTING = "arg_setting";
   public static final String EXTRA_SORT = "com.ddiehl.android.htn.extra_sort";
 
@@ -24,7 +27,8 @@ public class ChooseCommentSortDialog extends DialogFragment {
     return dialog;
   }
 
-  @NonNull @Override
+  @NonNull
+  @Override
   public Dialog onCreateDialog(Bundle savedInstanceState) {
     int selectedItem = -1;
 

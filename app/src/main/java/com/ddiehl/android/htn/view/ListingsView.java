@@ -1,6 +1,7 @@
 package com.ddiehl.android.htn.view;
 
 public interface ListingsView {
+
   void notifyDataSetChanged();
   void notifyItemChanged(int position);
   void notifyItemInserted(int position);
@@ -8,11 +9,8 @@ public interface ListingsView {
   void notifyItemRangeChanged(int position, int number);
   void notifyItemRangeInserted(int position, int number);
   void notifyItemRangeRemoved(int position, int number);
-  void showSortOptionsMenu();
-  void showTimespanOptionsMenu();
-  void onSortChanged();
-  void onTimespanChanged();
   void scrollToBottom();
+  void showNsfwWarningDialog();
 
   interface Callbacks {
     void onFirstItemShown();

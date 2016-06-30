@@ -284,4 +284,9 @@ public class LinkCommentsPresenterImpl extends BaseListingsPresenter
     super.showLinkContextMenu(menu, view, link);
     menu.findItem(R.id.action_link_reply).setVisible(true);
   }
+
+  @Override
+  public String getSavedCommentSort() {
+    return mSettingsManager.getCommentSort();
+  }
 }

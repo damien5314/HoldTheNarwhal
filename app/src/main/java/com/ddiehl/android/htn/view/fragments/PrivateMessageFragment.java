@@ -2,6 +2,8 @@ package com.ddiehl.android.htn.view.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.widget.TextView;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
@@ -54,6 +56,16 @@ public class PrivateMessageFragment extends BaseListingsFragment
     mMessagePresenter = mPrivateMessagePresenter;
     mListingsPresenter = mPrivateMessagePresenter;
     mCallbacks = mPrivateMessagePresenter;
+  }
+
+  @Override
+  public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    super.onCreateOptionsMenu(menu, inflater);
+
+    menu.findItem(R.id.action_change_timespan)
+        .setVisible(false);
+    menu.findItem(R.id.action_refresh)
+        .setVisible(false);
   }
 
   @Override

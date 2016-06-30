@@ -3,7 +3,6 @@ package com.ddiehl.android.htn.presenter;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
 import android.view.ContextMenu;
 import android.view.View;
 
@@ -190,31 +189,6 @@ public abstract class BaseListingsPresenter
   @Override
   public Listing getListingAt(int position) {
     return mListings.get(position);
-  }
-
-  @Override
-  public String getShow() {
-    return mShow;
-  }
-
-  @Override
-  public String getUsernameContext() {
-    return mUsernameContext;
-  }
-
-  @Override
-  public String getSubreddit() {
-    return mSubreddit;
-  }
-
-  @Override
-  public String getSort() {
-    return mSort;
-  }
-
-  @Override
-  public String getTimespan() {
-    return mTimespan;
   }
 
   @Override
@@ -498,39 +472,10 @@ public abstract class BaseListingsPresenter
   }
 
   @Override
-  public void onSortSelected(@Nullable String sort) {
-    if (sort == null) return; // Nothing happened
-    boolean changed = false;
-    if (!mSort.equals(sort)) {
-      mAnalytics.logOptionChangeSort(sort);
-      mSort = sort;
-      changed = true;
-    }
-    if (sort.equals("top") || sort.equals("controversial")) {
-      mListingsView.showTimespanOptionsMenu();
-    } else if (changed) {
-      mListingsView.onSortChanged();
-      onSortChanged();
-    }
-  }
-
-  @Override
-  public void onSortChanged() {
-    if ((mSort.equals("top") || mSort.equals("controversial"))
-        && mTimespan == null){
-      mTimespan = "all";
-    }
+  public void onSortChanged(@NonNull String sort, @Nullable String timespan) {
+    mSort = sort;
+    mTimespan = timespan;
     refreshData();
-  }
-
-  @Override
-  public void onTimespanSelected(@Nullable String timespan) {
-    if (!TextUtils.equals(mTimespan, timespan) && timespan != null) {
-      mTimespan = timespan;
-      mAnalytics.logOptionChangeTimespan(timespan);
-      mListingsView.onTimespanChanged();
-    }
-    onSortChanged(); // Sort was still changed to bring up this prompt, fire the callback
   }
 
   private void vote(int direction) {

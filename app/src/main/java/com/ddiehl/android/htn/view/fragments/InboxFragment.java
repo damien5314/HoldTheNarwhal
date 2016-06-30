@@ -29,14 +29,13 @@ public class InboxFragment extends BaseListingsFragment
 
   public static final String TAG = InboxFragment.class.getSimpleName();
 
-  private static final String ARG_SHOW = "arg_show";
+  private static final String ARG_SHOW = "ARG_SHOW";
+
+  @Arg(key = ARG_SHOW) String mShow;
 
   @Bind(R.id.tab_layout) TabLayout mTabs;
-  private TabLayout.Tab mTabAll, mTabUnread, mTabMessages,
-      mTabCommentReplies, mTabPostReplies, mTabMentions;
 
   private InboxPresenter mInboxPresenter;
-  @Arg String mShow;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -53,7 +52,7 @@ public class InboxFragment extends BaseListingsFragment
 
   @Override
   public void onPause() {
-    getArguments().putString(ARG_SHOW, mListingsPresenter.getShow());
+    getArguments().putString(ARG_SHOW, mShow);
     super.onPause();
   }
 
@@ -78,24 +77,30 @@ public class InboxFragment extends BaseListingsFragment
 
   private void initializeTabs() {
     mTabs.removeOnTabSelectedListener(this);
-    mTabAll = mTabs.newTab()
-        .setText(R.string.navigation_tabs_all).setTag("inbox");
-    mTabUnread = mTabs.newTab()
-        .setText(R.string.navigation_tabs_unread).setTag("unread");
-    mTabMessages = mTabs.newTab()
-        .setText(R.string.navigation_tabs_messages).setTag("messages");
-    mTabCommentReplies = mTabs.newTab()
-        .setText(R.string.navigation_tabs_comment_replies).setTag("comments");
-    mTabPostReplies = mTabs.newTab()
-        .setText(R.string.navigation_tabs_post_replies).setTag("selfreply");
-    mTabMentions = mTabs.newTab()
-        .setText(R.string.navigation_tabs_mentions).setTag("mentions");
-    mTabs.addTab(mTabAll);
-    mTabs.addTab(mTabUnread);
-    mTabs.addTab(mTabMessages);
-    mTabs.addTab(mTabCommentReplies);
-    mTabs.addTab(mTabPostReplies);
-    mTabs.addTab(mTabMentions);
+    TabLayout.Tab tabAll = mTabs.newTab()
+        .setText(R.string.navigation_tabs_all)
+        .setTag("inbox");
+    TabLayout.Tab tabUnread = mTabs.newTab()
+        .setText(R.string.navigation_tabs_unread)
+        .setTag("unread");
+    TabLayout.Tab tabMessages = mTabs.newTab()
+        .setText(R.string.navigation_tabs_messages)
+        .setTag("messages");
+    TabLayout.Tab tabCommentReplies = mTabs.newTab()
+        .setText(R.string.navigation_tabs_comment_replies)
+        .setTag("comments");
+    TabLayout.Tab tabPostReplies = mTabs.newTab()
+        .setText(R.string.navigation_tabs_post_replies)
+        .setTag("selfreply");
+    TabLayout.Tab tabMentions = mTabs.newTab()
+        .setText(R.string.navigation_tabs_mentions)
+        .setTag("mentions");
+    mTabs.addTab(tabAll);
+    mTabs.addTab(tabUnread);
+    mTabs.addTab(tabMessages);
+    mTabs.addTab(tabCommentReplies);
+    mTabs.addTab(tabPostReplies);
+    mTabs.addTab(tabMentions);
     mTabs.addOnTabSelectedListener(this);
   }
 

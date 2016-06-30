@@ -1,6 +1,5 @@
 package com.ddiehl.android.htn.view.fragments;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -21,6 +20,7 @@ import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.android.htn.view.adapters.LinkCommentsAdapter;
 import com.ddiehl.android.htn.view.adapters.ListingsAdapter;
 import com.ddiehl.android.htn.view.dialogs.AddCommentDialog;
+import com.ddiehl.android.htn.view.dialogs.ChooseCommentSortDialog;
 import com.hannesdorfmann.fragmentargs.FragmentArgs;
 import com.hannesdorfmann.fragmentargs.annotation.Arg;
 import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs;
@@ -29,20 +29,21 @@ import rxreddit.model.Comment;
 import rxreddit.model.Link;
 import rxreddit.model.Listing;
 
+import static android.app.Activity.RESULT_OK;
+
 @FragmentWithArgs
 public class LinkCommentsFragment extends BaseListingsFragment
     implements LinkCommentsView, SwipeRefreshLayout.OnRefreshListener {
 
   public static final String TAG = LinkCommentsFragment.class.getSimpleName();
 
-  private static final int REQUEST_ADD_COMMENT = 0x00000001;
-  private static final String DIALOG_ADD_COMMENT = "add_comment_dialog";
-
   private LinkCommentsPresenter mLinkCommentsPresenter;
 
   @Arg String mSubreddit;
   @Arg String mArticleId;
   @Arg String mCommentId;
+
+  private String mSort;
 
   public LinkCommentsFragment() { }
 
@@ -55,6 +56,7 @@ public class LinkCommentsFragment extends BaseListingsFragment
     mMainView = (MainView) getActivity();
     mLinkCommentsPresenter = new LinkCommentsPresenterImpl(
         mMainView, this, mSubreddit, mArticleId, mCommentId);
+    mSort = mLinkCommentsPresenter.getSavedCommentSort();
     mListingsPresenter = mLinkCommentsPresenter;
     mCallbacks = (Callbacks) mListingsPresenter;
   }
@@ -221,8 +223,14 @@ public class LinkCommentsFragment extends BaseListingsFragment
   @Override
   public void onActivityResult(int requestCode, int resultCode, Intent data) {
     switch (requestCode) {
+      case REQUEST_CHOOSE_SORT:
+        if (resultCode == RESULT_OK) {
+          String sort = data.getStringExtra(ChooseCommentSortDialog.EXTRA_SORT);
+          onSortSelected(sort);
+        }
+        break;
       case REQUEST_ADD_COMMENT:
-        if (resultCode == Activity.RESULT_OK) {
+        if (resultCode == RESULT_OK) {
           String parentId = data.getStringExtra(AddCommentDialog.EXTRA_PARENT_ID);
           String commentText = data.getStringExtra(AddCommentDialog.EXTRA_COMMENT_TEXT);
           mLinkCommentsPresenter.onCommentSubmitted(commentText);
@@ -232,8 +240,35 @@ public class LinkCommentsFragment extends BaseListingsFragment
   }
 
   @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    switch (item.getItemId()) {
+      case R.id.action_change_sort:
+        showSortOptionsMenu();
+        mAnalytics.logOptionChangeSort();
+        return true;
+    }
+    return super.onOptionsItemSelected(item);
+  }
+
+  private void showSortOptionsMenu() {
+    ChooseCommentSortDialog chooseLinkSortDialog =
+        ChooseCommentSortDialog.newInstance(mSort);
+    chooseLinkSortDialog.setTargetFragment(this, REQUEST_CHOOSE_SORT);
+    chooseLinkSortDialog.show(getFragmentManager(), ChooseCommentSortDialog.TAG);
+  }
+
+  @Override
   public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     inflater.inflate(R.menu.comments, menu);
+  }
+
+  private void onSortSelected(@NonNull String sort) {
+    mAnalytics.logOptionChangeSort(sort);
+
+    if (sort.equals(mSort)) return;
+
+    mSort = sort;
+    mListingsPresenter.onSortChanged(mSort, null);
   }
 
   @Override
@@ -252,7 +287,7 @@ public class LinkCommentsFragment extends BaseListingsFragment
     String id = listing.getKind() + "_" + listing.getId();
     AddCommentDialog dialog = AddCommentDialog.newInstance(id);
     dialog.setTargetFragment(this, REQUEST_ADD_COMMENT);
-    dialog.show(getFragmentManager(), DIALOG_ADD_COMMENT);
+    dialog.show(getFragmentManager(), AddCommentDialog.TAG);
   }
 
   @Override

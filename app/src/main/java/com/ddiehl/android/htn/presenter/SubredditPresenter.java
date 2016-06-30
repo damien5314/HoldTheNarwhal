@@ -95,7 +95,7 @@ public class SubredditPresenter extends BaseListingsPresenter implements LinkPre
       mSubredditInfo = info;
       UserIdentity user = getAuthorizedUser();
       if (shouldShowNsfwDialog(mSubredditInfo, user)) {
-        mMainView.showNsfwWarningDialog();
+        mListingsView.showNsfwWarningDialog();
       } else {
         if (mSubredditInfo != null) requestNextData();
         else mMainView.showToast(R.string.error_private_subreddit);

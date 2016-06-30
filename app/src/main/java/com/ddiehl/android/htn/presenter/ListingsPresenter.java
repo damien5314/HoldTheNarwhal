@@ -15,17 +15,10 @@ public interface ListingsPresenter extends BasePresenter {
   void getNextData();
   int getNumListings();
   Listing getListingAt(int position);
-  String getUsernameContext();
-  String getSubreddit();
   boolean hasPreviousListings();
   boolean hasNextListings();
-  String getSort();
-  String getTimespan();
-  String getShow();
   boolean getShowControversiality();
-  void onSortChanged();
+  void onSortChanged(@NonNull String sort, @Nullable String timespan);
   UserIdentity getAuthorizedUser();
-  void onSortSelected(@Nullable String sort);
-  void onTimespanSelected(@Nullable String timespan);
   void onNsfwSelected(boolean nsfwAllowed);
 }

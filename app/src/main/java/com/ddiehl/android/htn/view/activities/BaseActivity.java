@@ -12,7 +12,6 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
@@ -37,7 +36,6 @@ import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.android.htn.view.dialogs.AnalyticsDialog;
 import com.ddiehl.android.htn.view.dialogs.ConfirmExitDialog;
 import com.ddiehl.android.htn.view.dialogs.ConfirmSignOutDialog;
-import com.ddiehl.android.htn.view.dialogs.NsfwWarningDialog;
 import com.ddiehl.android.htn.view.dialogs.SubredditNavigationDialog;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
@@ -57,10 +55,8 @@ import timber.log.Timber;
 public abstract class BaseActivity extends AppCompatActivity
     implements MainView, NavigationView.OnNavigationItemSelectedListener, ConfirmExitDialog.Callbacks {
 
-  public static final int REQUEST_NSFW_WARNING = 1;
   public static final int REQUEST_SIGN_IN = 2;
 
-  private static final String DIALOG_NSFW_WARNING = "dialog_nsfw_warning";
   private static final String DIALOG_CONFIRM_SIGN_OUT = "dialog_confirm_sign_out";
   private static final String DIALOG_ANALYTICS = "dialog_analytics";
   private static final String DIALOG_SUBREDDIT_NAVIGATION = "dialog_subreddit_navigation";
@@ -315,13 +311,6 @@ public abstract class BaseActivity extends AppCompatActivity
     Picasso.with(this)
         .load(url)
         .into(mHeaderImage);
-  }
-
-  @Override
-  public void showNsfwWarningDialog() {
-    DialogFragment dialog = new NsfwWarningDialog();
-    dialog.setTargetFragment(getCurrentDisplayedFragment(), REQUEST_NSFW_WARNING);
-    dialog.show(getSupportFragmentManager(), DIALOG_NSFW_WARNING);
   }
 
   @Override

@@ -16,6 +16,9 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class AddCommentDialog extends DialogFragment {
+
+  public static final String TAG = AddCommentDialog.class.getSimpleName();
+
   public static final String EXTRA_PARENT_ID = "extra_parent_id";
   public static final String EXTRA_COMMENT_TEXT = "extra_comment_text";
 

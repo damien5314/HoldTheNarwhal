@@ -6,8 +6,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -28,10 +26,7 @@ import com.ddiehl.android.htn.presenter.ListingsPresenter;
 import com.ddiehl.android.htn.presenter.MessagePresenter;
 import com.ddiehl.android.htn.view.ListingsView;
 import com.ddiehl.android.htn.view.MainView;
-import com.ddiehl.android.htn.view.activities.BaseActivity;
 import com.ddiehl.android.htn.view.adapters.ListingsAdapter;
-import com.ddiehl.android.htn.view.dialogs.ChooseLinkSortDialog;
-import com.ddiehl.android.htn.view.dialogs.ChooseTimespanDialog;
 
 import javax.inject.Inject;
 
@@ -43,16 +38,12 @@ import rxreddit.model.Listing;
 import rxreddit.model.PrivateMessage;
 import timber.log.Timber;
 
-public abstract class BaseListingsFragment extends Fragment
+public abstract class BaseListingsFragment extends BaseFragment
     implements ListingsView, SwipeRefreshLayout.OnRefreshListener {
-  private static final String LINK_BASE_URL = "http://www.reddit.com";
-  private static final int REQUEST_CHOOSE_SORT = 0x2;
-  private static final int REQUEST_CHOOSE_TIMESPAN = 0x3;
-  private static final String DIALOG_CHOOSE_SORT = "dialog_choose_sort";
-  private static final String DIALOG_CHOOSE_TIMESPAN = "dialog_choose_timespan";
 
-  @Bind(R.id.recycler_view)
-  protected RecyclerView mRecyclerView;
+  private static final String LINK_BASE_URL = "http://www.reddit.com";
+
+  @Bind(R.id.recycler_view) protected RecyclerView mRecyclerView;
 
   @Inject protected Analytics mAnalytics;
   protected MainView mMainView;
@@ -138,15 +129,7 @@ public abstract class BaseListingsFragment extends Fragment
   @Override
   public void onActivityResult(int requestCode, int resultCode, Intent data) {
     switch (requestCode) {
-      case REQUEST_CHOOSE_SORT:
-        String sort = data.getStringExtra(ChooseLinkSortDialog.EXTRA_SORT);
-        mListingsPresenter.onSortSelected(sort);
-        break;
-      case REQUEST_CHOOSE_TIMESPAN:
-        String timespan = data.getStringExtra(ChooseTimespanDialog.EXTRA_TIMESPAN);
-        mListingsPresenter.onTimespanSelected(timespan);
-        break;
-      case BaseActivity.REQUEST_NSFW_WARNING:
+      case REQUEST_NSFW_WARNING:
         boolean result = resultCode == Activity.RESULT_OK;
         mListingsPresenter.onNsfwSelected(result);
         break;
@@ -155,29 +138,13 @@ public abstract class BaseListingsFragment extends Fragment
 
   @Override
   public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    super.onCreateOptionsMenu(menu, inflater);
     inflater.inflate(R.menu.listings, menu);
-    // Disable timespan option if current sort does not support it
-    String sort = mListingsPresenter.getSort();
-    if (sort == null) {
-      menu.findItem(R.id.action_change_timespan).setVisible(false);
-    } else if (sort.equals("hot") || sort.equals("new") || sort.equals("rising")) {
-      menu.findItem(R.id.action_change_timespan).setVisible(false);
-    } else { // controversial, top
-      menu.findItem(R.id.action_change_timespan).setVisible(true);
-    }
   }
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
-      case R.id.action_change_sort:
-        showSortOptionsMenu();
-        mAnalytics.logOptionChangeSort();
-        return true;
-      case R.id.action_change_timespan:
-        showTimespanOptionsMenu();
-        mAnalytics.logOptionChangeTimespan();
-        return true;
       case R.id.action_refresh:
         mListingsPresenter.refreshData();
         mAnalytics.logOptionRefresh();
@@ -188,34 +155,6 @@ public abstract class BaseListingsFragment extends Fragment
         return true;
     }
     return false;
-  }
-
-  @Override
-  public void showSortOptionsMenu() {
-    FragmentManager fm = getActivity().getSupportFragmentManager();
-    ChooseLinkSortDialog chooseLinkSortDialog =
-        ChooseLinkSortDialog.newInstance(mListingsPresenter.getSort());
-    chooseLinkSortDialog.setTargetFragment(this, REQUEST_CHOOSE_SORT);
-    chooseLinkSortDialog.show(fm, DIALOG_CHOOSE_SORT);
-  }
-
-  @Override
-  public void showTimespanOptionsMenu() {
-    FragmentManager fm = getActivity().getSupportFragmentManager();
-    ChooseTimespanDialog chooseTimespanDialog =
-        ChooseTimespanDialog.newInstance(mListingsPresenter.getTimespan());
-    chooseTimespanDialog.setTargetFragment(this, REQUEST_CHOOSE_TIMESPAN);
-    chooseTimespanDialog.show(fm, DIALOG_CHOOSE_TIMESPAN);
-  }
-
-  @Override
-  public void onSortChanged() {
-    getActivity().invalidateOptionsMenu();
-  }
-
-  @Override
-  public void onTimespanChanged() {
-    getActivity().invalidateOptionsMenu();
   }
 
   public void showLinkContextMenu(ContextMenu menu, View v, Link link) {
@@ -450,5 +389,14 @@ public abstract class BaseListingsFragment extends Fragment
   @Override
   public void scrollToBottom() {
     mRecyclerView.smoothScrollToPosition(mListingsAdapter.getItemCount()-1);
+  }
+
+  protected void finish(int resultCode, Intent data) {
+    if (getTargetFragment() != null) {
+      getTargetFragment().onActivityResult(getTargetRequestCode(), resultCode, data);
+    } else {
+      getActivity().setResult(resultCode);
+      getActivity().finish();
+    }
   }
 }

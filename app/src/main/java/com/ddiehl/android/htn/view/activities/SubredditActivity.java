@@ -25,7 +25,10 @@ public class SubredditActivity extends FragmentActivityCompat {
 
   @Override
   Fragment getFragment() {
-    return new SubredditFragmentBuilder(getSort(), getSubreddit(), getTimespan())
+    return new SubredditFragmentBuilder()
+        .subreddit(getSubreddit())
+        .sort(getSort())
+        .timespan(getTimespan())
         .build();
   }
 

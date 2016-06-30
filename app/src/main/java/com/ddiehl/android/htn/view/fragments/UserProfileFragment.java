@@ -1,11 +1,15 @@
 package com.ddiehl.android.htn.view.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -22,6 +26,8 @@ import com.ddiehl.android.htn.utils.AndroidUtils;
 import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.android.htn.view.UserProfileView;
 import com.ddiehl.android.htn.view.adapters.ListingsAdapter;
+import com.ddiehl.android.htn.view.dialogs.ChooseLinkSortDialog;
+import com.ddiehl.android.htn.view.dialogs.ChooseTimespanDialog;
 import com.hannesdorfmann.fragmentargs.FragmentArgs;
 import com.hannesdorfmann.fragmentargs.annotation.Arg;
 import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs;
@@ -39,6 +45,8 @@ import butterknife.ButterKnife;
 import rxreddit.model.Listing;
 import rxreddit.model.Trophy;
 import rxreddit.model.UserIdentity;
+
+import static android.app.Activity.RESULT_OK;
 
 @FragmentWithArgs
 public class UserProfileFragment extends BaseListingsFragment
@@ -134,13 +142,106 @@ public class UserProfileFragment extends BaseListingsFragment
     return R.layout.listings_fragment_user_profile;
   }
 
+  //region Options menu
+  /** Same implementation in {@link SubredditFragment} */
+
   @Override
-  public void onPause() {
-    mShow = mListingsPresenter.getShow();
-    mSort = mListingsPresenter.getSort();
-    mTimespan = mListingsPresenter.getTimespan();
-    super.onPause();
+  public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    super.onCreateOptionsMenu(menu, inflater);
+
+    // Disable timespan option if current sort does not support it
+    switch (mSort) {
+      case "controversial":
+      case "top":
+        menu.findItem(R.id.action_change_timespan)
+            .setVisible(true);
+        break;
+      case "hot":
+      case "new":
+      case "rising":
+      default:
+        menu.findItem(R.id.action_change_timespan)
+            .setVisible(false);
+        break;
+    }
   }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    switch (item.getItemId()) {
+      case R.id.action_change_sort:
+        showSortOptionsMenu();
+        mAnalytics.logOptionChangeSort();
+        return true;
+      case R.id.action_change_timespan:
+        showTimespanOptionsMenu();
+        mAnalytics.logOptionChangeTimespan();
+        return true;
+    }
+    return super.onOptionsItemSelected(item);
+  }
+
+  private void showSortOptionsMenu() {
+    ChooseLinkSortDialog chooseLinkSortDialog =
+        ChooseLinkSortDialog.newInstance(mSort);
+    chooseLinkSortDialog.setTargetFragment(this, REQUEST_CHOOSE_SORT);
+    chooseLinkSortDialog.show(getFragmentManager(), ChooseLinkSortDialog.TAG);
+  }
+
+  private void showTimespanOptionsMenu() {
+    ChooseTimespanDialog chooseTimespanDialog =
+        ChooseTimespanDialog.newInstance(mTimespan);
+    chooseTimespanDialog.setTargetFragment(this, REQUEST_CHOOSE_TIMESPAN);
+    chooseTimespanDialog.show(getFragmentManager(), ChooseTimespanDialog.TAG);
+  }
+
+  @Override
+  public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+    switch (requestCode) {
+      case REQUEST_CHOOSE_SORT:
+        if (resultCode == RESULT_OK) {
+          String sort = data.getStringExtra(ChooseLinkSortDialog.EXTRA_SORT);
+          onSortSelected(sort);
+        }
+        break;
+      case REQUEST_CHOOSE_TIMESPAN:
+        if (resultCode == RESULT_OK) {
+          String timespan = data.getStringExtra(ChooseTimespanDialog.EXTRA_TIMESPAN);
+          onTimespanSelected(timespan);
+        }
+        break;
+    }
+  }
+
+  // Cache for sort selected before showing timespan dialog
+  private String mSelectedSort;
+
+  private void onSortSelected(@NonNull String sort) {
+    mAnalytics.logOptionChangeSort(sort);
+
+    if (sort.equals(mSort)) return;
+
+    if (sort.equals("top") || sort.equals("controversial")) {
+      mSelectedSort = sort;
+      showTimespanOptionsMenu();
+    } else {
+      mSort = sort;
+      getActivity().invalidateOptionsMenu();
+      mListingsPresenter.onSortChanged(mSort, mTimespan);
+    }
+  }
+
+  private void onTimespanSelected(@NonNull String timespan) {
+    mAnalytics.logOptionChangeTimespan(timespan);
+
+    mSort = mSelectedSort;
+    mTimespan = timespan;
+    getActivity().invalidateOptionsMenu();
+    mListingsPresenter.onSortChanged(mSort, mTimespan);
+  }
+
+  //endregion
 
   @Override
   public void showUserInfo(@NonNull UserIdentity user) {
