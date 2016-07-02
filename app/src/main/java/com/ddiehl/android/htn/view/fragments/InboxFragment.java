@@ -21,7 +21,7 @@ import com.hannesdorfmann.fragmentargs.FragmentArgs;
 import com.hannesdorfmann.fragmentargs.annotation.Arg;
 import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs;
 
-import butterknife.Bind;
+import butterknife.BindView;
 
 @FragmentWithArgs
 public class InboxFragment extends BaseListingsFragment
@@ -33,7 +33,7 @@ public class InboxFragment extends BaseListingsFragment
 
   @Arg(key = ARG_SHOW) String mShow;
 
-  @Bind(R.id.tab_layout) TabLayout mTabs;
+  @BindView(R.id.tab_layout) TabLayout mTabs;
 
   private InboxPresenter mInboxPresenter;
 

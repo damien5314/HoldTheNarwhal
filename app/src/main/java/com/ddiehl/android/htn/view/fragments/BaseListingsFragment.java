@@ -30,7 +30,7 @@ import com.ddiehl.android.htn.view.adapters.ListingsAdapter;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import rxreddit.model.Comment;
 import rxreddit.model.Link;
@@ -43,7 +43,7 @@ public abstract class BaseListingsFragment extends BaseFragment
 
   private static final String LINK_BASE_URL = "http://www.reddit.com";
 
-  @Bind(R.id.recycler_view) protected RecyclerView mRecyclerView;
+  @BindView(R.id.recycler_view) protected RecyclerView mRecyclerView;
 
   @Inject protected Analytics mAnalytics;
   protected MainView mMainView;

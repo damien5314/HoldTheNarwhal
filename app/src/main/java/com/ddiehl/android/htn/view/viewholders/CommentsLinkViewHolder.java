@@ -15,13 +15,13 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.OnClick;
 import rxreddit.model.Link;
 
 public class CommentsLinkViewHolder extends BaseLinkViewHolder {
 
-  @Bind(R.id.link_parent_view)
+  @BindView(R.id.link_parent_view)
   View mParentLinkView;
 
   public CommentsLinkViewHolder(View v, LinkPresenter presenter) {

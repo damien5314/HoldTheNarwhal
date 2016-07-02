@@ -19,7 +19,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import rxreddit.model.Link;
@@ -30,24 +30,24 @@ public abstract class BaseLinkViewHolder extends RecyclerView.ViewHolder
   protected final LinkPresenter mLinkPresenter;
   protected Link mLink;
 
-  @Bind(R.id.link_view) View mLinkView;
-  @Bind(R.id.link_saved_view) View mSavedView;
-  @Bind(R.id.link_title)
+  @BindView(R.id.link_view) View mLinkView;
+  @BindView(R.id.link_saved_view) View mSavedView;
+  @BindView(R.id.link_title)
   TextView mLinkTitle;
-  @Bind(R.id.link_domain) TextView mLinkDomain;
-  @Bind(R.id.link_score) TextView mLinkScore;
-  @Bind(R.id.link_author)
+  @BindView(R.id.link_domain) TextView mLinkDomain;
+  @BindView(R.id.link_score) TextView mLinkScore;
+  @BindView(R.id.link_author)
   ColorSwapTextView mLinkAuthor;
-  @Bind(R.id.link_subreddit) TextView mLinkSubreddit;
-  @Bind(R.id.link_comment_count) TextView mLinkComments;
-  @Bind(R.id.link_self_text) TextView mSelfText;
-  @Bind(R.id.link_nsfw_indicator) TextView mNsfwIndicator;
-  @Bind(R.id.link_thumbnail)
+  @BindView(R.id.link_subreddit) TextView mLinkSubreddit;
+  @BindView(R.id.link_comment_count) TextView mLinkComments;
+  @BindView(R.id.link_self_text) TextView mSelfText;
+  @BindView(R.id.link_nsfw_indicator) TextView mNsfwIndicator;
+  @BindView(R.id.link_thumbnail)
   ImageView mLinkThumbnail;
-  @Bind(R.id.link_timestamp)
+  @BindView(R.id.link_timestamp)
   TimeSinceTextView mLinkTimestamp;
-  @Bind(R.id.link_gilded_text_view) TextView mGildedText;
-  @Bind(R.id.link_stickied_view) View mStickiedView;
+  @BindView(R.id.link_gilded_text_view) TextView mGildedText;
+  @BindView(R.id.link_stickied_view) View mStickiedView;
 
   public BaseLinkViewHolder(View v, LinkPresenter presenter) {
     super(v);

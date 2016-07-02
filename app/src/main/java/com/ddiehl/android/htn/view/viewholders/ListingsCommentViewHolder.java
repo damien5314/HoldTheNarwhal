@@ -15,7 +15,7 @@ import com.ddiehl.timesincetextview.TimeSinceTextView;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import rxreddit.model.Comment;
@@ -27,16 +27,16 @@ public class ListingsCommentViewHolder extends RecyclerView.ViewHolder
   private CommentPresenter mCommentPresenter;
   private Comment mComment;
 
-  @Bind(R.id.comment_link_title) TextView mCommentLinkTitleView;
-  @Bind(R.id.comment_link_subtitle) TextView mCommentLinkSubtitleView;
-  @Bind(R.id.comment_author) TextView mAuthorView;
-  @Bind(R.id.comment_score_layout) ViewGroup mScoreViewLayout;
-  @Bind(R.id.comment_score) TextView mScoreView;
-  @Bind(R.id.comment_timestamp) TimeSinceTextView mTimestampView;
-  @Bind(R.id.comment_saved_icon) View mSavedView;
-  @Bind(R.id.comment_body) TextView mBodyView;
-  @Bind(R.id.comment_gilded_text_view) TextView mGildedText;
-  @Bind(R.id.comment_controversiality_indicator) View mControversialityIndicator;
+  @BindView(R.id.comment_link_title) TextView mCommentLinkTitleView;
+  @BindView(R.id.comment_link_subtitle) TextView mCommentLinkSubtitleView;
+  @BindView(R.id.comment_author) TextView mAuthorView;
+  @BindView(R.id.comment_score_layout) ViewGroup mScoreViewLayout;
+  @BindView(R.id.comment_score) TextView mScoreView;
+  @BindView(R.id.comment_timestamp) TimeSinceTextView mTimestampView;
+  @BindView(R.id.comment_saved_icon) View mSavedView;
+  @BindView(R.id.comment_body) TextView mBodyView;
+  @BindView(R.id.comment_gilded_text_view) TextView mGildedText;
+  @BindView(R.id.comment_controversiality_indicator) View mControversialityIndicator;
 
   public ListingsCommentViewHolder(View v, CommentPresenter presenter) {
     super(v);

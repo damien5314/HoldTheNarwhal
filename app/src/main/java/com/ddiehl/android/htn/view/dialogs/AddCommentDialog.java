@@ -12,7 +12,7 @@ import android.widget.EditText;
 
 import com.ddiehl.android.htn.R;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class AddCommentDialog extends DialogFragment {
@@ -22,8 +22,8 @@ public class AddCommentDialog extends DialogFragment {
   public static final String EXTRA_PARENT_ID = "extra_parent_id";
   public static final String EXTRA_COMMENT_TEXT = "extra_comment_text";
 
-  @Bind(R.id.comment_edit_text) protected EditText mCommentEditText;
-  @Bind(R.id.comment_submit) protected Button mCommentSubmit;
+  @BindView(R.id.comment_edit_text) protected EditText mCommentEditText;
+  @BindView(R.id.comment_submit) protected Button mCommentSubmit;
 
   private String mParentFullName;
 

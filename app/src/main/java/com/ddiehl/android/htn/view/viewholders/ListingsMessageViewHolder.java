@@ -17,7 +17,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import rxreddit.model.Listing;
@@ -30,15 +30,15 @@ public class ListingsMessageViewHolder extends RecyclerView.ViewHolder
   private final MessagePresenter mInboxPresenter;
   private PrivateMessage mMessage;
 
-  @Bind(R.id.conversation_subject) TextView mConversationSubject;
-  @Bind(R.id.conversation_body_layout) ViewGroup mConversationBodyLayout;
-  @Bind(R.id.collapsed_messages_layout) ViewGroup mCollapsedMessagesLayout;
-  @Bind(R.id.collapsed_messages_text) TextView mCollapsedMessagesText;
-  @Bind(R.id.last_message_layout) ViewGroup mLastMessageLayout;
-  @Bind(R.id.message_indentation) View mMessageIndentation;
-  @Bind(R.id.last_message_metadata) TextView mLastMessageMetadata;
-  @Bind(R.id.unread_message_indicator) View mUnreadMessageIndicator;
-  @Bind(R.id.last_message_body) TextView mLastMessageBody;
+  @BindView(R.id.conversation_subject) TextView mConversationSubject;
+  @BindView(R.id.conversation_body_layout) ViewGroup mConversationBodyLayout;
+  @BindView(R.id.collapsed_messages_layout) ViewGroup mCollapsedMessagesLayout;
+  @BindView(R.id.collapsed_messages_text) TextView mCollapsedMessagesText;
+  @BindView(R.id.last_message_layout) ViewGroup mLastMessageLayout;
+  @BindView(R.id.message_indentation) View mMessageIndentation;
+  @BindView(R.id.last_message_metadata) TextView mLastMessageMetadata;
+  @BindView(R.id.unread_message_indicator) View mUnreadMessageIndicator;
+  @BindView(R.id.last_message_body) TextView mLastMessageBody;
 
   public ListingsMessageViewHolder(View view, MessagePresenter presenter) {
     super(view);

@@ -40,7 +40,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import rxreddit.model.Listing;
 import rxreddit.model.Trophy;
@@ -54,20 +54,20 @@ public class UserProfileFragment extends BaseListingsFragment
 
   public static final String TAG = UserProfileFragment.class.getSimpleName();
 
-  @Bind(R.id.tab_layout) TabLayout mUserProfileTabs;
-  @Bind(R.id.user_profile_summary) View mUserProfileSummary;
-  @Bind(R.id.recycler_view) View mListView;
-  @Bind(R.id.user_note_layout) View mFriendNoteLayout;
+  @BindView(R.id.tab_layout) TabLayout mUserProfileTabs;
+  @BindView(R.id.user_profile_summary) View mUserProfileSummary;
+  @BindView(R.id.recycler_view) View mListView;
+  @BindView(R.id.user_note_layout) View mFriendNoteLayout;
 
   // Views for user profile summary elements
-  @Bind(R.id.user_created) TextView mCreateDate;
-  @Bind(R.id.user_karma_layout) View mKarmaLayout;
-  @Bind(R.id.user_link_karma) TextView mLinkKarma;
-  @Bind(R.id.user_comment_karma) TextView mCommentKarma;
-  @Bind(R.id.user_friend_button) Button mFriendButton;
-  @Bind(R.id.user_friend_note_edit) TextView mFriendNote;
-  @Bind(R.id.user_friend_note_confirm) Button mFriendNoteSave;
-  @Bind(R.id.user_trophies) GridLayout mTrophies;
+  @BindView(R.id.user_created) TextView mCreateDate;
+  @BindView(R.id.user_karma_layout) View mKarmaLayout;
+  @BindView(R.id.user_link_karma) TextView mLinkKarma;
+  @BindView(R.id.user_comment_karma) TextView mCommentKarma;
+  @BindView(R.id.user_friend_button) Button mFriendButton;
+  @BindView(R.id.user_friend_note_edit) TextView mFriendNote;
+  @BindView(R.id.user_friend_note_confirm) Button mFriendNoteSave;
+  @BindView(R.id.user_trophies) GridLayout mTrophies;
 
   @Inject protected IdentityManager mIdentityManager;
 

@@ -49,10 +49,26 @@ public class AndroidUtils {
     return SimpleDateFormat.getDateInstance().format(new Date(t));
   }
 
-  public static float getScreenWidth() {
+  public static int getScreenWidthPx() {
+    DisplayMetrics display = Resources.getSystem().getDisplayMetrics();
+    return display.widthPixels;
+  }
+
+  public static int getScreenHeightPx() {
+    DisplayMetrics display = Resources.getSystem().getDisplayMetrics();
+    return display.heightPixels;
+  }
+
+  public static float getScreenWidthDp() {
     DisplayMetrics display = Resources.getSystem().getDisplayMetrics();
     float density = display.density;
     return display.widthPixels / density;
+  }
+
+  public static float getScreenHeightDp() {
+    DisplayMetrics display = Resources.getSystem().getDisplayMetrics();
+    float density = display.density;
+    return display.heightPixels / density;
   }
 
   /**

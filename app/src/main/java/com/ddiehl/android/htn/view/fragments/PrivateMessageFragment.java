@@ -19,7 +19,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import rxreddit.model.Listing;
 import rxreddit.model.PrivateMessage;
 
@@ -33,7 +33,7 @@ public class PrivateMessageFragment extends BaseListingsFragment
   private PrivateMessagePresenter mPrivateMessagePresenter;
 
   @Inject protected Gson mGson;
-  @Bind(R.id.conversation_subject) TextView mConversationSubject;
+  @BindView(R.id.conversation_subject) TextView mConversationSubject;
 
   public static PrivateMessageFragment newInstance(Gson gson, List<? extends Listing> messages) {
     PrivateMessageFragment fragment = new PrivateMessageFragment();

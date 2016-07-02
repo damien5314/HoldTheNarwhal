@@ -18,7 +18,7 @@ import com.ddiehl.timesincetextview.TimeSinceTextView;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import rxreddit.model.Comment;
@@ -31,14 +31,14 @@ public class ThreadCommentViewHolder extends RecyclerView.ViewHolder
   private final LinkCommentsPresenter mLinkCommentsPresenter;
   private Comment mComment;
 
-  @Bind(R.id.comment_author) ColorSwapTextView mAuthorView;
-  @Bind(R.id.comment_score_layout) ViewGroup mScoreViewLayout;
-  @Bind(R.id.comment_score) TextView mScoreView;
-  @Bind(R.id.comment_timestamp) TimeSinceTextView mTimestampView;
-  @Bind(R.id.comment_saved_icon) View mSavedView;
-  @Bind(R.id.comment_body) TextView mBodyView;
-  @Bind(R.id.comment_gilded_text_view) TextView mGildedText;
-  @Bind(R.id.comment_controversiality_indicator) View mControversialityIndicator;
+  @BindView(R.id.comment_author) ColorSwapTextView mAuthorView;
+  @BindView(R.id.comment_score_layout) ViewGroup mScoreViewLayout;
+  @BindView(R.id.comment_score) TextView mScoreView;
+  @BindView(R.id.comment_timestamp) TimeSinceTextView mTimestampView;
+  @BindView(R.id.comment_saved_icon) View mSavedView;
+  @BindView(R.id.comment_body) TextView mBodyView;
+  @BindView(R.id.comment_gilded_text_view) TextView mGildedText;
+  @BindView(R.id.comment_controversiality_indicator) View mControversialityIndicator;
 
   public ThreadCommentViewHolder(View v, LinkCommentsPresenter presenter) {
     super(v);

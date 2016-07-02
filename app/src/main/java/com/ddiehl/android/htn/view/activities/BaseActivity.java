@@ -45,7 +45,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import rxreddit.android.SignInActivity;
 import rxreddit.model.PrivateMessage;
@@ -65,15 +65,15 @@ public abstract class BaseActivity extends AppCompatActivity
   private static final String EXTRA_CUSTOM_TABS_TOOLBAR_COLOR =
       "android.support.customtabs.extra.TOOLBAR_COLOR";
 
-  @Bind(R.id.drawer_layout) DrawerLayout mDrawerLayout;
-  @Bind(R.id.navigation_view) NavigationView mNavigationView;
-//  @Bind(R.id.user_account_icon)
+  @BindView(R.id.drawer_layout) DrawerLayout mDrawerLayout;
+  @BindView(R.id.navigation_view) NavigationView mNavigationView;
+//  @BindView(R.id.user_account_icon)
   ImageView mGoldIndicator;
-//  @Bind(R.id.account_name)
+//  @BindView(R.id.account_name)
   TextView mAccountNameView;
-//  @Bind(R.id.sign_out_button)
+//  @BindView(R.id.sign_out_button)
   View mSignOutView;
-//  @Bind(R.id.navigation_drawer_header_image)
+//  @BindView(R.id.navigation_drawer_header_image)
   ImageView mHeaderImage;
   private ProgressDialog mLoadingOverlay;
 

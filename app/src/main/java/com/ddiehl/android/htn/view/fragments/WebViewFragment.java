@@ -34,7 +34,7 @@ import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -55,7 +55,7 @@ public class WebViewFragment extends Fragment {
   @Inject protected IdentityManager mIdentityManager;
   @Inject protected RedditService mRedditService;
 
-  @Bind(R.id.web_view) WebView mWebView;
+  @BindView(R.id.web_view) WebView mWebView;
 
   static {
     if (BuildConfig.DEBUG && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
