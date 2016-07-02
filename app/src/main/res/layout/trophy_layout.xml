@@ -1,25 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<ImageView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
+    android:id="@+id/trophy_icon"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/baseline_spacing"
-    tools:ignore="UseCompoundDrawables">
-
-  <ImageView
-      android:id="@+id/trophy_icon"
-      android:layout_width="@dimen/user_trophy_icon_width"
-      android:layout_height="@dimen/user_trophy_icon_height"
-      android:layout_gravity="center"/>
-
-  <TextView
-      android:id="@+id/trophy_name"
-      android:layout_width="@dimen/user_trophy_name_text_width"
-      android:layout_height="wrap_content"
-      android:gravity="center"
-      android:textSize="@dimen/user_trophy_name_text_size"
-      android:textColor="@color/secondary_text"/>
-
-</LinearLayout>
+    android:layout_marginEnd="@dimen/baseline_spacing"
+    android:layout_marginRight="@dimen/baseline_spacing"
+    android:layout_marginBottom="@dimen/baseline_spacing"
+    tools:ignore="ContentDescription"/>

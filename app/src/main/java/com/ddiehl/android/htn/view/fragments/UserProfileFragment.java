@@ -15,8 +15,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.IdentityManager;
@@ -42,7 +42,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import rxreddit.model.Listing;
 import rxreddit.model.Trophy;
 import rxreddit.model.UserIdentity;
@@ -154,20 +153,29 @@ public class UserProfileFragment extends BaseListingsFragment
   public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     super.onCreateOptionsMenu(menu, inflater);
 
-    // Disable timespan option if current sort does not support it
-    switch (mSort) {
-      case "controversial":
-      case "top":
-        menu.findItem(R.id.action_change_timespan)
-            .setVisible(true);
-        break;
-      case "hot":
-      case "new":
-      case "rising":
-      default:
-        menu.findItem(R.id.action_change_timespan)
-            .setVisible(false);
-        break;
+    if (mShow.equals("summary")) {
+      menu.findItem(R.id.action_change_sort)
+          .setVisible(false);
+      menu.findItem(R.id.action_change_timespan)
+          .setVisible(false);
+    } else {
+      menu.findItem(R.id.action_change_sort)
+          .setVisible(true);
+      // Disable timespan option if current sort does not support it
+      switch (mSort) {
+        case "controversial":
+        case "top":
+          menu.findItem(R.id.action_change_timespan)
+              .setVisible(true);
+          break;
+        case "hot":
+        case "new":
+        case "rising":
+        default:
+          menu.findItem(R.id.action_change_timespan)
+              .setVisible(false);
+          break;
+      }
     }
   }
 
@@ -306,16 +314,24 @@ public class UserProfileFragment extends BaseListingsFragment
     if (trophies == null || trophies.size() == 0) return; // Nothing to show
     LayoutInflater inflater = getActivity().getLayoutInflater();
     for (Listing listing : trophies) {
-      LinearLayout view = (LinearLayout) inflater.inflate(R.layout.trophy_layout, mTrophies, false);
-      TextView trophyNameView = ButterKnife.findById(view, R.id.trophy_name);
+      ImageView imageView = (ImageView) inflater.inflate(R.layout.trophy_layout, mTrophies, false);
       Trophy trophy = (Trophy) listing;
       String name = trophy.getName();
-      trophyNameView.setText(name);
+      imageView.setContentDescription(name);
+      imageView.setOnClickListener(
+          view -> Toast.makeText(view.getContext(), name, Toast.LENGTH_SHORT).show());
       Picasso.with(getActivity())
           .load(trophy.getIcon70())
-          .into(ButterKnife.<ImageView>findById(view, R.id.trophy_icon));
-      mTrophies.addView(view);
+          .into(imageView);
+      mTrophies.addView(imageView);
     }
+    // Calculate and set number of columns
+    final int trophiesWidth = mTrophies.getWidth();
+    final int trophyMargin = ((GridLayout.LayoutParams) mTrophies.getChildAt(0).getLayoutParams())
+        .rightMargin;
+    final int imageWidth = 70; // We always retrieve the 70px version
+    final int columns = trophiesWidth / (imageWidth + trophyMargin);
+    mTrophies.setColumnCount(columns);
   }
 
   private void initializeUserProfileTabs() {
@@ -363,7 +379,7 @@ public class UserProfileFragment extends BaseListingsFragment
         String tag = (String) tab.getTag();
         if (tag != null && tag.equals(show)) {
           tab.select();
-          showViewForTab(tab);
+          onTabSelected(tab);
           break;
         }
       }
@@ -371,23 +387,20 @@ public class UserProfileFragment extends BaseListingsFragment
     mUserProfileTabs.addOnTabSelectedListener(this);
   }
   
-  @Override public void onTabUnselected(TabLayout.Tab tab) {}
-  @Override public void onTabReselected(TabLayout.Tab tab) {}
+  @Override public void onTabUnselected(TabLayout.Tab tab) { }
+  @Override public void onTabReselected(TabLayout.Tab tab) { }
 
   @Override
   public void onTabSelected(TabLayout.Tab tab) {
-    showViewForTab(tab);
-    mUserProfilePresenter.requestData((String) tab.getTag());
-  }
-
-  private void showViewForTab(TabLayout.Tab tab) {
-    String tag = (String) tab.getTag();
-    if ("summary".equals(tag)) {
+    mShow = (String) tab.getTag();
+    if ("summary".equals(mShow)) {
       mListView.setVisibility(View.GONE);
       mUserProfileSummary.setVisibility(View.VISIBLE);
     } else {
       mUserProfileSummary.setVisibility(View.GONE);
       mListView.setVisibility(View.VISIBLE);
     }
+    getActivity().invalidateOptionsMenu();
+    mUserProfilePresenter.requestData(mShow);
   }
 }

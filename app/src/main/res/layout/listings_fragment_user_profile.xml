@@ -13,7 +13,7 @@
 
     <include layout="@layout/listings_fragment" />
 
-    <include layout="@layout/user_profile_summary_constraint" />
+    <include layout="@layout/user_profile_summary" />
 
   </FrameLayout>
 
