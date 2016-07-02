@@ -97,4 +97,5 @@ dependencies {
   def fragmentargs_version = "3.0.2"
   compile "com.hannesdorfmann.fragmentargs:annotation:$fragmentargs_version"
   apt "com.hannesdorfmann.fragmentargs:processor:$fragmentargs_version"
+  compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha3'
 }

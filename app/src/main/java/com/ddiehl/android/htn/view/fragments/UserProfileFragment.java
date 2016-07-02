@@ -35,6 +35,7 @@ import com.squareup.picasso.Picasso;
 
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -53,6 +54,8 @@ public class UserProfileFragment extends BaseListingsFragment
     implements UserProfileView, TabLayout.OnTabSelectedListener {
 
   public static final String TAG = UserProfileFragment.class.getSimpleName();
+
+  private static final int NUM_DEFAULT_TABS = 5;
 
   @BindView(R.id.tab_layout) TabLayout mUserProfileTabs;
   @BindView(R.id.user_profile_summary) View mUserProfileSummary;
@@ -76,8 +79,10 @@ public class UserProfileFragment extends BaseListingsFragment
   @Arg String mSort;
   @Arg String mTimespan;
 
-  private TabLayout.Tab mTabSummary, mTabOverview, mTabComments, mTabSubmitted, mTabGilded,
-      mTabUpvoted, mTabDownvoted, mTabHidden, mTabSaved;
+  private TabLayout.Tab mTabUpvoted;
+  private TabLayout.Tab mTabDownvoted;
+  private TabLayout.Tab mTabHidden;
+  private TabLayout.Tab mTabSaved;
 
   private UserProfilePresenter mUserProfilePresenter;
 
@@ -102,15 +107,15 @@ public class UserProfileFragment extends BaseListingsFragment
   @Override
   public void refreshTabs(boolean showAuthenticatedTabs) {
     if (showAuthenticatedTabs) {
-      if (mUserProfileTabs.getTabCount() == 4) {
+      if (mUserProfileTabs.getTabCount() == NUM_DEFAULT_TABS) {
         mUserProfileTabs.addTab(mTabUpvoted);
         mUserProfileTabs.addTab(mTabDownvoted);
         mUserProfileTabs.addTab(mTabHidden);
         mUserProfileTabs.addTab(mTabSaved);
       }
     } else {
-      if (mUserProfileTabs.getTabCount() > 4)
-        for (int i = mUserProfileTabs.getTabCount() - 1; i >= 4; i--) {
+      if (mUserProfileTabs.getTabCount() > NUM_DEFAULT_TABS)
+        for (int i = mUserProfileTabs.getTabCount() - 1; i >= NUM_DEFAULT_TABS; i--) {
           mUserProfileTabs.removeTabAt(i);
         }
     }
@@ -314,16 +319,6 @@ public class UserProfileFragment extends BaseListingsFragment
   }
 
   private void initializeUserProfileTabs() {
-    mTabSummary = mUserProfileTabs.newTab()
-        .setText(R.string.navigation_tabs_summary).setTag("summary");
-    mTabOverview = mUserProfileTabs.newTab()
-        .setText(R.string.navigation_tabs_overview).setTag("overview");
-    mTabComments = mUserProfileTabs.newTab()
-        .setText(R.string.navigation_tabs_comments).setTag("comments");
-    mTabSubmitted = mUserProfileTabs.newTab()
-        .setText(R.string.navigation_tabs_submitted).setTag("submitted");
-    mTabGilded = mUserProfileTabs.newTab()
-        .setText(R.string.navigation_tabs_gilded).setTag("gilded");
     mTabUpvoted = mUserProfileTabs.newTab()
         .setText(R.string.navigation_tabs_upvoted).setTag("upvoted");
     mTabDownvoted = mUserProfileTabs.newTab()
@@ -332,11 +327,26 @@ public class UserProfileFragment extends BaseListingsFragment
         .setText(R.string.navigation_tabs_hidden).setTag("hidden");
     mTabSaved = mUserProfileTabs.newTab()
         .setText(R.string.navigation_tabs_saved).setTag("saved");
+
     mUserProfileTabs.removeAllTabs();
-    mUserProfileTabs.addTab(mTabSummary);
-    mUserProfileTabs.addTab(mTabOverview);
-    mUserProfileTabs.addTab(mTabComments);
-    mUserProfileTabs.addTab(mTabSubmitted);
+    for (TabLayout.Tab tab : getDefaultTabs()) {
+      mUserProfileTabs.addTab(tab);
+    }
+  }
+
+  private List<TabLayout.Tab> getDefaultTabs() {
+    return Arrays.asList(
+        mUserProfileTabs.newTab()
+            .setText(R.string.navigation_tabs_summary).setTag("summary"),
+        mUserProfileTabs.newTab()
+            .setText(R.string.navigation_tabs_overview).setTag("overview"),
+        mUserProfileTabs.newTab()
+            .setText(R.string.navigation_tabs_comments).setTag("comments"),
+        mUserProfileTabs.newTab()
+            .setText(R.string.navigation_tabs_submitted).setTag("submitted"),
+        mUserProfileTabs.newTab()
+            .setText(R.string.navigation_tabs_gilded).setTag("gilded")
+    );
   }
 
   private TabLayout.Tab getCurrentSelectedTab() {
