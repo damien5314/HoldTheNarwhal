@@ -56,14 +56,13 @@
               android:textSize="@dimen/link_metadata_text_size"
               android:textColor="@color/nsfw_tag_color"/>
 
-          <!--android:fontFamily="sans-serif-light"-->
           <TextView
               android:id="@+id/link_gilded_text_view"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:gravity="center"
-              android:drawableStart="@drawable/ic_gilded_101"
-              android:drawableLeft="@drawable/ic_gilded_101"
+              android:drawableStart="@drawable/ic_reddit_gold_24dp"
+              android:drawableLeft="@drawable/ic_reddit_gold_24dp"
               android:textSize="@dimen/link_metadata_text_size"
               android:textColor="@color/secondary_text"
               tools:targetApi="16"

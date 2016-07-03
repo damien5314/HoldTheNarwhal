@@ -16,4 +16,5 @@
   <string name="comment_controversiality_indicator">†</string>
   <string name="comment_edit_text_hint">markdown supported</string>
   <string name="comment_add_submit">submit</string>
+  <string name="comment_added">comment successful</string>
 </resources>

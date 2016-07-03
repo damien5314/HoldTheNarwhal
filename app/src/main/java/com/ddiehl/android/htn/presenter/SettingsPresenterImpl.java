@@ -23,6 +23,7 @@ public class SettingsPresenterImpl implements SettingsPresenter, IdentityManager
   @Inject protected RedditService mRedditService;
   @Inject protected IdentityManager mIdentityManager;
   @Inject protected SettingsManager mSettingsManager;
+
   private final SettingsView mSettingsView;
 
   public SettingsPresenterImpl(SettingsView settingsView) {
@@ -62,7 +63,8 @@ public class SettingsPresenterImpl implements SettingsPresenter, IdentityManager
       if (AndroidUtils.isConnectedToNetwork(mApplicationContext)) {
         getData();
       } else {
-        mSettingsView.showToast(R.string.error_network_unavailable);
+        String message = mApplicationContext.getString(R.string.error_network_unavailable);
+        mSettingsView.showToast(message);
       }
     }
   }
@@ -73,8 +75,12 @@ public class SettingsPresenterImpl implements SettingsPresenter, IdentityManager
         .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
         .doOnTerminate(mSettingsView::dismissSpinner)
         .doOnNext(mSettingsManager::saveUserSettings)
-        .subscribe(settings -> refresh(false),
-            e -> mSettingsView.showError(e, R.string.error_get_user_settings));
+        .subscribe(
+            settings -> refresh(false),
+            e -> {
+              String message = mApplicationContext.getString(R.string.error_get_user_settings);
+              mSettingsView.showToast(message);
+            });
   }
 
   @Override

@@ -2,7 +2,6 @@ package com.ddiehl.android.htn.presenter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.view.ContextMenu;
 import android.view.View;
 
@@ -18,6 +17,7 @@ import com.ddiehl.android.htn.view.LinkView;
 import com.ddiehl.android.htn.view.ListingsView;
 import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.android.htn.view.PrivateMessageView;
+import com.ddiehl.android.htn.view.RedditNavigationView;
 import com.ddiehl.android.htn.view.UserProfileView;
 
 import java.util.ArrayList;
@@ -54,18 +54,17 @@ public abstract class BaseListingsPresenter
   @Inject protected Analytics mAnalytics;
 
   protected List<Listing> mListings = new ArrayList<>();
-  protected ListingsView mListingsView;
-  protected MainView mMainView;
-  protected LinkView mLinkView;
-  protected CommentView mCommentView;
-  protected UserProfileView mUserProfileView;
-  protected PrivateMessageView mPrivateMessageView;
 
-  protected String mShow;
-  protected String mUsernameContext;
-  protected String mSubreddit;
-  protected String mSort;
-  protected String mTimespan;
+  private ListingsView mListingsView;
+  
+  protected MainView mMainView;
+  protected RedditNavigationView mRedditNavigationView;
+
+  private LinkView mLinkView;
+  private CommentView mCommentView;
+  private UserProfileView mUserProfileView;
+  private PrivateMessageView mPrivateMessageView;
+
   protected Subreddit mSubredditInfo;
 
   protected Listing mListingSelected;
@@ -73,21 +72,17 @@ public abstract class BaseListingsPresenter
   protected String mPrevPageListingId, mNextPageListingId;
 
   public BaseListingsPresenter(
-      MainView main, ListingsView view, LinkView linkView, CommentView commentView,
-      UserProfileView userProfileView, PrivateMessageView messageView,
-      String show, String username, String subreddit, String sort, String timespan) {
+      MainView main, RedditNavigationView redditNavigationView, 
+      ListingsView view, LinkView linkView, CommentView commentView,
+      UserProfileView userProfileView, PrivateMessageView messageView) {
     HoldTheNarwhal.getApplicationComponent().inject(this);
+    mMainView = main;
+    mRedditNavigationView = redditNavigationView;
     mListingsView = view;
     mLinkView = linkView;
     mCommentView = commentView;
     mUserProfileView = userProfileView;
     mPrivateMessageView = messageView;
-    mMainView = main;
-    mShow = show;
-    mUsernameContext = username;
-    mSubreddit = subreddit;
-    mSort = sort;
-    mTimespan = timespan;
   }
 
   @Override
@@ -220,7 +215,8 @@ public abstract class BaseListingsPresenter
       if (listings == null) {
         mPrevPageListingId = null;
         mNextPageListingId = null;
-        mMainView.showError(new NullPointerException(), R.string.error_get_links);
+        String message = mContext.getString(R.string.error_get_links);
+        mMainView.showError(new NullPointerException(), message);
       } else {
         if (append) {
           int lastIndex = mListings.size()-1;
@@ -359,7 +355,7 @@ public abstract class BaseListingsPresenter
 
   public void showCommentThread(
       @NonNull String subreddit, @NonNull String linkId, @NonNull String commentId) {
-    mMainView.showCommentsForLink(subreddit, linkId, commentId);
+    mRedditNavigationView.showCommentsForLink(subreddit, linkId, commentId);
   }
 
   public void getMoreComments(@NonNull CommentStub comment) {
@@ -453,7 +449,7 @@ public abstract class BaseListingsPresenter
 
   public void openCommentLink(@NonNull Comment comment) {
     mListingSelected = comment;
-    mMainView.showCommentsForLink(comment.getSubreddit(), comment.getLinkId(), null);
+    mRedditNavigationView.showCommentsForLink(comment.getSubreddit(), comment.getLinkId(), null);
   }
 
   public void showMessageContextMenu(
@@ -472,9 +468,7 @@ public abstract class BaseListingsPresenter
   }
 
   @Override
-  public void onSortChanged(@NonNull String sort, @Nullable String timespan) {
-    mSort = sort;
-    mTimespan = timespan;
+  public void onSortChanged() {
     refreshData();
   }
 
@@ -491,7 +485,10 @@ public abstract class BaseListingsPresenter
           .subscribe(response -> {
             votable.applyVote(direction);
             mListingsView.notifyItemChanged(getIndexOf(listing));
-          }, e -> mMainView.showError(e, R.string.vote_failed));
+          }, e -> {
+            String message = mContext.getString(R.string.vote_failed);
+            mMainView.showError(e, message);
+          });
       mAnalytics.logVote(votable.getKind(), direction);
     }
   }
@@ -507,7 +504,10 @@ public abstract class BaseListingsPresenter
         .subscribe(response -> {
           savable.isSaved(toSave);
           mListingsView.notifyItemChanged(getIndexOf(listing));
-        }, e -> mMainView.showError(e, R.string.save_failed));
+        }, e -> {
+          String message = mContext.getString(R.string.save_failed);
+          mMainView.showError(e, message);
+        });
   }
 
   private void hide(Hideable hideable, boolean toHide) {
@@ -523,7 +523,10 @@ public abstract class BaseListingsPresenter
           } else {
             mListingsView.notifyItemRemoved(pos);
           }
-        }, e -> mMainView.showError(e, R.string.hide_failed));
+        }, e -> {
+          String message = mContext.getString(R.string.hide_failed);
+          mMainView.showError(e, message);
+        });
   }
 
   @Override
@@ -581,7 +584,10 @@ public abstract class BaseListingsPresenter
               message.markUnread(false);
               mListingsView.notifyItemChanged(getIndexOf(message));
             },
-            error -> mMainView.showError(error, R.string.error_xxx)
+            error -> {
+              String errorMessage = mContext.getString(R.string.error_xxx);
+              mMainView.showError(error, errorMessage);
+            }
         );
   }
 
@@ -595,7 +601,10 @@ public abstract class BaseListingsPresenter
               message.markUnread(true);
               mListingsView.notifyItemChanged(getIndexOf(message));
             },
-            error -> mMainView.showError(error, R.string.error_xxx)
+            error -> {
+              String errorMessage = mContext.getString(R.string.error_xxx);
+              mMainView.showError(error, errorMessage);
+            }
         );
   }
 
@@ -613,7 +622,7 @@ public abstract class BaseListingsPresenter
       }
     }
     messages.add(0, message);
-    mMainView.showInboxMessages(messages);
+    mRedditNavigationView.showInboxMessages(messages);
   }
 
   public void reportMessage() {

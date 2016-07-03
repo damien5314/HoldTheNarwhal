@@ -11,7 +11,8 @@ public abstract class FragmentActivity extends BaseActivity {
   abstract String getFragmentTag();
 
   @Override
-  public void showFragment() {
+  public void onStart() {
+    super.onStart();
     if (getFragmentManager().findFragmentByTag(getFragmentTag()) == null) {
       getFragmentManager().beginTransaction()
           .add(R.id.fragment_container, getFragment(), getFragmentTag())

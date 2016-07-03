@@ -7,9 +7,9 @@ import android.support.v4.app.Fragment;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.view.fragments.PrivateMessageFragment;
+import com.ddiehl.android.htn.view.fragments.PrivateMessageFragmentBuilder;
 import com.google.gson.Gson;
 
-import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -38,14 +38,14 @@ public class PrivateMessageActivity extends FragmentActivityCompat {
     }
   }
 
-  private List<PrivateMessage> getMessages() {
-    String json = getIntent().getStringExtra(EXTRA_MESSAGES);
-    return Arrays.asList(mGson.fromJson(json, PrivateMessage[].class));
+  private String getJson() {
+    return getIntent().getStringExtra(EXTRA_MESSAGES);
   }
 
   @Override
   Fragment getFragment() {
-    return PrivateMessageFragment.newInstance(mGson, getMessages());
+    return new PrivateMessageFragmentBuilder(getJson())
+        .build();
   }
 
   @Override

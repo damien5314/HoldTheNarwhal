@@ -1,5 +1,12 @@
 package com.ddiehl.android.htn.view;
 
 public interface LinkCommentsView extends ListingsView, LinkView, CommentView {
-  void linkUpdated();
+
+  String getCommentId();
+
+  String getArticleId();
+
+  String getSubreddit();
+
+  String getSort();
 }

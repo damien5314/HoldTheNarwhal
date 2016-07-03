@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.ContextMenu;
 import android.view.Menu;
@@ -12,11 +13,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
+import com.ddiehl.android.htn.SettingsManager;
 import com.ddiehl.android.htn.presenter.LinkCommentsPresenter;
 import com.ddiehl.android.htn.presenter.LinkCommentsPresenterImpl;
 import com.ddiehl.android.htn.view.LinkCommentsView;
-import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.android.htn.view.adapters.LinkCommentsAdapter;
 import com.ddiehl.android.htn.view.adapters.ListingsAdapter;
 import com.ddiehl.android.htn.view.dialogs.AddCommentDialog;
@@ -25,6 +27,9 @@ import com.hannesdorfmann.fragmentargs.FragmentArgs;
 import com.hannesdorfmann.fragmentargs.annotation.Arg;
 import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs;
 
+import javax.inject.Inject;
+
+import butterknife.BindView;
 import rxreddit.model.Comment;
 import rxreddit.model.Link;
 import rxreddit.model.Listing;
@@ -39,9 +44,13 @@ public class LinkCommentsFragment extends BaseListingsFragment
 
   private LinkCommentsPresenter mLinkCommentsPresenter;
 
+  @Inject protected SettingsManager mSettingsManager;
+
   @Arg String mSubreddit;
   @Arg String mArticleId;
   @Arg String mCommentId;
+
+  @BindView(R.id.coordinator_layout) protected CoordinatorLayout mCoordinatorLayout;
 
   private String mSort;
 
@@ -50,15 +59,34 @@ public class LinkCommentsFragment extends BaseListingsFragment
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    HoldTheNarwhal.getApplicationComponent().inject(this);
     FragmentArgs.inject(this);
     setRetainInstance(true);
     setHasOptionsMenu(true);
-    mMainView = (MainView) getActivity();
-    mLinkCommentsPresenter = new LinkCommentsPresenterImpl(
-        mMainView, this, mSubreddit, mArticleId, mCommentId);
-    mSort = mLinkCommentsPresenter.getSavedCommentSort();
+    mLinkCommentsPresenter = new LinkCommentsPresenterImpl(this, mRedditNavigationView, this);
+    mSort = mSettingsManager.getCommentSort();
     mListingsPresenter = mLinkCommentsPresenter;
     mCallbacks = (Callbacks) mListingsPresenter;
+  }
+
+  @Override
+  public String getCommentId() {
+    return mCommentId;
+  }
+
+  @Override
+  public String getArticleId() {
+    return mArticleId;
+  }
+
+  @Override
+  public String getSubreddit() {
+    return mSubreddit;
+  }
+
+  @Override
+  public String getSort() {
+    return mSort;
   }
 
   @Override
@@ -118,12 +146,12 @@ public class LinkCommentsFragment extends BaseListingsFragment
 
   @Override
   public void openUserProfileView(@NonNull Link link) {
-    ((MainView) getActivity()).showUserProfile(link.getAuthor(), null, null);
+    mRedditNavigationView.showUserProfile(link.getAuthor(), null, null);
   }
 
   @Override
   public void openUserProfileView(@NonNull Comment comment) {
-    ((MainView) getActivity()).showUserProfile(comment.getAuthor(), null, null);
+    mRedditNavigationView.showUserProfile(comment.getAuthor(), null, null);
   }
 
   @Override
@@ -268,18 +296,18 @@ public class LinkCommentsFragment extends BaseListingsFragment
     if (sort.equals(mSort)) return;
 
     mSort = sort;
-    mListingsPresenter.onSortChanged(mSort, null);
+    mListingsPresenter.onSortChanged();
   }
 
   @Override
   public void openLinkInWebView(@NonNull Link link) {
-    ((MainView) getActivity()).openURL(link.getUrl());
+    mRedditNavigationView.openURL(link.getUrl());
   }
 
   @Override
   public void showCommentsForLink(
       @NonNull String subreddit, @NonNull String linkId, @Nullable String commentId) {
-    mMainView.showCommentsForLink(subreddit, linkId, commentId);
+    mRedditNavigationView.showCommentsForLink(subreddit, linkId, commentId);
   }
 
   @Override
@@ -298,8 +326,8 @@ public class LinkCommentsFragment extends BaseListingsFragment
   }
 
   @Override
-  public void linkUpdated() {
-    mListingsAdapter.notifyItemChanged(0);
+  View getChromeView() {
+    return mCoordinatorLayout;
   }
 
   /**

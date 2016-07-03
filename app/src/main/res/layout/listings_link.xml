@@ -56,10 +56,10 @@
             android:textAppearance="?android:textAppearanceSmall"
             android:textColor="@color/secondary_text"
             android:gravity="center"
-            android:drawableStart="@drawable/ic_gilded_101"
-            android:drawableLeft="@drawable/ic_gilded_101"
-            tools:targetApi="16"
-            tools:text="× 2"/>
+            android:drawableStart="@drawable/ic_reddit_gold_24dp"
+            android:drawableLeft="@drawable/ic_reddit_gold_24dp"
+            tools:text="× 2"
+            tools:ignore="UnusedAttribute"/>
 
         <TextView
             android:id="@+id/link_domain"

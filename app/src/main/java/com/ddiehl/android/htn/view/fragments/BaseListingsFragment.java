@@ -19,16 +19,12 @@ import android.view.ViewGroup;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
-import com.ddiehl.android.htn.analytics.Analytics;
 import com.ddiehl.android.htn.presenter.CommentPresenter;
 import com.ddiehl.android.htn.presenter.LinkPresenter;
 import com.ddiehl.android.htn.presenter.ListingsPresenter;
 import com.ddiehl.android.htn.presenter.MessagePresenter;
 import com.ddiehl.android.htn.view.ListingsView;
-import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.android.htn.view.adapters.ListingsAdapter;
-
-import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -45,8 +41,6 @@ public abstract class BaseListingsFragment extends BaseFragment
 
   @BindView(R.id.recycler_view) protected RecyclerView mRecyclerView;
 
-  @Inject protected Analytics mAnalytics;
-  protected MainView mMainView;
   protected ListingsPresenter mListingsPresenter;
   protected LinkPresenter mLinkPresenter;
   protected CommentPresenter mCommentPresenter;
@@ -61,7 +55,6 @@ public abstract class BaseListingsFragment extends BaseFragment
     HoldTheNarwhal.getApplicationComponent().inject(this);
     setRetainInstance(true);
     setHasOptionsMenu(true);
-    mMainView = (MainView) getActivity();
   }
 
   @Nullable
@@ -150,7 +143,7 @@ public abstract class BaseListingsFragment extends BaseFragment
         mAnalytics.logOptionRefresh();
         return true;
       case R.id.action_settings:
-        mMainView.showSettings();
+        mRedditNavigationView.showSettings();
         mAnalytics.logOptionSettings();
         return true;
     }
@@ -301,7 +294,7 @@ public abstract class BaseListingsFragment extends BaseFragment
   }
 
   public void openCommentsInBrowser(@NonNull Link link) {
-    Uri uri = Uri.parse("http://www.reddit.com" + link.getPermalink());
+    Uri uri = Uri.parse(LINK_BASE_URL + link.getPermalink());
     Intent i = new Intent(Intent.ACTION_VIEW, uri);
     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     startActivity(i);
@@ -309,16 +302,16 @@ public abstract class BaseListingsFragment extends BaseFragment
 
   public void openLinkInWebView(@NonNull Link link) {
     mAnalytics.logOpenLink(link);
-    ((MainView) getActivity()).openURL(link.getUrl());
+    mRedditNavigationView.openURL(link.getUrl());
   }
 
   public void showCommentsForLink(
       @NonNull String subreddit, @NonNull String linkId, @Nullable String commentId) {
-    mMainView.showCommentsForLink(subreddit, linkId, commentId);
+    mRedditNavigationView.showCommentsForLink(subreddit, linkId, commentId);
   }
 
   public void openReplyView(@NonNull Listing listing) {
-    mMainView.showToast(R.string.implementation_pending);
+    showToast(R.string.implementation_pending);
   }
 
   public void openShareView(@NonNull Comment comment) {
@@ -330,11 +323,11 @@ public abstract class BaseListingsFragment extends BaseFragment
   }
 
   public void openUserProfileView(@NonNull Link link) {
-    ((MainView) getActivity()).showUserProfile(link.getAuthor(), null, null);
+    mRedditNavigationView.showUserProfile(link.getAuthor(), null, null);
   }
 
   public void openUserProfileView(@NonNull Comment comment) {
-    ((MainView) getActivity()).showUserProfile(comment.getAuthor(), null, null);
+    mRedditNavigationView.showUserProfile(comment.getAuthor(), null, null);
   }
 
   public void openCommentInBrowser(@NonNull Comment comment) {
@@ -384,11 +377,6 @@ public abstract class BaseListingsFragment extends BaseFragment
     mSwipeRefreshLayout.setRefreshing(false);
     mListingsPresenter.refreshData();
     mAnalytics.logOptionRefresh();
-  }
-
-  @Override
-  public void scrollToBottom() {
-    mRecyclerView.smoothScrollToPosition(mListingsAdapter.getItemCount()-1);
   }
 
   protected void finish(int resultCode, Intent data) {

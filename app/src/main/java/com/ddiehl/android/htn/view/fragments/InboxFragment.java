@@ -3,6 +3,7 @@ package com.ddiehl.android.htn.view.fragments;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TabLayout;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -21,6 +22,9 @@ import com.hannesdorfmann.fragmentargs.FragmentArgs;
 import com.hannesdorfmann.fragmentargs.annotation.Arg;
 import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs;
 
+import java.util.Arrays;
+import java.util.List;
+
 import butterknife.BindView;
 
 @FragmentWithArgs
@@ -33,7 +37,8 @@ public class InboxFragment extends BaseListingsFragment
 
   @Arg(key = ARG_SHOW) String mShow;
 
-  @BindView(R.id.tab_layout) TabLayout mTabs;
+  @BindView(R.id.tab_layout)          protected TabLayout mTabs;
+  @BindView(R.id.coordinator_layout)  protected CoordinatorLayout mCoordinatorLayout;
 
   private InboxPresenter mInboxPresenter;
 
@@ -42,7 +47,7 @@ public class InboxFragment extends BaseListingsFragment
     super.onCreate(savedInstanceState);
     FragmentArgs.inject(this);
     if (TextUtils.isEmpty(mShow)) mShow = "inbox";
-    mInboxPresenter = new InboxPresenter(mMainView, this, this, this, this, mShow);
+    mInboxPresenter = new InboxPresenter(this, mRedditNavigationView, this);
     mLinkPresenter = mInboxPresenter;
     mCommentPresenter = mInboxPresenter;
     mMessagePresenter = mInboxPresenter;
@@ -52,6 +57,7 @@ public class InboxFragment extends BaseListingsFragment
 
   @Override
   public void onPause() {
+    // TODO: Test if we need this, I think it's for restoring the Fragment when coming from background
     getArguments().putString(ARG_SHOW, mShow);
     super.onPause();
   }
@@ -60,8 +66,40 @@ public class InboxFragment extends BaseListingsFragment
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     View view = super.onCreateView(inflater, container, savedInstanceState);
     initializeTabs();
-    mMainView.setTitle(R.string.inbox_fragment_title);
+    setTitle(R.string.inbox_fragment_title);
     return view;
+  }
+
+  private void initializeTabs() {
+    mTabs.removeOnTabSelectedListener(this);
+    for (TabLayout.Tab tab : buildTabs()) {
+      mTabs.addTab(tab);
+    }
+    mTabs.addOnTabSelectedListener(this);
+  }
+
+  private List<TabLayout.Tab> buildTabs() {
+    return Arrays.asList(
+        mTabs.newTab()
+            .setText(R.string.navigation_tabs_all)
+            .setTag("inbox"),
+        mTabs.newTab()
+            .setText(R.string.navigation_tabs_unread)
+            .setTag("unread"),
+        mTabs.newTab()
+            .setText(R.string.navigation_tabs_messages)
+            .setTag("messages"),
+        mTabs.newTab()
+            .setText(R.string.navigation_tabs_comment_replies)
+            .setTag("comments"),
+        mTabs.newTab()
+            .setText(R.string.navigation_tabs_post_replies)
+            .setTag("selfreply"),
+        mTabs.newTab()
+            .setText(R.string.navigation_tabs_mentions)
+            .setTag("mentions")
+
+    );
   }
 
   @Override
@@ -73,35 +111,6 @@ public class InboxFragment extends BaseListingsFragment
   @Override
   protected int getLayoutResId() {
     return R.layout.listings_fragment_inbox;
-  }
-
-  private void initializeTabs() {
-    mTabs.removeOnTabSelectedListener(this);
-    TabLayout.Tab tabAll = mTabs.newTab()
-        .setText(R.string.navigation_tabs_all)
-        .setTag("inbox");
-    TabLayout.Tab tabUnread = mTabs.newTab()
-        .setText(R.string.navigation_tabs_unread)
-        .setTag("unread");
-    TabLayout.Tab tabMessages = mTabs.newTab()
-        .setText(R.string.navigation_tabs_messages)
-        .setTag("messages");
-    TabLayout.Tab tabCommentReplies = mTabs.newTab()
-        .setText(R.string.navigation_tabs_comment_replies)
-        .setTag("comments");
-    TabLayout.Tab tabPostReplies = mTabs.newTab()
-        .setText(R.string.navigation_tabs_post_replies)
-        .setTag("selfreply");
-    TabLayout.Tab tabMentions = mTabs.newTab()
-        .setText(R.string.navigation_tabs_mentions)
-        .setTag("mentions");
-    mTabs.addTab(tabAll);
-    mTabs.addTab(tabUnread);
-    mTabs.addTab(tabMessages);
-    mTabs.addTab(tabCommentReplies);
-    mTabs.addTab(tabPostReplies);
-    mTabs.addTab(tabMentions);
-    mTabs.addOnTabSelectedListener(this);
   }
 
   @Override
@@ -122,8 +131,8 @@ public class InboxFragment extends BaseListingsFragment
 
   @Override
   public void onTabSelected(TabLayout.Tab tab) {
-    String show = (String) tab.getTag();
-    mInboxPresenter.requestData(show);
+    mShow = (String) tab.getTag();
+    mInboxPresenter.onViewSelected(mShow);
   }
 
   @Override public void onTabUnselected(TabLayout.Tab tab) { }
@@ -147,5 +156,15 @@ public class InboxFragment extends BaseListingsFragment
   @Override
   public void showSubject(@NonNull String subject) {
     /* no-op for this view */
+  }
+
+  @Override
+  public String getShow() {
+    return mShow;
+  }
+
+  @Override
+  View getChromeView() {
+    return mCoordinatorLayout;
   }
 }

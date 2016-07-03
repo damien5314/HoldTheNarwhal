@@ -15,12 +15,8 @@
     android:supportsRtl="true">
 
     <activity
-      android:name=".view.activities.SubredditActivity"
-      android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize">
-      <intent-filter>
-        <action android:name="android.intent.action.MAIN" />
-        <category android:name="android.intent.category.LAUNCHER" />
-      </intent-filter>
+        android:name=".view.activities.DeepLinkDispatcher"
+        android:launchMode="singleTask">
       <intent-filter>
         <action android:name="android.intent.action.VIEW" />
         <category android:name="android.intent.category.DEFAULT" />
@@ -37,36 +33,43 @@
         <data android:pathPattern="/controversial" />
         <data android:pathPattern="/top" />
         <data android:pathPattern="/r/.*" />
-      </intent-filter>
-    </activity>
-    <activity
-        android:name=".view.activities.LinkCommentsActivity"/>
-    <activity
-        android:name=".view.activities.InboxActivity"/>
-    <activity
-        android:name=".view.activities.UserProfileActivity">
-      <intent-filter>
-        <action android:name="android.intent.action.VIEW" />
-        <category android:name="android.intent.category.DEFAULT" />
-        <category android:name="android.intent.category.BROWSABLE" />
-        <data android:scheme="http" />
-        <data android:scheme="https" />
-        <data android:host="reddit.com" />
-        <data android:host="*.reddit.com" />
         <data android:pathPattern="/u/.*" />
         <data android:pathPattern="/user/.*" />
       </intent-filter>
     </activity>
+
+    <activity
+      android:name=".view.activities.SubredditActivity"
+      android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize">
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN" />
+        <category android:name="android.intent.category.LAUNCHER" />
+      </intent-filter>
+    </activity>
+
+    <activity
+        android:name=".view.activities.LinkCommentsActivity"/>
+
+    <activity
+        android:name=".view.activities.InboxActivity"/>
+
+    <activity
+        android:name=".view.activities.UserProfileActivity"/>
+
     <activity
         android:name=".view.activities.PrivateMessageActivity"/>
+
     <activity
         android:name=".view.activities.SettingsActivity"/>
+
     <activity
         android:name=".view.activities.AboutAppActivity"/>
+
     <activity
         android:name=".view.activities.WebViewActivity"/>
 
-    <activity android:name="rxreddit.android.SignInActivity" />
+    <activity
+        android:name="rxreddit.android.SignInActivity" />
 
   </application>
 

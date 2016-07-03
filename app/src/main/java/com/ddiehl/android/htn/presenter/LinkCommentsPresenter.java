@@ -14,6 +14,4 @@ public interface LinkCommentsPresenter
   void toggleThreadVisible(Comment comment);
   void onCommentSubmitted(@NonNull String commentText);
   boolean shouldShowParentLink();
-
-  String getSavedCommentSort();
 }

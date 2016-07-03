@@ -10,6 +10,8 @@ import android.support.v7.app.AlertDialog;
 import com.ddiehl.android.htn.R;
 
 public class ConfirmSignOutDialog extends DialogFragment {
+
+  public static final String TAG = ConfirmSignOutDialog.class.getSimpleName();
   private Callbacks mListener;
 
   public interface Callbacks {

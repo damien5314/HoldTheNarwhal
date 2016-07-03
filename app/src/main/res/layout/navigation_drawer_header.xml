@@ -29,10 +29,10 @@
         android:id="@+id/user_account_icon"
         android:layout_width="18dp"
         android:layout_height="18dp"
-        android:layout_marginEnd="4dp"
-        android:layout_marginRight="4dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
         android:layout_gravity="center_vertical"
-        android:src="@drawable/ic_gilded_101"/>
+        android:src="@drawable/ic_reddit_gold_24dp"/>
 
     <TextView
         android:id="@+id/account_name"

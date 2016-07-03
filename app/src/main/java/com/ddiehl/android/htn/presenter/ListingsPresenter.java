@@ -1,7 +1,6 @@
 package com.ddiehl.android.htn.presenter;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import java.util.List;
 
@@ -18,7 +17,7 @@ public interface ListingsPresenter extends BasePresenter {
   boolean hasPreviousListings();
   boolean hasNextListings();
   boolean getShowControversiality();
-  void onSortChanged(@NonNull String sort, @Nullable String timespan);
+  void onSortChanged();
   UserIdentity getAuthorizedUser();
   void onNsfwSelected(boolean nsfwAllowed);
 }

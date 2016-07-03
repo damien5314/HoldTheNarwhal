@@ -2,14 +2,12 @@ package com.ddiehl.android.htn.view.activities;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -28,12 +26,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
+import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
+import com.ddiehl.android.htn.SettingsManager;
 import com.ddiehl.android.htn.analytics.Analytics;
-import com.ddiehl.android.htn.presenter.MainPresenter;
-import com.ddiehl.android.htn.presenter.MainPresenterImpl;
-import com.ddiehl.android.htn.view.MainView;
-import com.ddiehl.android.htn.view.dialogs.AnalyticsDialog;
+import com.ddiehl.android.htn.utils.AndroidUtils;
+import com.ddiehl.android.htn.view.RedditNavigationView;
 import com.ddiehl.android.htn.view.dialogs.ConfirmExitDialog;
 import com.ddiehl.android.htn.view.dialogs.ConfirmSignOutDialog;
 import com.ddiehl.android.htn.view.dialogs.SubredditNavigationDialog;
@@ -47,49 +45,57 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 import rxreddit.android.SignInActivity;
+import rxreddit.api.RedditService;
 import rxreddit.model.PrivateMessage;
+import rxreddit.model.UserAccessToken;
 import rxreddit.model.UserIdentity;
 import timber.log.Timber;
 
-public abstract class BaseActivity extends AppCompatActivity
-    implements MainView, NavigationView.OnNavigationItemSelectedListener, ConfirmExitDialog.Callbacks {
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+
+public abstract class BaseActivity extends AppCompatActivity implements
+    RedditNavigationView,
+    IdentityManager.Callbacks,
+    NavigationView.OnNavigationItemSelectedListener,
+    ConfirmExitDialog.Callbacks,
+    ConfirmSignOutDialog.Callbacks,
+    SubredditNavigationDialog.Callbacks {
 
   public static final int REQUEST_SIGN_IN = 2;
 
-  private static final String DIALOG_CONFIRM_SIGN_OUT = "dialog_confirm_sign_out";
-  private static final String DIALOG_ANALYTICS = "dialog_analytics";
-  private static final String DIALOG_SUBREDDIT_NAVIGATION = "dialog_subreddit_navigation";
   private static final String EXTRA_CUSTOM_TABS_SESSION =
       "android.support.customtabs.extra.SESSION";
   private static final String EXTRA_CUSTOM_TABS_TOOLBAR_COLOR =
       "android.support.customtabs.extra.TOOLBAR_COLOR";
 
-  @BindView(R.id.drawer_layout) DrawerLayout mDrawerLayout;
-  @BindView(R.id.navigation_view) NavigationView mNavigationView;
-//  @BindView(R.id.user_account_icon)
-  ImageView mGoldIndicator;
-//  @BindView(R.id.account_name)
-  TextView mAccountNameView;
-//  @BindView(R.id.sign_out_button)
-  View mSignOutView;
-//  @BindView(R.id.navigation_drawer_header_image)
-  ImageView mHeaderImage;
-  private ProgressDialog mLoadingOverlay;
+  @BindView(R.id.drawer_layout)                         protected DrawerLayout mDrawerLayout;
+  @BindView(R.id.navigation_view)                       protected NavigationView mNavigationView;
+  /* @BindView(R.id.user_account_icon) */               protected ImageView mGoldIndicator;
+  /* @BindView(R.id.account_name) */                    protected TextView mAccountNameView;
+  /* @BindView(R.id.sign_out_button) */                 protected View mSignOutView;
+  /* @BindView(R.id.navigation_drawer_header_image) */  protected ImageView mHeaderImage;
 
+  @Inject protected RedditService mRedditService;
+  @Inject protected IdentityManager mIdentityManager;
+  @Inject protected SettingsManager mSettingsManager;
   @Inject protected Analytics mAnalytics;
   @Inject protected Gson mGson;
-  private MainPresenter mMainPresenter;
-
-  public abstract void showFragment();
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    HoldTheNarwhal.getApplicationComponent().inject(this);
     setContentView(R.layout.activity_main);
-    initNavigationView();
+    HoldTheNarwhal.getApplicationComponent().inject(this);
     ButterKnife.bind(this);
+
+    initNavigationView();
 
     // Listen to events from the navigation drawer
     mNavigationView.setNavigationItemSelectedListener(this);
@@ -105,10 +111,6 @@ public abstract class BaseActivity extends AppCompatActivity
     }
 
     setTitle(null);
-
-    // Initialize dependencies
-    Uri data = getIntent().getData();
-    mMainPresenter = new MainPresenterImpl(this, data);
   }
 
   // Workaround for bug in support lib 23.1.0 - 23.2.0
@@ -119,33 +121,58 @@ public abstract class BaseActivity extends AppCompatActivity
     mGoldIndicator = (ImageView) header.findViewById(R.id.user_account_icon);
     mAccountNameView = (TextView) header.findViewById(R.id.account_name);
     mSignOutView = header.findViewById(R.id.sign_out_button);
-    mSignOutView.setOnClickListener(view -> onSignOut());
     mHeaderImage = (ImageView) header.findViewById(R.id.navigation_drawer_header_image);
+
+    mSignOutView.setOnClickListener(view -> onSignOut());
   }
 
   @Override
   protected void onResume() {
     super.onResume();
-    mMainPresenter.onResume();
+    
+    mIdentityManager.registerUserIdentityChangeListener(this);
+    UserIdentity user = mIdentityManager.getUserIdentity();
+    updateUserIdentity(user);
+    
+    boolean isLoggedIn = user != null && user.getName() != null;
+    updateNavigationItems(isLoggedIn);
+
+    mAnalytics.setUserIdentity(user == null ? null : user.getName());
+    mAnalytics.startSession();
   }
 
   @Override
   protected void onPause() {
-    mMainPresenter.onPause();
+    mIdentityManager.unregisterUserIdentityChangeListener(this);
+    mAnalytics.endSession();
     super.onPause();
   }
 
   @Override
-  public void updateUserIdentity(@Nullable UserIdentity identity) {
+  public Action1<UserIdentity> onUserIdentityChanged() {
+    return identity -> {
+      updateUserIdentity(identity);
+      if (identity == null) {
+        showToast(getString(R.string.user_signed_out));
+      } else {
+        // FIXME Ensure we only show this when the user changes
+        String name = identity.getName();
+        String formatter = getString(R.string.welcome_user);
+        String toast = String.format(formatter, name);
+        showToast(toast);
+      }
+    };
+  }
+
+  private void updateUserIdentity(@Nullable UserIdentity identity) {
     mAccountNameView.setText(identity == null ?
         getString(R.string.account_name_unauthorized) : identity.getName());
-    mSignOutView.setVisibility(identity == null ? View.GONE : View.VISIBLE);
-    mGoldIndicator.setVisibility(identity != null && identity.isGold() ? View.VISIBLE : View.GONE);
+    mSignOutView.setVisibility(identity == null ? GONE : VISIBLE);
+    mGoldIndicator.setVisibility(identity != null && identity.isGold() ? VISIBLE : GONE);
     updateNavigationItems(identity != null);
   }
 
-  @Override
-  public void updateNavigationItems(boolean isLoggedIn) {
+  protected void updateNavigationItems(boolean isLoggedIn) {
     Menu menu = mNavigationView.getMenu();
     menu.findItem(R.id.drawer_log_in).setVisible(!isLoggedIn);
     menu.findItem(R.id.drawer_inbox).setVisible(isLoggedIn);
@@ -154,69 +181,108 @@ public abstract class BaseActivity extends AppCompatActivity
   }
 
   @Override
-  public void closeNavigationDrawer() {
-    mDrawerLayout.closeDrawer(GravityCompat.START);
-  }
-
-  @Override
   public boolean onNavigationItemSelected(MenuItem menuItem) {
     closeNavigationDrawer();
     switch (menuItem.getItemId()) {
       case R.id.drawer_navigate_to_subreddit:
-        mMainPresenter.onNavigateToSubreddit();
+        onNavigateToSubreddit();
         return true;
       case R.id.drawer_log_in:
-        mMainPresenter.onLogIn();
+        onLogIn();
         return true;
       case R.id.drawer_inbox:
-        mMainPresenter.onShowInbox();
+        onShowInbox();
         return true;
       case R.id.drawer_user_profile:
-        mMainPresenter.onShowUserProfile();
+        onShowUserProfile();
         return true;
       case R.id.drawer_subreddits:
-        mMainPresenter.onShowSubreddits();
+        onShowSubreddits();
         return true;
       case R.id.drawer_front_page:
-        mMainPresenter.onShowFrontPage();
+        onShowFrontPage();
         return true;
       case R.id.drawer_r_all:
-        mMainPresenter.onShowAllListings();
+        onShowAllListings();
         return true;
       case R.id.drawer_random_subreddit:
-        mMainPresenter.onShowRandomSubreddit();
+        onShowRandomSubreddit();
         return true;
     }
     return false;
   }
 
-  @Override
-  public void showLoginView() {
-    Intent data = new Intent(this, SignInActivity.class);
-    data.putExtra(SignInActivity.EXTRA_AUTH_URL, mMainPresenter.getAuthorizationUrl());
-    startActivityForResult(data, REQUEST_SIGN_IN);
+  private void closeNavigationDrawer() {
+    mDrawerLayout.closeDrawer(GravityCompat.START);
   }
 
-  @Override
+  protected void onNavigateToSubreddit() {
+    showSubredditNavigationView();
+    mAnalytics.logDrawerNavigateToSubreddit();
+  }
+
+  protected void onLogIn() {
+    if (AndroidUtils.isConnectedToNetwork(this)) {
+      showLoginView();
+    } else showToast(getString(R.string.error_network_unavailable));
+
+    mAnalytics.logDrawerLogIn();
+  }
+
+  protected void onShowInbox() {
+    showInbox();
+    mAnalytics.logDrawerShowInbox();
+  }
+
+  protected void onShowUserProfile() {
+    String name = mIdentityManager.getUserIdentity().getName();
+    showUserProfile(name, "summary", "new");
+    mAnalytics.logDrawerUserProfile();
+  }
+
+  protected void onShowSubreddits() {
+    showUserSubreddits();
+    mAnalytics.logDrawerUserSubreddits();
+  }
+
+  protected void onShowFrontPage() {
+    showSubreddit(null, null, null);
+    mAnalytics.logDrawerFrontPage();
+  }
+
+  protected void onShowAllListings() {
+    showSubreddit("all", null, null);
+    mAnalytics.logDrawerAllSubreddits();
+  }
+
+  protected void onShowRandomSubreddit() {
+    showSubreddit("random", null, null);
+    mAnalytics.logDrawerRandomSubreddit();
+  }
+
+  public void showLoginView() {
+    Intent intent = new Intent(this, SignInActivity.class);
+    intent.putExtra(SignInActivity.EXTRA_AUTH_URL, mRedditService.getAuthorizationUrl());
+    startActivityForResult(intent, REQUEST_SIGN_IN);
+  }
+
   public void showInbox() {
     Intent intent = InboxActivity.getIntent(this, null);
     startActivity(intent);
   }
 
-  @Override
   public void showUserProfile(
       @NonNull String username, @Nullable String show, @Nullable String sort) {
     Intent intent = UserProfileActivity.getIntent(this, username, show, sort);
     startActivity(intent);
   }
 
-  @Override
   public void showSubreddit(@Nullable String subreddit, @Nullable String sort, String timespan) {
     Intent intent = SubredditActivity.getIntent(this, subreddit, sort, timespan);
     startActivity(intent);
   }
 
-  @Override @SuppressLint("NewApi")
+  @SuppressLint("NewApi")
   public void openURL(@NonNull String url) {
     if (canUseCustomTabs()) {
       // If so, present URL in custom tabs instead of WebView
@@ -236,18 +302,28 @@ public abstract class BaseActivity extends AppCompatActivity
   }
 
   private boolean canUseCustomTabs() {
-    return Build.VERSION.SDK_INT >= 18 && mMainPresenter.customTabsEnabled();
+    return Build.VERSION.SDK_INT >= 18 && customTabsEnabled();
   }
 
-  @Override
+  private boolean customTabsEnabled() {
+    return mSettingsManager.customTabsEnabled();
+  }
+
   public void showUserSubreddits() {
-    showToast(R.string.implementation_pending);
+    showToast(getString(R.string.implementation_pending));
   }
 
 //  @OnClick(R.id.sign_out_button)
   void onSignOut() {
-    new ConfirmSignOutDialog().show(getSupportFragmentManager(), DIALOG_CONFIRM_SIGN_OUT);
+    new ConfirmSignOutDialog().show(getSupportFragmentManager(), ConfirmSignOutDialog.TAG);
     mAnalytics.logClickedSignOut();
+  }
+
+  public void signOutUser() {
+    closeNavigationDrawer();
+    mRedditService.revokeAuthentication();
+    mIdentityManager.clearSavedUserIdentity();
+    mAnalytics.logSignOut();
   }
 
   @Override
@@ -260,54 +336,16 @@ public abstract class BaseActivity extends AppCompatActivity
     return false;
   }
 
-  private int mDialogCount = 0;
-
-  @Override
-  public void showSpinner(@Nullable String message) {
-    mDialogCount++;
-    if (mLoadingOverlay == null) {
-      mLoadingOverlay = new ProgressDialog(this, R.style.ProgressDialog);
-      mLoadingOverlay.setCancelable(false);
-      mLoadingOverlay.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-    }
-    mLoadingOverlay.setMessage(message);
-    mLoadingOverlay.show();
-  }
-
-  @Override
-  public void showSpinner(@StringRes int resId) {
-    showSpinner(getString(resId));
-  }
-
-  @Override
-  public void dismissSpinner() {
-    mDialogCount--;
-    if (mDialogCount < 0) mDialogCount = 0;
-    if (mLoadingOverlay != null && mLoadingOverlay.isShowing() && mDialogCount == 0) {
-      mLoadingOverlay.dismiss();
-    }
-  }
-
-  @Override
-  public void showToast(@StringRes int resId) {
-    showToast(getString(resId));
-  }
-
-  @Override
-  public void showToast(@NonNull String msg) {
-    Snackbar.make(mDrawerLayout, msg, Snackbar.LENGTH_SHORT).show();
-  }
-
   @Override
   public void onSignOutConfirm() {
-    mMainPresenter.signOutUser();
+    signOutUser();
   }
 
   @Override
-  public void onSignOutCancel() { /* no-op */ }
+  public void onSignOutCancel() { }
 
   @Override
-  public void loadImageIntoDrawerHeader(@Nullable String url) {
+  public void showSubredditImage(String url) {
     Picasso.with(this)
         .load(url)
         .into(mHeaderImage);
@@ -347,53 +385,16 @@ public abstract class BaseActivity extends AppCompatActivity
   public void onCancelExit() { }
 
   @Override
-  public void goBack() {
-    onBackPressed();
-  }
-
-  @Override
-  public void showSubredditIfEmpty(@Nullable String subreddit) {
-    if (getCurrentDisplayedFragment() == null) {
-      showSubreddit(subreddit, null, null);
-    }
-  }
-
-  @Override
-  public void showAnalyticsRequestDialog() {
-    new AnalyticsDialog().show(getSupportFragmentManager(), DIALOG_ANALYTICS);
-  }
-
-  @Override
-  public void onAnalyticsAccepted() {
-    mMainPresenter.onAnalyticsAccepted();
-  }
-
-  @Override
-  public void onAnalyticsDeclined() {
-    mMainPresenter.onAnalyticsDeclined();
-  }
-
-  @Override
   public void onSubredditNavigationConfirmed(String subreddit) {
     showSubreddit(subreddit, null, null);
   }
 
   @Override
-  public void onSubredditNavigationCancelled() { /* no-op */ }
-
-  @Override
-  public void showError(Throwable error, int errorResId) {
-    String message = getString(errorResId);
-    Timber.e(error, message);
-    if (error instanceof UnknownHostException) {
-      message = getString(R.string.error_network_unavailable);
-    }
-    Snackbar.make(mDrawerLayout, message, Snackbar.LENGTH_LONG).show();
-  }
+  public void onSubredditNavigationCancelled() { }
 
   @Override
   public void showSubredditNavigationView() {
-    new SubredditNavigationDialog().show(getSupportFragmentManager(), DIALOG_SUBREDDIT_NAVIGATION);
+    new SubredditNavigationDialog().show(getSupportFragmentManager(), SubredditNavigationDialog.TAG);
   }
 
   @Override
@@ -409,11 +410,39 @@ public abstract class BaseActivity extends AppCompatActivity
     switch (requestCode) {
       case REQUEST_SIGN_IN:
         if (resultCode == Activity.RESULT_OK) {
-          String callbackUrl = data.getStringExtra(SignInActivity.EXTRA_CALLBACK_URL);
-          mMainPresenter.onSignIn(callbackUrl);
+          String url = data.getStringExtra(SignInActivity.EXTRA_CALLBACK_URL);
+          onSignInCallback(url);
         }
         break;
     }
+  }
+
+  private void onSignInCallback(String url) {
+    mRedditService.processAuthenticationCallback(url)
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .flatMap(getUserIdentity())
+        .subscribe(
+            result -> { },
+            error -> {
+              Timber.e(error, "Error during sign in");
+              showError(error, getString(R.string.error_get_user_identity));
+            }
+        );
+  }
+
+  private void showError(Throwable error, String message) {
+    if (error instanceof UnknownHostException) {
+      message = getString(R.string.error_network_unavailable);
+    }
+    Snackbar.make(mDrawerLayout, message, Snackbar.LENGTH_LONG).show();
+  }
+
+  private Func1<UserAccessToken, Observable<UserIdentity>> getUserIdentity() {
+    return token -> mRedditService.getUserIdentity()
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .doOnNext(mIdentityManager::saveUserIdentity);
   }
 
   private Fragment getCurrentDisplayedFragment() {
@@ -436,5 +465,9 @@ public abstract class BaseActivity extends AppCompatActivity
         }
     }
     return super.onKeyUp(keycode, e);
+  }
+
+  protected void showToast(@NonNull String message) {
+    Snackbar.make(mDrawerLayout, message, Snackbar.LENGTH_SHORT).show();
   }
 }

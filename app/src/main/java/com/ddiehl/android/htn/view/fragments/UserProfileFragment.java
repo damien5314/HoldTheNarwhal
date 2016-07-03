@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TabLayout;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -56,22 +57,23 @@ public class UserProfileFragment extends BaseListingsFragment
 
   private static final int NUM_DEFAULT_TABS = 5;
 
-  @BindView(R.id.tab_layout) TabLayout mUserProfileTabs;
-  @BindView(R.id.user_profile_summary) View mUserProfileSummary;
-  @BindView(R.id.recycler_view) View mListView;
-  @BindView(R.id.user_note_layout) View mFriendNoteLayout;
+  @Inject protected IdentityManager mIdentityManager;
+
+  @BindView(R.id.coordinator_layout)        protected CoordinatorLayout mCoordinatorLayout;
+  @BindView(R.id.tab_layout)                protected TabLayout mUserProfileTabs;
+  @BindView(R.id.user_profile_summary)      protected View mUserProfileSummary;
+  @BindView(R.id.recycler_view)             protected View mListView;
+  @BindView(R.id.user_note_layout)          protected View mFriendNoteLayout;
 
   // Views for user profile summary elements
-  @BindView(R.id.user_created) TextView mCreateDate;
-  @BindView(R.id.user_karma_layout) View mKarmaLayout;
-  @BindView(R.id.user_link_karma) TextView mLinkKarma;
-  @BindView(R.id.user_comment_karma) TextView mCommentKarma;
-  @BindView(R.id.user_friend_button) Button mFriendButton;
-  @BindView(R.id.user_friend_note_edit) TextView mFriendNote;
-  @BindView(R.id.user_friend_note_confirm) Button mFriendNoteSave;
-  @BindView(R.id.user_trophies) GridLayout mTrophies;
-
-  @Inject protected IdentityManager mIdentityManager;
+  @BindView(R.id.user_created)              protected TextView mCreateDate;
+  @BindView(R.id.user_karma_layout)         protected View mKarmaLayout;
+  @BindView(R.id.user_link_karma)           protected TextView mLinkKarma;
+  @BindView(R.id.user_comment_karma)        protected TextView mCommentKarma;
+  @BindView(R.id.user_friend_button)        protected Button mFriendButton;
+  @BindView(R.id.user_friend_note_edit)     protected TextView mFriendNote;
+  @BindView(R.id.user_friend_note_confirm)  protected Button mFriendNoteSave;
+  @BindView(R.id.user_trophies)             protected GridLayout mTrophies;
 
   @Arg String mUsername;
   @Arg String mShow;
@@ -85,8 +87,6 @@ public class UserProfileFragment extends BaseListingsFragment
 
   private UserProfilePresenter mUserProfilePresenter;
 
-  public UserProfileFragment() { }
-
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -95,12 +95,65 @@ public class UserProfileFragment extends BaseListingsFragment
     if (TextUtils.isEmpty(mShow)) mShow = "summary";
     if (TextUtils.isEmpty(mSort)) mSort = "new";
     if (TextUtils.isEmpty(mTimespan)) mTimespan = "all";
-    mUserProfilePresenter = new UserProfilePresenter(
-        mMainView, this, this, this, this, mShow, mUsername, mSort, mTimespan);
+    mUserProfilePresenter = new UserProfilePresenter(this, mRedditNavigationView, this);
     mLinkPresenter = mUserProfilePresenter;
     mCommentPresenter = mUserProfilePresenter;
     mListingsPresenter = mUserProfilePresenter;
     mCallbacks = mUserProfilePresenter;
+  }
+
+  @Nullable @Override
+  public View onCreateView(
+      LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    View v = super.onCreateView(inflater, container, savedInstanceState);
+    initializeUserProfileTabs();
+    mKarmaLayout.setVisibility(View.GONE);
+    mFriendButton.setVisibility(View.GONE);
+    mFriendNoteLayout.setVisibility(View.GONE);
+    mFriendNoteSave.setOnClickListener(view -> {
+      String note = mFriendNote.getText().toString();
+      mUserProfilePresenter.saveFriendNote(note);
+    });
+    return v;
+  }
+
+  private void initializeUserProfileTabs() {
+    mTabUpvoted = mUserProfileTabs.newTab()
+        .setText(R.string.navigation_tabs_upvoted)
+        .setTag("upvoted");
+    mTabDownvoted = mUserProfileTabs.newTab()
+        .setText(R.string.navigation_tabs_downvoted)
+        .setTag("downvoted");
+    mTabHidden = mUserProfileTabs.newTab()
+        .setText(R.string.navigation_tabs_hidden)
+        .setTag("hidden");
+    mTabSaved = mUserProfileTabs.newTab()
+        .setText(R.string.navigation_tabs_saved)
+        .setTag("saved");
+
+    mUserProfileTabs.removeAllTabs();
+    for (TabLayout.Tab tab : buildDefaultTabs()) {
+      mUserProfileTabs.addTab(tab);
+    }
+
+    selectTab(mShow);
+
+    mUserProfileTabs.addOnTabSelectedListener(this);
+  }
+
+  private List<TabLayout.Tab> buildDefaultTabs() {
+    return Arrays.asList(
+        mUserProfileTabs.newTab()
+            .setText(R.string.navigation_tabs_summary).setTag("summary"),
+        mUserProfileTabs.newTab()
+            .setText(R.string.navigation_tabs_overview).setTag("overview"),
+        mUserProfileTabs.newTab()
+            .setText(R.string.navigation_tabs_comments).setTag("comments"),
+        mUserProfileTabs.newTab()
+            .setText(R.string.navigation_tabs_submitted).setTag("submitted"),
+        mUserProfileTabs.newTab()
+            .setText(R.string.navigation_tabs_gilded).setTag("gilded")
+    );
   }
 
   @Override
@@ -118,21 +171,6 @@ public class UserProfileFragment extends BaseListingsFragment
           mUserProfileTabs.removeTabAt(i);
         }
     }
-  }
-
-  @Nullable @Override
-  public View onCreateView(
-      LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    View v = super.onCreateView(inflater, container, savedInstanceState);
-    initializeUserProfileTabs();
-    mKarmaLayout.setVisibility(View.GONE);
-    mFriendButton.setVisibility(View.GONE);
-    mFriendNoteLayout.setVisibility(View.GONE);
-    mFriendNoteSave.setOnClickListener(view -> {
-      String note = mFriendNote.getText().toString();
-      mUserProfilePresenter.saveFriendNote(note);
-    });
-    return v;
   }
 
   @Override
@@ -241,7 +279,7 @@ public class UserProfileFragment extends BaseListingsFragment
     } else {
       mSort = sort;
       getActivity().invalidateOptionsMenu();
-      mListingsPresenter.onSortChanged(mSort, mTimespan);
+      mListingsPresenter.onSortChanged();
     }
   }
 
@@ -251,7 +289,7 @@ public class UserProfileFragment extends BaseListingsFragment
     mSort = mSelectedSort;
     mTimespan = timespan;
     getActivity().invalidateOptionsMenu();
-    mListingsPresenter.onSortChanged(mSort, mTimespan);
+    mListingsPresenter.onSortChanged();
   }
 
   //endregion
@@ -334,37 +372,6 @@ public class UserProfileFragment extends BaseListingsFragment
     mTrophies.setColumnCount(columns);
   }
 
-  private void initializeUserProfileTabs() {
-    mTabUpvoted = mUserProfileTabs.newTab()
-        .setText(R.string.navigation_tabs_upvoted).setTag("upvoted");
-    mTabDownvoted = mUserProfileTabs.newTab()
-        .setText(R.string.navigation_tabs_downvoted).setTag("downvoted");
-    mTabHidden = mUserProfileTabs.newTab()
-        .setText(R.string.navigation_tabs_hidden).setTag("hidden");
-    mTabSaved = mUserProfileTabs.newTab()
-        .setText(R.string.navigation_tabs_saved).setTag("saved");
-
-    mUserProfileTabs.removeAllTabs();
-    for (TabLayout.Tab tab : getDefaultTabs()) {
-      mUserProfileTabs.addTab(tab);
-    }
-  }
-
-  private List<TabLayout.Tab> getDefaultTabs() {
-    return Arrays.asList(
-        mUserProfileTabs.newTab()
-            .setText(R.string.navigation_tabs_summary).setTag("summary"),
-        mUserProfileTabs.newTab()
-            .setText(R.string.navigation_tabs_overview).setTag("overview"),
-        mUserProfileTabs.newTab()
-            .setText(R.string.navigation_tabs_comments).setTag("comments"),
-        mUserProfileTabs.newTab()
-            .setText(R.string.navigation_tabs_submitted).setTag("submitted"),
-        mUserProfileTabs.newTab()
-            .setText(R.string.navigation_tabs_gilded).setTag("gilded")
-    );
-  }
-
   private TabLayout.Tab getCurrentSelectedTab() {
     return mUserProfileTabs.getTabAt(
         mUserProfileTabs.getSelectedTabPosition());
@@ -401,6 +408,31 @@ public class UserProfileFragment extends BaseListingsFragment
       mListView.setVisibility(View.VISIBLE);
     }
     getActivity().invalidateOptionsMenu();
-    mUserProfilePresenter.requestData(mShow);
+    mUserProfilePresenter.requestData();
+  }
+
+  @Override
+  public String getShow() {
+    return mShow;
+  }
+
+  @Override
+  public String getUsernameContext() {
+    return mUsername;
+  }
+
+  @Override
+  public String getSort() {
+    return mSort;
+  }
+
+  @Override
+  public String getTimespan() {
+    return mTimespan;
+  }
+
+  @Override
+  View getChromeView() {
+    return mCoordinatorLayout;
   }
 }

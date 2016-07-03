@@ -1,24 +1,24 @@
 package com.ddiehl.android.htn.presenter;
 
 import com.ddiehl.android.htn.R;
-import com.ddiehl.android.htn.view.LinkView;
-import com.ddiehl.android.htn.view.ListingsView;
 import com.ddiehl.android.htn.view.MainView;
+import com.ddiehl.android.htn.view.RedditNavigationView;
+import com.ddiehl.android.htn.view.SubredditView;
 
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
-import rxreddit.model.Link;
 import rxreddit.model.ListingResponse;
 import rxreddit.model.Subreddit;
 import rxreddit.model.UserIdentity;
 
 public class SubredditPresenter extends BaseListingsPresenter implements LinkPresenter {
 
-  public SubredditPresenter(
-      MainView main, ListingsView listingsView, LinkView view,
-      String subreddit, String sort, String timespan) {
-    super(main, listingsView, view, null, null, null, null, null, subreddit, sort, timespan);
+  private SubredditView mSubredditView;
+
+  public SubredditPresenter(MainView main, RedditNavigationView navigationView, SubredditView view) {
+    super(main, navigationView, view, view, null, null, null);
+    mSubredditView = view;
   }
 
   @Override
@@ -35,9 +35,10 @@ public class SubredditPresenter extends BaseListingsPresenter implements LinkPre
 
   @Override
   void requestPreviousData() {
-    if (mSubreddit != null
-        && !mSubreddit.equals("all")
-        && !mSubreddit.equals("random")
+    String subreddit = mSubredditView.getSubreddit();
+    if (subreddit != null
+        && !subreddit.equals("all")
+        && !subreddit.equals("random")
         && mSubredditInfo == null) {
       getSubredditInfo();
     } else {
@@ -47,9 +48,10 @@ public class SubredditPresenter extends BaseListingsPresenter implements LinkPre
 
   @Override
   public void requestNextData() {
-    if (mSubreddit != null
-        && !mSubreddit.equals("all")
-        && !mSubreddit.equals("random")
+    String subreddit = mSubredditView.getSubreddit();
+    if (subreddit != null
+        && !subreddit.equals("all")
+        && !subreddit.equals("random")
         && mSubredditInfo == null) {
       getSubredditInfo();
     } else {
@@ -58,7 +60,7 @@ public class SubredditPresenter extends BaseListingsPresenter implements LinkPre
   }
 
   private void getSubredditInfo() {
-    mRedditService.getSubredditInfo(mSubreddit)
+    mRedditService.getSubredditInfo(mSubredditView.getSubreddit())
         .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
         .doOnSubscribe(() -> mMainView.showSpinner(null))
         .doOnTerminate(() -> {
@@ -66,12 +68,16 @@ public class SubredditPresenter extends BaseListingsPresenter implements LinkPre
           mNextRequested = false;
         })
         .subscribe(onSubredditInfoLoaded(),
-            e -> mMainView.showError(e, R.string.error_get_subreddit_info));
+            e -> {
+              String message = mContext.getString(R.string.error_get_subreddit_info);
+              mMainView.showError(e, message);
+            });
   }
 
   private void getSubredditLinks(boolean append) {
-    mAnalytics.logLoadSubreddit(mSubreddit, mSort, mTimespan);
-    mRedditService.loadLinks(mSubreddit, mSort, mTimespan,
+    mAnalytics.logLoadSubreddit(
+        mSubredditView.getSubreddit(), mSubredditView.getSort(), mSubredditView.getTimespan());
+    mRedditService.loadLinks(mSubredditView.getSubreddit(), mSubredditView.getSort(), mSubredditView.getTimespan(),
         append ? null : mPrevPageListingId,
         append ? mNextPageListingId : null)
         .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
@@ -87,7 +93,10 @@ public class SubredditPresenter extends BaseListingsPresenter implements LinkPre
         })
         .subscribe(
             onListingsLoaded(append),
-            e -> mMainView.showError(e, R.string.error_get_links));
+            e -> {
+              String message = mContext.getString(R.string.error_get_links);
+              mMainView.showError(e, message);
+            });
   }
 
   private Action1<Subreddit> onSubredditInfoLoaded() {
@@ -95,7 +104,7 @@ public class SubredditPresenter extends BaseListingsPresenter implements LinkPre
       mSubredditInfo = info;
       UserIdentity user = getAuthorizedUser();
       if (shouldShowNsfwDialog(mSubredditInfo, user)) {
-        mListingsView.showNsfwWarningDialog();
+        mSubredditView.showNsfwWarningDialog();
       } else {
         if (mSubredditInfo != null) requestNextData();
         else mMainView.showToast(R.string.error_private_subreddit);
@@ -113,17 +122,17 @@ public class SubredditPresenter extends BaseListingsPresenter implements LinkPre
   protected Action1<ListingResponse> onListingsLoaded(boolean append) {
     return (response) -> {
       super.onListingsLoaded(append).call(response);
-      if ("random".equals(mSubreddit)) {
-        mSubreddit = ((Link) mListings.get(0)).getSubreddit();
-      }
       updateTitle();
     };
   }
 
   private void updateTitle() {
-    if (mSubreddit == null) mMainView.setTitle(R.string.front_page_title);
-    else mMainView.setTitle(
-        String.format(mContext.getString(R.string.link_subreddit), mSubreddit));
+    if (mSubredditView.getSubreddit() == null) {
+      mMainView.setTitle(R.string.front_page_title);
+    } else {
+      mMainView.setTitle(
+          String.format(mContext.getString(R.string.link_subreddit), mSubredditView.getSubreddit()));
+    }
   }
 
   private void loadHeaderImage() {

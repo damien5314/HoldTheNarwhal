@@ -1,5 +1,6 @@
 package com.ddiehl.android.htn.view.fragments;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,7 +11,8 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
-import android.support.annotation.StringRes;
+import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -39,6 +41,8 @@ public class SettingsFragment extends PreferenceFragment
 
   @Inject protected IdentityManager mIdentityManager;
   private SettingsPresenter mSettingsPresenter;
+
+  private ProgressDialog mLoadingOverlay;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -167,22 +171,29 @@ public class SettingsFragment extends PreferenceFragment
   }
 
   @Override
-  public void showToast(@StringRes int messageResId) {
-
-  }
-
-  @Override
-  public void showError(Throwable e, @StringRes int messageResId) {
-
-  }
-
-  @Override
   public void showSpinner(String message) {
-
+    if (mLoadingOverlay == null) {
+      mLoadingOverlay = new ProgressDialog(getView().getContext(), R.style.ProgressDialog);
+      mLoadingOverlay.setCancelable(false);
+      mLoadingOverlay.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+    }
+    mLoadingOverlay.setMessage(message);
+    mLoadingOverlay.show();
   }
 
   @Override
   public void dismissSpinner() {
+    if (mLoadingOverlay != null && mLoadingOverlay.isShowing()) {
+      mLoadingOverlay.dismiss();
+    }
+  }
 
+  @Override
+  public void showToast(@NonNull String msg) {
+    Snackbar.make(getView(), msg, Snackbar.LENGTH_SHORT).show();
+  }
+
+  protected void showError(@NonNull String msg) {
+    Snackbar.make(getView(), msg, Snackbar.LENGTH_SHORT).show();
   }
 }

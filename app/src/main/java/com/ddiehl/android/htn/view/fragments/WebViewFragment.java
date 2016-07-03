@@ -1,13 +1,11 @@
 package com.ddiehl.android.htn.view.fragments;
 
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.MailTo;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -20,14 +18,13 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
-import android.widget.ZoomButtonsController;
 
 import com.ddiehl.android.htn.BuildConfig;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
-import com.ddiehl.android.htn.utils.AndroidUtils;
 import com.ddiehl.android.htn.view.MainView;
+import com.ddiehl.android.htn.view.SignInView;
 import com.hannesdorfmann.fragmentargs.FragmentArgs;
 import com.hannesdorfmann.fragmentargs.annotation.Arg;
 import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs;
@@ -36,47 +33,29 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
 import rxreddit.api.RedditService;
-import rxreddit.model.UserAccessToken;
 import timber.log.Timber;
 
+import static android.app.Activity.RESULT_OK;
+
 @FragmentWithArgs
-public class WebViewFragment extends Fragment {
+public class WebViewFragment extends BaseFragment implements SignInView {
 
   public static final String TAG = WebViewFragment.class.getSimpleName();
+  public static final String EXTRA_CALLBACK_URL = "EXTRA_CALLBACK_URL";
 
-  private static final String ARG_URL = "arg_url";
-
-  private MainView mMainView;
   @Arg String mUrl;
+
   @Inject protected IdentityManager mIdentityManager;
   @Inject protected RedditService mRedditService;
 
-  @BindView(R.id.web_view) WebView mWebView;
+  @BindView(R.id.web_view)      protected WebView mWebView;
+  @BindView(R.id.progress_bar)  protected ProgressBar mProgressBar;
 
   static {
     if (BuildConfig.DEBUG && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-      WebView.setWebContentsDebuggingEnabled(true);
+//      WebView.setWebContentsDebuggingEnabled(true);
     }
-  }
-
-  public WebViewFragment() { }
-
-  public static WebViewFragment newInstance(String url) {
-    Bundle args = new Bundle();
-    args.putString(ARG_URL, url);
-    WebViewFragment fragment = new WebViewFragment();
-    fragment.setArguments(args);
-    return fragment;
-  }
-
-  @Override
-  public void onAttach(Context context) {
-    super.onAttach(context);
-    mMainView = (MainView) context;
   }
 
   @Override
@@ -88,65 +67,94 @@ public class WebViewFragment extends Fragment {
     setHasOptionsMenu(true);
   }
 
-  @Override @SuppressWarnings("SetJavaScriptEnabled")
+  @Override
   public View onCreateView(
       LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-    View v = inflater.inflate(R.layout.web_view_fragment, container, false);
+    View view = inflater.inflate(R.layout.web_view_fragment, container, false);
+    ButterKnife.bind(this, view);
 
-    final ProgressBar progressBar = ButterKnife.findById(v, R.id.progress_bar);
-    progressBar.setMax(100);
-
-    ButterKnife.bind(this, v);
-
+    // Configure settings
     WebSettings settings = mWebView.getSettings();
+    configure(settings);
+
+    mWebView.setWebViewClient(
+        new MyWebViewClient(this, this, mRedditService.getRedirectUri(), mRedditService.getAuthorizationUrl()));
+
+    // Configure progress bar
+    mProgressBar.setMax(100);
+    mWebView.setWebChromeClient(getProgressBarChromeClient(mProgressBar));
+
+    // Handle back key taps
+    mWebView.setOnKeyListener(getBackKeyListener());
+
+    // Load url
+    mWebView.loadUrl(mUrl);
+
+    return view;
+  }
+
+  @SuppressWarnings("SetJavaScriptEnabled")
+  protected void configure(WebSettings settings) {
     settings.setJavaScriptEnabled(true);
     settings.setUseWideViewPort(true);
     settings.setLoadWithOverviewMode(true);
     settings.setDomStorageEnabled(true);
-    disableWebViewZoomControls(mWebView);
+    settings.setSupportZoom(true);
+    settings.setBuiltInZoomControls(true);
+    settings.setDisplayZoomControls(false);
+  }
 
-    mWebView.setWebViewClient(new WebViewClient() {
-      @Override
-      public boolean shouldOverrideUrlLoading(WebView view, String url) {
-        Timber.d("Loading URL: %s", url);
+  protected static class MyWebViewClient extends WebViewClient {
 
-        if (url.contains(mRedditService.getRedirectUri())
-            && !url.equals(mRedditService.getAuthorizationUrl())) {
-          mRedditService.processAuthenticationCallback(url)
-              .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-              .subscribe(
-                  getUserIdentity(),
-                  e -> mMainView.showError(e, R.string.error_get_user_identity));
-          mMainView.goBack();
-          return true; // Can we do this to prevent the page from loading at all?
-        }
+    private final MainView mMainView;
+    private final SignInView mSignInView;
+    private final String mRedirectUri;
+    private final String mAuthorizationUrl;
 
-        if (url.startsWith("mailto:")) {
-          MailTo mt = MailTo.parse(url);
-          Intent i = AndroidUtils.getNewEmailIntent(
-              mt.getTo(), mt.getSubject(), mt.getBody(), mt.getCc());
-          getActivity().startActivity(i);
-          return true;
-        }
+    public MyWebViewClient(@NonNull MainView mainView, @NonNull SignInView signInView, @NonNull String redirectUri, @NonNull String authorizationUrl) {
+      mMainView = mainView;
+      mSignInView = signInView;
+      mRedirectUri = redirectUri;
+      mAuthorizationUrl = authorizationUrl;
+    }
 
-        return false;
+    @Override
+    public boolean shouldOverrideUrlLoading(WebView view, String url) {
+      Timber.d("Loading URL: %s", url);
+
+      if (url.contains(mRedirectUri) && !url.equals(mAuthorizationUrl)) {
+        mSignInView.onCallbackUrlReceived(url);
+        return true;
       }
 
-      @Override
-      public void onPageStarted(WebView view, String url, Bitmap favicon) {
-        super.onPageStarted(view, url, favicon);
-
-        // 11 = Build.VERSION_CODES.HONEYCOMB (Android 3.0)
-        // http://stackoverflow.com/questions/15518317/shouldoverrideurlloading-is-not-working
-        if (Build.VERSION.SDK_INT < 11) {
-          if (shouldOverrideUrlLoading(view, url)) {
-            view.stopLoading();
-          }
-        }
+      if (url.startsWith("mailto:")) {
+        MailTo mt = MailTo.parse(url);
+        mMainView.doSendEmail(mt);
+        return true;
       }
-    });
 
-    mWebView.setWebChromeClient(new WebChromeClient() {
+      return false;
+    }
+  }
+
+  @Override
+  public void onCallbackUrlReceived(@NonNull String url) {
+    Intent data = new Intent();
+    data.putExtra(EXTRA_CALLBACK_URL, url);
+    finish(RESULT_OK, data);
+  }
+
+  private void finish(int resultCode, Intent data) {
+    if (getTargetFragment() != null) {
+      getTargetFragment().onActivityResult(getTargetRequestCode(), resultCode, data);
+    } else {
+      getActivity().setResult(resultCode, data);
+      getActivity().finish();
+    }
+  }
+
+  protected WebChromeClient getProgressBarChromeClient(final ProgressBar progressBar) {
+    return new WebChromeClient() {
       @Override
       public void onProgressChanged(WebView view, int progress) {
         if (progress == 100) {
@@ -156,10 +164,11 @@ public class WebViewFragment extends Fragment {
           progressBar.setProgress(progress);
         }
       }
-    });
+    };
+  }
 
-    mWebView.loadUrl(mUrl);
-    mWebView.setOnKeyListener((v1, keyCode, event) -> {
+  protected View.OnKeyListener getBackKeyListener() {
+    return (v1, keyCode, event) -> {
       // Check if the key event was the Back button and if there's history
       if (event.getAction() == KeyEvent.ACTION_UP
           && (keyCode == KeyEvent.KEYCODE_BACK) && mWebView.canGoBack()) {
@@ -167,17 +176,7 @@ public class WebViewFragment extends Fragment {
         return true;
       }
       return false;
-    });
-
-    return v;
-  }
-
-  private Action1<UserAccessToken> getUserIdentity() {
-    return token -> mRedditService.getUserIdentity()
-        .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(identity -> mIdentityManager.saveUserIdentity(identity))
-        .subscribe(mMainView::updateUserIdentity,
-            e -> mMainView.showError(e, R.string.error_get_user_identity));
+    };
   }
 
   @Override
@@ -188,30 +187,6 @@ public class WebViewFragment extends Fragment {
       mWebView.destroy();
     }
     super.onDestroyView();
-  }
-
-  /**
-   * Disable zoom buttons for WebView.
-   * http://stackoverflow.com/a/14751673/3238938
-   * http://twigstechtips.blogspot.com/2013/09/android-disable-webview-zoom-controls.html
-   */
-  private static void disableWebViewZoomControls(final WebView webView) {
-    webView.getSettings().setSupportZoom(true);
-    webView.getSettings().setBuiltInZoomControls(true);
-
-    // Use the API 11+ calls to disable the controls
-    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB) {
-      webView.getSettings().setDisplayZoomControls(false);
-    } else {
-      try {
-        ZoomButtonsController zoom_control;
-        zoom_control = ((ZoomButtonsController) webView.getClass()
-            .getMethod("getZoomButtonsController").invoke(webView, (Object[]) null));
-        zoom_control.getContainer().setVisibility(View.GONE);
-      } catch (Exception e) {
-        e.printStackTrace();
-      }
-    }
   }
 
   @Override
@@ -229,5 +204,10 @@ public class WebViewFragment extends Fragment {
     }
 
     return super.onOptionsItemSelected(item);
+  }
+
+  @Override
+  View getChromeView() {
+    return mWebView;
   }
 }

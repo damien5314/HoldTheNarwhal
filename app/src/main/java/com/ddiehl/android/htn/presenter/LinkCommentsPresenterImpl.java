@@ -10,6 +10,7 @@ import com.ddiehl.android.htn.model.CommentBank;
 import com.ddiehl.android.htn.model.CommentBankList;
 import com.ddiehl.android.htn.view.LinkCommentsView;
 import com.ddiehl.android.htn.view.MainView;
+import com.ddiehl.android.htn.view.RedditNavigationView;
 
 import java.util.HashMap;
 import java.util.List;
@@ -37,17 +38,11 @@ public class LinkCommentsPresenterImpl extends BaseListingsPresenter
   private final CommentBank mCommentBank;
   private Link mLinkContext;
   private Listing mReplyTarget = null;
-  private final String mLinkId;
-  private final String mCommentId;
 
-  public LinkCommentsPresenterImpl(
-      MainView main, LinkCommentsView view, String subreddit, String linkId, String commentId) {
-    super(main, view, view, view, null, null, null, null, subreddit, null, null);
+  public LinkCommentsPresenterImpl(MainView main, RedditNavigationView navigationView, LinkCommentsView view) {
+    super(main, navigationView, view, view, view, null, null);
     mLinkCommentsView = view;
     mCommentBank = new CommentBankList();
-    mLinkId = linkId;
-    mCommentId = commentId;
-    mSort = mSettingsManager.getCommentSort();
   }
 
   @Override
@@ -63,7 +58,7 @@ public class LinkCommentsPresenterImpl extends BaseListingsPresenter
     mLinkContext = null;
     mListingSelected = null;
     mCommentBank.clear();
-    mListingsView.notifyDataSetChanged();
+    mLinkCommentsView.notifyDataSetChanged();
   }
 
   @Override
@@ -82,12 +77,19 @@ public class LinkCommentsPresenterImpl extends BaseListingsPresenter
   @Override
   void requestNextData() {
     mMainView.showSpinner(null);
-    mRedditService.loadLinkComments(mSubreddit, mLinkId, mSort, mCommentId)
-        .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+    mRedditService.loadLinkComments(
+        mLinkCommentsView.getSubreddit(), mLinkCommentsView.getArticleId(),
+        mLinkCommentsView.getSort(), mLinkCommentsView.getCommentId()
+    )
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
         .doOnTerminate(mMainView::dismissSpinner)
         .subscribe(showLinkComments(),
-            e -> mMainView.showError(e, R.string.error_get_link_comments));
-    mAnalytics.logLoadLinkComments(mSort);
+            e -> {
+              String message = mContext.getString(R.string.error_get_link_comments);
+              mMainView.showError(e, message);
+            });
+    mAnalytics.logLoadLinkComments(mLinkCommentsView.getSort());
   }
 
   private Action1<List<ListingResponse>> showLinkComments() {
@@ -105,7 +107,7 @@ public class LinkCommentsPresenterImpl extends BaseListingsPresenter
       Integer minScore = mSettingsManager.getMinCommentScore();
       mCommentBank.collapseAllThreadsUnder(minScore);
       // TODO Specify commentsAdded
-      mListingsView.notifyDataSetChanged();
+      mLinkCommentsView.notifyDataSetChanged();
     };
   }
 
@@ -119,13 +121,16 @@ public class LinkCommentsPresenterImpl extends BaseListingsPresenter
     List<String> children = parentStub.getChildren();
     // Truncate list of children to 20
     children = children.subList(0, Math.min(MAX_CHILDREN_PER_REQUEST, children.size()));
-    mRedditService.loadMoreChildren(mLinkContext.getId(), children, mSort)
+    mRedditService.loadMoreChildren(mLinkContext.getId(), children, mLinkCommentsView.getSort())
         .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
         .doOnSubscribe(() -> mMainView.showSpinner(null))
         .doOnTerminate(mMainView::dismissSpinner)
         .subscribe(showMoreComments(parentStub),
-            e -> mMainView.showError(e, R.string.error_get_more_comments));
-    mAnalytics.logLoadMoreChildren(mSort);
+            e -> {
+              String message = mContext.getString(R.string.error_get_more_comments);
+              mMainView.showError(e, message);
+            });
+    mAnalytics.logLoadMoreChildren(mLinkCommentsView.getSort());
   }
 
   private Action1<MoreChildrenResponse> showMoreComments(@NonNull CommentStub parentStub) {
@@ -144,7 +149,7 @@ public class LinkCommentsPresenterImpl extends BaseListingsPresenter
       Integer minScore = mSettingsManager.getMinCommentScore();
       mCommentBank.collapseAllThreadsUnder(minScore);
       // TODO Specify commentRemoved and commentsAdded
-      mListingsView.notifyDataSetChanged();
+      mLinkCommentsView.notifyDataSetChanged();
     };
   }
 
@@ -175,15 +180,6 @@ public class LinkCommentsPresenterImpl extends BaseListingsPresenter
     return mLinkContext;
   }
 
-  // FIXME Need to port the saving of user setting
-  public void updateSort(@NonNull String sort) {
-    if (!mSort.equals(sort)) {
-      mSort = sort;
-      mSettingsManager.saveCommentSort(mSort);
-      refreshData();
-    }
-  }
-
   @Override
   public AbsComment getListingAt(int position) {
     return mCommentBank.getVisibleComment(position);
@@ -195,11 +191,11 @@ public class LinkCommentsPresenterImpl extends BaseListingsPresenter
     int position = mCommentBank.visibleIndexOf(comment);
     mCommentBank.toggleThreadVisible(comment);
     int diff = mCommentBank.getNumVisible() - before;
-    mListingsView.notifyItemChanged(position);
+    mLinkCommentsView.notifyItemChanged(position);
     if (diff > 0) {
-      mListingsView.notifyItemRangeInserted(position + 1, diff);
+      mLinkCommentsView.notifyItemRangeInserted(position + 1, diff);
     } else { // diff < 0
-      mListingsView.notifyItemRangeRemoved(position + 1, diff * -1);
+      mLinkCommentsView.notifyItemRangeRemoved(position + 1, diff * -1);
     }
   }
 
@@ -253,7 +249,9 @@ public class LinkCommentsPresenterImpl extends BaseListingsPresenter
     mRedditService.addComment(parentId, commentText)
         .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
         .subscribe(comment -> {
-          mMainView.showToast("Comment successful"); // FIXME Port to strings.xml
+          String message = mContext.getString(R.string.comment_added);
+          mMainView.showToast(message);
+
           // TODO Optimize this logic, it probably takes a long time in large threads
           int position;
           if (parentId.startsWith("t1_")) { // Comment
@@ -266,7 +264,10 @@ public class LinkCommentsPresenterImpl extends BaseListingsPresenter
           mCommentBank.add(position, comment);
           mLinkCommentsView.notifyItemInserted(
               mCommentBank.visibleIndexOf(comment));
-        }, e -> mMainView.showError(e, R.string.error_add_comment));
+        }, e -> {
+          String message = mContext.getString(R.string.error_add_comment);
+          mMainView.showError(e, message);
+        });
   }
 
   @Override
@@ -276,17 +277,12 @@ public class LinkCommentsPresenterImpl extends BaseListingsPresenter
 
   @Override
   public boolean shouldShowParentLink() {
-    return mCommentId != null;
+    return mLinkCommentsView.getCommentId() != null;
   }
 
   @Override
   public void showLinkContextMenu(ContextMenu menu, View view, Link link) {
     super.showLinkContextMenu(menu, view, link);
     menu.findItem(R.id.action_link_reply).setVisible(true);
-  }
-
-  @Override
-  public String getSavedCommentSort() {
-    return mSettingsManager.getCommentSort();
   }
 }

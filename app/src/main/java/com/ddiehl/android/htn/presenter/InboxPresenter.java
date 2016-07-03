@@ -1,14 +1,9 @@
 package com.ddiehl.android.htn.presenter;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-
 import com.ddiehl.android.htn.R;
-import com.ddiehl.android.htn.view.CommentView;
 import com.ddiehl.android.htn.view.InboxView;
-import com.ddiehl.android.htn.view.LinkView;
-import com.ddiehl.android.htn.view.ListingsView;
 import com.ddiehl.android.htn.view.MainView;
+import com.ddiehl.android.htn.view.RedditNavigationView;
 
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -20,19 +15,9 @@ public class InboxPresenter extends BaseListingsPresenter
 
   private final InboxView mInboxView;
 
-  public InboxPresenter(
-      @NonNull MainView main, @NonNull ListingsView listingsView,
-      @NonNull LinkView linkView, @NonNull CommentView commentView,
-      @NonNull InboxView inboxView, @Nullable String show) {
-    super(main, listingsView, linkView, commentView, null, inboxView, show, null, null, null, null);
-    mInboxView = inboxView;
-    mShow = show;
-  }
-
-  @Override
-  public void onResume() {
-    super.onResume();
-    mInboxView.selectTab(mShow);
+  public InboxPresenter(MainView main, RedditNavigationView navigationView, InboxView inbox) {
+    super(main, navigationView, inbox, inbox, inbox, null, inbox);
+    mInboxView = inbox;
   }
 
   @Override
@@ -47,9 +32,9 @@ public class InboxPresenter extends BaseListingsPresenter
 
   private void requestData(boolean append) {
     // TODO Analytics
-    mRedditService.getInbox(mShow,
-        append ? null : mPrevPageListingId,
-        append ? mNextPageListingId : null)
+    String prevId = append ? null : mPrevPageListingId;
+    String nextId = append ? mNextPageListingId : null;
+    mRedditService.getInbox(mInboxView.getShow(), prevId, nextId)
         .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
         .doOnSubscribe(() -> {
           mMainView.showSpinner(null);
@@ -60,17 +45,20 @@ public class InboxPresenter extends BaseListingsPresenter
           mNextRequested = false;
         })
         .subscribe(onListingsLoaded(append),
-            e -> mMainView.showError(e, R.string.error_get_inbox));
+            e -> {
+              String message = mContext.getString(R.string.error_get_inbox);
+              mMainView.showError(e, message);
+            });
   }
 
-  public void requestData(String show) {
-    mShow = show;
+  public void requestData() {
     refreshData();
   }
 
   public void onMarkMessagesRead() {
     mRedditService.markAllMessagesRead()
-        .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
         .subscribe(
             _void -> {
               for (Listing listing : mListings) {
@@ -78,8 +66,15 @@ public class InboxPresenter extends BaseListingsPresenter
                   ((PrivateMessage) listing).markUnread(false);
                 }
               }
-              mListingsView.notifyDataSetChanged();
+              mInboxView.notifyDataSetChanged();
             },
-            error -> mMainView.showError(error, R.string.error_xxx));
+            error -> {
+              String message = mContext.getString(R.string.error_xxx);
+              mMainView.showError(error, message);
+            });
+  }
+
+  public void onViewSelected(String show) {
+    refreshData();
   }
 }

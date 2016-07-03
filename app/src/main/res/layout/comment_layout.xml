@@ -103,6 +103,7 @@
             android:id="@+id/comment_saved_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:src="@drawable/ic_saved_dark"/>
 
         <TextView
@@ -111,8 +112,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:gravity="center"
-            android:drawableStart="@drawable/ic_gilded_101"
-            android:drawableLeft="@drawable/ic_gilded_101"
+            android:drawableStart="@drawable/ic_reddit_gold_24dp"
+            android:drawableLeft="@drawable/ic_reddit_gold_24dp"
             tools:text="× 2"/>
 
       </LinearLayout>

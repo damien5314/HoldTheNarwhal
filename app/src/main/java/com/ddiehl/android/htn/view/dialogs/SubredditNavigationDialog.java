@@ -13,6 +13,8 @@ import com.ddiehl.android.htn.R;
 import butterknife.ButterKnife;
 
 public class SubredditNavigationDialog extends DialogFragment {
+
+  public static final String TAG = SubredditNavigationDialog.class.getSimpleName();
   private Callbacks mListener;
 
   public interface Callbacks {

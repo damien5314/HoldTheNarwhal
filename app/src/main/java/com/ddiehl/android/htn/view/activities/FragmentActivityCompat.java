@@ -11,7 +11,8 @@ public abstract class FragmentActivityCompat extends BaseActivity {
   abstract String getFragmentTag();
 
   @Override
-  public void showFragment() {
+  public void onStart() {
+    super.onStart();
     if (getSupportFragmentManager().findFragmentByTag(getFragmentTag()) == null) {
       getSupportFragmentManager().beginTransaction()
           .add(R.id.fragment_container, getFragment(), getFragmentTag())

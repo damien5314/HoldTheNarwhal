@@ -3,15 +3,20 @@ package com.ddiehl.android.htn.view.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.presenter.ListingsPresenter;
 import com.ddiehl.android.htn.presenter.SubredditPresenter;
-import com.ddiehl.android.htn.view.LinkView;
+import com.ddiehl.android.htn.view.SubredditView;
 import com.ddiehl.android.htn.view.adapters.ListingsAdapter;
 import com.ddiehl.android.htn.view.dialogs.ChooseLinkSortDialog;
 import com.ddiehl.android.htn.view.dialogs.ChooseTimespanDialog;
@@ -19,10 +24,14 @@ import com.hannesdorfmann.fragmentargs.FragmentArgs;
 import com.hannesdorfmann.fragmentargs.annotation.Arg;
 import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import rxreddit.model.Link;
+
 import static android.app.Activity.RESULT_OK;
 
 @FragmentWithArgs
-public class SubredditFragment extends BaseListingsFragment implements LinkView {
+public class SubredditFragment extends BaseListingsFragment implements SubredditView {
 
   public static final String TAG = SubredditFragment.class.getSimpleName();
 
@@ -30,7 +39,7 @@ public class SubredditFragment extends BaseListingsFragment implements LinkView 
   @Arg(required = false) String mSort;
   @Arg(required = false) String mTimespan;
 
-  public SubredditFragment() { }
+  @BindView(R.id.coordinator_layout) protected CoordinatorLayout mCoordinatorLayout;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -38,10 +47,17 @@ public class SubredditFragment extends BaseListingsFragment implements LinkView 
     FragmentArgs.inject(this);
     if (TextUtils.isEmpty(mSort)) mSort = "hot";
     if (TextUtils.isEmpty(mTimespan)) mTimespan = "all";
-    mLinkPresenter = new SubredditPresenter(
-        mMainView, this, this, mSubreddit, mSort, mTimespan);
+    mLinkPresenter = new SubredditPresenter(this, mRedditNavigationView, this);
     mListingsPresenter = (ListingsPresenter) mLinkPresenter;
     mCallbacks = (Callbacks) mListingsPresenter;
+  }
+
+  @Nullable
+  @Override
+  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    View view = super.onCreateView(inflater, container, savedInstanceState);
+    ButterKnife.bind(this, view);
+    return view;
   }
 
   @Override
@@ -53,6 +69,64 @@ public class SubredditFragment extends BaseListingsFragment implements LinkView 
   public ListingsAdapter getListingsAdapter() {
     return new ListingsAdapter(
         mListingsPresenter, mLinkPresenter, mCommentPresenter, mMessagePresenter);
+  }
+
+  @Override
+  public void notifyDataSetChanged() {
+    super.notifyDataSetChanged();
+  }
+
+  @Override
+  public void notifyItemChanged(int position) {
+    super.notifyItemChanged(position);
+  }
+
+  @Override
+  public void notifyItemInserted(int position) {
+    super.notifyItemInserted(position);
+    if ("random".equals(getSubreddit())) {
+      mSubreddit = ((Link) mListingsPresenter.getListingAt(0)).getSubreddit();
+    }
+  }
+
+  @Override
+  public void notifyItemRemoved(int position) {
+    super.notifyItemRemoved(position);
+  }
+
+  @Override
+  public void notifyItemRangeChanged(int position, int count) {
+    super.notifyItemRangeChanged(position, count);
+  }
+
+  @Override
+  public void notifyItemRangeInserted(int position, int count) {
+    super.notifyItemRangeInserted(position, count);
+  }
+
+  @Override
+  public void notifyItemRangeRemoved(int position, int count) {
+    super.notifyItemRangeRemoved(position, count);
+  }
+
+  @Override
+  public String getSubreddit() {
+    return mSubreddit;
+  }
+
+  @Override
+  public String getSort() {
+    return mSort;
+  }
+
+  @Override
+  public String getTimespan() {
+    return mTimespan;
+  }
+
+  @Override
+  View getChromeView() {
+    return mCoordinatorLayout;
   }
 
   //region Options menu
@@ -141,7 +215,7 @@ public class SubredditFragment extends BaseListingsFragment implements LinkView 
     } else {
       mSort = sort;
       getActivity().invalidateOptionsMenu();
-      mListingsPresenter.onSortChanged(mSort, mTimespan);
+      mListingsPresenter.onSortChanged();
     }
   }
 
@@ -151,7 +225,7 @@ public class SubredditFragment extends BaseListingsFragment implements LinkView 
     mSort = mSelectedSort;
     mTimespan = timespan;
     getActivity().invalidateOptionsMenu();
-    mListingsPresenter.onSortChanged(mSort, mTimespan);
+    mListingsPresenter.onSortChanged();
   }
 
   //endregion

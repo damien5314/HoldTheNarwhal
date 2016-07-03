@@ -7,6 +7,8 @@ import android.view.View;
 import rxreddit.model.PrivateMessage;
 
 public interface PrivateMessageView {
+
   void showPrivateMessageContextMenu(ContextMenu menu, View v, PrivateMessage privateMessage);
+
   void showSubject(@NonNull String subject);
 }
