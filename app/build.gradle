@@ -80,7 +80,7 @@ dependencies {
   def butterknife_version = "8.0.1"
   compile "com.jakewharton:butterknife:$butterknife_version"
   apt "com.jakewharton:butterknife-compiler:$butterknife_version"
-  def rxreddit_version = "a10195b951154dcf26f2aafe92b0875cdf1046c7"
+  def rxreddit_version = "168e694bda8778a423109b9098566049c1988065"
   compile "com.github.damien5314.RxReddit:library:$rxreddit_version"
   compile "com.github.damien5314.RxReddit:android:$rxreddit_version"
   debugCompile "com.github.damien5314.RxReddit:mock:$rxreddit_version"

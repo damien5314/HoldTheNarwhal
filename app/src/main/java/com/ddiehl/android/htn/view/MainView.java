@@ -25,7 +25,5 @@ public interface MainView {
 
   void showError(Throwable error, String message);
 
-  void goBack();
-
   void doSendEmail(MailTo mailTo);
 }

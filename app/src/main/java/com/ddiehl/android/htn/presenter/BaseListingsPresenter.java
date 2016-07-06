@@ -18,7 +18,6 @@ import com.ddiehl.android.htn.view.ListingsView;
 import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.android.htn.view.PrivateMessageView;
 import com.ddiehl.android.htn.view.RedditNavigationView;
-import com.ddiehl.android.htn.view.UserProfileView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,17 +52,14 @@ public abstract class BaseListingsPresenter
   @Inject protected RedditService mRedditService;
   @Inject protected Analytics mAnalytics;
 
-  protected List<Listing> mListings = new ArrayList<>();
+  protected final List<Listing> mListings = new ArrayList<>();
 
-  private ListingsView mListingsView;
-  
-  protected MainView mMainView;
-  protected RedditNavigationView mRedditNavigationView;
-
-  private LinkView mLinkView;
-  private CommentView mCommentView;
-  private UserProfileView mUserProfileView;
-  private PrivateMessageView mPrivateMessageView;
+  private final ListingsView mListingsView;
+  protected final MainView mMainView;
+  protected final RedditNavigationView mRedditNavigationView;
+  private final LinkView mLinkView;
+  private final CommentView mCommentView;
+  private final PrivateMessageView mPrivateMessageView;
 
   protected Subreddit mSubredditInfo;
 
@@ -74,14 +70,13 @@ public abstract class BaseListingsPresenter
   public BaseListingsPresenter(
       MainView main, RedditNavigationView redditNavigationView, 
       ListingsView view, LinkView linkView, CommentView commentView,
-      UserProfileView userProfileView, PrivateMessageView messageView) {
+      PrivateMessageView messageView) {
     HoldTheNarwhal.getApplicationComponent().inject(this);
     mMainView = main;
     mRedditNavigationView = redditNavigationView;
     mListingsView = view;
     mLinkView = linkView;
     mCommentView = commentView;
-    mUserProfileView = userProfileView;
     mPrivateMessageView = messageView;
   }
 
@@ -527,17 +522,6 @@ public abstract class BaseListingsPresenter
           String message = mContext.getString(R.string.hide_failed);
           mMainView.showError(e, message);
         });
-  }
-
-  @Override
-  public void onNsfwSelected(boolean nsfwAllowed) {
-    if (nsfwAllowed) {
-      mSettingsManager.setOver18(true);
-      refreshData();
-    } else {
-      mMainView.dismissSpinner();
-      mMainView.goBack();
-    }
   }
 
   public boolean shouldShowNsfwTag() {

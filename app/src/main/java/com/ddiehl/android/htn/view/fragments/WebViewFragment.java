@@ -1,6 +1,5 @@
 package com.ddiehl.android.htn.view.fragments;
 
-import android.content.Intent;
 import android.net.MailTo;
 import android.os.Build;
 import android.os.Bundle;
@@ -24,7 +23,6 @@ import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.view.MainView;
-import com.ddiehl.android.htn.view.SignInView;
 import com.hannesdorfmann.fragmentargs.FragmentArgs;
 import com.hannesdorfmann.fragmentargs.annotation.Arg;
 import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs;
@@ -36,10 +34,8 @@ import butterknife.ButterKnife;
 import rxreddit.api.RedditService;
 import timber.log.Timber;
 
-import static android.app.Activity.RESULT_OK;
-
 @FragmentWithArgs
-public class WebViewFragment extends BaseFragment implements SignInView {
+public class WebViewFragment extends BaseFragment {
 
   public static final String TAG = WebViewFragment.class.getSimpleName();
   public static final String EXTRA_CALLBACK_URL = "EXTRA_CALLBACK_URL";
@@ -77,8 +73,7 @@ public class WebViewFragment extends BaseFragment implements SignInView {
     WebSettings settings = mWebView.getSettings();
     configure(settings);
 
-    mWebView.setWebViewClient(
-        new MyWebViewClient(this, this, mRedditService.getRedirectUri(), mRedditService.getAuthorizationUrl()));
+    mWebView.setWebViewClient(new Client(this));
 
     // Configure progress bar
     mProgressBar.setMax(100);
@@ -104,28 +99,17 @@ public class WebViewFragment extends BaseFragment implements SignInView {
     settings.setDisplayZoomControls(false);
   }
 
-  protected static class MyWebViewClient extends WebViewClient {
+  protected static class Client extends WebViewClient {
 
     private final MainView mMainView;
-    private final SignInView mSignInView;
-    private final String mRedirectUri;
-    private final String mAuthorizationUrl;
 
-    public MyWebViewClient(@NonNull MainView mainView, @NonNull SignInView signInView, @NonNull String redirectUri, @NonNull String authorizationUrl) {
+    public Client(@NonNull MainView mainView) {
       mMainView = mainView;
-      mSignInView = signInView;
-      mRedirectUri = redirectUri;
-      mAuthorizationUrl = authorizationUrl;
     }
 
     @Override
     public boolean shouldOverrideUrlLoading(WebView view, String url) {
       Timber.d("Loading URL: %s", url);
-
-      if (url.contains(mRedirectUri) && !url.equals(mAuthorizationUrl)) {
-        mSignInView.onCallbackUrlReceived(url);
-        return true;
-      }
 
       if (url.startsWith("mailto:")) {
         MailTo mt = MailTo.parse(url);
@@ -134,22 +118,6 @@ public class WebViewFragment extends BaseFragment implements SignInView {
       }
 
       return false;
-    }
-  }
-
-  @Override
-  public void onCallbackUrlReceived(@NonNull String url) {
-    Intent data = new Intent();
-    data.putExtra(EXTRA_CALLBACK_URL, url);
-    finish(RESULT_OK, data);
-  }
-
-  private void finish(int resultCode, Intent data) {
-    if (getTargetFragment() != null) {
-      getTargetFragment().onActivityResult(getTargetRequestCode(), resultCode, data);
-    } else {
-      getActivity().setResult(resultCode, data);
-      getActivity().finish();
     }
   }
 

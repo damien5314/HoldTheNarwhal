@@ -16,7 +16,7 @@ public class InboxPresenter extends BaseListingsPresenter
   private final InboxView mInboxView;
 
   public InboxPresenter(MainView main, RedditNavigationView navigationView, InboxView inbox) {
-    super(main, navigationView, inbox, inbox, inbox, null, inbox);
+    super(main, navigationView, inbox, inbox, inbox, inbox);
     mInboxView = inbox;
   }
 

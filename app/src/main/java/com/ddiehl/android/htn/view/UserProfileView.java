@@ -21,7 +21,9 @@ public interface UserProfileView extends ListingsView, LinkView, CommentView {
 
   void selectTab(String show);
 
-  void refreshTabs(boolean showAuthenticatedTabs);
+//  void refreshTabs(boolean showAuthenticatedTabs);
+
+  void onAuthenticatedStateChanged(boolean authenticated);
 
   String getShow();
 

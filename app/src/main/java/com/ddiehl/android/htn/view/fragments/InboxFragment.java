@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.presenter.InboxPresenter;
 import com.ddiehl.android.htn.utils.AndroidUtils;
@@ -26,10 +27,12 @@ import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
+import rx.functions.Action1;
+import rxreddit.model.UserIdentity;
 
 @FragmentWithArgs
 public class InboxFragment extends BaseListingsFragment
-    implements InboxView, TabLayout.OnTabSelectedListener {
+    implements InboxView, TabLayout.OnTabSelectedListener, IdentityManager.Callbacks {
 
   public static final String TAG = InboxFragment.class.getSimpleName();
 
@@ -46,7 +49,9 @@ public class InboxFragment extends BaseListingsFragment
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     FragmentArgs.inject(this);
+
     if (TextUtils.isEmpty(mShow)) mShow = "inbox";
+
     mInboxPresenter = new InboxPresenter(this, mRedditNavigationView, this);
     mLinkPresenter = mInboxPresenter;
     mCommentPresenter = mInboxPresenter;
@@ -55,26 +60,26 @@ public class InboxFragment extends BaseListingsFragment
     mCallbacks = mInboxPresenter;
   }
 
-  @Override
-  public void onPause() {
-    // TODO: Test if we need this, I think it's for restoring the Fragment when coming from background
-    getArguments().putString(ARG_SHOW, mShow);
-    super.onPause();
-  }
-
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     View view = super.onCreateView(inflater, container, savedInstanceState);
+
     initializeTabs();
+
     setTitle(R.string.inbox_fragment_title);
+
     return view;
   }
 
   private void initializeTabs() {
     mTabs.removeOnTabSelectedListener(this);
+
     for (TabLayout.Tab tab : buildTabs()) {
       mTabs.addTab(tab);
     }
+
+    selectTab(mShow);
+
     mTabs.addOnTabSelectedListener(this);
   }
 
@@ -100,6 +105,18 @@ public class InboxFragment extends BaseListingsFragment
             .setTag("mentions")
 
     );
+  }
+
+  @Override
+  public void onStart() {
+    super.onStart();
+    mIdentityManager.registerUserIdentityChangeListener(this);
+  }
+
+  @Override
+  public void onStop() {
+    mIdentityManager.unregisterUserIdentityChangeListener(this);
+    super.onStop();
   }
 
   @Override
@@ -166,5 +183,16 @@ public class InboxFragment extends BaseListingsFragment
   @Override
   View getChromeView() {
     return mCoordinatorLayout;
+  }
+
+  @Override
+  public Action1<UserIdentity> onUserIdentityChanged() {
+    return user -> {
+      if (user == null) {
+        finish();
+      } else {
+        mListingsPresenter.refreshData();
+      }
+    };
   }
 }

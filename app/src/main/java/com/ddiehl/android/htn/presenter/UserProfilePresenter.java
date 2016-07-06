@@ -21,22 +21,12 @@ public class UserProfilePresenter extends BaseListingsPresenter
   private final UserProfileView mSummaryView;
 
   public UserProfilePresenter(MainView main, RedditNavigationView navigationView, UserProfileView view) {
-    super(main, navigationView, view, view, view, view, null);
+    super(main, navigationView, view, view, view, null);
     HoldTheNarwhal.getApplicationComponent().inject(this);
     mSummaryView = view;
   }
 
-  @Override
-  public void onResume() {
-    super.onResume();
-    mSummaryView.refreshTabs(isAuthenticatedUser());
-    mMainView.setTitle(
-        String.format(
-            mContext.getString(R.string.username_formatter),
-            mSummaryView.getUsernameContext()));
-  }
-
-  private boolean isAuthenticatedUser() {
+  public boolean isAuthenticatedUser() {
     UserIdentity authenticatedUser = mIdentityManager.getUserIdentity();
     return authenticatedUser != null
         && Utils.equals(mSummaryView.getUsernameContext(), authenticatedUser.getName());
@@ -45,17 +35,14 @@ public class UserProfilePresenter extends BaseListingsPresenter
   @Override
   public Action1<UserIdentity> onUserIdentityChanged() {
     return identity -> {
-      if (isInAuthenticatedView()) {
-        mSummaryView.selectTab("summary");
-      }
-      mSummaryView.refreshTabs(isAuthenticatedUser());
-      super.onUserIdentityChanged().call(identity);
+      mSummaryView.onAuthenticatedStateChanged(isAuthenticatedUser());
+//      super.onUserIdentityChanged().call(identity);
     };
   }
 
   @Override
   void requestPreviousData() {
-    if (mSummaryView.getShow().equals("summary")) {
+    if ("summary".equals(mSummaryView.getShow())) {
       getSummaryData();
     } else {
       getListingData(false);
@@ -79,7 +66,8 @@ public class UserProfilePresenter extends BaseListingsPresenter
         mSummaryView.getShow(), mSummaryView.getUsernameContext(),
         mSummaryView.getSort(), mSummaryView.getTimespan(),
         before, after)
-        .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
         .doOnSubscribe(() -> {
           mMainView.showSpinner(null);
           if (append) mNextRequested = true;
@@ -90,11 +78,10 @@ public class UserProfilePresenter extends BaseListingsPresenter
           if (append) mNextRequested = false;
           else mBeforeRequested = false;
         })
-        .subscribe(onListingsLoaded(append),
-            e -> {
-              String message = mContext.getString(R.string.error_get_user_profile_listings);
-              mMainView.showError(e, message);
-            });
+        .subscribe(onListingsLoaded(append), e -> {
+          String message = mContext.getString(R.string.error_get_user_profile_listings);
+          mMainView.showError(e, message);
+        });
   }
 
   public void requestData() {
@@ -103,7 +90,8 @@ public class UserProfilePresenter extends BaseListingsPresenter
 
   private void getSummaryData() {
     mRedditService.getUserInfo(mSummaryView.getUsernameContext())
-        .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
         .doOnSubscribe(() -> {
           mMainView.showSpinner(null);
           mNextRequested = true;
@@ -119,7 +107,8 @@ public class UserProfilePresenter extends BaseListingsPresenter
               mMainView.showError(e, message);
             });
     mRedditService.getUserTrophies(mSummaryView.getUsernameContext())
-        .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
         .subscribe(mSummaryView::showTrophies,
             e -> {
               String message = mContext.getString(R.string.error_get_user_trophies);
@@ -131,7 +120,8 @@ public class UserProfilePresenter extends BaseListingsPresenter
     return user -> {
       if (user.isFriend()) {
         mRedditService.getFriendInfo(user.getName())
-            .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
             .subscribe(response -> {
               UserIdentity self = mIdentityManager.getUserIdentity();
               if (self != null && self.isGold()) {
@@ -147,7 +137,8 @@ public class UserProfilePresenter extends BaseListingsPresenter
 
   public void addFriend() {
     mRedditService.addFriend(mSummaryView.getUsernameContext())
-        .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
         .doOnTerminate(mMainView::dismissSpinner)
         .subscribe(response -> {
           mSummaryView.setFriendButtonState(true);
@@ -164,7 +155,8 @@ public class UserProfilePresenter extends BaseListingsPresenter
 
   public void deleteFriend() {
     mRedditService.deleteFriend(mSummaryView.getUsernameContext())
-        .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
         .doOnTerminate(mMainView::dismissSpinner)
         .subscribe(response -> {
           mSummaryView.setFriendButtonState(false);
@@ -182,7 +174,8 @@ public class UserProfilePresenter extends BaseListingsPresenter
     else {
       mMainView.showSpinner(null);
       mRedditService.saveFriendNote(mSummaryView.getUsernameContext(), note)
-          .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+          .subscribeOn(Schedulers.io())
+          .observeOn(AndroidSchedulers.mainThread())
           .doOnTerminate(mMainView::dismissSpinner)
           .subscribe(r -> mMainView.showToast(R.string.user_friend_note_save_confirm),
               e -> {
@@ -190,13 +183,5 @@ public class UserProfilePresenter extends BaseListingsPresenter
                 mMainView.showError(e, message);
               });
     }
-  }
-
-  private boolean isInAuthenticatedView() {
-    final String show = mSummaryView.getShow();
-    return show.equals("upvoted")
-        || show.equals("downvoted")
-        || show.equals("hidden")
-        || show.equals("saved");
   }
 }

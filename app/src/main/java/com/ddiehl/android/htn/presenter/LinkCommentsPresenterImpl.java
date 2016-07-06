@@ -40,7 +40,7 @@ public class LinkCommentsPresenterImpl extends BaseListingsPresenter
   private Listing mReplyTarget = null;
 
   public LinkCommentsPresenterImpl(MainView main, RedditNavigationView navigationView, LinkCommentsView view) {
-    super(main, navigationView, view, view, view, null, null);
+    super(main, navigationView, view, view, view, null);
     mLinkCommentsView = view;
     mCommentBank = new CommentBankList();
   }
@@ -94,18 +94,28 @@ public class LinkCommentsPresenterImpl extends BaseListingsPresenter
 
   private Action1<List<ListingResponse>> showLinkComments() {
     return listingResponseList -> {
-      // Link is responseList.get(0), comments are responseList.get(1)
       if (listingResponseList == null) return;
+
+      // Get link
       ListingResponse linkResponse = listingResponseList.get(0);
       mLinkContext = (Link) linkResponse.getData().getChildren().get(0);
-      if (mLinkContext != null) mMainView.setTitle(mLinkContext.getTitle());
+
+      // Get comments
       ListingResponse commentsResponse = listingResponseList.get(1);
       List<Listing> comments = commentsResponse.getData().getChildren();
+
+      // Flatten the returned comment tree
       RxRedditUtil.flattenCommentList(comments);
+
+      // Add comments to CommentBank
       mCommentBank.clear();
       mCommentBank.addAll(comments);
+
+      // Collapse all threads under the user's minimum score
       Integer minScore = mSettingsManager.getMinCommentScore();
       mCommentBank.collapseAllThreadsUnder(minScore);
+
+      // Notify adapter
       // TODO Specify commentsAdded
       mLinkCommentsView.notifyDataSetChanged();
     };

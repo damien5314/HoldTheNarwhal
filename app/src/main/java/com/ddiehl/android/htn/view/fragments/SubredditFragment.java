@@ -13,16 +13,21 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
+import com.ddiehl.android.htn.SettingsManager;
 import com.ddiehl.android.htn.presenter.ListingsPresenter;
 import com.ddiehl.android.htn.presenter.SubredditPresenter;
 import com.ddiehl.android.htn.view.SubredditView;
 import com.ddiehl.android.htn.view.adapters.ListingsAdapter;
 import com.ddiehl.android.htn.view.dialogs.ChooseLinkSortDialog;
 import com.ddiehl.android.htn.view.dialogs.ChooseTimespanDialog;
+import com.ddiehl.android.htn.view.dialogs.NsfwWarningDialog;
 import com.hannesdorfmann.fragmentargs.FragmentArgs;
 import com.hannesdorfmann.fragmentargs.annotation.Arg;
 import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -35,6 +40,8 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
 
   public static final String TAG = SubredditFragment.class.getSimpleName();
 
+  @Inject protected SettingsManager mSettingsManager;
+
   @Arg(required = false) String mSubreddit;
   @Arg(required = false) String mSort;
   @Arg(required = false) String mTimespan;
@@ -44,9 +51,12 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    HoldTheNarwhal.getApplicationComponent().inject(this);
     FragmentArgs.inject(this);
+
     if (TextUtils.isEmpty(mSort)) mSort = "hot";
     if (TextUtils.isEmpty(mTimespan)) mTimespan = "all";
+
     mLinkPresenter = new SubredditPresenter(this, mRedditNavigationView, this);
     mListingsPresenter = (ListingsPresenter) mLinkPresenter;
     mCallbacks = (Callbacks) mListingsPresenter;
@@ -57,6 +67,7 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     View view = super.onCreateView(inflater, container, savedInstanceState);
     ButterKnife.bind(this, view);
+    updateTitle();
     return view;
   }
 
@@ -69,6 +80,15 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
   public ListingsAdapter getListingsAdapter() {
     return new ListingsAdapter(
         mListingsPresenter, mLinkPresenter, mCommentPresenter, mMessagePresenter);
+  }
+
+  private void updateTitle() {
+    if (getSubreddit() == null) {
+      setTitle(R.string.front_page_title);
+    } else {
+      String formatter = getString(R.string.link_subreddit);
+      setTitle(String.format(formatter, getSubreddit()));
+    }
   }
 
   @Override
@@ -86,6 +106,7 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
     super.notifyItemInserted(position);
     if ("random".equals(getSubreddit())) {
       mSubreddit = ((Link) mListingsPresenter.getListingAt(0)).getSubreddit();
+      updateTitle();
     }
   }
 
@@ -183,6 +204,13 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
   }
 
   @Override
+  public void showNsfwWarningDialog() {
+    NsfwWarningDialog dialog = new NsfwWarningDialog();
+    dialog.setTargetFragment(this, REQUEST_NSFW_WARNING);
+    dialog.show(getFragmentManager(), NsfwWarningDialog.TAG);
+  }
+
+  @Override
   public void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
     switch (requestCode) {
@@ -198,6 +226,20 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
           onTimespanSelected(timespan);
         }
         break;
+      case REQUEST_NSFW_WARNING:
+        boolean result = resultCode == RESULT_OK;
+        onNsfwSelected(result);
+        break;
+    }
+  }
+
+  private void onNsfwSelected(boolean allowed) {
+    if (allowed) {
+      mSettingsManager.setOver18(true);
+      mListingsPresenter.refreshData();
+    } else {
+      dismissSpinner();
+      finish();
     }
   }
 

@@ -8,10 +8,12 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.ContextMenu;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
@@ -54,19 +56,22 @@ public class LinkCommentsFragment extends BaseListingsFragment
 
   private String mSort;
 
-  public LinkCommentsFragment() { }
-
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     HoldTheNarwhal.getApplicationComponent().inject(this);
     FragmentArgs.inject(this);
-    setRetainInstance(true);
-    setHasOptionsMenu(true);
     mLinkCommentsPresenter = new LinkCommentsPresenterImpl(this, mRedditNavigationView, this);
     mSort = mSettingsManager.getCommentSort();
     mListingsPresenter = mLinkCommentsPresenter;
     mCallbacks = (Callbacks) mListingsPresenter;
+  }
+
+  @Nullable @Override
+  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    View view = super.onCreateView(inflater, container, savedInstanceState);
+    setTitle(String.format(getString(R.string.link_subreddit), mSubreddit));
+    return view;
   }
 
   @Override

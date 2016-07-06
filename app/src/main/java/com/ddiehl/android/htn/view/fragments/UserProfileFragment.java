@@ -106,6 +106,7 @@ public class UserProfileFragment extends BaseListingsFragment
   public View onCreateView(
       LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     View v = super.onCreateView(inflater, container, savedInstanceState);
+    showHideView(mShow);
     initializeUserProfileTabs();
     mKarmaLayout.setVisibility(View.GONE);
     mFriendButton.setVisibility(View.GONE);
@@ -114,6 +115,9 @@ public class UserProfileFragment extends BaseListingsFragment
       String note = mFriendNote.getText().toString();
       mUserProfilePresenter.saveFriendNote(note);
     });
+    setTitle(String.format(
+        getString(R.string.username_formatter),
+        getUsernameContext()));
     return v;
   }
 
@@ -133,8 +137,11 @@ public class UserProfileFragment extends BaseListingsFragment
 
     mUserProfileTabs.removeAllTabs();
     for (TabLayout.Tab tab : buildDefaultTabs()) {
-      mUserProfileTabs.addTab(tab);
+      mUserProfileTabs.addTab(tab, tab.getTag().equals(mShow));
     }
+
+    boolean isAuthenticated = mUserProfilePresenter.isAuthenticatedUser();
+    showAuthenticatedTabs(isAuthenticated);
 
     selectTab(mShow);
 
@@ -144,21 +151,39 @@ public class UserProfileFragment extends BaseListingsFragment
   private List<TabLayout.Tab> buildDefaultTabs() {
     return Arrays.asList(
         mUserProfileTabs.newTab()
-            .setText(R.string.navigation_tabs_summary).setTag("summary"),
+            .setText(R.string.navigation_tabs_summary)
+            .setTag("summary"),
         mUserProfileTabs.newTab()
-            .setText(R.string.navigation_tabs_overview).setTag("overview"),
+            .setText(R.string.navigation_tabs_overview)
+            .setTag("overview"),
         mUserProfileTabs.newTab()
-            .setText(R.string.navigation_tabs_comments).setTag("comments"),
+            .setText(R.string.navigation_tabs_comments)
+            .setTag("comments"),
         mUserProfileTabs.newTab()
-            .setText(R.string.navigation_tabs_submitted).setTag("submitted"),
+            .setText(R.string.navigation_tabs_submitted)
+            .setTag("submitted"),
         mUserProfileTabs.newTab()
-            .setText(R.string.navigation_tabs_gilded).setTag("gilded")
+            .setText(R.string.navigation_tabs_gilded)
+            .setTag("gilded")
     );
   }
 
   @Override
-  public void refreshTabs(boolean showAuthenticatedTabs) {
-    if (showAuthenticatedTabs) {
+  public void onAuthenticatedStateChanged(boolean authenticated) {
+    selectTab("summary");
+    showAuthenticatedTabs(authenticated);
+    mListingsPresenter.refreshData();
+  }
+
+  private boolean isInAuthenticatedView(String show) {
+    return show.equals("upvoted")
+        || show.equals("downvoted")
+        || show.equals("hidden")
+        || show.equals("saved");
+  }
+
+  private void showAuthenticatedTabs(boolean authenticated) {
+    if (authenticated) {
       if (mUserProfileTabs.getTabCount() == NUM_DEFAULT_TABS) {
         mUserProfileTabs.addTab(mTabUpvoted);
         mUserProfileTabs.addTab(mTabDownvoted);
@@ -379,6 +404,7 @@ public class UserProfileFragment extends BaseListingsFragment
 
   @Override
   public void selectTab(String show) {
+    mShow = show;
     mUserProfileTabs.removeOnTabSelectedListener(this);
     for (int i = 0; i < AndroidUtils.getChildrenInTabLayout(mUserProfileTabs); i++) {
       TabLayout.Tab tab = mUserProfileTabs.getTabAt(i);
@@ -386,12 +412,13 @@ public class UserProfileFragment extends BaseListingsFragment
         String tag = (String) tab.getTag();
         if (tag != null && tag.equals(show)) {
           tab.select();
-          onTabSelected(tab);
           break;
         }
       }
     }
     mUserProfileTabs.addOnTabSelectedListener(this);
+
+    showHideView(mShow);
   }
   
   @Override public void onTabUnselected(TabLayout.Tab tab) { }
@@ -400,6 +427,12 @@ public class UserProfileFragment extends BaseListingsFragment
   @Override
   public void onTabSelected(TabLayout.Tab tab) {
     mShow = (String) tab.getTag();
+    showHideView(mShow);
+    getActivity().invalidateOptionsMenu();
+    mUserProfilePresenter.requestData();
+  }
+
+  private void showHideView(String show) {
     if ("summary".equals(mShow)) {
       mListView.setVisibility(View.GONE);
       mUserProfileSummary.setVisibility(View.VISIBLE);
@@ -407,8 +440,6 @@ public class UserProfileFragment extends BaseListingsFragment
       mUserProfileSummary.setVisibility(View.GONE);
       mListView.setVisibility(View.VISIBLE);
     }
-    getActivity().invalidateOptionsMenu();
-    mUserProfilePresenter.requestData();
   }
 
   @Override

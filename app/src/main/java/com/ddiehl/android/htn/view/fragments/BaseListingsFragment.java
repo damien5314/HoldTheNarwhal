@@ -1,6 +1,5 @@
 package com.ddiehl.android.htn.view.fragments;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -113,20 +112,10 @@ public abstract class BaseListingsFragment extends BaseFragment
   }
 
   @Override
-  public void onDestroyView() {
-    super.onDestroyView();
+  public void onDestroy() {
+    super.onDestroy();
     mListingsPresenter.onViewDestroyed();
     mRecyclerView.setAdapter(null);
-  }
-
-  @Override
-  public void onActivityResult(int requestCode, int resultCode, Intent data) {
-    switch (requestCode) {
-      case REQUEST_NSFW_WARNING:
-        boolean result = resultCode == Activity.RESULT_OK;
-        mListingsPresenter.onNsfwSelected(result);
-        break;
-    }
   }
 
   @Override

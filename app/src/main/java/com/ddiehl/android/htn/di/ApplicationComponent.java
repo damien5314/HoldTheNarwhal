@@ -13,6 +13,7 @@ import com.ddiehl.android.htn.view.fragments.BaseListingsFragment;
 import com.ddiehl.android.htn.view.fragments.LinkCommentsFragment;
 import com.ddiehl.android.htn.view.fragments.PrivateMessageFragment;
 import com.ddiehl.android.htn.view.fragments.SettingsFragment;
+import com.ddiehl.android.htn.view.fragments.SubredditFragment;
 import com.ddiehl.android.htn.view.fragments.UserProfileFragment;
 import com.ddiehl.android.htn.view.fragments.WebViewFragment;
 import com.ddiehl.android.htn.view.viewholders.ListingsCommentViewHolder;
@@ -41,6 +42,7 @@ public interface ApplicationComponent {
   // Fragments
   void inject(BaseFragment fragment);
   void inject(BaseListingsFragment fragment);
+  void inject(SubredditFragment fragment);
   void inject(UserProfileFragment fragment);
   void inject(PrivateMessageFragment fragment);
   void inject(SettingsFragment fragment);

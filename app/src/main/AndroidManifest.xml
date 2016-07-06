@@ -39,8 +39,7 @@
     </activity>
 
     <activity
-      android:name=".view.activities.SubredditActivity"
-      android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize">
+      android:name=".view.activities.SubredditActivity">
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
         <category android:name="android.intent.category.LAUNCHER" />

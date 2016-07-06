@@ -19,7 +19,7 @@ import com.ddiehl.android.htn.analytics.Analytics;
 import com.ddiehl.android.htn.utils.AndroidUtils;
 import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.android.htn.view.RedditNavigationView;
-import com.ddiehl.android.htn.view.dialogs.NsfwWarningDialog;
+import com.ddiehl.android.htn.view.activities.SubredditActivity;
 
 import javax.inject.Inject;
 
@@ -76,6 +76,8 @@ public abstract class BaseFragment extends Fragment implements MainView {
           processAuthenticationCallback(url);
         }
         break;
+      case REQUEST_NSFW_WARNING:
+        break;
       default:
         break;
     }
@@ -107,12 +109,6 @@ public abstract class BaseFragment extends Fragment implements MainView {
             });
   }
 
-  public void showNsfwWarningDialog() {
-    NsfwWarningDialog dialog = new NsfwWarningDialog();
-    dialog.setTargetFragment(this, REQUEST_NSFW_WARNING);
-    dialog.show(getFragmentManager(), NsfwWarningDialog.TAG);
-  }
-
   @Override
   public void doSendEmail(MailTo mailTo) {
     Intent i = AndroidUtils.getNewEmailIntent(
@@ -135,13 +131,19 @@ public abstract class BaseFragment extends Fragment implements MainView {
   }
 
   @Override
-  public void goBack() {
-    // TODO: Do we need to do anything here, since we changed to multi-activity?
-  }
-
-  @Override
   public void loadImageIntoDrawerHeader(@Nullable String url) {
     mRedditNavigationView.showSubredditImage(url);
+  }
+
+  protected void finish() {
+    // If we're the task root, start the main activity
+    if (getActivity().isTaskRoot()) {
+      Intent intent = SubredditActivity.getIntent(getContext(), null, null, null);
+      startActivity(intent);
+    }
+
+    // Finish so we can't get back here
+    getActivity().finish();
   }
 
   @Override

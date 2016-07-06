@@ -19,5 +19,4 @@ public interface ListingsPresenter extends BasePresenter {
   boolean getShowControversiality();
   void onSortChanged();
   UserIdentity getAuthorizedUser();
-  void onNsfwSelected(boolean nsfwAllowed);
 }

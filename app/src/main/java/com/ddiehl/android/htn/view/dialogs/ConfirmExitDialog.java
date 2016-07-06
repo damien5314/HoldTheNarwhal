@@ -33,7 +33,7 @@ public class ConfirmExitDialog extends DialogFragment {
   @Override
   public Dialog onCreateDialog(Bundle savedInstanceState) {
     return new AlertDialog.Builder(getContext())
-        .setTitle(R.string.confirm_exit_dialog_title)
+        .setMessage(R.string.confirm_exit_dialog_title)
         .setPositiveButton(R.string.confirm_exit_dialog_confirm,
             (dialogInterface, which) -> mCallbacks.onConfirmExit())
         .setNegativeButton(R.string.confirm_exit_dialog_cancel,

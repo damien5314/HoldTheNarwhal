@@ -8,16 +8,14 @@ import com.ddiehl.android.htn.view.SubredditView;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
-import rxreddit.model.ListingResponse;
 import rxreddit.model.Subreddit;
-import rxreddit.model.UserIdentity;
 
 public class SubredditPresenter extends BaseListingsPresenter implements LinkPresenter {
 
   private SubredditView mSubredditView;
 
   public SubredditPresenter(MainView main, RedditNavigationView navigationView, SubredditView view) {
-    super(main, navigationView, view, view, null, null, null);
+    super(main, navigationView, view, view, null, null);
     mSubredditView = view;
   }
 
@@ -102,37 +100,21 @@ public class SubredditPresenter extends BaseListingsPresenter implements LinkPre
   private Action1<Subreddit> onSubredditInfoLoaded() {
     return info -> {
       mSubredditInfo = info;
-      UserIdentity user = getAuthorizedUser();
-      if (shouldShowNsfwDialog(mSubredditInfo, user)) {
+
+      boolean over18 = mSettingsManager.getOver18();
+      if (shouldShowNsfwDialog(mSubredditInfo, over18)) {
         mSubredditView.showNsfwWarningDialog();
       } else {
         if (mSubredditInfo != null) requestNextData();
         else mMainView.showToast(R.string.error_private_subreddit);
       }
+
       loadHeaderImage();
     };
   }
 
-  private boolean shouldShowNsfwDialog(Subreddit info, UserIdentity user) {
-    return (info != null && info.isOver18())
-        && (user == null || !user.isOver18());
-  }
-
-  @Override
-  protected Action1<ListingResponse> onListingsLoaded(boolean append) {
-    return (response) -> {
-      super.onListingsLoaded(append).call(response);
-      updateTitle();
-    };
-  }
-
-  private void updateTitle() {
-    if (mSubredditView.getSubreddit() == null) {
-      mMainView.setTitle(R.string.front_page_title);
-    } else {
-      mMainView.setTitle(
-          String.format(mContext.getString(R.string.link_subreddit), mSubredditView.getSubreddit()));
-    }
+  private boolean shouldShowNsfwDialog(Subreddit subreddit, boolean userOver18) {
+    return subreddit != null && subreddit.isOver18() && !userOver18;
   }
 
   private void loadHeaderImage() {

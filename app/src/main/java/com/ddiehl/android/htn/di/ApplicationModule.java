@@ -53,9 +53,10 @@ public class ApplicationModule {
 
   @Singleton @Provides
   RedditService providesRedditService(Context context) {
+//    return new RedditServiceMock();
     final int cacheSize = 10 * 1024 * 1024; // 10 MiB
     File path = new File(context.getCacheDir().getAbsolutePath(), "htn-http-cache");
-    return new RedditService.Builder()
+    RedditService.Builder builder = new RedditService.Builder()
         .appId(BuildConfig.REDDIT_APP_ID)
         .redirectUri(BuildConfig.REDDIT_REDIRECT_URI)
         .deviceId(AndroidUtil.getDeviceId(context))
@@ -63,7 +64,8 @@ public class ApplicationModule {
             "android", "com.ddiehl.android.htn", BuildConfig.VERSION_NAME, "damien5314"))
         .accessTokenManager(new AndroidAccessTokenManager(context))
         .cache(cacheSize, path)
-        .build();
+        .loggingEnabled(BuildConfig.DEBUG);
+    return builder.build();
   }
 
   @Provides
