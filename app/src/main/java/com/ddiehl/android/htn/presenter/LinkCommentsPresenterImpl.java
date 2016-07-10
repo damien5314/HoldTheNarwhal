@@ -4,7 +4,6 @@ import android.support.annotation.NonNull;
 import android.view.ContextMenu;
 import android.view.View;
 
-import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.model.CommentBank;
 import com.ddiehl.android.htn.model.CommentBankList;
@@ -27,10 +26,9 @@ import rxreddit.model.Link;
 import rxreddit.model.Listing;
 import rxreddit.model.ListingResponse;
 import rxreddit.model.MoreChildrenResponse;
-import rxreddit.model.UserIdentity;
 
 public class LinkCommentsPresenterImpl extends BaseListingsPresenter
-    implements LinkCommentsPresenter, IdentityManager.Callbacks {
+    implements LinkCommentsPresenter {
 
   private static final int MAX_CHILDREN_PER_REQUEST = 20;
 
@@ -47,7 +45,6 @@ public class LinkCommentsPresenterImpl extends BaseListingsPresenter
 
   @Override
   public void onResume() {
-    mIdentityManager.registerUserIdentityChangeListener(this);
     if (mCommentBank.size() == 0) {
       getNextData();
     }
@@ -119,11 +116,6 @@ public class LinkCommentsPresenterImpl extends BaseListingsPresenter
       // TODO Specify commentsAdded
       mLinkCommentsView.notifyDataSetChanged();
     };
-  }
-
-  @Override
-  public Action1<UserIdentity> onUserIdentityChanged() {
-    return identity -> refreshData();
   }
 
   @Override

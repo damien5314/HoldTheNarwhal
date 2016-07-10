@@ -33,14 +33,6 @@ public class UserProfilePresenter extends BaseListingsPresenter
   }
 
   @Override
-  public Action1<UserIdentity> onUserIdentityChanged() {
-    return identity -> {
-      mSummaryView.onAuthenticatedStateChanged(isAuthenticatedUser());
-//      super.onUserIdentityChanged().call(identity);
-    };
-  }
-
-  @Override
   void requestPreviousData() {
     if ("summary".equals(mSummaryView.getShow())) {
       getSummaryData();

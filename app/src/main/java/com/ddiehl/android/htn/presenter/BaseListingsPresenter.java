@@ -44,7 +44,7 @@ import rxreddit.model.Votable;
 import timber.log.Timber;
 
 public abstract class BaseListingsPresenter
-    implements ListingsPresenter, IdentityManager.Callbacks, ListingsView.Callbacks {
+    implements ListingsPresenter, ListingsView.Callbacks {
 
   @Inject protected Context mContext;
   @Inject protected IdentityManager mIdentityManager;
@@ -82,7 +82,6 @@ public abstract class BaseListingsPresenter
 
   @Override
   public void onResume() {
-    mIdentityManager.registerUserIdentityChangeListener(this);
     // FIXME Do we need to check mNextRequested here?
     if (!mNextRequested && mListings.size() == 0) {
       if (mListingSelected != null) {
@@ -99,7 +98,6 @@ public abstract class BaseListingsPresenter
 
   @Override
   public void onPause() {
-    mIdentityManager.unregisterUserIdentityChangeListener(this);
   }
 
   @Override
@@ -164,11 +162,6 @@ public abstract class BaseListingsPresenter
   public void setData(@NonNull List<Listing> data) {
     mListings.clear();
     mListings.addAll(data);
-  }
-
-  @Override
-  public Action1<UserIdentity> onUserIdentityChanged() {
-    return identity -> refreshData();
   }
 
   @Override

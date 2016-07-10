@@ -22,7 +22,7 @@
   <string name="error_503">reddit is unavailable, try again soon</string>
   <string name="error_520">reddit is in maintenance</string>
   <string name="error_authentication">error during authentication</string>
-  <string name="error_get_user_identity">error getting user identity</string>
+  <string name="error_get_user_identity">error getting user info</string>
   <string name="error_get_user_settings">error loading settings</string>
   <string name="error_get_link_comments">error loading link comments</string>
   <string name="error_get_more_comments">error loading comments</string>

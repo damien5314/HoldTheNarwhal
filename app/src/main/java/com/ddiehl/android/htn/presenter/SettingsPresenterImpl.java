@@ -12,12 +12,10 @@ import com.ddiehl.android.htn.view.SettingsView;
 import javax.inject.Inject;
 
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import rxreddit.api.RedditService;
-import rxreddit.model.UserIdentity;
 
-public class SettingsPresenterImpl implements SettingsPresenter, IdentityManager.Callbacks {
+public class SettingsPresenterImpl implements SettingsPresenter {
 
   @Inject protected Context mApplicationContext;
   @Inject protected RedditService mRedditService;
@@ -33,7 +31,6 @@ public class SettingsPresenterImpl implements SettingsPresenter, IdentityManager
 
   @Override
   public void onResume() {
-    mIdentityManager.registerUserIdentityChangeListener(this);
     if (mRedditService.isUserAuthorized()) {
       refresh(true);
     }
@@ -41,18 +38,10 @@ public class SettingsPresenterImpl implements SettingsPresenter, IdentityManager
 
   @Override
   public void onPause() {
-    mIdentityManager.unregisterUserIdentityChangeListener(this);
   }
 
   @Override
-  public void onViewDestroyed() { /* no-op */ }
-
-  @Override
-  public Action1<UserIdentity> onUserIdentityChanged() {
-    return identity -> {
-      boolean shouldRefresh = identity != null;
-      refresh(shouldRefresh);
-    };
+  public void onViewDestroyed() {
   }
 
   @Override

@@ -7,4 +7,7 @@ public interface InboxView extends ListingsView, LinkView, CommentView, PrivateM
   void selectTab(@NonNull String show);
 
   String getShow();
+
+  // Call this when the user no longer has permission to view inbox
+  void finish();
 }

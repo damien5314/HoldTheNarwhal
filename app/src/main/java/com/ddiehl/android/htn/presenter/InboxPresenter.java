@@ -21,6 +21,17 @@ public class InboxPresenter extends BaseListingsPresenter
   }
 
   @Override
+  public void onResume() {
+    if (mIdentityManager.getUserIdentity() == null) {
+      // User was signed out, they can't view inbox anymore
+      mInboxView.finish();
+    } else {
+      // User is authenticated, defer to base implementation
+      super.onResume();
+    }
+  }
+
+  @Override
   void requestPreviousData() {
     requestData(false);
   }

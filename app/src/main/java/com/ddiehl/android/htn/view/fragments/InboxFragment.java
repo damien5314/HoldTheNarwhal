@@ -13,7 +13,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.presenter.InboxPresenter;
 import com.ddiehl.android.htn.utils.AndroidUtils;
@@ -27,12 +26,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
-import rx.functions.Action1;
-import rxreddit.model.UserIdentity;
 
 @FragmentWithArgs
 public class InboxFragment extends BaseListingsFragment
-    implements InboxView, TabLayout.OnTabSelectedListener, IdentityManager.Callbacks {
+    implements InboxView, TabLayout.OnTabSelectedListener {
 
   public static final String TAG = InboxFragment.class.getSimpleName();
 
@@ -108,18 +105,6 @@ public class InboxFragment extends BaseListingsFragment
   }
 
   @Override
-  public void onStart() {
-    super.onStart();
-    mIdentityManager.registerUserIdentityChangeListener(this);
-  }
-
-  @Override
-  public void onStop() {
-    mIdentityManager.unregisterUserIdentityChangeListener(this);
-    super.onStop();
-  }
-
-  @Override
   public ListingsAdapter getListingsAdapter() {
     return new ListingsAdapter(
         mListingsPresenter, mLinkPresenter, mCommentPresenter, mMessagePresenter);
@@ -183,16 +168,5 @@ public class InboxFragment extends BaseListingsFragment
   @Override
   View getChromeView() {
     return mCoordinatorLayout;
-  }
-
-  @Override
-  public Action1<UserIdentity> onUserIdentityChanged() {
-    return user -> {
-      if (user == null) {
-        finish();
-      } else {
-        mListingsPresenter.refreshData();
-      }
-    };
   }
 }

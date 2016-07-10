@@ -167,13 +167,6 @@ public class UserProfileFragment extends BaseListingsFragment
     );
   }
 
-  @Override
-  public void onAuthenticatedStateChanged(boolean authenticated) {
-    selectTab("summary");
-    showAuthenticatedTabs(authenticated);
-    mListingsPresenter.refreshData();
-  }
-
   private boolean isInAuthenticatedView(String show) {
     return show.equals("upvoted")
         || show.equals("downvoted")

@@ -74,6 +74,8 @@ public abstract class BaseActivity extends AppCompatActivity implements
       "android.support.customtabs.extra.SESSION";
   private static final String EXTRA_CUSTOM_TABS_TOOLBAR_COLOR =
       "android.support.customtabs.extra.TOOLBAR_COLOR";
+  private static final String EXTRA_AUTHENTICATION_STATE_CHANGE =
+      "com.ddiehl.android.htn.EXTRA_AUTHENTICATION_STATE_CHANGE";
 
   @BindView(R.id.drawer_layout)                         protected DrawerLayout mDrawerLayout;
   @BindView(R.id.navigation_view)                       protected NavigationView mNavigationView;
@@ -111,6 +113,24 @@ public abstract class BaseActivity extends AppCompatActivity implements
     }
 
     setTitle(null);
+
+    checkAndShowAuthenticationStateChange();
+  }
+
+  private void checkAndShowAuthenticationStateChange() {
+    if (getIntent().getExtras() == null ||
+        !getIntent().getExtras().containsKey(EXTRA_AUTHENTICATION_STATE_CHANGE)) return;
+
+    boolean isAuthenticated = getIntent().getBooleanExtra(EXTRA_AUTHENTICATION_STATE_CHANGE, false);
+
+    if (!isAuthenticated) {
+      showToast(getString(R.string.user_signed_out));
+    } else {
+      String name = mIdentityManager.getUserIdentity().getName();
+      String formatter = getString(R.string.welcome_user);
+      String toast = String.format(formatter, name);
+      showToast(toast);
+    }
   }
 
   // Workaround for bug in support lib 23.1.0 - 23.2.0
@@ -151,20 +171,25 @@ public abstract class BaseActivity extends AppCompatActivity implements
   @Override
   public Action1<UserIdentity> onUserIdentityChanged() {
     return identity -> {
-      updateUserIdentity(identity);
-      if (identity == null) {
-        showToast(getString(R.string.user_signed_out));
-      } else {
-        // FIXME Ensure we only show this when the user changes
-        String name = identity.getName();
-        String formatter = getString(R.string.welcome_user);
-        String toast = String.format(formatter, name);
-        showToast(toast);
+      // Restart activity
+      Intent newIntent = (Intent) getIntent().clone();
+      boolean isAuthenticated = identity != null;
+
+      // Clear the task stack if we're no longer authenticated
+      // This prevents the user from going back to content they aren't allowed to see
+      if (!isAuthenticated) {
+        newIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
       }
+
+      // Add extra to indicate that this activity was restarted due to a change in authentication state
+      newIntent.putExtra(EXTRA_AUTHENTICATION_STATE_CHANGE, isAuthenticated);
+
+      startActivity(newIntent);
+      finish();
     };
   }
 
-  private void updateUserIdentity(@Nullable UserIdentity identity) {
+  protected void updateUserIdentity(@Nullable UserIdentity identity) {
     mAccountNameView.setText(identity == null ?
         getString(R.string.account_name_unauthorized) : identity.getName());
     mSignOutView.setVisibility(identity == null ? GONE : VISIBLE);

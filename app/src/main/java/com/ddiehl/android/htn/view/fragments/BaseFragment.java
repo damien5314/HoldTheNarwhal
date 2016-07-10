@@ -135,7 +135,7 @@ public abstract class BaseFragment extends Fragment implements MainView {
     mRedditNavigationView.showSubredditImage(url);
   }
 
-  protected void finish() {
+  public void finish() {
     // If we're the task root, start the main activity
     if (getActivity().isTaskRoot()) {
       Intent intent = SubredditActivity.getIntent(getContext(), null, null, null);
