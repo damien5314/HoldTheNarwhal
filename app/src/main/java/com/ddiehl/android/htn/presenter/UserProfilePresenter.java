@@ -139,6 +139,7 @@ public class UserProfilePresenter extends BaseListingsPresenter
     mRedditService.addFriend(mSummaryView.getUsernameContext())
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
+        .doOnSubscribe(() -> mMainView.showSpinner(null))
         .doOnTerminate(mMainView::dismissSpinner)
         .subscribe(response -> {
           mSummaryView.setFriendButtonState(true);
@@ -157,6 +158,7 @@ public class UserProfilePresenter extends BaseListingsPresenter
     mRedditService.deleteFriend(mSummaryView.getUsernameContext())
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
+        .doOnSubscribe(() -> mMainView.showSpinner(null))
         .doOnTerminate(mMainView::dismissSpinner)
         .subscribe(response -> {
           mSummaryView.setFriendButtonState(false);

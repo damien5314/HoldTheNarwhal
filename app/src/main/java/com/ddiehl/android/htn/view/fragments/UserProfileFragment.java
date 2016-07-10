@@ -24,7 +24,6 @@ import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.presenter.UserProfilePresenter;
 import com.ddiehl.android.htn.utils.AndroidUtils;
-import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.android.htn.view.UserProfileView;
 import com.ddiehl.android.htn.view.adapters.ListingsAdapter;
 import com.ddiehl.android.htn.view.dialogs.ChooseLinkSortDialog;
@@ -347,13 +346,11 @@ public class UserProfileFragment extends BaseListingsFragment
     if (isFriend) {
       mFriendButton.setText(R.string.user_friend_delete_button_text);
       mFriendButton.setOnClickListener((v) -> {
-        ((MainView) getActivity()).showSpinner(null);
         mUserProfilePresenter.deleteFriend();
       });
     } else {
       mFriendButton.setText(R.string.user_friend_add_button_text);
       mFriendButton.setOnClickListener((v) -> {
-        ((MainView) getActivity()).showSpinner(null);
         mUserProfilePresenter.addFriend();
       });
     }
