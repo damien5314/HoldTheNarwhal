@@ -1,5 +1,7 @@
 package com.ddiehl.android.htn.presenter;
 
+import android.support.annotation.NonNull;
+
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.android.htn.view.RedditNavigationView;
@@ -8,6 +10,8 @@ import com.ddiehl.android.htn.view.SubredditView;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
+import rxreddit.model.Link;
+import rxreddit.model.ListingResponse;
 import rxreddit.model.Subreddit;
 
 public class SubredditPresenter extends BaseListingsPresenter implements LinkPresenter {
@@ -75,9 +79,12 @@ public class SubredditPresenter extends BaseListingsPresenter implements LinkPre
   private void getSubredditLinks(boolean append) {
     mAnalytics.logLoadSubreddit(
         mSubredditView.getSubreddit(), mSubredditView.getSort(), mSubredditView.getTimespan());
-    mRedditService.loadLinks(mSubredditView.getSubreddit(), mSubredditView.getSort(), mSubredditView.getTimespan(),
-        append ? null : mPrevPageListingId,
-        append ? mNextPageListingId : null)
+
+    final String before = append ? null : mPrevPageListingId;
+    final String after = append ? mNextPageListingId : null;
+    final String subreddit = mSubredditView.getSubreddit();
+
+    mRedditService.loadLinks(subreddit, mSubredditView.getSort(), mSubredditView.getTimespan(), before, after)
         .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
         .doOnSubscribe(() -> {
           mMainView.showSpinner(null);
@@ -90,11 +97,33 @@ public class SubredditPresenter extends BaseListingsPresenter implements LinkPre
           else mBeforeRequested = false;
         })
         .subscribe(
-            onListingsLoaded(append),
-            e -> {
+            response -> {
+              onListingsLoaded(append).call(response);
+
+              if ("random".equals(subreddit)) {
+                Link link = getLinkFromListingResponse(response);
+                String randomSubreddit = link == null ? null : link.getSubreddit();
+                mSubredditView.onRandomSubredditLoaded(randomSubreddit);
+              }
+            },
+            error -> {
               String message = mContext.getString(R.string.error_get_links);
-              mMainView.showError(e, message);
+              mMainView.showError(error, message);
             });
+  }
+
+  private Link getLinkFromListingResponse(@NonNull ListingResponse response) {
+    if (response.getData() == null) return null;
+
+    if (response.getData().getChildren() == null) return null;
+
+    if (response.getData().getChildren().size() == 0) return null;
+
+    if (response.getData().getChildren().get(0) == null) return null;
+
+    if (!(response.getData().getChildren().get(0) instanceof Link)) return null;
+
+    return (Link) response.getData().getChildren().get(0);
   }
 
   private Action1<Subreddit> onSubredditInfoLoaded() {

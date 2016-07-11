@@ -192,17 +192,22 @@ public abstract class BaseListingsPresenter
   protected Action1<ListingResponse> onListingsLoaded(boolean append) {
     return (response) -> {
       mMainView.dismissSpinner();
+
       if (append) mNextRequested = false;
       else mBeforeRequested = false;
+
       if (response == null) {
         mMainView.showToast(R.string.error_xxx);
         return;
       }
+
       ListingResponseData data = response.getData();
       List<Listing> listings = data.getChildren();
+
       if (listings == null) {
         mPrevPageListingId = null;
         mNextPageListingId = null;
+
         String message = mContext.getString(R.string.error_get_links);
         mMainView.showError(new NullPointerException(), message);
       } else {

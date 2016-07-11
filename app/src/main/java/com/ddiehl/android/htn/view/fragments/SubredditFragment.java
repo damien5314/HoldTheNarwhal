@@ -16,7 +16,6 @@ import android.view.ViewGroup;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.SettingsManager;
-import com.ddiehl.android.htn.presenter.ListingsPresenter;
 import com.ddiehl.android.htn.presenter.SubredditPresenter;
 import com.ddiehl.android.htn.view.SubredditView;
 import com.ddiehl.android.htn.view.adapters.ListingsAdapter;
@@ -57,9 +56,10 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
     if (TextUtils.isEmpty(mSort)) mSort = "hot";
     if (TextUtils.isEmpty(mTimespan)) mTimespan = "all";
 
-    mLinkPresenter = new SubredditPresenter(this, mRedditNavigationView, this);
-    mListingsPresenter = (ListingsPresenter) mLinkPresenter;
-    mCallbacks = (Callbacks) mListingsPresenter;
+    SubredditPresenter presenter = new SubredditPresenter(this, mRedditNavigationView, this);
+    mLinkPresenter = presenter;
+    mListingsPresenter = presenter;
+    mCallbacks = presenter;
   }
 
   @Nullable
@@ -208,6 +208,14 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
     NsfwWarningDialog dialog = new NsfwWarningDialog();
     dialog.setTargetFragment(this, REQUEST_NSFW_WARNING);
     dialog.show(getFragmentManager(), NsfwWarningDialog.TAG);
+  }
+
+  @Override /** Strange way to update the view, but works for now */
+  public void onRandomSubredditLoaded(String randomSubreddit) {
+    mSubreddit = randomSubreddit;
+
+    String formatter = getString(R.string.link_subreddit);
+    setTitle(String.format(formatter, getSubreddit()));
   }
 
   @Override

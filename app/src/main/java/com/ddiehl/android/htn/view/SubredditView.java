@@ -9,4 +9,6 @@ public interface SubredditView extends ListingsView, LinkView {
   String getTimespan();
 
   void showNsfwWarningDialog();
+
+  void onRandomSubredditLoaded(String randomSubreddit);
 }
