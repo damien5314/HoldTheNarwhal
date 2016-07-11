@@ -1,13 +1,13 @@
 package com.ddiehl.android.htn.view.widgets;
 
 import android.content.Context;
+import android.support.v7.widget.AppCompatEditText;
 import android.text.Editable;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import butterknife.ButterKnife;
@@ -15,7 +15,8 @@ import butterknife.OnEditorAction;
 import butterknife.OnFocusChange;
 import butterknife.OnTextChanged;
 
-public class RedditNavEditText extends EditText {
+public class RedditNavEditText extends AppCompatEditText {
+
   public RedditNavEditText(Context context) {
     this(context, null);
   }
@@ -28,29 +29,29 @@ public class RedditNavEditText extends EditText {
   private CharSequence before;
 
   @OnTextChanged(callback = OnTextChanged.Callback.BEFORE_TEXT_CHANGED)
-  void beforeTextChanged(CharSequence s, int start, int count, int after) {
-    before = s.subSequence(0, s.length());
+  void beforeTextChanged(CharSequence input, int start, int count, int after) {
+    before = input.subSequence(0, input.length());
   }
 
   @OnTextChanged(callback = OnTextChanged.Callback.AFTER_TEXT_CHANGED)
-  void afterTextChanged(Editable s) {
-    if (s.length() == 0) { // Blank field
+  void afterTextChanged(Editable input) {
+    if (input.length() == 0) { // Blank field
       return;
     }
 
-    if (s.length() < 3) {
-      s.insert(0, "/r/");
+    if (!input.toString().startsWith("/r/")) {
+      input.insert(0, "/r/");
       return;
     }
 
-    if (s.length() == 3) {
-      s.clear();
+    if (input.length() == 3) {
+      input.clear();
       return;
     }
 
-    CharSequence cs = s.subSequence(0, 3);
-    if (!cs.toString().equals("/r/") || s.toString().contains(" ")) {
-      s.replace(0, s.length(), before);
+    CharSequence cs = input.subSequence(0, 3);
+    if (!cs.toString().equals("/r/") || input.toString().contains(" ")) {
+      input.replace(0, input.length(), before);
     }
   }
 
