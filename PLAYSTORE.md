@@ -1,10 +1,8 @@
 This app is in alpha. Many features are incomplete or missing, but functionality present should be working fine. Please take this into account when leaving a rating, and if you observe any issues with your particular device, please let me know in a review, or the email at the bottom of the page. Thanks for using Hold the Narwhal.
 
  * View submissions for any subreddit community
- * View comments for submissions
- * Reply to submissions and comments
- * View user profile summary, overview, comments, submissions, gildings, and more
- * View private messages, post and comment replies, and username mentions
+ * View and reply to comments for submissions
+ * View user profile and inbox messages
  * Navigate directly to /r/all or your personal front page
 
 Coming soon
