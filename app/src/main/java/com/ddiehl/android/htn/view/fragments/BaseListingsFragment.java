@@ -80,25 +80,31 @@ public abstract class BaseListingsFragment extends BaseFragment
   private void instantiateListView() {
     mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     mRecyclerView.clearOnScrollListeners();
-    mRecyclerView.addOnScrollListener(mOnScrollListener);
+    mRecyclerView.addOnScrollListener(getOnScrollListener());
     mRecyclerView.setAdapter(mListingsAdapter);
   }
 
-  private final RecyclerView.OnScrollListener mOnScrollListener = new RecyclerView.OnScrollListener() {
-    int mFirstVisibleItem, mVisibleItemCount, mTotalItemCount;
-    @Override
-    public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-      LinearLayoutManager mgr = (LinearLayoutManager) recyclerView.getLayoutManager();
-      mVisibleItemCount = mgr.getChildCount();
-      mTotalItemCount = mgr.getItemCount();
-      mFirstVisibleItem = mgr.findFirstVisibleItemPosition();
-      if (mFirstVisibleItem == 0) {
-        mCallbacks.onFirstItemShown();
-      } else if ((mVisibleItemCount + mFirstVisibleItem) >= mTotalItemCount) {
-        mCallbacks.onLastItemShown();
+  private RecyclerView.OnScrollListener getOnScrollListener() {
+    return new RecyclerView.OnScrollListener() {
+
+      int mFirstVisibleItem;
+      int mVisibleItemCount;
+      int mTotalItemCount;
+
+      @Override
+      public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+        LinearLayoutManager mgr = (LinearLayoutManager) recyclerView.getLayoutManager();
+        mVisibleItemCount = mgr.getChildCount();
+        mTotalItemCount = mgr.getItemCount();
+        mFirstVisibleItem = mgr.findFirstVisibleItemPosition();
+        if (mFirstVisibleItem == 0) {
+          mCallbacks.onFirstItemShown();
+        } else if ((mVisibleItemCount + mFirstVisibleItem) >= mTotalItemCount) {
+          mCallbacks.onLastItemShown();
+        }
       }
-    }
-  };
+    };
+  }
 
   @Override
   public void onResume() {
