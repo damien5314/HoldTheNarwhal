@@ -18,6 +18,8 @@ public interface LinkView {
 
   void openShareView(@NonNull Link link);
 
+  void openSubredditView(String subreddit);
+
   void openUserProfileView(@NonNull Link link);
 
   void openLinkInBrowser(@NonNull Link link);

@@ -146,6 +146,15 @@ public abstract class BaseFragment extends Fragment implements MainView {
     getActivity().finish();
   }
 
+  protected void finish(int resultCode, Intent data) {
+    if (getTargetFragment() != null) {
+      getTargetFragment().onActivityResult(getTargetRequestCode(), resultCode, data);
+    } else {
+      getActivity().setResult(resultCode);
+      getActivity().finish();
+    }
+  }
+
   @Override
   public void showSpinner(@StringRes int resId) {
     showSpinner(getString(resId));

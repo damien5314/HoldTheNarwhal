@@ -19,6 +19,7 @@ public interface LinkPresenter extends BasePresenter {
   void saveLink();
   void unsaveLink();
   void shareLink();
+  void openLinkSubreddit();
   void openLinkUserProfile();
   void openLinkUserProfile(@NonNull Link link);
   void openLinkInBrowser();

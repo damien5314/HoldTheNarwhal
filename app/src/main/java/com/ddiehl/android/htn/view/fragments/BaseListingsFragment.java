@@ -23,6 +23,7 @@ import com.ddiehl.android.htn.presenter.LinkPresenter;
 import com.ddiehl.android.htn.presenter.ListingsPresenter;
 import com.ddiehl.android.htn.presenter.MessagePresenter;
 import com.ddiehl.android.htn.view.ListingsView;
+import com.ddiehl.android.htn.view.activities.SubredditActivity;
 import com.ddiehl.android.htn.view.adapters.ListingsAdapter;
 
 import butterknife.BindView;
@@ -120,7 +121,6 @@ public abstract class BaseListingsFragment extends BaseFragment
 
   @Override
   public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-    super.onCreateOptionsMenu(menu, inflater);
     inflater.inflate(R.menu.listings, menu);
   }
 
@@ -141,32 +141,54 @@ public abstract class BaseListingsFragment extends BaseFragment
 
   public void showLinkContextMenu(ContextMenu menu, View v, Link link) {
     getActivity().getMenuInflater().inflate(R.menu.link_context, menu);
+
+    // Build title for menu
     String score = link.getScore() == null ?
         v.getContext().getString(R.string.hidden_score_placeholder) : link.getScore().toString();
     String title = String.format(getString(R.string.menu_action_link), link.getTitle(), score);
     menu.setHeaderTitle(title);
-    menu.findItem(R.id.action_link_hide).setVisible(!link.isHidden());
-    menu.findItem(R.id.action_link_unhide).setVisible(link.isHidden());
-    // Set username for listing in the user profile menu item
+
+    // Set state of hide/unhide
+    menu.findItem(R.id.action_link_hide)
+        .setVisible(!link.isHidden());
+    menu.findItem(R.id.action_link_unhide)
+        .setVisible(link.isHidden());
+
+    // Set subreddit for link in the view subreddit menu item
+    String subreddit = String.format(
+        getString(R.string.action_view_subreddit), link.getSubreddit());
+    menu.findItem(R.id.action_link_view_subreddit)
+        .setTitle(subreddit);
+
+    // Set username for link in the view user profile menu item
     String username = String.format(
         getString(R.string.action_view_user_profile), link.getAuthor());
-    menu.findItem(R.id.action_link_view_user_profile).setTitle(username);
+    menu.findItem(R.id.action_link_view_user_profile)
+        .setTitle(username);
+
+    // Hide user profile for posts by deleted users
     if ("[deleted]".equalsIgnoreCase(link.getAuthor())) {
-      menu.findItem(R.id.action_link_view_user_profile).setVisible(false);
+      menu.findItem(R.id.action_link_view_user_profile)
+          .setVisible(false);
     }
   }
 
   public void showCommentContextMenu(ContextMenu menu, View v, Comment comment) {
     getActivity().getMenuInflater().inflate(R.menu.comment_context, menu);
+
+    // Build title for menu
     String score = comment.getScore() == null ?
         v.getContext().getString(R.string.hidden_score_placeholder) : comment.getScore().toString();
     String title = String.format(getString(R.string.menu_action_comment),
         comment.getAuthor(), score);
     menu.setHeaderTitle(title);
+
     // Set username for listing in the user profile menu item
     String username = String.format(
         getString(R.string.action_view_user_profile), comment.getAuthor());
     menu.findItem(R.id.action_comment_view_user_profile).setTitle(username);
+
+    // Hide user profile for posts by deleted users
     if ("[deleted]".equalsIgnoreCase(comment.getAuthor())) {
       menu.findItem(R.id.action_comment_view_user_profile).setVisible(false);
     }
@@ -197,6 +219,9 @@ public abstract class BaseListingsFragment extends BaseFragment
         return true;
       case R.id.action_link_share:
         mLinkPresenter.shareLink();
+        return true;
+      case R.id.action_link_view_subreddit:
+        mLinkPresenter.openLinkSubreddit();
         return true;
       case R.id.action_link_view_user_profile:
         mLinkPresenter.openLinkUserProfile();
@@ -311,6 +336,11 @@ public abstract class BaseListingsFragment extends BaseFragment
     startActivity(i);
   }
 
+  public void openSubredditView(String subreddit) {
+    Intent intent = SubredditActivity.getIntent(getContext(), subreddit, null, null);
+    startActivity(intent);
+  }
+
   public void openUserProfileView(@NonNull Link link) {
     mRedditNavigationView.showUserProfile(link.getAuthor(), null, null);
   }
@@ -366,14 +396,5 @@ public abstract class BaseListingsFragment extends BaseFragment
     mSwipeRefreshLayout.setRefreshing(false);
     mListingsPresenter.refreshData();
     mAnalytics.logOptionRefresh();
-  }
-
-  protected void finish(int resultCode, Intent data) {
-    if (getTargetFragment() != null) {
-      getTargetFragment().onActivityResult(getTargetRequestCode(), resultCode, data);
-    } else {
-      getActivity().setResult(resultCode);
-      getActivity().finish();
-    }
   }
 }

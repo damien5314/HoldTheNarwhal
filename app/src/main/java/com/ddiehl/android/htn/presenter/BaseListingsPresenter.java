@@ -294,6 +294,12 @@ public abstract class BaseListingsPresenter
     mLinkView.openShareView(link);
   }
 
+  public void openLinkSubreddit() {
+    Link link = (Link) mListingSelected;
+    String subreddit = link.getSubreddit();
+    mLinkView.openSubredditView(subreddit);
+  }
+
   public void openLinkUserProfile() {
     Link link = (Link) mListingSelected;
     mLinkView.openUserProfileView(link);
