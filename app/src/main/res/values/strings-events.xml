@@ -30,7 +30,7 @@
   <string name="error_get_links">error loading links</string>
   <string name="error_get_subreddit_info">error loading subreddit info</string>
   <string name="error_get_user_info">error loading user info</string>
-  <string name="error_get_user_trophies">error getting user trophies</string>
+  <string name="error_get_user_trophies">error loading user profile</string>
   <string name="error_get_friend_info">error getting friend info</string>
   <string name="error_get_user_profile_listings">error loading profile listings</string>
   <string name="error_user_settings_update">error updating settings</string>
