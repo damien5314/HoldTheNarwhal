@@ -145,6 +145,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:minHeight="24dp"
             android:orientation="horizontal">
 
           <TextView
@@ -152,7 +153,7 @@
               android:layout_width="0dp"
               android:layout_height="wrap_content"
               android:layout_weight="1"
-              android:layout_gravity="start"
+              android:layout_gravity="start|center_vertical"
               tools:text="1993 comments"
               style="@style/LinkMetadataTextViewDark"/>
 
@@ -167,6 +168,7 @@
               android:id="@+id/link_stickied_view"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
+              android:layout_gravity="center_vertical"
               android:src="@drawable/ic_stickied"/>
 
         </LinearLayout>
