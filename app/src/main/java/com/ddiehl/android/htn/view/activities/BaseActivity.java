@@ -114,6 +114,16 @@ public abstract class BaseActivity extends AppCompatActivity implements
 
     setTitle(null);
 
+    /**
+     * FIXME
+     * This is a hack because sometimes the user gets stuck in a state where
+     * they don't have a valid access token, but still have their user identity.
+     */
+    if (!mRedditService.isUserAuthorized()) {
+      mIdentityManager.clearSavedUserIdentity();
+    }
+
+    // Check to see if the activity was restarted due to authentication change
     checkAndShowAuthenticationStateChange();
   }
 
