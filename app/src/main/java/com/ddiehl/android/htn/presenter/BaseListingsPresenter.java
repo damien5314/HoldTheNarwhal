@@ -123,7 +123,7 @@ public abstract class BaseListingsPresenter
       if (AndroidUtils.isConnectedToNetwork(mContext)) {
         requestPreviousData();
       } else {
-        mMainView.showToast(R.string.error_network_unavailable);
+        mMainView.showToast(mContext.getString(R.string.error_network_unavailable));
       }
     }
   }
@@ -134,7 +134,7 @@ public abstract class BaseListingsPresenter
       if (AndroidUtils.isConnectedToNetwork(mContext)) {
         requestNextData();
       } else {
-        mMainView.showToast(R.string.error_network_unavailable);
+        mMainView.showToast(mContext.getString(R.string.error_network_unavailable));
       }
     }
   }
@@ -197,7 +197,7 @@ public abstract class BaseListingsPresenter
       else mBeforeRequested = false;
 
       if (response == null) {
-        mMainView.showToast(R.string.error_xxx);
+        mMainView.showToast(mContext.getString(R.string.error_xxx));
         return;
       }
 
@@ -271,7 +271,7 @@ public abstract class BaseListingsPresenter
 
   public void saveLink() {
     if (!mRedditService.isUserAuthorized()) {
-      mMainView.showToast(R.string.user_required);
+      mMainView.showToast(mContext.getString(R.string.user_required));
       return;
     }
     Link link = (Link) mListingSelected;
@@ -281,7 +281,7 @@ public abstract class BaseListingsPresenter
 
   public void unsaveLink() {
     if (!mRedditService.isUserAuthorized()) {
-      mMainView.showToast(R.string.user_required);
+      mMainView.showToast(mContext.getString(R.string.user_required));
       return;
     }
     Link link = (Link) mListingSelected;
@@ -321,7 +321,7 @@ public abstract class BaseListingsPresenter
 
   public void hideLink() {
     if (!mRedditService.isUserAuthorized()) {
-      mMainView.showToast(R.string.user_required);
+      mMainView.showToast(mContext.getString(R.string.user_required));
       return;
     }
 
@@ -332,7 +332,7 @@ public abstract class BaseListingsPresenter
 
   public void unhideLink() {
     if (!mRedditService.isUserAuthorized()) {
-      mMainView.showToast(R.string.user_required);
+      mMainView.showToast(mContext.getString(R.string.user_required));
       return;
     }
 
@@ -344,11 +344,11 @@ public abstract class BaseListingsPresenter
   public void reportLink() {
     Listing listing = mListingSelected;
     if (((Archivable) listing).isArchived()) {
-      mMainView.showToast(R.string.listing_archived);
+      mMainView.showToast(mContext.getString(R.string.listing_archived));
     } else if (!mRedditService.isUserAuthorized()) {
-      mMainView.showToast(R.string.user_required);
+      mMainView.showToast(mContext.getString(R.string.user_required));
     } else {
-      mMainView.showToast(R.string.implementation_pending);
+      mMainView.showToast(mContext.getString(R.string.implementation_pending));
     }
   }
 
@@ -377,7 +377,7 @@ public abstract class BaseListingsPresenter
   public void replyToComment() {
     Comment comment = (Comment) mListingSelected;
     if (comment.isArchived()) {
-      mMainView.showToast(R.string.listing_archived);
+      mMainView.showToast(mContext.getString(R.string.listing_archived));
     } else {
       mCommentView.openReplyView(comment);
     }
@@ -397,7 +397,7 @@ public abstract class BaseListingsPresenter
 
   public void saveComment() {
     if (!mRedditService.isUserAuthorized()) {
-      mMainView.showToast(R.string.user_required);
+      mMainView.showToast(mContext.getString(R.string.user_required));
       return;
     }
     Comment comment = (Comment) mListingSelected;
@@ -407,7 +407,7 @@ public abstract class BaseListingsPresenter
 
   public void unsaveComment() {
     if (!mRedditService.isUserAuthorized()) {
-      mMainView.showToast(R.string.user_required);
+      mMainView.showToast(mContext.getString(R.string.user_required));
       return;
     }
     Comment comment = (Comment) mListingSelected;
@@ -438,11 +438,11 @@ public abstract class BaseListingsPresenter
   public void reportComment() {
     Listing listing = mListingSelected;
     if (((Archivable) listing).isArchived()) {
-      mMainView.showToast(R.string.listing_archived);
+      mMainView.showToast(mContext.getString(R.string.listing_archived));
     } else if (!mRedditService.isUserAuthorized()) {
-      mMainView.showToast(R.string.user_required);
+      mMainView.showToast(mContext.getString(R.string.user_required));
     } else {
-      mMainView.showToast(R.string.implementation_pending);
+      mMainView.showToast(mContext.getString(R.string.implementation_pending));
     }
   }
 
@@ -474,9 +474,9 @@ public abstract class BaseListingsPresenter
   private void vote(int direction) {
     Listing listing = mListingSelected;
     if (((Archivable) listing).isArchived()) {
-      mMainView.showToast(R.string.listing_archived);
+      mMainView.showToast(mContext.getString(R.string.listing_archived));
     } else if (!mRedditService.isUserAuthorized()) {
-      mMainView.showToast(R.string.user_required);
+      mMainView.showToast(mContext.getString(R.string.user_required));
     } else {
       Votable votable = (Votable) listing;
       mRedditService.vote(votable.getKind() + "_" + votable.getId(), direction)
@@ -516,7 +516,7 @@ public abstract class BaseListingsPresenter
         .subscribe(response -> {
           int pos = mListings.indexOf(listing);
           if (toHide) {
-            mMainView.showToast(R.string.link_hidden);
+            mMainView.showToast(mContext.getString(R.string.link_hidden));
             mListings.remove(pos);
             mListingsView.notifyItemRemoved(pos);
           } else {
@@ -559,7 +559,7 @@ public abstract class BaseListingsPresenter
 
   public void replyToMessage() {
     PrivateMessage message = (PrivateMessage) mListingSelected;
-    mMainView.showToast(R.string.implementation_pending);
+    mMainView.showToast(mContext.getString(R.string.implementation_pending));
   }
 
   public void markMessageRead() {
@@ -615,11 +615,11 @@ public abstract class BaseListingsPresenter
 
   public void reportMessage() {
     PrivateMessage message = (PrivateMessage) mListingSelected;
-    mMainView.showToast(R.string.implementation_pending);
+    mMainView.showToast(mContext.getString(R.string.implementation_pending));
   }
 
   public void blockUser() {
     PrivateMessage message = (PrivateMessage) mListingSelected;
-    mMainView.showToast(R.string.implementation_pending);
+    mMainView.showToast(mContext.getString(R.string.implementation_pending));
   }
 }

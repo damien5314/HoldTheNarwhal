@@ -13,17 +13,13 @@ public interface MainView {
 
   void setTitle(@StringRes int id);
 
-  void showSpinner(@Nullable String msg);
-
-  void showSpinner(@StringRes int resId);
+  void showSpinner(@Nullable CharSequence msg);
 
   void dismissSpinner();
 
-  void showToast(@NonNull String msg);
+  void showToast(@NonNull CharSequence msg);
 
-  void showToast(@StringRes int resId);
-
-  void showError(Throwable error, String message);
+  void showError(Throwable error, CharSequence message);
 
   void doSendEmail(MailTo mailTo);
 }

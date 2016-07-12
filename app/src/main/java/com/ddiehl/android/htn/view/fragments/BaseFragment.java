@@ -119,7 +119,7 @@ public abstract class BaseFragment extends Fragment implements MainView {
   private int mDialogCount = 0;
 
   @Override
-  public void showSpinner(@Nullable String message) {
+  public void showSpinner(@Nullable CharSequence message) {
     mDialogCount++;
     if (mLoadingOverlay == null) {
       mLoadingOverlay = new ProgressDialog(getContext(), R.style.ProgressDialog);
@@ -156,11 +156,6 @@ public abstract class BaseFragment extends Fragment implements MainView {
   }
 
   @Override
-  public void showSpinner(@StringRes int resId) {
-    showSpinner(getString(resId));
-  }
-
-  @Override
   public void dismissSpinner() {
     mDialogCount--;
     if (mDialogCount < 0) mDialogCount = 0;
@@ -170,17 +165,12 @@ public abstract class BaseFragment extends Fragment implements MainView {
   }
 
   @Override
-  public void showToast(@StringRes int resId) {
-    showToast(getString(resId));
-  }
-
-  @Override
-  public void showToast(@NonNull String msg) {
+  public void showToast(@NonNull CharSequence msg) {
     Snackbar.make(getChromeView(), msg, Snackbar.LENGTH_SHORT).show();
   }
 
   @Override
-  public void showError(Throwable error, @NonNull String message) {
+  public void showError(Throwable error, @NonNull CharSequence message) {
     Snackbar.make(getChromeView(), message, Snackbar.LENGTH_SHORT).show();
   }
 

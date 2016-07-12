@@ -331,7 +331,7 @@ public abstract class BaseListingsFragment extends BaseFragment
   }
 
   public void openReplyView(@NonNull Listing listing) {
-    showToast(R.string.implementation_pending);
+    showToast(getString(R.string.implementation_pending));
   }
 
   public void openShareView(@NonNull Comment comment) {

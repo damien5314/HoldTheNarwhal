@@ -135,7 +135,7 @@ public class SubredditPresenter extends BaseListingsPresenter implements LinkPre
         mSubredditView.showNsfwWarningDialog();
       } else {
         if (mSubredditInfo != null) requestNextData();
-        else mMainView.showToast(R.string.error_private_subreddit);
+        else mMainView.showToast(mContext.getString(R.string.error_private_subreddit));
       }
 
       loadHeaderImage();

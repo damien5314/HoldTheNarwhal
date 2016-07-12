@@ -139,7 +139,7 @@ public class UserProfilePresenter extends BaseListingsPresenter
           if (self != null && self.isGold()) {
             mSummaryView.showFriendNote("");
           }
-          mMainView.showToast(R.string.user_friend_add_confirm);
+          mMainView.showToast(mContext.getString(R.string.user_friend_add_confirm));
         }, e -> {
           String message = mContext.getString(R.string.user_friend_add_error);
           mMainView.showError(e, message);
@@ -155,7 +155,7 @@ public class UserProfilePresenter extends BaseListingsPresenter
         .subscribe(response -> {
           mSummaryView.setFriendButtonState(false);
           mSummaryView.hideFriendNote();
-          mMainView.showToast(R.string.user_friend_delete_confirm);
+          mMainView.showToast(mContext.getString(R.string.user_friend_delete_confirm));
         }, e -> {
           String message = mContext.getString(R.string.user_friend_delete_error);
           mMainView.showError(e, message);
@@ -164,14 +164,14 @@ public class UserProfilePresenter extends BaseListingsPresenter
 
   public void saveFriendNote(@NonNull String note) {
     // Note must be non-empty for a positive response
-    if (TextUtils.isEmpty(note)) mMainView.showToast(R.string.user_friend_empty_note);
+    if (TextUtils.isEmpty(note)) mMainView.showToast(mContext.getString(R.string.user_friend_empty_note));
     else {
       mMainView.showSpinner(null);
       mRedditService.saveFriendNote(mSummaryView.getUsernameContext(), note)
           .subscribeOn(Schedulers.io())
           .observeOn(AndroidSchedulers.mainThread())
           .doOnTerminate(mMainView::dismissSpinner)
-          .subscribe(r -> mMainView.showToast(R.string.user_friend_note_save_confirm),
+          .subscribe(r -> mMainView.showToast(mContext.getString(R.string.user_friend_note_save_confirm)),
               e -> {
                 String message = mContext.getString(R.string.user_friend_note_save_error);
                 mMainView.showError(e, message);

@@ -224,9 +224,9 @@ public class LinkCommentsPresenterImpl extends BaseListingsPresenter
   @Override
   public void replyToLink() {
     if (((Archivable) mListingSelected).isArchived()) {
-      mMainView.showToast(R.string.listing_archived);
+      mMainView.showToast(mContext.getString(R.string.listing_archived));
     } else if (!mRedditService.isUserAuthorized()) {
-      mMainView.showToast(R.string.user_required);
+      mMainView.showToast(mContext.getString(R.string.user_required));
     } else {
       mReplyTarget = mLinkContext;
       mLinkCommentsView.openReplyView(mLinkContext);
@@ -236,9 +236,9 @@ public class LinkCommentsPresenterImpl extends BaseListingsPresenter
   @Override
   public void replyToComment() {
     if (((Archivable) mListingSelected).isArchived()) {
-      mMainView.showToast(R.string.listing_archived);
+      mMainView.showToast(mContext.getString(R.string.listing_archived));
     } else if (!mRedditService.isUserAuthorized()) {
-      mMainView.showToast(R.string.user_required);
+      mMainView.showToast(mContext.getString(R.string.user_required));
     } else {
       mReplyTarget = mListingSelected;
       mLinkCommentsView.openReplyView(mListingSelected);
