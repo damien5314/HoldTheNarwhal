@@ -46,8 +46,10 @@ public abstract class BaseListingsFragment extends BaseFragment
   protected CommentPresenter mCommentPresenter;
   protected MessagePresenter mMessagePresenter;
   protected ListingsAdapter mListingsAdapter;
-  protected SwipeRefreshLayout mSwipeRefreshLayout;
   protected ListingsView.Callbacks mCallbacks;
+
+  protected SwipeRefreshLayout mSwipeRefreshLayout;
+  protected Listing mListingSelected;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -145,12 +147,13 @@ public abstract class BaseListingsFragment extends BaseFragment
     return false;
   }
 
-  public void showLinkContextMenu(ContextMenu menu, View v, Link link) {
+  public void showLinkContextMenu(ContextMenu menu, View view, Link link) {
+    mListingSelected = link;
     getActivity().getMenuInflater().inflate(R.menu.link_context, menu);
 
     // Build title for menu
     String score = link.getScore() == null ?
-        v.getContext().getString(R.string.hidden_score_placeholder) : link.getScore().toString();
+        view.getContext().getString(R.string.hidden_score_placeholder) : link.getScore().toString();
     String title = String.format(getString(R.string.menu_action_link), link.getTitle(), score);
     menu.setHeaderTitle(title);
 
@@ -177,14 +180,19 @@ public abstract class BaseListingsFragment extends BaseFragment
       menu.findItem(R.id.action_link_view_user_profile)
           .setVisible(false);
     }
+
+    menu.findItem(R.id.action_link_reply).setVisible(false);
+    menu.findItem(R.id.action_link_save).setVisible(!link.isSaved());
+    menu.findItem(R.id.action_link_unsave).setVisible(link.isSaved());
   }
 
-  public void showCommentContextMenu(ContextMenu menu, View v, Comment comment) {
+  public void showCommentContextMenu(ContextMenu menu, View view, Comment comment) {
+    mListingSelected = comment;
     getActivity().getMenuInflater().inflate(R.menu.comment_context, menu);
 
     // Build title for menu
     String score = comment.getScore() == null ?
-        v.getContext().getString(R.string.hidden_score_placeholder) : comment.getScore().toString();
+        view.getContext().getString(R.string.hidden_score_placeholder) : comment.getScore().toString();
     String title = String.format(getString(R.string.menu_action_comment),
         comment.getAuthor(), score);
     menu.setHeaderTitle(title);
@@ -194,103 +202,119 @@ public abstract class BaseListingsFragment extends BaseFragment
         getString(R.string.action_view_user_profile), comment.getAuthor());
     menu.findItem(R.id.action_comment_view_user_profile).setTitle(username);
 
+    // Hide save/unsave option
+    menu.findItem(R.id.action_comment_save).setVisible(!comment.isSaved());
+    menu.findItem(R.id.action_comment_unsave).setVisible(comment.isSaved());
+
     // Hide user profile for posts by deleted users
     if ("[deleted]".equalsIgnoreCase(comment.getAuthor())) {
       menu.findItem(R.id.action_comment_view_user_profile).setVisible(false);
     }
   }
 
-  public void showPrivateMessageContextMenu(
-      ContextMenu menu, View v, PrivateMessage privateMessage) {
+  public void showMessageContextMenu(ContextMenu menu, View view, PrivateMessage message) {
+    mListingSelected = message;
     getActivity().getMenuInflater().inflate(R.menu.message_context, menu);
+
+    // Hide ride/unread option based on state
+    menu.findItem(R.id.action_message_mark_read)
+        .setVisible(message.isUnread());
+    menu.findItem(R.id.action_message_mark_unread)
+        .setVisible(!message.isUnread());
   }
 
   @Override
   public boolean onContextItemSelected(MenuItem item) {
     switch (item.getItemId()) {
+      case R.id.action_link_reply:
+        mLinkPresenter.replyToLink((Link) mListingSelected);
+        return true;
       case R.id.action_link_upvote:
-        mLinkPresenter.upvoteLink();
+        mLinkPresenter.upvoteLink((Link) mListingSelected);
         return true;
       case R.id.action_link_downvote:
-        mLinkPresenter.downvoteLink();
+        mLinkPresenter.downvoteLink((Link) mListingSelected);
         return true;
       case R.id.action_link_show_comments:
-        mLinkPresenter.showCommentsForLink();
+        mLinkPresenter.showCommentsForLink((Link) mListingSelected);
         return true;
       case R.id.action_link_save:
-        mLinkPresenter.saveLink();
+        mLinkPresenter.saveLink((Link) mListingSelected);
         return true;
       case R.id.action_link_unsave:
-        mLinkPresenter.unsaveLink();
+        mLinkPresenter.unsaveLink((Link) mListingSelected);
         return true;
       case R.id.action_link_share:
-        mLinkPresenter.shareLink();
+        mLinkPresenter.shareLink((Link) mListingSelected);
         return true;
       case R.id.action_link_view_subreddit:
-        mLinkPresenter.openLinkSubreddit();
+        mLinkPresenter.openLinkSubreddit((Link) mListingSelected);
         return true;
       case R.id.action_link_view_user_profile:
-        mLinkPresenter.openLinkUserProfile();
+        mLinkPresenter.openLinkUserProfile((Link) mListingSelected);
         return true;
       case R.id.action_link_open_in_browser:
-        mLinkPresenter.openLinkInBrowser();
+        mLinkPresenter.openLinkInBrowser((Link) mListingSelected);
         return true;
       case R.id.action_link_open_comments_in_browser:
-        mLinkPresenter.openCommentsInBrowser();
+        mLinkPresenter.openCommentsInBrowser((Link) mListingSelected);
         return true;
       case R.id.action_link_hide:
-        mLinkPresenter.hideLink();
+        mLinkPresenter.hideLink((Link) mListingSelected);
         return true;
       case R.id.action_link_unhide:
-        mLinkPresenter.unhideLink();
+        mLinkPresenter.unhideLink((Link) mListingSelected);
         return true;
       case R.id.action_link_report:
-        mLinkPresenter.reportLink();
+        mLinkPresenter.reportLink((Link) mListingSelected);
         return true;
       case R.id.action_comment_permalink:
-        mCommentPresenter.openCommentPermalink();
+        mCommentPresenter.openCommentPermalink((Comment) mListingSelected);
         return true;
       case R.id.action_comment_reply:
-        mCommentPresenter.replyToComment();
+        mCommentPresenter.replyToComment((Comment) mListingSelected);
         return true;
       case R.id.action_comment_upvote:
-        mCommentPresenter.upvoteComment();
+        mCommentPresenter.upvoteComment((Comment) mListingSelected);
         return true;
       case R.id.action_comment_downvote:
-        mCommentPresenter.downvoteComment();
+        mCommentPresenter.downvoteComment((Comment) mListingSelected);
         return true;
       case R.id.action_comment_save:
-        mCommentPresenter.saveComment();
+        mCommentPresenter.saveComment((Comment) mListingSelected);
         return true;
       case R.id.action_comment_unsave:
-        mCommentPresenter.unsaveComment();
+        mCommentPresenter.unsaveComment((Comment) mListingSelected);
         return true;
       case R.id.action_comment_share:
-        mCommentPresenter.shareComment();
+        mCommentPresenter.shareComment((Comment) mListingSelected);
+        return true;
+      case R.id.action_comment_view_user_profile:
+        mCommentPresenter.openCommentUserProfile((Comment) mListingSelected);
         return true;
       case R.id.action_comment_open_in_browser:
-        mCommentPresenter.openCommentInBrowser();
+        mCommentPresenter.openCommentInBrowser((Comment) mListingSelected);
         return true;
       case R.id.action_comment_report:
-        mCommentPresenter.reportComment();
+        mCommentPresenter.reportComment((Comment) mListingSelected);
         return true;
       case R.id.action_message_show_permalink:
-        mMessagePresenter.showMessagePermalink();
+        mMessagePresenter.showMessagePermalink((PrivateMessage) mListingSelected);
         return true;
       case R.id.action_message_report:
-        mMessagePresenter.reportMessage();
+        mMessagePresenter.reportMessage((PrivateMessage) mListingSelected);
         return true;
       case R.id.action_message_block_user:
-        mMessagePresenter.blockUser();
+        mMessagePresenter.blockUser((PrivateMessage) mListingSelected);
         return true;
       case R.id.action_message_mark_read:
-        mMessagePresenter.markMessageRead();
+        mMessagePresenter.markMessageRead((PrivateMessage) mListingSelected);
         return true;
       case R.id.action_message_mark_unread:
-        mMessagePresenter.markMessageUnread();
+        mMessagePresenter.markMessageUnread((PrivateMessage) mListingSelected);
         return true;
       case R.id.action_message_reply:
-        mMessagePresenter.replyToMessage();
+        mMessagePresenter.replyToMessage((PrivateMessage) mListingSelected);
         return true;
       default:
         Timber.w("No action registered to this context item");

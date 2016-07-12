@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.presenter.LinkCommentsPresenter;
+import com.ddiehl.android.htn.view.LinkCommentsView;
 import com.ddiehl.android.htn.view.widgets.ColorSwapTextView;
 import com.ddiehl.timesincetextview.TimeSinceTextView;
 
@@ -28,6 +29,7 @@ public class ThreadCommentViewHolder extends RecyclerView.ViewHolder
     implements View.OnCreateContextMenuListener {
 
   @Inject protected Context mContext;
+  private final LinkCommentsView mLinkCommentsView;
   private final LinkCommentsPresenter mLinkCommentsPresenter;
   private Comment mComment;
 
@@ -40,11 +42,12 @@ public class ThreadCommentViewHolder extends RecyclerView.ViewHolder
   @BindView(R.id.comment_gilded_text_view) TextView mGildedText;
   @BindView(R.id.comment_controversiality_indicator) View mControversialityIndicator;
 
-  public ThreadCommentViewHolder(View v, LinkCommentsPresenter presenter) {
-    super(v);
+  public ThreadCommentViewHolder(View view, LinkCommentsView linkCommentsView, LinkCommentsPresenter presenter) {
+    super(view);
     HoldTheNarwhal.getApplicationComponent().inject(this);
+    mLinkCommentsView = linkCommentsView;
     mLinkCommentsPresenter = presenter;
-    ButterKnife.bind(this, v);
+    ButterKnife.bind(this, view);
     itemView.setOnCreateContextMenuListener(this);
   }
 
@@ -197,7 +200,7 @@ public class ThreadCommentViewHolder extends RecyclerView.ViewHolder
   }
 
   @Override
-  public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-    mLinkCommentsPresenter.showCommentContextMenu(menu, v, menuInfo, mComment);
+  public void onCreateContextMenu(ContextMenu menu, View view, ContextMenu.ContextMenuInfo menuInfo) {
+    mLinkCommentsView.showCommentContextMenu(menu, view, mComment);
   }
 }

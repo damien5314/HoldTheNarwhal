@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.presenter.CommentPresenter;
+import com.ddiehl.android.htn.view.CommentView;
 import com.ddiehl.timesincetextview.TimeSinceTextView;
 
 import javax.inject.Inject;
@@ -24,6 +25,7 @@ public class ListingsCommentViewHolder extends RecyclerView.ViewHolder
     implements View.OnCreateContextMenuListener {
 
   @Inject protected Context mAppContext;
+  private CommentView mCommentView;
   private CommentPresenter mCommentPresenter;
   private Comment mComment;
 
@@ -38,11 +40,12 @@ public class ListingsCommentViewHolder extends RecyclerView.ViewHolder
   @BindView(R.id.comment_gilded_text_view) TextView mGildedText;
   @BindView(R.id.comment_controversiality_indicator) View mControversialityIndicator;
 
-  public ListingsCommentViewHolder(View v, CommentPresenter presenter) {
-    super(v);
+  public ListingsCommentViewHolder(View view, CommentView commentView, CommentPresenter presenter) {
+    super(view);
     HoldTheNarwhal.getApplicationComponent().inject(this);
+    mCommentView = commentView;
     mCommentPresenter = presenter;
-    ButterKnife.bind(this, v);
+    ButterKnife.bind(this, view);
     itemView.setOnCreateContextMenuListener(this);
   }
 
@@ -208,7 +211,7 @@ public class ListingsCommentViewHolder extends RecyclerView.ViewHolder
   }
 
   @Override
-  public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-    mCommentPresenter.showCommentContextMenu(menu, v, menuInfo, mComment);
+  public void onCreateContextMenu(ContextMenu menu, View view, ContextMenu.ContextMenuInfo menuInfo) {
+    mCommentView.showCommentContextMenu(menu, view, mComment);
   }
 }

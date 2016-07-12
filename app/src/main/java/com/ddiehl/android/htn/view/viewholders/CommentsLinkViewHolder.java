@@ -11,6 +11,7 @@ import android.view.View;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.ThumbnailMode;
 import com.ddiehl.android.htn.presenter.LinkPresenter;
+import com.ddiehl.android.htn.view.LinkView;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -24,8 +25,8 @@ public class CommentsLinkViewHolder extends BaseLinkViewHolder {
   @BindView(R.id.link_parent_view)
   View mParentLinkView;
 
-  public CommentsLinkViewHolder(View v, LinkPresenter presenter) {
-    super(v, presenter);
+  public CommentsLinkViewHolder(View view, LinkView linkView, LinkPresenter presenter) {
+    super(view, linkView, presenter);
   }
 
   @OnClick(R.id.link_comment_count)

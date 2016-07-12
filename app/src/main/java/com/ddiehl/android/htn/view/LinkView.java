@@ -9,7 +9,7 @@ import rxreddit.model.Link;
 
 public interface LinkView {
 
-  void showLinkContextMenu(ContextMenu menu, View v, Link link);
+  void showLinkContextMenu(ContextMenu menu, View view, Link link);
 
   void openLinkInWebView(@NonNull Link link);
 

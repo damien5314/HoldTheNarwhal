@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.ThumbnailMode;
 import com.ddiehl.android.htn.presenter.LinkCommentsPresenter;
+import com.ddiehl.android.htn.view.LinkCommentsView;
 import com.ddiehl.android.htn.view.viewholders.BaseLinkViewHolder;
 import com.ddiehl.android.htn.view.viewholders.CommentsLinkViewHolder;
 import com.ddiehl.android.htn.view.viewholders.ThreadCommentViewHolder;
@@ -19,14 +20,17 @@ import rxreddit.model.Link;
 import rxreddit.model.Listing;
 
 public class LinkCommentsAdapter extends ListingsAdapter {
+
   private static final int TYPE_LINK = 0;
   private static final int TYPE_COMMENT = 1;
   private static final int TYPE_COMMENT_STUB = 2;
 
+  private final LinkCommentsView mLinkCommentsView;
   private final LinkCommentsPresenter mLinkCommentsPresenter;
 
-  public LinkCommentsAdapter(LinkCommentsPresenter presenter) {
-    super(presenter, presenter, presenter, null);
+  public LinkCommentsAdapter(LinkCommentsView linkCommentsView, LinkCommentsPresenter presenter) {
+    super(presenter, linkCommentsView, presenter, linkCommentsView, presenter, null, null);
+    mLinkCommentsView = linkCommentsView;
     mLinkCommentsPresenter = presenter;
   }
 
@@ -44,11 +48,11 @@ public class LinkCommentsAdapter extends ListingsAdapter {
       case TYPE_LINK:
         View view = LayoutInflater.from(parent.getContext())
             .inflate(R.layout.link_comments_link, parent, false);
-        return new CommentsLinkViewHolder(view, mLinkCommentsPresenter);
+        return new CommentsLinkViewHolder(view, mLinkCommentsView, mLinkCommentsPresenter);
       case TYPE_COMMENT:
         view = LayoutInflater.from(parent.getContext())
             .inflate(R.layout.link_comments_comment, parent, false);
-        return new ThreadCommentViewHolder(view, mLinkCommentsPresenter);
+        return new ThreadCommentViewHolder(view, mLinkCommentsView, mLinkCommentsPresenter);
       case TYPE_COMMENT_STUB:
         view = LayoutInflater.from(parent.getContext())
             .inflate(R.layout.link_comments_stub, parent, false);

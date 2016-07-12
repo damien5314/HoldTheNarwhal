@@ -7,14 +7,16 @@ import android.view.View;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.ThumbnailMode;
 import com.ddiehl.android.htn.presenter.LinkPresenter;
+import com.ddiehl.android.htn.view.LinkView;
 import com.squareup.picasso.Picasso;
 
 import butterknife.OnClick;
 import rxreddit.model.Link;
 
 public class ListingsLinkViewHolder extends BaseLinkViewHolder {
-  public ListingsLinkViewHolder(View v, LinkPresenter presenter) {
-    super(v, presenter);
+
+  public ListingsLinkViewHolder(View view, LinkView linkView, LinkPresenter presenter) {
+    super(view, linkView, presenter);
   }
 
   @OnClick(R.id.link_comment_count)
@@ -25,13 +27,13 @@ public class ListingsLinkViewHolder extends BaseLinkViewHolder {
   @Override
   protected void showLiked(@NonNull Link link) {
     if (link.isLiked() == null) {
-      mLinkView.setBackgroundColor(
+      mView.setBackgroundColor(
               ContextCompat.getColor(mContext, R.color.transparent));
     } else if (link.isLiked()) {
-      mLinkView.setBackgroundColor(
+      mView.setBackgroundColor(
               ContextCompat.getColor(mContext, R.color.reddit_orange_lighter));
     } else {
-      mLinkView.setBackgroundColor(
+      mView.setBackgroundColor(
               ContextCompat.getColor(mContext, R.color.reddit_blue_lighter));
     }
   }

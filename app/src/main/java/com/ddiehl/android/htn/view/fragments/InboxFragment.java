@@ -107,7 +107,7 @@ public class InboxFragment extends BaseListingsFragment
   @Override
   public ListingsAdapter getListingsAdapter() {
     return new ListingsAdapter(
-        mListingsPresenter, mLinkPresenter, mCommentPresenter, mMessagePresenter);
+        mListingsPresenter, this, mLinkPresenter, this, mCommentPresenter, this, mMessagePresenter);
   }
 
   @Override

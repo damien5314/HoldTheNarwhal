@@ -1,8 +1,6 @@
 package com.ddiehl.android.htn.presenter;
 
 import android.support.annotation.NonNull;
-import android.view.ContextMenu;
-import android.view.View;
 
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.model.CommentBank;
@@ -19,7 +17,6 @@ import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import rxreddit.RxRedditUtil;
 import rxreddit.model.AbsComment;
-import rxreddit.model.Archivable;
 import rxreddit.model.Comment;
 import rxreddit.model.CommentStub;
 import rxreddit.model.Link;
@@ -53,7 +50,6 @@ public class LinkCommentsPresenterImpl extends BaseListingsPresenter
   @Override
   public void onViewDestroyed() {
     mLinkContext = null;
-    mListingSelected = null;
     mCommentBank.clear();
     mLinkCommentsView.notifyDataSetChanged();
   }
@@ -222,26 +218,26 @@ public class LinkCommentsPresenterImpl extends BaseListingsPresenter
   }
 
   @Override
-  public void replyToLink() {
-    if (((Archivable) mListingSelected).isArchived()) {
+  public void replyToLink(Link link) {
+    if (link.isArchived()) {
       mMainView.showToast(mContext.getString(R.string.listing_archived));
     } else if (!mRedditService.isUserAuthorized()) {
       mMainView.showToast(mContext.getString(R.string.user_required));
     } else {
-      mReplyTarget = mLinkContext;
-      mLinkCommentsView.openReplyView(mLinkContext);
+      mReplyTarget = link;
+      mLinkCommentsView.openReplyView(link);
     }
   }
 
   @Override
-  public void replyToComment() {
-    if (((Archivable) mListingSelected).isArchived()) {
+  public void replyToComment(@NonNull Comment comment) {
+    if (comment.isArchived()) {
       mMainView.showToast(mContext.getString(R.string.listing_archived));
     } else if (!mRedditService.isUserAuthorized()) {
       mMainView.showToast(mContext.getString(R.string.user_required));
     } else {
-      mReplyTarget = mListingSelected;
-      mLinkCommentsView.openReplyView(mListingSelected);
+      mReplyTarget = comment;
+      mLinkCommentsView.openReplyView(comment);
     }
   }
 
@@ -249,7 +245,8 @@ public class LinkCommentsPresenterImpl extends BaseListingsPresenter
   public void onCommentSubmitted(@NonNull String commentText) {
     String parentId = mReplyTarget.getFullName();
     mRedditService.addComment(parentId, commentText)
-        .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
         .subscribe(comment -> {
           String message = mContext.getString(R.string.comment_added);
           mMainView.showToast(message);
@@ -258,7 +255,7 @@ public class LinkCommentsPresenterImpl extends BaseListingsPresenter
           int position;
           if (parentId.startsWith("t1_")) { // Comment
             comment.setDepth(((Comment) mReplyTarget).getDepth() + 1);
-            position = mCommentBank.indexOf((Comment) mListingSelected) + 1;
+            position = mCommentBank.indexOf((Comment) mReplyTarget) + 1;
           } else {
             comment.setDepth(1);
             position = 0;
@@ -280,11 +277,5 @@ public class LinkCommentsPresenterImpl extends BaseListingsPresenter
   @Override
   public boolean shouldShowParentLink() {
     return mLinkCommentsView.getCommentId() != null;
-  }
-
-  @Override
-  public void showLinkContextMenu(ContextMenu menu, View view, Link link) {
-    super.showLinkContextMenu(menu, view, link);
-    menu.findItem(R.id.action_link_reply).setVisible(true);
   }
 }

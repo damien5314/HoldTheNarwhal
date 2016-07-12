@@ -11,6 +11,7 @@ import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.presenter.MessagePresenter;
 import com.ddiehl.android.htn.utils.Utils;
+import com.ddiehl.android.htn.view.PrivateMessageView;
 import com.ddiehl.timesincetextview.TimeSince;
 
 import java.util.List;
@@ -27,7 +28,8 @@ public class ListingsMessageViewHolder extends RecyclerView.ViewHolder
     implements View.OnCreateContextMenuListener {
 
   @Inject protected Context mAppContext;
-  private final MessagePresenter mInboxPresenter;
+  private final PrivateMessageView mPrivateMessageView;
+  private final MessagePresenter mMessagePresenter;
   private PrivateMessage mMessage;
 
   @BindView(R.id.conversation_subject) TextView mConversationSubject;
@@ -40,10 +42,11 @@ public class ListingsMessageViewHolder extends RecyclerView.ViewHolder
   @BindView(R.id.unread_message_indicator) View mUnreadMessageIndicator;
   @BindView(R.id.last_message_body) TextView mLastMessageBody;
 
-  public ListingsMessageViewHolder(View view, MessagePresenter presenter) {
+  public ListingsMessageViewHolder(View view, PrivateMessageView pmView, MessagePresenter presenter) {
     super(view);
     HoldTheNarwhal.getApplicationComponent().inject(this);
-    mInboxPresenter = presenter;
+    mPrivateMessageView = pmView;
+    mMessagePresenter = presenter;
     ButterKnife.bind(this, view);
     itemView.setOnCreateContextMenuListener(this);
   }
@@ -79,7 +82,7 @@ public class ListingsMessageViewHolder extends RecyclerView.ViewHolder
           mAppContext.getResources().getQuantityString(R.plurals.view_more_messages, n, n));
     }
     boolean isToMe = Utils.equals(
-        mInboxPresenter.getUserIdentity().getName(), messageToShow.getDestination());
+        mMessagePresenter.getUserIdentity().getName(), messageToShow.getDestination());
     String from = mAppContext.getString(
         isToMe ? R.string.message_metadata_from : R.string.message_metadata_to);
     from = String.format(from,
@@ -96,7 +99,7 @@ public class ListingsMessageViewHolder extends RecyclerView.ViewHolder
 
   @Override
   public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-    mInboxPresenter.showMessageContextMenu(menu, v, menuInfo, mMessage);
+    mPrivateMessageView.showMessageContextMenu(menu, v, mMessage);
   }
 
   @OnClick({ R.id.last_message_layout })
@@ -106,6 +109,6 @@ public class ListingsMessageViewHolder extends RecyclerView.ViewHolder
 
   @OnClick({ R.id.conversation_subject, R.id.collapsed_messages_layout })
   void showMessageView() {
-    mInboxPresenter.showMessagePermalink(mMessage);
+    mMessagePresenter.showMessagePermalink(mMessage);
   }
 }

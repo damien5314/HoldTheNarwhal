@@ -79,7 +79,7 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
   @Override
   public ListingsAdapter getListingsAdapter() {
     return new ListingsAdapter(
-        mListingsPresenter, mLinkPresenter, mCommentPresenter, mMessagePresenter);
+        mListingsPresenter, this, mLinkPresenter, null, mCommentPresenter, null, mMessagePresenter);
   }
 
   private void updateTitle() {

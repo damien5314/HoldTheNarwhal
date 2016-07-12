@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.ThumbnailMode;
 import com.ddiehl.android.htn.presenter.LinkPresenter;
+import com.ddiehl.android.htn.view.LinkView;
 import com.ddiehl.android.htn.view.widgets.ColorSwapTextView;
 import com.ddiehl.timesincetextview.TimeSinceTextView;
 import com.squareup.picasso.Picasso;
@@ -26,34 +27,33 @@ import rxreddit.model.Link;
 
 public abstract class BaseLinkViewHolder extends RecyclerView.ViewHolder
     implements View.OnCreateContextMenuListener {
+
   protected final Context mContext;
+  protected final LinkView mLinkView;
   protected final LinkPresenter mLinkPresenter;
   protected Link mLink;
 
-  @BindView(R.id.link_view) View mLinkView;
-  @BindView(R.id.link_saved_view) View mSavedView;
-  @BindView(R.id.link_title)
-  TextView mLinkTitle;
-  @BindView(R.id.link_domain) TextView mLinkDomain;
-  @BindView(R.id.link_score) TextView mLinkScore;
-  @BindView(R.id.link_author)
-  ColorSwapTextView mLinkAuthor;
-  @BindView(R.id.link_subreddit) TextView mLinkSubreddit;
-  @BindView(R.id.link_comment_count) TextView mLinkComments;
-  @BindView(R.id.link_self_text) TextView mSelfText;
-  @BindView(R.id.link_nsfw_indicator) TextView mNsfwIndicator;
-  @BindView(R.id.link_thumbnail)
-  ImageView mLinkThumbnail;
-  @BindView(R.id.link_timestamp)
-  TimeSinceTextView mLinkTimestamp;
-  @BindView(R.id.link_gilded_text_view) TextView mGildedText;
-  @BindView(R.id.link_stickied_view) View mStickiedView;
+  @BindView(R.id.link_view)             protected View mView;
+  @BindView(R.id.link_saved_view)       protected View mSavedView;
+  @BindView(R.id.link_title)            protected TextView mLinkTitle;
+  @BindView(R.id.link_domain)           protected TextView mLinkDomain;
+  @BindView(R.id.link_score)            protected TextView mLinkScore;
+  @BindView(R.id.link_author)           protected ColorSwapTextView mLinkAuthor;
+  @BindView(R.id.link_subreddit)        protected TextView mLinkSubreddit;
+  @BindView(R.id.link_comment_count)    protected TextView mLinkComments;
+  @BindView(R.id.link_self_text)        protected TextView mSelfText;
+  @BindView(R.id.link_nsfw_indicator)   protected TextView mNsfwIndicator;
+  @BindView(R.id.link_thumbnail)        protected ImageView mLinkThumbnail;
+  @BindView(R.id.link_timestamp)        protected TimeSinceTextView mLinkTimestamp;
+  @BindView(R.id.link_gilded_text_view) protected TextView mGildedText;
+  @BindView(R.id.link_stickied_view)    protected View mStickiedView;
 
-  public BaseLinkViewHolder(View v, LinkPresenter presenter) {
-    super(v);
-    mContext = v.getContext().getApplicationContext();
+  public BaseLinkViewHolder(View view, LinkView linkView, LinkPresenter presenter) {
+    super(view);
+    mContext = view.getContext().getApplicationContext();
+    mLinkView = linkView;
     mLinkPresenter = presenter;
-    ButterKnife.bind(this, v);
+    ButterKnife.bind(this, view);
     itemView.setOnCreateContextMenuListener(this);
   }
 
@@ -236,6 +236,6 @@ public abstract class BaseLinkViewHolder extends RecyclerView.ViewHolder
   @Override
   public void onCreateContextMenu(
       ContextMenu menu, View view, ContextMenu.ContextMenuInfo menuInfo) {
-    mLinkPresenter.showLinkContextMenu(menu, view, mLink);
+    mLinkView.showLinkContextMenu(menu, view, mLink);
   }
 }

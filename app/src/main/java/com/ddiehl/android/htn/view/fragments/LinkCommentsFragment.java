@@ -62,8 +62,10 @@ public class LinkCommentsFragment extends BaseListingsFragment
     HoldTheNarwhal.getApplicationComponent().inject(this);
     FragmentArgs.inject(this);
     mLinkCommentsPresenter = new LinkCommentsPresenterImpl(this, mRedditNavigationView, this);
-    mSort = mSettingsManager.getCommentSort();
     mListingsPresenter = mLinkCommentsPresenter;
+    mLinkPresenter = mLinkCommentsPresenter;
+    mCommentPresenter = mLinkCommentsPresenter;
+    mSort = mSettingsManager.getCommentSort();
     mCallbacks = (Callbacks) mListingsPresenter;
   }
 
@@ -101,26 +103,7 @@ public class LinkCommentsFragment extends BaseListingsFragment
 
   @Override
   protected ListingsAdapter getListingsAdapter() {
-    return new LinkCommentsAdapter(mLinkCommentsPresenter);
-  }
-
-  @Override
-  public void showCommentContextMenu(ContextMenu menu, View v, Comment comment) {
-    getActivity().getMenuInflater().inflate(R.menu.comment_context, menu);
-    String score = comment.getScore() == null ?
-        v.getContext().getString(R.string.hidden_score_placeholder) : comment.getScore().toString();
-    String title = String.format(getString(R.string.menu_action_comment),
-        comment.getAuthor(), score);
-    menu.setHeaderTitle(title);
-    if (comment.isArchived()) {
-      menu.findItem(R.id.action_comment_report).setVisible(false);
-    }
-    // Set username for listing in the user profile menu item
-    String username = String.format(getString(R.string.action_view_user_profile), comment.getAuthor());
-    menu.findItem(R.id.action_comment_view_user_profile).setTitle(username);
-    if ("[deleted]".equalsIgnoreCase(comment.getAuthor())) {
-      menu.findItem(R.id.action_comment_view_user_profile).setVisible(false);
-    }
+    return new LinkCommentsAdapter(this, mLinkCommentsPresenter);
   }
 
   @Override
@@ -175,83 +158,83 @@ public class LinkCommentsFragment extends BaseListingsFragment
     startActivity(i);
   }
 
-  @Override
-  public boolean onContextItemSelected(MenuItem item) {
-    switch (item.getItemId()) {
-      case R.id.action_link_reply:
-        mLinkCommentsPresenter.replyToLink();
-        return true;
-      case R.id.action_link_upvote:
-        mLinkCommentsPresenter.upvoteLink();
-        return true;
-      case R.id.action_link_downvote:
-        mLinkCommentsPresenter.downvoteLink();
-        return true;
-      case R.id.action_link_show_comments:
-        mLinkCommentsPresenter.showCommentsForLink();
-        return true;
-      case R.id.action_link_save:
-        mLinkCommentsPresenter.saveLink();
-        return true;
-      case R.id.action_link_unsave:
-        mLinkCommentsPresenter.unsaveLink();
-        return true;
-      case R.id.action_link_share:
-        mLinkCommentsPresenter.shareLink();
-        return true;
-      case R.id.action_link_view_user_profile:
-        Link link = mLinkCommentsPresenter.getLinkContext();
-        mLinkCommentsPresenter.openLinkUserProfile(link);
-        return true;
-      case R.id.action_link_open_in_browser:
-        mLinkCommentsPresenter.openLinkInBrowser();
-        return true;
-      case R.id.action_link_open_comments_in_browser:
-        mLinkCommentsPresenter.openCommentsInBrowser();
-        return true;
-      case R.id.action_link_hide:
-        mLinkCommentsPresenter.hideLink();
-        return true;
-      case R.id.action_link_unhide:
-        mLinkCommentsPresenter.unhideLink();
-        return true;
-      case R.id.action_link_report:
-        mLinkCommentsPresenter.reportLink();
-        return true;
-      case R.id.action_comment_permalink:
-        mLinkCommentsPresenter.openCommentPermalink();
-        return true;
-      case R.id.action_comment_reply:
-        mLinkCommentsPresenter.replyToComment();
-        return true;
-      case R.id.action_comment_upvote:
-        mLinkCommentsPresenter.upvoteComment();
-        return true;
-      case R.id.action_comment_downvote:
-        mLinkCommentsPresenter.downvoteComment();
-        return true;
-      case R.id.action_comment_save:
-        mLinkCommentsPresenter.saveComment();
-        return true;
-      case R.id.action_comment_unsave:
-        mLinkCommentsPresenter.unsaveComment();
-        return true;
-      case R.id.action_comment_share:
-        mLinkCommentsPresenter.shareComment();
-        return true;
-      case R.id.action_comment_view_user_profile:
-        mLinkCommentsPresenter.openCommentUserProfile();
-        return true;
-      case R.id.action_comment_open_in_browser:
-        mLinkCommentsPresenter.openCommentInBrowser();
-        return true;
-      case R.id.action_comment_report:
-        mLinkCommentsPresenter.reportComment();
-        return true;
-      default:
-        return false;
-    }
-  }
+//  @Override
+//  public boolean onContextItemSelected(MenuItem item) {
+//    switch (item.getItemId()) {
+//      case R.id.action_link_reply:
+//        mLinkCommentsPresenter.replyToLink();
+//        return true;
+//      case R.id.action_link_upvote:
+//        mLinkCommentsPresenter.upvoteLink((Link) mListingSelected);
+//        return true;
+//      case R.id.action_link_downvote:
+//        mLinkCommentsPresenter.downvoteLink((Link) mListingSelected);
+//        return true;
+//      case R.id.action_link_show_comments:
+//        mLinkCommentsPresenter.showCommentsForLink((Link) mListingSelected);
+//        return true;
+//      case R.id.action_link_save:
+//        mLinkCommentsPresenter.saveLink();
+//        return true;
+//      case R.id.action_link_unsave:
+//        mLinkCommentsPresenter.unsaveLink();
+//        return true;
+//      case R.id.action_link_share:
+//        mLinkCommentsPresenter.shareLink();
+//        return true;
+//      case R.id.action_link_view_user_profile:
+//        Link link = mLinkCommentsPresenter.getLinkContext();
+//        mLinkCommentsPresenter.openLinkUserProfile(link);
+//        return true;
+//      case R.id.action_link_open_in_browser:
+//        mLinkCommentsPresenter.openLinkInBrowser();
+//        return true;
+//      case R.id.action_link_open_comments_in_browser:
+//        mLinkCommentsPresenter.openCommentsInBrowser();
+//        return true;
+//      case R.id.action_link_hide:
+//        mLinkCommentsPresenter.hideLink();
+//        return true;
+//      case R.id.action_link_unhide:
+//        mLinkCommentsPresenter.unhideLink();
+//        return true;
+//      case R.id.action_link_report:
+//        mLinkCommentsPresenter.reportLink();
+//        return true;
+//      case R.id.action_comment_permalink:
+//        mLinkCommentsPresenter.openCommentPermalink();
+//        return true;
+//      case R.id.action_comment_reply:
+//        mLinkCommentsPresenter.replyToComment();
+//        return true;
+//      case R.id.action_comment_upvote:
+//        mLinkCommentsPresenter.upvoteComment();
+//        return true;
+//      case R.id.action_comment_downvote:
+//        mLinkCommentsPresenter.downvoteComment();
+//        return true;
+//      case R.id.action_comment_save:
+//        mLinkCommentsPresenter.saveComment();
+//        return true;
+//      case R.id.action_comment_unsave:
+//        mLinkCommentsPresenter.unsaveComment();
+//        return true;
+//      case R.id.action_comment_share:
+//        mLinkCommentsPresenter.shareComment();
+//        return true;
+//      case R.id.action_comment_view_user_profile:
+//        mLinkCommentsPresenter.openCommentUserProfile();
+//        return true;
+//      case R.id.action_comment_open_in_browser:
+//        mLinkCommentsPresenter.openCommentInBrowser();
+//        return true;
+//      case R.id.action_comment_report:
+//        mLinkCommentsPresenter.reportComment();
+//        return true;
+//      default:
+//        return false;
+//    }
+//  }
 
   @Override
   public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -333,6 +316,14 @@ public class LinkCommentsFragment extends BaseListingsFragment
   @Override
   View getChromeView() {
     return mCoordinatorLayout;
+  }
+
+  @Override
+  public void showLinkContextMenu(ContextMenu menu, View view, Link link) {
+    super.showLinkContextMenu(menu, view, link);
+
+    // Show the reply action when viewing link comments
+    menu.findItem(R.id.action_link_reply).setVisible(true);
   }
 
   /**

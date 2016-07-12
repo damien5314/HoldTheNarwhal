@@ -2,8 +2,6 @@ package com.ddiehl.android.htn.presenter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.view.ContextMenu;
-import android.view.View;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.IdentityManager;
@@ -28,7 +26,6 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import rxreddit.api.RedditService;
-import rxreddit.model.Archivable;
 import rxreddit.model.Comment;
 import rxreddit.model.CommentStub;
 import rxreddit.model.Hideable;
@@ -63,7 +60,6 @@ public abstract class BaseListingsPresenter
 
   protected Subreddit mSubredditInfo;
 
-  protected Listing mListingSelected;
   protected boolean mBeforeRequested, mNextRequested = false;
   protected String mPrevPageListingId, mNextPageListingId;
 
@@ -84,15 +80,7 @@ public abstract class BaseListingsPresenter
   public void onResume() {
     // FIXME Do we need to check mNextRequested here?
     if (!mNextRequested && mListings.size() == 0) {
-      if (mListingSelected != null) {
-        mListings.add(mListingSelected);
-        mPrevPageListingId = mListingSelected.getFullName();
-        mNextPageListingId = mListingSelected.getFullName();
-        getPreviousData();
-        getNextData();
-      } else {
-        refreshData();
-      }
+      refreshData();
     }
   }
 
@@ -225,17 +213,7 @@ public abstract class BaseListingsPresenter
     };
   }
 
-  public void showLinkContextMenu(
-      ContextMenu menu, View view, Link link) {
-    mListingSelected = link;
-    mLinkView.showLinkContextMenu(menu, view, link);
-    menu.findItem(R.id.action_link_reply).setVisible(false);
-    menu.findItem(R.id.action_link_save).setVisible(!link.isSaved());
-    menu.findItem(R.id.action_link_unsave).setVisible(link.isSaved());
-  }
-
   public void openLink(@NonNull Link link) {
-    mListingSelected = link;
     if (link.isSelf()) {
       mLinkView.showCommentsForLink(link.getSubreddit(), link.getId(), null);
     } else {
@@ -243,107 +221,85 @@ public abstract class BaseListingsPresenter
     }
   }
 
-  public void showCommentsForLink() {
-    Link link = (Link) mListingSelected;
-    showCommentsForLink(link);
-  }
-
   public void showCommentsForLink(@NonNull Link link) {
-    mListingSelected = link; // Save selected listing so we can restore the view on back navigation
     mLinkView.showCommentsForLink(link.getSubreddit(), link.getId(), null);
   }
 
-  public void replyToLink() {
-    mCommentView.openReplyView(mListingSelected);
+  public void replyToLink(Link link) {
+    mCommentView.openReplyView(link);
   }
 
-  public void upvoteLink() {
-    Votable votable = (Votable) mListingSelected;
-    int dir = (votable.isLiked() == null || !votable.isLiked()) ? 1 : 0;
-    vote(dir);
+  public void upvoteLink(@NonNull Link link) {
+    int dir = (link.isLiked() == null || !link.isLiked()) ? 1 : 0;
+    vote(link, dir);
   }
 
-  public void downvoteLink() {
-    Votable votable = (Votable) mListingSelected;
-    int dir = (votable.isLiked() == null || votable.isLiked()) ? -1 : 0;
-    vote(dir);
+  public void downvoteLink(@NonNull Link link) {
+    int dir = (link.isLiked() == null || link.isLiked()) ? -1 : 0;
+    vote(link, dir);
   }
 
-  public void saveLink() {
+  public void saveLink(@NonNull Link link) {
     if (!mRedditService.isUserAuthorized()) {
       mMainView.showToast(mContext.getString(R.string.user_required));
       return;
     }
-    Link link = (Link) mListingSelected;
     save(link, true);
     mAnalytics.logSave(link.getKind(), null, true);
   }
 
-  public void unsaveLink() {
+  public void unsaveLink(@NonNull Link link) {
     if (!mRedditService.isUserAuthorized()) {
       mMainView.showToast(mContext.getString(R.string.user_required));
       return;
     }
-    Link link = (Link) mListingSelected;
     save(link, false);
     mAnalytics.logSave(link.getKind(), null, false);
   }
 
-  public void shareLink() {
-    Link link = (Link) mListingSelected;
+  public void shareLink(@NonNull Link link) {
     mLinkView.openShareView(link);
   }
 
-  public void openLinkSubreddit() {
-    Link link = (Link) mListingSelected;
+  public void openLinkSubreddit(@NonNull Link link) {
     String subreddit = link.getSubreddit();
     mLinkView.openSubredditView(subreddit);
-  }
-
-  public void openLinkUserProfile() {
-    Link link = (Link) mListingSelected;
-    mLinkView.openUserProfileView(link);
   }
 
   public void openLinkUserProfile(@NonNull Link link) {
     mLinkView.openUserProfileView(link);
   }
 
-  public void openLinkInBrowser() {
-    Link link = (Link) mListingSelected;
+  public void openLinkInBrowser(@NonNull Link link) {
     mLinkView.openLinkInBrowser(link);
   }
 
-  public void openCommentsInBrowser() {
-    Link link = (Link) mListingSelected;
+  public void openCommentsInBrowser(@NonNull Link link) {
     mLinkView.openCommentsInBrowser(link);
   }
 
-  public void hideLink() {
+  public void hideLink(@NonNull Link link) {
     if (!mRedditService.isUserAuthorized()) {
       mMainView.showToast(mContext.getString(R.string.user_required));
       return;
     }
 
-    Link link = (Link) mListingSelected;
     hide(link, true);
     mAnalytics.logHide(link.getKind(), true);
   }
 
-  public void unhideLink() {
+  public void unhideLink(@NonNull Link link) {
     if (!mRedditService.isUserAuthorized()) {
       mMainView.showToast(mContext.getString(R.string.user_required));
       return;
     }
 
-    Link link = (Link) mListingSelected;
     hide(link, false);
     mAnalytics.logHide(link.getKind(), false);
   }
 
-  public void reportLink() {
-    Listing listing = mListingSelected;
-    if (((Archivable) listing).isArchived()) {
+  public void reportLink(@NonNull Link link) {
+    if (link.isArchived()) {
       mMainView.showToast(mContext.getString(R.string.listing_archived));
     } else if (!mRedditService.isUserAuthorized()) {
       mMainView.showToast(mContext.getString(R.string.user_required));
@@ -361,21 +317,11 @@ public abstract class BaseListingsPresenter
     // Comment stubs cannot appear in a listing view
   }
 
-  public void showCommentContextMenu(
-      ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, Comment comment) {
-    mListingSelected = comment;
-    mCommentView.showCommentContextMenu(menu, v, comment);
-    menu.findItem(R.id.action_comment_save).setVisible(!comment.isSaved());
-    menu.findItem(R.id.action_comment_unsave).setVisible(comment.isSaved());
-  }
-
-  public void openCommentPermalink() {
-    Comment comment = (Comment) mListingSelected;
+  public void openCommentPermalink(@NonNull Comment comment) {
     showCommentThread(comment.getSubreddit(), comment.getLinkId(), comment.getId());
   }
 
-  public void replyToComment() {
-    Comment comment = (Comment) mListingSelected;
+  public void replyToComment(@NonNull Comment comment) {
     if (comment.isArchived()) {
       mMainView.showToast(mContext.getString(R.string.listing_archived));
     } else {
@@ -383,61 +329,48 @@ public abstract class BaseListingsPresenter
     }
   }
 
-  public void upvoteComment() {
-    Votable votable = (Votable) mListingSelected;
-    int dir = (votable.isLiked() == null || !votable.isLiked()) ? 1 : 0;
-    vote(dir);
+  public void upvoteComment(@NonNull Comment comment) {
+    int dir = (comment.isLiked() == null || !comment.isLiked()) ? 1 : 0;
+    vote(comment, dir);
   }
 
-  public void downvoteComment() {
-    Votable votable = (Votable) mListingSelected;
-    int dir = (votable.isLiked() == null || votable.isLiked()) ? -1 : 0;
-    vote(dir);
+  public void downvoteComment(@NonNull Comment comment) {
+    int dir = (comment.isLiked() == null || comment.isLiked()) ? -1 : 0;
+    vote(null, dir);
   }
 
-  public void saveComment() {
+  public void saveComment(@NonNull Comment comment) {
     if (!mRedditService.isUserAuthorized()) {
       mMainView.showToast(mContext.getString(R.string.user_required));
       return;
     }
-    Comment comment = (Comment) mListingSelected;
     save(comment, true);
     mAnalytics.logSave(comment.getKind(), null, true);
   }
 
-  public void unsaveComment() {
+  public void unsaveComment(@NonNull Comment comment) {
     if (!mRedditService.isUserAuthorized()) {
       mMainView.showToast(mContext.getString(R.string.user_required));
       return;
     }
-    Comment comment = (Comment) mListingSelected;
     save(comment, false);
     mAnalytics.logSave(comment.getKind(), null, false);
   }
 
-  public void shareComment() {
-    Comment comment = (Comment) mListingSelected;
+  public void shareComment(@NonNull Comment comment) {
     mCommentView.openShareView(comment);
   }
 
-  public void openCommentUserProfile() {
-    Comment comment = (Comment) mListingSelected;
-    openCommentUserProfile(comment);
-  }
-
   public void openCommentUserProfile(@NonNull Comment comment) {
-    mListingSelected = comment;
     mCommentView.openUserProfileView(comment);
   }
 
-  public void openCommentInBrowser() {
-    Comment comment = (Comment) mListingSelected;
+  public void openCommentInBrowser(@NonNull Comment comment) {
     mCommentView.openCommentInBrowser(comment);
   }
 
-  public void reportComment() {
-    Listing listing = mListingSelected;
-    if (((Archivable) listing).isArchived()) {
+  public void reportComment(@NonNull Comment comment) {
+    if (comment.isArchived()) {
       mMainView.showToast(mContext.getString(R.string.listing_archived));
     } else if (!mRedditService.isUserAuthorized()) {
       mMainView.showToast(mContext.getString(R.string.user_required));
@@ -447,18 +380,7 @@ public abstract class BaseListingsPresenter
   }
 
   public void openCommentLink(@NonNull Comment comment) {
-    mListingSelected = comment;
     mRedditNavigationView.showCommentsForLink(comment.getSubreddit(), comment.getLinkId(), null);
-  }
-
-  public void showMessageContextMenu(
-      ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, PrivateMessage message) {
-    mListingSelected = message;
-    mPrivateMessageView.showPrivateMessageContextMenu(menu, v, message);
-    menu.findItem(R.id.action_message_mark_read)
-        .setVisible(message.isUnread());
-    menu.findItem(R.id.action_message_mark_unread)
-        .setVisible(!message.isUnread());
   }
 
   @Override
@@ -471,19 +393,17 @@ public abstract class BaseListingsPresenter
     refreshData();
   }
 
-  private void vote(int direction) {
-    Listing listing = mListingSelected;
-    if (((Archivable) listing).isArchived()) {
+  private void vote(Votable votable, int direction) {
+    if (votable.isArchived()) {
       mMainView.showToast(mContext.getString(R.string.listing_archived));
     } else if (!mRedditService.isUserAuthorized()) {
       mMainView.showToast(mContext.getString(R.string.user_required));
     } else {
-      Votable votable = (Votable) listing;
       mRedditService.vote(votable.getKind() + "_" + votable.getId(), direction)
           .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
           .subscribe(response -> {
             votable.applyVote(direction);
-            mListingsView.notifyItemChanged(getIndexOf(listing));
+            mListingsView.notifyItemChanged(getIndexOf((Listing) votable));
           }, e -> {
             String message = mContext.getString(R.string.vote_failed);
             mMainView.showError(e, message);
@@ -492,17 +412,17 @@ public abstract class BaseListingsPresenter
     }
   }
 
+  /** This is overridden in link comments view which has headers */
   protected int getIndexOf(Listing listing) {
     return mListings.indexOf(listing);
   }
 
   private void save(Savable savable, boolean toSave) {
-    Listing listing = mListingSelected;
     mRedditService.save(savable.getFullName(), null, toSave)
         .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
         .subscribe(response -> {
           savable.isSaved(toSave);
-          mListingsView.notifyItemChanged(getIndexOf(listing));
+          mListingsView.notifyItemChanged(getIndexOf((Listing) savable));
         }, e -> {
           String message = mContext.getString(R.string.save_failed);
           mMainView.showError(e, message);
@@ -510,18 +430,12 @@ public abstract class BaseListingsPresenter
   }
 
   private void hide(Hideable hideable, boolean toHide) {
-    Listing listing = mListingSelected;
     mRedditService.hide(hideable.getFullName(), toHide)
         .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
         .subscribe(response -> {
-          int pos = mListings.indexOf(listing);
-          if (toHide) {
-            mMainView.showToast(mContext.getString(R.string.link_hidden));
-            mListings.remove(pos);
-            mListingsView.notifyItemRemoved(pos);
-          } else {
-            mListingsView.notifyItemRemoved(pos);
-          }
+          int pos = getIndexOf((Listing) hideable);
+          mListings.remove(pos);
+          mListingsView.notifyItemRemoved(pos);
         }, e -> {
           String message = mContext.getString(R.string.hide_failed);
           mMainView.showError(e, message);
@@ -557,13 +471,11 @@ public abstract class BaseListingsPresenter
     return mIdentityManager.getUserIdentity();
   }
 
-  public void replyToMessage() {
-    PrivateMessage message = (PrivateMessage) mListingSelected;
+  public void replyToMessage(@NonNull PrivateMessage message) {
     mMainView.showToast(mContext.getString(R.string.implementation_pending));
   }
 
-  public void markMessageRead() {
-    PrivateMessage message = (PrivateMessage) mListingSelected;
+  public void markMessageRead(@NonNull PrivateMessage message) {
     String fullname = message.getFullName();
     mRedditService.markMessagesRead(fullname)
         .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
@@ -579,8 +491,7 @@ public abstract class BaseListingsPresenter
         );
   }
 
-  public void markMessageUnread() {
-    PrivateMessage message = (PrivateMessage) mListingSelected;
+  public void markMessageUnread(@NonNull PrivateMessage message) {
     String fullname = message.getFullName();
     mRedditService.markMessagesUnread(fullname)
         .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
@@ -596,12 +507,7 @@ public abstract class BaseListingsPresenter
         );
   }
 
-  public void showMessagePermalink() {
-    showMessagePermalink((PrivateMessage) mListingSelected);
-  }
-
-  public void showMessagePermalink(PrivateMessage message) {
-    mListingSelected = message;
+  public void showMessagePermalink(@NonNull PrivateMessage message) {
     ListingResponse listingResponse = message.getReplies();
     List<PrivateMessage> messages = new ArrayList<>();
     if (listingResponse != null) {
@@ -613,13 +519,11 @@ public abstract class BaseListingsPresenter
     mRedditNavigationView.showInboxMessages(messages);
   }
 
-  public void reportMessage() {
-    PrivateMessage message = (PrivateMessage) mListingSelected;
+  public void reportMessage(@NonNull PrivateMessage message) {
     mMainView.showToast(mContext.getString(R.string.implementation_pending));
   }
 
-  public void blockUser() {
-    PrivateMessage message = (PrivateMessage) mListingSelected;
+  public void blockUser(@NonNull PrivateMessage message) {
     mMainView.showToast(mContext.getString(R.string.implementation_pending));
   }
 }

@@ -193,7 +193,7 @@ public class UserProfileFragment extends BaseListingsFragment
   @Override
   public ListingsAdapter getListingsAdapter() {
     return new ListingsAdapter(
-        mListingsPresenter, mLinkPresenter, mCommentPresenter, mMessagePresenter);
+        mListingsPresenter, this, mLinkPresenter, this, mCommentPresenter, null, mMessagePresenter);
   }
 
   @Override

@@ -93,7 +93,7 @@ public class PrivateMessageFragment extends BaseFragment
   }
 
   @Override
-  public void showPrivateMessageContextMenu(ContextMenu menu, View v, PrivateMessage privateMessage) {
+  public void showMessageContextMenu(ContextMenu menu, View v, PrivateMessage privateMessage) {
 
   }
 
