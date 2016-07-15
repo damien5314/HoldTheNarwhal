@@ -177,15 +177,12 @@ public abstract class BaseActivity extends AppCompatActivity implements
 
       // Clear the task stack if we're no longer authenticated
       // This prevents the user from going back to content they aren't allowed to see
-      if (!isAuthenticated) {
-        newIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-      }
+      newIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
 
       // Add extra to indicate that this activity was restarted due to a change in authentication state
       newIntent.putExtra(EXTRA_AUTHENTICATION_STATE_CHANGE, isAuthenticated);
 
       startActivity(newIntent);
-      finish();
     };
   }
 
