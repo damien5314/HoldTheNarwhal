@@ -96,7 +96,8 @@
               android:layout_width="wrap_content"
               android:layout_height="@dimen/unread_message_indicator_size"
               android:layout_gravity="top"
-              android:src="@drawable/ic_unread_message"/>
+              android:src="@drawable/ic_email_black_24dp"
+              android:tint="@color/reddit_orangered"/>
 
         </LinearLayout>
 

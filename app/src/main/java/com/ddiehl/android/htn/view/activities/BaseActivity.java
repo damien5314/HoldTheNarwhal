@@ -3,6 +3,7 @@ package com.ddiehl.android.htn.view.activities;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -108,7 +109,9 @@ public abstract class BaseActivity extends AppCompatActivity implements
 
     ActionBar actionBar = getSupportActionBar();
     if (actionBar != null) {
-      actionBar.setHomeAsUpIndicator(R.drawable.ic_navigation_menu);
+      Drawable homeIndicator = HoldTheNarwhal.getTintedDrawable(
+          this, R.drawable.ic_menu_black_24dp, R.color.icons);
+      actionBar.setHomeAsUpIndicator(homeIndicator);
       actionBar.setDisplayHomeAsUpEnabled(true);
     }
 

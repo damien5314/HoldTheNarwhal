@@ -1,7 +1,7 @@
 <LinearLayout
+    android:id="@+id/link_view"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/link_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -9,15 +9,15 @@
   <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:paddingBottom="@dimen/baseline_spacing"
-      android:paddingTop="@dimen/baseline_spacing"
       android:background="@color/white"
-      android:orientation="vertical">
+      android:orientation="vertical"
+      android:paddingBottom="@dimen/baseline_spacing"
+      android:paddingTop="@dimen/baseline_spacing">
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="vertical"
         android:paddingLeft="@dimen/baseline_spacing"
         android:paddingRight="@dimen/baseline_spacing">
 
@@ -25,19 +25,19 @@
           android:id="@+id/link_title"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:textAlignment="viewStart"
           android:layout_gravity="start"
           android:fontFamily="sans-serif-light"
+          android:textAlignment="viewStart"
           android:textAppearance="?android:textAppearanceMedium"
           android:textColor="@color/primary_text"
-          tools:text="The quick brown fox jumped over the white fence"
-          tools:ignore="UnusedAttribute"/>
+          tools:ignore="UnusedAttribute"
+          tools:text="The quick brown fox jumped over the white fence"/>
 
       <LinearLayout
           android:id="@+id/link_metadata"
-          android:orientation="vertical"
           android:layout_width="match_parent"
-          android:layout_height="wrap_content">
+          android:layout_height="wrap_content"
+          android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -53,18 +53,18 @@
               android:layout_marginRight="@dimen/link_metadata_margin"
               android:background="@drawable/nsfw_tag_bg"
               android:text="@string/nsfw"
-              android:textSize="@dimen/link_metadata_text_size"
-              android:textColor="@color/nsfw_tag_color"/>
+              android:textColor="@color/nsfw_tag_color"
+              android:textSize="@dimen/link_metadata_text_size"/>
 
           <TextView
               android:id="@+id/link_gilded_text_view"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
-              android:gravity="center"
-              android:drawableStart="@drawable/ic_reddit_gold_24dp"
               android:drawableLeft="@drawable/ic_reddit_gold_24dp"
-              android:textSize="@dimen/link_metadata_text_size"
+              android:drawableStart="@drawable/ic_reddit_gold_24dp"
+              android:gravity="center"
               android:textColor="@color/secondary_text"
+              android:textSize="@dimen/link_metadata_text_size"
               tools:targetApi="16"
               tools:text="× 2"/>
 
@@ -74,8 +74,8 @@
               android:layout_height="wrap_content"
               android:layout_weight="1"
               android:gravity="end"
-              android:textSize="@dimen/link_metadata_text_size"
               android:textColor="@color/secondary_text"
+              android:textSize="@dimen/link_metadata_text_size"
               tools:text="imgur.com"/>
 
         </LinearLayout>
@@ -86,18 +86,18 @@
 
           <TextView
               android:id="@+id/link_score"
+              style="@style/LinkMetadataTextViewLight"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
-              style="@style/LinkMetadataTextViewLight"
               tools:text="573 points"/>
 
           <com.ddiehl.timesincetextview.TimeSinceTextView
               android:id="@+id/link_timestamp"
+              style="@style/LinkMetadataTextViewLight"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
-              android:layout_alignParentRight="true"
               android:layout_alignParentEnd="true"
-              style="@style/LinkMetadataTextViewLight"
+              android:layout_alignParentRight="true"
               tools:text="2 days ago"/>
 
         </RelativeLayout>
@@ -108,19 +108,19 @@
 
           <com.ddiehl.android.htn.view.widgets.ColorSwapTextView
               android:id="@+id/link_author"
+              style="@style/LinkMetadataTextViewLight"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
-              tools:text="/u/andrewsmith1984"
-              style="@style/LinkMetadataTextViewLight"/>
+              tools:text="/u/andrewsmith1984"/>
 
           <TextView
               android:id="@+id/link_subreddit"
+              style="@style/LinkMetadataTextViewLight"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:layout_alignParentEnd="true"
               android:layout_alignParentRight="true"
-              tools:text="/r/AskReddit"
-              style="@style/LinkMetadataTextViewLight"/>
+              tools:text="/r/AskReddit"/>
 
         </RelativeLayout>
 
@@ -138,8 +138,7 @@
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_gravity="center"
-          android:layout_marginTop="8dp"
-          android:src="@drawable/ic_thumbnail_placeholder"/>
+          android:layout_marginTop="8dp"/>
 
     </FrameLayout>
 
@@ -148,16 +147,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/baseline_spacing"
+        android:bufferType="spannable"
+        android:gravity="start"
         android:paddingLeft="@dimen/baseline_spacing"
         android:paddingRight="@dimen/baseline_spacing"
-        android:gravity="start"
         android:textAlignment="viewStart"
         android:textAppearance="?android:textAppearanceSmall"
         android:textColor="@color/primary_text"
         android:textColorLink="@color/link_color"
-        android:bufferType="spannable"
-        tools:text="Lorem ipsum dolor sit amet"
-        tools:ignore="UnusedAttribute"/>
+        tools:ignore="UnusedAttribute"
+        tools:text="Lorem ipsum dolor sit amet"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -167,47 +166,51 @@
 
       <TextView
           android:id="@+id/link_comment_count"
+          style="@style/LinkMetadataTextViewLight"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
+          android:layout_gravity="start|center_vertical"
           android:layout_weight="1"
-          android:layout_gravity="start"
           android:paddingLeft="@dimen/baseline_spacing"
           android:paddingRight="@dimen/baseline_spacing"
-          tools:text="1993 comments"
-          style="@style/LinkMetadataTextViewLight"/>
+          tools:text="1993 comments"/>
 
       <ImageView
           android:id="@+id/link_saved_view"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_gravity="center_vertical"
-          android:src="@drawable/ic_saved_dark"/>
+          android:src="@drawable/ic_save_black_24dp"
+          android:tint="@color/secondary_text"/>
 
       <ImageView
           android:id="@+id/link_stickied_view"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:src="@drawable/ic_stickied_dark"/>
+          android:src="@drawable/ic_class_black_24dp"
+          android:tint="@color/secondary_text"/>
 
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/link_parent_view"
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
       <TextView
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_marginTop="@dimen/baseline_spacing"
+          android:drawableLeft="@drawable/ic_info_outline_black_24dp"
+          android:drawablePadding="@dimen/baseline_spacing"
+          android:drawableStart="@drawable/ic_info_outline_black_24dp"
+          android:drawableTint="@color/secondary_text"
+          android:gravity="center_vertical"
           android:paddingLeft="@dimen/baseline_spacing"
           android:paddingRight="@dimen/baseline_spacing"
-          android:textAppearance="@android:style/TextAppearance.Small"
-          android:drawableStart="@drawable/ic_info"
-          android:drawableLeft="@drawable/ic_info"
-          android:drawablePadding="@dimen/baseline_spacing"
-          android:text="@string/link_parent_text"/>
+          android:text="@string/link_parent_text"
+          android:textAppearance="@android:style/TextAppearance.Small"/>
 
     </LinearLayout>
 

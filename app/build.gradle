@@ -9,6 +9,7 @@ android {
   compileSdkVersion 24
   buildToolsVersion "23.0.3"
   useLibrary 'org.apache.http.legacy'
+
   defaultConfig {
     applicationId "com.ddiehl.android.htn"
     minSdkVersion 15
@@ -20,6 +21,7 @@ android {
     buildConfigField "String", "REDDIT_APP_ID", "\"" + REDDIT_APP_ID + "\""
     buildConfigField "String", "REDDIT_REDIRECT_URI", "\"" + REDDIT_REDIRECT_URI + "\""
   }
+
   signingConfigs {
     release {
       storeFile file(KEYSTORE_PATH)
@@ -28,6 +30,7 @@ android {
       keyPassword KEY_PWD
     }
   }
+
   buildTypes {
     debug {
       debuggable true
@@ -44,6 +47,7 @@ android {
       buildConfigField "String", "FLURRY_API_KEY", "\"" + FLURRY_API_KEY_PROD + "\""
     }
   }
+
   compileOptions {
     sourceCompatibility JavaVersion.VERSION_1_8
     targetCompatibility JavaVersion.VERSION_1_8

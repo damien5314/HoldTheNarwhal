@@ -10,6 +10,8 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.view.Menu;
 import android.view.View;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
@@ -18,6 +20,7 @@ import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.analytics.Analytics;
 import com.ddiehl.android.htn.utils.AndroidUtils;
 import com.ddiehl.android.htn.view.MainView;
+import com.ddiehl.android.htn.view.MenuTintUtils;
 import com.ddiehl.android.htn.view.RedditNavigationView;
 import com.ddiehl.android.htn.view.activities.SubredditActivity;
 
@@ -64,6 +67,12 @@ public abstract class BaseFragment extends Fragment implements MainView {
   public void onDetach() {
     mRedditNavigationView = null;
     super.onDetach();
+  }
+
+  @Override
+  public void onPrepareOptionsMenu(Menu menu) {
+    super.onPrepareOptionsMenu(menu);
+    MenuTintUtils.tintAllIcons(menu, ContextCompat.getColor(getContext(), R.color.icons));
   }
 
   @Override

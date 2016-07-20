@@ -8,7 +8,6 @@ import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.ThumbnailMode;
 import com.ddiehl.android.htn.presenter.LinkPresenter;
 import com.ddiehl.android.htn.view.LinkView;
-import com.squareup.picasso.Picasso;
 
 import butterknife.OnClick;
 import rxreddit.model.Link;
@@ -56,13 +55,17 @@ public class ListingsLinkViewHolder extends BaseLinkViewHolder {
       mLinkThumbnail.setVisibility(View.VISIBLE);
       url = link.getThumbnail();
     }
+
     if (url == null) url = "";
+
     switch (url) {
       case "nsfw":
-        mLinkThumbnail.setVisibility(View.VISIBLE);
-        Picasso.with(mContext)
-            .load(R.drawable.ic_nsfw2)
-            .into(mLinkThumbnail);
+        mLinkThumbnail.setVisibility(View.GONE);
+        // This doesn't look correct, probably just get rid of it
+//        mLinkThumbnail.setVisibility(View.VISIBLE);
+//        Picasso.with(mContext)
+//            .load(R.drawable.ic_nsfw2)
+//            .into(mLinkThumbnail);
         break;
       case "": case "default": case "self":
         mLinkThumbnail.setVisibility(View.GONE);
