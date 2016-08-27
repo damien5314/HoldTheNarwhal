@@ -146,7 +146,7 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
   }
 
   @Override
-  View getChromeView() {
+  protected View getChromeView() {
     return mCoordinatorLayout;
   }
 

@@ -314,7 +314,7 @@ public class LinkCommentsFragment extends BaseListingsFragment
   }
 
   @Override
-  View getChromeView() {
+  protected View getChromeView() {
     return mCoordinatorLayout;
   }
 

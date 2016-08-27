@@ -70,6 +70,9 @@
     <activity
         android:name="rxreddit.android.SignInActivity" />
 
+    <activity
+        android:name=".subscriptions.SubscriptionManagerActivity" />
+
   </application>
 
 </manifest>

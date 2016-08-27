@@ -166,7 +166,7 @@ public class InboxFragment extends BaseListingsFragment
   }
 
   @Override
-  View getChromeView() {
+  protected View getChromeView() {
     return mCoordinatorLayout;
   }
 }

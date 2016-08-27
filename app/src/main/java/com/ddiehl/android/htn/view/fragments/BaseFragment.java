@@ -193,5 +193,5 @@ public abstract class BaseFragment extends Fragment implements MainView {
     getActivity().setTitle(title);
   }
 
-  abstract View getChromeView();
+  protected abstract View getChromeView();
 }

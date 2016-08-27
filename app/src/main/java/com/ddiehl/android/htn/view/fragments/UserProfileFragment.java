@@ -453,7 +453,7 @@ public class UserProfileFragment extends BaseListingsFragment
   }
 
   @Override
-  View getChromeView() {
+  protected View getChromeView() {
     return mCoordinatorLayout;
   }
 }

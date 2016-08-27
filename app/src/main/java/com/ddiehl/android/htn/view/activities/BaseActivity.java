@@ -31,6 +31,7 @@ import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.SettingsManager;
 import com.ddiehl.android.htn.analytics.Analytics;
+import com.ddiehl.android.htn.subscriptions.SubscriptionManagerActivity;
 import com.ddiehl.android.htn.utils.AndroidUtils;
 import com.ddiehl.android.htn.view.RedditNavigationView;
 import com.ddiehl.android.htn.view.dialogs.ConfirmExitDialog;
@@ -345,7 +346,8 @@ public abstract class BaseActivity extends AppCompatActivity implements
   }
 
   public void showUserSubreddits() {
-    showToast(getString(R.string.implementation_pending));
+    Intent intent = SubscriptionManagerActivity.getIntent(this);
+    startActivity(intent);
   }
 
 //  @OnClick(R.id.sign_out_button)

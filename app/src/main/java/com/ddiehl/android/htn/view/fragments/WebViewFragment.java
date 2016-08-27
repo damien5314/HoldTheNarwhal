@@ -175,7 +175,7 @@ public class WebViewFragment extends BaseFragment {
   }
 
   @Override
-  View getChromeView() {
+  protected View getChromeView() {
     return mWebView;
   }
 }
