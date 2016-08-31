@@ -71,7 +71,8 @@
         android:name="rxreddit.android.SignInActivity" />
 
     <activity
-        android:name=".subscriptions.SubscriptionManagerActivity" />
+        android:name=".subscriptions.SubscriptionManagerActivity"
+        android:exported="true"/>
 
   </application>
 

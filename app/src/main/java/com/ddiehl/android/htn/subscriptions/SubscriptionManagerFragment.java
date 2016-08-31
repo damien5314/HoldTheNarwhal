@@ -3,6 +3,7 @@ package com.ddiehl.android.htn.subscriptions;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +12,6 @@ import android.view.ViewGroup;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.view.fragments.BaseFragment;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -31,8 +31,8 @@ public class SubscriptionManagerFragment extends BaseFragment {
   @BindView(R.id.coordinator_layout)  CoordinatorLayout mCoordinatorLayout;
   @BindView(R.id.recycler_view)       RecyclerView mRecyclerView;
 
+  SubscriptionManagerAdapter mAdapter;
   SubscriptionManagerPresenter mPresenter;
-  final List<Subreddit> mSubscriptionList = new ArrayList<>();
 
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -54,13 +54,15 @@ public class SubscriptionManagerFragment extends BaseFragment {
   }
 
   private void initListView(RecyclerView recyclerView) {
-
+    mAdapter = new SubscriptionManagerAdapter();
+    recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+    recyclerView.setAdapter(mAdapter);
   }
 
   @Override
   public void onResume() {
     super.onResume();
-    if (mSubscriptionList.isEmpty()) {
+    if (!mAdapter.hasData()) {
       loadSubscriptions();
     }
   }
@@ -79,7 +81,7 @@ public class SubscriptionManagerFragment extends BaseFragment {
 
   private Action1<List<Subreddit>> onSubscriptionsLoaded() {
     return subscriptions -> {
-      mSubscriptionList.addAll(subscriptions);
+      mAdapter.addAll(subscriptions);
     };
   }
 }
