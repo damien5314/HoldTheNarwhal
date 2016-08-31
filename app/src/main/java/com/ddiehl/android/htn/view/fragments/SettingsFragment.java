@@ -48,9 +48,12 @@ public class SettingsFragment extends PreferenceFragment
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     HoldTheNarwhal.getApplicationComponent().inject(this);
+
     setRetainInstance(true);
     setHasOptionsMenu(true);
+
     mSettingsPresenter = new SettingsPresenterImpl(this);
+
     getPreferenceManager().setSharedPreferencesName(SettingsManagerImpl.PREFS_USER);
     addDefaultPreferences();
   }

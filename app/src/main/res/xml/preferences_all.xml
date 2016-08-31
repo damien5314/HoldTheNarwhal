@@ -16,6 +16,13 @@
       android:title="@string/pref_use_custom_tabs"
       android:defaultValue="true"/>
 
+    <ListPreference
+        android:key="pref_font"
+        android:title="@string/pref_font"
+        android:entries="@array/pref_font_entries"
+        android:entryValues="@array/pref_font_values"
+        android:defaultValue="fonts/Arimo/Arimo-Regular.ttf"/>
+
     <Preference
       android:key="pref_about_app"
       android:title="@string/pref_about_app"/>

@@ -32,6 +32,7 @@
   <string name="action_share">share</string>
   <string name="action_save">save</string>
   <string name="action_unsave">unsave</string>
+  <string name="action_view_subreddit">view /r/%s</string>
   <string name="action_view_user_profile">view /u/%s</string>
   <string name="action_hide">hide</string>
   <string name="action_unhide">unhide</string>

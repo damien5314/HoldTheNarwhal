@@ -2,6 +2,7 @@ package com.ddiehl.android.htn.view.activities;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -58,6 +59,8 @@ import rxreddit.model.PrivateMessage;
 import rxreddit.model.UserAccessToken;
 import rxreddit.model.UserIdentity;
 import timber.log.Timber;
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
@@ -91,6 +94,11 @@ public abstract class BaseActivity extends AppCompatActivity implements
   @Inject protected SettingsManager mSettingsManager;
   @Inject protected Analytics mAnalytics;
   @Inject protected Gson mGson;
+
+  @Override
+  protected void attachBaseContext(Context newBase) {
+    super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+  }
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -129,6 +137,18 @@ public abstract class BaseActivity extends AppCompatActivity implements
 
     // Check to see if the activity was restarted due to authentication change
     checkAndShowAuthenticationStateChange();
+
+    // Custom font
+    CalligraphyConfig.initDefault(
+        new CalligraphyConfig.Builder()
+            .setDefaultFontPath(getFont())
+            .setFontAttrId(R.attr.fontPath)
+            .build()
+    );
+  }
+
+  private String getFont() {
+    return mSettingsManager.getFont();
   }
 
   private void checkAndShowAuthenticationStateChange() {

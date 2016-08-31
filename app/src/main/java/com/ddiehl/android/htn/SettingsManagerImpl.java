@@ -24,6 +24,7 @@ public class SettingsManagerImpl implements SettingsManager {
   public static final String PREF_ALLOW_ANALYTICS = "pref_allow_analytics";
   public static final String PREF_ALLOW_ANALYTICS_ASKED = "pref_allow_analytics_asked";
   public static final String PREF_USE_CHROME_TABS = "pref_use_chrome_tabs";
+  public static final String PREF_FONT = "pref_font";
 
   // reddit settings
   public static final String PREF_HAS_FROM_REMOTE = "pref_flag_for_user";
@@ -309,6 +310,11 @@ public class SettingsManagerImpl implements SettingsManager {
   @Override
   public boolean customTabsEnabled() {
     return mSharedPreferences.getBoolean(PREF_USE_CHROME_TABS, true);
+  }
+
+  @Override
+  public String getFont() {
+    return mSharedPreferences.getString(PREF_FONT, "");
   }
 
   /////////////////////
