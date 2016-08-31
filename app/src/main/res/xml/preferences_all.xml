@@ -21,7 +21,7 @@
         android:title="@string/pref_font"
         android:entries="@array/pref_font_entries"
         android:entryValues="@array/pref_font_values"
-        android:defaultValue="fonts/Arimo/Arimo-Regular.ttf"/>
+        android:defaultValue="@string/font_system_value"/>
 
     <Preference
       android:key="pref_about_app"
