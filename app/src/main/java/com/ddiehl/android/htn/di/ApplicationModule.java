@@ -1,10 +1,12 @@
 package com.ddiehl.android.htn.di;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 
 import com.ddiehl.android.htn.BuildConfig;
 import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.IdentityManagerImpl;
+import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.SettingsManager;
 import com.ddiehl.android.htn.SettingsManagerImpl;
 import com.ddiehl.android.htn.analytics.Analytics;
@@ -17,6 +19,7 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import in.uncod.android.bypass.Bypass;
 import rxreddit.RxRedditUtil;
 import rxreddit.android.AndroidAccessTokenManager;
 import rxreddit.android.AndroidUtil;
@@ -71,5 +74,13 @@ public class ApplicationModule {
   @Provides
   Gson providesGson(RedditService redditService) {
     return redditService.getGson();
+  }
+
+  @Singleton @Provides
+  Bypass providesBypass(Context context) {
+    Bypass.Options options = new Bypass.Options();
+    options.setBlockQuoteColor(
+        ContextCompat.getColor(context, R.color.markdown_quote_block));
+    return new Bypass(context, options);
   }
 }

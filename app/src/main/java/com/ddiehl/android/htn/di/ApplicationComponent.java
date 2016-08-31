@@ -20,6 +20,7 @@ import com.ddiehl.android.htn.view.viewholders.ListingsCommentViewHolder;
 import com.ddiehl.android.htn.view.viewholders.ListingsMessageViewHolder;
 import com.ddiehl.android.htn.view.viewholders.ThreadCommentViewHolder;
 import com.ddiehl.android.htn.view.viewholders.ThreadStubViewHolder;
+import com.ddiehl.android.htn.view.widgets.MarkdownTextView;
 
 import javax.inject.Singleton;
 
@@ -60,4 +61,7 @@ public interface ApplicationComponent {
   void inject(BaseListingsPresenter presenter);
   void inject(UserProfilePresenter presenter);
   void inject(SettingsPresenterImpl presenter);
+
+  // Views
+  void inject(MarkdownTextView view);
 }
