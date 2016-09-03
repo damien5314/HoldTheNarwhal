@@ -2,8 +2,10 @@
 <resources>
 
   <plurals name="num_subscribers">
-    <item quantity="one">subscriber</item>
-    <item quantity="other">subscribers</item>
+    <item quantity="one">%s subscriber</item>
+    <item quantity="other">%s subscribers</item>
   </plurals>
+
+  <string name="subscriptions_load_failed">failed to load subscriptions, try again later</string>
 
 </resources>

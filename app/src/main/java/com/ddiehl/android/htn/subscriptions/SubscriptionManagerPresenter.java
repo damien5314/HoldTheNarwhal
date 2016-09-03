@@ -1,16 +1,26 @@
 package com.ddiehl.android.htn.subscriptions;
 
-import java.util.Collections;
-import java.util.List;
+import com.ddiehl.android.htn.HoldTheNarwhal;
+
+import javax.inject.Inject;
 
 import rx.Observable;
-import rxreddit.model.Subreddit;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+import rxreddit.api.RedditService;
+import rxreddit.model.ListingResponse;
 
 public class SubscriptionManagerPresenter {
 
-  public Observable<List<Subreddit>> getSubscriptions() {
-    return Observable.defer(() -> {
-      return Observable.just(Collections.singletonList(new Subreddit()));
-    });
+  @Inject RedditService mRedditService;
+
+  public SubscriptionManagerPresenter() {
+    HoldTheNarwhal.getApplicationComponent().inject(this);
+  }
+
+  public Observable<ListingResponse> getSubscriptions() {
+    return mRedditService.getSubscriberSubreddits()
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread());
   }
 }

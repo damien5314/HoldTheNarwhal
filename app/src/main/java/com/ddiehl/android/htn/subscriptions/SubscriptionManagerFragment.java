@@ -9,14 +9,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.view.fragments.BaseFragment;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import rx.functions.Action1;
+import rxreddit.model.Listing;
+import rxreddit.model.ListingResponse;
 import rxreddit.model.Subreddit;
 import timber.log.Timber;
 
@@ -33,10 +37,12 @@ public class SubscriptionManagerFragment extends BaseFragment {
 
   SubscriptionManagerAdapter mAdapter;
   SubscriptionManagerPresenter mPresenter;
+  String mNextPageId;
 
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    HoldTheNarwhal.getApplicationComponent().inject(this);
     mPresenter = new SubscriptionManagerPresenter();
   }
 
@@ -69,19 +75,30 @@ public class SubscriptionManagerFragment extends BaseFragment {
 
   void loadSubscriptions() {
     mPresenter.getSubscriptions()
+        .doOnSubscribe(() -> showSpinner(null))
+        .doOnUnsubscribe(this::dismissSpinner)
         .subscribe(onSubscriptionsLoaded(), onSubscriptionsLoadError());
   }
 
   private Action1<Throwable> onSubscriptionsLoadError() {
     return throwable -> {
       Timber.e(throwable, "Error loading subreddit subscriptions");
-      // TODO show error toast
+      showError(throwable, getString(R.string.subscriptions_load_failed));
     };
   }
 
-  private Action1<List<Subreddit>> onSubscriptionsLoaded() {
-    return subscriptions -> {
-      mAdapter.addAll(subscriptions);
+  private Action1<ListingResponse> onSubscriptionsLoaded() {
+    return response -> {
+      mNextPageId = response.getData().getAfter();
+
+      // Translate list of Listings into list of Subreddits
+      List<Listing> listings = response.getData().getChildren();
+      List<Subreddit> subreddits = new ArrayList<>(listings.size());
+      for (Listing l : listings) {
+        subreddits.add((Subreddit) l);
+      }
+
+      mAdapter.addAll(subreddits);
     };
   }
 }

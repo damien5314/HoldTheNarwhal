@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.ddiehl.android.htn.R;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -77,9 +78,9 @@ public class SubscriptionManagerAdapter extends RecyclerView.Adapter<Subscriptio
 
       // Set subscriber count
       Integer subscribers = subreddit.getSubscribers();
-      String subscribersFormatter = itemView.getContext().getResources()
-          .getQuantityString(R.plurals.num_subscribers, subscribers, subscribers);
-      mNumSubscribers.setText(subscribers);
+      String subscribersText = itemView.getContext().getResources()
+          .getQuantityString(R.plurals.num_subscribers, subscribers, NumberFormat.getInstance().format(subscribers));
+      mNumSubscribers.setText(subscribersText);
     }
   }
 }
