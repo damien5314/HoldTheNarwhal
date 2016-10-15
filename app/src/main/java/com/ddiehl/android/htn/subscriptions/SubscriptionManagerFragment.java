@@ -3,6 +3,7 @@ package com.ddiehl.android.htn.subscriptions;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -43,14 +44,20 @@ public class SubscriptionManagerFragment extends BaseFragment {
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     HoldTheNarwhal.getApplicationComponent().inject(this);
+
     mPresenter = new SubscriptionManagerPresenter();
+
+    getActivity().getWindow().getDecorView()
+        .setBackgroundColor(ContextCompat.getColor(getContext(), R.color.white));
   }
 
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.subscription_manager_fragment, container, false);
     ButterKnife.bind(this, view);
+
     initListView(mRecyclerView);
+
     return view;
   }
 
@@ -60,20 +67,38 @@ public class SubscriptionManagerFragment extends BaseFragment {
   }
 
   private void initListView(RecyclerView recyclerView) {
+    final LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+    recyclerView.setLayoutManager(layoutManager);
+
     mAdapter = new SubscriptionManagerAdapter();
-    recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     recyclerView.setAdapter(mAdapter);
+
+    recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+      @Override
+      public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+        final int first = layoutManager.findFirstVisibleItemPosition();
+        final int last = layoutManager.findLastVisibleItemPosition();
+        if (first != 0 && last == mAdapter.getItemCount()) {
+          requestNextPage();
+        }
+      }
+    });
   }
 
   @Override
   public void onResume() {
     super.onResume();
+
     if (!mAdapter.hasData()) {
-      loadSubscriptions();
+      requestNextPage();
     }
   }
 
-  void loadSubscriptions() {
+  private void requestNextPage() {
+    loadSubscriptions(null);
+  }
+
+  void loadSubscriptions(@Nullable String nextPageId) {
     mPresenter.getSubscriptions()
         .doOnSubscribe(() -> showSpinner(null))
         .doOnUnsubscribe(this::dismissSpinner)
