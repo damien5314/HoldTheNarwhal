@@ -6,17 +6,17 @@ import com.ddiehl.android.htn.R;
 
 public abstract class FragmentActivity extends BaseActivity {
 
-  abstract Fragment getFragment();
+    abstract Fragment getFragment();
 
-  abstract String getFragmentTag();
+    abstract String getFragmentTag();
 
-  @Override
-  public void onStart() {
-    super.onStart();
-    if (getFragmentManager().findFragmentByTag(getFragmentTag()) == null) {
-      getFragmentManager().beginTransaction()
-          .add(R.id.fragment_container, getFragment(), getFragmentTag())
-          .commit();
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (getFragmentManager().findFragmentByTag(getFragmentTag()) == null) {
+            getFragmentManager().beginTransaction()
+                    .add(R.id.fragment_container, getFragment(), getFragmentTag())
+                    .commit();
+        }
     }
-  }
 }

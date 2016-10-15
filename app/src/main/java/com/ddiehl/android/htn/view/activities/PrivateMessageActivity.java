@@ -18,38 +18,38 @@ import rxreddit.model.PrivateMessage;
 
 public class PrivateMessageActivity extends FragmentActivityCompat {
 
-  private static final String EXTRA_MESSAGES = "EXTRA_MESSAGES";
+    private static final String EXTRA_MESSAGES = "EXTRA_MESSAGES";
 
-  @Inject protected Gson mGson;
+    @Inject protected Gson mGson;
 
-  public static Intent getIntent(Context context, Gson gson, List<PrivateMessage> messages) {
-    Intent intent = new Intent(context, PrivateMessageActivity.class);
-    String json = gson.toJson(messages);
-    intent.putExtra(EXTRA_MESSAGES, json); // lol
-    return intent;
-  }
-
-  @Override
-  protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    HoldTheNarwhal.getApplicationComponent().inject(this);
-    if (getIntent().getExtras() == null) {
-      throw new RuntimeException("no extras passed to PrivateMessageActivity");
+    public static Intent getIntent(Context context, Gson gson, List<PrivateMessage> messages) {
+        Intent intent = new Intent(context, PrivateMessageActivity.class);
+        String json = gson.toJson(messages);
+        intent.putExtra(EXTRA_MESSAGES, json); // lol
+        return intent;
     }
-  }
 
-  private String getJson() {
-    return getIntent().getStringExtra(EXTRA_MESSAGES);
-  }
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        HoldTheNarwhal.getApplicationComponent().inject(this);
+        if (getIntent().getExtras() == null) {
+            throw new RuntimeException("no extras passed to PrivateMessageActivity");
+        }
+    }
 
-  @Override
-  Fragment getFragment() {
-    return new PrivateMessageFragmentBuilder(getJson())
-        .build();
-  }
+    private String getJson() {
+        return getIntent().getStringExtra(EXTRA_MESSAGES);
+    }
 
-  @Override
-  String getFragmentTag() {
-    return PrivateMessageFragment.TAG;
-  }
+    @Override
+    Fragment getFragment() {
+        return new PrivateMessageFragmentBuilder(getJson())
+                .build();
+    }
+
+    @Override
+    String getFragmentTag() {
+        return PrivateMessageFragment.TAG;
+    }
 }

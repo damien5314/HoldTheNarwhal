@@ -16,138 +16,138 @@ import rxreddit.model.Subreddit;
 
 public class SubredditPresenter extends BaseListingsPresenter implements LinkPresenter {
 
-  private SubredditView mSubredditView;
+    private SubredditView mSubredditView;
 
-  public SubredditPresenter(MainView main, RedditNavigationView navigationView, SubredditView view) {
-    super(main, navigationView, view, view, null, null);
-    mSubredditView = view;
-  }
-
-  @Override
-  public void onResume() {
-    super.onResume();
-    loadHeaderImage();
-  }
-
-  @Override
-  public void onPause() {
-    mMainView.loadImageIntoDrawerHeader(null);
-    super.onPause();
-  }
-
-  @Override
-  void requestPreviousData() {
-    String subreddit = mSubredditView.getSubreddit();
-    if (subreddit != null
-        && !subreddit.equals("all")
-        && !subreddit.equals("random")
-        && mSubredditInfo == null) {
-      getSubredditInfo();
-    } else {
-      getSubredditLinks(false);
+    public SubredditPresenter(MainView main, RedditNavigationView navigationView, SubredditView view) {
+        super(main, navigationView, view, view, null, null);
+        mSubredditView = view;
     }
-  }
 
-  @Override
-  public void requestNextData() {
-    String subreddit = mSubredditView.getSubreddit();
-    if (subreddit != null
-        && !subreddit.equals("all")
-        && !subreddit.equals("random")
-        && mSubredditInfo == null) {
-      getSubredditInfo();
-    } else {
-      getSubredditLinks(true);
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadHeaderImage();
     }
-  }
 
-  private void getSubredditInfo() {
-    mRedditService.getSubredditInfo(mSubredditView.getSubreddit())
-        .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-        .doOnSubscribe(() -> mMainView.showSpinner(null))
-        .doOnTerminate(() -> {
-          mMainView.dismissSpinner();
-          mNextRequested = false;
-        })
-        .subscribe(onSubredditInfoLoaded(),
-            e -> {
-              String message = mContext.getString(R.string.error_get_subreddit_info);
-              mMainView.showError(e, message);
-            });
-  }
+    @Override
+    public void onPause() {
+        mMainView.loadImageIntoDrawerHeader(null);
+        super.onPause();
+    }
 
-  private void getSubredditLinks(boolean append) {
-    mAnalytics.logLoadSubreddit(
-        mSubredditView.getSubreddit(), mSubredditView.getSort(), mSubredditView.getTimespan());
+    @Override
+    void requestPreviousData() {
+        String subreddit = mSubredditView.getSubreddit();
+        if (subreddit != null
+                && !subreddit.equals("all")
+                && !subreddit.equals("random")
+                && mSubredditInfo == null) {
+            getSubredditInfo();
+        } else {
+            getSubredditLinks(false);
+        }
+    }
 
-    final String before = append ? null : mPrevPageListingId;
-    final String after = append ? mNextPageListingId : null;
-    final String subreddit = mSubredditView.getSubreddit();
+    @Override
+    public void requestNextData() {
+        String subreddit = mSubredditView.getSubreddit();
+        if (subreddit != null
+                && !subreddit.equals("all")
+                && !subreddit.equals("random")
+                && mSubredditInfo == null) {
+            getSubredditInfo();
+        } else {
+            getSubredditLinks(true);
+        }
+    }
 
-    mRedditService.loadLinks(subreddit, mSubredditView.getSort(), mSubredditView.getTimespan(), before, after)
-        .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-        .doOnSubscribe(() -> {
-          mMainView.showSpinner(null);
-          if (append) mNextRequested = true;
-          else mBeforeRequested = true;
-        })
-        .doOnTerminate(() -> {
-          mMainView.dismissSpinner();
-          if (append) mNextRequested = false;
-          else mBeforeRequested = false;
-        })
-        .subscribe(
-            response -> {
-              onListingsLoaded(append).call(response);
+    private void getSubredditInfo() {
+        mRedditService.getSubredditInfo(mSubredditView.getSubreddit())
+                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe(() -> mMainView.showSpinner(null))
+                .doOnTerminate(() -> {
+                    mMainView.dismissSpinner();
+                    mNextRequested = false;
+                })
+                .subscribe(onSubredditInfoLoaded(),
+                        e -> {
+                            String message = mContext.getString(R.string.error_get_subreddit_info);
+                            mMainView.showError(e, message);
+                        });
+    }
 
-              if ("random".equals(subreddit)) {
-                Link link = getLinkFromListingResponse(response);
-                String randomSubreddit = link == null ? null : link.getSubreddit();
-                mSubredditView.onRandomSubredditLoaded(randomSubreddit);
-              }
-            },
-            error -> {
-              String message = mContext.getString(R.string.error_get_links);
-              mMainView.showError(error, message);
-            });
-  }
+    private void getSubredditLinks(boolean append) {
+        mAnalytics.logLoadSubreddit(
+                mSubredditView.getSubreddit(), mSubredditView.getSort(), mSubredditView.getTimespan());
 
-  private Link getLinkFromListingResponse(@NonNull ListingResponse response) {
-    if (response.getData() == null) return null;
+        final String before = append ? null : mPrevPageListingId;
+        final String after = append ? mNextPageListingId : null;
+        final String subreddit = mSubredditView.getSubreddit();
 
-    if (response.getData().getChildren() == null) return null;
+        mRedditService.loadLinks(subreddit, mSubredditView.getSort(), mSubredditView.getTimespan(), before, after)
+                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe(() -> {
+                    mMainView.showSpinner(null);
+                    if (append) mNextRequested = true;
+                    else mBeforeRequested = true;
+                })
+                .doOnTerminate(() -> {
+                    mMainView.dismissSpinner();
+                    if (append) mNextRequested = false;
+                    else mBeforeRequested = false;
+                })
+                .subscribe(
+                        response -> {
+                            onListingsLoaded(append).call(response);
 
-    if (response.getData().getChildren().size() == 0) return null;
+                            if ("random".equals(subreddit)) {
+                                Link link = getLinkFromListingResponse(response);
+                                String randomSubreddit = link == null ? null : link.getSubreddit();
+                                mSubredditView.onRandomSubredditLoaded(randomSubreddit);
+                            }
+                        },
+                        error -> {
+                            String message = mContext.getString(R.string.error_get_links);
+                            mMainView.showError(error, message);
+                        });
+    }
 
-    if (response.getData().getChildren().get(0) == null) return null;
+    private Link getLinkFromListingResponse(@NonNull ListingResponse response) {
+        if (response.getData() == null) return null;
 
-    if (!(response.getData().getChildren().get(0) instanceof Link)) return null;
+        if (response.getData().getChildren() == null) return null;
 
-    return (Link) response.getData().getChildren().get(0);
-  }
+        if (response.getData().getChildren().size() == 0) return null;
 
-  private Action1<Subreddit> onSubredditInfoLoaded() {
-    return info -> {
-      mSubredditInfo = info;
+        if (response.getData().getChildren().get(0) == null) return null;
 
-      boolean over18 = mSettingsManager.getOver18();
-      if (shouldShowNsfwDialog(mSubredditInfo, over18)) {
-        mSubredditView.showNsfwWarningDialog();
-      } else {
-        if (mSubredditInfo != null) requestNextData();
-        else mMainView.showToast(mContext.getString(R.string.error_private_subreddit));
-      }
+        if (!(response.getData().getChildren().get(0) instanceof Link)) return null;
 
-      loadHeaderImage();
-    };
-  }
+        return (Link) response.getData().getChildren().get(0);
+    }
 
-  private boolean shouldShowNsfwDialog(Subreddit subreddit, boolean userOver18) {
-    return subreddit != null && subreddit.isOver18() && !userOver18;
-  }
+    private Action1<Subreddit> onSubredditInfoLoaded() {
+        return info -> {
+            mSubredditInfo = info;
 
-  private void loadHeaderImage() {
-    mMainView.loadImageIntoDrawerHeader(
-        mSubredditInfo == null ? null : mSubredditInfo.getHeaderImageUrl());
-  }
+            boolean over18 = mSettingsManager.getOver18();
+            if (shouldShowNsfwDialog(mSubredditInfo, over18)) {
+                mSubredditView.showNsfwWarningDialog();
+            } else {
+                if (mSubredditInfo != null) requestNextData();
+                else mMainView.showToast(mContext.getString(R.string.error_private_subreddit));
+            }
+
+            loadHeaderImage();
+        };
+    }
+
+    private boolean shouldShowNsfwDialog(Subreddit subreddit, boolean userOver18) {
+        return subreddit != null && subreddit.isOver18() && !userOver18;
+    }
+
+    private void loadHeaderImage() {
+        mMainView.loadImageIntoDrawerHeader(
+                mSubredditInfo == null ? null : mSubredditInfo.getHeaderImageUrl());
+    }
 }

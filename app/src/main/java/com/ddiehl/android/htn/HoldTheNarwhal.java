@@ -17,38 +17,38 @@ import timber.log.Timber;
 
 public class HoldTheNarwhal extends Application {
 
-  private static ApplicationComponent mComponent;
+    private static ApplicationComponent mComponent;
 
-  @Override
-  public void onCreate() {
-    super.onCreate();
+    @Override
+    public void onCreate() {
+        super.onCreate();
 
-    mComponent = DaggerApplicationComponent.builder()
-        .applicationModule(new ApplicationModule(this))
-        .build();
+        mComponent = DaggerApplicationComponent.builder()
+                .applicationModule(new ApplicationModule(this))
+                .build();
 
 //    LeakCanary.install(this);
-    Timber.plant(new Timber.DebugTree());
+        Timber.plant(new Timber.DebugTree());
 
-    if (BuildConfig.DEBUG) {
-      Picasso.setSingletonInstance(
-          new Picasso.Builder(this)
+        if (BuildConfig.DEBUG) {
+            Picasso.setSingletonInstance(
+                    new Picasso.Builder(this)
 //              .memoryCache(Cache.NONE)
 //              .indicatorsEnabled(true)
-              .loggingEnabled(false)
-              .build());
+                            .loggingEnabled(false)
+                            .build());
+        }
     }
-  }
 
-  public static ApplicationComponent getApplicationComponent() {
-    return mComponent;
-  }
+    public static ApplicationComponent getApplicationComponent() {
+        return mComponent;
+    }
 
-  public static Drawable getTintedDrawable(
-      Context context, @DrawableRes int drawableResId, @ColorRes int colorResId) {
-    Drawable drawable = ContextCompat.getDrawable(context, drawableResId);
-    int color = ContextCompat.getColor(context, colorResId);
-    drawable.setColorFilter(color, PorterDuff.Mode.SRC_IN);
-    return drawable;
-  }
+    public static Drawable getTintedDrawable(
+            Context context, @DrawableRes int drawableResId, @ColorRes int colorResId) {
+        Drawable drawable = ContextCompat.getDrawable(context, drawableResId);
+        int color = ContextCompat.getColor(context, colorResId);
+        drawable.setColorFilter(color, PorterDuff.Mode.SRC_IN);
+        return drawable;
+    }
 }

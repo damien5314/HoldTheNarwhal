@@ -1,3 +1,3 @@
 package com.ddiehl.android.htn;
 
-public enum ThumbnailMode { NO_THUMBNAIL, VARIANT, FULL }
+public enum ThumbnailMode {NO_THUMBNAIL, VARIANT, FULL}

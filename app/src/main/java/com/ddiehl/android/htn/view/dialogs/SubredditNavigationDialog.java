@@ -14,43 +14,46 @@ import butterknife.ButterKnife;
 
 public class SubredditNavigationDialog extends DialogFragment {
 
-  public static final String TAG = SubredditNavigationDialog.class.getSimpleName();
-  private Callbacks mListener;
+    public static final String TAG = SubredditNavigationDialog.class.getSimpleName();
+    private Callbacks mListener;
 
-  public interface Callbacks {
-    void onSubredditNavigationConfirmed(String subreddit);
-    void onSubredditNavigationCancelled();
-  }
+    public interface Callbacks {
 
-  @NonNull @Override
-  public Dialog onCreateDialog(Bundle savedInstanceState) {
-    Dialog dialog = new Dialog(getActivity());
-    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-    dialog.setContentView(R.layout.navigate_to_subreddit_edit_text);
-    ButterKnife.findById(dialog, R.id.drawer_navigate_to_subreddit_go)
-        .setOnClickListener((v) -> {
-          EditText vInput = ButterKnife.findById(dialog,
-              R.id.drawer_navigate_to_subreddit_text);
-          String inputSubreddit = vInput.getText().toString();
-          if (inputSubreddit.equals("")) return;
+        void onSubredditNavigationConfirmed(String subreddit);
 
-          inputSubreddit = inputSubreddit.substring(3);
-          inputSubreddit = inputSubreddit.trim();
-          vInput.setText("");
-          dialog.dismiss();
-          mListener.onSubredditNavigationConfirmed(inputSubreddit);
-        });
-    return dialog;
-  }
-
-  @Override
-  public void onAttach(Context context) {
-    super.onAttach(context);
-    try {
-      mListener = (Callbacks) context;
-    } catch (ClassCastException e) {
-      throw new ClassCastException(context.getClass().getSimpleName()
-          + " must implement AnalyticsDialog.Callbacks");
+        void onSubredditNavigationCancelled();
     }
-  }
+
+    @NonNull
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        Dialog dialog = new Dialog(getActivity());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.navigate_to_subreddit_edit_text);
+        ButterKnife.findById(dialog, R.id.drawer_navigate_to_subreddit_go)
+                .setOnClickListener((v) -> {
+                    EditText vInput = ButterKnife.findById(dialog,
+                            R.id.drawer_navigate_to_subreddit_text);
+                    String inputSubreddit = vInput.getText().toString();
+                    if (inputSubreddit.equals("")) return;
+
+                    inputSubreddit = inputSubreddit.substring(3);
+                    inputSubreddit = inputSubreddit.trim();
+                    vInput.setText("");
+                    dialog.dismiss();
+                    mListener.onSubredditNavigationConfirmed(inputSubreddit);
+                });
+        return dialog;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            mListener = (Callbacks) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.getClass().getSimpleName()
+                    + " must implement AnalyticsDialog.Callbacks");
+        }
+    }
 }

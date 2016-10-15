@@ -8,17 +8,17 @@ import com.ddiehl.android.htn.view.fragments.SettingsFragment;
 
 public class SettingsActivity extends FragmentActivity {
 
-  public static Intent getIntent(Context context) {
-    return new Intent(context, SettingsActivity.class);
-  }
+    public static Intent getIntent(Context context) {
+        return new Intent(context, SettingsActivity.class);
+    }
 
-  @Override
-  Fragment getFragment() {
-    return new SettingsFragment();
-  }
+    @Override
+    Fragment getFragment() {
+        return new SettingsFragment();
+    }
 
-  @Override
-  String getFragmentTag() {
-    return SettingsFragment.TAG;
-  }
+    @Override
+    String getFragmentTag() {
+        return SettingsFragment.TAG;
+    }
 }

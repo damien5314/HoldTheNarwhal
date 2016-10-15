@@ -8,17 +8,17 @@ import com.ddiehl.android.htn.view.fragments.AboutAppFragment;
 
 public class AboutAppActivity extends FragmentActivityCompat {
 
-  public static Intent getIntent(Context context) {
-    return new Intent(context, AboutAppActivity.class);
-  }
+    public static Intent getIntent(Context context) {
+        return new Intent(context, AboutAppActivity.class);
+    }
 
-  @Override
-  Fragment getFragment() {
-    return AboutAppFragment.newInstance();
-  }
+    @Override
+    Fragment getFragment() {
+        return AboutAppFragment.newInstance();
+    }
 
-  @Override
-  String getFragmentTag() {
-    return AboutAppFragment.TAG;
-  }
+    @Override
+    String getFragmentTag() {
+        return AboutAppFragment.TAG;
+    }
 }

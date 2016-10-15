@@ -1,73 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-  <string-array name="link_sort_options">
-    <item>@string/link_sort_hot</item>
-    <item>@string/link_sort_new</item>
-    <item>@string/link_sort_top</item>
-    <item>@string/link_sort_controversial</item>
-  </string-array>
+    <string-array name="link_sort_options">
+        <item>@string/link_sort_hot</item>
+        <item>@string/link_sort_new</item>
+        <item>@string/link_sort_top</item>
+        <item>@string/link_sort_controversial</item>
+    </string-array>
 
-  <string-array name="link_sort_option_values">
-    <item>hot</item>
-    <item>new</item>
-    <item>top</item>
-    <item>controversial</item>
-  </string-array>
+    <string-array name="link_sort_option_values">
+        <item>hot</item>
+        <item>new</item>
+        <item>top</item>
+        <item>controversial</item>
+    </string-array>
 
-  <string-array name="comment_sort_options">
-    <item>@string/comment_sort_best</item>
-    <item>@string/comment_sort_top</item>
-    <item>@string/comment_sort_new</item>
-    <item>@string/comment_sort_controversial</item>
-    <item>@string/comment_sort_old</item>
-    <item>@string/comment_sort_qa</item>
-  </string-array>
+    <string-array name="comment_sort_options">
+        <item>@string/comment_sort_best</item>
+        <item>@string/comment_sort_top</item>
+        <item>@string/comment_sort_new</item>
+        <item>@string/comment_sort_controversial</item>
+        <item>@string/comment_sort_old</item>
+        <item>@string/comment_sort_qa</item>
+    </string-array>
 
-  <string-array name="comment_sort_option_values">
-    <item>confidence</item>
-    <item>top</item>
-    <item>new</item>
-    <item>controversial</item>
-    <item>old</item>
-    <item>qa</item>
-  </string-array>
+    <string-array name="comment_sort_option_values">
+        <item>confidence</item>
+        <item>top</item>
+        <item>new</item>
+        <item>controversial</item>
+        <item>old</item>
+        <item>qa</item>
+    </string-array>
 
-  <string-array name="timespan_options">
-    <item>@string/timespan_hour</item>
-    <item>@string/timespan_day</item>
-    <item>@string/timespan_week</item>
-    <item>@string/timespan_month</item>
-    <item>@string/timespan_year</item>
-    <item>@string/timespan_all</item>
-  </string-array>
+    <string-array name="timespan_options">
+        <item>@string/timespan_hour</item>
+        <item>@string/timespan_day</item>
+        <item>@string/timespan_week</item>
+        <item>@string/timespan_month</item>
+        <item>@string/timespan_year</item>
+        <item>@string/timespan_all</item>
+    </string-array>
 
-  <string-array name="timespan_option_values">
-    <item>hour</item>
-    <item>day</item>
-    <item>week</item>
-    <item>month</item>
-    <item>year</item>
-    <item>all</item>
-  </string-array>
+    <string-array name="timespan_option_values">
+        <item>hour</item>
+        <item>day</item>
+        <item>week</item>
+        <item>month</item>
+        <item>year</item>
+        <item>all</item>
+    </string-array>
 
-  <string-array name="pref_media_options">
-    <item>@string/pref_media_on</item>
-    <item>@string/pref_media_off</item>
-    <item>@string/pref_media_subreddit</item>
-  </string-array>
+    <string-array name="pref_media_options">
+        <item>@string/pref_media_on</item>
+        <item>@string/pref_media_off</item>
+        <item>@string/pref_media_subreddit</item>
+    </string-array>
 
-  <string-array name="pref_media_option_values">
-    <item>on</item>
-    <item>off</item>
-    <item>subreddit</item>
-  </string-array>
+    <string-array name="pref_media_option_values">
+        <item>on</item>
+        <item>off</item>
+        <item>subreddit</item>
+    </string-array>
 
-  <string-array name="pref_num_links_values">
-    <item>10</item>
-    <item>25</item>
-    <item>50</item>
-    <item>100</item>
-  </string-array>
+    <string-array name="pref_num_links_values">
+        <item>10</item>
+        <item>25</item>
+        <item>50</item>
+        <item>100</item>
+    </string-array>
 
 </resources>

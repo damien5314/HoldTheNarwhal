@@ -5,42 +5,42 @@ import android.content.SharedPreferences;
 import rxreddit.model.UserSettings;
 
 public interface SettingsManager
-    extends SharedPreferences.OnSharedPreferenceChangeListener {
+        extends SharedPreferences.OnSharedPreferenceChangeListener {
 
-  boolean hasFromRemote();
+    boolean hasFromRemote();
 
-  void saveUserSettings(UserSettings settings);
+    void saveUserSettings(UserSettings settings);
 
-  void clearUserSettings();
+    void clearUserSettings();
 
-  String getDeviceId();
+    String getDeviceId();
 
-  boolean areAnalyticsEnabled();
+    boolean areAnalyticsEnabled();
 
-  void setAnalyticsEnabled(boolean b);
+    void setAnalyticsEnabled(boolean b);
 
-  boolean customTabsEnabled();
+    boolean customTabsEnabled();
 
-  String getFont();
+    String getFont();
 
-  boolean askedForAnalytics();
+    boolean askedForAnalytics();
 
-  void setAskedForAnalytics(boolean b);
+    void setAskedForAnalytics(boolean b);
 
-  String getCommentSort();
+    String getCommentSort();
 
-  void saveCommentSort(String pref);
+    void saveCommentSort(String pref);
 
-  Integer getMinCommentScore();
+    Integer getMinCommentScore();
 
-  boolean getShowControversiality();
+    boolean getShowControversiality();
 
-  boolean getOver18();
+    boolean getOver18();
 
-  void setOver18(boolean b);
+    void setOver18(boolean b);
 
-  boolean getNoProfanity();
+    boolean getNoProfanity();
 
-  boolean getLabelNsfw();
+    boolean getLabelNsfw();
 
 }

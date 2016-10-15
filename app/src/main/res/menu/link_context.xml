@@ -1,76 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
 
-  <item
-      android:id="@+id/action_link_reply"
-      android:icon="@android:drawable/ic_menu_revert"
-      android:title="@string/action_reply" />
+    <item
+            android:id="@+id/action_link_reply"
+            android:icon="@android:drawable/ic_menu_revert"
+            android:title="@string/action_reply" />
 
-  <item
-      android:id="@+id/action_link_upvote"
-      android:title="@string/action_upvote"
-      app:showAsAction="ifRoom" />
+    <item
+            android:id="@+id/action_link_upvote"
+            android:title="@string/action_upvote"
+            app:showAsAction="ifRoom" />
 
-  <item
-      android:id="@+id/action_link_downvote"
-      android:title="@string/action_downvote"
-      app:showAsAction="ifRoom" />
+    <item
+            android:id="@+id/action_link_downvote"
+            android:title="@string/action_downvote"
+            app:showAsAction="ifRoom" />
 
-  <item
-      android:id="@+id/action_link_show_comments"
-      android:title="@string/action_show_comments"
-      app:showAsAction="never" />
+    <item
+            android:id="@+id/action_link_show_comments"
+            android:title="@string/action_show_comments"
+            app:showAsAction="never" />
 
-  <item
-      android:id="@+id/action_link_save"
-      android:title="@string/action_save"
-      app:showAsAction="never" />
+    <item
+            android:id="@+id/action_link_save"
+            android:title="@string/action_save"
+            app:showAsAction="never" />
 
-  <item
-      android:id="@+id/action_link_unsave"
-      android:title="@string/action_unsave"
-      app:showAsAction="never" />
+    <item
+            android:id="@+id/action_link_unsave"
+            android:title="@string/action_unsave"
+            app:showAsAction="never" />
 
-  <item
-      android:id="@+id/action_link_share"
-      android:title="@string/action_share"
-      app:showAsAction="never" />
+    <item
+            android:id="@+id/action_link_share"
+            android:title="@string/action_share"
+            app:showAsAction="never" />
 
-  <item
-      android:id="@+id/action_link_view_subreddit"
-      android:title="@string/action_view_subreddit"
-      app:showAsAction="never" />
+    <item
+            android:id="@+id/action_link_view_subreddit"
+            android:title="@string/action_view_subreddit"
+            app:showAsAction="never" />
 
-  <item
-      android:id="@+id/action_link_view_user_profile"
-      android:title="@string/action_view_user_profile"
-      app:showAsAction="never" />
+    <item
+            android:id="@+id/action_link_view_user_profile"
+            android:title="@string/action_view_user_profile"
+            app:showAsAction="never" />
 
-  <item
-      android:id="@+id/action_link_open_in_browser"
-      android:title="@string/action_open_in_browser"
-      app:showAsAction="never" />
+    <item
+            android:id="@+id/action_link_open_in_browser"
+            android:title="@string/action_open_in_browser"
+            app:showAsAction="never" />
 
-  <item
-      android:id="@+id/action_link_open_comments_in_browser"
-      android:title="@string/action_open_comments_in_browser"
-      app:showAsAction="never" />
+    <item
+            android:id="@+id/action_link_open_comments_in_browser"
+            android:title="@string/action_open_comments_in_browser"
+            app:showAsAction="never" />
 
-  <item
-      android:id="@+id/action_link_hide"
-      android:title="@string/action_hide"
-      app:showAsAction="never" />
+    <item
+            android:id="@+id/action_link_hide"
+            android:title="@string/action_hide"
+            app:showAsAction="never" />
 
-  <item
-      android:id="@+id/action_link_unhide"
-      android:title="@string/action_unhide"
-      app:showAsAction="never" />
+    <item
+            android:id="@+id/action_link_unhide"
+            android:title="@string/action_unhide"
+            app:showAsAction="never" />
 
-  <item
-      android:id="@+id/action_link_report"
-      android:title="@string/action_report"
-      app:showAsAction="never" />
+    <item
+            android:id="@+id/action_link_report"
+            android:title="@string/action_report"
+            app:showAsAction="never" />
 
 </menu>

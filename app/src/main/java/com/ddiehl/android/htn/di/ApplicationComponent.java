@@ -29,41 +29,57 @@ import dagger.Component;
 
 @Singleton
 @Component(modules = {
-    ApplicationModule.class
+        ApplicationModule.class
 })
 public interface ApplicationComponent {
 
-  // Managers
-  void inject(FlurryAnalytics analytics);
+    // Managers
+    void inject(FlurryAnalytics analytics);
 
-  // Activities
-  void inject(BaseActivity activity);
-  void inject(PrivateMessageActivity activity);
-  void inject(SettingsActivity activity);
+    // Activities
+    void inject(BaseActivity activity);
 
-  // Fragments
-  void inject(BaseFragment fragment);
-  void inject(BaseListingsFragment fragment);
-  void inject(SubredditFragment fragment);
-  void inject(UserProfileFragment fragment);
-  void inject(PrivateMessageFragment fragment);
-  void inject(SettingsFragment fragment);
-  void inject(WebViewFragment fragment);
-  void inject(LinkCommentsFragment fragment);
+    void inject(PrivateMessageActivity activity);
 
-  // ViewHolders
-  void inject(ThreadCommentViewHolder vh);
-  void inject(ThreadStubViewHolder vh);
-  void inject(ListingsMessageViewHolder vh);
-  void inject(ListingsCommentViewHolder vh);
-  void inject(PrivateMessageAdapter.VH vh);
+    void inject(SettingsActivity activity);
 
-  // Presenters
-  void inject(BaseListingsPresenter presenter);
-  void inject(UserProfilePresenter presenter);
-  void inject(SettingsPresenterImpl presenter);
-  void inject(SubscriptionManagerPresenter presenter);
+    // Fragments
+    void inject(BaseFragment fragment);
 
-  // Views
-  void inject(MarkdownTextView view);
+    void inject(BaseListingsFragment fragment);
+
+    void inject(SubredditFragment fragment);
+
+    void inject(UserProfileFragment fragment);
+
+    void inject(PrivateMessageFragment fragment);
+
+    void inject(SettingsFragment fragment);
+
+    void inject(WebViewFragment fragment);
+
+    void inject(LinkCommentsFragment fragment);
+
+    // ViewHolders
+    void inject(ThreadCommentViewHolder vh);
+
+    void inject(ThreadStubViewHolder vh);
+
+    void inject(ListingsMessageViewHolder vh);
+
+    void inject(ListingsCommentViewHolder vh);
+
+    void inject(PrivateMessageAdapter.VH vh);
+
+    // Presenters
+    void inject(BaseListingsPresenter presenter);
+
+    void inject(UserProfilePresenter presenter);
+
+    void inject(SettingsPresenterImpl presenter);
+
+    void inject(SubscriptionManagerPresenter presenter);
+
+    // Views
+    void inject(MarkdownTextView view);
 }

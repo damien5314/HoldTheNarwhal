@@ -27,103 +27,104 @@ import timber.log.Timber;
 
 public class SubscriptionManagerFragment extends BaseFragment {
 
-  public static final String TAG = SubscriptionManagerFragment.class.getSimpleName();
+    public static final String TAG = SubscriptionManagerFragment.class.getSimpleName();
 
-  public static SubscriptionManagerFragment newInstance() {
-    return new SubscriptionManagerFragment();
-  }
-
-  @BindView(R.id.coordinator_layout)  CoordinatorLayout mCoordinatorLayout;
-  @BindView(R.id.recycler_view)       RecyclerView mRecyclerView;
-
-  SubscriptionManagerAdapter mAdapter;
-  SubscriptionManagerPresenter mPresenter;
-  String mNextPageId;
-
-  @Override
-  public void onCreate(@Nullable Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    HoldTheNarwhal.getApplicationComponent().inject(this);
-
-    mPresenter = new SubscriptionManagerPresenter();
-
-    getActivity().getWindow().getDecorView()
-        .setBackgroundColor(ContextCompat.getColor(getContext(), R.color.white));
-  }
-
-  @Nullable @Override
-  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-    View view = inflater.inflate(R.layout.subscription_manager_fragment, container, false);
-    ButterKnife.bind(this, view);
-
-    initListView(mRecyclerView);
-
-    return view;
-  }
-
-  @Override
-  protected View getChromeView() {
-    return mCoordinatorLayout;
-  }
-
-  private void initListView(RecyclerView recyclerView) {
-    final LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-    recyclerView.setLayoutManager(layoutManager);
-
-    mAdapter = new SubscriptionManagerAdapter();
-    recyclerView.setAdapter(mAdapter);
-
-    recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-      @Override
-      public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-        final int first = layoutManager.findFirstVisibleItemPosition();
-        final int last = layoutManager.findLastVisibleItemPosition();
-        if (first != 0 && last == mAdapter.getItemCount()) {
-          requestNextPage();
-        }
-      }
-    });
-  }
-
-  @Override
-  public void onResume() {
-    super.onResume();
-
-    if (!mAdapter.hasData()) {
-      requestNextPage();
+    public static SubscriptionManagerFragment newInstance() {
+        return new SubscriptionManagerFragment();
     }
-  }
 
-  private void requestNextPage() {
-    loadSubscriptions(null);
-  }
+    @BindView(R.id.coordinator_layout) CoordinatorLayout mCoordinatorLayout;
+    @BindView(R.id.recycler_view) RecyclerView mRecyclerView;
 
-  void loadSubscriptions(@Nullable String nextPageId) {
-    mPresenter.getSubscriptions()
-        .doOnSubscribe(() -> showSpinner(null))
-        .doOnUnsubscribe(this::dismissSpinner)
-        .subscribe(onSubscriptionsLoaded(), onSubscriptionsLoadError());
-  }
+    SubscriptionManagerAdapter mAdapter;
+    SubscriptionManagerPresenter mPresenter;
+    String mNextPageId;
 
-  private Action1<Throwable> onSubscriptionsLoadError() {
-    return throwable -> {
-      Timber.e(throwable, "Error loading subreddit subscriptions");
-      showError(throwable, getString(R.string.subscriptions_load_failed));
-    };
-  }
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        HoldTheNarwhal.getApplicationComponent().inject(this);
 
-  private Action1<ListingResponse> onSubscriptionsLoaded() {
-    return response -> {
-      mNextPageId = response.getData().getAfter();
+        mPresenter = new SubscriptionManagerPresenter();
 
-      // Translate list of Listings into list of Subreddits
-      List<Listing> listings = response.getData().getChildren();
-      List<Subreddit> subreddits = new ArrayList<>(listings.size());
-      for (Listing l : listings) {
-        subreddits.add((Subreddit) l);
-      }
+        getActivity().getWindow().getDecorView()
+                .setBackgroundColor(ContextCompat.getColor(getContext(), R.color.white));
+    }
 
-      mAdapter.addAll(subreddits);
-    };
-  }
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.subscription_manager_fragment, container, false);
+        ButterKnife.bind(this, view);
+
+        initListView(mRecyclerView);
+
+        return view;
+    }
+
+    @Override
+    protected View getChromeView() {
+        return mCoordinatorLayout;
+    }
+
+    private void initListView(RecyclerView recyclerView) {
+        final LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(layoutManager);
+
+        mAdapter = new SubscriptionManagerAdapter();
+        recyclerView.setAdapter(mAdapter);
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                final int first = layoutManager.findFirstVisibleItemPosition();
+                final int last = layoutManager.findLastVisibleItemPosition();
+                if (first != 0 && last == mAdapter.getItemCount()) {
+                    requestNextPage();
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (!mAdapter.hasData()) {
+            requestNextPage();
+        }
+    }
+
+    private void requestNextPage() {
+        loadSubscriptions(null);
+    }
+
+    void loadSubscriptions(@Nullable String nextPageId) {
+        mPresenter.getSubscriptions()
+                .doOnSubscribe(() -> showSpinner(null))
+                .doOnUnsubscribe(this::dismissSpinner)
+                .subscribe(onSubscriptionsLoaded(), onSubscriptionsLoadError());
+    }
+
+    private Action1<Throwable> onSubscriptionsLoadError() {
+        return throwable -> {
+            Timber.e(throwable, "Error loading subreddit subscriptions");
+            showError(throwable, getString(R.string.subscriptions_load_failed));
+        };
+    }
+
+    private Action1<ListingResponse> onSubscriptionsLoaded() {
+        return response -> {
+            mNextPageId = response.getData().getAfter();
+
+            // Translate list of Listings into list of Subreddits
+            List<Listing> listings = response.getData().getChildren();
+            List<Subreddit> subreddits = new ArrayList<>(listings.size());
+            for (Listing l : listings) {
+                subreddits.add((Subreddit) l);
+            }
+
+            mAdapter.addAll(subreddits);
+        };
+    }
 }

@@ -9,25 +9,25 @@ import rxreddit.model.UserIdentity;
 
 public interface ListingsPresenter extends BasePresenter {
 
-  void refreshData();
+    void refreshData();
 
-  void setData(@NonNull List<Listing> data);
+    void setData(@NonNull List<Listing> data);
 
-  void getPreviousData();
+    void getPreviousData();
 
-  void getNextData();
+    void getNextData();
 
-  int getNumListings();
+    int getNumListings();
 
-  Listing getListingAt(int position);
+    Listing getListingAt(int position);
 
-  boolean hasPreviousListings();
+    boolean hasPreviousListings();
 
-  boolean hasNextListings();
+    boolean hasNextListings();
 
-  boolean getShowControversiality();
+    boolean getShowControversiality();
 
-  void onSortChanged();
+    void onSortChanged();
 
-  UserIdentity getAuthorizedUser();
+    UserIdentity getAuthorizedUser();
 }

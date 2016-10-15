@@ -9,26 +9,26 @@ import rxreddit.model.PrivateMessage;
 
 public interface RedditNavigationView {
 
-  void showCommentsForLink(
-      @NonNull String subreddit, @NonNull String linkId, @Nullable String commentId);
+    void showCommentsForLink(
+            @NonNull String subreddit, @NonNull String linkId, @Nullable String commentId);
 
-  void openURL(@NonNull String url);
+    void openURL(@NonNull String url);
 
-  void showSettings();
+    void showSettings();
 
-  void showLoginView();
+    void showLoginView();
 
-  void showInbox();
+    void showInbox();
 
-  void showInboxMessages(@NonNull List<PrivateMessage> messages);
+    void showInboxMessages(@NonNull List<PrivateMessage> messages);
 
-  void showUserProfile(@NonNull String username, @Nullable String show, @Nullable String sort);
+    void showUserProfile(@NonNull String username, @Nullable String show, @Nullable String sort);
 
-  void showSubredditNavigationView();
+    void showSubredditNavigationView();
 
-  void showUserSubreddits();
+    void showUserSubreddits();
 
-  void showSubreddit(@Nullable String subreddit, @Nullable String sort, String timespan);
+    void showSubreddit(@Nullable String subreddit, @Nullable String sort, String timespan);
 
-  void showSubredditImage(String url);
+    void showSubredditImage(String url);
 }

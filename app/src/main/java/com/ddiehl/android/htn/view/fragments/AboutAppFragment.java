@@ -20,30 +20,31 @@ import butterknife.ButterKnife;
 
 public class AboutAppFragment extends MarkdownTextFragment {
 
-  public static final String TAG = AboutAppFragment.class.getSimpleName();
+    public static final String TAG = AboutAppFragment.class.getSimpleName();
 
-  public static AboutAppFragment newInstance() {
-    // Get input
-    InputStream in_s = AboutAppFragment.class.getResourceAsStream("/assets/htn_about_app.md");
-    String text = Utils.getStringFromInputStream(in_s);
-    // Pass to Fragment
-    AboutAppFragment f = new AboutAppFragment();
-    Bundle args = new Bundle();
-    args.putString(ARG_TEXT, text);
-    f.setArguments(args);
-    return f;
-  }
+    public static AboutAppFragment newInstance() {
+        // Get input
+        InputStream in_s = AboutAppFragment.class.getResourceAsStream("/assets/htn_about_app.md");
+        String text = Utils.getStringFromInputStream(in_s);
+        // Pass to Fragment
+        AboutAppFragment f = new AboutAppFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_TEXT, text);
+        f.setArguments(args);
+        return f;
+    }
 
-  @Nullable @Override
-  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    View view = super.onCreateView(inflater, container, savedInstanceState);
-    if (view == null) return null;
-    view.setBackgroundColor(ContextCompat.getColor(getActivity(), android.R.color.white));
-    CharSequence ins = String.format("Version %1$s\n\nReleased %2$s\n\n",
-        BuildConfig.VERSION_NAME,
-        AndroidUtils.getBuildTimeFormatted());
-    MarkdownTextView tv = ButterKnife.findById(view, R.id.markdown_text_view);
-    tv.setText(TextUtils.concat(ins, tv.getText()));
-    return view;
-  }
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = super.onCreateView(inflater, container, savedInstanceState);
+        if (view == null) return null;
+        view.setBackgroundColor(ContextCompat.getColor(getActivity(), android.R.color.white));
+        CharSequence ins = String.format("Version %1$s\n\nReleased %2$s\n\n",
+                BuildConfig.VERSION_NAME,
+                AndroidUtils.getBuildTimeFormatted());
+        MarkdownTextView tv = ButterKnife.findById(view, R.id.markdown_text_view);
+        tv.setText(TextUtils.concat(ins, tv.getText()));
+        return view;
+    }
 }

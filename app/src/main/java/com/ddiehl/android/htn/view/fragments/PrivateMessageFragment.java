@@ -35,81 +35,82 @@ import rxreddit.model.PrivateMessage;
 
 @FragmentWithArgs
 public class PrivateMessageFragment extends BaseFragment
-    implements PrivateMessageView {
+        implements PrivateMessageView {
 
-  public static final String TAG = PrivateMessageFragment.class.getSimpleName();
+    public static final String TAG = PrivateMessageFragment.class.getSimpleName();
 
-  @Arg String mJson;
+    @Arg String mJson;
 
-  @Inject protected Gson mGson;
+    @Inject protected Gson mGson;
 
-  @BindView(R.id.coordinator_layout)    protected CoordinatorLayout mCoordinatorLayout;
-  @BindView(R.id.conversation_subject)  protected TextView mConversationSubject;
-  @BindView(R.id.recycler_view)         protected RecyclerView mRecyclerView;
+    @BindView(R.id.coordinator_layout) protected CoordinatorLayout mCoordinatorLayout;
+    @BindView(R.id.conversation_subject) protected TextView mConversationSubject;
+    @BindView(R.id.recycler_view) protected RecyclerView mRecyclerView;
 
-  private PrivateMessageAdapter mAdapter;
+    private PrivateMessageAdapter mAdapter;
 
-  @Override
-  public void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    HoldTheNarwhal.getApplicationComponent().inject(this);
-    FragmentArgs.inject(this);
-    mAdapter = new PrivateMessageAdapter();
-  }
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        HoldTheNarwhal.getApplicationComponent().inject(this);
+        FragmentArgs.inject(this);
+        mAdapter = new PrivateMessageAdapter();
+    }
 
-  @Nullable @Override
-  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-    View view = inflater.inflate(R.layout.listings_fragment_private_message, container, false);
-    ButterKnife.bind(this, view);
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.listings_fragment_private_message, container, false);
+        ButterKnife.bind(this, view);
 
-    // Configure RecyclerView
-    mRecyclerView.setAdapter(mAdapter);
-    RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(
-        getContext(), LinearLayoutManager.VERTICAL, false);
-    mRecyclerView.setLayoutManager(layoutManager);
+        // Configure RecyclerView
+        mRecyclerView.setAdapter(mAdapter);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(
+                getContext(), LinearLayoutManager.VERTICAL, false);
+        mRecyclerView.setLayoutManager(layoutManager);
 
-    // Add passed messages to adapter
-    List<PrivateMessage> messages = Arrays.asList(
-        mGson.fromJson(mJson, PrivateMessage[].class));
-    mAdapter.getMessages().addAll(messages);
-    mAdapter.notifyDataSetChanged();
-    String subject = messages.get(0).getSubject();
-    mConversationSubject.setText(subject);
+        // Add passed messages to adapter
+        List<PrivateMessage> messages = Arrays.asList(
+                mGson.fromJson(mJson, PrivateMessage[].class));
+        mAdapter.getMessages().addAll(messages);
+        mAdapter.notifyDataSetChanged();
+        String subject = messages.get(0).getSubject();
+        mConversationSubject.setText(subject);
 
-    // Scroll to bottom so user sees the latest message
-    scrollToBottom();
+        // Scroll to bottom so user sees the latest message
+        scrollToBottom();
 
-    return view;
-  }
+        return view;
+    }
 
-  @Override
-  public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-    super.onCreateOptionsMenu(menu, inflater);
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
 
-    menu.findItem(R.id.action_change_timespan)
-        .setVisible(false);
-    menu.findItem(R.id.action_refresh)
-        .setVisible(false);
-  }
+        menu.findItem(R.id.action_change_timespan)
+                .setVisible(false);
+        menu.findItem(R.id.action_refresh)
+                .setVisible(false);
+    }
 
-  @Override
-  public void showMessageContextMenu(ContextMenu menu, View v, PrivateMessage privateMessage) {
+    @Override
+    public void showMessageContextMenu(ContextMenu menu, View v, PrivateMessage privateMessage) {
 
-  }
+    }
 
-  @Override
-  public void showSubject(@NonNull String subject) {
-    mConversationSubject.setText(subject);
-  }
+    @Override
+    public void showSubject(@NonNull String subject) {
+        mConversationSubject.setText(subject);
+    }
 
-  private void scrollToBottom() {
-    new Handler().post(() ->
-        mRecyclerView.smoothScrollToPosition(mAdapter.getItemCount() - 1)
-    );
-  }
+    private void scrollToBottom() {
+        new Handler().post(() ->
+                mRecyclerView.smoothScrollToPosition(mAdapter.getItemCount() - 1)
+        );
+    }
 
-  @Override
-  protected View getChromeView() {
-    return mCoordinatorLayout;
-  }
+    @Override
+    protected View getChromeView() {
+        return mCoordinatorLayout;
+    }
 }

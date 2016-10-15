@@ -2,13 +2,13 @@ package com.ddiehl.android.htn.view;
 
 public interface SubredditView extends ListingsView, LinkView {
 
-  String getSubreddit();
+    String getSubreddit();
 
-  String getSort();
+    String getSort();
 
-  String getTimespan();
+    String getTimespan();
 
-  void showNsfwWarningDialog();
+    void showNsfwWarningDialog();
 
-  void onRandomSubredditLoaded(String randomSubreddit);
+    void onRandomSubredditLoaded(String randomSubreddit);
 }

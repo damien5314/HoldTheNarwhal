@@ -9,23 +9,23 @@ import rxreddit.model.UserIdentity;
 
 public interface UserProfileView extends ListingsView, LinkView, CommentView {
 
-  void showUserInfo(@NonNull UserIdentity user);
+    void showUserInfo(@NonNull UserIdentity user);
 
-  void showFriendNote(@NonNull String note);
+    void showFriendNote(@NonNull String note);
 
-  void hideFriendNote();
+    void hideFriendNote();
 
-  void showTrophies(List<Listing> trophies);
+    void showTrophies(List<Listing> trophies);
 
-  void setFriendButtonState(boolean isFriend);
+    void setFriendButtonState(boolean isFriend);
 
-  void selectTab(String show);
+    void selectTab(String show);
 
-  String getShow();
+    String getShow();
 
-  String getUsernameContext();
+    String getUsernameContext();
 
-  String getSort();
+    String getSort();
 
-  String getTimespan();
+    String getTimespan();
 }

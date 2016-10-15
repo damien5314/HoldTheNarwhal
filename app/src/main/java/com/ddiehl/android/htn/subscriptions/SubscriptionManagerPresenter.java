@@ -12,15 +12,15 @@ import rxreddit.model.ListingResponse;
 
 public class SubscriptionManagerPresenter {
 
-  @Inject RedditService mRedditService;
+    @Inject RedditService mRedditService;
 
-  public SubscriptionManagerPresenter() {
-    HoldTheNarwhal.getApplicationComponent().inject(this);
-  }
+    public SubscriptionManagerPresenter() {
+        HoldTheNarwhal.getApplicationComponent().inject(this);
+    }
 
-  public Observable<ListingResponse> getSubscriptions() {
-    return mRedditService.getSubscriberSubreddits()
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread());
-  }
+    public Observable<ListingResponse> getSubscriptions() {
+        return mRedditService.getSubscriberSubreddits()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
 }

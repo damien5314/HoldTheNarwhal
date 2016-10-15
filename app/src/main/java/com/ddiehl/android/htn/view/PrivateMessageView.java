@@ -8,7 +8,7 @@ import rxreddit.model.PrivateMessage;
 
 public interface PrivateMessageView {
 
-  void showMessageContextMenu(ContextMenu menu, View view, PrivateMessage privateMessage);
+    void showMessageContextMenu(ContextMenu menu, View view, PrivateMessage privateMessage);
 
-  void showSubject(@NonNull String subject);
+    void showSubject(@NonNull String subject);
 }

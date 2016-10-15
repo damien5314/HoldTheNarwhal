@@ -2,9 +2,9 @@ package com.ddiehl.android.htn.presenter;
 
 public interface BasePresenter {
 
-  void onResume();
+    void onResume();
 
-  void onPause();
+    void onPause();
 
-  void onViewDestroyed();
+    void onViewDestroyed();
 }

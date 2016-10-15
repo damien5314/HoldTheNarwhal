@@ -5,18 +5,18 @@ import rxreddit.model.UserIdentity;
 
 public interface IdentityManager {
 
-  UserIdentity getUserIdentity();
+    UserIdentity getUserIdentity();
 
-  void saveUserIdentity(UserIdentity identity);
+    void saveUserIdentity(UserIdentity identity);
 
-  void clearSavedUserIdentity();
+    void clearSavedUserIdentity();
 
-  void registerUserIdentityChangeListener(Callbacks listener);
+    void registerUserIdentityChangeListener(Callbacks listener);
 
-  void unregisterUserIdentityChangeListener(Callbacks listener);
+    void unregisterUserIdentityChangeListener(Callbacks listener);
 
-  interface Callbacks {
+    interface Callbacks {
 
-    Action1<UserIdentity> onUserIdentityChanged();
-  }
+        Action1<UserIdentity> onUserIdentityChanged();
+    }
 }

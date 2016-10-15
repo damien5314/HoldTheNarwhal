@@ -7,17 +7,17 @@ import rxreddit.model.UserIdentity;
 
 public interface MessagePresenter {
 
-  UserIdentity getUserIdentity();
+    UserIdentity getUserIdentity();
 
-  void replyToMessage(@NonNull PrivateMessage message);
+    void replyToMessage(@NonNull PrivateMessage message);
 
-  void markMessageRead(@NonNull PrivateMessage message);
+    void markMessageRead(@NonNull PrivateMessage message);
 
-  void markMessageUnread(@NonNull PrivateMessage message);
+    void markMessageUnread(@NonNull PrivateMessage message);
 
-  void showMessagePermalink(@NonNull PrivateMessage message);
+    void showMessagePermalink(@NonNull PrivateMessage message);
 
-  void reportMessage(@NonNull PrivateMessage message);
+    void reportMessage(@NonNull PrivateMessage message);
 
-  void blockUser(@NonNull PrivateMessage message);
+    void blockUser(@NonNull PrivateMessage message);
 }
