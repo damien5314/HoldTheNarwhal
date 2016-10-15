@@ -1,21 +1,21 @@
-apply plugin: 'com.android.application'
-apply plugin: 'android-apt'
-apply plugin: 'me.tatarka.retrolambda'
-apply plugin: 'com.jakewharton.hugo'
-apply plugin: 'com.getkeepsafe.dexcount'
-apply plugin: 'com.github.ben-manes.versions'
+apply plugin: "com.android.application"
+apply plugin: "android-apt"
+apply plugin: "me.tatarka.retrolambda"
+apply plugin: "com.jakewharton.hugo"
+apply plugin: "com.getkeepsafe.dexcount"
+apply plugin: "com.github.ben-manes.versions"
 
 android {
   compileSdkVersion 24
-  buildToolsVersion '24.0.2'
-  useLibrary 'org.apache.http.legacy'
+  buildToolsVersion "$project.ext.buildToolsVersion"
+  useLibrary "org.apache.http.legacy"
 
   defaultConfig {
     applicationId "com.ddiehl.android.htn"
     minSdkVersion 15
     targetSdkVersion 24
     versionCode 9
-    versionName '0.5.2'
+    versionName "0.5.2"
     resConfigs "en"
     buildConfigField "long", "BUILD_TIME_UTC", "" + getTime()
     buildConfigField "String", "REDDIT_APP_ID", "\"" + REDDIT_APP_ID + "\""
@@ -36,13 +36,13 @@ android {
       debuggable true
       minifyEnabled false
       applicationIdSuffix ".debug"
-      versionNameSuffix '-dev'
+      versionNameSuffix "-dev"
       buildConfigField "String", "FLURRY_API_KEY", "\"" + FLURRY_API_KEY_DEBUG + "\""
     }
     release {
       debuggable false
       minifyEnabled true
-      proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+      proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
       signingConfig signingConfigs.release
       buildConfigField "String", "FLURRY_API_KEY", "\"" + FLURRY_API_KEY_PROD + "\""
     }
@@ -60,7 +60,7 @@ def getTime() {
 
 def getLocalProperty(String s) {
   Properties properties = new Properties()
-  properties.load(project.rootProject.file('local.properties').newDataInputStream())
+  properties.load(project.rootProject.file("local.properties").newDataInputStream())
   return properties.getProperty(s)
 }
 
@@ -71,15 +71,14 @@ retrolambda {
 }
 
 dependencies {
-  compile fileTree(include: '*.jar', dir: 'libs')
-  compile project(':bypass')
+  compile fileTree(include: "*.jar", dir: "libs")
+  compile project(":bypass")
 
-  def appcompat_version = "24.2.1"
-  compile "com.android.support:appcompat-v7:$appcompat_version"
-  compile "com.android.support:support-v4:$appcompat_version"
-  compile "com.android.support:design:$appcompat_version"
-  compile "com.android.support:recyclerview-v7:$appcompat_version"
-  compile "com.android.support:cardview-v7:$appcompat_version"
+  compile "com.android.support:appcompat-v7:$project.ext.supportLibraryVersion"
+  compile "com.android.support:support-v4:$project.ext.supportLibraryVersion"
+  compile "com.android.support:design:$project.ext.supportLibraryVersion"
+  compile "com.android.support:recyclerview-v7:$project.ext.supportLibraryVersion"
+  compile "com.android.support:cardview-v7:$project.ext.supportLibraryVersion"
   compile "com.android.support.constraint:constraint-layout:1.0.0-alpha3"
 
   compile "com.google.android.gms:play-services-analytics:9.6.1" // Required for Flurry

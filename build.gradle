@@ -24,6 +24,13 @@ allprojects {
   }
 }
 
+subprojects {
+  ext {
+    buildToolsVersion = "24.0.2"
+    supportLibraryVersion = "24.2.1"
+  }
+}
+
 task clean(type: Delete) {
   delete rootProject.buildDir
 }
