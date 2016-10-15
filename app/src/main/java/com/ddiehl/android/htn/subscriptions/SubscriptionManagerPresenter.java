@@ -1,5 +1,8 @@
 package com.ddiehl.android.htn.subscriptions;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 import com.ddiehl.android.htn.HoldTheNarwhal;
 
 import javax.inject.Inject;
@@ -18,8 +21,13 @@ public class SubscriptionManagerPresenter {
         HoldTheNarwhal.getApplicationComponent().inject(this);
     }
 
-    public Observable<ListingResponse> getSubscriptions() {
-        return mRedditService.getSubscriberSubreddits()
+    /**
+     * Get list of {@link rxreddit.model.Subreddit} to which user is subscribed.
+     * @param where Valid: "subscriber", "contributor", "moderator"
+     */
+    public Observable<ListingResponse> getSubscriptions(
+            @NonNull String where, @Nullable String beforePageId, @Nullable String nextPageId) {
+        return mRedditService.getSubreddits(where, beforePageId, nextPageId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }

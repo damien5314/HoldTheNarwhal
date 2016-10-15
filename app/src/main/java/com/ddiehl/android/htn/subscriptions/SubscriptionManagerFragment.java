@@ -1,6 +1,7 @@
 package com.ddiehl.android.htn.subscriptions;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.content.ContextCompat;
@@ -19,6 +20,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import rx.Observable;
 import rx.functions.Action1;
 import rxreddit.model.Listing;
 import rxreddit.model.ListingResponse;
@@ -39,6 +41,8 @@ public class SubscriptionManagerFragment extends BaseFragment {
     SubscriptionManagerAdapter mAdapter;
     SubscriptionManagerPresenter mPresenter;
     String mNextPageId;
+
+    Observable<ListingResponse> mGetSubscriptionsObservable;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -67,7 +71,7 @@ public class SubscriptionManagerFragment extends BaseFragment {
         return mCoordinatorLayout;
     }
 
-    private void initListView(RecyclerView recyclerView) {
+    void initListView(RecyclerView recyclerView) {
         final LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
 
@@ -79,7 +83,9 @@ public class SubscriptionManagerFragment extends BaseFragment {
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 final int first = layoutManager.findFirstVisibleItemPosition();
                 final int last = layoutManager.findLastVisibleItemPosition();
-                if (first != 0 && last == mAdapter.getItemCount()) {
+
+                if (first != 0 && last == mAdapter.getItemCount() - 1
+                        && mNextPageId != null) {
                     requestNextPage();
                 }
             }
@@ -95,25 +101,33 @@ public class SubscriptionManagerFragment extends BaseFragment {
         }
     }
 
-    private void requestNextPage() {
-        loadSubscriptions(null);
+    void requestNextPage() {
+        Timber.d("GET NEXT PAGE");
+        if (mGetSubscriptionsObservable == null) {
+            loadSubscriptions("subscriber", null, mNextPageId);
+        }
     }
 
-    void loadSubscriptions(@Nullable String nextPageId) {
-        mPresenter.getSubscriptions()
+    void loadSubscriptions(@NonNull String where, @Nullable String before, @Nullable String after) {
+        Timber.d("GET SUBSCRIPTIONS");
+        mGetSubscriptionsObservable = mPresenter.getSubscriptions(where, before, after)
                 .doOnSubscribe(() -> showSpinner(null))
-                .doOnUnsubscribe(this::dismissSpinner)
+                .doOnUnsubscribe(() -> {
+                    dismissSpinner();
+                    mGetSubscriptionsObservable = null;
+                });
+        mGetSubscriptionsObservable
                 .subscribe(onSubscriptionsLoaded(), onSubscriptionsLoadError());
     }
 
-    private Action1<Throwable> onSubscriptionsLoadError() {
+    Action1<Throwable> onSubscriptionsLoadError() {
         return throwable -> {
             Timber.e(throwable, "Error loading subreddit subscriptions");
             showError(throwable, getString(R.string.subscriptions_load_failed));
         };
     }
 
-    private Action1<ListingResponse> onSubscriptionsLoaded() {
+    Action1<ListingResponse> onSubscriptionsLoaded() {
         return response -> {
             mNextPageId = response.getData().getAfter();
 
