@@ -19,8 +19,8 @@ android {
   }
 
   sourceSets {
-    main.java.srcDirs += 'bypass/platform/android/library/src'
-    main.jniLibs.srcDirs += 'bypass/platform/android/library/libs'
+    main.java.srcDirs += 'library/platform/android/library/src'
+    main.jniLibs.srcDirs += 'library/platform/android/library/libs'
   }
 }
 
