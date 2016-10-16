@@ -68,6 +68,12 @@ public class SubscriptionManagerAdapter extends RecyclerView.Adapter<Subscriptio
         return mData.size() > 0;
     }
 
+    public void clearData() {
+        int itemCount = mData.size();
+        mData.clear();
+        notifyItemRangeRemoved(0, itemCount);
+    }
+
     public static class VH extends RecyclerView.ViewHolder {
 
         @Inject Bypass mBypass;
@@ -87,10 +93,10 @@ public class SubscriptionManagerAdapter extends RecyclerView.Adapter<Subscriptio
             mName.setText(subreddit.getDisplayName());
 
             // Set public description
-
             CharSequence description = mBypass.markdownToSpannable(subreddit.getPublicDescription());
             mPublicDescription.setText(description);
 
+            // Set subreddit icon
             String iconUrl = subreddit.getIconImg();
             if (!TextUtils.isEmpty(iconUrl)) {
                 Picasso.with(mSubscriptionIcon.getContext())
@@ -101,6 +107,13 @@ public class SubscriptionManagerAdapter extends RecyclerView.Adapter<Subscriptio
             } else {
                 mSubscriptionIcon.setImageDrawable(null);
             }
+
+            // Set onClick listener
+            itemView.setOnClickListener(view -> {
+                // Open info view
+            });
+
+
 
             // Set subscriber count
 //            Integer subscribers = subreddit.getSubscribers();

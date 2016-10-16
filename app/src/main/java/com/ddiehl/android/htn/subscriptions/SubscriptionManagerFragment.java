@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -33,6 +34,7 @@ public class SubscriptionManagerFragment extends BaseFragment {
     }
 
     @BindView(R.id.coordinator_layout) CoordinatorLayout mCoordinatorLayout;
+    @BindView(R.id.swipe_refresh_layout) SwipeRefreshLayout mSwipeRefreshLayout;
     @BindView(R.id.recycler_view) RecyclerView mRecyclerView;
 
     SubscriptionManagerAdapter mAdapter;
@@ -63,7 +65,17 @@ public class SubscriptionManagerFragment extends BaseFragment {
 
         showTabs(false);
 
+        mSwipeRefreshLayout.setOnRefreshListener(onSwipeRefresh());
+
         initListView(mRecyclerView);
+    }
+
+    SwipeRefreshLayout.OnRefreshListener onSwipeRefresh() {
+        return () -> {
+            // Cancel refreshing state and refresh data
+            mSwipeRefreshLayout.setRefreshing(false);
+            refreshData();
+        };
     }
 
     @Override
@@ -99,6 +111,12 @@ public class SubscriptionManagerFragment extends BaseFragment {
         if (!mAdapter.hasData()) {
             requestNextPage();
         }
+    }
+
+    void refreshData() {
+        mNextPageId = null;
+        mAdapter.clearData();
+        requestNextPage();
     }
 
     void requestNextPage() {
