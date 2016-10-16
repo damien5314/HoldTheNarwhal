@@ -33,14 +33,17 @@ public class InboxFragment extends BaseListingsFragment
 
     public static final String TAG = InboxFragment.class.getSimpleName();
 
-    private static final String ARG_SHOW = "ARG_SHOW";
-
-    @Arg(key = ARG_SHOW) String mShow;
+    @Arg(key = "ARG_SHOW") String mShow;
 
     @BindView(R.id.tab_layout) protected TabLayout mTabs;
     @BindView(R.id.coordinator_layout) protected CoordinatorLayout mCoordinatorLayout;
 
     private InboxPresenter mInboxPresenter;
+
+    @Override
+    protected int getLayoutResId() {
+        return R.layout.listings_fragment_inbox;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -109,11 +112,6 @@ public class InboxFragment extends BaseListingsFragment
     public ListingsAdapter getListingsAdapter() {
         return new ListingsAdapter(
                 mListingsPresenter, this, mLinkPresenter, this, mCommentPresenter, this, mMessagePresenter);
-    }
-
-    @Override
-    protected int getLayoutResId() {
-        return R.layout.listings_fragment_inbox;
     }
 
     @Override

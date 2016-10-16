@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,9 +16,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -111,20 +108,6 @@ public abstract class BaseActivity extends AppCompatActivity implements
 
         // Listen to events from the navigation drawer
         mNavigationView.setNavigationItemSelectedListener(this);
-
-        // Initialize app toolbar
-        Toolbar toolbar = ButterKnife.findById(this, R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            Drawable homeIndicator = HoldTheNarwhal.getTintedDrawable(
-                    this, R.drawable.ic_menu_black_24dp, R.color.icons);
-            actionBar.setHomeAsUpIndicator(homeIndicator);
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
-
-        setTitle(null);
 
         /**
          * FIXME
