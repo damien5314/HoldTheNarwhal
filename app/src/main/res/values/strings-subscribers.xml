@@ -7,5 +7,6 @@
     </plurals>
 
     <string name="subscriptions_load_failed">failed to load subscriptions, try again later</string>
+    <string name="subscription_icon">subreddit icon</string>
 
 </resources>

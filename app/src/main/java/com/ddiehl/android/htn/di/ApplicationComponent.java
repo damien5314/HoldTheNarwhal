@@ -4,6 +4,7 @@ import com.ddiehl.android.htn.analytics.FlurryAnalytics;
 import com.ddiehl.android.htn.presenter.BaseListingsPresenter;
 import com.ddiehl.android.htn.presenter.SettingsPresenterImpl;
 import com.ddiehl.android.htn.presenter.UserProfilePresenter;
+import com.ddiehl.android.htn.subscriptions.SubscriptionManagerAdapter;
 import com.ddiehl.android.htn.subscriptions.SubscriptionManagerPresenter;
 import com.ddiehl.android.htn.view.activities.BaseActivity;
 import com.ddiehl.android.htn.view.activities.PrivateMessageActivity;
@@ -38,46 +39,31 @@ public interface ApplicationComponent {
 
     // Activities
     void inject(BaseActivity activity);
-
     void inject(PrivateMessageActivity activity);
-
     void inject(SettingsActivity activity);
 
     // Fragments
     void inject(BaseFragment fragment);
-
     void inject(BaseListingsFragment fragment);
-
     void inject(SubredditFragment fragment);
-
     void inject(UserProfileFragment fragment);
-
     void inject(PrivateMessageFragment fragment);
-
     void inject(SettingsFragment fragment);
-
     void inject(WebViewFragment fragment);
-
     void inject(LinkCommentsFragment fragment);
 
     // ViewHolders
     void inject(ThreadCommentViewHolder vh);
-
     void inject(ThreadStubViewHolder vh);
-
     void inject(ListingsMessageViewHolder vh);
-
     void inject(ListingsCommentViewHolder vh);
-
     void inject(PrivateMessageAdapter.VH vh);
+    void inject(SubscriptionManagerAdapter.VH vh);
 
     // Presenters
     void inject(BaseListingsPresenter presenter);
-
     void inject(UserProfilePresenter presenter);
-
     void inject(SettingsPresenterImpl presenter);
-
     void inject(SubscriptionManagerPresenter presenter);
 
     // Views

@@ -1,26 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/baseline_spacing">
 
-    <TextView
-            android:id="@+id/name"
-            style="@style/TextAppearance.AppCompat.Medium"
+    <ImageView
+            android:id="@+id/subscription_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/primary_text"
-            tools:text="/r/AskReddit" />
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:contentDescription="@string/subscription_icon"
+            tools:src="@drawable/sports_icon" />
 
-    <TextView
-            android:id="@+id/num_subscribers"
-            style="@style/TextAppearance.AppCompat.Small"
+    <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/secondary_text"
-            tools:text="15,860 subscribers" />
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_toLeftOf="@id/subscription_icon"
+            android:layout_toStartOf="@id/subscription_icon"
+            android:orientation="vertical">
 
-</LinearLayout>
+        <TextView
+                android:id="@+id/name"
+                style="@style/TextAppearance.AppCompat.Medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/primary_text"
+                tools:text="AskReddit" />
+
+        <TextView
+                android:id="@+id/public_description"
+                style="@style/TextAppearance.AppCompat.Small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="3"
+                android:textColor="@color/secondary_text"
+                tools:text="/r/AskReddit is the place to ask and answer thought-provoking questions." />
+
+    </LinearLayout>
+
+</RelativeLayout>

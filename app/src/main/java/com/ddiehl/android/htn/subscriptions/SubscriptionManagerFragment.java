@@ -102,14 +102,12 @@ public class SubscriptionManagerFragment extends BaseFragment {
     }
 
     void requestNextPage() {
-        Timber.d("GET NEXT PAGE");
         if (mGetSubscriptionsObservable == null) {
             loadSubscriptions("subscriber", null, mNextPageId);
         }
     }
 
     void loadSubscriptions(@NonNull String where, @Nullable String before, @Nullable String after) {
-        Timber.d("GET SUBSCRIPTIONS");
         mGetSubscriptionsObservable = mPresenter.getSubscriptions(where, before, after)
                 .doOnSubscribe(() -> showSpinner(null))
                 .doOnUnsubscribe(() -> {

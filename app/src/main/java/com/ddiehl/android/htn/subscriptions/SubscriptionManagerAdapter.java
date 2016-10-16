@@ -1,20 +1,26 @@
 package com.ddiehl.android.htn.subscriptions;
 
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
+import com.squareup.picasso.Picasso;
 
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import in.uncod.android.bypass.Bypass;
 import rxreddit.model.Subreddit;
 
 public class SubscriptionManagerAdapter extends RecyclerView.Adapter<SubscriptionManagerAdapter.VH> {
@@ -62,13 +68,17 @@ public class SubscriptionManagerAdapter extends RecyclerView.Adapter<Subscriptio
         return mData.size() > 0;
     }
 
-    static class VH extends RecyclerView.ViewHolder {
+    public static class VH extends RecyclerView.ViewHolder {
+
+        @Inject Bypass mBypass;
 
         @BindView(R.id.name) TextView mName;
-        @BindView(R.id.num_subscribers) TextView mNumSubscribers;
+        @BindView(R.id.public_description) TextView mPublicDescription;
+        @BindView(R.id.subscription_icon) ImageView mSubscriptionIcon;
 
         public VH(View itemView) {
             super(itemView);
+            HoldTheNarwhal.getApplicationComponent().inject(this);
             ButterKnife.bind(this, itemView);
         }
 
@@ -76,11 +86,27 @@ public class SubscriptionManagerAdapter extends RecyclerView.Adapter<Subscriptio
             // Set name
             mName.setText(subreddit.getDisplayName());
 
+            // Set public description
+
+            CharSequence description = mBypass.markdownToSpannable(subreddit.getPublicDescription());
+            mPublicDescription.setText(description);
+
+            String iconUrl = subreddit.getIconImg();
+            if (!TextUtils.isEmpty(iconUrl)) {
+                Picasso.with(mSubscriptionIcon.getContext())
+                        .load(iconUrl)
+                        .resizeDimen(R.dimen.subscription_icon_width, R.dimen.subscription_icon_height)
+                        .centerInside()
+                        .into(mSubscriptionIcon);
+            } else {
+                mSubscriptionIcon.setImageDrawable(null);
+            }
+
             // Set subscriber count
-            Integer subscribers = subreddit.getSubscribers();
-            String subscribersText = itemView.getContext().getResources()
-                    .getQuantityString(R.plurals.num_subscribers, subscribers, NumberFormat.getInstance().format(subscribers));
-            mNumSubscribers.setText(subscribersText);
+//            Integer subscribers = subreddit.getSubscribers();
+//            String subscribersText = itemView.getContext().getResources()
+//                    .getQuantityString(R.plurals.num_subscribers, subscribers, NumberFormat.getInstance().format(subscribers));
+//            mPublicDescription.setText(subscribersText);
         }
     }
 }
