@@ -1,27 +1,27 @@
 apply plugin: 'com.android.library'
 
 android {
-  compileSdkVersion 24
-  buildToolsVersion "$project.ext.buildToolsVersion"
+    compileSdkVersion 24
+    buildToolsVersion "$project.ext.buildToolsVersion"
 
-  defaultConfig {
-    minSdkVersion 15
-    targetSdkVersion 24
-    versionCode 1
-    versionName "1.0"
-  }
-
-  buildTypes {
-    release {
-      minifyEnabled false
-      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+    defaultConfig {
+        minSdkVersion 15
+        targetSdkVersion 24
+        versionCode 1
+        versionName "1.0"
     }
-  }
 
-  sourceSets {
-    main.java.srcDirs += 'library/platform/android/library/src'
-    main.jniLibs.srcDirs += 'library/platform/android/library/libs'
-  }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    sourceSets {
+        main.java.srcDirs += 'library/platform/android/library/src'
+        main.jniLibs.srcDirs += 'library/platform/android/library/libs'
+    }
 }
 
 dependencies {
