@@ -8,11 +8,13 @@ import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.v4.content.ContextCompat;
 
+import com.crashlytics.android.Crashlytics;
 import com.ddiehl.android.htn.di.ApplicationComponent;
 import com.ddiehl.android.htn.di.ApplicationModule;
 import com.ddiehl.android.htn.di.DaggerApplicationComponent;
 import com.squareup.picasso.Picasso;
 
+import io.fabric.sdk.android.Fabric;
 import timber.log.Timber;
 
 public class HoldTheNarwhal extends Application {
@@ -22,6 +24,8 @@ public class HoldTheNarwhal extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        Fabric.with(this, new Crashlytics());
 
         mComponent = DaggerApplicationComponent.builder()
                 .applicationModule(new ApplicationModule(this))
