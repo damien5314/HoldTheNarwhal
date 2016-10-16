@@ -57,6 +57,7 @@ public abstract class BaseFragment extends Fragment implements MainView {
     private ProgressDialog mLoadingOverlay;
 
     protected abstract int getLayoutResId();
+    protected abstract View getChromeView();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -81,7 +82,7 @@ public abstract class BaseFragment extends Fragment implements MainView {
 
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         if (actionBar != null) {
-            Drawable homeIndicator = HoldTheNarwhal.getTintedDrawable(
+            Drawable homeIndicator = AndroidUtils.getTintedDrawable(
                     getContext(), R.drawable.ic_menu_black_24dp, R.color.icons
             );
             actionBar.setHomeAsUpIndicator(homeIndicator);
@@ -90,8 +91,11 @@ public abstract class BaseFragment extends Fragment implements MainView {
     }
 
     protected void showTabs(boolean show) {
-        ButterKnife.findById(getView(), R.id.tab_layout)
-                .setVisibility(show ? View.VISIBLE : View.GONE);
+        View view = getView();
+        if (view != null) {
+            ButterKnife.findById(view, R.id.tab_layout)
+                    .setVisibility(show ? View.VISIBLE : View.GONE);
+        }
     }
 
     @Override
@@ -231,6 +235,4 @@ public abstract class BaseFragment extends Fragment implements MainView {
     public void setTitle(@NonNull CharSequence title) {
         getActivity().setTitle(title);
     }
-
-    protected abstract View getChromeView();
 }

@@ -1,12 +1,6 @@
 package com.ddiehl.android.htn;
 
 import android.app.Application;
-import android.content.Context;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
-import android.support.annotation.ColorRes;
-import android.support.annotation.DrawableRes;
-import android.support.v4.content.ContextCompat;
 
 import com.crashlytics.android.Crashlytics;
 import com.ddiehl.android.htn.di.ApplicationComponent;
@@ -46,13 +40,5 @@ public class HoldTheNarwhal extends Application {
 
     public static ApplicationComponent getApplicationComponent() {
         return mComponent;
-    }
-
-    public static Drawable getTintedDrawable(
-            Context context, @DrawableRes int drawableResId, @ColorRes int colorResId) {
-        Drawable drawable = ContextCompat.getDrawable(context, drawableResId);
-        int color = ContextCompat.getColor(context, colorResId);
-        drawable.setColorFilter(color, PorterDuff.Mode.SRC_IN);
-        return drawable;
     }
 }
