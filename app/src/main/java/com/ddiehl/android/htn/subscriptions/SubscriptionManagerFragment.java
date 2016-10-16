@@ -7,9 +7,7 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
@@ -59,14 +57,13 @@ public class SubscriptionManagerFragment extends BaseFragment {
                 .setBackgroundColor(ContextCompat.getColor(getContext(), R.color.white));
     }
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle state) {
-        View view = super.onCreateView(inflater, container, state);
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        showTabs(false);
 
         initListView(mRecyclerView);
-
-        return view;
     }
 
     @Override

@@ -68,6 +68,12 @@ public abstract class BaseFragment extends Fragment implements MainView {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle state) {
         View view = inflater.inflate(getLayoutResId(), container, false);
         ButterKnife.bind(this, view);
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
         // Initialize toolbar
         Toolbar toolbar = ButterKnife.findById(view, R.id.toolbar);
@@ -81,8 +87,11 @@ public abstract class BaseFragment extends Fragment implements MainView {
             actionBar.setHomeAsUpIndicator(homeIndicator);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+    }
 
-        return view;
+    protected void showTabs(boolean show) {
+        ButterKnife.findById(getView(), R.id.tab_layout)
+                .setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
     @Override

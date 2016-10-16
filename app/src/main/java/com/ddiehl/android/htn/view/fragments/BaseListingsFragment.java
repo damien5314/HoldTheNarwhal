@@ -72,11 +72,6 @@ public abstract class BaseListingsFragment extends BaseFragment
 
     protected abstract ListingsAdapter getListingsAdapter();
 
-    protected void showTabs(boolean show) {
-        ButterKnife.findById(getView(), R.id.tab_layout)
-                .setVisibility(show ? View.VISIBLE : View.GONE);
-    }
-
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);

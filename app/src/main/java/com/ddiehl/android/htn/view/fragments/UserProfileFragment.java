@@ -12,7 +12,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.ImageView;
@@ -87,13 +86,20 @@ public class UserProfileFragment extends BaseListingsFragment
     private UserProfilePresenter mUserProfilePresenter;
 
     @Override
+    protected int getLayoutResId() {
+        return R.layout.listings_fragment_user_profile;
+    }
+
+    @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         HoldTheNarwhal.getApplicationComponent().inject(this);
         FragmentArgs.inject(this);
+
         if (TextUtils.isEmpty(mShow)) mShow = "summary";
         if (TextUtils.isEmpty(mSort)) mSort = "new";
         if (TextUtils.isEmpty(mTimespan)) mTimespan = "all";
+
         mUserProfilePresenter = new UserProfilePresenter(this, mRedditNavigationView, this);
         mLinkPresenter = mUserProfilePresenter;
         mCommentPresenter = mUserProfilePresenter;
@@ -101,24 +107,26 @@ public class UserProfileFragment extends BaseListingsFragment
         mCallbacks = mUserProfilePresenter;
     }
 
-    @Nullable
     @Override
-    public View onCreateView(
-            LayoutInflater inflater, ViewGroup container, Bundle state) {
-        View v = super.onCreateView(inflater, container, state);
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
         showHideView(mShow);
+
         initializeUserProfileTabs();
+
         mKarmaLayout.setVisibility(View.GONE);
         mFriendButton.setVisibility(View.GONE);
         mFriendNoteLayout.setVisibility(View.GONE);
-        mFriendNoteSave.setOnClickListener(view -> {
+
+        mFriendNoteSave.setOnClickListener(saveView -> {
             String note = mFriendNote.getText().toString();
             mUserProfilePresenter.saveFriendNote(note);
         });
+
         setTitle(String.format(
                 getString(R.string.username_formatter),
                 getUsernameContext()));
-        return v;
     }
 
     private void initializeUserProfileTabs() {
@@ -195,11 +203,6 @@ public class UserProfileFragment extends BaseListingsFragment
     public ListingsAdapter getListingsAdapter() {
         return new ListingsAdapter(
                 mListingsPresenter, this, mLinkPresenter, this, mCommentPresenter, null, mMessagePresenter);
-    }
-
-    @Override
-    protected int getLayoutResId() {
-        return R.layout.listings_fragment_user_profile;
     }
 
     //region Options menu
@@ -399,7 +402,9 @@ public class UserProfileFragment extends BaseListingsFragment
     @Override
     public void selectTab(String show) {
         mShow = show;
+
         mUserProfileTabs.removeOnTabSelectedListener(this);
+
         for (int i = 0; i < AndroidUtils.getChildrenInTabLayout(mUserProfileTabs); i++) {
             TabLayout.Tab tab = mUserProfileTabs.getTabAt(i);
             if (tab != null) {
@@ -410,6 +415,7 @@ public class UserProfileFragment extends BaseListingsFragment
                 }
             }
         }
+
         mUserProfileTabs.addOnTabSelectedListener(this);
 
         showHideView(mShow);
@@ -432,7 +438,7 @@ public class UserProfileFragment extends BaseListingsFragment
     }
 
     private void showHideView(String show) {
-        if ("summary".equals(mShow)) {
+        if ("summary".equals(show)) {
             mListView.setVisibility(View.GONE);
             mUserProfileSummary.setVisibility(View.VISIBLE);
         } else {

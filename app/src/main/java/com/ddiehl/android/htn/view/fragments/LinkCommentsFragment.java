@@ -8,12 +8,10 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.ContextMenu;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
@@ -69,12 +67,13 @@ public class LinkCommentsFragment extends BaseListingsFragment
         mCallbacks = (Callbacks) mListingsPresenter;
     }
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
-        View view = super.onCreateView(inflater, container, state);
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        showTabs(false);
+
         setTitle(String.format(getString(R.string.link_subreddit), mSubreddit));
-        return view;
     }
 
     @Override
