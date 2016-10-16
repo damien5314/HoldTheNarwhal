@@ -1,17 +1,13 @@
 package com.ddiehl.android.htn.view.fragments;
 
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -63,24 +59,9 @@ public abstract class BaseListingsFragment extends BaseFragment
         setHasOptionsMenu(true);
     }
 
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(getLayoutResId(), container, false);
-        ButterKnife.bind(this, view);
-
-        // Initialize toolbar
-        Toolbar toolbar = ButterKnife.findById(view, R.id.toolbar);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-
-        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        if (actionBar != null) {
-            Drawable homeIndicator = HoldTheNarwhal.getTintedDrawable(
-                    getContext(), R.drawable.ic_menu_black_24dp, R.color.icons
-            );
-            actionBar.setHomeAsUpIndicator(homeIndicator);
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
+    @Nullable @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle state) {
+        View view = super.onCreateView(inflater, container, state);
 
         // Initialize list view
         mListingsAdapter = getListingsAdapter();
@@ -89,9 +70,12 @@ public abstract class BaseListingsFragment extends BaseFragment
         return view;
     }
 
-    protected abstract int getLayoutResId();
-
     protected abstract ListingsAdapter getListingsAdapter();
+
+    protected void showTabs(boolean show) {
+        ButterKnife.findById(getView(), R.id.tab_layout)
+                .setVisibility(show ? View.VISIBLE : View.GONE);
+    }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {

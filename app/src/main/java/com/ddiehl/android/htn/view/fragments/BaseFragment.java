@@ -3,6 +3,7 @@ package com.ddiehl.android.htn.view.fragments;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.net.MailTo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -11,8 +12,13 @@ import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.IdentityManager;
@@ -26,6 +32,7 @@ import com.ddiehl.android.htn.view.activities.SubredditActivity;
 
 import javax.inject.Inject;
 
+import butterknife.ButterKnife;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
@@ -49,10 +56,33 @@ public abstract class BaseFragment extends Fragment implements MainView {
     protected RedditNavigationView mRedditNavigationView;
     private ProgressDialog mLoadingOverlay;
 
+    protected abstract int getLayoutResId();
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         HoldTheNarwhal.getApplicationComponent().inject(this);
+    }
+
+    @Nullable @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle state) {
+        View view = inflater.inflate(getLayoutResId(), container, false);
+        ButterKnife.bind(this, view);
+
+        // Initialize toolbar
+        Toolbar toolbar = ButterKnife.findById(view, R.id.toolbar);
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+
+        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        if (actionBar != null) {
+            Drawable homeIndicator = HoldTheNarwhal.getTintedDrawable(
+                    getContext(), R.drawable.ic_menu_black_24dp, R.color.icons
+            );
+            actionBar.setHomeAsUpIndicator(homeIndicator);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
+        return view;
     }
 
     @Override

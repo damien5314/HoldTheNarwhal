@@ -71,8 +71,8 @@ public class LinkCommentsFragment extends BaseListingsFragment
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = super.onCreateView(inflater, container, savedInstanceState);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
+        View view = super.onCreateView(inflater, container, state);
         setTitle(String.format(getString(R.string.link_subreddit), mSubreddit));
         return view;
     }

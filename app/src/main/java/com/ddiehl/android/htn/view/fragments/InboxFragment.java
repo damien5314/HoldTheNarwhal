@@ -62,8 +62,8 @@ public class InboxFragment extends BaseListingsFragment
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = super.onCreateView(inflater, container, savedInstanceState);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
+        View view = super.onCreateView(inflater, container, state);
 
         initializeTabs();
 

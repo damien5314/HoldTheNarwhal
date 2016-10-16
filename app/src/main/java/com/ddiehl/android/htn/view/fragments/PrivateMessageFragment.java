@@ -30,12 +30,10 @@ import java.util.List;
 import javax.inject.Inject;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import rxreddit.model.PrivateMessage;
 
 @FragmentWithArgs
-public class PrivateMessageFragment extends BaseFragment
-        implements PrivateMessageView {
+public class PrivateMessageFragment extends BaseFragment implements PrivateMessageView {
 
     public static final String TAG = PrivateMessageFragment.class.getSimpleName();
 
@@ -43,11 +41,16 @@ public class PrivateMessageFragment extends BaseFragment
 
     @Inject protected Gson mGson;
 
-    @BindView(R.id.coordinator_layout) protected CoordinatorLayout mCoordinatorLayout;
-    @BindView(R.id.conversation_subject) protected TextView mConversationSubject;
-    @BindView(R.id.recycler_view) protected RecyclerView mRecyclerView;
+    @BindView(R.id.coordinator_layout) CoordinatorLayout mCoordinatorLayout;
+    @BindView(R.id.conversation_subject) TextView mConversationSubject;
+    @BindView(R.id.recycler_view) RecyclerView mRecyclerView;
 
     private PrivateMessageAdapter mAdapter;
+
+    @Override
+    protected int getLayoutResId() {
+        return R.layout.listings_fragment_private_message;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -57,23 +60,29 @@ public class PrivateMessageFragment extends BaseFragment
         mAdapter = new PrivateMessageAdapter();
     }
 
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.listings_fragment_private_message, container, false);
-        ButterKnife.bind(this, view);
+    @Nullable @Override
+    public View onCreateView(
+            LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle state) {
+        View view = super.onCreateView(inflater, container, state);
+
+        // Remove title and hide tab layout
+        getActivity().setTitle(null);
 
         // Configure RecyclerView
         mRecyclerView.setAdapter(mAdapter);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(
-                getContext(), LinearLayoutManager.VERTICAL, false);
+                getContext(), LinearLayoutManager.VERTICAL, false
+        );
         mRecyclerView.setLayoutManager(layoutManager);
 
         // Add passed messages to adapter
         List<PrivateMessage> messages = Arrays.asList(
-                mGson.fromJson(mJson, PrivateMessage[].class));
+                mGson.fromJson(mJson, PrivateMessage[].class)
+        );
         mAdapter.getMessages().addAll(messages);
         mAdapter.notifyDataSetChanged();
+
+        // Set text for subject view
         String subject = messages.get(0).getSubject();
         mConversationSubject.setText(subject);
 

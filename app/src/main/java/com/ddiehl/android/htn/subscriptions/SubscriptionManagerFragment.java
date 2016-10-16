@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import rx.Observable;
 import rx.functions.Action1;
 import rxreddit.model.Listing;
@@ -45,6 +44,11 @@ public class SubscriptionManagerFragment extends BaseFragment {
     Observable<ListingResponse> mGetSubscriptionsObservable;
 
     @Override
+    protected int getLayoutResId() {
+        return R.layout.subscription_manager_fragment;
+    }
+
+    @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         HoldTheNarwhal.getApplicationComponent().inject(this);
@@ -57,9 +61,8 @@ public class SubscriptionManagerFragment extends BaseFragment {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.subscription_manager_fragment, container, false);
-        ButterKnife.bind(this, view);
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle state) {
+        View view = super.onCreateView(inflater, container, state);
 
         initListView(mRecyclerView);
 

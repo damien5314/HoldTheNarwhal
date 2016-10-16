@@ -30,7 +30,6 @@ import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs;
 import javax.inject.Inject;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import rxreddit.api.RedditService;
 import timber.log.Timber;
 
@@ -55,6 +54,11 @@ public class WebViewFragment extends BaseFragment {
     }
 
     @Override
+    protected int getLayoutResId() {
+        return R.layout.web_view_fragment;
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         HoldTheNarwhal.getApplicationComponent().inject(this);
@@ -65,9 +69,8 @@ public class WebViewFragment extends BaseFragment {
 
     @Override
     public View onCreateView(
-            LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.web_view_fragment, container, false);
-        ButterKnife.bind(this, view);
+            LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle state) {
+        View view = super.onCreateView(inflater, container, state);
 
         // Configure settings
         WebSettings settings = mWebView.getSettings();

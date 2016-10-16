@@ -48,6 +48,11 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
     @BindView(R.id.coordinator_layout) protected CoordinatorLayout mCoordinatorLayout;
 
     @Override
+    protected int getLayoutResId() {
+        return R.layout.listings_fragment;
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         HoldTheNarwhal.getApplicationComponent().inject(this);
@@ -64,16 +69,19 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = super.onCreateView(inflater, container, savedInstanceState);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
+        View view = super.onCreateView(inflater, container, state);
         ButterKnife.bind(this, view);
-        updateTitle();
         return view;
     }
 
     @Override
-    protected int getLayoutResId() {
-        return R.layout.listings_fragment;
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        showTabs(false);
+
+        updateTitle();
     }
 
     @Override

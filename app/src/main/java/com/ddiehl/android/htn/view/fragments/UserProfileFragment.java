@@ -104,8 +104,8 @@ public class UserProfileFragment extends BaseListingsFragment
     @Nullable
     @Override
     public View onCreateView(
-            LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = super.onCreateView(inflater, container, savedInstanceState);
+            LayoutInflater inflater, ViewGroup container, Bundle state) {
+        View v = super.onCreateView(inflater, container, state);
         showHideView(mShow);
         initializeUserProfileTabs();
         mKarmaLayout.setVisibility(View.GONE);
