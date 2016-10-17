@@ -3,6 +3,11 @@ package com.ddiehl.android.htn.view.adapters;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 
+/**
+ * Implementation of {@link ItemTouchHelper.Callback} that forwards its callbacks to a
+ * {@link ItemTouchHelperAdapter}. This enables drag-and-drop and swipe functionality on
+ * {@link RecyclerView} viewholder classes.
+ */
 public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
     private final ItemTouchHelperAdapter mAdapter;
