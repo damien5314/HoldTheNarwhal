@@ -8,10 +8,12 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
+import com.ddiehl.android.htn.view.adapters.SimpleItemTouchHelperCallback;
 import com.ddiehl.android.htn.view.fragments.BaseFragment;
 
 import java.util.ArrayList;
@@ -84,12 +86,15 @@ public class SubscriptionManagerFragment extends BaseFragment {
     }
 
     void initListView(RecyclerView recyclerView) {
+        // Initialize layout manager
         final LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
 
-        mAdapter = new SubscriptionManagerAdapter();
-        recyclerView.setAdapter(mAdapter);
+        // Initialize adapter
+        SubscriptionManagerAdapter adapter = new SubscriptionManagerAdapter();
+        recyclerView.setAdapter(adapter);
 
+        // Add scroll listener for fetching more items
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -102,6 +107,14 @@ public class SubscriptionManagerFragment extends BaseFragment {
                 }
             }
         });
+
+        // Add touch helper for handling swipe gestures
+        ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter);
+        ItemTouchHelper helper = new ItemTouchHelper(callback);
+        helper.attachToRecyclerView(recyclerView);
+
+        // Cache adapter
+        mAdapter = adapter;
     }
 
     @Override

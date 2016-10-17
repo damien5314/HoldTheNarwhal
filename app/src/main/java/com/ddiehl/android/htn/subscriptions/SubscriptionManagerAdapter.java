@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
+import com.ddiehl.android.htn.view.adapters.ItemTouchHelperAdapter;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -23,7 +24,8 @@ import butterknife.ButterKnife;
 import in.uncod.android.bypass.Bypass;
 import rxreddit.model.Subreddit;
 
-public class SubscriptionManagerAdapter extends RecyclerView.Adapter<SubscriptionManagerAdapter.VH> {
+public class SubscriptionManagerAdapter extends RecyclerView.Adapter<SubscriptionManagerAdapter.VH>
+        implements ItemTouchHelperAdapter {
 
     private final List<Subreddit> mData = new ArrayList<>();
 
@@ -74,6 +76,16 @@ public class SubscriptionManagerAdapter extends RecyclerView.Adapter<Subscriptio
         notifyItemRangeRemoved(0, itemCount);
     }
 
+    @Override
+    public void onItemMove(int fromPosition, int toPosition) {
+
+    }
+
+    @Override
+    public void onItemDismiss(int position) {
+
+    }
+
     public static class VH extends RecyclerView.ViewHolder {
 
         @Inject Bypass mBypass;
@@ -112,8 +124,6 @@ public class SubscriptionManagerAdapter extends RecyclerView.Adapter<Subscriptio
             itemView.setOnClickListener(view -> {
                 // Open info view
             });
-
-
 
             // Set subscriber count
 //            Integer subscribers = subreddit.getSubscribers();
