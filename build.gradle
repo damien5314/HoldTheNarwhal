@@ -36,7 +36,7 @@ subprojects {
         playServicesVersion = "9.6.1"
         picassoVersion = "2.5.2"
         butterknifeVersion = "8.4.0"
-        rxRedditVersion = "000ab08b4cceb6b1b41f614ace41367cfd6ab1ab"
+        rxRedditVersion = "158624f9c168f58ef8aa04b87f4c241624a6629f"
         rxAndroidVersion = "1.2.1"
         rxJavaVersion = "1.2.1"
         rxJavaProguardVersion = "1.2.1.0"

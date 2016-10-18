@@ -1,5 +1,6 @@
 package com.ddiehl.android.htn.subscriptions;
 
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -22,12 +23,18 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import in.uncod.android.bypass.Bypass;
+import rx.functions.Action1;
 import rxreddit.model.Subreddit;
 
 public class SubscriptionManagerAdapter extends RecyclerView.Adapter<SubscriptionManagerAdapter.VH>
         implements ItemTouchHelperAdapter {
 
-    private final List<Subreddit> mData = new ArrayList<>();
+    final SubscriptionManagerPresenter mPresenter;
+    final List<Subreddit> mData = new ArrayList<>();
+
+    public SubscriptionManagerAdapter(@NonNull SubscriptionManagerPresenter presenter) {
+        mPresenter = presenter;
+    }
 
     public void add(Subreddit subscription, Subreddit... others) {
         int previousSize = mData.size();
@@ -78,12 +85,29 @@ public class SubscriptionManagerAdapter extends RecyclerView.Adapter<Subscriptio
 
     @Override
     public void onItemMove(int fromPosition, int toPosition) {
-
+        // Dragging is disabled for this view
     }
 
     @Override
     public void onItemDismiss(int position) {
+        Subreddit subToUnsubscribe = mData.get(position);
+        mPresenter.unsubscribe(subToUnsubscribe)
+                .subscribe(
+                        onSubredditUnsubscribed(subToUnsubscribe),
+                        onUnsubscribeError(subToUnsubscribe)
+                );
+    }
 
+    Action1<Void> onSubredditUnsubscribed(final Subreddit subreddit) {
+        return _void -> {
+
+        };
+    }
+
+    Action1<Throwable> onUnsubscribeError(final Subreddit subreddit) {
+        return error -> {
+
+        };
     }
 
     public static class VH extends RecyclerView.ViewHolder {

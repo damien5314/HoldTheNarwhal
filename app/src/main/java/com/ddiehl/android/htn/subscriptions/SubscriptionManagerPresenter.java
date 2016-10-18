@@ -12,6 +12,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rxreddit.api.RedditService;
 import rxreddit.model.ListingResponse;
+import rxreddit.model.Subreddit;
 
 public class SubscriptionManagerPresenter {
 
@@ -30,5 +31,15 @@ public class SubscriptionManagerPresenter {
         return mRedditService.getSubreddits(where, beforePageId, nextPageId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public Observable<Void> subscribe(Subreddit subreddit) {
+        String name = subreddit.getName();
+        return mRedditService.subscribe(name);
+    }
+
+    public Observable<Void> unsubscribe(Subreddit subreddit) {
+        String name = subreddit.getName();
+        return mRedditService.unsubscribe(name);
     }
 }

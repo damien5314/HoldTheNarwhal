@@ -91,7 +91,7 @@ public class SubscriptionManagerFragment extends BaseFragment {
         recyclerView.setLayoutManager(layoutManager);
 
         // Initialize adapter
-        SubscriptionManagerAdapter adapter = new SubscriptionManagerAdapter();
+        SubscriptionManagerAdapter adapter = new SubscriptionManagerAdapter(mPresenter);
         recyclerView.setAdapter(adapter);
 
         // Add scroll listener for fetching more items
