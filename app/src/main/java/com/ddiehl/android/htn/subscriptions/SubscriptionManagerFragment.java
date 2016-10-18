@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,16 +19,18 @@ import com.ddiehl.android.htn.view.fragments.BaseFragment;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import rx.Observable;
+import rx.functions.Action0;
 import rx.functions.Action1;
 import rxreddit.model.Listing;
 import rxreddit.model.ListingResponse;
 import rxreddit.model.Subreddit;
 import timber.log.Timber;
 
-public class SubscriptionManagerFragment extends BaseFragment {
+public class SubscriptionManagerFragment extends BaseFragment implements SubscriptionManagerView {
 
     public static final String TAG = SubscriptionManagerFragment.class.getSimpleName();
 
@@ -44,6 +47,7 @@ public class SubscriptionManagerFragment extends BaseFragment {
     String mNextPageId;
 
     Observable<ListingResponse> mGetSubscriptionsObservable;
+    Snackbar mSnackbar;
 
     @Override
     protected int getLayoutResId() {
@@ -64,6 +68,8 @@ public class SubscriptionManagerFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        setTitle(R.string.subscription_manager_title);
 
         showTabs(false);
 
@@ -91,7 +97,7 @@ public class SubscriptionManagerFragment extends BaseFragment {
         recyclerView.setLayoutManager(layoutManager);
 
         // Initialize adapter
-        SubscriptionManagerAdapter adapter = new SubscriptionManagerAdapter(mPresenter);
+        SubscriptionManagerAdapter adapter = new SubscriptionManagerAdapter(this, mPresenter);
         recyclerView.setAdapter(adapter);
 
         // Add scroll listener for fetching more items
@@ -170,4 +176,111 @@ public class SubscriptionManagerFragment extends BaseFragment {
             mAdapter.addAll(subreddits);
         };
     }
+
+    @Override
+    public void onSubredditDismissed(final @NonNull Subreddit subreddit) {
+        unsubscribe(subreddit);
+    }
+
+    //region Unsubscribe
+
+    void unsubscribe(final @NonNull Subreddit subreddit) {
+//        mPresenter.unsubscribe(subreddit)
+        Observable.just((Void) null) // For testing
+                .doOnSubscribe(showUnsubscribingView(subreddit))
+                .delay(2, TimeUnit.SECONDS) // For testing
+                .subscribe(
+                        onSubredditUnsubscribed(subreddit),
+                        onUnsubscribeError(subreddit)
+                );
+    }
+
+    Action0 showUnsubscribingView(final @NonNull Subreddit subreddit) {
+        return () -> {
+            String message = getString(R.string.unsubscribing_subreddit, subreddit.getDisplayName());
+            mSnackbar = Snackbar.make(mCoordinatorLayout, message, Snackbar.LENGTH_INDEFINITE);
+            mSnackbar.setCallback(new Snackbar.Callback() {
+                @Override
+                public void onDismissed(Snackbar snackbar, int event) {
+                    mSnackbar = null;
+                }
+            });
+            mSnackbar.show();
+        };
+    }
+
+    Action1<Void> onSubredditUnsubscribed(final @NonNull Subreddit subreddit) {
+        return result -> {
+            // Dismiss unsubscribing Snackbar, if it exists
+            if (mSnackbar != null) {
+                mSnackbar.dismiss();
+            }
+
+            // Show Snackbar confirming unsubscribe, with an Undo button to resubscribe
+            String message = getString(R.string.unsubscribed_subreddit, subreddit.getDisplayName());
+            Snackbar snackbar = Snackbar.make(mCoordinatorLayout, message, Snackbar.LENGTH_LONG);
+            snackbar.setAction(R.string.unsubscribe_undo, view -> resubscribe(subreddit));
+            snackbar.show();
+        };
+    }
+
+    Action1<Throwable> onUnsubscribeError(final @NonNull Subreddit subreddit) {
+        return error -> {
+            Timber.e("Error unsubscribing from /r/%s", subreddit.getDisplayName());
+            showError(error, getString(R.string.unsubscribe_error, subreddit.getDisplayName()));
+        };
+    }
+
+    //endregion
+
+    //region Resubscribe
+
+    void resubscribe(final @NonNull Subreddit subreddit) {
+//        mPresenter.subscribe(subreddit);
+        Observable.just((Void) null) // For testing
+                .doOnSubscribe(showResubscribingView(subreddit))
+                .delay(2, TimeUnit.SECONDS) // For testing
+                .subscribe(
+                        onSubredditResubscribed(subreddit),
+                        onResubscribeError(subreddit)
+                );
+    }
+
+    Action0 showResubscribingView(final @NonNull Subreddit subreddit) {
+        return () -> {
+            String message = getString(R.string.resubscribing_subreddit, subreddit.getDisplayName());
+            mSnackbar = Snackbar.make(mCoordinatorLayout, message, Snackbar.LENGTH_INDEFINITE);
+            mSnackbar.setCallback(new Snackbar.Callback() {
+                @Override
+                public void onDismissed(Snackbar snackbar, int event) {
+                    mSnackbar = null;
+                }
+            });
+            mSnackbar.show();
+        };
+    }
+
+    Action1<Void> onSubredditResubscribed(final @NonNull Subreddit subreddit) {
+        return result -> {
+            // Dismiss Snackbar, if it exists
+            if (mSnackbar != null) {
+                mSnackbar.dismiss();
+            }
+
+            // Show Snackbar confirming resubscribe, with an Undo button to unsubscribe
+            String message = getString(R.string.resubscribed_subreddit, subreddit.getDisplayName());
+            Snackbar snackbar = Snackbar.make(mCoordinatorLayout, message, Snackbar.LENGTH_LONG);
+            snackbar.setAction(R.string.resubscribe_undo, view -> unsubscribe(subreddit));
+            snackbar.show();
+        };
+    }
+
+    Action1<Throwable> onResubscribeError(final @NonNull Subreddit subreddit) {
+        return error -> {
+            Timber.e("Error resubscribing to /r/%s", subreddit.getDisplayName());
+            showError(error, getString(R.string.resubscribe_error, subreddit.getDisplayName()));
+        };
+    }
+
+    //endregion
 }

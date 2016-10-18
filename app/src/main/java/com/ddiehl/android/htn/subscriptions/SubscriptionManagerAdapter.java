@@ -23,16 +23,18 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import in.uncod.android.bypass.Bypass;
-import rx.functions.Action1;
 import rxreddit.model.Subreddit;
 
 public class SubscriptionManagerAdapter extends RecyclerView.Adapter<SubscriptionManagerAdapter.VH>
         implements ItemTouchHelperAdapter {
 
+    final SubscriptionManagerView mSubscriptionManagerView;
     final SubscriptionManagerPresenter mPresenter;
     final List<Subreddit> mData = new ArrayList<>();
 
-    public SubscriptionManagerAdapter(@NonNull SubscriptionManagerPresenter presenter) {
+    public SubscriptionManagerAdapter(
+            @NonNull SubscriptionManagerView view, @NonNull SubscriptionManagerPresenter presenter) {
+        mSubscriptionManagerView = view;
         mPresenter = presenter;
     }
 
@@ -90,24 +92,11 @@ public class SubscriptionManagerAdapter extends RecyclerView.Adapter<Subscriptio
 
     @Override
     public void onItemDismiss(int position) {
-        Subreddit subToUnsubscribe = mData.get(position);
-        mPresenter.unsubscribe(subToUnsubscribe)
-                .subscribe(
-                        onSubredditUnsubscribed(subToUnsubscribe),
-                        onUnsubscribeError(subToUnsubscribe)
-                );
+        Subreddit subreddit = mData.get(position);
+        mSubscriptionManagerView.onSubredditDismissed(subreddit);
     }
 
-    Action1<Void> onSubredditUnsubscribed(final Subreddit subreddit) {
-        return _void -> {
-
-        };
-    }
-
-    Action1<Throwable> onUnsubscribeError(final Subreddit subreddit) {
-        return error -> {
-
-        };
+    void showUnsubscribingSnackbar(final Subreddit subreddit) {
     }
 
     public static class VH extends RecyclerView.ViewHolder {

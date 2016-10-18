@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="subscription_manager_title">subscriptions</string>
+
     <plurals name="num_subscribers">
         <item quantity="one">%s subscriber</item>
         <item quantity="other">%s subscribers</item>
@@ -8,5 +10,15 @@
 
     <string name="subscriptions_load_failed">failed to load subscriptions, try again later</string>
     <string name="subscription_icon">subreddit icon</string>
+
+    <string name="unsubscribing_subreddit">unsubscribing from /r/%s</string>
+    <string name="unsubscribed_subreddit">unsubscribed from /r/%s</string>
+    <string name="unsubscribe_undo">undo</string>
+    <string name="unsubscribe_error">error unsubscribing from /r/%s</string>
+
+    <string name="resubscribing_subreddit">resubscribing to /r/%s</string>
+    <string name="resubscribed_subreddit">resubscribed to /r/%s</string>
+    <string name="resubscribe_undo">undo</string>
+    <string name="resubscribe_error">error resubscribing to /r/%s</string>
 
 </resources>
