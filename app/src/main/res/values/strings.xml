@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="subreddit_search_input_hint">/r/AskReddit</string>
+</resources>

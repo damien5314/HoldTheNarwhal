@@ -21,4 +21,7 @@
     <string name="resubscribe_undo">undo</string>
     <string name="resubscribe_error">error resubscribing to /r/%s</string>
 
+    <string name="subreddit_search_dialog_title">search for subreddit</string>
+    <string name="subreddit_search_dialog_confirm">search</string>
+
 </resources>
