@@ -45,6 +45,11 @@ public class SubscriptionManagerAdapter extends RecyclerView.Adapter<Subscriptio
         notifyItemRangeInserted(previousSize, mData.size() - previousSize);
     }
 
+    public void add(final int position, final Subreddit subreddit) {
+        mData.add(position, subreddit);
+        notifyItemInserted(position);
+    }
+
     public void addAll(List<Subreddit> subreddits) {
         int previousSize = mData.size();
         mData.addAll(subreddits);
@@ -92,11 +97,10 @@ public class SubscriptionManagerAdapter extends RecyclerView.Adapter<Subscriptio
 
     @Override
     public void onItemDismiss(int position) {
-        Subreddit subreddit = mData.get(position);
-        mSubscriptionManagerView.onSubredditDismissed(subreddit);
-    }
+        Subreddit subreddit = mData.remove(position);
+        notifyItemRemoved(position);
 
-    void showUnsubscribingSnackbar(final Subreddit subreddit) {
+        mSubscriptionManagerView.onSubredditDismissed(subreddit, position);
     }
 
     public static class VH extends RecyclerView.ViewHolder {

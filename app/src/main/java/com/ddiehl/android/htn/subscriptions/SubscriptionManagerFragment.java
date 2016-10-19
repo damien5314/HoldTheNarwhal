@@ -23,6 +23,7 @@ import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
 import rx.functions.Action1;
 import rxreddit.model.Listing;
@@ -178,20 +179,22 @@ public class SubscriptionManagerFragment extends BaseFragment implements Subscri
     }
 
     @Override
-    public void onSubredditDismissed(final @NonNull Subreddit subreddit) {
-        unsubscribe(subreddit);
+    public void onSubredditDismissed(final @NonNull Subreddit subreddit, final int position) {
+        // Unsubscribe from subreddit
+        unsubscribe(subreddit, position);
     }
 
     //region Unsubscribe
 
-    void unsubscribe(final @NonNull Subreddit subreddit) {
+    void unsubscribe(final @NonNull Subreddit subreddit, final int position) {
 //        mPresenter.unsubscribe(subreddit)
         Observable.just((Void) null) // For testing
                 .doOnSubscribe(showUnsubscribingView(subreddit))
                 .delay(2, TimeUnit.SECONDS) // For testing
+                .observeOn(AndroidSchedulers.mainThread()) // For testing
                 .subscribe(
-                        onSubredditUnsubscribed(subreddit),
-                        onUnsubscribeError(subreddit)
+                        onSubredditUnsubscribed(subreddit, position),
+                        onUnsubscribeError(subreddit, position)
                 );
     }
 
@@ -209,7 +212,7 @@ public class SubscriptionManagerFragment extends BaseFragment implements Subscri
         };
     }
 
-    Action1<Void> onSubredditUnsubscribed(final @NonNull Subreddit subreddit) {
+    Action1<Void> onSubredditUnsubscribed(final @NonNull Subreddit subreddit, int position) {
         return result -> {
             // Dismiss unsubscribing Snackbar, if it exists
             if (mSnackbar != null) {
@@ -219,13 +222,17 @@ public class SubscriptionManagerFragment extends BaseFragment implements Subscri
             // Show Snackbar confirming unsubscribe, with an Undo button to resubscribe
             String message = getString(R.string.unsubscribed_subreddit, subreddit.getDisplayName());
             Snackbar snackbar = Snackbar.make(mCoordinatorLayout, message, Snackbar.LENGTH_LONG);
-            snackbar.setAction(R.string.unsubscribe_undo, view -> resubscribe(subreddit));
+            snackbar.setAction(R.string.unsubscribe_undo, view -> resubscribe(subreddit, position));
             snackbar.show();
         };
     }
 
-    Action1<Throwable> onUnsubscribeError(final @NonNull Subreddit subreddit) {
+    Action1<Throwable> onUnsubscribeError(final @NonNull Subreddit subreddit, int position) {
         return error -> {
+            // Add subreddit back into the adapter
+            mAdapter.add(position, subreddit);
+
+            // Show error messaging
             Timber.e("Error unsubscribing from /r/%s", subreddit.getDisplayName());
             showError(error, getString(R.string.unsubscribe_error, subreddit.getDisplayName()));
         };
@@ -235,13 +242,14 @@ public class SubscriptionManagerFragment extends BaseFragment implements Subscri
 
     //region Resubscribe
 
-    void resubscribe(final @NonNull Subreddit subreddit) {
+    void resubscribe(final @NonNull Subreddit subreddit, int position) {
 //        mPresenter.subscribe(subreddit);
         Observable.just((Void) null) // For testing
                 .doOnSubscribe(showResubscribingView(subreddit))
                 .delay(2, TimeUnit.SECONDS) // For testing
+                .observeOn(AndroidSchedulers.mainThread()) // For testing
                 .subscribe(
-                        onSubredditResubscribed(subreddit),
+                        onSubredditResubscribed(subreddit, position),
                         onResubscribeError(subreddit)
                 );
     }
@@ -260,17 +268,20 @@ public class SubscriptionManagerFragment extends BaseFragment implements Subscri
         };
     }
 
-    Action1<Void> onSubredditResubscribed(final @NonNull Subreddit subreddit) {
+    Action1<Void> onSubredditResubscribed(final @NonNull Subreddit subreddit, final int position) {
         return result -> {
             // Dismiss Snackbar, if it exists
             if (mSnackbar != null) {
                 mSnackbar.dismiss();
             }
 
+            // Add subreddit back into the adapter
+            mAdapter.add(position, subreddit);
+
             // Show Snackbar confirming resubscribe, with an Undo button to unsubscribe
             String message = getString(R.string.resubscribed_subreddit, subreddit.getDisplayName());
             Snackbar snackbar = Snackbar.make(mCoordinatorLayout, message, Snackbar.LENGTH_LONG);
-            snackbar.setAction(R.string.resubscribe_undo, view -> unsubscribe(subreddit));
+            snackbar.setAction(R.string.resubscribe_undo, view -> unsubscribe(subreddit, position));
             snackbar.show();
         };
     }
