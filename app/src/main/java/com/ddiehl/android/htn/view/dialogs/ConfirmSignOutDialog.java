@@ -21,6 +21,23 @@ public class ConfirmSignOutDialog extends DialogFragment {
         void onSignOutCancel();
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            mListener = (Callbacks) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.getClass().getSimpleName()
+                    + " must implement AnalyticsDialog.Callbacks");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        mListener = null;
+        super.onDetach();
+    }
+
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -39,16 +56,5 @@ public class ConfirmSignOutDialog extends DialogFragment {
                 })
                 .setCancelable(true)
                 .create();
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        try {
-            mListener = (Callbacks) context;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(context.getClass().getSimpleName()
-                    + " must implement AnalyticsDialog.Callbacks");
-        }
     }
 }

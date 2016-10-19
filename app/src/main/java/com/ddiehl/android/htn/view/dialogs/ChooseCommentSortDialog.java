@@ -14,11 +14,9 @@ public class ChooseCommentSortDialog extends DialogFragment {
 
     public static final String TAG = ChooseCommentSortDialog.class.getSimpleName();
 
-    private static final String ARG_SETTING = "arg_setting";
-    public static final String EXTRA_SORT = "com.ddiehl.android.htn.extra_sort";
+    public static final String EXTRA_SORT = "com.ddiehl.android.htn.EXTRA_SORT";
 
-    public ChooseCommentSortDialog() {
-    }
+    private static final String ARG_SETTING = "ARG_SETTING";
 
     public static ChooseCommentSortDialog newInstance(String currentSetting) {
         Bundle args = new Bundle();

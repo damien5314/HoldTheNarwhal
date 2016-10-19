@@ -15,13 +15,31 @@ import butterknife.ButterKnife;
 public class SubredditNavigationDialog extends DialogFragment {
 
     public static final String TAG = SubredditNavigationDialog.class.getSimpleName();
-    private Callbacks mListener;
 
     public interface Callbacks {
 
         void onSubredditNavigationConfirmed(String subreddit);
 
         void onSubredditNavigationCancelled();
+    }
+
+    private Callbacks mListener;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            mListener = (Callbacks) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.getClass().getSimpleName()
+                    + " must implement AnalyticsDialog.Callbacks");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        mListener = null;
+        super.onDetach();
     }
 
     @NonNull
@@ -44,16 +62,5 @@ public class SubredditNavigationDialog extends DialogFragment {
                     mListener.onSubredditNavigationConfirmed(inputSubreddit);
                 });
         return dialog;
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        try {
-            mListener = (Callbacks) context;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(context.getClass().getSimpleName()
-                    + " must implement AnalyticsDialog.Callbacks");
-        }
     }
 }

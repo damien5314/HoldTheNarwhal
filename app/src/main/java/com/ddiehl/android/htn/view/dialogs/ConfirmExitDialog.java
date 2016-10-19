@@ -20,7 +20,7 @@ public class ConfirmExitDialog extends DialogFragment {
         void onCancelExit();
     }
 
-    private Callbacks mCallbacks;
+    private Callbacks mListener;
 
     @Override
     public void onAttach(Context context) {
@@ -28,7 +28,13 @@ public class ConfirmExitDialog extends DialogFragment {
         if (!(context instanceof Callbacks)) {
             throw new ClassCastException(context + " must implement ConfirmExitDialogs.Callbacks");
         }
-        mCallbacks = (Callbacks) context;
+        mListener = (Callbacks) context;
+    }
+
+    @Override
+    public void onDetach() {
+        mListener = null;
+        super.onDetach();
     }
 
     @NonNull
@@ -37,9 +43,9 @@ public class ConfirmExitDialog extends DialogFragment {
         return new AlertDialog.Builder(getContext())
                 .setMessage(R.string.confirm_exit_dialog_title)
                 .setPositiveButton(R.string.confirm_exit_dialog_confirm,
-                        (dialogInterface, which) -> mCallbacks.onConfirmExit())
+                        (dialogInterface, which) -> mListener.onConfirmExit())
                 .setNegativeButton(R.string.confirm_exit_dialog_cancel,
-                        (dialogInterface, which) -> mCallbacks.onCancelExit())
+                        (dialogInterface, which) -> mListener.onCancelExit())
                 .create();
     }
 }

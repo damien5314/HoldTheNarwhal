@@ -19,16 +19,13 @@ public class AddCommentDialog extends DialogFragment {
 
     public static final String TAG = AddCommentDialog.class.getSimpleName();
 
-    public static final String EXTRA_PARENT_ID = "extra_parent_id";
-    public static final String EXTRA_COMMENT_TEXT = "extra_comment_text";
+    public static final String EXTRA_PARENT_ID = "EXTRA_PARENT_ID";
+    public static final String EXTRA_COMMENT_TEXT = "EXTRA_COMMENT_TEXT";
 
     @BindView(R.id.comment_edit_text) protected EditText mCommentEditText;
     @BindView(R.id.comment_submit) protected Button mCommentSubmit;
 
     private String mParentFullName;
-
-    public AddCommentDialog() {
-    }
 
     public static AddCommentDialog newInstance(@NonNull String parentFullname) {
         AddCommentDialog dialog = new AddCommentDialog();
