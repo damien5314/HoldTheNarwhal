@@ -19,11 +19,9 @@ import com.ddiehl.android.htn.view.fragments.BaseFragment;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
 import rx.functions.Action1;
 import rxreddit.model.Listing;
@@ -187,11 +185,8 @@ public class SubscriptionManagerFragment extends BaseFragment implements Subscri
     //region Unsubscribe
 
     void unsubscribe(final @NonNull Subreddit subreddit, final int position) {
-//        mPresenter.unsubscribe(subreddit)
-        Observable.just((Void) null) // For testing
+        mPresenter.unsubscribe(subreddit)
                 .doOnSubscribe(showUnsubscribingView(subreddit))
-                .delay(2, TimeUnit.SECONDS) // For testing
-                .observeOn(AndroidSchedulers.mainThread()) // For testing
                 .subscribe(
                         onSubredditUnsubscribed(subreddit, position),
                         onUnsubscribeError(subreddit, position)
@@ -243,11 +238,8 @@ public class SubscriptionManagerFragment extends BaseFragment implements Subscri
     //region Resubscribe
 
     void resubscribe(final @NonNull Subreddit subreddit, int position) {
-//        mPresenter.subscribe(subreddit);
-        Observable.just((Void) null) // For testing
+        mPresenter.subscribe(subreddit)
                 .doOnSubscribe(showResubscribingView(subreddit))
-                .delay(2, TimeUnit.SECONDS) // For testing
-                .observeOn(AndroidSchedulers.mainThread()) // For testing
                 .subscribe(
                         onSubredditResubscribed(subreddit, position),
                         onResubscribeError(subreddit)
