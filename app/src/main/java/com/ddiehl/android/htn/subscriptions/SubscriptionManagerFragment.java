@@ -191,6 +191,8 @@ public class SubscriptionManagerFragment extends BaseFragment implements Subscri
     //region Unsubscribe
 
     void unsubscribe(final @NonNull Subreddit subreddit, final int position) {
+        mAdapter.remove(subreddit);
+
         mPresenter.unsubscribe(subreddit)
                 .doOnSubscribe(showUnsubscribingView(subreddit))
                 .subscribe(

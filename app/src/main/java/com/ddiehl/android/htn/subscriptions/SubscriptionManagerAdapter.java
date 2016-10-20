@@ -97,9 +97,7 @@ public class SubscriptionManagerAdapter extends RecyclerView.Adapter<Subscriptio
 
     @Override
     public void onItemDismiss(int position) {
-        Subreddit subreddit = mData.remove(position);
-        notifyItemRemoved(position);
-
+        Subreddit subreddit = mData.get(position);
         mSubscriptionManagerView.onSubredditDismissed(subreddit, position);
     }
 
