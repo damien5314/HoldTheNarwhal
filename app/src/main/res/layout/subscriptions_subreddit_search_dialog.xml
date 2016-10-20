@@ -4,16 +4,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    <android.support.design.widget.TextInputLayout
+    <com.ddiehl.android.htn.view.widgets.SubredditEditText
+            android:id="@+id/search_input_field"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-        <EditText
-                android:id="@+id/search_input_field"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:hint="@string/subreddit_search_input_hint" />
-
-    </android.support.design.widget.TextInputLayout>
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:layout_marginEnd="@dimen/activity_horizontal_margin"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:hint="@string/subreddit_search_input_hint" />
 
 </FrameLayout>

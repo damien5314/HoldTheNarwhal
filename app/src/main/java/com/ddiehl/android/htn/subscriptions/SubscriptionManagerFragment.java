@@ -1,5 +1,6 @@
 package com.ddiehl.android.htn.subscriptions;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -29,6 +30,9 @@ import rxreddit.model.Listing;
 import rxreddit.model.ListingResponse;
 import rxreddit.model.Subreddit;
 import timber.log.Timber;
+
+import static android.app.Activity.RESULT_OK;
+import static com.ddiehl.android.htn.subscriptions.SubredditSearchDialog.REQUEST_SEARCH;
 
 public class SubscriptionManagerFragment extends BaseFragment implements SubscriptionManagerView {
 
@@ -79,7 +83,9 @@ public class SubscriptionManagerFragment extends BaseFragment implements Subscri
         initListView(mRecyclerView);
 
         mSearchButton.setOnClickListener(button -> {
-            // TODO
+            SubredditSearchDialog dialog = new SubredditSearchDialog();
+            dialog.setTargetFragment(this, REQUEST_SEARCH);
+            dialog.show(getFragmentManager(), SubredditSearchDialog.TAG);
         });
     }
 
@@ -294,4 +300,21 @@ public class SubscriptionManagerFragment extends BaseFragment implements Subscri
     }
 
     //endregion
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == SubredditSearchDialog.REQUEST_SEARCH) {
+            if (resultCode == RESULT_OK) {
+                String subredditName = data.getStringExtra(SubredditSearchDialog.RESULT_SEARCH);
+                search(subredditName);
+            }
+        }
+    }
+
+    private void search(String subredditName) {
+        // TODO
+    }
 }

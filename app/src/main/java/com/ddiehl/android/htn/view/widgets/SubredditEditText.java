@@ -15,13 +15,13 @@ import butterknife.OnEditorAction;
 import butterknife.OnFocusChange;
 import butterknife.OnTextChanged;
 
-public class RedditNavEditText extends AppCompatEditText {
+public class SubredditEditText extends AppCompatEditText {
 
-    public RedditNavEditText(Context context) {
+    public SubredditEditText(Context context) {
         this(context, null);
     }
 
-    public RedditNavEditText(Context context, AttributeSet attrs) {
+    public SubredditEditText(Context context, AttributeSet attrs) {
         super(context, attrs);
         ButterKnife.bind(this);
     }
