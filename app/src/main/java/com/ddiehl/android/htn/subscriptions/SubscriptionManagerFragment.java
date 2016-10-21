@@ -16,6 +16,7 @@ import android.view.View;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
+import com.ddiehl.android.htn.subredditinfo.SubredditInfoActivity;
 import com.ddiehl.android.htn.view.adapters.SimpleItemTouchHelperCallback;
 import com.ddiehl.android.htn.view.fragments.BaseFragment;
 
@@ -37,6 +38,8 @@ import static com.ddiehl.android.htn.subscriptions.SubredditSearchDialog.REQUEST
 public class SubscriptionManagerFragment extends BaseFragment implements SubscriptionManagerView {
 
     public static final String TAG = SubscriptionManagerFragment.class.getSimpleName();
+
+    private static final int REQUEST_GET_SUBREDDIT_INFO = 1000;
 
     public static SubscriptionManagerFragment newInstance() {
         return new SubscriptionManagerFragment();
@@ -189,6 +192,11 @@ public class SubscriptionManagerFragment extends BaseFragment implements Subscri
     }
 
     @Override
+    public void onSubredditClicked(final @NonNull Subreddit subreddit, final int position) {
+        search(subreddit.getDisplayName());
+    }
+
+    @Override
     public void onSubredditDismissed(final @NonNull Subreddit subreddit, final int position) {
         // Unsubscribe from subreddit
         unsubscribe(subreddit, position);
@@ -301,20 +309,23 @@ public class SubscriptionManagerFragment extends BaseFragment implements Subscri
 
     //endregion
 
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == SubredditSearchDialog.REQUEST_SEARCH) {
-            if (resultCode == RESULT_OK) {
-                String subredditName = data.getStringExtra(SubredditSearchDialog.RESULT_SEARCH);
-                search(subredditName);
-            }
+        switch (requestCode) {
+            case SubredditSearchDialog.REQUEST_SEARCH:
+                if (resultCode == RESULT_OK) {
+                    String subredditName = data.getStringExtra(SubredditSearchDialog.RESULT_SEARCH);
+                    search(subredditName);
+                }
+                break;
         }
     }
 
     private void search(String subredditName) {
-        // TODO
+        Intent intent = new Intent(getContext(), SubredditInfoActivity.class);
+        intent.putExtra(SubredditInfoActivity.EXTRA_SUBREDDIT, subredditName);
+        startActivityForResult(intent, REQUEST_GET_SUBREDDIT_INFO);
     }
 }

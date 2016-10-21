@@ -66,7 +66,7 @@ public class SubscriptionManagerAdapter extends RecyclerView.Adapter<Subscriptio
     public VH onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.subscription_manager_item, parent, false);
-        return new VH(itemView);
+        return new VH(itemView, mSubscriptionManagerView);
     }
 
     @Override
@@ -109,10 +109,15 @@ public class SubscriptionManagerAdapter extends RecyclerView.Adapter<Subscriptio
         @BindView(R.id.public_description) TextView mPublicDescription;
         @BindView(R.id.subscription_icon) ImageView mSubscriptionIcon;
 
-        public VH(View itemView) {
+        SubscriptionManagerView mSubscriptionManagerView;
+
+        public VH(View itemView, SubscriptionManagerView subscriptionManagerView) {
             super(itemView);
+
             HoldTheNarwhal.getApplicationComponent().inject(this);
             ButterKnife.bind(this, itemView);
+
+            mSubscriptionManagerView = subscriptionManagerView;
         }
 
         public void bind(Subreddit subreddit) {
@@ -136,9 +141,7 @@ public class SubscriptionManagerAdapter extends RecyclerView.Adapter<Subscriptio
             }
 
             // Set onClick listener
-            itemView.setOnClickListener(view -> {
-                // Open info view
-            });
+            itemView.setOnClickListener(view -> mSubscriptionManagerView.onSubredditClicked(subreddit, getAdapterPosition()));
 
             // Set subscriber count
 //            Integer subscribers = subreddit.getSubscribers();

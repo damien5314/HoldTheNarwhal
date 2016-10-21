@@ -36,6 +36,7 @@ public class SubredditSearchDialog extends DialogFragment {
     void onConfirm() {
         EditText editText = ButterKnife.findById(getDialog(), R.id.search_input_field);
         String input = editText.getText().toString();
+        input = input.substring(3); // Trim the "/r/" portion of the input field
 
         if (TextUtils.isEmpty(input)) {
             onSearchCancelled();

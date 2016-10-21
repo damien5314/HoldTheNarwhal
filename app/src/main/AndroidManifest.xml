@@ -79,6 +79,9 @@
         <activity
                 android:name=".subscriptions.SubscriptionManagerActivity" />
 
+        <activity
+                android:name=".subredditinfo.SubredditInfoActivity" />
+
     </application>
 
 </manifest>
