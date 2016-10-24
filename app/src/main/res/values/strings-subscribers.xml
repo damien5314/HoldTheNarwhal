@@ -3,11 +3,6 @@
 
     <string name="subscription_manager_title">subscriptions</string>
 
-    <plurals name="num_subscribers">
-        <item quantity="one">%s subscriber</item>
-        <item quantity="other">%s subscribers</item>
-    </plurals>
-
     <string name="subscriptions_load_failed">failed to load subscriptions, try again later</string>
     <string name="subscription_icon">subreddit icon</string>
 
@@ -23,5 +18,11 @@
 
     <string name="subreddit_search_dialog_title">search for subreddit</string>
     <string name="subreddit_search_dialog_confirm">search</string>
+
+    <plurals name="num_subscribers">
+        <item quantity="one">%s subscriber</item>
+        <item quantity="other">%s subscribers</item>
+    </plurals>
+    <string name="created_format">created %s</string>
 
 </resources>

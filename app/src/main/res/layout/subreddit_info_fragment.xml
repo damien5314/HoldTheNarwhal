@@ -1,20 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout
+        android:id="@+id/coordinator_layout"
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/coordinator_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-    <android.support.design.widget.AppBarLayout
+    <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:elevation="@dimen/toolbar_elevation"
-            tools:targetApi="lollipop">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-        <include layout="@layout/app_toolbar" />
+        <android.support.design.widget.AppBarLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:elevation="@dimen/toolbar_elevation"
+                tools:targetApi="lollipop">
 
-    </android.support.design.widget.AppBarLayout>
+            <include layout="@layout/app_toolbar" />
+
+        </android.support.design.widget.AppBarLayout>
+
+        <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:showDividers="beginning|middle|end"
+                    android:divider="@drawable/spacer_16dp_h"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin"
+                    android:orientation="vertical">
+
+                <TextView
+                        android:id="@+id/create_date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="@color/primary_text"
+                        tools:text="created December 23, 2013" />
+
+                <TextView
+                        android:id="@+id/subscriber_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="@color/primary_text"
+                        tools:text="130,055 subscribers" />
+
+                <TextView
+                        android:id="@+id/nsfw_icon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/nsfw_tag_bg"
+                        android:text="@string/nsfw"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="@color/nsfw_tag_color" />
+
+                <TextView
+                        android:id="@+id/public_description"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="@color/primary_text"
+                        tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum sodales sem sit amet augue consectetur blandit. Praesent molestie vulputate aliquet. Quisque posuere hendrerit risus ac feugiat." />
+
+            </LinearLayout>
+
+        </ScrollView>
+
+    </LinearLayout>
 
 </android.support.design.widget.CoordinatorLayout>
