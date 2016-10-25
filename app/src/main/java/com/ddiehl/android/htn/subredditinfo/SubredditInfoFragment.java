@@ -17,10 +17,14 @@ import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
+import rx.Observable;
 import rx.functions.Action1;
+import rx.functions.Func1;
 import rxreddit.model.Subreddit;
+import timber.log.Timber;
 
 @FragmentWithArgs
 public class SubredditInfoFragment extends BaseFragment {
@@ -29,6 +33,7 @@ public class SubredditInfoFragment extends BaseFragment {
     public static final int RESULT_GET_INFO_ERROR = -1000;
 
     @BindView(R.id.coordinator_layout) CoordinatorLayout mCoordinatorLayout;
+    @BindView(R.id.subreddit_name) TextView mSubredditName;
     @BindView(R.id.create_date) TextView mCreateDate;
     @BindView(R.id.subscriber_count) TextView mSubscriberCount;
     @BindView(R.id.nsfw_icon) TextView mNsfwIcon;
@@ -50,24 +55,39 @@ public class SubredditInfoFragment extends BaseFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         FragmentArgs.inject(this);
-
-        String title = String.format("/r/%s", mSubreddit);
-        setTitle(title);
+        setTitle("");
     }
 
     @Override
     public void onStart() {
         super.onStart();
+
+        // Set name field
+        String name = String.format("/r/%s", mSubreddit);
+        mSubredditName.setText(name);
+
+        // Load info
         loadSubredditInfo();
     }
 
     void loadSubredditInfo() {
         mRedditService.getSubredditInfo(mSubreddit)
+                // testing
+                .delay(2000, TimeUnit.MILLISECONDS)
+                .flatMap(new Func1<Subreddit, Observable<Subreddit>>() {
+                    @Override
+                    public Observable<Subreddit> call(Subreddit subreddit) {
+                        return Observable.error(new RuntimeException());
+                    }
+                })
+                // end testing
                 .subscribe(onSubredditInfoLoaded(), onSubredditInfoLoadError());
     }
 
     Action1<Throwable> onSubredditInfoLoadError() {
         return error -> {
+            Timber.e("Error loading subreddit info", error);
+
             // Pass error back to target fragment or Activity
             if (getTargetFragment() != null) {
                 getTargetFragment().onActivityResult(getTargetRequestCode(), RESULT_GET_INFO_ERROR, null);
@@ -84,15 +104,13 @@ public class SubredditInfoFragment extends BaseFragment {
 
     void showSubredditInfo(final @NonNull Subreddit subreddit) {
         // Format and show date created
-        String created = formatDate(subreddit.getCreatedUtc());
-        String createdText = getString(R.string.created_format, created);
+        Long created = subreddit.getCreatedUtc();
+        String createdText = formatDate(created);
         mCreateDate.setText(createdText);
 
         // Format and show subscriber count
-        String subscribers = NumberFormat.getInstance().format(subreddit.getSubscribers());
-        String subscriberText = getContext().getResources().getQuantityString(
-                R.plurals.num_subscribers, subreddit.getSubscribers(), subscribers
-        );
+        Integer subscribers = subreddit.getSubscribers();
+        String subscriberText = NumberFormat.getInstance().format(subscribers);
         mSubscriberCount.setText(subscriberText);
 
         // Show/Hide NSFW icon

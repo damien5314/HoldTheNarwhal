@@ -4,7 +4,8 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/baseline_spacing">
+        android:padding="@dimen/baseline_spacing"
+        android:background="?android:attr/selectableItemBackground">
 
     <ImageView
             android:id="@+id/subscription_icon"

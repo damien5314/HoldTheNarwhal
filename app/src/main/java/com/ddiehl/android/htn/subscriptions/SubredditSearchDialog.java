@@ -21,7 +21,6 @@ public class SubredditSearchDialog extends DialogFragment {
 
     public static final String TAG = SubredditSearchDialog.class.getSimpleName();
 
-    public static final int REQUEST_SEARCH = 1001;
     public static final String RESULT_SEARCH = "RESULT_SEARCH";
 
     @NonNull @Override

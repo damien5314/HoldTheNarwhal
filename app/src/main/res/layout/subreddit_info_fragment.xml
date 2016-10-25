@@ -29,11 +29,48 @@
             <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:showDividers="beginning|middle|end"
-                    android:divider="@drawable/spacer_16dp_h"
+                    android:layout_marginBottom="@dimen/activity_vertical_margin"
                     android:layout_marginLeft="@dimen/activity_horizontal_margin"
                     android:layout_marginRight="@dimen/activity_horizontal_margin"
+                    android:layout_marginTop="@dimen/activity_vertical_margin"
+                    android:divider="@drawable/spacer_16dp_h"
                     android:orientation="vertical">
+
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                    <TextView
+                            android:id="@+id/subreddit_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+                            android:textColor="@color/primary_text"
+                            tools:text="/r/AskReddit" />
+
+                    <TextView
+                            android:id="@+id/nsfw_icon"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="16dp"
+                            android:layout_marginStart="16dp"
+                            android:layout_gravity="center"
+                            android:background="@drawable/nsfw_tag_bg"
+                            android:text="@string/nsfw"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                            android:textColor="@color/nsfw_tag_color" />
+
+                </LinearLayout>
+
+                <android.support.v4.widget.Space
+                        android:layout_width="match_parent"
+                        android:layout_height="16dp" />
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/created" />
 
                 <TextView
                         android:id="@+id/create_date"
@@ -41,7 +78,16 @@
                         android:layout_height="wrap_content"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                         android:textColor="@color/primary_text"
-                        tools:text="created December 23, 2013" />
+                        tools:text="Dec 23, 2013" />
+
+                <android.support.v4.widget.Space
+                        android:layout_width="match_parent"
+                        android:layout_height="16dp" />
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/subscribers" />
 
                 <TextView
                         android:id="@+id/subscriber_count"
@@ -49,16 +95,16 @@
                         android:layout_height="wrap_content"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                         android:textColor="@color/primary_text"
-                        tools:text="130,055 subscribers" />
+                        tools:text="130,055" />
+
+                <android.support.v4.widget.Space
+                        android:layout_width="match_parent"
+                        android:layout_height="16dp" />
 
                 <TextView
-                        android:id="@+id/nsfw_icon"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/nsfw_tag_bg"
-                        android:text="@string/nsfw"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:textColor="@color/nsfw_tag_color" />
+                        android:text="@string/description" />
 
                 <TextView
                         android:id="@+id/public_description"

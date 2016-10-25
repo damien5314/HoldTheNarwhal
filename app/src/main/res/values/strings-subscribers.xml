@@ -23,6 +23,9 @@
         <item quantity="one">%s subscriber</item>
         <item quantity="other">%s subscribers</item>
     </plurals>
+    <string name="subscribers">subscribers</string>
+    <string name="created">created</string>
     <string name="created_format">created %s</string>
+    <string name="description">description</string>
 
 </resources>

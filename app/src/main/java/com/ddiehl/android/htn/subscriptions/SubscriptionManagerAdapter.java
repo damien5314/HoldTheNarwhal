@@ -125,7 +125,8 @@ public class SubscriptionManagerAdapter extends RecyclerView.Adapter<Subscriptio
             mName.setText(subreddit.getDisplayName());
 
             // Set public description
-            CharSequence description = mBypass.markdownToSpannable(subreddit.getPublicDescription());
+            String publicDescription = subreddit.getPublicDescription();
+            CharSequence description = mBypass.markdownToSpannable(publicDescription);
             mPublicDescription.setText(description);
 
             // Set subreddit icon
@@ -141,13 +142,9 @@ public class SubscriptionManagerAdapter extends RecyclerView.Adapter<Subscriptio
             }
 
             // Set onClick listener
-            itemView.setOnClickListener(view -> mSubscriptionManagerView.onSubredditClicked(subreddit, getAdapterPosition()));
-
-            // Set subscriber count
-//            Integer subscribers = subreddit.getSubscribers();
-//            String subscribersText = itemView.getContext().getResources()
-//                    .getQuantityString(R.plurals.num_subscribers, subscribers, NumberFormat.getInstance().format(subscribers));
-//            mPublicDescription.setText(subscribersText);
+            itemView.setOnClickListener(
+                    view -> mSubscriptionManagerView.onSubredditClicked(subreddit, getAdapterPosition())
+            );
         }
     }
 }
