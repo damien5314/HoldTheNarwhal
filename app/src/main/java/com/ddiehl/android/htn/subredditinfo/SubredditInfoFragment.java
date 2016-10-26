@@ -17,12 +17,11 @@ import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
-import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
-import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 import rxreddit.model.Subreddit;
 import timber.log.Timber;
 
@@ -68,22 +67,16 @@ public class SubredditInfoFragment extends BaseFragment {
         mSubredditName.setText(name);
 
         // Load info
+        mParentViewGroup.setVisibility(View.GONE);
         loadSubredditInfo();
     }
 
     void loadSubredditInfo() {
         mRedditService.getSubredditInfo(mSubreddit)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(this::showSpinner)
                 .doOnUnsubscribe(this::dismissSpinner)
-                // testing
-                .delay(2000, TimeUnit.MILLISECONDS)
-                .flatMap(new Func1<Subreddit, Observable<Subreddit>>() {
-                    @Override
-                    public Observable<Subreddit> call(Subreddit subreddit) {
-                        return Observable.error(new RuntimeException());
-                    }
-                })
-                // end testing
                 .subscribe(onSubredditInfoLoaded(), onSubredditInfoLoadError());
     }
 
@@ -102,7 +95,10 @@ public class SubredditInfoFragment extends BaseFragment {
     }
 
     Action1<Subreddit> onSubredditInfoLoaded() {
-        return this::showSubredditInfo;
+        return subreddit -> {
+            mParentViewGroup.setVisibility(View.VISIBLE);
+            showSubredditInfo(subreddit);
+        };
     }
 
     void showSubredditInfo(final @NonNull Subreddit subreddit) {
