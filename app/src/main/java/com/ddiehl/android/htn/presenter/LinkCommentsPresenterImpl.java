@@ -69,7 +69,7 @@ public class LinkCommentsPresenterImpl extends BaseListingsPresenter
 
     @Override
     void requestNextData() {
-        mMainView.showSpinner(null);
+        mMainView.showSpinner();
         mRedditService.loadLinkComments(
                 mLinkCommentsView.getSubreddit(), mLinkCommentsView.getArticleId(),
                 mLinkCommentsView.getSort(), mLinkCommentsView.getCommentId()
@@ -121,7 +121,7 @@ public class LinkCommentsPresenterImpl extends BaseListingsPresenter
         children = children.subList(0, Math.min(MAX_CHILDREN_PER_REQUEST, children.size()));
         mRedditService.loadMoreChildren(mLinkContext.getId(), children, mLinkCommentsView.getSort())
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe(() -> mMainView.showSpinner(null))
+                .doOnSubscribe(mMainView::showSpinner)
                 .doOnTerminate(mMainView::dismissSpinner)
                 .subscribe(showMoreComments(parentStub),
                         e -> {

@@ -33,6 +33,7 @@ public class SubredditInfoFragment extends BaseFragment {
     public static final int RESULT_GET_INFO_ERROR = -1000;
 
     @BindView(R.id.coordinator_layout) CoordinatorLayout mCoordinatorLayout;
+    @BindView(R.id.subreddit_info_parent) View mParentViewGroup;
     @BindView(R.id.subreddit_name) TextView mSubredditName;
     @BindView(R.id.create_date) TextView mCreateDate;
     @BindView(R.id.subscriber_count) TextView mSubscriberCount;
@@ -72,6 +73,8 @@ public class SubredditInfoFragment extends BaseFragment {
 
     void loadSubredditInfo() {
         mRedditService.getSubredditInfo(mSubreddit)
+                .doOnSubscribe(this::showSpinner)
+                .doOnUnsubscribe(this::dismissSpinner)
                 // testing
                 .delay(2000, TimeUnit.MILLISECONDS)
                 .flatMap(new Func1<Subreddit, Observable<Subreddit>>() {

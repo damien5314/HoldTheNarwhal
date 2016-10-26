@@ -64,7 +64,7 @@ public class SubredditPresenter extends BaseListingsPresenter implements LinkPre
     private void getSubredditInfo() {
         mRedditService.getSubredditInfo(mSubredditView.getSubreddit())
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe(() -> mMainView.showSpinner(null))
+                .doOnSubscribe(mMainView::showSpinner)
                 .doOnTerminate(() -> {
                     mMainView.dismissSpinner();
                     mNextRequested = false;
@@ -87,7 +87,7 @@ public class SubredditPresenter extends BaseListingsPresenter implements LinkPre
         mRedditService.loadLinks(subreddit, mSubredditView.getSort(), mSubredditView.getTimespan(), before, after)
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(() -> {
-                    mMainView.showSpinner(null);
+                    mMainView.showSpinner();
                     if (append) mNextRequested = true;
                     else mBeforeRequested = true;
                 })

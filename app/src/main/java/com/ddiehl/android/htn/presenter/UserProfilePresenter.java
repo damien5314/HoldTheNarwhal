@@ -61,7 +61,7 @@ public class UserProfilePresenter extends BaseListingsPresenter
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(() -> {
-                    mMainView.showSpinner(null);
+                    mMainView.showSpinner();
                     if (append) mNextRequested = true;
                     else mBeforeRequested = true;
                 })
@@ -85,7 +85,7 @@ public class UserProfilePresenter extends BaseListingsPresenter
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(() -> {
-                    mMainView.showSpinner(null);
+                    mMainView.showSpinner();
                     mNextRequested = true;
                 })
                 .doOnTerminate(() -> {
@@ -131,7 +131,7 @@ public class UserProfilePresenter extends BaseListingsPresenter
         mRedditService.addFriend(mSummaryView.getUsernameContext())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe(() -> mMainView.showSpinner(null))
+                .doOnSubscribe(() -> mMainView.showSpinner())
                 .doOnTerminate(mMainView::dismissSpinner)
                 .subscribe(response -> {
                     mSummaryView.setFriendButtonState(true);
@@ -150,7 +150,7 @@ public class UserProfilePresenter extends BaseListingsPresenter
         mRedditService.deleteFriend(mSummaryView.getUsernameContext())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe(() -> mMainView.showSpinner(null))
+                .doOnSubscribe(mMainView::showSpinner)
                 .doOnTerminate(mMainView::dismissSpinner)
                 .subscribe(response -> {
                     mSummaryView.setFriendButtonState(false);
@@ -167,7 +167,7 @@ public class UserProfilePresenter extends BaseListingsPresenter
         if (TextUtils.isEmpty(note))
             mMainView.showToast(mContext.getString(R.string.user_friend_empty_note));
         else {
-            mMainView.showSpinner(null);
+            mMainView.showSpinner();
             mRedditService.saveFriendNote(mSummaryView.getUsernameContext(), note)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())

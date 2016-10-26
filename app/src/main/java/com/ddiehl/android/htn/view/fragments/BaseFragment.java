@@ -171,14 +171,14 @@ public abstract class BaseFragment extends Fragment implements MainView {
     private int mDialogCount = 0;
 
     @Override
-    public void showSpinner(@Nullable CharSequence message) {
+    public void showSpinner() {
         mDialogCount++;
         if (mLoadingOverlay == null) {
             mLoadingOverlay = new ProgressDialog(getContext(), R.style.ProgressDialog);
             mLoadingOverlay.setCancelable(false);
             mLoadingOverlay.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         }
-        mLoadingOverlay.setMessage(message);
+//        mLoadingOverlay.setMessage(message);
         mLoadingOverlay.show();
     }
 

@@ -13,7 +13,7 @@ public interface MainView {
 
     void setTitle(@StringRes int id);
 
-    void showSpinner(@Nullable CharSequence msg);
+    void showSpinner();
 
     void dismissSpinner();
 

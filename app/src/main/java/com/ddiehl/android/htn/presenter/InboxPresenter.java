@@ -48,7 +48,7 @@ public class InboxPresenter extends BaseListingsPresenter
         mRedditService.getInbox(mInboxView.getShow(), prevId, nextId)
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(() -> {
-                    mMainView.showSpinner(null);
+                    mMainView.showSpinner();
                     mNextRequested = true;
                 })
                 .doOnTerminate(() -> {
