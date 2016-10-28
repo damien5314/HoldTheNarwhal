@@ -19,10 +19,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import butterknife.BindView;
+import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import rxreddit.model.Subreddit;
+import rxreddit.model.SubredditRules;
 import timber.log.Timber;
 
 @FragmentWithArgs
@@ -38,6 +40,7 @@ public class SubredditInfoFragment extends BaseFragment {
     @BindView(R.id.subscriber_count) TextView mSubscriberCount;
     @BindView(R.id.nsfw_icon) TextView mNsfwIcon;
     @BindView(R.id.public_description) TextView mPublicDescription;
+    @BindView(R.id.rules_text) TextView mRules;
 
     @Arg String mSubreddit;
 
@@ -72,7 +75,16 @@ public class SubredditInfoFragment extends BaseFragment {
     }
 
     void loadSubredditInfo() {
-        mRedditService.getSubredditInfo(mSubreddit)
+        Observable.combineLatest(
+                mRedditService.getSubredditInfo(mSubreddit),
+                mRedditService.getSubredditRules(mSubreddit),
+//                mRedditService.getSubredditSidebar(mSubreddit),
+                (subreddit, rules) -> {
+                    InfoTuple tuple = new InfoTuple();
+                    tuple.subreddit = subreddit;
+                    tuple.rules = rules;
+                    return tuple;
+                })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(this::showSpinner)
@@ -94,10 +106,12 @@ public class SubredditInfoFragment extends BaseFragment {
         };
     }
 
-    Action1<Subreddit> onSubredditInfoLoaded() {
-        return subreddit -> {
+    Action1<InfoTuple> onSubredditInfoLoaded() {
+        return tuple -> {
             mParentViewGroup.setVisibility(View.VISIBLE);
-            showSubredditInfo(subreddit);
+
+            showSubredditInfo(tuple.subreddit);
+            showSubredditRules(tuple.rules);
         };
     }
 
@@ -121,9 +135,18 @@ public class SubredditInfoFragment extends BaseFragment {
         mPublicDescription.setText(publicDescription);
     }
 
+    void showSubredditRules(SubredditRules rules) {
+
+    }
+
     String formatDate(final long createdUtc) {
         Date date = new Date(createdUtc * 1000);
         DateFormat format = SimpleDateFormat.getDateInstance();
         return format.format(date);
+    }
+
+    static class InfoTuple {
+        Subreddit subreddit;
+        SubredditRules rules;
     }
 }

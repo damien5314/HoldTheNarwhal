@@ -115,6 +115,20 @@
                         android:textColor="@color/primary_text"
                         tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum sodales sem sit amet augue consectetur blandit. Praesent molestie vulputate aliquet. Quisque posuere hendrerit risus ac feugiat." />
 
+                <android.support.v4.widget.Space
+                        android:layout_width="match_parent"
+                        android:layout_height="16dp" />
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/rules"/>
+
+                <TextView
+                        android:id="@+id/rules_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
             </LinearLayout>
 
         </ScrollView>

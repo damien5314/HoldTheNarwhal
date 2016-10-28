@@ -27,5 +27,7 @@
     <string name="created">created</string>
     <string name="created_format">created %s</string>
     <string name="description">description</string>
+    <string name="rules">rules</string>
+    <string name="sidebar">sidebar</string>
 
 </resources>
