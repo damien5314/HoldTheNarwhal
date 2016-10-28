@@ -4,9 +4,12 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.view.fragments.BaseFragment;
 import com.hannesdorfmann.fragmentargs.FragmentArgs;
@@ -18,7 +21,11 @@ import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
+import butterknife.ButterKnife;
+import in.uncod.android.bypass.Bypass;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -33,6 +40,8 @@ public class SubredditInfoFragment extends BaseFragment {
     public static final String TAG = SubredditInfoFragment.class.getSimpleName();
     public static final int RESULT_GET_INFO_ERROR = -1000;
 
+    @Inject Bypass mBypass;
+
     @BindView(R.id.coordinator_layout) CoordinatorLayout mCoordinatorLayout;
     @BindView(R.id.subreddit_info_parent) View mParentViewGroup;
     @BindView(R.id.subreddit_name) TextView mSubredditName;
@@ -40,7 +49,7 @@ public class SubredditInfoFragment extends BaseFragment {
     @BindView(R.id.subscriber_count) TextView mSubscriberCount;
     @BindView(R.id.nsfw_icon) TextView mNsfwIcon;
     @BindView(R.id.public_description) TextView mPublicDescription;
-    @BindView(R.id.rules_text) TextView mRules;
+    @BindView(R.id.rules_layout) LinearLayout mRulesLayout;
 
     @Arg String mSubreddit;
 
@@ -57,6 +66,7 @@ public class SubredditInfoFragment extends BaseFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        HoldTheNarwhal.getApplicationComponent().inject(this);
         FragmentArgs.inject(this);
         setTitle("");
     }
@@ -135,14 +145,49 @@ public class SubredditInfoFragment extends BaseFragment {
         mPublicDescription.setText(publicDescription);
     }
 
-    void showSubredditRules(SubredditRules rules) {
-
-    }
-
     String formatDate(final long createdUtc) {
         Date date = new Date(createdUtc * 1000);
         DateFormat format = SimpleDateFormat.getDateInstance();
         return format.format(date);
+    }
+
+    void showSubredditRules(SubredditRules rules) {
+        for (SubredditRules.Rule rule : rules.getRules()) {
+            addToRules(rule);
+        }
+    }
+
+    void addToRules(SubredditRules.Rule rule) {
+        // Inflate layout and bind views
+        View view = LayoutInflater.from(getContext())
+                .inflate(R.layout.subreddit_rule, mRulesLayout, false);
+        TextView shortNameView = ButterKnife.findById(view, R.id.short_name);
+        TextView categoryView = ButterKnife.findById(view, R.id.category);
+        TextView descriptionView = ButterKnife.findById(view, R.id.description);
+
+        // Bind data
+        String shortName = rule.getShortName();
+        shortNameView.setText(shortName);
+
+        String category = rule.getKind();
+        categoryView.setText(getTextForCategory(category));
+
+        String description = rule.getDescription().trim();
+        CharSequence descriptionText = mBypass.markdownToSpannable(description);
+        descriptionView.setText(descriptionText);
+
+        mRulesLayout.addView(view);
+    }
+
+    String getTextForCategory(String category) {
+        switch (category) {
+            case "link":
+                return getString(R.string.subreddit_category_link);
+            case "comment":
+                return getString(R.string.subreddit_category_comment);
+            case "all": default:
+                return getString(R.string.subreddit_category_all);
+        }
     }
 
     static class InfoTuple {

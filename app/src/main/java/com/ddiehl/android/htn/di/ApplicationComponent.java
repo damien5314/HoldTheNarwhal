@@ -4,6 +4,7 @@ import com.ddiehl.android.htn.analytics.FlurryAnalytics;
 import com.ddiehl.android.htn.presenter.BaseListingsPresenter;
 import com.ddiehl.android.htn.presenter.SettingsPresenterImpl;
 import com.ddiehl.android.htn.presenter.UserProfilePresenter;
+import com.ddiehl.android.htn.subredditinfo.SubredditInfoFragment;
 import com.ddiehl.android.htn.subscriptions.SubscriptionManagerAdapter;
 import com.ddiehl.android.htn.subscriptions.SubscriptionManagerPresenter;
 import com.ddiehl.android.htn.view.activities.BaseActivity;
@@ -51,6 +52,7 @@ public interface ApplicationComponent {
     void inject(SettingsFragment fragment);
     void inject(WebViewFragment fragment);
     void inject(LinkCommentsFragment fragment);
+    void inject(SubredditInfoFragment fragment);
 
     // ViewHolders
     void inject(ThreadCommentViewHolder vh);

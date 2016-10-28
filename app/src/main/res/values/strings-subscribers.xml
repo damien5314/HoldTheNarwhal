@@ -30,4 +30,8 @@
     <string name="rules">rules</string>
     <string name="sidebar">sidebar</string>
 
+    <string name="subreddit_category_link">Posts only</string>
+    <string name="subreddit_category_comment">Comments only</string>
+    <string name="subreddit_category_all">Posts and Comments</string>
+
 </resources>
