@@ -6,6 +6,12 @@
     <string name="subscriptions_load_failed">failed to load subscriptions, try again later</string>
     <string name="subscription_icon">subreddit icon</string>
 
+    <string name="subscribe">subscribe</string>
+    <string name="unsubscribe">unsubscribe</string>
+    <string name="subscribed">subscribed</string>
+
+    <string name="subscribe_error">Error subscribing to /r/%s</string>
+
     <string name="unsubscribing_subreddit">unsubscribing from /r/%s</string>
     <string name="unsubscribed_subreddit">unsubscribed from /r/%s</string>
     <string name="unsubscribe_undo">undo</string>
@@ -16,6 +22,7 @@
     <string name="resubscribe_undo">undo</string>
     <string name="resubscribe_error">error resubscribing to /r/%s</string>
 
+    <string name="subreddit_search_input_hint">/r/AskReddit</string>
     <string name="subreddit_search_dialog_title">search for subreddit</string>
     <string name="subreddit_search_dialog_confirm">search</string>
 

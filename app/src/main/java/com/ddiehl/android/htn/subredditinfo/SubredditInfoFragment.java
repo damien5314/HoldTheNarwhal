@@ -1,16 +1,21 @@
 package com.ddiehl.android.htn.subredditinfo;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
+import com.ddiehl.android.htn.subscriptions.SubscriptionManagerPresenter;
 import com.ddiehl.android.htn.view.fragments.BaseFragment;
 import com.hannesdorfmann.fragmentargs.FragmentArgs;
 import com.hannesdorfmann.fragmentargs.annotation.Arg;
@@ -26,7 +31,6 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import in.uncod.android.bypass.Bypass;
-import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
@@ -45,6 +49,7 @@ public class SubredditInfoFragment extends BaseFragment {
     @BindView(R.id.coordinator_layout) CoordinatorLayout mCoordinatorLayout;
     @BindView(R.id.subreddit_info_parent) View mParentViewGroup;
     @BindView(R.id.subreddit_name) TextView mSubredditName;
+    @BindView(R.id.subscribe_button) Button mSubscribeButton;
     @BindView(R.id.create_date) TextView mCreateDate;
     @BindView(R.id.subscriber_count) TextView mSubscriberCount;
     @BindView(R.id.nsfw_icon) TextView mNsfwIcon;
@@ -52,6 +57,9 @@ public class SubredditInfoFragment extends BaseFragment {
     @BindView(R.id.rules_layout) LinearLayout mRulesLayout;
 
     @Arg String mSubreddit;
+
+    SubredditInfoLoader mSubredditInfoLoader;
+    SubscriptionManagerPresenter mSubscriptionManager;
 
     @Override
     protected int getLayoutResId() {
@@ -66,8 +74,13 @@ public class SubredditInfoFragment extends BaseFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         HoldTheNarwhal.getApplicationComponent().inject(this);
         FragmentArgs.inject(this);
+
+        mSubredditInfoLoader = new SubredditInfoLoader();
+        mSubscriptionManager = new SubscriptionManagerPresenter();
+
         setTitle("");
     }
 
@@ -85,16 +98,7 @@ public class SubredditInfoFragment extends BaseFragment {
     }
 
     void loadSubredditInfo() {
-        Observable.combineLatest(
-                mRedditService.getSubredditInfo(mSubreddit),
-                mRedditService.getSubredditRules(mSubreddit),
-//                mRedditService.getSubredditSidebar(mSubreddit),
-                (subreddit, rules) -> {
-                    InfoTuple tuple = new InfoTuple();
-                    tuple.subreddit = subreddit;
-                    tuple.rules = rules;
-                    return tuple;
-                })
+        mSubredditInfoLoader.getSubredditInfo(mSubreddit)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(this::showSpinner)
@@ -120,9 +124,81 @@ public class SubredditInfoFragment extends BaseFragment {
         return tuple -> {
             mParentViewGroup.setVisibility(View.VISIBLE);
 
+            showSubscribeButton(tuple.subreddit);
             showSubredditInfo(tuple.subreddit);
             showSubredditRules(tuple.rules);
         };
+    }
+
+    void showSubscribeButton(final @NonNull Subreddit subreddit) {
+        Boolean subscribed = subreddit.getUserIsSubscriber();
+
+        // Show subscribe
+        if (subscribed == null || !subscribed) {
+            mSubscribeButton.setText(R.string.subscribe);
+            mSubscribeButton.setOnClickListener((view) ->
+                    mSubscriptionManager.subscribe(subreddit)
+                            .doOnSubscribe(() -> mSubscribeButton.setEnabled(false))
+                            .doOnUnsubscribe(() -> mSubscribeButton.setEnabled(true))
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(onSubredditSubscribed(), onSubredditSubscribeError()));
+        }
+
+        // Show unsubscribe
+        else {
+            mSubscribeButton.setText(R.string.subscribed);
+            mSubscribeButton.setOnClickListener((view) ->
+                    mSubscriptionManager.unsubscribe(subreddit)
+                            .doOnSubscribe(() -> mSubscribeButton.setEnabled(false))
+                            .doOnUnsubscribe(() -> mSubscribeButton.setEnabled(true))
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(onSubredditUnsubscribed(), onSubredditUnsubscribeError()));
+        }
+    }
+
+    Action1<Void> onSubredditSubscribed() {
+        return (result) -> setSubscribeButtonState(true);
+    }
+
+    Action1<Throwable> onSubredditSubscribeError() {
+        return (error) -> {
+            Timber.e("Error subscribing to /r/" + mSubreddit, error);
+
+            String errorMsg = getString(R.string.subscribe_error, mSubreddit);
+            Snackbar.make(mCoordinatorLayout, errorMsg, Snackbar.LENGTH_LONG)
+                    .show();
+        };
+    }
+
+    Action1<Void> onSubredditUnsubscribed() {
+        return (result) -> setSubscribeButtonState(false);
+    }
+
+    Action1<Throwable> onSubredditUnsubscribeError() {
+        return (error) -> {
+            Timber.e("Error unsubscribing from /r/" + mSubreddit, error);
+
+            String errorMsg = getString(R.string.unsubscribe_error, mSubreddit);
+            Snackbar.make(mCoordinatorLayout, errorMsg, Snackbar.LENGTH_LONG)
+                    .show();
+        };
+    }
+
+    void setSubscribeButtonState(boolean subscribed) {
+        if (subscribed) {
+            mSubscribeButton.setText(R.string.subscribed);
+
+            // Add check icon
+            Drawable checkDrawable = ContextCompat.getDrawable(getContext(), R.drawable.ic_done_black_24dp);
+            mSubscribeButton.setCompoundDrawables(checkDrawable, null, null, null);
+        } else {
+            mSubscribeButton.setText(R.string.subscribe);
+
+            // Remove check icon
+            mSubscribeButton.setCompoundDrawables(null, null, null, null);
+        }
     }
 
     void showSubredditInfo(final @NonNull Subreddit subreddit) {
@@ -185,13 +261,9 @@ public class SubredditInfoFragment extends BaseFragment {
                 return getString(R.string.subreddit_category_link);
             case "comment":
                 return getString(R.string.subreddit_category_comment);
-            case "all": default:
+            case "all":
+            default:
                 return getString(R.string.subreddit_category_all);
         }
-    }
-
-    static class InfoTuple {
-        Subreddit subreddit;
-        SubredditRules rules;
     }
 }

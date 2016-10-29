@@ -5,6 +5,7 @@ import com.ddiehl.android.htn.presenter.BaseListingsPresenter;
 import com.ddiehl.android.htn.presenter.SettingsPresenterImpl;
 import com.ddiehl.android.htn.presenter.UserProfilePresenter;
 import com.ddiehl.android.htn.subredditinfo.SubredditInfoFragment;
+import com.ddiehl.android.htn.subredditinfo.SubredditInfoLoader;
 import com.ddiehl.android.htn.subscriptions.SubscriptionManagerAdapter;
 import com.ddiehl.android.htn.subscriptions.SubscriptionManagerPresenter;
 import com.ddiehl.android.htn.view.activities.BaseActivity;
@@ -67,6 +68,7 @@ public interface ApplicationComponent {
     void inject(UserProfilePresenter presenter);
     void inject(SettingsPresenterImpl presenter);
     void inject(SubscriptionManagerPresenter presenter);
+    void inject(SubredditInfoLoader loader);
 
     // Views
     void inject(MarkdownTextView view);

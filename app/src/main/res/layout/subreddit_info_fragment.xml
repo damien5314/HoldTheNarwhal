@@ -64,7 +64,7 @@
                 </LinearLayout>
 
                 <Button
-                        android:id="@+id/subscribe_unsubscribe"
+                        android:id="@+id/subscribe_button"
                         android:layout_width="match_parent"
                         android:layout_height="48dp"
                         android:layout_gravity="start"
