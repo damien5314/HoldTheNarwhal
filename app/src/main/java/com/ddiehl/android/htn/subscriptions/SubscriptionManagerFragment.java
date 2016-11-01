@@ -26,8 +26,10 @@ import java.util.List;
 
 import butterknife.BindView;
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
 import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 import rxreddit.model.Listing;
 import rxreddit.model.ListingResponse;
 import rxreddit.model.Subreddit;
@@ -210,6 +212,8 @@ public class SubscriptionManagerFragment extends BaseFragment implements Subscri
 
         mPresenter.unsubscribe(subreddit)
                 .doOnSubscribe(showUnsubscribingView(subreddit))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         onSubredditUnsubscribed(subreddit, position),
                         onUnsubscribeError(subreddit, position)
@@ -246,14 +250,14 @@ public class SubscriptionManagerFragment extends BaseFragment implements Subscri
     }
 
     Action1<Throwable> onUnsubscribeError(final @NonNull Subreddit subreddit, int position) {
-        return error -> {
+        return (error) -> getActivity().runOnUiThread(() -> {
             // Add subreddit back into the adapter
             mAdapter.add(position, subreddit);
 
             // Show error messaging
-            Timber.e("Error unsubscribing from /r/%s", subreddit.getDisplayName());
+            Timber.e(error, "Error unsubscribing from /r/%s", subreddit.getDisplayName());
             showError(error, getString(R.string.unsubscribe_error, subreddit.getDisplayName()));
-        };
+        });
     }
 
     //endregion
@@ -263,6 +267,8 @@ public class SubscriptionManagerFragment extends BaseFragment implements Subscri
     void resubscribe(final @NonNull Subreddit subreddit, int position) {
         mPresenter.subscribe(subreddit)
                 .doOnSubscribe(showResubscribingView(subreddit))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         onSubredditResubscribed(subreddit, position),
                         onResubscribeError(subreddit)
@@ -302,10 +308,10 @@ public class SubscriptionManagerFragment extends BaseFragment implements Subscri
     }
 
     Action1<Throwable> onResubscribeError(final @NonNull Subreddit subreddit) {
-        return error -> {
-            Timber.e("Error resubscribing to /r/%s", subreddit.getDisplayName());
+        return error -> getActivity().runOnUiThread(() -> {
+            Timber.e(error, "Error resubscribing to /r/%s", subreddit.getDisplayName());
             showError(error, getString(R.string.resubscribe_error, subreddit.getDisplayName()));
-        };
+        });
     }
 
     //endregion

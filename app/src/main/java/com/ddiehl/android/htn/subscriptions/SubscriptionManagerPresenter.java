@@ -34,12 +34,12 @@ public class SubscriptionManagerPresenter {
     }
 
     public Observable<Void> subscribe(Subreddit subreddit) {
-        String name = subreddit.getName();
+        String name = subreddit.getDisplayName();
         return mRedditService.subscribe(name);
     }
 
     public Observable<Void> unsubscribe(Subreddit subreddit) {
-        String name = subreddit.getName();
+        String name = subreddit.getDisplayName();
         return mRedditService.unsubscribe(name);
     }
 }

@@ -32,6 +32,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import in.uncod.android.bypass.Bypass;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action0;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import rxreddit.model.Subreddit;
@@ -136,35 +137,55 @@ public class SubredditInfoFragment extends BaseFragment {
         // Show subscribe
         if (subscribed == null || !subscribed) {
             mSubscribeButton.setText(R.string.subscribe);
+
+            // Add check icon
+            Drawable checkDrawable = ContextCompat.getDrawable(getContext(), R.drawable.ic_done_black_24dp);
+            mSubscribeButton.setCompoundDrawables(checkDrawable, null, null, null);
+
+            // Set subscribe on click
             mSubscribeButton.setOnClickListener((view) ->
                     mSubscriptionManager.subscribe(subreddit)
-                            .doOnSubscribe(() -> mSubscribeButton.setEnabled(false))
-                            .doOnUnsubscribe(() -> mSubscribeButton.setEnabled(true))
+                            .doOnSubscribe(setSubscribeButtonEnabled(false))
+                            .doOnUnsubscribe(setSubscribeButtonEnabled(true))
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(onSubredditSubscribed(), onSubredditSubscribeError()));
+                            .subscribe(onSubredditSubscribed(subreddit), onSubredditSubscribeError()));
         }
 
         // Show unsubscribe
         else {
             mSubscribeButton.setText(R.string.subscribed);
+
+            // Add check icon
+            mSubscribeButton.setCompoundDrawables(null, null, null, null);
+
+            // Set unsubscribe on click
             mSubscribeButton.setOnClickListener((view) ->
                     mSubscriptionManager.unsubscribe(subreddit)
-                            .doOnSubscribe(() -> mSubscribeButton.setEnabled(false))
-                            .doOnUnsubscribe(() -> mSubscribeButton.setEnabled(true))
+                            .doOnSubscribe(setSubscribeButtonEnabled(false))
+                            .doOnUnsubscribe(setSubscribeButtonEnabled(true))
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(onSubredditUnsubscribed(), onSubredditUnsubscribeError()));
+                            .subscribe(onSubredditUnsubscribed(subreddit), onSubredditUnsubscribeError()));
         }
     }
 
-    Action1<Void> onSubredditSubscribed() {
-        return (result) -> setSubscribeButtonState(true);
+    Action0 setSubscribeButtonEnabled(boolean enabled) {
+        return () -> getActivity().runOnUiThread(() ->
+                mSubscribeButton.setEnabled(enabled)
+        );
+    }
+
+    Action1<Void> onSubredditSubscribed(Subreddit subreddit) {
+        return (result) -> {
+            subreddit.setUserIsSubscriber(true);
+            showSubscribeButton(subreddit);
+        };
     }
 
     Action1<Throwable> onSubredditSubscribeError() {
         return (error) -> {
-            Timber.e("Error subscribing to /r/" + mSubreddit, error);
+            Timber.e(error, "Error subscribing to /r/%s", mSubreddit);
 
             String errorMsg = getString(R.string.subscribe_error, mSubreddit);
             Snackbar.make(mCoordinatorLayout, errorMsg, Snackbar.LENGTH_LONG)
@@ -172,33 +193,21 @@ public class SubredditInfoFragment extends BaseFragment {
         };
     }
 
-    Action1<Void> onSubredditUnsubscribed() {
-        return (result) -> setSubscribeButtonState(false);
+    Action1<Void> onSubredditUnsubscribed(Subreddit subreddit) {
+        return (result) -> {
+            subreddit.setUserIsSubscriber(false);
+            showSubscribeButton(subreddit);
+        };
     }
 
     Action1<Throwable> onSubredditUnsubscribeError() {
         return (error) -> {
-            Timber.e("Error unsubscribing from /r/" + mSubreddit, error);
+            Timber.e(error, "Error unsubscribing from /r/%s", mSubreddit);
 
             String errorMsg = getString(R.string.unsubscribe_error, mSubreddit);
             Snackbar.make(mCoordinatorLayout, errorMsg, Snackbar.LENGTH_LONG)
                     .show();
         };
-    }
-
-    void setSubscribeButtonState(boolean subscribed) {
-        if (subscribed) {
-            mSubscribeButton.setText(R.string.subscribed);
-
-            // Add check icon
-            Drawable checkDrawable = ContextCompat.getDrawable(getContext(), R.drawable.ic_done_black_24dp);
-            mSubscribeButton.setCompoundDrawables(checkDrawable, null, null, null);
-        } else {
-            mSubscribeButton.setText(R.string.subscribe);
-
-            // Remove check icon
-            mSubscribeButton.setCompoundDrawables(null, null, null, null);
-        }
     }
 
     void showSubredditInfo(final @NonNull Subreddit subreddit) {
