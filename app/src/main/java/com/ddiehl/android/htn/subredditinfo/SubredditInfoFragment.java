@@ -1,16 +1,16 @@
 package com.ddiehl.android.htn.subredditinfo;
 
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
+import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
@@ -32,7 +32,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import in.uncod.android.bypass.Bypass;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action0;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import rxreddit.model.Subreddit;
@@ -50,7 +49,10 @@ public class SubredditInfoFragment extends BaseFragment {
     @BindView(R.id.coordinator_layout) CoordinatorLayout mCoordinatorLayout;
     @BindView(R.id.subreddit_info_parent) View mParentViewGroup;
     @BindView(R.id.subreddit_name) TextView mSubredditName;
-    @BindView(R.id.subscribe_button) Button mSubscribeButton;
+    @BindView(R.id.subscribe_button) ViewGroup mSubscribeButtonLayout;
+    @BindView(R.id.subscribe_button_text) TextView mSubscribeButtonText;
+    @BindView(R.id.subscribe_button_icon) ImageView mSubscribeButtonIcon;
+    @BindView(R.id.subscribe_button_progress) ProgressBar mSubscribeButtonProgressBar;
     @BindView(R.id.create_date) TextView mCreateDate;
     @BindView(R.id.subscriber_count) TextView mSubscriberCount;
     @BindView(R.id.nsfw_icon) TextView mNsfwIcon;
@@ -61,6 +63,7 @@ public class SubredditInfoFragment extends BaseFragment {
 
     SubredditInfoLoader mSubredditInfoLoader;
     SubscriptionManagerPresenter mSubscriptionManager;
+    InfoTuple mSubredditInfo;
 
     @Override
     protected int getLayoutResId() {
@@ -123,6 +126,7 @@ public class SubredditInfoFragment extends BaseFragment {
 
     Action1<InfoTuple> onSubredditInfoLoaded() {
         return tuple -> {
+            mSubredditInfo = tuple;
             mParentViewGroup.setVisibility(View.VISIBLE);
 
             showSubscribeButton(tuple.subreddit);
@@ -134,46 +138,52 @@ public class SubredditInfoFragment extends BaseFragment {
     void showSubscribeButton(final @NonNull Subreddit subreddit) {
         Boolean subscribed = subreddit.getUserIsSubscriber();
 
+        mSubscribeButtonProgressBar.setVisibility(View.GONE);
+        mSubscribeButtonLayout.setEnabled(true);
+
         // Show subscribe
         if (subscribed == null || !subscribed) {
-            mSubscribeButton.setText(R.string.subscribe);
+            mSubscribeButtonText.setText(R.string.subscribe);
 
-            // Add check icon
-            Drawable checkDrawable = ContextCompat.getDrawable(getContext(), R.drawable.ic_done_black_24dp);
-            mSubscribeButton.setCompoundDrawables(checkDrawable, null, null, null);
+            // Removed check icon
+            mSubscribeButtonIcon.setVisibility(View.GONE);
 
             // Set subscribe on click
-            mSubscribeButton.setOnClickListener((view) ->
-                    mSubscriptionManager.subscribe(subreddit)
-                            .doOnSubscribe(setSubscribeButtonEnabled(false))
-                            .doOnUnsubscribe(setSubscribeButtonEnabled(true))
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(onSubredditSubscribed(subreddit), onSubredditSubscribeError()));
+            mSubscribeButtonLayout.setOnClickListener((view) -> {
+                mSubscribeButtonLayout.setOnClickListener(null);
+                mSubscribeButtonIcon.setVisibility(View.GONE);
+                mSubscribeButtonProgressBar.setVisibility(View.VISIBLE);
+                mSubscribeButtonLayout.setEnabled(false);
+
+                mSubscriptionManager.subscribe(subreddit)
+                        .doOnUnsubscribe(() -> showSubscribeButton(mSubredditInfo.subreddit))
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(onSubredditSubscribed(subreddit), onSubredditSubscribeError());
+            });
         }
 
         // Show unsubscribe
         else {
-            mSubscribeButton.setText(R.string.subscribed);
+            mSubscribeButtonText.setText(R.string.subscribed);
 
             // Add check icon
-            mSubscribeButton.setCompoundDrawables(null, null, null, null);
+            mSubscribeButtonIcon.setVisibility(View.VISIBLE);
 
             // Set unsubscribe on click
-            mSubscribeButton.setOnClickListener((view) ->
-                    mSubscriptionManager.unsubscribe(subreddit)
-                            .doOnSubscribe(setSubscribeButtonEnabled(false))
-                            .doOnUnsubscribe(setSubscribeButtonEnabled(true))
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(onSubredditUnsubscribed(subreddit), onSubredditUnsubscribeError()));
-        }
-    }
+            mSubscribeButtonLayout.setOnClickListener((view) -> {
+                mSubscribeButtonLayout.setOnClickListener(null);
+                mSubscribeButtonIcon.setVisibility(View.GONE);
+                mSubscribeButtonProgressBar.setVisibility(View.VISIBLE);
+                mSubscribeButtonLayout.setEnabled(false);
 
-    Action0 setSubscribeButtonEnabled(boolean enabled) {
-        return () -> getActivity().runOnUiThread(() ->
-                mSubscribeButton.setEnabled(enabled)
-        );
+                mSubscriptionManager.unsubscribe(subreddit)
+                        .doOnUnsubscribe(() -> showSubscribeButton(mSubredditInfo.subreddit))
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(onSubredditUnsubscribed(subreddit), onSubredditUnsubscribeError());
+            });
+        }
     }
 
     Action1<Void> onSubredditSubscribed(Subreddit subreddit) {
