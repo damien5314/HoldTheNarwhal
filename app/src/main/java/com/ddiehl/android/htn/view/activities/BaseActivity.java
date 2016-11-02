@@ -332,7 +332,9 @@ public abstract class BaseActivity extends AppCompatActivity implements
             extras.putInt(EXTRA_CUSTOM_TABS_TOOLBAR_COLOR, ContextCompat.getColor(this, R.color.primary));
             intent.putExtras(extras);
             startActivity(intent);
-        } else showWebViewForURL(url);
+        } else {
+            showWebViewForURL(url);
+        }
     }
 
     private void showWebViewForURL(@NonNull String url) {
