@@ -148,18 +148,25 @@ public class SubredditInfoFragment extends BaseFragment {
             // Removed check icon
             mSubscribeButtonIcon.setVisibility(View.GONE);
 
-            // Set subscribe on click
+            // Set onClick behavior
             mSubscribeButtonLayout.setOnClickListener((view) -> {
+                // Remove onClick behavior
                 mSubscribeButtonLayout.setOnClickListener(null);
+
+                // Hide icon, show progress bar, and set layout to disabled state
                 mSubscribeButtonIcon.setVisibility(View.GONE);
                 mSubscribeButtonProgressBar.setVisibility(View.VISIBLE);
                 mSubscribeButtonLayout.setEnabled(false);
 
+                // Subscribe to subreddit
                 mSubscriptionManager.subscribe(subreddit)
                         .doOnUnsubscribe(() -> showSubscribeButton(mSubredditInfo.subreddit))
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(onSubredditSubscribed(subreddit), onSubredditSubscribeError());
+                        .subscribe(
+                                (result) -> subreddit.setUserIsSubscriber(true),
+                                onSubredditSubscribeError()
+                        );
             });
         }
 
@@ -170,27 +177,27 @@ public class SubredditInfoFragment extends BaseFragment {
             // Add check icon
             mSubscribeButtonIcon.setVisibility(View.VISIBLE);
 
-            // Set unsubscribe on click
+            // Set onClick behavior
             mSubscribeButtonLayout.setOnClickListener((view) -> {
+                // Remove onClick behavior
                 mSubscribeButtonLayout.setOnClickListener(null);
+
+                // Hide icon, show progress bar, and set layout to disabled state
                 mSubscribeButtonIcon.setVisibility(View.GONE);
                 mSubscribeButtonProgressBar.setVisibility(View.VISIBLE);
                 mSubscribeButtonLayout.setEnabled(false);
 
+                // Unsubscribe from subreddit
                 mSubscriptionManager.unsubscribe(subreddit)
                         .doOnUnsubscribe(() -> showSubscribeButton(mSubredditInfo.subreddit))
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(onSubredditUnsubscribed(subreddit), onSubredditUnsubscribeError());
+                        .subscribe(
+                                (result) -> subreddit.setUserIsSubscriber(false),
+                                onSubredditUnsubscribeError()
+                        );
             });
         }
-    }
-
-    Action1<Void> onSubredditSubscribed(Subreddit subreddit) {
-        return (result) -> {
-            subreddit.setUserIsSubscriber(true);
-            showSubscribeButton(subreddit);
-        };
     }
 
     Action1<Throwable> onSubredditSubscribeError() {
@@ -200,13 +207,6 @@ public class SubredditInfoFragment extends BaseFragment {
             String errorMsg = getString(R.string.subscribe_error, mSubreddit);
             Snackbar.make(mCoordinatorLayout, errorMsg, Snackbar.LENGTH_LONG)
                     .show();
-        };
-    }
-
-    Action1<Void> onSubredditUnsubscribed(Subreddit subreddit) {
-        return (result) -> {
-            subreddit.setUserIsSubscriber(false);
-            showSubscribeButton(subreddit);
         };
     }
 
