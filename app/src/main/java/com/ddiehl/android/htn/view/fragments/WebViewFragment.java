@@ -41,11 +41,11 @@ public class WebViewFragment extends BaseFragment {
 
     @Arg String mUrl;
 
-    @Inject protected IdentityManager mIdentityManager;
-    @Inject protected RedditService mRedditService;
+    @Inject IdentityManager mIdentityManager;
+    @Inject RedditService mRedditService;
 
-    @BindView(R.id.web_view) protected WebView mWebView;
-    @BindView(R.id.progress_bar) protected ProgressBar mProgressBar;
+    @BindView(R.id.web_view) WebView mWebView;
+    @BindView(R.id.progress_bar) ProgressBar mProgressBar;
 
     static {
         if (BuildConfig.DEBUG && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
@@ -67,7 +67,7 @@ public class WebViewFragment extends BaseFragment {
         setHasOptionsMenu(true);
     }
 
-    @Override
+    @NonNull @Override
     public View onCreateView(
             LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle state) {
         View view = super.onCreateView(inflater, container, state);

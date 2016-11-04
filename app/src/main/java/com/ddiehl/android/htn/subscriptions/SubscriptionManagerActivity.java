@@ -17,6 +17,7 @@ public class SubscriptionManagerActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        showTabs(false);
         showFragment();
     }
 

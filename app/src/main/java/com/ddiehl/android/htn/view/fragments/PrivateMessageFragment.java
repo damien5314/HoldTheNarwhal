@@ -39,13 +39,13 @@ public class PrivateMessageFragment extends BaseFragment implements PrivateMessa
 
     @Arg String mJson;
 
-    @Inject protected Gson mGson;
+    @Inject Gson mGson;
 
     @BindView(R.id.coordinator_layout) CoordinatorLayout mCoordinatorLayout;
     @BindView(R.id.conversation_subject) TextView mConversationSubject;
     @BindView(R.id.recycler_view) RecyclerView mRecyclerView;
 
-    private PrivateMessageAdapter mAdapter;
+    PrivateMessageAdapter mAdapter;
 
     @Override
     protected int getLayoutResId() {
@@ -60,7 +60,7 @@ public class PrivateMessageFragment extends BaseFragment implements PrivateMessa
         mAdapter = new PrivateMessageAdapter();
     }
 
-    @Nullable @Override
+    @NonNull @Override
     public View onCreateView(
             LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle state) {
         View view = super.onCreateView(inflater, container, state);

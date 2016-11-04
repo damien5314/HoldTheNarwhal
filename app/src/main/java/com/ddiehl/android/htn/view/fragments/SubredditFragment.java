@@ -3,7 +3,6 @@ package com.ddiehl.android.htn.view.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -47,6 +46,9 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
 
     @BindView(R.id.coordinator_layout) protected CoordinatorLayout mCoordinatorLayout;
 
+    // Cache for sort selected before showing timespan dialog
+    private String mSelectedSort;
+
     @Override
     protected int getLayoutResId() {
         return R.layout.listings_fragment;
@@ -67,8 +69,7 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
         mCallbacks = presenter;
     }
 
-    @Nullable
-    @Override
+    @NonNull @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
         View view = super.onCreateView(inflater, container, state);
         ButterKnife.bind(this, view);
@@ -78,9 +79,6 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        showTabs(false);
-
         updateTitle();
     }
 
@@ -262,9 +260,6 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
             finish();
         }
     }
-
-    // Cache for sort selected before showing timespan dialog
-    private String mSelectedSort;
 
     private void onSortSelected(@NonNull String sort) {
         mAnalytics.logOptionChangeSort(sort);

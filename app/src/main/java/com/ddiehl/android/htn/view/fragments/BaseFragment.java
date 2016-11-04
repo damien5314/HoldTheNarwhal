@@ -3,18 +3,15 @@ package com.ddiehl.android.htn.view.fragments;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.net.MailTo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -54,7 +51,8 @@ public abstract class BaseFragment extends Fragment implements MainView {
     @Inject protected Analytics mAnalytics;
 
     protected RedditNavigationView mRedditNavigationView;
-    private ProgressDialog mLoadingOverlay;
+    ProgressDialog mLoadingOverlay;
+    protected TabLayout mTabLayout;
 
     protected abstract int getLayoutResId();
     protected abstract View getChromeView();
@@ -65,37 +63,12 @@ public abstract class BaseFragment extends Fragment implements MainView {
         HoldTheNarwhal.getApplicationComponent().inject(this);
     }
 
-    @Nullable @Override
+    @NonNull @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle state) {
         View view = inflater.inflate(getLayoutResId(), container, false);
         ButterKnife.bind(this, view);
+        mTabLayout = ButterKnife.findById(getActivity(), R.id.tab_layout);
         return view;
-    }
-
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        // Initialize toolbar
-        Toolbar toolbar = ButterKnife.findById(view, R.id.toolbar);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-
-        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        if (actionBar != null) {
-            Drawable homeIndicator = AndroidUtils.getTintedDrawable(
-                    getContext(), R.drawable.ic_menu_black_24dp, R.color.icons
-            );
-            actionBar.setHomeAsUpIndicator(homeIndicator);
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
-    }
-
-    protected void showTabs(boolean show) {
-        View view = getView();
-        if (view != null) {
-            ButterKnife.findById(view, R.id.tab_layout)
-                    .setVisibility(show ? View.VISIBLE : View.GONE);
-        }
     }
 
     @Override

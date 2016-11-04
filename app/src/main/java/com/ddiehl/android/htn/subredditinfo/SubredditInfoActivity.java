@@ -18,13 +18,15 @@ public class SubredditInfoActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Set window background color
-        int bgColor = ContextCompat.getColor(this, R.color.white);
-        getWindow().getDecorView().setBackgroundColor(bgColor);
-
         if (!getIntent().getExtras().containsKey(EXTRA_SUBREDDIT)) {
             throw new RuntimeException("Activity is missing required extras");
         }
+
+        showTabs(false);
+
+        // Set window background color
+        int bgColor = ContextCompat.getColor(this, R.color.white);
+        getWindow().getDecorView().setBackgroundColor(bgColor);
 
         mSubreddit = getIntent().getExtras().getString(EXTRA_SUBREDDIT);
     }

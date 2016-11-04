@@ -2,7 +2,6 @@ package com.ddiehl.android.htn.view.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TabLayout;
 import android.text.TextUtils;
@@ -35,8 +34,7 @@ public class InboxFragment extends BaseListingsFragment
 
     @Arg(key = "ARG_SHOW") String mShow;
 
-    @BindView(R.id.tab_layout) protected TabLayout mTabs;
-    @BindView(R.id.coordinator_layout) protected CoordinatorLayout mCoordinatorLayout;
+    @BindView(R.id.coordinator_layout) CoordinatorLayout mCoordinatorLayout;
 
     private InboxPresenter mInboxPresenter;
 
@@ -60,8 +58,7 @@ public class InboxFragment extends BaseListingsFragment
         mCallbacks = mInboxPresenter;
     }
 
-    @Nullable
-    @Override
+    @NonNull @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
         View view = super.onCreateView(inflater, container, state);
 
@@ -73,35 +70,35 @@ public class InboxFragment extends BaseListingsFragment
     }
 
     private void initializeTabs() {
-        mTabs.removeOnTabSelectedListener(this);
+        mTabLayout.removeOnTabSelectedListener(this);
 
         for (TabLayout.Tab tab : buildTabs()) {
-            mTabs.addTab(tab);
+            mTabLayout.addTab(tab);
         }
 
         selectTab(mShow);
 
-        mTabs.addOnTabSelectedListener(this);
+        mTabLayout.addOnTabSelectedListener(this);
     }
 
     private List<TabLayout.Tab> buildTabs() {
         return Arrays.asList(
-                mTabs.newTab()
+                mTabLayout.newTab()
                         .setText(R.string.navigation_tabs_all)
                         .setTag("inbox"),
-                mTabs.newTab()
+                mTabLayout.newTab()
                         .setText(R.string.navigation_tabs_unread)
                         .setTag("unread"),
-                mTabs.newTab()
+                mTabLayout.newTab()
                         .setText(R.string.navigation_tabs_messages)
                         .setTag("messages"),
-                mTabs.newTab()
+                mTabLayout.newTab()
                         .setText(R.string.navigation_tabs_comment_replies)
                         .setTag("comments"),
-                mTabs.newTab()
+                mTabLayout.newTab()
                         .setText(R.string.navigation_tabs_post_replies)
                         .setTag("selfreply"),
-                mTabs.newTab()
+                mTabLayout.newTab()
                         .setText(R.string.navigation_tabs_mentions)
                         .setTag("mentions")
 
@@ -116,9 +113,9 @@ public class InboxFragment extends BaseListingsFragment
 
     @Override
     public void selectTab(@NonNull String show) {
-        mTabs.removeOnTabSelectedListener(this);
-        for (int i = 0; i < AndroidUtils.getChildrenInTabLayout(mTabs); i++) {
-            TabLayout.Tab tab = mTabs.getTabAt(i);
+        mTabLayout.removeOnTabSelectedListener(this);
+        for (int i = 0; i < AndroidUtils.getChildrenInTabLayout(mTabLayout); i++) {
+            TabLayout.Tab tab = mTabLayout.getTabAt(i);
             if (tab != null) {
                 String tag = (String) tab.getTag();
                 if (tag != null && tag.equals(show)) {
@@ -127,7 +124,7 @@ public class InboxFragment extends BaseListingsFragment
                 }
             }
         }
-        mTabs.addOnTabSelectedListener(this);
+        mTabLayout.addOnTabSelectedListener(this);
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.ddiehl.android.htn.view.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
 import com.ddiehl.android.htn.view.fragments.SubredditFragment;
@@ -47,5 +48,11 @@ public class SubredditActivity extends FragmentActivityCompat {
 
     private String getTimespan() {
         return getIntent().getStringExtra(EXTRA_TIMESPAN);
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        showTabs(false);
     }
 }

@@ -59,7 +59,7 @@ public abstract class BaseListingsFragment extends BaseFragment
         setHasOptionsMenu(true);
     }
 
-    @Nullable @Override
+    @NonNull @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle state) {
         View view = super.onCreateView(inflater, container, state);
 

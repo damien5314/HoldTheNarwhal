@@ -82,8 +82,6 @@ public class SubscriptionManagerFragment extends BaseFragment implements Subscri
 
         setTitle(R.string.subscription_manager_title);
 
-        showTabs(false);
-
         mSwipeRefreshLayout.setOnRefreshListener(onSwipeRefresh());
 
         initListView(mRecyclerView);

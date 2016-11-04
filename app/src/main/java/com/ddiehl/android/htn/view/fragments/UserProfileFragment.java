@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.ImageView;
@@ -46,6 +47,7 @@ import rxreddit.model.Trophy;
 import rxreddit.model.UserIdentity;
 
 import static android.app.Activity.RESULT_OK;
+import static butterknife.ButterKnife.findById;
 
 @FragmentWithArgs
 public class UserProfileFragment extends BaseListingsFragment
@@ -58,20 +60,19 @@ public class UserProfileFragment extends BaseListingsFragment
     @Inject protected IdentityManager mIdentityManager;
 
     @BindView(R.id.coordinator_layout) protected CoordinatorLayout mCoordinatorLayout;
-    @BindView(R.id.tab_layout) protected TabLayout mUserProfileTabs;
     @BindView(R.id.user_profile_summary) protected View mUserProfileSummary;
     @BindView(R.id.recycler_view) protected View mListView;
     @BindView(R.id.user_note_layout) protected View mFriendNoteLayout;
 
     // Views for user profile summary elements
-    @BindView(R.id.user_created) protected TextView mCreateDate;
-    @BindView(R.id.user_karma_layout) protected View mKarmaLayout;
-    @BindView(R.id.user_link_karma) protected TextView mLinkKarma;
-    @BindView(R.id.user_comment_karma) protected TextView mCommentKarma;
-    @BindView(R.id.user_friend_button) protected Button mFriendButton;
-    @BindView(R.id.user_friend_note_edit) protected TextView mFriendNote;
-    @BindView(R.id.user_friend_note_confirm) protected Button mFriendNoteSave;
-    @BindView(R.id.user_trophies) protected GridLayout mTrophies;
+    @BindView(R.id.user_created) TextView mCreateDate;
+    @BindView(R.id.user_karma_layout) View mKarmaLayout;
+    @BindView(R.id.user_link_karma) TextView mLinkKarma;
+    @BindView(R.id.user_comment_karma) TextView mCommentKarma;
+    @BindView(R.id.user_friend_button) Button mFriendButton;
+    @BindView(R.id.user_friend_note_edit) TextView mFriendNote;
+    @BindView(R.id.user_friend_note_confirm) Button mFriendNoteSave;
+    @BindView(R.id.user_trophies) GridLayout mTrophies;
 
     @Arg String mUsername;
     @Arg String mShow;
@@ -107,6 +108,13 @@ public class UserProfileFragment extends BaseListingsFragment
         mCallbacks = mUserProfilePresenter;
     }
 
+    @NonNull @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle state) {
+        View view = super.onCreateView(inflater, container, state);
+        mTabLayout = findById(getActivity(), R.id.tab_layout);
+        return view;
+    }
+
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -130,47 +138,47 @@ public class UserProfileFragment extends BaseListingsFragment
     }
 
     private void initializeUserProfileTabs() {
-        mTabUpvoted = mUserProfileTabs.newTab()
+        mTabUpvoted = mTabLayout.newTab()
                 .setText(R.string.navigation_tabs_upvoted)
                 .setTag("upvoted");
-        mTabDownvoted = mUserProfileTabs.newTab()
+        mTabDownvoted = mTabLayout.newTab()
                 .setText(R.string.navigation_tabs_downvoted)
                 .setTag("downvoted");
-        mTabHidden = mUserProfileTabs.newTab()
+        mTabHidden = mTabLayout.newTab()
                 .setText(R.string.navigation_tabs_hidden)
                 .setTag("hidden");
-        mTabSaved = mUserProfileTabs.newTab()
+        mTabSaved = mTabLayout.newTab()
                 .setText(R.string.navigation_tabs_saved)
                 .setTag("saved");
 
-        mUserProfileTabs.removeAllTabs();
-        for (TabLayout.Tab tab : buildDefaultTabs()) {
-            mUserProfileTabs.addTab(tab, tab.getTag().equals(mShow));
+        mTabLayout.removeAllTabs();
+        for (TabLayout.Tab tab : buildDefaultTabs(mTabLayout)) {
+            mTabLayout.addTab(tab, tab.getTag().equals(mShow));
         }
 
         boolean isAuthenticated = mUserProfilePresenter.isAuthenticatedUser();
-        showAuthenticatedTabs(isAuthenticated);
+        showAuthenticatedTabs(mTabLayout, isAuthenticated);
 
         selectTab(mShow);
 
-        mUserProfileTabs.addOnTabSelectedListener(this);
+        mTabLayout.addOnTabSelectedListener(this);
     }
 
-    private List<TabLayout.Tab> buildDefaultTabs() {
+    private List<TabLayout.Tab> buildDefaultTabs(TabLayout tabLayout) {
         return Arrays.asList(
-                mUserProfileTabs.newTab()
+                tabLayout.newTab()
                         .setText(R.string.navigation_tabs_summary)
                         .setTag("summary"),
-                mUserProfileTabs.newTab()
+                tabLayout.newTab()
                         .setText(R.string.navigation_tabs_overview)
                         .setTag("overview"),
-                mUserProfileTabs.newTab()
+                tabLayout.newTab()
                         .setText(R.string.navigation_tabs_comments)
                         .setTag("comments"),
-                mUserProfileTabs.newTab()
+                tabLayout.newTab()
                         .setText(R.string.navigation_tabs_submitted)
                         .setTag("submitted"),
-                mUserProfileTabs.newTab()
+                tabLayout.newTab()
                         .setText(R.string.navigation_tabs_gilded)
                         .setTag("gilded")
         );
@@ -183,18 +191,18 @@ public class UserProfileFragment extends BaseListingsFragment
                 || show.equals("saved");
     }
 
-    private void showAuthenticatedTabs(boolean authenticated) {
+    private void showAuthenticatedTabs(TabLayout tabLayout, boolean authenticated) {
         if (authenticated) {
-            if (mUserProfileTabs.getTabCount() == NUM_DEFAULT_TABS) {
-                mUserProfileTabs.addTab(mTabUpvoted);
-                mUserProfileTabs.addTab(mTabDownvoted);
-                mUserProfileTabs.addTab(mTabHidden);
-                mUserProfileTabs.addTab(mTabSaved);
+            if (tabLayout.getTabCount() == NUM_DEFAULT_TABS) {
+                tabLayout.addTab(mTabUpvoted);
+                tabLayout.addTab(mTabDownvoted);
+                tabLayout.addTab(mTabHidden);
+                tabLayout.addTab(mTabSaved);
             }
         } else {
-            if (mUserProfileTabs.getTabCount() > NUM_DEFAULT_TABS)
-                for (int i = mUserProfileTabs.getTabCount() - 1; i >= NUM_DEFAULT_TABS; i--) {
-                    mUserProfileTabs.removeTabAt(i);
+            if (tabLayout.getTabCount() > NUM_DEFAULT_TABS)
+                for (int i = tabLayout.getTabCount() - 1; i >= NUM_DEFAULT_TABS; i--) {
+                    tabLayout.removeTabAt(i);
                 }
         }
     }
@@ -395,18 +403,18 @@ public class UserProfileFragment extends BaseListingsFragment
     }
 
     private TabLayout.Tab getCurrentSelectedTab() {
-        return mUserProfileTabs.getTabAt(
-                mUserProfileTabs.getSelectedTabPosition());
+        return mTabLayout.getTabAt(
+                mTabLayout.getSelectedTabPosition());
     }
 
     @Override
     public void selectTab(String show) {
         mShow = show;
 
-        mUserProfileTabs.removeOnTabSelectedListener(this);
+        mTabLayout.removeOnTabSelectedListener(this);
 
-        for (int i = 0; i < AndroidUtils.getChildrenInTabLayout(mUserProfileTabs); i++) {
-            TabLayout.Tab tab = mUserProfileTabs.getTabAt(i);
+        for (int i = 0; i < AndroidUtils.getChildrenInTabLayout(mTabLayout); i++) {
+            TabLayout.Tab tab = mTabLayout.getTabAt(i);
             if (tab != null) {
                 String tag = (String) tab.getTag();
                 if (tag != null && tag.equals(show)) {
@@ -416,7 +424,7 @@ public class UserProfileFragment extends BaseListingsFragment
             }
         }
 
-        mUserProfileTabs.addOnTabSelectedListener(this);
+        mTabLayout.addOnTabSelectedListener(this);
 
         showHideView(mShow);
     }

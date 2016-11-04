@@ -3,6 +3,7 @@ package com.ddiehl.android.htn.view.activities;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 
 import com.ddiehl.android.htn.view.fragments.SettingsFragment;
 
@@ -20,5 +21,11 @@ public class SettingsActivity extends FragmentActivity {
     @Override
     String getFragmentTag() {
         return SettingsFragment.TAG;
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        showTabs(false);
     }
 }

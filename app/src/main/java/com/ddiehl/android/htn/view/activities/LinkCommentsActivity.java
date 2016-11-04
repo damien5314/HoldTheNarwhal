@@ -2,6 +2,7 @@ package com.ddiehl.android.htn.view.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
 import com.ddiehl.android.htn.view.fragments.LinkCommentsFragment;
@@ -32,15 +33,21 @@ public class LinkCommentsActivity extends FragmentActivityCompat {
         return LinkCommentsFragment.TAG;
     }
 
-    public String getSubreddit() {
+    String getSubreddit() {
         return getIntent().getStringExtra(EXTRA_SUBREDDIT);
     }
 
-    public String getArticleId() {
+    String getArticleId() {
         return getIntent().getStringExtra(EXTRA_ARTICLE_ID);
     }
 
-    public String getCommentId() {
+    String getCommentId() {
         return getIntent().getStringExtra(EXTRA_COMMENT_ID);
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        showTabs(false);
     }
 }

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -11,12 +12,15 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -81,6 +85,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
 
     @BindView(R.id.drawer_layout) protected DrawerLayout mDrawerLayout;
     @BindView(R.id.navigation_view) protected NavigationView mNavigationView;
+    @BindView(R.id.tab_layout) protected TabLayout mTabLayout;
     /* @BindView(R.id.user_account_icon) */               protected ImageView mGoldIndicator;
     /* @BindView(R.id.account_name) */                    protected TextView mAccountNameView;
     /* @BindView(R.id.sign_out_button) */                 protected View mSignOutView;
@@ -104,9 +109,21 @@ public abstract class BaseActivity extends AppCompatActivity implements
         HoldTheNarwhal.getApplicationComponent().inject(this);
         ButterKnife.bind(this);
 
-        initNavigationView();
+        // Initialize toolbar
+        Toolbar toolbar = ButterKnife.findById(this, R.id.toolbar);
+        setSupportActionBar(toolbar);
 
-        // Listen to events from the navigation drawer
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            Drawable homeIndicator = AndroidUtils.getTintedDrawable(
+                    this, R.drawable.ic_menu_black_24dp, R.color.icons
+            );
+            actionBar.setHomeAsUpIndicator(homeIndicator);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
+        // Initialize navigation view
+        initNavigationView();
         mNavigationView.setNavigationItemSelectedListener(this);
 
         /**
@@ -211,6 +228,10 @@ public abstract class BaseActivity extends AppCompatActivity implements
         updateNavigationItems(identity != null);
     }
 
+    protected void showTabs(boolean show) {
+        mTabLayout.setVisibility(show ? VISIBLE : GONE);
+    }
+
     protected void updateNavigationItems(boolean isLoggedIn) {
         Menu menu = mNavigationView.getMenu();
         menu.findItem(R.id.drawer_log_in).setVisible(!isLoggedIn);
@@ -220,7 +241,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
     }
 
     @Override
-    public boolean onNavigationItemSelected(MenuItem menuItem) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         closeNavigationDrawer();
         switch (menuItem.getItemId()) {
             case R.id.drawer_navigate_to_subreddit:

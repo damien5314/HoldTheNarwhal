@@ -70,9 +70,6 @@ public class LinkCommentsFragment extends BaseListingsFragment
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        showTabs(false);
-
         setTitle(String.format(getString(R.string.link_subreddit), mSubreddit));
     }
 

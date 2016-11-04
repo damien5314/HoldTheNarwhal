@@ -36,6 +36,7 @@ public class PrivateMessageActivity extends FragmentActivityCompat {
         if (getIntent().getExtras() == null) {
             throw new RuntimeException("no extras passed to PrivateMessageActivity");
         }
+        showTabs(false);
     }
 
     private String getJson() {

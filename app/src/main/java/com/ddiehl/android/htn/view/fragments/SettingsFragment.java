@@ -39,10 +39,10 @@ public class SettingsFragment extends PreferenceFragment
 
     public static final String TAG = SettingsFragment.class.getSimpleName();
 
-    @Inject protected IdentityManager mIdentityManager;
-    private SettingsPresenter mSettingsPresenter;
+    @Inject IdentityManager mIdentityManager;
+    SettingsPresenter mSettingsPresenter;
 
-    private ProgressDialog mLoadingOverlay;
+    ProgressDialog mLoadingOverlay;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
