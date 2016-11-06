@@ -157,11 +157,6 @@ public class InboxFragment extends BaseListingsFragment
     }
 
     @Override
-    public void showSubject(@NonNull String subject) {
-    /* no-op for this view */
-    }
-
-    @Override
     public String getShow() {
         return mShow;
     }

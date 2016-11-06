@@ -13,7 +13,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
@@ -42,7 +41,6 @@ public class PrivateMessageFragment extends BaseFragment implements PrivateMessa
     @Inject Gson mGson;
 
     @BindView(R.id.coordinator_layout) CoordinatorLayout mCoordinatorLayout;
-    @BindView(R.id.conversation_subject) TextView mConversationSubject;
     @BindView(R.id.recycler_view) RecyclerView mRecyclerView;
 
     PrivateMessageAdapter mAdapter;
@@ -65,9 +63,6 @@ public class PrivateMessageFragment extends BaseFragment implements PrivateMessa
             LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle state) {
         View view = super.onCreateView(inflater, container, state);
 
-        // Remove title and hide tab layout
-        getActivity().setTitle(null);
-
         // Configure RecyclerView
         mRecyclerView.setAdapter(mAdapter);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(
@@ -84,7 +79,7 @@ public class PrivateMessageFragment extends BaseFragment implements PrivateMessa
 
         // Set text for subject view
         String subject = messages.get(0).getSubject();
-        mConversationSubject.setText(subject);
+        getActivity().setTitle(subject);
 
         // Scroll to bottom so user sees the latest message
         scrollToBottom();
@@ -105,11 +100,6 @@ public class PrivateMessageFragment extends BaseFragment implements PrivateMessa
     @Override
     public void showMessageContextMenu(ContextMenu menu, View v, PrivateMessage privateMessage) {
 
-    }
-
-    @Override
-    public void showSubject(@NonNull String subject) {
-        mConversationSubject.setText(subject);
     }
 
     private void scrollToBottom() {
