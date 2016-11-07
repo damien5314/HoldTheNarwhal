@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="front_page_title">front page</string>
-  <plurals name="link_score">
-    <item quantity="one">%d point</item>
-    <item quantity="other">%d points</item>
-  </plurals>
-  <string name="link_gilded_text">&#160;× %d</string>
-  <string name="link_subreddit">/r/%s</string>
-  <string name="link_author">/u/%s</string>
-  <string name="link_domain">%s</string>
-  <plurals name="link_comment_count">
-    <item quantity="one">%d comment</item>
-    <item quantity="other">%d comments</item>
-  </plurals>
-  <string name="hidden_score_placeholder">\?</string>
+    <string name="front_page_title">front page</string>
+    <plurals name="link_score">
+        <item quantity="one">%d point</item>
+        <item quantity="other">%d points</item>
+    </plurals>
+    <string name="link_gilded_text">&#160;× %d</string>
+    <string name="link_subreddit">/r/%s</string>
+    <string name="link_author">/u/%s</string>
+    <string name="link_domain">%s</string>
+    <plurals name="link_comment_count">
+        <item quantity="one">%d comment</item>
+        <item quantity="other">%d comments</item>
+    </plurals>
+    <string name="hidden_score_placeholder">\?</string>
   <string name="link_parent_text">you are viewing a single comment\'s thread, tap here to view
     the full list of comments</string>
 </resources>

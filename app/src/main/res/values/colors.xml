@@ -1,45 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <!-- icon height in navigation drawer is 20dp w/ 6dp padding -->
-  <!-- http://www.materialpalette.com/blue-grey/red -->
-  <color name="primary_light">#cfd8dc</color>
-  <color name="primary">#607d8b</color>
-  <color name="primary_dark">#455a64</color>
-  <color name="accent">#ff5252</color>
-  <color name="primary_text">#212121</color>
-  <color name="secondary_text">#727272</color>
-  <color name="icons">#ffffff</color>
-  <color name="divider">#b6b6b6</color>
+    <!-- icon height in navigation drawer is 20dp w/ 6dp padding -->
+    <!-- http://www.materialpalette.com/blue-grey/red -->
+    <color name="primary_light">#cfd8dc</color>
+    <color name="primary">#607d8b</color>
+    <color name="primary_dark">#455a64</color>
+    <color name="accent">#ff5252</color>
+    <color name="primary_text">#212121</color>
+    <color name="secondary_text">#727272</color>
+    <color name="icons">#ffffff</color>
+    <color name="divider">#b6b6b6</color>
 
-  <color name="white">#fff</color>
-  <color name="black">#000</color>
-  <color name="transparent">#0000</color>
-  <color name="indentation">@color/primary</color>
-  <color name="reddit_orange_full">@color/reddit_orange</color>
-  <color name="reddit_orange_lighter">#ffcbb8</color>
-  <color name="reddit_blue_full">@color/reddit_downvote</color>
-  <color name="reddit_blue_lighter">#c9c9ff</color>
-  <color name="reddit_gold">#f6e600</color>
-  <color name="author_op_background">#0055df</color>
-  <color name="author_op_text">#ffffff</color>
-  <color name="author_moderator_background">#228822</color>
-  <color name="author_moderator_text">#ffffff</color>
-  <color name="author_admin_background">#ff0011</color>
-  <color name="author_admin_text">#ffffff</color>
-  <color name="markdown_quote_block">@color/primary_light</color>
-  <color name="comment_controversiality_indicator">#ff5252</color>
-  <color name="nsfw_tag_color">#d10023</color>
-  <color name="link_color">#0000ee</color>
+    <!-- States -->
+    <color name="disabled">@color/gray70</color>
 
-  <!-- reddit color scheme -->
-  <!-- https://www.reddit.com/about/alien/ -->
-  <color name="reddit_orange">#ff5700</color>
-  <color name="reddit_orangered">#ff4500</color>
-  <color name="reddit_upvote">#ff8b60</color>
-  <color name="reddit_neutral">#c6c6c6</color>
-  <color name="reddit_downvote">#9494ff</color>
-  <color name="reddit_light_bg">#eff7ff</color>
-  <color name="reddit_header">#cee3f8</color>
-  <color name="reddit_ui_text">#336699</color>
+    <color name="white">#fff</color>
+    <color name="black">#000</color>
+    <color name="gray70">#c0cace</color>
+    <color name="transparent">#0000</color>
+    <color name="indentation">@color/primary</color>
+    <color name="reddit_orange_full">@color/reddit_orange</color>
+    <color name="reddit_orange_lighter">#ffcbb8</color>
+    <color name="reddit_blue_full">@color/reddit_downvote</color>
+    <color name="reddit_blue_lighter">#c9c9ff</color>
+    <color name="reddit_gold">#f6e600</color>
+    <color name="author_op_background">#0055df</color>
+    <color name="author_op_text">#ffffff</color>
+    <color name="author_moderator_background">#228822</color>
+    <color name="author_moderator_text">#ffffff</color>
+    <color name="author_admin_background">#ff0011</color>
+    <color name="author_admin_text">#ffffff</color>
+    <color name="markdown_quote_block">@color/primary_light</color>
+    <color name="comment_controversiality_indicator">#ff5252</color>
+    <color name="nsfw_tag_color">#d10023</color>
+    <color name="link_color">#0000ee</color>
+
+    <!-- reddit color scheme -->
+    <!-- https://www.reddit.com/about/alien/ -->
+    <color name="reddit_orange">#ff5700</color>
+    <color name="reddit_orangered">#ff4500</color>
+    <color name="reddit_upvote">#ff8b60</color>
+    <color name="reddit_neutral">#c6c6c6</color>
+    <color name="reddit_downvote">#9494ff</color>
+    <color name="reddit_light_bg">#eff7ff</color>
+    <color name="reddit_header">#cee3f8</color>
+    <color name="reddit_ui_text">#336699</color>
 
 </resources>

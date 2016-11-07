@@ -2,7 +2,6 @@ package com.ddiehl.android.htn.view.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TabLayout;
 import android.text.TextUtils;
@@ -29,144 +28,141 @@ import butterknife.BindView;
 
 @FragmentWithArgs
 public class InboxFragment extends BaseListingsFragment
-    implements InboxView, TabLayout.OnTabSelectedListener {
+        implements InboxView, TabLayout.OnTabSelectedListener {
 
-  public static final String TAG = InboxFragment.class.getSimpleName();
+    public static final String TAG = InboxFragment.class.getSimpleName();
 
-  private static final String ARG_SHOW = "ARG_SHOW";
+    @Arg(key = "ARG_SHOW") String mShow;
 
-  @Arg(key = ARG_SHOW) String mShow;
+    @BindView(R.id.coordinator_layout) CoordinatorLayout mCoordinatorLayout;
 
-  @BindView(R.id.tab_layout)          protected TabLayout mTabs;
-  @BindView(R.id.coordinator_layout)  protected CoordinatorLayout mCoordinatorLayout;
+    private InboxPresenter mInboxPresenter;
 
-  private InboxPresenter mInboxPresenter;
-
-  @Override
-  public void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    FragmentArgs.inject(this);
-
-    if (TextUtils.isEmpty(mShow)) mShow = "inbox";
-
-    mInboxPresenter = new InboxPresenter(this, mRedditNavigationView, this);
-    mLinkPresenter = mInboxPresenter;
-    mCommentPresenter = mInboxPresenter;
-    mMessagePresenter = mInboxPresenter;
-    mListingsPresenter = mInboxPresenter;
-    mCallbacks = mInboxPresenter;
-  }
-
-  @Nullable @Override
-  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    View view = super.onCreateView(inflater, container, savedInstanceState);
-
-    initializeTabs();
-
-    setTitle(R.string.inbox_fragment_title);
-
-    return view;
-  }
-
-  private void initializeTabs() {
-    mTabs.removeOnTabSelectedListener(this);
-
-    for (TabLayout.Tab tab : buildTabs()) {
-      mTabs.addTab(tab);
+    @Override
+    protected int getLayoutResId() {
+        return R.layout.listings_fragment_inbox;
     }
 
-    selectTab(mShow);
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        FragmentArgs.inject(this);
 
-    mTabs.addOnTabSelectedListener(this);
-  }
+        if (TextUtils.isEmpty(mShow)) mShow = "inbox";
 
-  private List<TabLayout.Tab> buildTabs() {
-    return Arrays.asList(
-        mTabs.newTab()
-            .setText(R.string.navigation_tabs_all)
-            .setTag("inbox"),
-        mTabs.newTab()
-            .setText(R.string.navigation_tabs_unread)
-            .setTag("unread"),
-        mTabs.newTab()
-            .setText(R.string.navigation_tabs_messages)
-            .setTag("messages"),
-        mTabs.newTab()
-            .setText(R.string.navigation_tabs_comment_replies)
-            .setTag("comments"),
-        mTabs.newTab()
-            .setText(R.string.navigation_tabs_post_replies)
-            .setTag("selfreply"),
-        mTabs.newTab()
-            .setText(R.string.navigation_tabs_mentions)
-            .setTag("mentions")
+        mInboxPresenter = new InboxPresenter(this, mRedditNavigationView, this);
+        mLinkPresenter = mInboxPresenter;
+        mCommentPresenter = mInboxPresenter;
+        mMessagePresenter = mInboxPresenter;
+        mListingsPresenter = mInboxPresenter;
+        mCallbacks = mInboxPresenter;
+    }
 
-    );
-  }
+    @NonNull @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
+        View view = super.onCreateView(inflater, container, state);
 
-  @Override
-  public ListingsAdapter getListingsAdapter() {
-    return new ListingsAdapter(
-        mListingsPresenter, mLinkPresenter, mCommentPresenter, mMessagePresenter);
-  }
+        initializeTabs();
 
-  @Override
-  protected int getLayoutResId() {
-    return R.layout.listings_fragment_inbox;
-  }
+        setTitle(R.string.inbox_fragment_title);
 
-  @Override
-  public void selectTab(@NonNull String show) {
-    mTabs.removeOnTabSelectedListener(this);
-    for (int i = 0; i < AndroidUtils.getChildrenInTabLayout(mTabs); i++) {
-      TabLayout.Tab tab = mTabs.getTabAt(i);
-      if (tab != null) {
-        String tag = (String) tab.getTag();
-        if (tag != null && tag.equals(show)) {
-          tab.select();
-          break;
+        return view;
+    }
+
+    private void initializeTabs() {
+        mTabLayout.removeOnTabSelectedListener(this);
+
+        for (TabLayout.Tab tab : buildTabs()) {
+            mTabLayout.addTab(tab);
         }
-      }
+
+        selectTab(mShow);
+
+        mTabLayout.addOnTabSelectedListener(this);
     }
-    mTabs.addOnTabSelectedListener(this);
-  }
 
-  @Override
-  public void onTabSelected(TabLayout.Tab tab) {
-    mShow = (String) tab.getTag();
-    mInboxPresenter.onViewSelected(mShow);
-  }
+    private List<TabLayout.Tab> buildTabs() {
+        return Arrays.asList(
+                mTabLayout.newTab()
+                        .setText(R.string.navigation_tabs_all)
+                        .setTag("inbox"),
+                mTabLayout.newTab()
+                        .setText(R.string.navigation_tabs_unread)
+                        .setTag("unread"),
+                mTabLayout.newTab()
+                        .setText(R.string.navigation_tabs_messages)
+                        .setTag("messages"),
+                mTabLayout.newTab()
+                        .setText(R.string.navigation_tabs_comment_replies)
+                        .setTag("comments"),
+                mTabLayout.newTab()
+                        .setText(R.string.navigation_tabs_post_replies)
+                        .setTag("selfreply"),
+                mTabLayout.newTab()
+                        .setText(R.string.navigation_tabs_mentions)
+                        .setTag("mentions")
 
-  @Override public void onTabUnselected(TabLayout.Tab tab) { }
-  @Override public void onTabReselected(TabLayout.Tab tab) { }
-
-  @Override
-  public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-    inflater.inflate(R.menu.listings_inbox, menu);
-  }
-
-  @Override
-  public boolean onOptionsItemSelected(MenuItem item) {
-    switch (item.getItemId()) {
-      case R.id.action_mark_messages_read:
-        mInboxPresenter.onMarkMessagesRead();
-        return true;
+        );
     }
-    return super.onOptionsItemSelected(item);
-  }
 
-  @Override
-  public void showSubject(@NonNull String subject) {
-    /* no-op for this view */
-  }
+    @Override
+    public ListingsAdapter getListingsAdapter() {
+        return new ListingsAdapter(
+                mListingsPresenter, this, mLinkPresenter, this, mCommentPresenter, this, mMessagePresenter);
+    }
 
-  @Override
-  public String getShow() {
-    return mShow;
-  }
+    @Override
+    public void selectTab(@NonNull String show) {
+        mTabLayout.removeOnTabSelectedListener(this);
+        for (int i = 0; i < AndroidUtils.getChildrenInTabLayout(mTabLayout); i++) {
+            TabLayout.Tab tab = mTabLayout.getTabAt(i);
+            if (tab != null) {
+                String tag = (String) tab.getTag();
+                if (tag != null && tag.equals(show)) {
+                    tab.select();
+                    break;
+                }
+            }
+        }
+        mTabLayout.addOnTabSelectedListener(this);
+    }
 
-  @Override
-  View getChromeView() {
-    return mCoordinatorLayout;
-  }
+    @Override
+    public void onTabSelected(TabLayout.Tab tab) {
+        mShow = (String) tab.getTag();
+        mInboxPresenter.onViewSelected(mShow);
+    }
+
+    @Override
+    public void onTabUnselected(TabLayout.Tab tab) {
+    }
+
+    @Override
+    public void onTabReselected(TabLayout.Tab tab) {
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.listings_inbox, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_mark_messages_read:
+                mInboxPresenter.onMarkMessagesRead();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public String getShow() {
+        return mShow;
+    }
+
+    @Override
+    protected View getChromeView() {
+        return mCoordinatorLayout;
+    }
 }

@@ -17,63 +17,63 @@ import rxreddit.api.RedditService;
 
 public class SettingsPresenterImpl implements SettingsPresenter {
 
-  @Inject protected Context mApplicationContext;
-  @Inject protected RedditService mRedditService;
-  @Inject protected IdentityManager mIdentityManager;
-  @Inject protected SettingsManager mSettingsManager;
+    @Inject protected Context mApplicationContext;
+    @Inject protected RedditService mRedditService;
+    @Inject protected IdentityManager mIdentityManager;
+    @Inject protected SettingsManager mSettingsManager;
 
-  private final SettingsView mSettingsView;
+    private final SettingsView mSettingsView;
 
-  public SettingsPresenterImpl(SettingsView settingsView) {
-    mSettingsView = settingsView;
-    HoldTheNarwhal.getApplicationComponent().inject(this);
-  }
-
-  @Override
-  public void onResume() {
-    if (mRedditService.isUserAuthorized()) {
-      refresh(true);
+    public SettingsPresenterImpl(SettingsView settingsView) {
+        mSettingsView = settingsView;
+        HoldTheNarwhal.getApplicationComponent().inject(this);
     }
-  }
 
-  @Override
-  public void onPause() {
-  }
-
-  @Override
-  public void onViewDestroyed() {
-  }
-
-  @Override
-  public void refresh(boolean pullFromServer) {
-    boolean showUser = mSettingsManager.hasFromRemote();
-    mSettingsView.showPreferences(showUser);
-    if (pullFromServer) {
-      if (AndroidUtils.isConnectedToNetwork(mApplicationContext)) {
-        getData();
-      } else {
-        String message = mApplicationContext.getString(R.string.error_network_unavailable);
-        mSettingsView.showToast(message);
-      }
+    @Override
+    public void onResume() {
+        if (mRedditService.isUserAuthorized()) {
+            refresh(true);
+        }
     }
-  }
 
-  private void getData() {
-    mSettingsView.showSpinner(null);
-    mRedditService.getUserSettings()
-        .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-        .doOnTerminate(mSettingsView::dismissSpinner)
-        .doOnNext(mSettingsManager::saveUserSettings)
-        .subscribe(
-            settings -> refresh(false),
-            e -> {
-              String message = mApplicationContext.getString(R.string.error_get_user_settings);
-              mSettingsView.showToast(message);
-            });
-  }
+    @Override
+    public void onPause() {
+    }
 
-  @Override
-  public boolean isRefreshable() {
-    return mSettingsManager.hasFromRemote();
-  }
+    @Override
+    public void onViewDestroyed() {
+    }
+
+    @Override
+    public void refresh(boolean pullFromServer) {
+        boolean showUser = mSettingsManager.hasFromRemote();
+        mSettingsView.showPreferences(showUser);
+        if (pullFromServer) {
+            if (AndroidUtils.isConnectedToNetwork(mApplicationContext)) {
+                getData();
+            } else {
+                String message = mApplicationContext.getString(R.string.error_network_unavailable);
+                mSettingsView.showToast(message);
+            }
+        }
+    }
+
+    private void getData() {
+        mSettingsView.showSpinner(null);
+        mRedditService.getUserSettings()
+                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .doOnTerminate(mSettingsView::dismissSpinner)
+                .doOnNext(mSettingsManager::saveUserSettings)
+                .subscribe(
+                        settings -> refresh(false),
+                        e -> {
+                            String message = mApplicationContext.getString(R.string.error_get_user_settings);
+                            mSettingsView.showToast(message);
+                        });
+    }
+
+    @Override
+    public boolean isRefreshable() {
+        return mSettingsManager.hasFromRemote();
+    }
 }

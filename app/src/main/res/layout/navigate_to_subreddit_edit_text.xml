@@ -1,39 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/navigation_drawer_item"
-    android:layout_width="match_parent"
-    android:layout_height="@dimen/navigation_drawer_item_height"
-    android:orientation="horizontal"
-    android:paddingLeft="@dimen/navigation_drawer_item_margin"
-    android:paddingRight="@dimen/navigation_drawer_item_margin">
+        android:id="@+id/navigation_drawer_item"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/navigation_drawer_item_height"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/navigation_drawer_item_margin"
+        android:paddingRight="@dimen/navigation_drawer_item_margin">
 
-  <com.ddiehl.android.htn.view.widgets.RedditNavEditText
-      android:id="@+id/drawer_navigate_to_subreddit_text"
-      android:layout_width="@dimen/navigation_drawer_width"
-      android:layout_height="wrap_content"
-      android:layout_gravity="center_vertical"
-      android:background="@null"
-      android:gravity="start"
-      android:hint="@string/drawer_navigate_to_subreddit"
-      android:imeOptions="actionDone"
-      android:inputType="text"
-      android:maxLines="1"
-      android:textAlignment="viewStart"
-      android:textColor="@color/primary_text"
-      android:textColorHint="@color/secondary_text"
-      android:textSize="@dimen/navigation_drawer_item_text"
-      tools:ignore="UnusedAttribute"/>
+    <com.ddiehl.android.htn.view.widgets.SubredditEditText
+            android:id="@+id/drawer_navigate_to_subreddit_text"
+            android:layout_width="@dimen/navigation_drawer_width"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:background="@null"
+            android:gravity="start"
+            android:hint="@string/drawer_navigate_to_subreddit"
+            android:imeOptions="actionDone"
+            android:inputType="text"
+            android:maxLines="1"
+            android:textAlignment="viewStart"
+            android:textColor="@color/primary_text"
+            android:textColorHint="@color/secondary_text"
+            android:textSize="@dimen/navigation_drawer_item_text"
+            tools:ignore="UnusedAttribute" />
 
-  <ImageView
-      android:id="@+id/drawer_navigate_to_subreddit_go"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_gravity="center_vertical"
-      android:color="@color/accent"
-      android:src="@drawable/ic_navigation_go"
-      android:autoMirrored="true"
-      tools:ignore="UnusedAttribute"/>
+    <ImageView
+            android:id="@+id/drawer_navigate_to_subreddit_go"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:autoMirrored="true"
+            android:contentDescription="@string/drawer_navigate_to_subreddit_go_cd"
+            android:src="@drawable/ic_arrow_forward_black_24dp"
+            android:tint="@color/accent"
+            tools:ignore="UnusedAttribute" />
 
 </LinearLayout>

@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
 
-  <solid
-      android:color="@color/author_moderator_background"/>
+    <solid
+            android:color="@color/author_moderator_background" />
 
-  <corners
-      android:radius="@dimen/distinguished_author_bg_corners"/>
+    <corners
+            android:radius="@dimen/distinguished_author_bg_corners" />
 
-  <padding
-      android:left="@dimen/distinguished_author_bg_padding"
-      android:right="@dimen/distinguished_author_bg_padding"/>
+    <padding
+            android:left="@dimen/distinguished_author_bg_padding"
+            android:right="@dimen/distinguished_author_bg_padding" />
 
 </shape>

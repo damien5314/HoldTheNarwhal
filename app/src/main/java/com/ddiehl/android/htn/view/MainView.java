@@ -7,23 +7,19 @@ import android.support.annotation.StringRes;
 
 public interface MainView {
 
-  void loadImageIntoDrawerHeader(@Nullable String url);
+    void loadImageIntoDrawerHeader(@Nullable String url);
 
-  void setTitle(@NonNull CharSequence title);
+    void setTitle(@NonNull CharSequence title);
 
-  void setTitle(@StringRes int id);
+    void setTitle(@StringRes int id);
 
-  void showSpinner(@Nullable String msg);
+    void showSpinner();
 
-  void showSpinner(@StringRes int resId);
+    void dismissSpinner();
 
-  void dismissSpinner();
+    void showToast(@NonNull CharSequence msg);
 
-  void showToast(@NonNull String msg);
+    void showError(Throwable error, CharSequence message);
 
-  void showToast(@StringRes int resId);
-
-  void showError(Throwable error, String message);
-
-  void doSendEmail(MailTo mailTo);
+    void doSendEmail(MailTo mailTo);
 }

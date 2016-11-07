@@ -1,24 +1,22 @@
 package com.ddiehl.android.htn.view.widgets;
 
 import android.content.Context;
+import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
-import android.widget.ImageView;
 
-public class SquareImageView  extends ImageView {
+public class SquareImageView extends AppCompatImageView {
 
-  public SquareImageView(Context context) {
-    super(context);
-  }
+    public SquareImageView(Context context) {
+        super(context);
+    }
 
-  public SquareImageView(Context context, AttributeSet attrs) {
-    super(context, attrs);
-  }
+    public SquareImageView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+    }
 
-  @Override
-  protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-    super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-    int height = getMeasuredHeight();
-    //noinspection SuspiciousNameCombination
-    setMeasuredDimension(height, height);
-  }
+    @Override
+    protected void onMeasure(int width, int height) {
+        //noinspection SuspiciousNameCombination
+        super.onMeasure(height, height);
+    }
 }

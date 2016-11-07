@@ -4,10 +4,10 @@ import android.support.annotation.NonNull;
 
 public interface InboxView extends ListingsView, LinkView, CommentView, PrivateMessageView {
 
-  void selectTab(@NonNull String show);
+    void selectTab(@NonNull String show);
 
-  String getShow();
+    String getShow();
 
-  // Call this when the user no longer has permission to view inbox
-  void finish();
+    // Call this when the user no longer has permission to view inbox
+    void finish();
 }

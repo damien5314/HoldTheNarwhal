@@ -15,37 +15,40 @@ import com.ddiehl.android.htn.utils.Utils;
 import java.io.InputStream;
 
 public class MarkdownTextFragment extends Fragment {
-  public static final String ARG_TEXT = "arg_text";
 
-  private String mText;
+    public static final String ARG_TEXT = "arg_text";
 
-  public MarkdownTextFragment() { }
+    private String mText;
 
-  public static Fragment newInstance(@NonNull String text) {
-    Fragment f = new MarkdownTextFragment();
-    Bundle args = new Bundle();
-    args.putString(ARG_TEXT, text);
-    f.setArguments(args);
-    return f;
-  }
+    public MarkdownTextFragment() {
+    }
 
-  public static Fragment newInstance(@NonNull InputStream in_s) {
-    String text = Utils.getStringFromInputStream(in_s);
-    return newInstance(text);
-  }
+    public static Fragment newInstance(@NonNull String text) {
+        Fragment f = new MarkdownTextFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_TEXT, text);
+        f.setArguments(args);
+        return f;
+    }
 
-  @Override
-  public void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    Bundle args = getArguments();
-    mText = args.getString(ARG_TEXT, "");
-  }
+    public static Fragment newInstance(@NonNull InputStream in_s) {
+        String text = Utils.getStringFromInputStream(in_s);
+        return newInstance(text);
+    }
 
-  @Nullable @Override
-  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    View v = View.inflate(getActivity(), R.layout.fragment_markdown_text, null);
-    TextView tv = (TextView) v.findViewById(R.id.markdown_text_view);
-    tv.setText(mText);
-    return v;
-  }
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Bundle args = getArguments();
+        mText = args.getString(ARG_TEXT, "");
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View v = View.inflate(getActivity(), R.layout.fragment_markdown_text, null);
+        TextView tv = (TextView) v.findViewById(R.id.markdown_text_view);
+        tv.setText(mText);
+        return v;
+    }
 }

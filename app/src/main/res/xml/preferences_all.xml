@@ -1,25 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen
-    xmlns:android="http://schemas.android.com/apk/res/android">
+        xmlns:android="http://schemas.android.com/apk/res/android">
 
-  <!-- Show these to all users -->
-  <PreferenceCategory
-    android:title="@string/preferences_app">
+    <!-- Show these to all users -->
+    <PreferenceCategory
+            android:title="@string/preferences_app">
 
-    <CheckBoxPreference
-      android:key="pref_allow_analytics"
-      android:title="@string/pref_allow_analytics"
-      android:defaultValue="false"/>
+        <CheckBoxPreference
+                android:key="pref_allow_analytics"
+                android:title="@string/pref_allow_analytics"
+                android:defaultValue="false" />
 
-    <CheckBoxPreference
-      android:key="pref_use_chrome_tabs"
-      android:title="@string/pref_use_custom_tabs"
-      android:defaultValue="true"/>
+        <CheckBoxPreference
+                android:key="pref_use_chrome_tabs"
+                android:title="@string/pref_use_custom_tabs"
+                android:defaultValue="true" />
 
-    <Preference
-      android:key="pref_about_app"
-      android:title="@string/pref_about_app"/>
+        <ListPreference
+                android:key="pref_font"
+                android:title="@string/pref_font"
+                android:entries="@array/pref_font_entries"
+                android:entryValues="@array/pref_font_values"
+                android:defaultValue="@string/font_system_value" />
 
-  </PreferenceCategory>
+        <Preference
+                android:key="pref_about_app"
+                android:title="@string/pref_about_app" />
+
+    </PreferenceCategory>
 
 </PreferenceScreen>

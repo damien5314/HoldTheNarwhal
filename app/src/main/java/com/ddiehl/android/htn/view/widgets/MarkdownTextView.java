@@ -1,89 +1,78 @@
 package com.ddiehl.android.htn.view.widgets;
 
 import android.content.Context;
-import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.AppCompatTextView;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
 import android.util.AttributeSet;
-import android.widget.TextView;
 
-import com.ddiehl.android.htn.R;
+import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.view.Linkify;
 
 import java.util.regex.Pattern;
 
+import javax.inject.Inject;
+
 import in.uncod.android.bypass.Bypass;
 
-public class MarkdownTextView extends TextView {
-  private CharSequence mRawText;
+public class MarkdownTextView extends AppCompatTextView {
 
-  public MarkdownTextView(Context context) {
-    super(context);
-    setMovementMethod(LinkMovementMethod.getInstance());
-  }
+    @Inject Bypass mBypass;
 
-  public MarkdownTextView(Context context, AttributeSet attrs) {
-    super(context, attrs);
-    setMovementMethod(LinkMovementMethod.getInstance());
-  }
+    private CharSequence mRawText;
 
-  public MarkdownTextView(Context context, AttributeSet attrs, int defStyleAttr) {
-    super(context, attrs, defStyleAttr);
-    setMovementMethod(LinkMovementMethod.getInstance());
-  }
-
-  @Override
-  public CharSequence getText() {
-    if (isInEditMode()) return super.getText();
-    return mRawText;
-  }
-
-  @Override
-  public void setText(CharSequence text, BufferType type) {
-    mRawText = text;
-    if (isInEditMode()) {
-      super.setText(text, type);
-    } else {
-      Bypass b = BypassWrapper.getInstance(getContext());
-      CharSequence formatted = b.markdownToSpannable(text.toString());
-      SpannableString s = SpannableString.valueOf(formatted);
-
-      // Add links for /r/ and /u/ patterns
-      Linkify.addLinks(s, Pattern.compile("\\s/*[ru](ser)*/[^ \n]*"), "https://www.reddit.com", null,
-          (match, url) -> {
-            url = url.trim();
-            if (!url.startsWith("/")) url = "/" + url;
-            return url;
-          });
-
-      // Add links missing protocol
-      Linkify.addLinks(s, Pattern.compile("\\swww\\.[^ \\n]*"), "http://", null,
-          (match, url) -> {
-            return url.trim();
-          });
-
-      // Add links with any protocol
-      Linkify.addLinks(s, Pattern.compile("[a-z]+://[^ \\n]*"), null);
-
-      super.setText(s, type);
+    public MarkdownTextView(Context context) {
+        this(context, null);
     }
-  }
 
-  private static class BypassWrapper {
-    private static Bypass _instance;
+    public MarkdownTextView(Context context, AttributeSet attrs) {
+        this(context, attrs, 0);
+    }
 
-    public static Bypass getInstance(Context c) {
-      if (_instance == null) {
-        synchronized (Bypass.class) {
-          if (_instance == null) {
-            Bypass.Options o = new Bypass.Options();
-            o.setBlockQuoteColor(
-                ContextCompat.getColor(c, R.color.markdown_quote_block));
-            _instance = new Bypass(c, o);
-          }
+    public MarkdownTextView(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        init();
+    }
+
+    void init() {
+        setMovementMethod(LinkMovementMethod.getInstance());
+        if (isInEditMode()) return;
+        HoldTheNarwhal.getApplicationComponent().inject(this);
+    }
+
+    @Override
+    public CharSequence getText() {
+        if (isInEditMode()) return super.getText();
+        return mRawText;
+    }
+
+    @Override
+    public void setText(CharSequence text, BufferType type) {
+        mRawText = text;
+        if (isInEditMode() || mBypass == null) {
+            super.setText(text, type);
+        } else {
+            CharSequence formatted = mBypass.markdownToSpannable(text.toString());
+            SpannableString s = SpannableString.valueOf(formatted);
+
+            // Add links for /r/ and /u/ patterns
+            Linkify.addLinks(s, Pattern.compile("\\s/*[ru](ser)*/[^ \n]*"), "https://www.reddit.com", null,
+                    (match, url) -> {
+                        url = url.trim();
+                        if (!url.startsWith("/")) url = "/" + url;
+                        return url;
+                    });
+
+            // Add links missing protocol
+            Linkify.addLinks(s, Pattern.compile("\\swww\\.[^ \\n]*"), "http://", null,
+                    (match, url) -> {
+                        return url.trim();
+                    });
+
+            // Add links with any protocol
+            Linkify.addLinks(s, Pattern.compile("[a-z]+://[^ \\n]*"), null);
+
+            super.setText(s, type);
         }
-      }
-      return _instance;
     }
-  }
 }

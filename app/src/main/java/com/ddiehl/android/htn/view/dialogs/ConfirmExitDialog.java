@@ -11,33 +11,41 @@ import com.ddiehl.android.htn.R;
 
 public class ConfirmExitDialog extends DialogFragment {
 
-  public static final String TAG = ConfirmExitDialog.class.getSimpleName();
+    public static final String TAG = ConfirmExitDialog.class.getSimpleName();
 
-  public interface Callbacks {
-    void onConfirmExit();
-    void onCancelExit();
-  }
+    public interface Callbacks {
 
-  private Callbacks mCallbacks;
+        void onConfirmExit();
 
-  @Override
-  public void onAttach(Context context) {
-    super.onAttach(context);
-    if (!(context instanceof Callbacks)) {
-      throw new ClassCastException(context + " must implement ConfirmExitDialogs.Callbacks");
+        void onCancelExit();
     }
-    mCallbacks = (Callbacks) context;
-  }
 
-  @NonNull
-  @Override
-  public Dialog onCreateDialog(Bundle savedInstanceState) {
-    return new AlertDialog.Builder(getContext())
-        .setMessage(R.string.confirm_exit_dialog_title)
-        .setPositiveButton(R.string.confirm_exit_dialog_confirm,
-            (dialogInterface, which) -> mCallbacks.onConfirmExit())
-        .setNegativeButton(R.string.confirm_exit_dialog_cancel,
-            (dialogInterface, which) -> mCallbacks.onCancelExit())
-        .create();
-  }
+    private Callbacks mListener;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (!(context instanceof Callbacks)) {
+            throw new ClassCastException(context + " must implement ConfirmExitDialogs.Callbacks");
+        }
+        mListener = (Callbacks) context;
+    }
+
+    @Override
+    public void onDetach() {
+        mListener = null;
+        super.onDetach();
+    }
+
+    @NonNull
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        return new AlertDialog.Builder(getContext())
+                .setMessage(R.string.confirm_exit_dialog_title)
+                .setPositiveButton(R.string.confirm_exit_dialog_confirm,
+                        (dialogInterface, which) -> mListener.onConfirmExit())
+                .setNegativeButton(R.string.confirm_exit_dialog_cancel,
+                        (dialogInterface, which) -> mListener.onCancelExit())
+                .create();
+    }
 }

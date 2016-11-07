@@ -9,26 +9,31 @@ import com.ddiehl.android.htn.view.fragments.InboxFragmentBuilder;
 
 public class InboxActivity extends FragmentActivityCompat {
 
-  private static final String EXTRA_SHOW = "EXTRA_SHOW";
+    private static final String EXTRA_SHOW = "EXTRA_SHOW";
 
-  public static Intent getIntent(Context context, String show) {
-    Intent intent = new Intent(context, InboxActivity.class);
-    intent.putExtra(EXTRA_SHOW, show);
-    return intent;
-  }
+    public static Intent getIntent(Context context, String show) {
+        Intent intent = new Intent(context, InboxActivity.class);
+        intent.putExtra(EXTRA_SHOW, show);
+        return intent;
+    }
 
-  @Override
-  Fragment getFragment() {
-    return new InboxFragmentBuilder(getShow())
-        .build();
-  }
+    @Override
+    protected boolean hasNavigationDrawer() {
+        return true;
+    }
 
-  @Override
-  String getFragmentTag() {
-    return InboxFragment.TAG;
-  }
+    @Override
+    Fragment getFragment() {
+        return new InboxFragmentBuilder(getShow())
+                .build();
+    }
 
-  private String getShow() {
-    return getIntent().getStringExtra(EXTRA_SHOW);
-  }
+    @Override
+    String getFragmentTag() {
+        return InboxFragment.TAG;
+    }
+
+    private String getShow() {
+        return getIntent().getStringExtra(EXTRA_SHOW);
+    }
 }

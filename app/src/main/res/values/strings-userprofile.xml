@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="navigation_tabs_summary">summary</string>
-  <string name="navigation_tabs_overview">overview</string>
-  <string name="navigation_tabs_comments">comments</string>
-  <string name="navigation_tabs_submitted">submitted</string>
-  <string name="navigation_tabs_gilded">gilded</string>
-  <string name="navigation_tabs_upvoted">upvoted</string>
-  <string name="navigation_tabs_downvoted">downvoted</string>
-  <string name="navigation_tabs_hidden">hidden</string>
-  <string name="navigation_tabs_saved">saved</string>
-  <string name="user_profile_summary_created">redditor since %s</string>
-  <string name="user_link_score">link score</string>
-  <string name="user_comment_score">comment score</string>
-  <string name="user_friend_note_label">note</string>
-  <string name="user_friend_empty_note">friend note cannot be empty</string>
-  <string name="user_friend_note_save_button">save</string>
+    <string name="navigation_tabs_summary">summary</string>
+    <string name="navigation_tabs_overview">overview</string>
+    <string name="navigation_tabs_comments">comments</string>
+    <string name="navigation_tabs_submitted">submitted</string>
+    <string name="navigation_tabs_gilded">gilded</string>
+    <string name="navigation_tabs_upvoted">upvoted</string>
+    <string name="navigation_tabs_downvoted">downvoted</string>
+    <string name="navigation_tabs_hidden">hidden</string>
+    <string name="navigation_tabs_saved">saved</string>
+    <string name="user_profile_summary_created">redditor since %s</string>
+    <string name="user_link_score">link score</string>
+    <string name="user_comment_score">comment score</string>
+    <string name="user_friend_note_label">note</string>
+    <string name="user_friend_empty_note">friend note cannot be empty</string>
+    <string name="user_friend_note_save_button">save</string>
 </resources>
