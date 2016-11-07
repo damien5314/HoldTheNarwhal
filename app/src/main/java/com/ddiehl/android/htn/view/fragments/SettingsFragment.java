@@ -27,6 +27,7 @@ import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.SettingsManagerImpl;
 import com.ddiehl.android.htn.presenter.SettingsPresenter;
 import com.ddiehl.android.htn.presenter.SettingsPresenterImpl;
+import com.ddiehl.android.htn.view.MenuTintUtils;
 import com.ddiehl.android.htn.view.SettingsView;
 import com.ddiehl.android.htn.view.activities.AboutAppActivity;
 
@@ -155,6 +156,7 @@ public class SettingsFragment extends PreferenceFragment
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
+        MenuTintUtils.tintAllIcons(menu, ContextCompat.getColor(getActivity(), R.color.icons));
         menu.findItem(R.id.action_refresh).setVisible(mSettingsPresenter.isRefreshable());
     }
 
