@@ -237,7 +237,8 @@ public class SubredditInfoFragment extends BaseFragment {
 
         // Show public description text
         String publicDescription = subreddit.getPublicDescription();
-        mPublicDescription.setText(publicDescription);
+        CharSequence formattedDescription = mBypass.markdownToSpannable(publicDescription);
+        mPublicDescription.setText(formattedDescription);
     }
 
     String formatDate(final long createdUtc) {
