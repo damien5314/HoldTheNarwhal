@@ -3,6 +3,7 @@ package com.ddiehl.android.htn.view.activities;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
@@ -14,7 +15,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
@@ -85,13 +85,13 @@ public abstract class BaseActivity extends AppCompatActivity implements
     private static final String EXTRA_AUTHENTICATION_STATE_CHANGE =
             "com.ddiehl.android.htn.EXTRA_AUTHENTICATION_STATE_CHANGE";
 
-    @BindView(R.id.drawer_layout) protected DrawerLayout mDrawerLayout;
-    @BindView(R.id.navigation_view) protected NavigationView mNavigationView;
-    @BindView(R.id.tab_layout) protected TabLayout mTabLayout;
-    /* @BindView(R.id.user_account_icon) */               protected ImageView mGoldIndicator;
-    /* @BindView(R.id.account_name) */                    protected TextView mAccountNameView;
-    /* @BindView(R.id.sign_out_button) */                 protected View mSignOutView;
-    /* @BindView(R.id.navigation_drawer_header_image) */  protected ImageView mHeaderImage;
+    @BindView(R.id.drawer_layout) DrawerLayout mDrawerLayout;
+    @BindView(R.id.navigation_view) NavigationView mNavigationView;
+    @BindView(R.id.tab_layout) TabLayout mTabLayout;
+    /* @BindView(R.id.user_account_icon) */ ImageView mGoldIndicator;
+    /* @BindView(R.id.account_name) */ TextView mAccountNameView;
+    /* @BindView(R.id.sign_out_button) */ View mSignOutView;
+    /* @BindView(R.id.navigation_drawer_header_image) */ ImageView mHeaderImage;
 
     @Inject protected RedditService mRedditService;
     @Inject protected IdentityManager mIdentityManager;
@@ -103,13 +103,15 @@ public abstract class BaseActivity extends AppCompatActivity implements
 
     @Override
     protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+        ContextWrapper wrapper = CalligraphyContextWrapper.wrap(newBase);
+        super.attachBaseContext(wrapper);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         HoldTheNarwhal.getApplicationComponent().inject(this);
         ButterKnife.bind(this);
 
@@ -119,28 +121,26 @@ public abstract class BaseActivity extends AppCompatActivity implements
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            Drawable homeIndicator = AndroidUtils.getTintedDrawable(
-                    this, R.drawable.ic_menu_black_24dp, R.color.icons
-            );
-
             mDrawerToggle = new ActionBarDrawerToggle(
-                    this,                  /* host Activity */
-                    mDrawerLayout,         /* DrawerLayout object */
-                    toolbar,  /* nav drawer icon to replace 'Up' caret */
-                    R.string.drawer_open,  /* "open drawer" description */
-                    R.string.drawer_close  /* "close drawer" description */
+                    this,                   /* host Activity */
+                    mDrawerLayout,          /* DrawerLayout object */
+                    toolbar,                /* nav drawer icon to replace 'Up' caret */
+                    R.string.drawer_open,   /* "open drawer" description */
+                    R.string.drawer_close   /* "close drawer" description */
             );
 
             // Set the drawer toggle as the DrawerListener
             mDrawerLayout.addDrawerListener(mDrawerToggle);
 
+            Drawable homeIndicator = AndroidUtils.getTintedDrawable(
+                    this, R.drawable.ic_menu_black_24dp, R.color.icons
+            );
             actionBar.setHomeAsUpIndicator(homeIndicator);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
         // Initialize navigation view
         initNavigationView();
-        mNavigationView.setNavigationItemSelectedListener(this);
 
         /**
          * FIXME
@@ -194,6 +194,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
         mHeaderImage = (ImageView) header.findViewById(R.id.navigation_drawer_header_image);
 
         mSignOutView.setOnClickListener(view -> onSignOut());
+        mNavigationView.setNavigationItemSelectedListener(this);
     }
 
     @Override
@@ -541,10 +542,6 @@ public abstract class BaseActivity extends AppCompatActivity implements
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(mIdentityManager::saveUserIdentity);
-    }
-
-    private Fragment getCurrentDisplayedFragment() {
-        return getSupportFragmentManager().findFragmentById(R.id.fragment_container);
     }
 
     @Override
