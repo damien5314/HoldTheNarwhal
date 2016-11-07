@@ -5,6 +5,11 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,7 +60,6 @@ public class SubredditInfoFragment extends BaseFragment {
     @BindView(R.id.subscribe_button_progress) ProgressBar mSubscribeButtonProgressBar;
     @BindView(R.id.create_date) TextView mCreateDate;
     @BindView(R.id.subscriber_count) TextView mSubscriberCount;
-    @BindView(R.id.nsfw_icon) TextView mNsfwIcon;
     @BindView(R.id.public_description) TextView mPublicDescription;
     @BindView(R.id.rules_layout) LinearLayout mRulesLayout;
 
@@ -231,9 +235,39 @@ public class SubredditInfoFragment extends BaseFragment {
         String subscriberText = NumberFormat.getInstance().format(subscribers);
         mSubscriberCount.setText(subscriberText);
 
-        // Show/Hide NSFW icon
-        boolean showNsfw = subreddit.isOver18();
-        mNsfwIcon.setVisibility(showNsfw ? View.VISIBLE : View.GONE);
+        // Show/Hide NSFW text
+        if (subreddit.isOver18()) {
+            SpannableStringBuilder ssb = new SpannableStringBuilder();
+
+            // Cache subreddit name text
+            CharSequence nameText = mSubredditName.getText();
+            ssb.append(nameText);
+
+            // Append nsfw label
+            String nsfwText = getString(R.string.nsfw);
+            ssb.append("   ").append(nsfwText);
+
+            // Apply smaller size span
+            ssb.setSpan(
+                    new RelativeSizeSpan(0.5f),
+                    nameText.length(),
+                    ssb.length(),
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            );
+
+            // Apply color span
+            int nsfwTagColor = ContextCompat.getColor(getContext(), R.color.nsfw_tag_color);
+            ForegroundColorSpan colorSpan = new ForegroundColorSpan(nsfwTagColor);
+            ssb.setSpan(
+                    colorSpan,
+                    nameText.length(),
+                    ssb.length(),
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            );
+
+            mSubredditName.setText(ssb);
+        }
+
 
         // Show public description text
         String publicDescription = subreddit.getPublicDescription();
