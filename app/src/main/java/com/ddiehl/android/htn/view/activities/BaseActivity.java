@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
@@ -19,6 +20,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
@@ -97,6 +99,8 @@ public abstract class BaseActivity extends AppCompatActivity implements
     @Inject protected Analytics mAnalytics;
     @Inject protected Gson mGson;
 
+    ActionBarDrawerToggle mDrawerToggle;
+
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
@@ -118,6 +122,18 @@ public abstract class BaseActivity extends AppCompatActivity implements
             Drawable homeIndicator = AndroidUtils.getTintedDrawable(
                     this, R.drawable.ic_menu_black_24dp, R.color.icons
             );
+
+            mDrawerToggle = new ActionBarDrawerToggle(
+                    this,                  /* host Activity */
+                    mDrawerLayout,         /* DrawerLayout object */
+                    toolbar,  /* nav drawer icon to replace 'Up' caret */
+                    R.string.drawer_open,  /* "open drawer" description */
+                    R.string.drawer_close  /* "close drawer" description */
+            );
+
+            // Set the drawer toggle as the DrawerListener
+            mDrawerLayout.addDrawerListener(mDrawerToggle);
+
             actionBar.setHomeAsUpIndicator(homeIndicator);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
@@ -178,6 +194,19 @@ public abstract class BaseActivity extends AppCompatActivity implements
         mHeaderImage = (ImageView) header.findViewById(R.id.navigation_drawer_header_image);
 
         mSignOutView.setOnClickListener(view -> onSignOut());
+    }
+
+    @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        mDrawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
     @Override
@@ -391,11 +420,13 @@ public abstract class BaseActivity extends AppCompatActivity implements
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                mDrawerLayout.openDrawer(GravityCompat.START);
-                return true;
+        // Pass the event to ActionBarDrawerToggle, if it returns
+        // true, then it has handled the app icon touch event
+        if (mDrawerToggle.onOptionsItemSelected(item)) {
+            return true;
         }
+
+        // Handle other option items, if any
         return false;
     }
 
