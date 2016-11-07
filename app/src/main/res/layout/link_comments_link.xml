@@ -52,6 +52,7 @@
                             android:layout_marginEnd="@dimen/link_metadata_margin"
                             android:layout_marginRight="@dimen/link_metadata_margin"
                             android:background="@drawable/nsfw_tag_bg"
+                            android:includeFontPadding="false"
                             android:text="@string/nsfw"
                             android:textColor="@color/nsfw_tag_color"
                             android:textSize="@dimen/link_metadata_text_size" />

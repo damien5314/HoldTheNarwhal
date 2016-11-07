@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView
         xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
         xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         card_view:cardElevation="@dimen/link_card_elevation"
@@ -15,22 +15,22 @@
 
         <LinearLayout
                 android:id="@+id/link_view"
-                android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:orientation="vertical"
                 android:padding="@dimen/baseline_spacing">
 
             <TextView
                     android:id="@+id/link_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAlignment="viewStart"
                     android:layout_gravity="start"
                     android:fontFamily="sans-serif-light"
+                    android:textAlignment="viewStart"
                     android:textAppearance="?android:textAppearanceMedium"
                     android:textColor="@color/primary_text"
-                    tools:text="The quick brown fox jumped over the white fence"
-                    tools:ignore="UnusedAttribute" />
+                    tools:ignore="UnusedAttribute"
+                    tools:text="The quick brown fox jumped over the white fence" />
 
             <LinearLayout
                     android:layout_width="fill_parent"
@@ -44,6 +44,7 @@
                         android:layout_marginEnd="@dimen/link_metadata_margin"
                         android:layout_marginRight="@dimen/link_metadata_margin"
                         android:background="@drawable/nsfw_tag_bg"
+                        android:includeFontPadding="false"
                         android:text="@string/nsfw"
                         android:textAppearance="?android:textAppearanceSmall"
                         android:textColor="@color/nsfw_tag_color" />
@@ -52,14 +53,14 @@
                         android:id="@+id/link_gilded_text_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:drawableLeft="@drawable/ic_reddit_gold_24dp"
+                        android:drawableStart="@drawable/ic_reddit_gold_24dp"
                         android:fontFamily="sans-serif-light"
+                        android:gravity="center"
                         android:textAppearance="?android:textAppearanceSmall"
                         android:textColor="@color/secondary_text"
-                        android:gravity="center"
-                        android:drawableStart="@drawable/ic_reddit_gold_24dp"
-                        android:drawableLeft="@drawable/ic_reddit_gold_24dp"
-                        tools:text="× 2"
-                        tools:ignore="UnusedAttribute" />
+                        tools:ignore="UnusedAttribute"
+                        tools:text="× 2" />
 
                 <TextView
                         android:id="@+id/link_domain"
@@ -67,11 +68,11 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:fontFamily="sans-serif-light"
+                        android:gravity="end"
                         android:textAppearance="?android:textAppearanceSmall"
                         android:textColor="@color/secondary_text"
-                        android:gravity="end"
-                        tools:text="imgur.com"
-                        tools:targetApi="16" />
+                        tools:targetApi="16"
+                        tools:text="imgur.com" />
 
             </LinearLayout>
 
@@ -79,16 +80,16 @@
 
         <LinearLayout
                 android:id="@+id/link_metadata"
-                android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
             <LinearLayout
-                    android:orientation="vertical"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="@color/primary_dark"
+                    android:orientation="vertical"
                     android:padding="@dimen/baseline_spacing">
 
                 <RelativeLayout
@@ -97,19 +98,19 @@
 
                     <TextView
                             android:id="@+id/link_score"
+                            style="@style/LinkMetadataTextViewDark"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            style="@style/LinkMetadataTextViewDark"
                             tools:text="573 points" />
 
                     <com.ddiehl.timesincetextview.TimeSinceTextView
                             android:id="@+id/link_timestamp"
+                            style="@style/LinkMetadataTextViewDark"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
                             android:layout_alignParentEnd="true"
-                            tools:text="2 days ago"
-                            style="@style/LinkMetadataTextViewDark" />
+                            android:layout_alignParentRight="true"
+                            tools:text="2 days ago" />
 
                 </RelativeLayout>
 
@@ -119,27 +120,27 @@
 
                     <com.ddiehl.android.htn.view.widgets.ColorSwapTextView
                             android:id="@+id/link_author"
+                            style="@style/LinkMetadataTextViewDark"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            tools:text="/u/andrewsmith1984"
-                            style="@style/LinkMetadataTextViewDark" />
+                            tools:text="/u/andrewsmith1984" />
 
                     <TextView
                             android:id="@+id/link_subreddit"
+                            style="@style/LinkMetadataTextViewDark"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
                             android:layout_alignParentRight="true"
-                            tools:text="/r/AskReddit"
-                            style="@style/LinkMetadataTextViewDark" />
+                            tools:text="/r/AskReddit" />
 
                 </RelativeLayout>
 
                 <View
                         android:layout_width="fill_parent"
                         android:layout_height="@dimen/comment_data_divider_width"
-                        android:layout_marginTop="@dimen/comment_data_divider_margin"
                         android:layout_marginBottom="@dimen/comment_data_divider_margin"
+                        android:layout_marginTop="@dimen/comment_data_divider_margin"
                         android:background="@color/divider" />
 
                 <LinearLayout
@@ -151,11 +152,11 @@
 
                     <TextView
                             android:id="@+id/link_comment_count"
+                            style="@style/LinkMetadataTextViewDark"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            tools:text="1993 comments"
-                            style="@style/LinkMetadataTextViewDark" />
+                            tools:text="1993 comments" />
 
                     <ImageView
                             android:id="@+id/link_saved_view"
@@ -186,16 +187,16 @@
                 android:id="@+id/link_self_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:textAppearanceSmall"
-                android:textAlignment="viewStart"
+                android:background="@color/white"
+                android:bufferType="spannable"
                 android:gravity="start"
+                android:padding="@dimen/link_self_text_padding"
+                android:textAlignment="viewStart"
+                android:textAppearance="?android:textAppearanceSmall"
                 android:textColor="@color/primary_text"
                 android:textColorLink="@color/link_color"
-                android:padding="@dimen/link_self_text_padding"
-                android:bufferType="spannable"
-                android:background="@color/white"
-                tools:text="Lorem ipsum dolor sit amet"
-                tools:ignore="UnusedAttribute" />
+                tools:ignore="UnusedAttribute"
+                tools:text="Lorem ipsum dolor sit amet" />
 
     </LinearLayout>
 

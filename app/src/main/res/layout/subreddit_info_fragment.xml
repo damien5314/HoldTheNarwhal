@@ -47,6 +47,7 @@
                             android:layout_marginLeft="16dp"
                             android:layout_marginStart="16dp"
                             android:background="@drawable/nsfw_tag_bg"
+                            android:includeFontPadding="false"
                             android:text="@string/nsfw"
                             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                             android:textColor="@color/nsfw_tag_color" />
@@ -71,8 +72,8 @@
                             android:layout_centerInParent="true"
                             android:padding="8dp"
                             android:textAllCaps="true"
-                            android:textSize="@dimen/button_text_size"
                             android:textColor="@color/white"
+                            android:textSize="@dimen/button_text_size"
                             tools:text="@string/subscribed" />
 
                     <ImageView
@@ -93,8 +94,8 @@
                             android:layout_centerVertical="true"
                             android:layout_toLeftOf="@id/subscribe_button_text"
                             android:layout_toStartOf="@id/subscribe_button_text"
-                            android:indeterminateTint="@color/white"
                             android:indeterminate="true"
+                            android:indeterminateTint="@color/white"
                             android:visibility="gone"
                             tools:visibility="visible" />
 
