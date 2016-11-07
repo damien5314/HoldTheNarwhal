@@ -12,8 +12,6 @@
         <item name="android:windowActionModeOverlay">true</item>
         <!-- app background color -->
         <item name="android:windowBackground">@color/primary_light</item>
-
-        <item name="android:buttonStyle">@style/CustomButton</item>
     </style>
 
     <style name="ToolbarThemeLightText" parent="AppTheme">
@@ -53,16 +51,6 @@
         <item name="android:fullDark">@color/transparent</item>
         <item name="android:topBright">@color/transparent</item>
         <item name="android:topDark">@color/transparent</item>
-    </style>
-
-    <style name="CustomButton" parent="Widget.AppCompat.Button">
-        <item name="android:background">@drawable/button_bg</item>
-        <item name="android:textColor">@color/white</item>
-        <item name="android:paddingLeft">16dp</item>
-        <item name="android:paddingRight">16dp</item>
-        <item name="android:minHeight">0dp</item>
-        <item name="android:height">64dp</item>
-        <item name="android:drawablePadding">8dp</item>
     </style>
 
 </resources>
