@@ -101,6 +101,8 @@ public abstract class BaseActivity extends AppCompatActivity implements
 
     ActionBarDrawerToggle mDrawerToggle;
 
+    protected abstract boolean hasNavigationDrawer();
+
     @Override
     protected void attachBaseContext(Context newBase) {
         ContextWrapper wrapper = CalligraphyContextWrapper.wrap(newBase);
@@ -121,21 +123,25 @@ public abstract class BaseActivity extends AppCompatActivity implements
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            mDrawerToggle = new ActionBarDrawerToggle(
-                    this,                   /* host Activity */
-                    mDrawerLayout,          /* DrawerLayout object */
-                    toolbar,                /* nav drawer icon to replace 'Up' caret */
-                    R.string.drawer_open,   /* "open drawer" description */
-                    R.string.drawer_close   /* "close drawer" description */
-            );
+            if (hasNavigationDrawer()) {
+                mDrawerToggle = new ActionBarDrawerToggle(
+                        this,                   /* host Activity */
+                        mDrawerLayout,          /* DrawerLayout object */
+                        toolbar,                /* nav drawer icon to replace 'Up' caret */
+                        R.string.drawer_open,   /* "open drawer" description */
+                        R.string.drawer_close   /* "close drawer" description */
+                );
 
-            // Set the drawer toggle as the DrawerListener
-            mDrawerLayout.addDrawerListener(mDrawerToggle);
+                // Set the drawer toggle as the DrawerListener
+                mDrawerLayout.addDrawerListener(mDrawerToggle);
 
-            Drawable homeIndicator = AndroidUtils.getTintedDrawable(
-                    this, R.drawable.ic_menu_black_24dp, R.color.icons
-            );
-            actionBar.setHomeAsUpIndicator(homeIndicator);
+                Drawable homeIndicator = AndroidUtils.getTintedDrawable(
+                        this, R.drawable.ic_menu_black_24dp, R.color.icons
+                );
+                actionBar.setHomeAsUpIndicator(homeIndicator);
+            } else {
+                actionBar.setHomeAsUpIndicator(null);
+            }
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
@@ -201,13 +207,17 @@ public abstract class BaseActivity extends AppCompatActivity implements
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         // Sync the toggle state after onRestoreInstanceState has occurred.
-        mDrawerToggle.syncState();
+        if (mDrawerToggle != null) {
+            mDrawerToggle.syncState();
+        }
     }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        mDrawerToggle.onConfigurationChanged(newConfig);
+        if (mDrawerToggle != null) {
+            mDrawerToggle.onConfigurationChanged(newConfig);
+        }
     }
 
     @Override
@@ -423,12 +433,18 @@ public abstract class BaseActivity extends AppCompatActivity implements
     public boolean onOptionsItemSelected(MenuItem item) {
         // Pass the event to ActionBarDrawerToggle, if it returns
         // true, then it has handled the app icon touch event
-        if (mDrawerToggle.onOptionsItemSelected(item)) {
+        if (mDrawerToggle != null && mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
 
-        // Handle other option items, if any
-        return false;
+        // Handle other option items
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            default:
+                return false;
+        }
     }
 
     @Override
@@ -438,6 +454,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
 
     @Override
     public void onSignOutCancel() {
+        // no-op
     }
 
     @Override

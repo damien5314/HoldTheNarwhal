@@ -18,6 +18,11 @@ public class WebViewActivity extends FragmentActivityCompat {
     }
 
     @Override
+    protected boolean hasNavigationDrawer() {
+        return false;
+    }
+
+    @Override
     Fragment getFragment() {
         return new WebViewFragmentBuilder(getUrl())
                 .build();

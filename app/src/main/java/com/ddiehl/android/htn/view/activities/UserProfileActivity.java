@@ -23,6 +23,11 @@ public class UserProfileActivity extends FragmentActivityCompat {
     }
 
     @Override
+    protected boolean hasNavigationDrawer() {
+        return true;
+    }
+
+    @Override
     Fragment getFragment() {
         return new UserProfileFragmentBuilder(getShow(), getSort(), getTimespan(), getUsername())
                 .build();

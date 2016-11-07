@@ -15,6 +15,11 @@ public class SubscriptionManagerActivity extends BaseActivity {
     }
 
     @Override
+    protected boolean hasNavigationDrawer() {
+        return true;
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         showTabs(false);

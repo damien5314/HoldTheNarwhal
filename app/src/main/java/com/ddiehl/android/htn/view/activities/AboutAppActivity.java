@@ -14,6 +14,11 @@ public class AboutAppActivity extends FragmentActivityCompat {
     }
 
     @Override
+    protected boolean hasNavigationDrawer() {
+        return false;
+    }
+
+    @Override
     Fragment getFragment() {
         return AboutAppFragment.newInstance();
     }

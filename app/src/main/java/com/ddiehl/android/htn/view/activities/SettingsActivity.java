@@ -14,6 +14,11 @@ public class SettingsActivity extends FragmentActivity {
     }
 
     @Override
+    protected boolean hasNavigationDrawer() {
+        return false;
+    }
+
+    @Override
     Fragment getFragment() {
         return new SettingsFragment();
     }

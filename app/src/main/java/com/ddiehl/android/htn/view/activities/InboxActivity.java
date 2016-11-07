@@ -18,6 +18,11 @@ public class InboxActivity extends FragmentActivityCompat {
     }
 
     @Override
+    protected boolean hasNavigationDrawer() {
+        return true;
+    }
+
+    @Override
     Fragment getFragment() {
         return new InboxFragmentBuilder(getShow())
                 .build();

@@ -25,6 +25,11 @@ public class SubredditActivity extends FragmentActivityCompat {
     }
 
     @Override
+    protected boolean hasNavigationDrawer() {
+        return true;
+    }
+
+    @Override
     Fragment getFragment() {
         return new SubredditFragmentBuilder()
                 .subreddit(getSubreddit())

@@ -11,6 +11,11 @@ import timber.log.Timber;
 public class DeepLinkDispatcher extends BaseActivity {
 
     @Override
+    protected boolean hasNavigationDrawer() {
+        return false;
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 

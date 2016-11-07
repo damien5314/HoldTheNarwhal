@@ -16,6 +16,11 @@ public class SubredditInfoActivity extends BaseActivity {
     String mSubreddit;
 
     @Override
+    protected boolean hasNavigationDrawer() {
+        return false;
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 

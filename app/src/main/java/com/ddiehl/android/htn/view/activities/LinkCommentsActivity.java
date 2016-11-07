@@ -23,6 +23,11 @@ public class LinkCommentsActivity extends FragmentActivityCompat {
     }
 
     @Override
+    protected boolean hasNavigationDrawer() {
+        return false;
+    }
+
+    @Override
     Fragment getFragment() {
         return new LinkCommentsFragmentBuilder(getArticleId(), getCommentId(), getSubreddit())
                 .build();
