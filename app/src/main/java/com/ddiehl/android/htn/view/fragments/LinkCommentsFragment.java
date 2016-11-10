@@ -177,6 +177,10 @@ public class LinkCommentsFragment extends BaseListingsFragment
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.action_share:
+                Link link = mLinkCommentsPresenter.getLinkContext();
+                mLinkPresenter.shareLink(link);
+                return true;
             case R.id.action_change_sort:
                 showSortOptionsMenu();
                 mAnalytics.logOptionChangeSort();
