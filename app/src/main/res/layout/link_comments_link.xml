@@ -10,9 +10,10 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/white"
+            android:divider="@drawable/spacer_8dp_h"
             android:orientation="vertical"
-            android:paddingBottom="@dimen/baseline_spacing"
-            android:paddingTop="@dimen/baseline_spacing">
+            android:paddingTop="@dimen/baseline_spacing"
+            android:showDividers="middle|end">
 
         <LinearLayout
                 android:layout_width="match_parent"
@@ -138,8 +139,7 @@
                     android:id="@+id/link_thumbnail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="8dp" />
+                    android:layout_gravity="center" />
 
         </FrameLayout>
 
@@ -147,7 +147,6 @@
                 android:id="@+id/link_self_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/baseline_spacing"
                 android:bufferType="spannable"
                 android:gravity="start"
                 android:paddingLeft="@dimen/baseline_spacing"
@@ -162,7 +161,6 @@
         <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/link_list_item_margin_vertical"
                 android:orientation="horizontal">
 
             <TextView
@@ -202,12 +200,12 @@
             <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/baseline_spacing"
                     android:drawableLeft="@drawable/ic_info_outline_black_24dp"
                     android:drawablePadding="@dimen/baseline_spacing"
                     android:drawableStart="@drawable/ic_info_outline_black_24dp"
                     android:drawableTint="@color/secondary_text"
                     android:gravity="center_vertical"
+                    android:minHeight="48dp"
                     android:paddingLeft="@dimen/baseline_spacing"
                     android:paddingRight="@dimen/baseline_spacing"
                     android:text="@string/link_parent_text"
