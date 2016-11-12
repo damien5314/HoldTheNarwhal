@@ -169,7 +169,8 @@
                     android:id="@+id/action_link_reply"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1">
+                    android:layout_weight="1"
+                    android:background="?attr/selectableItemBackground">
 
                 <ImageView
                         android:layout_width="wrap_content"
@@ -185,7 +186,8 @@
                     android:id="@+id/action_link_upvote"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1">
+                    android:layout_weight="1"
+                    android:background="?attr/selectableItemBackground">
 
                 <ImageView
                         android:id="@+id/action_link_upvote_icon"
@@ -202,7 +204,8 @@
                     android:id="@+id/action_link_downvote"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1">
+                    android:layout_weight="1"
+                    android:background="?attr/selectableItemBackground">
 
                 <ImageView
                         android:id="@+id/action_link_downvote_icon"
@@ -219,7 +222,8 @@
                     android:id="@+id/action_link_save"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1">
+                    android:layout_weight="1"
+                    android:background="?attr/selectableItemBackground">
 
                 <ImageView
                         android:id="@+id/action_link_save_icon"
@@ -236,7 +240,8 @@
                     android:id="@+id/action_link_share"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1">
+                    android:layout_weight="1"
+                    android:background="?attr/selectableItemBackground">
 
                 <ImageView
                         android:layout_width="wrap_content"
@@ -252,7 +257,8 @@
                     android:id="@+id/action_link_hide"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1">
+                    android:layout_weight="1"
+                    android:background="?attr/selectableItemBackground">
 
                 <ImageView
                         android:layout_width="wrap_content"
@@ -268,7 +274,8 @@
                     android:id="@+id/action_link_report"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1">
+                    android:layout_weight="1"
+                    android:background="?attr/selectableItemBackground">
 
                 <ImageView
                         android:layout_width="wrap_content"
@@ -305,7 +312,7 @@
                     android:layout_gravity="center_vertical"
                     android:src="@drawable/ic_save_black_24dp"
                     android:tint="@color/secondary_text"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
 
             <ImageView
                     android:id="@+id/link_stickied_view"
