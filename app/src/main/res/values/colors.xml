@@ -34,6 +34,7 @@
     <color name="comment_controversiality_indicator">#ff5252</color>
     <color name="nsfw_tag_color">#d10023</color>
     <color name="link_color">#0000ee</color>
+    <color name="link_saved_color">@color/reddit_blue_full</color>
 
     <!-- reddit color scheme -->
     <!-- https://www.reddit.com/about/alien/ -->

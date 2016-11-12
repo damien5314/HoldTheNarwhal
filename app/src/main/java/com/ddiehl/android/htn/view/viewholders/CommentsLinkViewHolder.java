@@ -1,5 +1,6 @@
 package com.ddiehl.android.htn.view.viewholders;
 
+import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
@@ -7,6 +8,7 @@ import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.util.DisplayMetrics;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.ThumbnailMode;
@@ -21,13 +23,9 @@ import rxreddit.model.Link;
 
 public class CommentsLinkViewHolder extends BaseLinkViewHolder {
 
-//    @BindView(R.id.action_link_reply) View mLinkReply;
-//    @BindView(R.id.action_link_upvote) View mLinkUpvote;
-//    @BindView(R.id.action_link_downvote) View mLinkDownvote;
-//    @BindView(R.id.action_link_save) View mLinkSave;
-//    @BindView(R.id.action_link_share) View mLinkShare;
-//    @BindView(R.id.action_link_hide) View mLinkHide;
-//    @BindView(R.id.action_link_report) View mLinkReport;
+    @BindView(R.id.action_link_upvote_icon) ImageView mLinkUpvote;
+    @BindView(R.id.action_link_downvote_icon) ImageView mLinkDownvote;
+    @BindView(R.id.action_link_save_icon) ImageView mLinkSave;
     @BindView(R.id.link_parent_view) View mParentLinkView;
 
     public CommentsLinkViewHolder(View view, LinkView linkView, LinkPresenter presenter) {
@@ -51,7 +49,11 @@ public class CommentsLinkViewHolder extends BaseLinkViewHolder {
 
     @OnClick(R.id.action_link_save)
     void onSaveClicked() {
-        mLinkPresenter.saveLink(mLink);
+        if (mLink.isSaved()) {
+            mLinkPresenter.unsaveLink(mLink);
+        } else {
+            mLinkPresenter.saveLink(mLink);
+        }
     }
 
     @OnClick(R.id.action_link_share)
@@ -76,21 +78,32 @@ public class CommentsLinkViewHolder extends BaseLinkViewHolder {
 
     @Override
     protected void showLiked(@NonNull Link link) {
-        int color;
+        // Determine tint color based on liked status and tint the buttons appropriately
+        @ColorInt int color;
+        mLinkUpvote.setColorFilter(null);
+        mLinkDownvote.setColorFilter(null);
         if (link.isLiked() == null) {
             color = ContextCompat.getColor(mContext, R.color.secondary_text);
         } else if (link.isLiked()) {
             color = ContextCompat.getColor(mContext, R.color.reddit_orange_full);
+            mLinkUpvote.setColorFilter(color);
         } else {
             color = ContextCompat.getColor(mContext, R.color.reddit_blue_full);
+            mLinkDownvote.setColorFilter(color);
         }
+
+        // Determine if we should show the score, or a placeholder if the score is hidden
         Integer score = link.getScore();
         String scoreStr = score == null ?
                 mContext.getString(R.string.hidden_score_placeholder) : score.toString();
+
+        // Format the number section of the score with a color span
         int length = scoreStr.length();
         int index = mLinkScore.getText().toString().indexOf(scoreStr);
         Spannable s = new SpannableString(mLinkScore.getText());
         s.setSpan(new ForegroundColorSpan(color), index, length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        // Set the final stylized text
         mLinkScore.setText(s);
     }
 
@@ -124,6 +137,17 @@ public class CommentsLinkViewHolder extends BaseLinkViewHolder {
             default:
                 mLinkThumbnail.setVisibility(View.VISIBLE);
                 loadThumbnail(url);
+        }
+    }
+
+    @Override
+    protected void showSaved(@NonNull Link link) {
+        if (link.isSaved()) {
+            mLinkSave.setColorFilter(
+                    ContextCompat.getColor(mContext, R.color.link_saved_color)
+            );
+        } else {
+            mLinkSave.setColorFilter(null);
         }
     }
 
