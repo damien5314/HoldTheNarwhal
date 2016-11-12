@@ -337,7 +337,7 @@ public abstract class BaseListingsPresenter
 
     public void downvoteComment(@NonNull Comment comment) {
         int dir = (comment.isLiked() == null || comment.isLiked()) ? -1 : 0;
-        vote(null, dir);
+        vote(comment, dir);
     }
 
     public void saveComment(@NonNull Comment comment) {
