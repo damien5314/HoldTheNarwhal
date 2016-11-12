@@ -21,16 +21,57 @@ import rxreddit.model.Link;
 
 public class CommentsLinkViewHolder extends BaseLinkViewHolder {
 
-    @BindView(R.id.link_parent_view)
-    View mParentLinkView;
+//    @BindView(R.id.action_link_reply) View mLinkReply;
+//    @BindView(R.id.action_link_upvote) View mLinkUpvote;
+//    @BindView(R.id.action_link_downvote) View mLinkDownvote;
+//    @BindView(R.id.action_link_save) View mLinkSave;
+//    @BindView(R.id.action_link_share) View mLinkShare;
+//    @BindView(R.id.action_link_hide) View mLinkHide;
+//    @BindView(R.id.action_link_report) View mLinkReport;
+    @BindView(R.id.link_parent_view) View mParentLinkView;
 
     public CommentsLinkViewHolder(View view, LinkView linkView, LinkPresenter presenter) {
         super(view, linkView, presenter);
     }
 
+    @OnClick(R.id.action_link_reply)
+    void onReplyClicked() {
+        mLinkPresenter.replyToLink(mLink);
+    }
+
+    @OnClick(R.id.action_link_upvote)
+    void onUpvoteClicked() {
+        mLinkPresenter.upvoteLink(mLink);
+    }
+
+    @OnClick(R.id.action_link_downvote)
+    void onDownvoteClicked() {
+        mLinkPresenter.downvoteLink(mLink);
+    }
+
+    @OnClick(R.id.action_link_save)
+    void onSaveClicked() {
+        mLinkPresenter.saveLink(mLink);
+    }
+
+    @OnClick(R.id.action_link_share)
+    void onShareClicked() {
+        mLinkPresenter.shareLink(mLink);
+    }
+
+    @OnClick(R.id.action_link_hide)
+    void onHideClicked() {
+        mLinkPresenter.hideLink(mLink);
+    }
+
+    @OnClick(R.id.action_link_report)
+    void onReportClicked() {
+        mLinkPresenter.reportLink(mLink);
+    }
+
     @OnClick(R.id.link_comment_count)
     void showCommentsForLink() {
-    /* no-op */
+        // Already viewing the comments, do nothing
     }
 
     @Override
@@ -74,11 +115,6 @@ public class CommentsLinkViewHolder extends BaseLinkViewHolder {
         switch (url) {
             case "nsfw":
                 mLinkThumbnail.setVisibility(View.GONE);
-                // This doesn't look correct, probably just get rid of it
-//        mLinkThumbnail.setVisibility(View.VISIBLE);
-//        Picasso.with(mContext)
-//            .load(R.drawable.ic_nsfw2)
-//            .into(mLinkThumbnail);
                 break;
             case "":
             case "default":

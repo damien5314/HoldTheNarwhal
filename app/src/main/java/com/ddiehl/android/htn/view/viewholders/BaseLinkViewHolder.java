@@ -68,7 +68,8 @@ public abstract class BaseLinkViewHolder extends RecyclerView.ViewHolder
     }
 
     public void bind(
-            @NonNull Link link, boolean showSelfText, ThumbnailMode mode, boolean showNsfw, boolean showParentLink) {
+            @NonNull Link link, boolean showSelfText, ThumbnailMode mode,
+            boolean showNsfw, boolean showParentLink) {
         mLink = link;
         showSelfText(link, showSelfText);
         showScore(link);
