@@ -254,23 +254,6 @@
             </FrameLayout>
 
             <FrameLayout
-                    android:id="@+id/action_link_hide"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="?attr/selectableItemBackground">
-
-                <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:contentDescription="@string/action_hide"
-                        android:src="@drawable/ic_close_black_24dp"
-                        android:tint="@color/secondary_text" />
-
-            </FrameLayout>
-
-            <FrameLayout
                     android:id="@+id/action_link_report"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"

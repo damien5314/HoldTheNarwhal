@@ -61,11 +61,6 @@ public class CommentsLinkViewHolder extends BaseLinkViewHolder {
         mLinkPresenter.shareLink(mLink);
     }
 
-    @OnClick(R.id.action_link_hide)
-    void onHideClicked() {
-        mLinkPresenter.hideLink(mLink);
-    }
-
     @OnClick(R.id.action_link_report)
     void onReportClicked() {
         mLinkPresenter.reportLink(mLink);
