@@ -16,6 +16,7 @@
             android:background="?attr/selectableItemBackground">
 
         <ImageView
+                android:id="@+id/action_link_reply_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -87,6 +88,7 @@
             android:background="?attr/selectableItemBackground">
 
         <ImageView
+                android:id="@+id/action_link_share_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -104,6 +106,7 @@
             android:background="?attr/selectableItemBackground">
 
         <ImageView
+                android:id="@+id/action_link_hide_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -121,6 +124,7 @@
             android:background="?attr/selectableItemBackground">
 
         <ImageView
+                android:id="@+id/action_link_report_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
