@@ -19,9 +19,17 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import rx.functions.Action0;
 import rxreddit.model.Link;
 
+import static com.ddiehl.android.htn.view.widgets.LinkOptionsBar.Icons.DOWNVOTE;
 import static com.ddiehl.android.htn.view.widgets.LinkOptionsBar.Icons.HIDE;
+import static com.ddiehl.android.htn.view.widgets.LinkOptionsBar.Icons.REPLY;
+import static com.ddiehl.android.htn.view.widgets.LinkOptionsBar.Icons.REPORT;
+import static com.ddiehl.android.htn.view.widgets.LinkOptionsBar.Icons.SAVE;
+import static com.ddiehl.android.htn.view.widgets.LinkOptionsBar.Icons.SHARE;
+import static com.ddiehl.android.htn.view.widgets.LinkOptionsBar.Icons.UPVOTE;
+
 
 public class CommentsLinkViewHolder extends BaseLinkViewHolder {
 
@@ -33,45 +41,47 @@ public class CommentsLinkViewHolder extends BaseLinkViewHolder {
     public CommentsLinkViewHolder(View view, LinkView linkView, LinkPresenter presenter) {
         super(view, linkView, presenter);
         mLinkOptionsBar.showIcons(false, HIDE);
+        mLinkOptionsBar.setOnIconClickListener(REPLY, onReplyClicked());
+        mLinkOptionsBar.setOnIconClickListener(UPVOTE, onUpvoteClicked());
+        mLinkOptionsBar.setOnIconClickListener(DOWNVOTE, onDownvoteClicked());
+        mLinkOptionsBar.setOnIconClickListener(SAVE, onSaveClicked());
+        mLinkOptionsBar.setOnIconClickListener(SHARE, onShareClicked());
+        mLinkOptionsBar.setOnIconClickListener(HIDE, onHideClicked());
+        mLinkOptionsBar.setOnIconClickListener(REPORT, onReportClicked());
     }
 
-    @OnClick(R.id.action_link_reply)
-    void onReplyClicked() {
-        mLinkPresenter.replyToLink(mLink);
+    Action0 onReplyClicked() {
+        return () -> mLinkPresenter.replyToLink(mLink);
     }
 
-    @OnClick(R.id.action_link_upvote)
-    void onUpvoteClicked() {
-        mLinkPresenter.upvoteLink(mLink);
+    Action0 onUpvoteClicked() {
+        return () -> mLinkPresenter.upvoteLink(mLink);
     }
 
-    @OnClick(R.id.action_link_downvote)
-    void onDownvoteClicked() {
-        mLinkPresenter.downvoteLink(mLink);
+    Action0 onDownvoteClicked() {
+        return () -> mLinkPresenter.downvoteLink(mLink);
     }
 
-    @OnClick(R.id.action_link_save)
-    void onSaveClicked() {
-        if (mLink.isSaved()) {
-            mLinkPresenter.unsaveLink(mLink);
-        } else {
-            mLinkPresenter.saveLink(mLink);
-        }
+    Action0 onSaveClicked() {
+        return () -> {
+            if (mLink.isSaved()) {
+                mLinkPresenter.unsaveLink(mLink);
+            } else {
+                mLinkPresenter.saveLink(mLink);
+            }
+        };
     }
 
-    @OnClick(R.id.action_link_share)
-    void onShareClicked() {
-        mLinkPresenter.shareLink(mLink);
+    Action0 onShareClicked() {
+        return () -> mLinkPresenter.shareLink(mLink);
     }
 
-    @OnClick(R.id.action_link_hide)
-    void onHideClicked() {
-        mLinkPresenter.hideLink(mLink);
+    Action0 onHideClicked() {
+        return () -> mLinkPresenter.hideLink(mLink);
     }
 
-    @OnClick(R.id.action_link_report)
-    void onReportClicked() {
-        mLinkPresenter.reportLink(mLink);
+    Action0 onReportClicked() {
+        return () -> mLinkPresenter.reportLink(mLink);
     }
 
     @OnClick(R.id.link_comment_count)
