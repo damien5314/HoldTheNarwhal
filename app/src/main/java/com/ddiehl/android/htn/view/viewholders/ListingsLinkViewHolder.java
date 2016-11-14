@@ -27,13 +27,16 @@ public class ListingsLinkViewHolder extends BaseLinkViewHolder {
     protected void showLiked(@NonNull Link link) {
         if (link.isLiked() == null) {
             mView.setBackgroundColor(
-                    ContextCompat.getColor(mContext, R.color.transparent));
+                    ContextCompat.getColor(mContext, R.color.transparent)
+            );
         } else if (link.isLiked()) {
             mView.setBackgroundColor(
-                    ContextCompat.getColor(mContext, R.color.reddit_orange_lighter));
+                    ContextCompat.getColor(mContext, R.color.reddit_orange_lighter)
+            );
         } else {
             mView.setBackgroundColor(
-                    ContextCompat.getColor(mContext, R.color.reddit_blue_lighter));
+                    ContextCompat.getColor(mContext, R.color.reddit_blue_lighter)
+            );
         }
     }
 

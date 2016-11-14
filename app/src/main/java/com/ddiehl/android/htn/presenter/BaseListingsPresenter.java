@@ -434,12 +434,14 @@ public abstract class BaseListingsPresenter
 
     private void hide(Hideable hideable, boolean toHide) {
         mRedditService.hide(hideable.getFullName(), toHide)
-                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(response -> {
                     int pos = getIndexOf((Listing) hideable);
                     mListings.remove(pos);
                     mListingsView.notifyItemRemoved(pos);
                 }, e -> {
+                    Timber.e(e);
                     String message = mContext.getString(R.string.hide_failed);
                     mMainView.showError(e, message);
                 });

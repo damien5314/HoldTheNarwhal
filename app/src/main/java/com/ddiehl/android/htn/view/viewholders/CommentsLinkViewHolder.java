@@ -1,5 +1,6 @@
 package com.ddiehl.android.htn.view.viewholders;
 
+import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
@@ -12,44 +13,109 @@ import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.ThumbnailMode;
 import com.ddiehl.android.htn.presenter.LinkPresenter;
 import com.ddiehl.android.htn.view.LinkView;
+import com.ddiehl.android.htn.view.widgets.LinkOptionsBar;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import rx.functions.Action0;
 import rxreddit.model.Link;
+
+import static com.ddiehl.android.htn.view.widgets.LinkOptionsBar.Icons.DOWNVOTE;
+import static com.ddiehl.android.htn.view.widgets.LinkOptionsBar.Icons.HIDE;
+import static com.ddiehl.android.htn.view.widgets.LinkOptionsBar.Icons.REPLY;
+import static com.ddiehl.android.htn.view.widgets.LinkOptionsBar.Icons.REPORT;
+import static com.ddiehl.android.htn.view.widgets.LinkOptionsBar.Icons.SAVE;
+import static com.ddiehl.android.htn.view.widgets.LinkOptionsBar.Icons.SHARE;
+import static com.ddiehl.android.htn.view.widgets.LinkOptionsBar.Icons.UPVOTE;
+
 
 public class CommentsLinkViewHolder extends BaseLinkViewHolder {
 
+    @BindView(R.id.link_options_bar)
+    LinkOptionsBar mLinkOptionsBar;
     @BindView(R.id.link_parent_view)
     View mParentLinkView;
 
     public CommentsLinkViewHolder(View view, LinkView linkView, LinkPresenter presenter) {
         super(view, linkView, presenter);
+        mLinkOptionsBar.showIcons(false, HIDE);
+        mLinkOptionsBar.setOnIconClickListener(REPLY, onReplyClicked());
+        mLinkOptionsBar.setOnIconClickListener(UPVOTE, onUpvoteClicked());
+        mLinkOptionsBar.setOnIconClickListener(DOWNVOTE, onDownvoteClicked());
+        mLinkOptionsBar.setOnIconClickListener(SAVE, onSaveClicked());
+        mLinkOptionsBar.setOnIconClickListener(SHARE, onShareClicked());
+        mLinkOptionsBar.setOnIconClickListener(HIDE, onHideClicked());
+        mLinkOptionsBar.setOnIconClickListener(REPORT, onReportClicked());
+    }
+
+    Action0 onReplyClicked() {
+        return () -> mLinkPresenter.replyToLink(mLink);
+    }
+
+    Action0 onUpvoteClicked() {
+        return () -> mLinkPresenter.upvoteLink(mLink);
+    }
+
+    Action0 onDownvoteClicked() {
+        return () -> mLinkPresenter.downvoteLink(mLink);
+    }
+
+    Action0 onSaveClicked() {
+        return () -> {
+            if (mLink.isSaved()) {
+                mLinkPresenter.unsaveLink(mLink);
+            } else {
+                mLinkPresenter.saveLink(mLink);
+            }
+        };
+    }
+
+    Action0 onShareClicked() {
+        return () -> mLinkPresenter.shareLink(mLink);
+    }
+
+    Action0 onHideClicked() {
+        return () -> mLinkPresenter.hideLink(mLink);
+    }
+
+    Action0 onReportClicked() {
+        return () -> mLinkPresenter.reportLink(mLink);
     }
 
     @OnClick(R.id.link_comment_count)
     void showCommentsForLink() {
-    /* no-op */
+        // Already viewing the comments, do nothing
     }
 
     @Override
     protected void showLiked(@NonNull Link link) {
-        int color;
+        // Determine tint color based on liked status and tint the buttons appropriately
+        @ColorInt int color;
         if (link.isLiked() == null) {
             color = ContextCompat.getColor(mContext, R.color.secondary_text);
+            mLinkOptionsBar.setVoted(0);
         } else if (link.isLiked()) {
             color = ContextCompat.getColor(mContext, R.color.reddit_orange_full);
+            mLinkOptionsBar.setVoted(1);
         } else {
             color = ContextCompat.getColor(mContext, R.color.reddit_blue_full);
+            mLinkOptionsBar.setVoted(-1);
         }
+
+        // Determine if we should show the score, or a placeholder if the score is hidden
         Integer score = link.getScore();
         String scoreStr = score == null ?
                 mContext.getString(R.string.hidden_score_placeholder) : score.toString();
+
+        // Format the number section of the score with a color span
         int length = scoreStr.length();
         int index = mLinkScore.getText().toString().indexOf(scoreStr);
         Spannable s = new SpannableString(mLinkScore.getText());
         s.setSpan(new ForegroundColorSpan(color), index, length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        // Set the final stylized text
         mLinkScore.setText(s);
     }
 
@@ -74,11 +140,6 @@ public class CommentsLinkViewHolder extends BaseLinkViewHolder {
         switch (url) {
             case "nsfw":
                 mLinkThumbnail.setVisibility(View.GONE);
-                // This doesn't look correct, probably just get rid of it
-//        mLinkThumbnail.setVisibility(View.VISIBLE);
-//        Picasso.with(mContext)
-//            .load(R.drawable.ic_nsfw2)
-//            .into(mLinkThumbnail);
                 break;
             case "":
             case "default":
@@ -89,6 +150,11 @@ public class CommentsLinkViewHolder extends BaseLinkViewHolder {
                 mLinkThumbnail.setVisibility(View.VISIBLE);
                 loadThumbnail(url);
         }
+    }
+
+    @Override
+    protected void showSaved(@NonNull Link link) {
+        mLinkOptionsBar.setSaved(link.isSaved());
     }
 
     @Override
