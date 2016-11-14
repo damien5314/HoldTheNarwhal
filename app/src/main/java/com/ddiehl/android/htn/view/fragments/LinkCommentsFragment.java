@@ -44,13 +44,14 @@ public class LinkCommentsFragment extends BaseListingsFragment
 
     private LinkCommentsPresenter mLinkCommentsPresenter;
 
-    @Inject protected SettingsManager mSettingsManager;
+    @Inject SettingsManager mSettingsManager;
 
     @Arg String mSubreddit;
     @Arg String mArticleId;
     @Arg String mCommentId;
 
-    @BindView(R.id.coordinator_layout) protected CoordinatorLayout mCoordinatorLayout;
+    @BindView(R.id.coordinator_layout)
+    CoordinatorLayout mCoordinatorLayout;
 
     private String mSort;
 
