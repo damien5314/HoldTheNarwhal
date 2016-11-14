@@ -159,6 +159,7 @@
                 tools:text="Lorem ipsum dolor sit amet" />
 
         <com.ddiehl.android.htn.view.widgets.LinkOptionsBar
+                android:id="@+id/link_options_bar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 

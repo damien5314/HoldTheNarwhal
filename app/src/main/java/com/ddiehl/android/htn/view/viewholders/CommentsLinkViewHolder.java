@@ -8,12 +8,12 @@ import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.util.DisplayMetrics;
 import android.view.View;
-import android.widget.ImageView;
 
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.ThumbnailMode;
 import com.ddiehl.android.htn.presenter.LinkPresenter;
 import com.ddiehl.android.htn.view.LinkView;
+import com.ddiehl.android.htn.view.widgets.LinkOptionsBar;
 
 import java.util.List;
 
@@ -23,10 +23,10 @@ import rxreddit.model.Link;
 
 public class CommentsLinkViewHolder extends BaseLinkViewHolder {
 
-    @BindView(R.id.action_link_upvote_icon) ImageView mLinkUpvote;
-    @BindView(R.id.action_link_downvote_icon) ImageView mLinkDownvote;
-    @BindView(R.id.action_link_save_icon) ImageView mLinkSave;
-    @BindView(R.id.link_parent_view) View mParentLinkView;
+    @BindView(R.id.link_options_bar)
+    LinkOptionsBar mLinkOptionsBar;
+    @BindView(R.id.link_parent_view)
+    View mParentLinkView;
 
     public CommentsLinkViewHolder(View view, LinkView linkView, LinkPresenter presenter) {
         super(view, linkView, presenter);
@@ -80,16 +80,15 @@ public class CommentsLinkViewHolder extends BaseLinkViewHolder {
     protected void showLiked(@NonNull Link link) {
         // Determine tint color based on liked status and tint the buttons appropriately
         @ColorInt int color;
-        mLinkUpvote.setColorFilter(null);
-        mLinkDownvote.setColorFilter(null);
         if (link.isLiked() == null) {
             color = ContextCompat.getColor(mContext, R.color.secondary_text);
+            mLinkOptionsBar.setVoted(0);
         } else if (link.isLiked()) {
             color = ContextCompat.getColor(mContext, R.color.reddit_orange_full);
-            mLinkUpvote.setColorFilter(color);
+            mLinkOptionsBar.setVoted(1);
         } else {
             color = ContextCompat.getColor(mContext, R.color.reddit_blue_full);
-            mLinkDownvote.setColorFilter(color);
+            mLinkOptionsBar.setVoted(-1);
         }
 
         // Determine if we should show the score, or a placeholder if the score is hidden
@@ -142,13 +141,7 @@ public class CommentsLinkViewHolder extends BaseLinkViewHolder {
 
     @Override
     protected void showSaved(@NonNull Link link) {
-        if (link.isSaved()) {
-            mLinkSave.setColorFilter(
-                    ContextCompat.getColor(mContext, R.color.link_saved_color)
-            );
-        } else {
-            mLinkSave.setColorFilter(null);
-        }
+        mLinkOptionsBar.setSaved(link.isSaved());
     }
 
     @Override
