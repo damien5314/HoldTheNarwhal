@@ -21,6 +21,8 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import rxreddit.model.Link;
 
+import static com.ddiehl.android.htn.view.widgets.LinkOptionsBar.Icons.HIDE;
+
 public class CommentsLinkViewHolder extends BaseLinkViewHolder {
 
     @BindView(R.id.link_options_bar)
@@ -30,6 +32,7 @@ public class CommentsLinkViewHolder extends BaseLinkViewHolder {
 
     public CommentsLinkViewHolder(View view, LinkView linkView, LinkPresenter presenter) {
         super(view, linkView, presenter);
+        mLinkOptionsBar.showIcons(false, HIDE);
     }
 
     @OnClick(R.id.action_link_reply)

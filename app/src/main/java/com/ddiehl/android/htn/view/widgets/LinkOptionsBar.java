@@ -22,7 +22,7 @@ public class LinkOptionsBar extends LinearLayout {
 
     static final @LayoutRes int LAYOUT_RES_ID = R.layout.link_options_bar;
 
-    enum Icons {
+    public enum Icons {
         REPLY, UPVOTE, DOWNVOTE, SAVE, SHARE, HIDE, REPORT
     }
 
