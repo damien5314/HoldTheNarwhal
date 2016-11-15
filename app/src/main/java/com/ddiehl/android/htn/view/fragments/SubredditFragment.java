@@ -69,7 +69,6 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
 
         SubredditPresenter presenter = new SubredditPresenter(this, mRedditNavigationView, this);
         mSubredditPresenter = presenter;
-        mLinkPresenter = presenter;
         mListingsPresenter = presenter;
         mCallbacks = presenter;
     }
@@ -110,7 +109,7 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
     @Override
     public ListingsAdapter getListingsAdapter() {
         return new ListingsAdapter(
-                mListingsPresenter, this, mLinkPresenter, null, mCommentPresenter, null, mMessagePresenter);
+                mListingsPresenter, this, null, null);
     }
 
     private void updateTitle() {

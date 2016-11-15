@@ -29,7 +29,7 @@ public class LinkCommentsAdapter extends ListingsAdapter {
     private final LinkCommentsPresenter mLinkCommentsPresenter;
 
     public LinkCommentsAdapter(LinkCommentsView linkCommentsView, LinkCommentsPresenter presenter) {
-        super(presenter, linkCommentsView, presenter, linkCommentsView, presenter, null, null);
+        super(presenter, linkCommentsView, linkCommentsView, null);
         mLinkCommentsView = linkCommentsView;
         mLinkCommentsPresenter = presenter;
     }

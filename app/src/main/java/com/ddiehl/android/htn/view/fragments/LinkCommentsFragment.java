@@ -61,8 +61,6 @@ public class LinkCommentsFragment extends BaseListingsFragment
         FragmentArgs.inject(this);
         mLinkCommentsPresenter = new LinkCommentsPresenter(this, mRedditNavigationView, this);
         mListingsPresenter = mLinkCommentsPresenter;
-        mLinkPresenter = mLinkCommentsPresenter;
-        mCommentPresenter = mLinkCommentsPresenter;
         mSort = mSettingsManager.getCommentSort();
         mCallbacks = (Callbacks) mListingsPresenter;
     }
@@ -237,23 +235,23 @@ public class LinkCommentsFragment extends BaseListingsFragment
 
         switch (item.getItemId()) {
             case R.id.action_share:
-                mLinkPresenter.shareLink(link);
+                mListingsPresenter.shareLink(link);
                 return true;
             case R.id.action_change_sort:
                 showSortOptionsMenu();
                 mAnalytics.logOptionChangeSort();
                 return true;
             case R.id.action_link_view_subreddit:
-                mLinkPresenter.openLinkSubreddit(link);
+                mListingsPresenter.openLinkSubreddit(link);
                 return true;
             case R.id.action_link_view_user_profile:
-                mLinkPresenter.openLinkUserProfile(link);
+                mListingsPresenter.openLinkUserProfile(link);
                 return true;
             case R.id.action_link_open_in_browser:
-                mLinkPresenter.openLinkInBrowser(link);
+                mListingsPresenter.openLinkInBrowser(link);
                 return true;
             case R.id.action_link_open_comments_in_browser:
-                mLinkPresenter.openCommentsInBrowser(link);
+                mListingsPresenter.openCommentsInBrowser(link);
                 return true;
         }
         return super.onOptionsItemSelected(item);

@@ -39,9 +39,6 @@ public abstract class BaseListingsFragment extends BaseFragment
     @BindView(R.id.recycler_view) protected RecyclerView mRecyclerView;
 
     protected BaseListingsPresenter mListingsPresenter;
-    protected BaseListingsPresenter mLinkPresenter;
-    protected BaseListingsPresenter mCommentPresenter;
-    protected BaseListingsPresenter mMessagePresenter;
     protected ListingsAdapter mListingsAdapter;
     protected ListingsView.Callbacks mCallbacks;
 
@@ -225,94 +222,94 @@ public abstract class BaseListingsFragment extends BaseFragment
     public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_link_reply:
-                mLinkPresenter.replyToLink((Link) mListingSelected);
+                mListingsPresenter.replyToLink((Link) mListingSelected);
                 return true;
             case R.id.action_link_upvote:
-                mLinkPresenter.upvoteLink((Link) mListingSelected);
+                mListingsPresenter.upvoteLink((Link) mListingSelected);
                 return true;
             case R.id.action_link_downvote:
-                mLinkPresenter.downvoteLink((Link) mListingSelected);
+                mListingsPresenter.downvoteLink((Link) mListingSelected);
                 return true;
             case R.id.action_link_show_comments:
-                mLinkPresenter.showCommentsForLink((Link) mListingSelected);
+                mListingsPresenter.showCommentsForLink((Link) mListingSelected);
                 return true;
             case R.id.action_link_save:
-                mLinkPresenter.saveLink((Link) mListingSelected);
+                mListingsPresenter.saveLink((Link) mListingSelected);
                 return true;
             case R.id.action_link_unsave:
-                mLinkPresenter.unsaveLink((Link) mListingSelected);
+                mListingsPresenter.unsaveLink((Link) mListingSelected);
                 return true;
             case R.id.action_link_share:
-                mLinkPresenter.shareLink((Link) mListingSelected);
+                mListingsPresenter.shareLink((Link) mListingSelected);
                 return true;
             case R.id.action_link_view_subreddit:
-                mLinkPresenter.openLinkSubreddit((Link) mListingSelected);
+                mListingsPresenter.openLinkSubreddit((Link) mListingSelected);
                 return true;
             case R.id.action_link_view_user_profile:
-                mLinkPresenter.openLinkUserProfile((Link) mListingSelected);
+                mListingsPresenter.openLinkUserProfile((Link) mListingSelected);
                 return true;
             case R.id.action_link_open_in_browser:
-                mLinkPresenter.openLinkInBrowser((Link) mListingSelected);
+                mListingsPresenter.openLinkInBrowser((Link) mListingSelected);
                 return true;
             case R.id.action_link_open_comments_in_browser:
-                mLinkPresenter.openCommentsInBrowser((Link) mListingSelected);
+                mListingsPresenter.openCommentsInBrowser((Link) mListingSelected);
                 return true;
             case R.id.action_link_hide:
-                mLinkPresenter.hideLink((Link) mListingSelected);
+                mListingsPresenter.hideLink((Link) mListingSelected);
                 return true;
             case R.id.action_link_unhide:
-                mLinkPresenter.unhideLink((Link) mListingSelected);
+                mListingsPresenter.unhideLink((Link) mListingSelected);
                 return true;
             case R.id.action_link_report:
-                mLinkPresenter.reportLink((Link) mListingSelected);
+                mListingsPresenter.reportLink((Link) mListingSelected);
                 return true;
             case R.id.action_comment_permalink:
-                mCommentPresenter.openCommentPermalink((Comment) mListingSelected);
+                mListingsPresenter.openCommentPermalink((Comment) mListingSelected);
                 return true;
             case R.id.action_comment_reply:
-                mCommentPresenter.replyToComment((Comment) mListingSelected);
+                mListingsPresenter.replyToComment((Comment) mListingSelected);
                 return true;
             case R.id.action_comment_upvote:
-                mCommentPresenter.upvoteComment((Comment) mListingSelected);
+                mListingsPresenter.upvoteComment((Comment) mListingSelected);
                 return true;
             case R.id.action_comment_downvote:
-                mCommentPresenter.downvoteComment((Comment) mListingSelected);
+                mListingsPresenter.downvoteComment((Comment) mListingSelected);
                 return true;
             case R.id.action_comment_save:
-                mCommentPresenter.saveComment((Comment) mListingSelected);
+                mListingsPresenter.saveComment((Comment) mListingSelected);
                 return true;
             case R.id.action_comment_unsave:
-                mCommentPresenter.unsaveComment((Comment) mListingSelected);
+                mListingsPresenter.unsaveComment((Comment) mListingSelected);
                 return true;
             case R.id.action_comment_share:
-                mCommentPresenter.shareComment((Comment) mListingSelected);
+                mListingsPresenter.shareComment((Comment) mListingSelected);
                 return true;
             case R.id.action_comment_view_user_profile:
-                mCommentPresenter.openCommentUserProfile((Comment) mListingSelected);
+                mListingsPresenter.openCommentUserProfile((Comment) mListingSelected);
                 return true;
             case R.id.action_comment_open_in_browser:
-                mCommentPresenter.openCommentInBrowser((Comment) mListingSelected);
+                mListingsPresenter.openCommentInBrowser((Comment) mListingSelected);
                 return true;
             case R.id.action_comment_report:
-                mCommentPresenter.reportComment((Comment) mListingSelected);
+                mListingsPresenter.reportComment((Comment) mListingSelected);
                 return true;
             case R.id.action_message_show_permalink:
-                mMessagePresenter.showMessagePermalink((PrivateMessage) mListingSelected);
+                mListingsPresenter.showMessagePermalink((PrivateMessage) mListingSelected);
                 return true;
             case R.id.action_message_report:
-                mMessagePresenter.reportMessage((PrivateMessage) mListingSelected);
+                mListingsPresenter.reportMessage((PrivateMessage) mListingSelected);
                 return true;
             case R.id.action_message_block_user:
-                mMessagePresenter.blockUser((PrivateMessage) mListingSelected);
+                mListingsPresenter.blockUser((PrivateMessage) mListingSelected);
                 return true;
             case R.id.action_message_mark_read:
-                mMessagePresenter.markMessageRead((PrivateMessage) mListingSelected);
+                mListingsPresenter.markMessageRead((PrivateMessage) mListingSelected);
                 return true;
             case R.id.action_message_mark_unread:
-                mMessagePresenter.markMessageUnread((PrivateMessage) mListingSelected);
+                mListingsPresenter.markMessageUnread((PrivateMessage) mListingSelected);
                 return true;
             case R.id.action_message_reply:
-                mMessagePresenter.replyToMessage((PrivateMessage) mListingSelected);
+                mListingsPresenter.replyToMessage((PrivateMessage) mListingSelected);
                 return true;
             default:
                 Timber.w("No action registered to this context item");

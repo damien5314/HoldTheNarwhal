@@ -51,9 +51,6 @@ public class InboxFragment extends BaseListingsFragment
         if (TextUtils.isEmpty(mShow)) mShow = "inbox";
 
         mInboxPresenter = new InboxPresenter(this, mRedditNavigationView, this);
-        mLinkPresenter = mInboxPresenter;
-        mCommentPresenter = mInboxPresenter;
-        mMessagePresenter = mInboxPresenter;
         mListingsPresenter = mInboxPresenter;
         mCallbacks = mInboxPresenter;
     }
@@ -120,8 +117,7 @@ public class InboxFragment extends BaseListingsFragment
 
     @Override
     public ListingsAdapter getListingsAdapter() {
-        return new ListingsAdapter(
-                mListingsPresenter, this, mLinkPresenter, this, mCommentPresenter, this, mMessagePresenter);
+        return new ListingsAdapter(mListingsPresenter, this, this, this);
     }
 
     @Override
