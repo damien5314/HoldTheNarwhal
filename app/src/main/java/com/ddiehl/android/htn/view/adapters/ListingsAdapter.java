@@ -7,10 +7,10 @@ import android.view.ViewGroup;
 
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.ThumbnailMode;
+import com.ddiehl.android.htn.presenter.BaseListingsPresenter;
 import com.ddiehl.android.htn.presenter.CommentPresenter;
 import com.ddiehl.android.htn.presenter.InboxPresenter;
 import com.ddiehl.android.htn.presenter.LinkPresenter;
-import com.ddiehl.android.htn.presenter.ListingsPresenter;
 import com.ddiehl.android.htn.presenter.MessagePresenter;
 import com.ddiehl.android.htn.view.CommentView;
 import com.ddiehl.android.htn.view.LinkView;
@@ -34,7 +34,7 @@ public class ListingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     protected final LinkView mLinkView;
     protected final CommentView mCommentView;
     protected final PrivateMessageView mPrivateMessageView;
-    protected final ListingsPresenter mListingsPresenter;
+    protected final BaseListingsPresenter mListingsPresenter;
     protected final LinkPresenter mLinkPresenter;
     protected final CommentPresenter mCommentPresenter;
     protected final MessagePresenter mMessagePresenter;
@@ -42,7 +42,7 @@ public class ListingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     protected ThumbnailMode mThumbnailMode;
 
     public ListingsAdapter(
-            ListingsPresenter presenter,
+            BaseListingsPresenter presenter,
             LinkView linkView, LinkPresenter linkPresenter,
             CommentView commentView, CommentPresenter commentPresenter,
             PrivateMessageView pmView, MessagePresenter messagePresenter) {

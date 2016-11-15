@@ -16,7 +16,6 @@ import android.view.View;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.SettingsManager;
-import com.ddiehl.android.htn.presenter.LinkCommentsPresenter;
 import com.ddiehl.android.htn.presenter.LinkCommentsPresenterImpl;
 import com.ddiehl.android.htn.view.LinkCommentsView;
 import com.ddiehl.android.htn.view.adapters.LinkCommentsAdapter;
@@ -42,7 +41,7 @@ public class LinkCommentsFragment extends BaseListingsFragment
 
     public static final String TAG = LinkCommentsFragment.class.getSimpleName();
 
-    private LinkCommentsPresenter mLinkCommentsPresenter;
+    private LinkCommentsPresenterImpl mLinkCommentsPresenter;
 
     @Inject SettingsManager mSettingsManager;
 

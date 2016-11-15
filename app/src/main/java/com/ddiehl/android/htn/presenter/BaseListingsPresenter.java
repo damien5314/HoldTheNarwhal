@@ -41,7 +41,7 @@ import rxreddit.model.Votable;
 import timber.log.Timber;
 
 public abstract class BaseListingsPresenter
-        implements ListingsPresenter, ListingsView.Callbacks {
+        implements ListingsView.Callbacks {
 
     @Inject protected Context mContext;
     @Inject protected IdentityManager mIdentityManager;
@@ -76,18 +76,15 @@ public abstract class BaseListingsPresenter
         mPrivateMessageView = messageView;
     }
 
-    @Override
     public boolean hasData() {
         return mListings.size() != 0;
     }
 
-    @Override
     public void clearData() {
         mListings.clear();
         mListingsView.notifyDataSetChanged();
     }
 
-    @Override
     public void refreshData() {
         mPrevPageListingId = null;
         mNextPageListingId = null;
@@ -97,7 +94,6 @@ public abstract class BaseListingsPresenter
         getNextData();
     }
 
-    @Override
     public void getPreviousData() {
         if (!mBeforeRequested) {
             if (AndroidUtils.isConnectedToNetwork(mContext)) {
@@ -108,7 +104,6 @@ public abstract class BaseListingsPresenter
         }
     }
 
-    @Override
     public void getNextData() {
         if (!mNextRequested) {
             if (AndroidUtils.isConnectedToNetwork(mContext)) {
@@ -139,33 +134,27 @@ public abstract class BaseListingsPresenter
         }
     }
 
-    @Override
     public void setData(@NonNull List<Listing> data) {
         mListings.clear();
         mListings.addAll(data);
     }
 
-    @Override
     public int getNumListings() {
         return mListings.size();
     }
 
-    @Override
     public Listing getListingAt(int position) {
         return mListings.get(position);
     }
 
-    @Override
     public boolean hasPreviousListings() {
         return mPrevPageListingId != null;
     }
 
-    @Override
     public boolean hasNextListings() {
         return mNextPageListingId != null;
     }
 
-    @Override
     public boolean getShowControversiality() {
         return mSettingsManager.getShowControversiality();
     }
@@ -376,12 +365,10 @@ public abstract class BaseListingsPresenter
         mRedditNavigationView.showCommentsForLink(comment.getSubreddit(), comment.getLinkId(), null);
     }
 
-    @Override
     public UserIdentity getAuthorizedUser() {
         return mIdentityManager.getUserIdentity();
     }
 
-    @Override
     public void onSortChanged() {
         refreshData();
     }

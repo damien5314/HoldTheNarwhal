@@ -18,9 +18,9 @@ import android.view.ViewGroup;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
+import com.ddiehl.android.htn.presenter.BaseListingsPresenter;
 import com.ddiehl.android.htn.presenter.CommentPresenter;
 import com.ddiehl.android.htn.presenter.LinkPresenter;
-import com.ddiehl.android.htn.presenter.ListingsPresenter;
 import com.ddiehl.android.htn.presenter.MessagePresenter;
 import com.ddiehl.android.htn.view.ListingsView;
 import com.ddiehl.android.htn.view.activities.SubredditActivity;
@@ -41,7 +41,7 @@ public abstract class BaseListingsFragment extends BaseFragment
 
     @BindView(R.id.recycler_view) protected RecyclerView mRecyclerView;
 
-    protected ListingsPresenter mListingsPresenter;
+    protected BaseListingsPresenter mListingsPresenter;
     protected LinkPresenter mLinkPresenter;
     protected CommentPresenter mCommentPresenter;
     protected MessagePresenter mMessagePresenter;
