@@ -15,7 +15,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rxreddit.api.RedditService;
 
-public class SettingsPresenterImpl implements SettingsPresenter {
+public class SettingsPresenterImpl {
 
     @Inject protected Context mApplicationContext;
     @Inject protected RedditService mRedditService;
@@ -29,7 +29,6 @@ public class SettingsPresenterImpl implements SettingsPresenter {
         HoldTheNarwhal.getApplicationComponent().inject(this);
     }
 
-    @Override
     public void refresh(boolean pullFromServer) {
         boolean showUser = mSettingsManager.hasFromRemote();
         mSettingsView.showPreferences(showUser);
@@ -57,12 +56,10 @@ public class SettingsPresenterImpl implements SettingsPresenter {
                         });
     }
 
-    @Override
     public boolean isRefreshable() {
         return mSettingsManager.hasFromRemote();
     }
 
-    @Override
     public boolean isUserAuthorized() {
         return mRedditService.isUserAuthorized();
     }

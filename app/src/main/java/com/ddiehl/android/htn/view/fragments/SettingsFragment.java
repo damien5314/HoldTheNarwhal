@@ -25,7 +25,6 @@ import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.SettingsManagerImpl;
-import com.ddiehl.android.htn.presenter.SettingsPresenter;
 import com.ddiehl.android.htn.presenter.SettingsPresenterImpl;
 import com.ddiehl.android.htn.view.MenuTintUtils;
 import com.ddiehl.android.htn.view.SettingsView;
@@ -41,7 +40,7 @@ public class SettingsFragment extends PreferenceFragment
     public static final String TAG = SettingsFragment.class.getSimpleName();
 
     @Inject IdentityManager mIdentityManager;
-    SettingsPresenter mSettingsPresenter;
+    SettingsPresenterImpl mSettingsPresenter;
 
     ProgressDialog mLoadingOverlay;
 
