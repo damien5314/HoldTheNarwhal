@@ -20,7 +20,6 @@ import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.presenter.BaseListingsPresenter;
 import com.ddiehl.android.htn.presenter.LinkPresenter;
-import com.ddiehl.android.htn.presenter.MessagePresenter;
 import com.ddiehl.android.htn.view.ListingsView;
 import com.ddiehl.android.htn.view.activities.SubredditActivity;
 import com.ddiehl.android.htn.view.adapters.ListingsAdapter;
@@ -43,7 +42,7 @@ public abstract class BaseListingsFragment extends BaseFragment
     protected BaseListingsPresenter mListingsPresenter;
     protected LinkPresenter mLinkPresenter;
     protected BaseListingsPresenter mCommentPresenter;
-    protected MessagePresenter mMessagePresenter;
+    protected BaseListingsPresenter mMessagePresenter;
     protected ListingsAdapter mListingsAdapter;
     protected ListingsView.Callbacks mCallbacks;
 
