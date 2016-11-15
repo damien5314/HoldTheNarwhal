@@ -173,7 +173,7 @@ public class SubscriptionManagerFragment extends BaseFragment implements Subscri
     Action1<Throwable> onSubscriptionsLoadError() {
         return error -> {
             Timber.w(error, "Error loading subreddit subscriptions");
-            showError(error, getString(R.string.subscriptions_load_failed));
+            showError(getString(R.string.subscriptions_load_failed));
         };
     }
 
@@ -254,7 +254,7 @@ public class SubscriptionManagerFragment extends BaseFragment implements Subscri
 
             // Show error messaging
             Timber.w(error, "Error unsubscribing from /r/%s", subreddit.getDisplayName());
-            showError(error, getString(R.string.unsubscribe_error, subreddit.getDisplayName()));
+            showError(getString(R.string.unsubscribe_error, subreddit.getDisplayName()));
         });
     }
 
@@ -308,7 +308,7 @@ public class SubscriptionManagerFragment extends BaseFragment implements Subscri
     Action1<Throwable> onResubscribeError(final @NonNull Subreddit subreddit) {
         return error -> getActivity().runOnUiThread(() -> {
             Timber.w(error, "Error resubscribing to /r/%s", subreddit.getDisplayName());
-            showError(error, getString(R.string.resubscribe_error, subreddit.getDisplayName()));
+            showError(getString(R.string.resubscribe_error, subreddit.getDisplayName()));
         });
     }
 
@@ -328,7 +328,7 @@ public class SubscriptionManagerFragment extends BaseFragment implements Subscri
             case REQUEST_GET_SUBREDDIT_INFO:
                 if (resultCode == SubredditInfoFragment.RESULT_GET_INFO_ERROR) {
                     String message = getString(R.string.error_get_subreddit_info);
-                    showError(null, message);
+                    showError(message);
                 }
                 break;
         }

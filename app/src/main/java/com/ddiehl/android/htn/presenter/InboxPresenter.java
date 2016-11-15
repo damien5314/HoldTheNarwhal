@@ -49,7 +49,7 @@ public class InboxPresenter extends BaseListingsPresenter {
                         error -> {
                             Timber.w(error, "Error retrieving inbox listings");
                             String message = mContext.getString(R.string.error_get_inbox);
-                            mMainView.showError(error, message);
+                            mMainView.showError(message);
                         }
                 );
     }
@@ -74,7 +74,7 @@ public class InboxPresenter extends BaseListingsPresenter {
                         error -> {
                             Timber.w(error, "Error marking messages read");
                             String message = mContext.getString(R.string.error_xxx);
-                            mMainView.showError(error, message);
+                            mMainView.showError(message);
                         }
                 );
     }

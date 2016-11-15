@@ -10,6 +10,8 @@ import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.android.htn.view.RedditNavigationView;
 import com.ddiehl.android.htn.view.UserProfileView;
 
+import java.io.IOException;
+
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
@@ -75,7 +77,7 @@ public class UserProfilePresenter extends BaseListingsPresenter {
                         error -> {
                             Timber.w(error, "Error loading profile listings");
                             String message = mContext.getString(R.string.error_get_user_profile_listings);
-                            mMainView.showError(error, message);
+                            mMainView.showError(message);
                         });
     }
 
@@ -101,7 +103,7 @@ public class UserProfilePresenter extends BaseListingsPresenter {
                         error -> {
                             Timber.w(error, "Error loading friend info");
                             String message = mContext.getString(R.string.error_get_user_info);
-                            mMainView.showError(error, message);
+                            mMainView.showError(message);
                         }
                 );
         mRedditService.getUserTrophies(mSummaryView.getUsernameContext())
@@ -112,7 +114,7 @@ public class UserProfilePresenter extends BaseListingsPresenter {
                         error -> {
                             Timber.w(error, "Error loading user trophies");
                             String message = mContext.getString(R.string.error_get_user_trophies);
-                            mMainView.showError(error, message);
+                            mMainView.showError(message);
                         }
                 );
     }
@@ -131,7 +133,7 @@ public class UserProfilePresenter extends BaseListingsPresenter {
                         }, error -> {
                             Timber.w(error, "Error getting friend info");
                             String message = mContext.getString(R.string.error_get_friend_info);
-                            mMainView.showError(error, message);
+                            mMainView.showError(message);
                         });
             }
         };
@@ -155,7 +157,7 @@ public class UserProfilePresenter extends BaseListingsPresenter {
                         error -> {
                             Timber.w(error, "Error adding friend");
                             String message = mContext.getString(R.string.user_friend_add_error);
-                            mMainView.showError(error, message);
+                            mMainView.showError(message);
                         }
                 );
     }
@@ -173,9 +175,14 @@ public class UserProfilePresenter extends BaseListingsPresenter {
                             mMainView.showToast(mContext.getString(R.string.user_friend_delete_confirm));
                         },
                         error -> {
-                            Timber.w(error, "Error deleting friend");
-                            String message = mContext.getString(R.string.user_friend_delete_error);
-                            mMainView.showError(error, message);
+                            if (error instanceof IOException) {
+                                String message = mContext.getString(R.string.error_network_unavailable);
+                                mMainView.showError(message);
+                            } else {
+                                Timber.w(error, "Error deleting friend");
+                                String message = mContext.getString(R.string.user_friend_delete_error);
+                                mMainView.showError(message);
+                            }
                         }
                 );
     }
@@ -198,7 +205,7 @@ public class UserProfilePresenter extends BaseListingsPresenter {
                             error -> {
                                 Timber.w(error, "Error saving friend note");
                                 String message = mContext.getString(R.string.user_friend_note_save_error);
-                                mMainView.showError(error, message);
+                                mMainView.showError(message);
                             }
                     );
         }

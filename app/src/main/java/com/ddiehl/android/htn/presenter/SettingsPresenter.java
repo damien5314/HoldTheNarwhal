@@ -18,10 +18,10 @@ import timber.log.Timber;
 
 public class SettingsPresenter {
 
-    @Inject protected Context mApplicationContext;
-    @Inject protected RedditService mRedditService;
-    @Inject protected IdentityManager mIdentityManager;
-    @Inject protected SettingsManager mSettingsManager;
+    @Inject Context mApplicationContext;
+    @Inject RedditService mRedditService;
+    @Inject IdentityManager mIdentityManager;
+    @Inject SettingsManager mSettingsManager;
 
     private final SettingsView mSettingsView;
 

@@ -118,7 +118,7 @@ public abstract class BaseFragment extends Fragment implements MainView {
                         error -> {
                             Timber.w(error, "Error processing authentication callback");
                             String message = getString(R.string.error_get_user_identity);
-                            showError(error, message);
+                            showError(message);
                         }
                 );
     }
@@ -134,7 +134,7 @@ public abstract class BaseFragment extends Fragment implements MainView {
                         error -> {
                             Timber.w(error, "Error getting user identity");
                             String message = getString(R.string.error_get_user_identity);
-                            showError(error, message);
+                            showError(message);
                         });
     }
 
@@ -199,7 +199,7 @@ public abstract class BaseFragment extends Fragment implements MainView {
     }
 
     @Override
-    public void showError(Throwable error, @NonNull CharSequence message) {
+    public void showError(@NonNull CharSequence message) {
         Snackbar.make(getChromeView(), message, Snackbar.LENGTH_SHORT).show();
     }
 

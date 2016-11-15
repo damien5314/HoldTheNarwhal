@@ -67,7 +67,7 @@ public class SubredditPresenter extends BaseListingsPresenter {
                         error -> {
                             Timber.w(error, "Error loading subreddit info");
                             String message = mContext.getString(R.string.error_get_subreddit_info);
-                            mMainView.showError(error, message);
+                            mMainView.showError(message);
                         }
                 );
     }
@@ -105,7 +105,7 @@ public class SubredditPresenter extends BaseListingsPresenter {
                         error -> {
                             Timber.w(error, "Error loading links");
                             String message = mContext.getString(R.string.error_get_links);
-                            mMainView.showError(error, message);
+                            mMainView.showError(message);
                         }
                 );
     }

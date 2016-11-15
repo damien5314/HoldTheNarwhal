@@ -99,7 +99,8 @@ public abstract class BaseListingsPresenter
             if (AndroidUtils.isConnectedToNetwork(mContext)) {
                 requestPreviousData();
             } else {
-                mMainView.showToast(mContext.getString(R.string.error_network_unavailable));
+                String message = mContext.getString(R.string.error_network_unavailable);
+                mMainView.showToast(message);
             }
         }
     }
@@ -109,7 +110,8 @@ public abstract class BaseListingsPresenter
             if (AndroidUtils.isConnectedToNetwork(mContext)) {
                 requestNextData();
             } else {
-                mMainView.showToast(mContext.getString(R.string.error_network_unavailable));
+                String message = mContext.getString(R.string.error_network_unavailable);
+                mMainView.showToast(message);
             }
         }
     }
@@ -179,7 +181,7 @@ public abstract class BaseListingsPresenter
                 mNextPageListingId = null;
 
                 String message = mContext.getString(R.string.error_get_links);
-                mMainView.showError(new NullPointerException(), message);
+                mMainView.showError(message);
             } else {
                 if (append) {
                     int lastIndex = mListings.size() - 1;
@@ -389,7 +391,7 @@ public abstract class BaseListingsPresenter
                             error -> {
                                 Timber.w(error, "Error voting on listing");
                                 String message = mContext.getString(R.string.vote_failed);
-                                mMainView.showError(error, message);
+                                mMainView.showError(message);
                             }
                     );
             mAnalytics.logVote(votable.getKind(), direction);
@@ -414,7 +416,7 @@ public abstract class BaseListingsPresenter
                         error -> {
                             Timber.w(error, "Error saving listing");
                             String message = mContext.getString(R.string.save_failed);
-                            mMainView.showError(error, message);
+                            mMainView.showError(message);
                         }
                 );
     }
@@ -432,7 +434,7 @@ public abstract class BaseListingsPresenter
                         error -> {
                             Timber.w(error, "Error hiding listing");
                             String message = mContext.getString(R.string.hide_failed);
-                            mMainView.showError(error, message);
+                            mMainView.showError(message);
                         }
                 );
     }
@@ -482,7 +484,7 @@ public abstract class BaseListingsPresenter
                         error -> {
                             Timber.w(error, "Error marking message read");
                             String errorMessage = mContext.getString(R.string.error_xxx);
-                            mMainView.showError(error, errorMessage);
+                            mMainView.showError(errorMessage);
                         }
                 );
     }
@@ -499,7 +501,7 @@ public abstract class BaseListingsPresenter
                         error -> {
                             Timber.w(error, "Error marking message unread");
                             String errorMessage = mContext.getString(R.string.error_xxx);
-                            mMainView.showError(error, errorMessage);
+                            mMainView.showError(errorMessage);
                         }
                 );
     }

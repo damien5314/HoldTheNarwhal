@@ -79,7 +79,7 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
                         error -> {
                             Timber.w(error, "Error retrieving comment listings");
                             String message = mContext.getString(R.string.error_get_link_comments);
-                            mMainView.showError(error, message);
+                            mMainView.showError(message);
                         }
                 );
         mAnalytics.logLoadLinkComments(mLinkCommentsView.getSort());
@@ -130,7 +130,7 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
                         error -> {
                             Timber.w(error, "Error retrieving more comments");
                             String message = mContext.getString(R.string.error_get_more_comments);
-                            mMainView.showError(error, message);
+                            mMainView.showError(message);
                         }
                 );
         mAnalytics.logLoadMoreChildren(mLinkCommentsView.getSort());
@@ -270,7 +270,7 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
                         error -> {
                             Timber.w(error, "Error adding comment");
                             String message = mContext.getString(R.string.error_add_comment);
-                            mMainView.showError(error, message);
+                            mMainView.showError(message);
                         }
                 );
     }
