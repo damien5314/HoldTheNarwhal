@@ -6,7 +6,7 @@ import com.ddiehl.android.htn.ThumbnailMode;
 
 import rxreddit.model.Link;
 
-public interface LinkPresenter extends BasePresenter {
+public interface LinkPresenter {
 
     void openLink(@NonNull Link link);
 

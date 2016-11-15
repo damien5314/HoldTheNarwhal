@@ -7,7 +7,7 @@ import rxreddit.model.CommentStub;
 import rxreddit.model.Link;
 
 public interface LinkCommentsPresenter
-        extends BasePresenter, ListingsPresenter, LinkPresenter, CommentPresenter {
+        extends ListingsPresenter, LinkPresenter, CommentPresenter {
 
     Link getLinkContext();
 

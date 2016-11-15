@@ -30,21 +30,6 @@ public class SettingsPresenterImpl implements SettingsPresenter {
     }
 
     @Override
-    public void onResume() {
-        if (mRedditService.isUserAuthorized()) {
-            refresh(true);
-        }
-    }
-
-    @Override
-    public void onPause() {
-    }
-
-    @Override
-    public void onViewDestroyed() {
-    }
-
-    @Override
     public void refresh(boolean pullFromServer) {
         boolean showUser = mSettingsManager.hasFromRemote();
         mSettingsView.showPreferences(showUser);
@@ -75,5 +60,10 @@ public class SettingsPresenterImpl implements SettingsPresenter {
     @Override
     public boolean isRefreshable() {
         return mSettingsManager.hasFromRemote();
+    }
+
+    @Override
+    public boolean isUserAuthorized() {
+        return mRedditService.isUserAuthorized();
     }
 }

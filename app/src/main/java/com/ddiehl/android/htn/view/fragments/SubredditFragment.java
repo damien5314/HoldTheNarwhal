@@ -30,6 +30,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import rxreddit.model.Link;
+import rxreddit.model.Subreddit;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -44,7 +45,10 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
     @Arg(required = false) String mSort;
     @Arg(required = false) String mTimespan;
 
-    @BindView(R.id.coordinator_layout) protected CoordinatorLayout mCoordinatorLayout;
+    @BindView(R.id.coordinator_layout)
+    CoordinatorLayout mCoordinatorLayout;
+
+    SubredditPresenter mSubredditPresenter;
 
     // Cache for sort selected before showing timespan dialog
     private String mSelectedSort;
@@ -64,6 +68,7 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
         if (TextUtils.isEmpty(mTimespan)) mTimespan = "all";
 
         SubredditPresenter presenter = new SubredditPresenter(this, mRedditNavigationView, this);
+        mSubredditPresenter = presenter;
         mLinkPresenter = presenter;
         mListingsPresenter = presenter;
         mCallbacks = presenter;
@@ -80,6 +85,26 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         updateTitle();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        // Load subreddit image into drawer header
+        Subreddit subredditInfo = mSubredditPresenter.getSubredditInfo();
+        if (subredditInfo != null) {
+            String url = subredditInfo.getHeaderImageUrl();
+            loadImageIntoDrawerHeader(url);
+        }
+    }
+
+    @Override
+    public void onPause() {
+        // Clear subreddit image from drawer header
+        loadImageIntoDrawerHeader(null);
+
+        super.onPause();
     }
 
     @Override
@@ -226,6 +251,11 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
 
         String formatter = getString(R.string.link_subreddit);
         setTitle(String.format(formatter, getSubreddit()));
+    }
+
+    @Override
+    public void loadHeaderImage() {
+
     }
 
     @Override

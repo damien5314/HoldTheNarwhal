@@ -41,17 +41,14 @@ public class LinkCommentsPresenterImpl extends BaseListingsPresenter
     }
 
     @Override
-    public void onResume() {
-        if (mCommentBank.size() == 0) {
-            getNextData();
-        }
+    public boolean hasData() {
+        return mCommentBank.size() != 0;
     }
 
     @Override
-    public void onViewDestroyed() {
+    public void clearData() {
         mLinkContext = null;
         mCommentBank.clear();
-        mLinkCommentsView.notifyDataSetChanged();
     }
 
     @Override
@@ -64,7 +61,7 @@ public class LinkCommentsPresenterImpl extends BaseListingsPresenter
 
     @Override
     void requestPreviousData() {
-
+        // Comments aren't paginated the same as a listings endpoint
     }
 
     @Override

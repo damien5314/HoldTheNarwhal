@@ -24,25 +24,13 @@ public class SubredditPresenter extends BaseListingsPresenter implements LinkPre
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        loadHeaderImage();
-    }
-
-    @Override
-    public void onPause() {
-        mMainView.loadImageIntoDrawerHeader(null);
-        super.onPause();
-    }
-
-    @Override
     void requestPreviousData() {
         String subreddit = mSubredditView.getSubreddit();
         if (subreddit != null
                 && !subreddit.equals("all")
                 && !subreddit.equals("random")
                 && mSubredditInfo == null) {
-            getSubredditInfo();
+            loadSubredditInfo(mSubredditView.getSubreddit());
         } else {
             getSubredditLinks(false);
         }
@@ -55,14 +43,18 @@ public class SubredditPresenter extends BaseListingsPresenter implements LinkPre
                 && !subreddit.equals("all")
                 && !subreddit.equals("random")
                 && mSubredditInfo == null) {
-            getSubredditInfo();
+            loadSubredditInfo(mSubredditView.getSubreddit());
         } else {
             getSubredditLinks(true);
         }
     }
 
-    private void getSubredditInfo() {
-        mRedditService.getSubredditInfo(mSubredditView.getSubreddit())
+    public Subreddit getSubredditInfo() {
+        return mSubredditInfo;
+    }
+
+    private void loadSubredditInfo(@NonNull String subreddit) {
+        mRedditService.getSubredditInfo(subreddit)
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(mMainView::showSpinner)
                 .doOnTerminate(() -> {
@@ -134,20 +126,19 @@ public class SubredditPresenter extends BaseListingsPresenter implements LinkPre
             if (shouldShowNsfwDialog(mSubredditInfo, over18)) {
                 mSubredditView.showNsfwWarningDialog();
             } else {
-                if (mSubredditInfo != null) requestNextData();
-                else mMainView.showToast(mContext.getString(R.string.error_private_subreddit));
+                if (mSubredditInfo != null) {
+                    requestNextData();
+                } else {
+                    String message = mContext.getString(R.string.error_private_subreddit);
+                    mMainView.showToast(message);
+                }
             }
 
-            loadHeaderImage();
+            mSubredditView.loadHeaderImage();
         };
     }
 
     private boolean shouldShowNsfwDialog(Subreddit subreddit, boolean userOver18) {
         return subreddit != null && subreddit.isOver18() && !userOver18;
-    }
-
-    private void loadHeaderImage() {
-        mMainView.loadImageIntoDrawerHeader(
-                mSubredditInfo == null ? null : mSubredditInfo.getHeaderImageUrl());
     }
 }

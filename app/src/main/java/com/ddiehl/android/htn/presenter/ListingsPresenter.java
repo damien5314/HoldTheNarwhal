@@ -7,7 +7,11 @@ import java.util.List;
 import rxreddit.model.Listing;
 import rxreddit.model.UserIdentity;
 
-public interface ListingsPresenter extends BasePresenter {
+public interface ListingsPresenter {
+
+    boolean hasData();
+
+    void clearData();
 
     void refreshData();
 

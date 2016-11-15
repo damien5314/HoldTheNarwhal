@@ -5,7 +5,7 @@ import android.support.annotation.NonNull;
 import rxreddit.model.Comment;
 import rxreddit.model.CommentStub;
 
-public interface CommentPresenter extends BasePresenter {
+public interface CommentPresenter {
 
     void showCommentThread(@NonNull String subreddit, @NonNull String linkId, @NonNull String commentId);
 

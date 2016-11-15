@@ -11,4 +11,6 @@ public interface SubredditView extends ListingsView, LinkView {
     void showNsfwWarningDialog();
 
     void onRandomSubredditLoaded(String randomSubreddit);
+
+    void loadHeaderImage();
 }

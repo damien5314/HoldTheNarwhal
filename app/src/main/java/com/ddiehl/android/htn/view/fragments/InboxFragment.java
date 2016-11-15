@@ -69,6 +69,19 @@ public class InboxFragment extends BaseListingsFragment
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (mIdentityManager.getUserIdentity() == null) {
+            // User was signed out, they can't view inbox anymore
+            finish();
+        } else {
+            // User is authenticated, defer to base implementation
+            super.onResume();
+        }
+    }
+
     private void initializeTabs() {
         mTabLayout.removeOnTabSelectedListener(this);
 

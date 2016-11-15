@@ -77,16 +77,18 @@ public class SettingsFragment extends PreferenceFragment
     @Override
     public void onResume() {
         super.onResume();
-        mSettingsPresenter.onResume();
         getActivity().getSharedPreferences(SettingsManagerImpl.PREFS_USER, Context.MODE_PRIVATE)
                 .registerOnSharedPreferenceChangeListener(this);
+
+        if (mSettingsPresenter.isUserAuthorized()) {
+            mSettingsPresenter.refresh(true);
+        }
     }
 
     @Override
     public void onPause() {
         getActivity().getSharedPreferences(SettingsManagerImpl.PREFS_USER, Context.MODE_PRIVATE)
                 .unregisterOnSharedPreferenceChangeListener(this);
-        mSettingsPresenter.onPause();
         super.onPause();
     }
 

@@ -111,20 +111,21 @@ public abstract class BaseListingsFragment extends BaseFragment
     @Override
     public void onResume() {
         super.onResume();
-        mListingsPresenter.onResume();
-    }
 
-    @Override
-    public void onPause() {
-        mListingsPresenter.onPause();
-        super.onPause();
+        // FIXME Do we need to check mNextRequested here?
+        if (!mListingsPresenter.hasData()) {
+            mListingsPresenter.refreshData();
+        }
     }
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
-        mListingsPresenter.onViewDestroyed();
         mRecyclerView.setAdapter(null);
+
+        // To disable the memory dereferencing functionality just comment these lines
+        mListingsPresenter.clearData();
+
+        super.onDestroy();
     }
 
     @Override
