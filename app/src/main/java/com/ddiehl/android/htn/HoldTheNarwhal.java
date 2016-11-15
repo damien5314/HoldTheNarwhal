@@ -6,6 +6,10 @@ import com.crashlytics.android.Crashlytics;
 import com.ddiehl.android.htn.di.ApplicationComponent;
 import com.ddiehl.android.htn.di.ApplicationModule;
 import com.ddiehl.android.htn.di.DaggerApplicationComponent;
+import com.ddiehl.android.logging.CrashlyticsLogger;
+import com.ddiehl.android.logging.CrashlyticsLoggingTree;
+import com.ddiehl.android.logging.LogcatLogger;
+import com.ddiehl.android.logging.LogcatLoggingTree;
 import com.squareup.picasso.Picasso;
 
 import io.fabric.sdk.android.Fabric;
@@ -26,7 +30,15 @@ public class HoldTheNarwhal extends Application {
                 .build();
 
 //    LeakCanary.install(this);
-        Timber.plant(new Timber.DebugTree());
+
+        // Install logging trees
+        if (BuildConfig.DEBUG) {
+            Timber.Tree tree = new LogcatLoggingTree(new LogcatLogger());
+            Timber.plant(tree);
+        } else {
+            Timber.Tree tree = new CrashlyticsLoggingTree(new CrashlyticsLogger());
+            Timber.plant(tree);
+        }
 
         if (BuildConfig.DEBUG) {
             Picasso.setSingletonInstance(
