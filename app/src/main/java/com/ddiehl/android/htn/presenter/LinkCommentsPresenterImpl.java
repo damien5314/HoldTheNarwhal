@@ -89,6 +89,8 @@ public class LinkCommentsPresenterImpl extends BaseListingsPresenter
         return listingResponseList -> {
             if (listingResponseList == null) return;
 
+            mLinkCommentsView.refreshOptionsMenu();
+
             // Get link
             ListingResponse linkResponse = listingResponseList.get(0);
             mLinkContext = (Link) linkResponse.getData().getChildren().get(0);

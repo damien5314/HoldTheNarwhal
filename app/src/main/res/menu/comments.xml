@@ -22,6 +22,26 @@
             app:showAsAction="never" />
 
     <item
+            android:id="@+id/action_link_view_subreddit"
+            android:title="@string/action_view_subreddit"
+            app:showAsAction="never" />
+
+    <item
+            android:id="@+id/action_link_view_user_profile"
+            android:title="@string/action_view_user_profile"
+            app:showAsAction="never" />
+
+    <item
+            android:id="@+id/action_link_open_in_browser"
+            android:title="@string/action_open_in_browser"
+            app:showAsAction="never" />
+
+    <item
+            android:id="@+id/action_link_open_comments_in_browser"
+            android:title="@string/action_open_comments_in_browser"
+            app:showAsAction="never" />
+
+    <item
             android:id="@+id/action_settings"
             android:title="@string/action_settings"
             app:showAsAction="never" />

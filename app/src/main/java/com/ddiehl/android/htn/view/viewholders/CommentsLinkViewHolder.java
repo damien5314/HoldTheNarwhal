@@ -40,12 +40,11 @@ public class CommentsLinkViewHolder extends BaseLinkViewHolder {
 
     public CommentsLinkViewHolder(View view, LinkView linkView, LinkPresenter presenter) {
         super(view, linkView, presenter);
-        mLinkOptionsBar.showIcons(false, HIDE);
+        mLinkOptionsBar.showIcons(false, HIDE, SHARE);
         mLinkOptionsBar.setOnIconClickListener(REPLY, onReplyClicked());
         mLinkOptionsBar.setOnIconClickListener(UPVOTE, onUpvoteClicked());
         mLinkOptionsBar.setOnIconClickListener(DOWNVOTE, onDownvoteClicked());
         mLinkOptionsBar.setOnIconClickListener(SAVE, onSaveClicked());
-        mLinkOptionsBar.setOnIconClickListener(SHARE, onShareClicked());
         mLinkOptionsBar.setOnIconClickListener(HIDE, onHideClicked());
         mLinkOptionsBar.setOnIconClickListener(REPORT, onReportClicked());
     }
@@ -70,10 +69,6 @@ public class CommentsLinkViewHolder extends BaseLinkViewHolder {
                 mLinkPresenter.saveLink(mLink);
             }
         };
-    }
-
-    Action0 onShareClicked() {
-        return () -> mLinkPresenter.shareLink(mLink);
     }
 
     Action0 onHideClicked() {

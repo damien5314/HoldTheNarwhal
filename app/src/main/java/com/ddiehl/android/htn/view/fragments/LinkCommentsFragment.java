@@ -176,15 +176,68 @@ public class LinkCommentsFragment extends BaseListingsFragment
     }
 
     @Override
+    public void refreshOptionsMenu() {
+        getActivity().supportInvalidateOptionsMenu();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.comments, menu);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+
+        Link link = mLinkCommentsPresenter.getLinkContext();
+
+        MenuItem viewSubredditItem = menu.findItem(R.id.action_link_view_subreddit);
+        MenuItem viewUserItem = menu.findItem(R.id.action_link_view_user_profile);
+
+        if (link == null) {
+            viewSubredditItem.setVisible(false);
+            viewUserItem.setVisible(false);
+        } else {
+            viewSubredditItem.setVisible(true);
+            viewUserItem.setVisible(true);
+
+            // Insert name of subreddit to its menu item
+            String viewSubredditTitle = viewSubredditItem.getTitle().toString();
+            viewSubredditItem.setTitle(
+                    String.format(viewSubredditTitle, link.getSubreddit())
+            );
+
+            // Insert name of user in user profile menu item
+            String viewUserTitle = viewUserItem.getTitle().toString();
+            viewUserItem.setTitle(
+                    String.format(viewUserTitle, link.getAuthor())
+            );
+        }
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Link link = mLinkCommentsPresenter.getLinkContext();
+
         switch (item.getItemId()) {
             case R.id.action_share:
-                Link link = mLinkCommentsPresenter.getLinkContext();
                 mLinkPresenter.shareLink(link);
                 return true;
             case R.id.action_change_sort:
                 showSortOptionsMenu();
                 mAnalytics.logOptionChangeSort();
+                return true;
+            case R.id.action_link_view_subreddit:
+                mLinkPresenter.openLinkSubreddit(link);
+                return true;
+            case R.id.action_link_view_user_profile:
+                mLinkPresenter.openLinkUserProfile(link);
+                return true;
+            case R.id.action_link_open_in_browser:
+                mLinkPresenter.openLinkInBrowser(link);
+                return true;
+            case R.id.action_link_open_comments_in_browser:
+                mLinkPresenter.openCommentsInBrowser(link);
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -195,11 +248,6 @@ public class LinkCommentsFragment extends BaseListingsFragment
                 ChooseCommentSortDialog.newInstance(mSort);
         chooseLinkSortDialog.setTargetFragment(this, REQUEST_CHOOSE_SORT);
         chooseLinkSortDialog.show(getFragmentManager(), ChooseCommentSortDialog.TAG);
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.comments, menu);
     }
 
     private void onSortSelected(@NonNull String sort) {
