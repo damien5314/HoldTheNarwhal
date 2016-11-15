@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
-import com.ddiehl.android.htn.presenter.LinkCommentsPresenter;
+import com.ddiehl.android.htn.presenter.LinkCommentsPresenterImpl;
 import com.ddiehl.android.htn.view.LinkCommentsView;
 import com.ddiehl.android.htn.view.widgets.ColorSwapTextView;
 import com.ddiehl.timesincetextview.TimeSinceTextView;
@@ -30,7 +30,7 @@ public class ThreadCommentViewHolder extends RecyclerView.ViewHolder
 
     @Inject protected Context mContext;
     private final LinkCommentsView mLinkCommentsView;
-    private final LinkCommentsPresenter mLinkCommentsPresenter;
+    private final LinkCommentsPresenterImpl mLinkCommentsPresenter;
     private Comment mComment;
 
     @BindView(R.id.comment_author) ColorSwapTextView mAuthorView;
@@ -42,7 +42,7 @@ public class ThreadCommentViewHolder extends RecyclerView.ViewHolder
     @BindView(R.id.comment_gilded_text_view) TextView mGildedText;
     @BindView(R.id.comment_controversiality_indicator) View mControversialityIndicator;
 
-    public ThreadCommentViewHolder(View view, LinkCommentsView linkCommentsView, LinkCommentsPresenter presenter) {
+    public ThreadCommentViewHolder(View view, LinkCommentsView linkCommentsView, LinkCommentsPresenterImpl presenter) {
         super(view);
         HoldTheNarwhal.getApplicationComponent().inject(this);
         mLinkCommentsView = linkCommentsView;

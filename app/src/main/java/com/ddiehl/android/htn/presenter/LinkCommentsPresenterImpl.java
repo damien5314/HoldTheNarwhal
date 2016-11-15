@@ -24,8 +24,7 @@ import rxreddit.model.Listing;
 import rxreddit.model.ListingResponse;
 import rxreddit.model.MoreChildrenResponse;
 
-public class LinkCommentsPresenterImpl extends BaseListingsPresenter
-        implements LinkCommentsPresenter {
+public class LinkCommentsPresenterImpl extends BaseListingsPresenter {
 
     private static final int MAX_CHILDREN_PER_REQUEST = 20;
 
@@ -172,7 +171,6 @@ public class LinkCommentsPresenterImpl extends BaseListingsPresenter
         }
     }
 
-    @Override
     public Link getLinkContext() {
         return mLinkContext;
     }
@@ -182,7 +180,6 @@ public class LinkCommentsPresenterImpl extends BaseListingsPresenter
         return mCommentBank.getVisibleComment(position);
     }
 
-    @Override
     public void toggleThreadVisible(Comment comment) {
         int before = mCommentBank.getNumVisible();
         int position = mCommentBank.visibleIndexOf(comment);
@@ -240,7 +237,6 @@ public class LinkCommentsPresenterImpl extends BaseListingsPresenter
         }
     }
 
-    @Override
     public void onCommentSubmitted(@NonNull String commentText) {
         String parentId = mReplyTarget.getFullName();
         mRedditService.addComment(parentId, commentText)
@@ -273,7 +269,6 @@ public class LinkCommentsPresenterImpl extends BaseListingsPresenter
         // Link is already being displayed with this presenter
     }
 
-    @Override
     public boolean shouldShowParentLink() {
         return mLinkCommentsView.getCommentId() != null;
     }
