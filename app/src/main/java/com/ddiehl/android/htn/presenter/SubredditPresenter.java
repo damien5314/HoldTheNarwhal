@@ -7,6 +7,8 @@ import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.android.htn.view.RedditNavigationView;
 import com.ddiehl.android.htn.view.SubredditView;
 
+import java.io.IOException;
+
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
@@ -65,9 +67,14 @@ public class SubredditPresenter extends BaseListingsPresenter {
                 .subscribe(
                         onSubredditInfoLoaded(),
                         error -> {
-                            Timber.w(error, "Error loading subreddit info");
-                            String message = mContext.getString(R.string.error_get_subreddit_info);
-                            mMainView.showError(message);
+                            if (error instanceof IOException) {
+                                String message = mContext.getString(R.string.error_network_unavailable);
+                                mMainView.showError(message);
+                            } else {
+                                Timber.w(error, "Error loading subreddit info");
+                                String message = mContext.getString(R.string.error_get_subreddit_info);
+                                mMainView.showError(message);
+                            }
                         }
                 );
     }
@@ -103,9 +110,14 @@ public class SubredditPresenter extends BaseListingsPresenter {
                             }
                         },
                         error -> {
-                            Timber.w(error, "Error loading links");
-                            String message = mContext.getString(R.string.error_get_links);
-                            mMainView.showError(message);
+                            if (error instanceof IOException) {
+                                String message = mContext.getString(R.string.error_network_unavailable);
+                                mMainView.showError(message);
+                            } else {
+                                Timber.w(error, "Error loading links");
+                                String message = mContext.getString(R.string.error_get_links);
+                                mMainView.showError(message);
+                            }
                         }
                 );
     }

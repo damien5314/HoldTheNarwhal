@@ -27,6 +27,8 @@ import com.ddiehl.android.htn.view.MenuTintUtils;
 import com.ddiehl.android.htn.view.RedditNavigationView;
 import com.ddiehl.android.htn.view.activities.SubredditActivity;
 
+import java.io.IOException;
+
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
@@ -116,9 +118,14 @@ public abstract class BaseFragment extends Fragment implements MainView {
                 .subscribe(
                         getUserIdentity(),
                         error -> {
-                            Timber.w(error, "Error processing authentication callback");
-                            String message = getString(R.string.error_get_user_identity);
-                            showError(message);
+                            if (error instanceof IOException) {
+                                String message = getString(R.string.error_network_unavailable);
+                                showError(message);
+                            } else {
+                                Timber.w(error, "Error processing authentication callback");
+                                String message = getString(R.string.error_get_user_identity);
+                                showError(message);
+                            }
                         }
                 );
     }
@@ -132,9 +139,14 @@ public abstract class BaseFragment extends Fragment implements MainView {
                             mIdentityManager.saveUserIdentity(user);
                         },
                         error -> {
-                            Timber.w(error, "Error getting user identity");
-                            String message = getString(R.string.error_get_user_identity);
-                            showError(message);
+                            if (error instanceof IOException) {
+                                String message = getString(R.string.error_network_unavailable);
+                                showError(message);
+                            } else {
+                                Timber.w(error, "Error getting user identity");
+                                String message = getString(R.string.error_get_user_identity);
+                                showError(message);
+                            }
                         });
     }
 

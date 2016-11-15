@@ -9,6 +9,8 @@ import com.ddiehl.android.htn.SettingsManager;
 import com.ddiehl.android.htn.utils.AndroidUtils;
 import com.ddiehl.android.htn.view.SettingsView;
 
+import java.io.IOException;
+
 import javax.inject.Inject;
 
 import rx.android.schedulers.AndroidSchedulers;
@@ -18,7 +20,7 @@ import timber.log.Timber;
 
 public class SettingsPresenter {
 
-    @Inject Context mApplicationContext;
+    @Inject Context mContext;
     @Inject RedditService mRedditService;
     @Inject IdentityManager mIdentityManager;
     @Inject SettingsManager mSettingsManager;
@@ -34,10 +36,10 @@ public class SettingsPresenter {
         boolean showUser = mSettingsManager.hasFromRemote();
         mSettingsView.showPreferences(showUser);
         if (pullFromServer) {
-            if (AndroidUtils.isConnectedToNetwork(mApplicationContext)) {
+            if (AndroidUtils.isConnectedToNetwork(mContext)) {
                 getData();
             } else {
-                String message = mApplicationContext.getString(R.string.error_network_unavailable);
+                String message = mContext.getString(R.string.error_network_unavailable);
                 mSettingsView.showToast(message);
             }
         }
@@ -52,9 +54,14 @@ public class SettingsPresenter {
                 .subscribe(
                         settings -> refresh(false),
                         error -> {
-                            Timber.w(error, "Error getting user settings");
-                            String message = mApplicationContext.getString(R.string.error_get_user_settings);
-                            mSettingsView.showToast(message);
+                            if (error instanceof IOException) {
+                                String message = mContext.getString(R.string.error_network_unavailable);
+                                mSettingsView.showToast(message);
+                            } else {
+                                Timber.w(error, "Error getting user settings");
+                                String message = mContext.getString(R.string.error_get_user_settings);
+                                mSettingsView.showToast(message);
+                            }
                         }
                 );
     }

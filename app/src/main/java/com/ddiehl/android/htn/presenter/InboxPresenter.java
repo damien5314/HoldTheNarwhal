@@ -5,6 +5,8 @@ import com.ddiehl.android.htn.view.InboxView;
 import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.android.htn.view.RedditNavigationView;
 
+import java.io.IOException;
+
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rxreddit.model.Listing;
@@ -47,9 +49,14 @@ public class InboxPresenter extends BaseListingsPresenter {
                 .subscribe(
                         onListingsLoaded(append),
                         error -> {
-                            Timber.w(error, "Error retrieving inbox listings");
-                            String message = mContext.getString(R.string.error_get_inbox);
-                            mMainView.showError(message);
+                            if (error instanceof IOException) {
+                                String message = mContext.getString(R.string.error_network_unavailable);
+                                mMainView.showError(message);
+                            } else {
+                                Timber.w(error, "Error retrieving inbox listings");
+                                String message = mContext.getString(R.string.error_get_inbox);
+                                mMainView.showError(message);
+                            }
                         }
                 );
     }
@@ -72,9 +79,14 @@ public class InboxPresenter extends BaseListingsPresenter {
                             mInboxView.notifyDataSetChanged();
                         },
                         error -> {
-                            Timber.w(error, "Error marking messages read");
-                            String message = mContext.getString(R.string.error_xxx);
-                            mMainView.showError(message);
+                            if (error instanceof IOException) {
+                                String message = mContext.getString(R.string.error_network_unavailable);
+                                mMainView.showError(message);
+                            } else {
+                                Timber.w(error, "Error marking messages read");
+                                String message = mContext.getString(R.string.error_xxx);
+                                mMainView.showError(message);
+                            }
                         }
                 );
     }

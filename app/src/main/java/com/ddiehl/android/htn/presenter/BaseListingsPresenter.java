@@ -17,6 +17,7 @@ import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.android.htn.view.PrivateMessageView;
 import com.ddiehl.android.htn.view.RedditNavigationView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -389,9 +390,14 @@ public abstract class BaseListingsPresenter
                                 mListingsView.notifyItemChanged(getIndexOf((Listing) votable));
                             },
                             error -> {
-                                Timber.w(error, "Error voting on listing");
-                                String message = mContext.getString(R.string.vote_failed);
-                                mMainView.showError(message);
+                                if (error instanceof IOException) {
+                                    String message = mContext.getString(R.string.error_network_unavailable);
+                                    mMainView.showError(message);
+                                } else {
+                                    Timber.w(error, "Error voting on listing");
+                                    String message = mContext.getString(R.string.vote_failed);
+                                    mMainView.showError(message);
+                                }
                             }
                     );
             mAnalytics.logVote(votable.getKind(), direction);
@@ -414,9 +420,14 @@ public abstract class BaseListingsPresenter
                             mListingsView.notifyItemChanged(getIndexOf((Listing) savable));
                         },
                         error -> {
-                            Timber.w(error, "Error saving listing");
-                            String message = mContext.getString(R.string.save_failed);
-                            mMainView.showError(message);
+                            if (error instanceof IOException) {
+                                String message = mContext.getString(R.string.error_network_unavailable);
+                                mMainView.showError(message);
+                            } else {
+                                Timber.w(error, "Error saving listing");
+                                String message = mContext.getString(R.string.save_failed);
+                                mMainView.showError(message);
+                            }
                         }
                 );
     }
@@ -432,9 +443,14 @@ public abstract class BaseListingsPresenter
                             mListingsView.notifyItemRemoved(pos);
                         },
                         error -> {
-                            Timber.w(error, "Error hiding listing");
-                            String message = mContext.getString(R.string.hide_failed);
-                            mMainView.showError(message);
+                            if (error instanceof IOException) {
+                                String message = mContext.getString(R.string.error_network_unavailable);
+                                mMainView.showError(message);
+                            } else {
+                                Timber.w(error, "Error hiding listing");
+                                String message = mContext.getString(R.string.hide_failed);
+                                mMainView.showError(message);
+                            }
                         }
                 );
     }
@@ -472,36 +488,46 @@ public abstract class BaseListingsPresenter
         mMainView.showToast(mContext.getString(R.string.implementation_pending));
     }
 
-    public void markMessageRead(@NonNull PrivateMessage message) {
-        String fullname = message.getFullName();
+    public void markMessageRead(@NonNull PrivateMessage pm) {
+        String fullname = pm.getFullName();
         mRedditService.markMessagesRead(fullname)
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         result -> {
-                            message.markUnread(false);
-                            mListingsView.notifyItemChanged(getIndexOf(message));
+                            pm.markUnread(false);
+                            mListingsView.notifyItemChanged(getIndexOf(pm));
                         },
                         error -> {
-                            Timber.w(error, "Error marking message read");
-                            String errorMessage = mContext.getString(R.string.error_xxx);
-                            mMainView.showError(errorMessage);
+                            if (error instanceof IOException) {
+                                String message = mContext.getString(R.string.error_network_unavailable);
+                                mMainView.showError(message);
+                            } else {
+                                Timber.w(error, "Error marking message read");
+                                String errorMessage = mContext.getString(R.string.error_xxx);
+                                mMainView.showError(errorMessage);
+                            }
                         }
                 );
     }
 
-    public void markMessageUnread(@NonNull PrivateMessage message) {
-        String fullname = message.getFullName();
+    public void markMessageUnread(@NonNull PrivateMessage pm) {
+        String fullname = pm.getFullName();
         mRedditService.markMessagesUnread(fullname)
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         result -> {
-                            message.markUnread(true);
-                            mListingsView.notifyItemChanged(getIndexOf(message));
+                            pm.markUnread(true);
+                            mListingsView.notifyItemChanged(getIndexOf(pm));
                         },
                         error -> {
-                            Timber.w(error, "Error marking message unread");
-                            String errorMessage = mContext.getString(R.string.error_xxx);
-                            mMainView.showError(errorMessage);
+                            if (error instanceof IOException) {
+                                String message = mContext.getString(R.string.error_network_unavailable);
+                                mMainView.showError(message);
+                            } else {
+                                Timber.w(error, "Error marking message unread");
+                                String errorMessage = mContext.getString(R.string.error_xxx);
+                                mMainView.showError(errorMessage);
+                            }
                         }
                 );
     }

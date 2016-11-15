@@ -9,6 +9,7 @@ import com.ddiehl.android.htn.view.LinkCommentsView;
 import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.android.htn.view.RedditNavigationView;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -77,9 +78,14 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
                 .subscribe(
                         showLinkComments(),
                         error -> {
-                            Timber.w(error, "Error retrieving comment listings");
-                            String message = mContext.getString(R.string.error_get_link_comments);
-                            mMainView.showError(message);
+                            if (error instanceof IOException) {
+                                String message = mContext.getString(R.string.error_network_unavailable);
+                                mMainView.showError(message);
+                            } else {
+                                Timber.w(error, "Error retrieving comment listings");
+                                String message = mContext.getString(R.string.error_get_link_comments);
+                                mMainView.showError(message);
+                            }
                         }
                 );
         mAnalytics.logLoadLinkComments(mLinkCommentsView.getSort());
@@ -128,9 +134,14 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
                 .subscribe(
                         showMoreComments(parentStub),
                         error -> {
-                            Timber.w(error, "Error retrieving more comments");
-                            String message = mContext.getString(R.string.error_get_more_comments);
-                            mMainView.showError(message);
+                            if (error instanceof IOException) {
+                                String message = mContext.getString(R.string.error_network_unavailable);
+                                mMainView.showError(message);
+                            } else {
+                                Timber.w(error, "Error retrieving more comments");
+                                String message = mContext.getString(R.string.error_get_more_comments);
+                                mMainView.showError(message);
+                            }
                         }
                 );
         mAnalytics.logLoadMoreChildren(mLinkCommentsView.getSort());
@@ -268,9 +279,14 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
                                     mCommentBank.visibleIndexOf(comment));
                         },
                         error -> {
-                            Timber.w(error, "Error adding comment");
-                            String message = mContext.getString(R.string.error_add_comment);
-                            mMainView.showError(message);
+                            if (error instanceof IOException) {
+                                String message = mContext.getString(R.string.error_network_unavailable);
+                                mMainView.showError(message);
+                            } else {
+                                Timber.w(error, "Error adding comment");
+                                String message = mContext.getString(R.string.error_add_comment);
+                                mMainView.showError(message);
+                            }
                         }
                 );
     }

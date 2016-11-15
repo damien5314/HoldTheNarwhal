@@ -75,10 +75,16 @@ public class UserProfilePresenter extends BaseListingsPresenter {
                 .subscribe(
                         onListingsLoaded(append),
                         error -> {
-                            Timber.w(error, "Error loading profile listings");
-                            String message = mContext.getString(R.string.error_get_user_profile_listings);
-                            mMainView.showError(message);
-                        });
+                            if (error instanceof IOException) {
+                                String message = mContext.getString(R.string.error_network_unavailable);
+                                mMainView.showError(message);
+                            } else {
+                                Timber.w(error, "Error loading profile listings");
+                                String message = mContext.getString(R.string.error_get_user_profile_listings);
+                                mMainView.showError(message);
+                            }
+                        }
+                );
     }
 
     public void requestData() {
@@ -101,9 +107,14 @@ public class UserProfilePresenter extends BaseListingsPresenter {
                 .subscribe(
                         mSummaryView::showUserInfo,
                         error -> {
-                            Timber.w(error, "Error loading friend info");
-                            String message = mContext.getString(R.string.error_get_user_info);
-                            mMainView.showError(message);
+                            if (error instanceof IOException) {
+                                String message = mContext.getString(R.string.error_network_unavailable);
+                                mMainView.showError(message);
+                            } else {
+                                Timber.w(error, "Error loading friend info");
+                                String message = mContext.getString(R.string.error_get_user_info);
+                                mMainView.showError(message);
+                            }
                         }
                 );
         mRedditService.getUserTrophies(mSummaryView.getUsernameContext())
@@ -112,9 +123,14 @@ public class UserProfilePresenter extends BaseListingsPresenter {
                 .subscribe(
                         mSummaryView::showTrophies,
                         error -> {
-                            Timber.w(error, "Error loading user trophies");
-                            String message = mContext.getString(R.string.error_get_user_trophies);
-                            mMainView.showError(message);
+                            if (error instanceof IOException) {
+                                String message = mContext.getString(R.string.error_network_unavailable);
+                                mMainView.showError(message);
+                            } else {
+                                Timber.w(error, "Error loading user trophies");
+                                String message = mContext.getString(R.string.error_get_user_trophies);
+                                mMainView.showError(message);
+                            }
                         }
                 );
     }
@@ -125,16 +141,24 @@ public class UserProfilePresenter extends BaseListingsPresenter {
                 mRedditService.getFriendInfo(user.getName())
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(response -> {
-                            UserIdentity self = mIdentityManager.getUserIdentity();
-                            if (self != null && self.isGold()) {
-                                mSummaryView.showFriendNote(response.getNote());
-                            }
-                        }, error -> {
-                            Timber.w(error, "Error getting friend info");
-                            String message = mContext.getString(R.string.error_get_friend_info);
-                            mMainView.showError(message);
-                        });
+                        .subscribe(
+                                response -> {
+                                    UserIdentity self = mIdentityManager.getUserIdentity();
+                                    if (self != null && self.isGold()) {
+                                        mSummaryView.showFriendNote(response.getNote());
+                                    }
+                                },
+                                error -> {
+                                    if (error instanceof IOException) {
+                                        String message = mContext.getString(R.string.error_network_unavailable);
+                                        mMainView.showError(message);
+                                    } else {
+                                        Timber.w(error, "Error getting friend info");
+                                        String message = mContext.getString(R.string.error_get_friend_info);
+                                        mMainView.showError(message);
+                                    }
+                                }
+                        );
             }
         };
     }
@@ -155,9 +179,14 @@ public class UserProfilePresenter extends BaseListingsPresenter {
                             mMainView.showToast(mContext.getString(R.string.user_friend_add_confirm));
                         },
                         error -> {
-                            Timber.w(error, "Error adding friend");
-                            String message = mContext.getString(R.string.user_friend_add_error);
-                            mMainView.showError(message);
+                            if (error instanceof IOException) {
+                                String message = mContext.getString(R.string.error_network_unavailable);
+                                mMainView.showError(message);
+                            } else {
+                                Timber.w(error, "Error adding friend");
+                                String message = mContext.getString(R.string.user_friend_add_error);
+                                mMainView.showError(message);
+                            }
                         }
                 );
     }
@@ -203,9 +232,14 @@ public class UserProfilePresenter extends BaseListingsPresenter {
                                 mMainView.showToast(message);
                             },
                             error -> {
-                                Timber.w(error, "Error saving friend note");
-                                String message = mContext.getString(R.string.user_friend_note_save_error);
-                                mMainView.showError(message);
+                                if (error instanceof IOException) {
+                                    String message = mContext.getString(R.string.error_network_unavailable);
+                                    mMainView.showError(message);
+                                } else {
+                                    Timber.w(error, "Error saving friend note");
+                                    String message = mContext.getString(R.string.user_friend_note_save_error);
+                                    mMainView.showError(message);
+                                }
                             }
                     );
         }
