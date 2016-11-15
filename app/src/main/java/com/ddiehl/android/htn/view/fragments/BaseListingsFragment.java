@@ -19,7 +19,6 @@ import android.view.ViewGroup;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.presenter.BaseListingsPresenter;
-import com.ddiehl.android.htn.presenter.CommentPresenter;
 import com.ddiehl.android.htn.presenter.LinkPresenter;
 import com.ddiehl.android.htn.presenter.MessagePresenter;
 import com.ddiehl.android.htn.view.ListingsView;
@@ -43,7 +42,7 @@ public abstract class BaseListingsFragment extends BaseFragment
 
     protected BaseListingsPresenter mListingsPresenter;
     protected LinkPresenter mLinkPresenter;
-    protected CommentPresenter mCommentPresenter;
+    protected BaseListingsPresenter mCommentPresenter;
     protected MessagePresenter mMessagePresenter;
     protected ListingsAdapter mListingsAdapter;
     protected ListingsView.Callbacks mCallbacks;

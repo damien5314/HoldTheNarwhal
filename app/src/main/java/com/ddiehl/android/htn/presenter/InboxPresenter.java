@@ -11,7 +11,7 @@ import rxreddit.model.Listing;
 import rxreddit.model.PrivateMessage;
 
 public class InboxPresenter extends BaseListingsPresenter
-        implements LinkPresenter, CommentPresenter, MessagePresenter {
+        implements LinkPresenter, MessagePresenter {
 
     private final InboxView mInboxView;
 
