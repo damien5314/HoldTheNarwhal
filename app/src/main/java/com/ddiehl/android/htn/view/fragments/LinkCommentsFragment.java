@@ -16,7 +16,7 @@ import android.view.View;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.SettingsManager;
-import com.ddiehl.android.htn.presenter.LinkCommentsPresenterImpl;
+import com.ddiehl.android.htn.presenter.LinkCommentsPresenter;
 import com.ddiehl.android.htn.view.LinkCommentsView;
 import com.ddiehl.android.htn.view.adapters.LinkCommentsAdapter;
 import com.ddiehl.android.htn.view.adapters.ListingsAdapter;
@@ -41,7 +41,7 @@ public class LinkCommentsFragment extends BaseListingsFragment
 
     public static final String TAG = LinkCommentsFragment.class.getSimpleName();
 
-    private LinkCommentsPresenterImpl mLinkCommentsPresenter;
+    private LinkCommentsPresenter mLinkCommentsPresenter;
 
     @Inject SettingsManager mSettingsManager;
 
@@ -59,7 +59,7 @@ public class LinkCommentsFragment extends BaseListingsFragment
         super.onCreate(savedInstanceState);
         HoldTheNarwhal.getApplicationComponent().inject(this);
         FragmentArgs.inject(this);
-        mLinkCommentsPresenter = new LinkCommentsPresenterImpl(this, mRedditNavigationView, this);
+        mLinkCommentsPresenter = new LinkCommentsPresenter(this, mRedditNavigationView, this);
         mListingsPresenter = mLinkCommentsPresenter;
         mLinkPresenter = mLinkCommentsPresenter;
         mCommentPresenter = mLinkCommentsPresenter;

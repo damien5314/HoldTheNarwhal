@@ -2,7 +2,7 @@ package com.ddiehl.android.htn.di;
 
 import com.ddiehl.android.htn.analytics.FlurryAnalytics;
 import com.ddiehl.android.htn.presenter.BaseListingsPresenter;
-import com.ddiehl.android.htn.presenter.SettingsPresenterImpl;
+import com.ddiehl.android.htn.presenter.SettingsPresenter;
 import com.ddiehl.android.htn.presenter.UserProfilePresenter;
 import com.ddiehl.android.htn.subredditinfo.SubredditInfoFragment;
 import com.ddiehl.android.htn.subredditinfo.SubredditInfoLoader;
@@ -66,7 +66,7 @@ public interface ApplicationComponent {
     // Presenters
     void inject(BaseListingsPresenter presenter);
     void inject(UserProfilePresenter presenter);
-    void inject(SettingsPresenterImpl presenter);
+    void inject(SettingsPresenter presenter);
     void inject(SubscriptionManagerPresenter presenter);
     void inject(SubredditInfoLoader loader);
 

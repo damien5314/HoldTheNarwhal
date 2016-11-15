@@ -24,7 +24,7 @@ import rxreddit.model.Listing;
 import rxreddit.model.ListingResponse;
 import rxreddit.model.MoreChildrenResponse;
 
-public class LinkCommentsPresenterImpl extends BaseListingsPresenter {
+public class LinkCommentsPresenter extends BaseListingsPresenter {
 
     private static final int MAX_CHILDREN_PER_REQUEST = 20;
 
@@ -33,7 +33,7 @@ public class LinkCommentsPresenterImpl extends BaseListingsPresenter {
     private Link mLinkContext;
     private Listing mReplyTarget = null;
 
-    public LinkCommentsPresenterImpl(MainView main, RedditNavigationView navigationView, LinkCommentsView view) {
+    public LinkCommentsPresenter(MainView main, RedditNavigationView navigationView, LinkCommentsView view) {
         super(main, navigationView, view, view, view, null);
         mLinkCommentsView = view;
         mCommentBank = new CommentBankList();

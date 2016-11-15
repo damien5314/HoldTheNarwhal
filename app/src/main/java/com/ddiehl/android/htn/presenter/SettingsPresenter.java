@@ -15,7 +15,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rxreddit.api.RedditService;
 
-public class SettingsPresenterImpl {
+public class SettingsPresenter {
 
     @Inject protected Context mApplicationContext;
     @Inject protected RedditService mRedditService;
@@ -24,7 +24,7 @@ public class SettingsPresenterImpl {
 
     private final SettingsView mSettingsView;
 
-    public SettingsPresenterImpl(SettingsView settingsView) {
+    public SettingsPresenter(SettingsView settingsView) {
         mSettingsView = settingsView;
         HoldTheNarwhal.getApplicationComponent().inject(this);
     }

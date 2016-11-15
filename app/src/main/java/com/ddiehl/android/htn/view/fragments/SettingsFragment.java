@@ -25,7 +25,7 @@ import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.SettingsManagerImpl;
-import com.ddiehl.android.htn.presenter.SettingsPresenterImpl;
+import com.ddiehl.android.htn.presenter.SettingsPresenter;
 import com.ddiehl.android.htn.view.MenuTintUtils;
 import com.ddiehl.android.htn.view.SettingsView;
 import com.ddiehl.android.htn.view.activities.AboutAppActivity;
@@ -40,7 +40,7 @@ public class SettingsFragment extends PreferenceFragment
     public static final String TAG = SettingsFragment.class.getSimpleName();
 
     @Inject IdentityManager mIdentityManager;
-    SettingsPresenterImpl mSettingsPresenter;
+    SettingsPresenter mSettingsPresenter;
 
     ProgressDialog mLoadingOverlay;
 
@@ -52,7 +52,7 @@ public class SettingsFragment extends PreferenceFragment
         setRetainInstance(true);
         setHasOptionsMenu(true);
 
-        mSettingsPresenter = new SettingsPresenterImpl(this);
+        mSettingsPresenter = new SettingsPresenter(this);
 
         getPreferenceManager().setSharedPreferencesName(SettingsManagerImpl.PREFS_USER);
         addDefaultPreferences();

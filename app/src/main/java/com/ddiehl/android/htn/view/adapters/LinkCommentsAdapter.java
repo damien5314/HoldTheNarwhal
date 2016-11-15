@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.ThumbnailMode;
-import com.ddiehl.android.htn.presenter.LinkCommentsPresenterImpl;
+import com.ddiehl.android.htn.presenter.LinkCommentsPresenter;
 import com.ddiehl.android.htn.view.LinkCommentsView;
 import com.ddiehl.android.htn.view.viewholders.BaseLinkViewHolder;
 import com.ddiehl.android.htn.view.viewholders.CommentsLinkViewHolder;
@@ -26,9 +26,9 @@ public class LinkCommentsAdapter extends ListingsAdapter {
     private static final int TYPE_COMMENT_STUB = 2;
 
     private final LinkCommentsView mLinkCommentsView;
-    private final LinkCommentsPresenterImpl mLinkCommentsPresenter;
+    private final LinkCommentsPresenter mLinkCommentsPresenter;
 
-    public LinkCommentsAdapter(LinkCommentsView linkCommentsView, LinkCommentsPresenterImpl presenter) {
+    public LinkCommentsAdapter(LinkCommentsView linkCommentsView, LinkCommentsPresenter presenter) {
         super(presenter, linkCommentsView, presenter, linkCommentsView, presenter, null, null);
         mLinkCommentsView = linkCommentsView;
         mLinkCommentsPresenter = presenter;
