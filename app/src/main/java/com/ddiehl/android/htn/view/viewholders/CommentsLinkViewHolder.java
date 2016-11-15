@@ -11,7 +11,7 @@ import android.view.View;
 
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.ThumbnailMode;
-import com.ddiehl.android.htn.presenter.LinkPresenter;
+import com.ddiehl.android.htn.presenter.BaseListingsPresenter;
 import com.ddiehl.android.htn.view.LinkView;
 import com.ddiehl.android.htn.view.widgets.LinkOptionsBar;
 
@@ -38,7 +38,7 @@ public class CommentsLinkViewHolder extends BaseLinkViewHolder {
     @BindView(R.id.link_parent_view)
     View mParentLinkView;
 
-    public CommentsLinkViewHolder(View view, LinkView linkView, LinkPresenter presenter) {
+    public CommentsLinkViewHolder(View view, LinkView linkView, BaseListingsPresenter presenter) {
         super(view, linkView, presenter);
         mLinkOptionsBar.showIcons(false, HIDE, SHARE);
         mLinkOptionsBar.setOnIconClickListener(REPLY, onReplyClicked());

@@ -10,8 +10,7 @@ import rx.schedulers.Schedulers;
 import rxreddit.model.Listing;
 import rxreddit.model.PrivateMessage;
 
-public class InboxPresenter extends BaseListingsPresenter
-        implements LinkPresenter {
+public class InboxPresenter extends BaseListingsPresenter {
 
     private final InboxView mInboxView;
 

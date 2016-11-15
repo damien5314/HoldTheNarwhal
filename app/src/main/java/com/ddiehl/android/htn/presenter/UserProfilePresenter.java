@@ -15,8 +15,7 @@ import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import rxreddit.model.UserIdentity;
 
-public class UserProfilePresenter extends BaseListingsPresenter
-        implements LinkPresenter {
+public class UserProfilePresenter extends BaseListingsPresenter {
 
     private final UserProfileView mSummaryView;
 

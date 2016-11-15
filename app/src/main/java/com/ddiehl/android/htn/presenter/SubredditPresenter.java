@@ -14,7 +14,7 @@ import rxreddit.model.Link;
 import rxreddit.model.ListingResponse;
 import rxreddit.model.Subreddit;
 
-public class SubredditPresenter extends BaseListingsPresenter implements LinkPresenter {
+public class SubredditPresenter extends BaseListingsPresenter {
 
     private SubredditView mSubredditView;
 
