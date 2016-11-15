@@ -44,7 +44,7 @@ import com.ddiehl.android.htn.view.dialogs.SubredditNavigationDialog;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
-import java.net.UnknownHostException;
+import java.io.IOException;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -324,7 +324,9 @@ public abstract class BaseActivity extends AppCompatActivity implements
     protected void onLogIn() {
         if (AndroidUtils.isConnectedToNetwork(this)) {
             showLoginView();
-        } else showToast(getString(R.string.error_network_unavailable));
+        } else {
+            showToast(getString(R.string.error_network_unavailable));
+        }
 
         mAnalytics.logDrawerLogIn();
     }
@@ -547,7 +549,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
     }
 
     private void showError(Throwable error, String message) {
-        if (error instanceof UnknownHostException) {
+        if (error instanceof IOException) {
             message = getString(R.string.error_network_unavailable);
         }
         Snackbar.make(mDrawerLayout, message, Snackbar.LENGTH_LONG).show();
