@@ -381,13 +381,17 @@ public abstract class BaseListingsPresenter
         } else {
             mRedditService.vote(votable.getKind() + "_" + votable.getId(), direction)
                     .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(response -> {
-                        votable.applyVote(direction);
-                        mListingsView.notifyItemChanged(getIndexOf((Listing) votable));
-                    }, e -> {
-                        String message = mContext.getString(R.string.vote_failed);
-                        mMainView.showError(e, message);
-                    });
+                    .subscribe(
+                            response -> {
+                                votable.applyVote(direction);
+                                mListingsView.notifyItemChanged(getIndexOf((Listing) votable));
+                            },
+                            error -> {
+                                Timber.w(error, "Error voting on listing");
+                                String message = mContext.getString(R.string.vote_failed);
+                                mMainView.showError(error, message);
+                            }
+                    );
             mAnalytics.logVote(votable.getKind(), direction);
         }
     }
@@ -402,28 +406,35 @@ public abstract class BaseListingsPresenter
     private void save(Savable savable, boolean toSave) {
         mRedditService.save(savable.getFullName(), null, toSave)
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(response -> {
-                    savable.isSaved(toSave);
-                    mListingsView.notifyItemChanged(getIndexOf((Listing) savable));
-                }, e -> {
-                    String message = mContext.getString(R.string.save_failed);
-                    mMainView.showError(e, message);
-                });
+                .subscribe(
+                        response -> {
+                            savable.isSaved(toSave);
+                            mListingsView.notifyItemChanged(getIndexOf((Listing) savable));
+                        },
+                        error -> {
+                            Timber.w(error, "Error saving listing");
+                            String message = mContext.getString(R.string.save_failed);
+                            mMainView.showError(error, message);
+                        }
+                );
     }
 
     private void hide(Hideable hideable, boolean toHide) {
         mRedditService.hide(hideable.getFullName(), toHide)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(response -> {
-                    int pos = getIndexOf((Listing) hideable);
-                    mListings.remove(pos);
-                    mListingsView.notifyItemRemoved(pos);
-                }, e -> {
-                    Timber.e(e);
-                    String message = mContext.getString(R.string.hide_failed);
-                    mMainView.showError(e, message);
-                });
+                .subscribe(
+                        response -> {
+                            int pos = getIndexOf((Listing) hideable);
+                            mListings.remove(pos);
+                            mListingsView.notifyItemRemoved(pos);
+                        },
+                        error -> {
+                            Timber.w(error, "Error hiding listing");
+                            String message = mContext.getString(R.string.hide_failed);
+                            mMainView.showError(error, message);
+                        }
+                );
     }
 
     public boolean shouldShowNsfwTag() {
@@ -464,11 +475,12 @@ public abstract class BaseListingsPresenter
         mRedditService.markMessagesRead(fullname)
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        _void -> {
+                        result -> {
                             message.markUnread(false);
                             mListingsView.notifyItemChanged(getIndexOf(message));
                         },
                         error -> {
+                            Timber.w(error, "Error marking message read");
                             String errorMessage = mContext.getString(R.string.error_xxx);
                             mMainView.showError(error, errorMessage);
                         }
@@ -480,11 +492,12 @@ public abstract class BaseListingsPresenter
         mRedditService.markMessagesUnread(fullname)
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        _void -> {
+                        result -> {
                             message.markUnread(true);
                             mListingsView.notifyItemChanged(getIndexOf(message));
                         },
                         error -> {
+                            Timber.w(error, "Error marking message unread");
                             String errorMessage = mContext.getString(R.string.error_xxx);
                             mMainView.showError(error, errorMessage);
                         }

@@ -14,6 +14,7 @@ import javax.inject.Inject;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rxreddit.api.RedditService;
+import timber.log.Timber;
 
 public class SettingsPresenter {
 
@@ -50,10 +51,12 @@ public class SettingsPresenter {
                 .doOnNext(mSettingsManager::saveUserSettings)
                 .subscribe(
                         settings -> refresh(false),
-                        e -> {
+                        error -> {
+                            Timber.w(error, "Error getting user settings");
                             String message = mApplicationContext.getString(R.string.error_get_user_settings);
                             mSettingsView.showToast(message);
-                        });
+                        }
+                );
     }
 
     public boolean isRefreshable() {

@@ -538,10 +538,9 @@ public abstract class BaseActivity extends AppCompatActivity implements
                 .observeOn(AndroidSchedulers.mainThread())
                 .flatMap(getUserIdentity())
                 .subscribe(
-                        result -> {
-                        },
+                        result -> { },
                         error -> {
-                            Timber.e(error, "Error during sign in");
+                            Timber.w(error, "Error during sign in");
                             showError(error, getString(R.string.error_get_user_identity));
                         }
                 );

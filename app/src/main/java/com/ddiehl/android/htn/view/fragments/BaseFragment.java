@@ -35,6 +35,7 @@ import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import rxreddit.api.RedditService;
 import rxreddit.model.UserAccessToken;
+import timber.log.Timber;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -115,9 +116,11 @@ public abstract class BaseFragment extends Fragment implements MainView {
                 .subscribe(
                         getUserIdentity(),
                         error -> {
+                            Timber.w(error, "Error processing authentication callback");
                             String message = getString(R.string.error_get_user_identity);
                             showError(error, message);
-                        });
+                        }
+                );
     }
 
     private Action1<UserAccessToken> getUserIdentity() {
@@ -129,6 +132,7 @@ public abstract class BaseFragment extends Fragment implements MainView {
                             mIdentityManager.saveUserIdentity(user);
                         },
                         error -> {
+                            Timber.w(error, "Error getting user identity");
                             String message = getString(R.string.error_get_user_identity);
                             showError(error, message);
                         });

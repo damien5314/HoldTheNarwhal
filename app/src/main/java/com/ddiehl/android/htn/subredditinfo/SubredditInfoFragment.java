@@ -116,7 +116,7 @@ public class SubredditInfoFragment extends BaseFragment {
 
     Action1<Throwable> onSubredditInfoLoadError() {
         return error -> {
-            Timber.e("Error loading subreddit info", error);
+            Timber.e(error, "Error loading subreddit info");
 
             // Pass error back to target fragment or Activity
             if (getTargetFragment() != null) {
@@ -206,7 +206,7 @@ public class SubredditInfoFragment extends BaseFragment {
 
     Action1<Throwable> onSubredditSubscribeError() {
         return (error) -> {
-            Timber.e(error, "Error subscribing to /r/%s", mSubreddit);
+            Timber.w(error, "Error subscribing to /r/%s", mSubreddit);
 
             String errorMsg = getString(R.string.subscribe_error, mSubreddit);
             Snackbar.make(mCoordinatorLayout, errorMsg, Snackbar.LENGTH_LONG)

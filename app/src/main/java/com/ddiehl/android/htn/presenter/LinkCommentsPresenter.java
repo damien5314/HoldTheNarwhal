@@ -23,6 +23,7 @@ import rxreddit.model.Link;
 import rxreddit.model.Listing;
 import rxreddit.model.ListingResponse;
 import rxreddit.model.MoreChildrenResponse;
+import timber.log.Timber;
 
 public class LinkCommentsPresenter extends BaseListingsPresenter {
 
@@ -73,11 +74,14 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnTerminate(mMainView::dismissSpinner)
-                .subscribe(showLinkComments(),
-                        e -> {
+                .subscribe(
+                        showLinkComments(),
+                        error -> {
+                            Timber.w(error, "Error retrieving comment listings");
                             String message = mContext.getString(R.string.error_get_link_comments);
-                            mMainView.showError(e, message);
-                        });
+                            mMainView.showError(error, message);
+                        }
+                );
         mAnalytics.logLoadLinkComments(mLinkCommentsView.getSort());
     }
 
@@ -121,11 +125,14 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(mMainView::showSpinner)
                 .doOnTerminate(mMainView::dismissSpinner)
-                .subscribe(showMoreComments(parentStub),
-                        e -> {
+                .subscribe(
+                        showMoreComments(parentStub),
+                        error -> {
+                            Timber.w(error, "Error retrieving more comments");
                             String message = mContext.getString(R.string.error_get_more_comments);
-                            mMainView.showError(e, message);
-                        });
+                            mMainView.showError(error, message);
+                        }
+                );
         mAnalytics.logLoadMoreChildren(mLinkCommentsView.getSort());
     }
 
@@ -242,26 +249,30 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
         mRedditService.addComment(parentId, commentText)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(comment -> {
-                    String message = mContext.getString(R.string.comment_added);
-                    mMainView.showToast(message);
+                .subscribe(
+                        comment -> {
+                            String message = mContext.getString(R.string.comment_added);
+                            mMainView.showToast(message);
 
-                    // TODO Optimize this logic, it probably takes a long time in large threads
-                    int position;
-                    if (parentId.startsWith("t1_")) { // Comment
-                        comment.setDepth(((Comment) mReplyTarget).getDepth() + 1);
-                        position = mCommentBank.indexOf((Comment) mReplyTarget) + 1;
-                    } else {
-                        comment.setDepth(1);
-                        position = 0;
-                    }
-                    mCommentBank.add(position, comment);
-                    mLinkCommentsView.notifyItemInserted(
-                            mCommentBank.visibleIndexOf(comment));
-                }, e -> {
-                    String message = mContext.getString(R.string.error_add_comment);
-                    mMainView.showError(e, message);
-                });
+                            // TODO Optimize this logic, it probably takes a long time in large threads
+                            int position;
+                            if (parentId.startsWith("t1_")) { // Comment
+                                comment.setDepth(((Comment) mReplyTarget).getDepth() + 1);
+                                position = mCommentBank.indexOf((Comment) mReplyTarget) + 1;
+                            } else {
+                                comment.setDepth(1);
+                                position = 0;
+                            }
+                            mCommentBank.add(position, comment);
+                            mLinkCommentsView.notifyItemInserted(
+                                    mCommentBank.visibleIndexOf(comment));
+                        },
+                        error -> {
+                            Timber.w(error, "Error adding comment");
+                            String message = mContext.getString(R.string.error_add_comment);
+                            mMainView.showError(error, message);
+                        }
+                );
     }
 
     @Override

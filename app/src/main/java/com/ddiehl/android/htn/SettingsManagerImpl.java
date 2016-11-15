@@ -149,8 +149,10 @@ public class SettingsManagerImpl implements SettingsManager {
             // Post SettingsUpdate event with changed keys and values
             mRedditService.updateUserSettings(changedSettings)
                     .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(r -> Timber.d("Settings updated successfully"),
-                            e -> Timber.e(e, "Error updating settings"));
+                    .subscribe(
+                            result -> Timber.d("Settings updated successfully"),
+                            error -> Timber.w(error, "Error updating settings")
+                    );
         }
 
         Map prefs = sp.getAll();

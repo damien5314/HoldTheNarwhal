@@ -14,6 +14,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import rxreddit.model.UserIdentity;
+import timber.log.Timber;
 
 public class UserProfilePresenter extends BaseListingsPresenter {
 
@@ -69,10 +70,13 @@ public class UserProfilePresenter extends BaseListingsPresenter {
                     if (append) mNextRequested = false;
                     else mBeforeRequested = false;
                 })
-                .subscribe(onListingsLoaded(append), e -> {
-                    String message = mContext.getString(R.string.error_get_user_profile_listings);
-                    mMainView.showError(e, message);
-                });
+                .subscribe(
+                        onListingsLoaded(append),
+                        error -> {
+                            Timber.w(error, "Error loading profile listings");
+                            String message = mContext.getString(R.string.error_get_user_profile_listings);
+                            mMainView.showError(error, message);
+                        });
     }
 
     public void requestData() {
@@ -92,19 +96,25 @@ public class UserProfilePresenter extends BaseListingsPresenter {
                     mNextRequested = false;
                 })
                 .doOnNext(getFriendInfo())
-                .subscribe(mSummaryView::showUserInfo,
-                        e -> {
+                .subscribe(
+                        mSummaryView::showUserInfo,
+                        error -> {
+                            Timber.w(error, "Error loading friend info");
                             String message = mContext.getString(R.string.error_get_user_info);
-                            mMainView.showError(e, message);
-                        });
+                            mMainView.showError(error, message);
+                        }
+                );
         mRedditService.getUserTrophies(mSummaryView.getUsernameContext())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(mSummaryView::showTrophies,
-                        e -> {
+                .subscribe(
+                        mSummaryView::showTrophies,
+                        error -> {
+                            Timber.w(error, "Error loading user trophies");
                             String message = mContext.getString(R.string.error_get_user_trophies);
-                            mMainView.showError(e, message);
-                        });
+                            mMainView.showError(error, message);
+                        }
+                );
     }
 
     private Action1<UserIdentity> getFriendInfo() {
@@ -118,9 +128,10 @@ public class UserProfilePresenter extends BaseListingsPresenter {
                             if (self != null && self.isGold()) {
                                 mSummaryView.showFriendNote(response.getNote());
                             }
-                        }, e -> {
+                        }, error -> {
+                            Timber.w(error, "Error getting friend info");
                             String message = mContext.getString(R.string.error_get_friend_info);
-                            mMainView.showError(e, message);
+                            mMainView.showError(error, message);
                         });
             }
         };
@@ -132,17 +143,21 @@ public class UserProfilePresenter extends BaseListingsPresenter {
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(() -> mMainView.showSpinner())
                 .doOnTerminate(mMainView::dismissSpinner)
-                .subscribe(response -> {
-                    mSummaryView.setFriendButtonState(true);
-                    UserIdentity self = mIdentityManager.getUserIdentity();
-                    if (self != null && self.isGold()) {
-                        mSummaryView.showFriendNote("");
-                    }
-                    mMainView.showToast(mContext.getString(R.string.user_friend_add_confirm));
-                }, e -> {
-                    String message = mContext.getString(R.string.user_friend_add_error);
-                    mMainView.showError(e, message);
-                });
+                .subscribe(
+                        response -> {
+                            mSummaryView.setFriendButtonState(true);
+                            UserIdentity self = mIdentityManager.getUserIdentity();
+                            if (self != null && self.isGold()) {
+                                mSummaryView.showFriendNote("");
+                            }
+                            mMainView.showToast(mContext.getString(R.string.user_friend_add_confirm));
+                        },
+                        error -> {
+                            Timber.w(error, "Error adding friend");
+                            String message = mContext.getString(R.string.user_friend_add_error);
+                            mMainView.showError(error, message);
+                        }
+                );
     }
 
     public void deleteFriend() {
@@ -151,14 +166,18 @@ public class UserProfilePresenter extends BaseListingsPresenter {
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(mMainView::showSpinner)
                 .doOnTerminate(mMainView::dismissSpinner)
-                .subscribe(response -> {
-                    mSummaryView.setFriendButtonState(false);
-                    mSummaryView.hideFriendNote();
-                    mMainView.showToast(mContext.getString(R.string.user_friend_delete_confirm));
-                }, e -> {
-                    String message = mContext.getString(R.string.user_friend_delete_error);
-                    mMainView.showError(e, message);
-                });
+                .subscribe(
+                        response -> {
+                            mSummaryView.setFriendButtonState(false);
+                            mSummaryView.hideFriendNote();
+                            mMainView.showToast(mContext.getString(R.string.user_friend_delete_confirm));
+                        },
+                        error -> {
+                            Timber.w(error, "Error deleting friend");
+                            String message = mContext.getString(R.string.user_friend_delete_error);
+                            mMainView.showError(error, message);
+                        }
+                );
     }
 
     public void saveFriendNote(@NonNull String note) {
@@ -171,11 +190,17 @@ public class UserProfilePresenter extends BaseListingsPresenter {
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .doOnTerminate(mMainView::dismissSpinner)
-                    .subscribe(r -> mMainView.showToast(mContext.getString(R.string.user_friend_note_save_confirm)),
-                            e -> {
+                    .subscribe(
+                            result -> {
+                                String message = mContext.getString(R.string.user_friend_note_save_confirm);
+                                mMainView.showToast(message);
+                            },
+                            error -> {
+                                Timber.w(error, "Error saving friend note");
                                 String message = mContext.getString(R.string.user_friend_note_save_error);
-                                mMainView.showError(e, message);
-                            });
+                                mMainView.showError(error, message);
+                            }
+                    );
         }
     }
 }

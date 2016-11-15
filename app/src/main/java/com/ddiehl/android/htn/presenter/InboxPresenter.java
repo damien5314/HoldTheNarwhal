@@ -9,6 +9,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rxreddit.model.Listing;
 import rxreddit.model.PrivateMessage;
+import timber.log.Timber;
 
 public class InboxPresenter extends BaseListingsPresenter {
 
@@ -43,11 +44,14 @@ public class InboxPresenter extends BaseListingsPresenter {
                     mMainView.dismissSpinner();
                     mNextRequested = false;
                 })
-                .subscribe(onListingsLoaded(append),
-                        e -> {
+                .subscribe(
+                        onListingsLoaded(append),
+                        error -> {
+                            Timber.w(error, "Error retrieving inbox listings");
                             String message = mContext.getString(R.string.error_get_inbox);
-                            mMainView.showError(e, message);
-                        });
+                            mMainView.showError(error, message);
+                        }
+                );
     }
 
     public void requestData() {
@@ -59,7 +63,7 @@ public class InboxPresenter extends BaseListingsPresenter {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        _void -> {
+                        result -> {
                             for (Listing listing : mListings) {
                                 if (listing instanceof PrivateMessage) {
                                     ((PrivateMessage) listing).markUnread(false);
@@ -68,9 +72,11 @@ public class InboxPresenter extends BaseListingsPresenter {
                             mInboxView.notifyDataSetChanged();
                         },
                         error -> {
+                            Timber.w(error, "Error marking messages read");
                             String message = mContext.getString(R.string.error_xxx);
                             mMainView.showError(error, message);
-                        });
+                        }
+                );
     }
 
     public void onViewSelected(String show) {

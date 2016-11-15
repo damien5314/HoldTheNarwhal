@@ -13,6 +13,7 @@ import rx.schedulers.Schedulers;
 import rxreddit.model.Link;
 import rxreddit.model.ListingResponse;
 import rxreddit.model.Subreddit;
+import timber.log.Timber;
 
 public class SubredditPresenter extends BaseListingsPresenter {
 
@@ -61,11 +62,14 @@ public class SubredditPresenter extends BaseListingsPresenter {
                     mMainView.dismissSpinner();
                     mNextRequested = false;
                 })
-                .subscribe(onSubredditInfoLoaded(),
-                        e -> {
+                .subscribe(
+                        onSubredditInfoLoaded(),
+                        error -> {
+                            Timber.w(error, "Error loading subreddit info");
                             String message = mContext.getString(R.string.error_get_subreddit_info);
-                            mMainView.showError(e, message);
-                        });
+                            mMainView.showError(error, message);
+                        }
+                );
     }
 
     private void getSubredditLinks(boolean append) {
@@ -99,9 +103,11 @@ public class SubredditPresenter extends BaseListingsPresenter {
                             }
                         },
                         error -> {
+                            Timber.w(error, "Error loading links");
                             String message = mContext.getString(R.string.error_get_links);
                             mMainView.showError(error, message);
-                        });
+                        }
+                );
     }
 
     private Link getLinkFromListingResponse(@NonNull ListingResponse response) {

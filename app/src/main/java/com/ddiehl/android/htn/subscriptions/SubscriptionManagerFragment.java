@@ -171,9 +171,9 @@ public class SubscriptionManagerFragment extends BaseFragment implements Subscri
     }
 
     Action1<Throwable> onSubscriptionsLoadError() {
-        return throwable -> {
-            Timber.e(throwable, "Error loading subreddit subscriptions");
-            showError(throwable, getString(R.string.subscriptions_load_failed));
+        return error -> {
+            Timber.w(error, "Error loading subreddit subscriptions");
+            showError(error, getString(R.string.subscriptions_load_failed));
         };
     }
 
@@ -253,7 +253,7 @@ public class SubscriptionManagerFragment extends BaseFragment implements Subscri
             mAdapter.add(position, subreddit);
 
             // Show error messaging
-            Timber.e(error, "Error unsubscribing from /r/%s", subreddit.getDisplayName());
+            Timber.w(error, "Error unsubscribing from /r/%s", subreddit.getDisplayName());
             showError(error, getString(R.string.unsubscribe_error, subreddit.getDisplayName()));
         });
     }
@@ -307,7 +307,7 @@ public class SubscriptionManagerFragment extends BaseFragment implements Subscri
 
     Action1<Throwable> onResubscribeError(final @NonNull Subreddit subreddit) {
         return error -> getActivity().runOnUiThread(() -> {
-            Timber.e(error, "Error resubscribing to /r/%s", subreddit.getDisplayName());
+            Timber.w(error, "Error resubscribing to /r/%s", subreddit.getDisplayName());
             showError(error, getString(R.string.resubscribe_error, subreddit.getDisplayName()));
         });
     }
