@@ -102,8 +102,6 @@ public class UserProfileFragment extends BaseListingsFragment
         if (TextUtils.isEmpty(mTimespan)) mTimespan = "all";
 
         mUserProfilePresenter = new UserProfilePresenter(this, mRedditNavigationView, this);
-        mLinkPresenter = mUserProfilePresenter;
-        mCommentPresenter = mUserProfilePresenter;
         mListingsPresenter = mUserProfilePresenter;
         mCallbacks = mUserProfilePresenter;
     }
@@ -210,7 +208,7 @@ public class UserProfileFragment extends BaseListingsFragment
     @Override
     public ListingsAdapter getListingsAdapter() {
         return new ListingsAdapter(
-                mListingsPresenter, this, mLinkPresenter, this, mCommentPresenter, null, mMessagePresenter);
+                mListingsPresenter, this, this, null);
     }
 
     //region Options menu

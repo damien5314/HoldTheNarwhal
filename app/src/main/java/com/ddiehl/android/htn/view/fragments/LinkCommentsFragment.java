@@ -17,7 +17,6 @@ import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.SettingsManager;
 import com.ddiehl.android.htn.presenter.LinkCommentsPresenter;
-import com.ddiehl.android.htn.presenter.LinkCommentsPresenterImpl;
 import com.ddiehl.android.htn.view.LinkCommentsView;
 import com.ddiehl.android.htn.view.adapters.LinkCommentsAdapter;
 import com.ddiehl.android.htn.view.adapters.ListingsAdapter;
@@ -60,10 +59,8 @@ public class LinkCommentsFragment extends BaseListingsFragment
         super.onCreate(savedInstanceState);
         HoldTheNarwhal.getApplicationComponent().inject(this);
         FragmentArgs.inject(this);
-        mLinkCommentsPresenter = new LinkCommentsPresenterImpl(this, mRedditNavigationView, this);
+        mLinkCommentsPresenter = new LinkCommentsPresenter(this, mRedditNavigationView, this);
         mListingsPresenter = mLinkCommentsPresenter;
-        mLinkPresenter = mLinkCommentsPresenter;
-        mCommentPresenter = mLinkCommentsPresenter;
         mSort = mSettingsManager.getCommentSort();
         mCallbacks = (Callbacks) mListingsPresenter;
     }
@@ -72,6 +69,23 @@ public class LinkCommentsFragment extends BaseListingsFragment
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setTitle(String.format(getString(R.string.link_subreddit), mSubreddit));
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (!mLinkCommentsPresenter.hasData()) {
+            mLinkCommentsPresenter.refreshData();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        mLinkCommentsPresenter.clearData();
+        notifyDataSetChanged();
+
+        super.onDestroy();
     }
 
     @Override
@@ -221,23 +235,23 @@ public class LinkCommentsFragment extends BaseListingsFragment
 
         switch (item.getItemId()) {
             case R.id.action_share:
-                mLinkPresenter.shareLink(link);
+                mListingsPresenter.shareLink(link);
                 return true;
             case R.id.action_change_sort:
                 showSortOptionsMenu();
                 mAnalytics.logOptionChangeSort();
                 return true;
             case R.id.action_link_view_subreddit:
-                mLinkPresenter.openLinkSubreddit(link);
+                mListingsPresenter.openLinkSubreddit(link);
                 return true;
             case R.id.action_link_view_user_profile:
-                mLinkPresenter.openLinkUserProfile(link);
+                mListingsPresenter.openLinkUserProfile(link);
                 return true;
             case R.id.action_link_open_in_browser:
-                mLinkPresenter.openLinkInBrowser(link);
+                mListingsPresenter.openLinkInBrowser(link);
                 return true;
             case R.id.action_link_open_comments_in_browser:
-                mLinkPresenter.openCommentsInBrowser(link);
+                mListingsPresenter.openCommentsInBrowser(link);
                 return true;
         }
         return super.onOptionsItemSelected(item);

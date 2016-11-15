@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
-import com.ddiehl.android.htn.presenter.CommentPresenter;
+import com.ddiehl.android.htn.presenter.BaseListingsPresenter;
 
 import javax.inject.Inject;
 
@@ -21,7 +21,7 @@ import rxreddit.model.CommentStub;
 public class ThreadStubViewHolder extends RecyclerView.ViewHolder {
 
     @Inject protected Context mAppContext;
-    private final CommentPresenter mCommentPresenter;
+    private final BaseListingsPresenter mCommentPresenter;
     private CommentStub mCommentStub;
     private String mSubreddit;
     private String mLinkId;
@@ -29,7 +29,7 @@ public class ThreadStubViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.comment_more)
     TextView mMoreCommentsView;
 
-    public ThreadStubViewHolder(View v, CommentPresenter presenter) {
+    public ThreadStubViewHolder(View v, BaseListingsPresenter presenter) {
         super(v);
         HoldTheNarwhal.getApplicationComponent().inject(this);
         mCommentPresenter = presenter;

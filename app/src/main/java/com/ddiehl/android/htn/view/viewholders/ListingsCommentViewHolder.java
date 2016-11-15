@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
-import com.ddiehl.android.htn.presenter.CommentPresenter;
+import com.ddiehl.android.htn.presenter.BaseListingsPresenter;
 import com.ddiehl.android.htn.view.CommentView;
 import com.ddiehl.timesincetextview.TimeSinceTextView;
 
@@ -26,7 +26,7 @@ public class ListingsCommentViewHolder extends RecyclerView.ViewHolder
 
     @Inject protected Context mAppContext;
     private CommentView mCommentView;
-    private CommentPresenter mCommentPresenter;
+    private BaseListingsPresenter mCommentPresenter;
     private Comment mComment;
 
     @BindView(R.id.comment_link_title) TextView mCommentLinkTitleView;
@@ -40,7 +40,7 @@ public class ListingsCommentViewHolder extends RecyclerView.ViewHolder
     @BindView(R.id.comment_gilded_text_view) TextView mGildedText;
     @BindView(R.id.comment_controversiality_indicator) View mControversialityIndicator;
 
-    public ListingsCommentViewHolder(View view, CommentView commentView, CommentPresenter presenter) {
+    public ListingsCommentViewHolder(View view, CommentView commentView, BaseListingsPresenter presenter) {
         super(view);
         HoldTheNarwhal.getApplicationComponent().inject(this);
         mCommentView = commentView;

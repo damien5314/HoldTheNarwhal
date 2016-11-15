@@ -41,7 +41,7 @@ import rxreddit.model.Votable;
 import timber.log.Timber;
 
 public abstract class BaseListingsPresenter
-        implements ListingsPresenter, ListingsView.Callbacks {
+        implements ListingsView.Callbacks {
 
     @Inject protected Context mContext;
     @Inject protected IdentityManager mIdentityManager;
@@ -49,7 +49,7 @@ public abstract class BaseListingsPresenter
     @Inject protected RedditService mRedditService;
     @Inject protected Analytics mAnalytics;
 
-    protected final List<Listing> mListings = new ArrayList<>();
+    final List<Listing> mListings = new ArrayList<>();
 
     private final ListingsView mListingsView;
     protected final MainView mMainView;
@@ -58,10 +58,10 @@ public abstract class BaseListingsPresenter
     private final CommentView mCommentView;
     private final PrivateMessageView mPrivateMessageView;
 
-    protected Subreddit mSubredditInfo;
-
     protected boolean mBeforeRequested, mNextRequested = false;
     protected String mPrevPageListingId, mNextPageListingId;
+
+    protected Subreddit mSubredditInfo;
 
     public BaseListingsPresenter(
             MainView main, RedditNavigationView redditNavigationView,
@@ -76,26 +76,15 @@ public abstract class BaseListingsPresenter
         mPrivateMessageView = messageView;
     }
 
-    @Override
-    public void onResume() {
-        // FIXME Do we need to check mNextRequested here?
-        if (!mNextRequested && mListings.size() == 0) {
-            refreshData();
-        }
+    public boolean hasData() {
+        return mListings.size() != 0;
     }
 
-    @Override
-    public void onPause() {
-    }
-
-    @Override
-    public void onViewDestroyed() {
-        // To disable the memory dereferencing functionality just comment these lines
+    public void clearData() {
         mListings.clear();
         mListingsView.notifyDataSetChanged();
     }
 
-    @Override
     public void refreshData() {
         mPrevPageListingId = null;
         mNextPageListingId = null;
@@ -105,7 +94,6 @@ public abstract class BaseListingsPresenter
         getNextData();
     }
 
-    @Override
     public void getPreviousData() {
         if (!mBeforeRequested) {
             if (AndroidUtils.isConnectedToNetwork(mContext)) {
@@ -116,7 +104,6 @@ public abstract class BaseListingsPresenter
         }
     }
 
-    @Override
     public void getNextData() {
         if (!mNextRequested) {
             if (AndroidUtils.isConnectedToNetwork(mContext)) {
@@ -147,33 +134,27 @@ public abstract class BaseListingsPresenter
         }
     }
 
-    @Override
     public void setData(@NonNull List<Listing> data) {
         mListings.clear();
         mListings.addAll(data);
     }
 
-    @Override
     public int getNumListings() {
         return mListings.size();
     }
 
-    @Override
     public Listing getListingAt(int position) {
         return mListings.get(position);
     }
 
-    @Override
     public boolean hasPreviousListings() {
         return mPrevPageListingId != null;
     }
 
-    @Override
     public boolean hasNextListings() {
         return mNextPageListingId != null;
     }
 
-    @Override
     public boolean getShowControversiality() {
         return mSettingsManager.getShowControversiality();
     }
@@ -384,12 +365,10 @@ public abstract class BaseListingsPresenter
         mRedditNavigationView.showCommentsForLink(comment.getSubreddit(), comment.getLinkId(), null);
     }
 
-    @Override
     public UserIdentity getAuthorizedUser() {
         return mIdentityManager.getUserIdentity();
     }
 
-    @Override
     public void onSortChanged() {
         refreshData();
     }

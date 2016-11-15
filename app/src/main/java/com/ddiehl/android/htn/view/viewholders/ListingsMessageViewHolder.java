@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
-import com.ddiehl.android.htn.presenter.MessagePresenter;
+import com.ddiehl.android.htn.presenter.BaseListingsPresenter;
 import com.ddiehl.android.htn.utils.Utils;
 import com.ddiehl.android.htn.view.PrivateMessageView;
 import com.ddiehl.timesincetextview.TimeSince;
@@ -29,7 +29,7 @@ public class ListingsMessageViewHolder extends RecyclerView.ViewHolder
 
     @Inject protected Context mAppContext;
     private final PrivateMessageView mPrivateMessageView;
-    private final MessagePresenter mMessagePresenter;
+    private final BaseListingsPresenter mMessagePresenter;
     private PrivateMessage mMessage;
 
     @BindView(R.id.conversation_subject) TextView mConversationSubject;
@@ -42,7 +42,7 @@ public class ListingsMessageViewHolder extends RecyclerView.ViewHolder
     @BindView(R.id.unread_message_indicator) View mUnreadMessageIndicator;
     @BindView(R.id.last_message_body) TextView mLastMessageBody;
 
-    public ListingsMessageViewHolder(View view, PrivateMessageView pmView, MessagePresenter presenter) {
+    public ListingsMessageViewHolder(View view, PrivateMessageView pmView, BaseListingsPresenter presenter) {
         super(view);
         HoldTheNarwhal.getApplicationComponent().inject(this);
         mPrivateMessageView = pmView;

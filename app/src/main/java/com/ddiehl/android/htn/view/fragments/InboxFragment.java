@@ -51,9 +51,6 @@ public class InboxFragment extends BaseListingsFragment
         if (TextUtils.isEmpty(mShow)) mShow = "inbox";
 
         mInboxPresenter = new InboxPresenter(this, mRedditNavigationView, this);
-        mLinkPresenter = mInboxPresenter;
-        mCommentPresenter = mInboxPresenter;
-        mMessagePresenter = mInboxPresenter;
         mListingsPresenter = mInboxPresenter;
         mCallbacks = mInboxPresenter;
     }
@@ -67,6 +64,19 @@ public class InboxFragment extends BaseListingsFragment
         setTitle(R.string.inbox_fragment_title);
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (mIdentityManager.getUserIdentity() == null) {
+            // User was signed out, they can't view inbox anymore
+            finish();
+        } else {
+            // User is authenticated, defer to base implementation
+            super.onResume();
+        }
     }
 
     private void initializeTabs() {
@@ -107,8 +117,7 @@ public class InboxFragment extends BaseListingsFragment
 
     @Override
     public ListingsAdapter getListingsAdapter() {
-        return new ListingsAdapter(
-                mListingsPresenter, this, mLinkPresenter, this, mCommentPresenter, this, mMessagePresenter);
+        return new ListingsAdapter(mListingsPresenter, this, this, this);
     }
 
     @Override

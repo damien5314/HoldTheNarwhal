@@ -10,25 +10,13 @@ import rx.schedulers.Schedulers;
 import rxreddit.model.Listing;
 import rxreddit.model.PrivateMessage;
 
-public class InboxPresenter extends BaseListingsPresenter
-        implements LinkPresenter, CommentPresenter, MessagePresenter {
+public class InboxPresenter extends BaseListingsPresenter {
 
     private final InboxView mInboxView;
 
     public InboxPresenter(MainView main, RedditNavigationView navigationView, InboxView inbox) {
         super(main, navigationView, inbox, inbox, inbox, inbox);
         mInboxView = inbox;
-    }
-
-    @Override
-    public void onResume() {
-        if (mIdentityManager.getUserIdentity() == null) {
-            // User was signed out, they can't view inbox anymore
-            mInboxView.finish();
-        } else {
-            // User is authenticated, defer to base implementation
-            super.onResume();
-        }
     }
 
     @Override

@@ -6,7 +6,7 @@ import android.view.View;
 
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.ThumbnailMode;
-import com.ddiehl.android.htn.presenter.LinkPresenter;
+import com.ddiehl.android.htn.presenter.BaseListingsPresenter;
 import com.ddiehl.android.htn.view.LinkView;
 
 import butterknife.OnClick;
@@ -14,7 +14,7 @@ import rxreddit.model.Link;
 
 public class ListingsLinkViewHolder extends BaseLinkViewHolder {
 
-    public ListingsLinkViewHolder(View view, LinkView linkView, LinkPresenter presenter) {
+    public ListingsLinkViewHolder(View view, LinkView linkView, BaseListingsPresenter presenter) {
         super(view, linkView, presenter);
     }
 

@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.ThumbnailMode;
-import com.ddiehl.android.htn.presenter.LinkPresenter;
+import com.ddiehl.android.htn.presenter.BaseListingsPresenter;
 import com.ddiehl.android.htn.view.LinkView;
 import com.ddiehl.android.htn.view.widgets.ColorSwapTextView;
 import com.ddiehl.timesincetextview.TimeSinceTextView;
@@ -30,7 +30,7 @@ public abstract class BaseLinkViewHolder extends RecyclerView.ViewHolder
 
     protected final Context mContext;
     protected final LinkView mLinkView;
-    protected final LinkPresenter mLinkPresenter;
+    protected final BaseListingsPresenter mLinkPresenter;
     protected Link mLink;
 
     @BindView(R.id.link_view) protected View mView;
@@ -48,7 +48,7 @@ public abstract class BaseLinkViewHolder extends RecyclerView.ViewHolder
     @BindView(R.id.link_gilded_text_view) protected TextView mGildedText;
     @BindView(R.id.link_stickied_view) protected View mStickiedView;
 
-    public BaseLinkViewHolder(View view, LinkView linkView, LinkPresenter presenter) {
+    public BaseLinkViewHolder(View view, LinkView linkView, BaseListingsPresenter presenter) {
         super(view);
         mContext = view.getContext().getApplicationContext();
         mLinkView = linkView;

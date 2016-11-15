@@ -26,7 +26,6 @@ import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.SettingsManagerImpl;
 import com.ddiehl.android.htn.presenter.SettingsPresenter;
-import com.ddiehl.android.htn.presenter.SettingsPresenterImpl;
 import com.ddiehl.android.htn.view.MenuTintUtils;
 import com.ddiehl.android.htn.view.SettingsView;
 import com.ddiehl.android.htn.view.activities.AboutAppActivity;
@@ -53,7 +52,7 @@ public class SettingsFragment extends PreferenceFragment
         setRetainInstance(true);
         setHasOptionsMenu(true);
 
-        mSettingsPresenter = new SettingsPresenterImpl(this);
+        mSettingsPresenter = new SettingsPresenter(this);
 
         getPreferenceManager().setSharedPreferencesName(SettingsManagerImpl.PREFS_USER);
         addDefaultPreferences();
@@ -77,16 +76,18 @@ public class SettingsFragment extends PreferenceFragment
     @Override
     public void onResume() {
         super.onResume();
-        mSettingsPresenter.onResume();
         getActivity().getSharedPreferences(SettingsManagerImpl.PREFS_USER, Context.MODE_PRIVATE)
                 .registerOnSharedPreferenceChangeListener(this);
+
+        if (mSettingsPresenter.isUserAuthorized()) {
+            mSettingsPresenter.refresh(true);
+        }
     }
 
     @Override
     public void onPause() {
         getActivity().getSharedPreferences(SettingsManagerImpl.PREFS_USER, Context.MODE_PRIVATE)
                 .unregisterOnSharedPreferenceChangeListener(this);
-        mSettingsPresenter.onPause();
         super.onPause();
     }
 
