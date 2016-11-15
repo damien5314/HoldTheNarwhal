@@ -9,4 +9,6 @@ public interface LinkCommentsView extends ListingsView, LinkView, CommentView {
     String getSubreddit();
 
     String getSort();
+
+    void refreshOptionsMenu();
 }
