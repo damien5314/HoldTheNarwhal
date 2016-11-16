@@ -1,4 +1,4 @@
-package com.ddiehl.android.htn.view.widgets;
+package com.ddiehl.android.htn.view;
 
 import android.content.Context;
 import android.support.v7.widget.AppCompatTextView;
@@ -7,7 +7,6 @@ import android.text.method.LinkMovementMethod;
 import android.util.AttributeSet;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
-import com.ddiehl.android.htn.view.Linkify;
 
 import java.util.regex.Pattern;
 

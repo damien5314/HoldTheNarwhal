@@ -1,4 +1,4 @@
-package com.ddiehl.android.htn.view.viewholders;
+package com.ddiehl.android.htn.listings.links;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -12,9 +12,8 @@ import android.widget.TextView;
 
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.listings.BaseListingsPresenter;
-import com.ddiehl.android.htn.listings.links.LinkView;
 import com.ddiehl.android.htn.listings.subreddit.ThumbnailMode;
-import com.ddiehl.android.htn.view.widgets.ColorSwapTextView;
+import com.ddiehl.android.htn.view.ColorSwapTextView;
 import com.ddiehl.timesincetextview.TimeSinceTextView;
 import com.squareup.picasso.Picasso;
 

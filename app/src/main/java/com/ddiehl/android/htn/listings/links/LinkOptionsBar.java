@@ -1,4 +1,4 @@
-package com.ddiehl.android.htn.view.widgets;
+package com.ddiehl.android.htn.listings.links;
 
 import android.content.Context;
 import android.os.Build;

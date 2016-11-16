@@ -1,4 +1,4 @@
-package com.ddiehl.android.htn.view.widgets;
+package com.ddiehl.android.htn.view;
 
 import android.text.TextPaint;
 import android.text.style.URLSpan;

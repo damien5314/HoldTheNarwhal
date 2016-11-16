@@ -4,7 +4,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    <com.ddiehl.android.htn.view.widgets.SubredditEditText
+    <com.ddiehl.android.htn.navigation.SubredditEditText
             android:id="@+id/search_input_field"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

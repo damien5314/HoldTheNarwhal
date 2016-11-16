@@ -1,4 +1,4 @@
-package com.ddiehl.android.htn.view.widgets;
+package com.ddiehl.android.htn.view;
 
 import android.annotation.TargetApi;
 import android.content.Context;

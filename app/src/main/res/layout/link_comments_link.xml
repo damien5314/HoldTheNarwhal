@@ -108,7 +108,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
-                    <com.ddiehl.android.htn.view.widgets.ColorSwapTextView
+                    <com.ddiehl.android.htn.view.ColorSwapTextView
                             android:id="@+id/link_author"
                             style="@style/LinkMetadataTextViewLight"
                             android:layout_width="wrap_content"
@@ -143,7 +143,7 @@
 
         </FrameLayout>
 
-        <com.ddiehl.android.htn.view.widgets.MarkdownTextView
+        <com.ddiehl.android.htn.view.MarkdownTextView
                 android:id="@+id/link_self_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -158,7 +158,7 @@
                 tools:ignore="UnusedAttribute"
                 tools:text="Lorem ipsum dolor sit amet" />
 
-        <com.ddiehl.android.htn.view.widgets.LinkOptionsBar
+        <com.ddiehl.android.htn.listings.links.LinkOptionsBar
                 android:id="@+id/link_options_bar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />

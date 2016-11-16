@@ -7,14 +7,14 @@ import android.view.ViewGroup;
 
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.listings.comments.CommentView;
+import com.ddiehl.android.htn.listings.comments.ListingsCommentViewHolder;
 import com.ddiehl.android.htn.listings.inbox.InboxPresenter;
+import com.ddiehl.android.htn.listings.inbox.ListingsMessageViewHolder;
 import com.ddiehl.android.htn.listings.inbox.PrivateMessageView;
+import com.ddiehl.android.htn.listings.links.BaseLinkViewHolder;
 import com.ddiehl.android.htn.listings.links.LinkView;
+import com.ddiehl.android.htn.listings.links.ListingsLinkViewHolder;
 import com.ddiehl.android.htn.listings.subreddit.ThumbnailMode;
-import com.ddiehl.android.htn.view.viewholders.BaseLinkViewHolder;
-import com.ddiehl.android.htn.view.viewholders.ListingsCommentViewHolder;
-import com.ddiehl.android.htn.view.viewholders.ListingsLinkViewHolder;
-import com.ddiehl.android.htn.view.viewholders.ListingsMessageViewHolder;
 
 import rxreddit.model.Comment;
 import rxreddit.model.Link;

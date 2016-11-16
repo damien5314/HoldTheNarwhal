@@ -7,11 +7,9 @@ import android.view.ViewGroup;
 
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.listings.ListingsAdapter;
+import com.ddiehl.android.htn.listings.links.BaseLinkViewHolder;
+import com.ddiehl.android.htn.listings.links.CommentsLinkViewHolder;
 import com.ddiehl.android.htn.listings.subreddit.ThumbnailMode;
-import com.ddiehl.android.htn.view.viewholders.BaseLinkViewHolder;
-import com.ddiehl.android.htn.view.viewholders.CommentsLinkViewHolder;
-import com.ddiehl.android.htn.view.viewholders.ThreadCommentViewHolder;
-import com.ddiehl.android.htn.view.viewholders.ThreadStubViewHolder;
 
 import rxreddit.model.Comment;
 import rxreddit.model.CommentStub;

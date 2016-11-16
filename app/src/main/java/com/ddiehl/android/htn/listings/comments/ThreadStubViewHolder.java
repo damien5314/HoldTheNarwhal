@@ -1,4 +1,4 @@
-package com.ddiehl.android.htn.view.viewholders;
+package com.ddiehl.android.htn.listings.comments;
 
 import android.content.Context;
 import android.content.res.Configuration;

@@ -1,8 +1,6 @@
-package com.ddiehl.android.htn.view.viewholders;
+package com.ddiehl.android.htn.listings.comments;
 
 import android.content.Context;
-import android.content.res.Configuration;
-import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu;
@@ -12,9 +10,7 @@ import android.widget.TextView;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
-import com.ddiehl.android.htn.listings.comments.LinkCommentsPresenter;
-import com.ddiehl.android.htn.listings.comments.LinkCommentsView;
-import com.ddiehl.android.htn.view.widgets.ColorSwapTextView;
+import com.ddiehl.android.htn.listings.BaseListingsPresenter;
 import com.ddiehl.timesincetextview.TimeSinceTextView;
 
 import javax.inject.Inject;
@@ -23,17 +19,18 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import rxreddit.model.Comment;
-import rxreddit.model.Link;
 
-public class ThreadCommentViewHolder extends RecyclerView.ViewHolder
+public class ListingsCommentViewHolder extends RecyclerView.ViewHolder
         implements View.OnCreateContextMenuListener {
 
-    @Inject protected Context mContext;
-    private final LinkCommentsView mLinkCommentsView;
-    private final LinkCommentsPresenter mLinkCommentsPresenter;
+    @Inject protected Context mAppContext;
+    private CommentView mCommentView;
+    private BaseListingsPresenter mCommentPresenter;
     private Comment mComment;
 
-    @BindView(R.id.comment_author) ColorSwapTextView mAuthorView;
+    @BindView(R.id.comment_link_title) TextView mCommentLinkTitleView;
+    @BindView(R.id.comment_link_subtitle) TextView mCommentLinkSubtitleView;
+    @BindView(R.id.comment_author) TextView mAuthorView;
     @BindView(R.id.comment_score_layout) ViewGroup mScoreViewLayout;
     @BindView(R.id.comment_score) TextView mScoreView;
     @BindView(R.id.comment_timestamp) TimeSinceTextView mTimestampView;
@@ -42,18 +39,23 @@ public class ThreadCommentViewHolder extends RecyclerView.ViewHolder
     @BindView(R.id.comment_gilded_text_view) TextView mGildedText;
     @BindView(R.id.comment_controversiality_indicator) View mControversialityIndicator;
 
-    public ThreadCommentViewHolder(View view, LinkCommentsView linkCommentsView, LinkCommentsPresenter presenter) {
+    public ListingsCommentViewHolder(View view, CommentView commentView, BaseListingsPresenter presenter) {
         super(view);
         HoldTheNarwhal.getApplicationComponent().inject(this);
-        mLinkCommentsView = linkCommentsView;
-        mLinkCommentsPresenter = presenter;
+        mCommentView = commentView;
+        mCommentPresenter = presenter;
         ButterKnife.bind(this, view);
         itemView.setOnCreateContextMenuListener(this);
     }
 
+    @OnClick(R.id.comment_link_title)
+    void onClickTitle() {
+        mCommentPresenter.openCommentLink(mComment);
+    }
+
     @OnClick(R.id.comment_metadata)
     void onClickMetadata(View v) {
-        mLinkCommentsPresenter.toggleThreadVisible(mComment);
+        v.showContextMenu();
     }
 
     @OnClick(R.id.comment_body)
@@ -61,71 +63,85 @@ public class ThreadCommentViewHolder extends RecyclerView.ViewHolder
         v.showContextMenu();
     }
 
-    public void bind(final Link link, final Comment comment, boolean showControversiality) {
+    public void bind(Comment comment, boolean showControversiality) {
         mComment = comment;
-        addPaddingViews(comment);
-        showAuthor(link, comment);
+        showLinkTitle(comment);
+        showLinkSubtitle(comment);
+        showAuthor(comment);
         showBody(comment);
         showScore(comment);
         showTimestamp(comment);
-        showEdited(comment);
-        setCollapsed(comment);
         showLiked(comment);
         showSaved(comment);
         showGilded(comment);
         showControversiality(comment, showControversiality);
     }
 
-    public void bind(final Comment comment, boolean showControversiality) {
-        bind(null, comment, showControversiality);
+    private void showLinkTitle(Comment comment) {
+        mCommentLinkTitleView.setText(comment.getLinkTitle());
     }
 
-    // Add padding views to indentation_wrapper based on depth of comment
-    private void addPaddingViews(Comment comment) {
-        int viewMargin = (comment.getDepth() - 2)
-                * (int) mContext.getResources().getDimension(R.dimen.comment_indentation_margin);
-        RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) itemView.getLayoutParams();
-        Configuration config = mContext.getResources().getConfiguration();
-        if (Build.VERSION.SDK_INT >= 17 && config.getLayoutDirection() == View.LAYOUT_DIRECTION_RTL) {
-            params.setMargins(0, 0, viewMargin, 0);
+    private void showLinkSubtitle(Comment comment) {
+        String linkAuthor = comment.getLinkAuthor();
+        String subreddit = comment.getSubreddit();
+        String subject = getSubjectAbbreviationForComment(comment);
+        if (subject == null) {
+            String titleFormatter = mAppContext.getString(R.string.listing_comment_subtitle_format);
+            mCommentLinkSubtitleView.setText(
+                    String.format(titleFormatter, subreddit, linkAuthor));
         } else {
-            params.setMargins(viewMargin, 0, 0, 0);
+            String titleFormatter = mAppContext.getString(R.string.listing_comment_inbox_subtitle_format);
+            mCommentLinkSubtitleView.setText(
+                    String.format(titleFormatter, subreddit, subject));
         }
     }
 
-    private void showAuthor(Link link, Comment comment) {
-        String author = comment.getAuthor();
+    private String getSubjectAbbreviationForComment(Comment comment) {
+        String subject = comment.getSubject();
+        if (subject == null) return null;
+        int resId;
+        if ("comment reply".equals(subject)) {
+            resId = R.string.listing_comment_subject_commentreply;
+        } else if ("post reply".equals(subject)) {
+            resId = R.string.listing_comment_subject_postreply;
+        } else { // if ("username mention".equals(subject)) {
+            resId = R.string.listing_comment_subject_usernamemention;
+        }
+        return mAppContext.getString(resId);
+    }
+
+    private void showAuthor(Comment comment) {
         mAuthorView.setVisibility(View.VISIBLE);
-        mAuthorView.setText(author);
         String authorType = null;
         String distinguished = comment.getDistinguished();
         if (distinguished != null && !distinguished.equals("")) {
             authorType = distinguished;
         }
-        if (link != null && author.equals(link.getAuthor())) {
-            authorType = "op";
-        }
         if (authorType != null) {
             switch (authorType) {
                 case "op":
                     mAuthorView.setBackgroundResource(R.drawable.author_op_bg);
-                    mAuthorView.setTextColor(ContextCompat.getColor(mContext, R.color.author_op_text));
+                    mAuthorView.setTextColor(
+                            ContextCompat.getColor(mAppContext, R.color.author_op_text));
                     break;
                 case "moderator":
                     mAuthorView.setBackgroundResource(R.drawable.author_moderator_bg);
-                    mAuthorView.setTextColor(ContextCompat.getColor(mContext, R.color.author_moderator_text));
+                    mAuthorView.setTextColor(
+                            ContextCompat.getColor(mAppContext, R.color.author_moderator_text));
                     break;
                 case "admin":
                     mAuthorView.setBackgroundResource(R.drawable.author_admin_bg);
-                    mAuthorView.setTextColor(ContextCompat.getColor(mContext, R.color.author_admin_text));
+                    mAuthorView.setTextColor(
+                            ContextCompat.getColor(mAppContext, R.color.author_admin_text));
                     break;
                 default:
             }
         } else {
-            //noinspection deprecation
-            mAuthorView.setBackgroundDrawable(mAuthorView.getOriginalBackground());
-            mAuthorView.setTextColor(ContextCompat.getColor(mContext, R.color.secondary_text));
+            mAuthorView.setBackgroundResource(0);
+            mAuthorView.setTextColor(
+                    ContextCompat.getColor(mAppContext, R.color.secondary_text));
         }
+        mAuthorView.setText(comment.getAuthor());
     }
 
     private void showBody(Comment comment) {
@@ -133,18 +149,17 @@ public class ThreadCommentViewHolder extends RecyclerView.ViewHolder
     }
 
     private void showScore(Comment comment) {
-        String text;
         if (comment.getScore() == null) {
-            text = mContext.getString(R.string.hidden_score_placeholder);
-        } else text = String.format(mContext.getString(R.string.comment_score), comment.getScore());
-        mScoreView.setText(text);
+            mScoreViewLayout.setVisibility(View.GONE);
+        } else {
+            mScoreViewLayout.setVisibility(View.VISIBLE);
+            mScoreView.setText(
+                    String.format(mAppContext.getString(R.string.comment_score), comment.getScore()));
+        }
     }
 
     private void showTimestamp(Comment comment) {
         mTimestampView.setDate(comment.getCreateUtc().longValue());
-    }
-
-    private void showEdited(Comment comment) {
         if (comment.isEdited() != null) {
             switch (comment.isEdited()) {
                 case "":
@@ -163,18 +178,14 @@ public class ThreadCommentViewHolder extends RecyclerView.ViewHolder
         mTimestampView.setText(edited ? text + "*" : text.toString().replace("*", ""));
     }
 
-    private void setCollapsed(Comment comment) {
-        mBodyView.setVisibility(comment.isCollapsed() ? View.GONE : View.VISIBLE);
-    }
-
     // Set background tint based on isLiked
     private void showLiked(Comment comment) {
         if (comment.isLiked() == null) {
-            mScoreView.setTextColor(ContextCompat.getColor(mContext, R.color.secondary_text));
+            mScoreView.setTextColor(ContextCompat.getColor(mAppContext, R.color.secondary_text));
         } else if (comment.isLiked()) {
-            mScoreView.setTextColor(ContextCompat.getColor(mContext, R.color.reddit_orange_full));
+            mScoreView.setTextColor(ContextCompat.getColor(mAppContext, R.color.reddit_orange_full));
         } else {
-            mScoreView.setTextColor(ContextCompat.getColor(mContext, R.color.reddit_blue_full));
+            mScoreView.setTextColor(ContextCompat.getColor(mAppContext, R.color.reddit_blue_full));
         }
     }
 
@@ -182,11 +193,10 @@ public class ThreadCommentViewHolder extends RecyclerView.ViewHolder
         mSavedView.setVisibility(comment.isSaved() ? View.VISIBLE : View.GONE);
     }
 
-    // Show gilding view if appropriate, else hide
     private void showGilded(Comment comment) {
         Integer gilded = comment.getGilded();
         if (gilded != null && gilded > 0) {
-            mGildedText.setText(String.format(mContext.getString(R.string.link_gilded_text), gilded));
+            mGildedText.setText(String.format(mAppContext.getString(R.string.link_gilded_text), gilded));
             mGildedText.setVisibility(View.VISIBLE);
         } else {
             mGildedText.setVisibility(View.GONE);
@@ -201,6 +211,6 @@ public class ThreadCommentViewHolder extends RecyclerView.ViewHolder
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View view, ContextMenu.ContextMenuInfo menuInfo) {
-        mLinkCommentsView.showCommentContextMenu(menu, view, mComment);
+        mCommentView.showCommentContextMenu(menu, view, mComment);
     }
 }

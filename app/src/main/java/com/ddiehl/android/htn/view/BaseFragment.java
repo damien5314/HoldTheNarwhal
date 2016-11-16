@@ -23,9 +23,9 @@ import com.ddiehl.android.htn.analytics.Analytics;
 import com.ddiehl.android.htn.identity.IdentityManager;
 import com.ddiehl.android.htn.listings.subreddit.SubredditActivity;
 import com.ddiehl.android.htn.navigation.RedditNavigationView;
+import com.ddiehl.android.htn.navigation.WebViewFragment;
 import com.ddiehl.android.htn.utils.AndroidUtils;
 import com.ddiehl.android.htn.utils.MenuTintUtils;
-import com.ddiehl.android.htn.web.WebViewFragment;
 
 import java.io.IOException;
 

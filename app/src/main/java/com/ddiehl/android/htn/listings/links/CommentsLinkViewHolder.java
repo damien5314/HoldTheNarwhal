@@ -1,4 +1,4 @@
-package com.ddiehl.android.htn.view.viewholders;
+package com.ddiehl.android.htn.listings.links;
 
 import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
@@ -11,9 +11,7 @@ import android.view.View;
 
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.listings.BaseListingsPresenter;
-import com.ddiehl.android.htn.listings.links.LinkView;
 import com.ddiehl.android.htn.listings.subreddit.ThumbnailMode;
-import com.ddiehl.android.htn.view.widgets.LinkOptionsBar;
 
 import java.util.List;
 
@@ -22,13 +20,13 @@ import butterknife.OnClick;
 import rx.functions.Action0;
 import rxreddit.model.Link;
 
-import static com.ddiehl.android.htn.view.widgets.LinkOptionsBar.Icons.DOWNVOTE;
-import static com.ddiehl.android.htn.view.widgets.LinkOptionsBar.Icons.HIDE;
-import static com.ddiehl.android.htn.view.widgets.LinkOptionsBar.Icons.REPLY;
-import static com.ddiehl.android.htn.view.widgets.LinkOptionsBar.Icons.REPORT;
-import static com.ddiehl.android.htn.view.widgets.LinkOptionsBar.Icons.SAVE;
-import static com.ddiehl.android.htn.view.widgets.LinkOptionsBar.Icons.SHARE;
-import static com.ddiehl.android.htn.view.widgets.LinkOptionsBar.Icons.UPVOTE;
+import static com.ddiehl.android.htn.listings.links.LinkOptionsBar.Icons.DOWNVOTE;
+import static com.ddiehl.android.htn.listings.links.LinkOptionsBar.Icons.HIDE;
+import static com.ddiehl.android.htn.listings.links.LinkOptionsBar.Icons.REPLY;
+import static com.ddiehl.android.htn.listings.links.LinkOptionsBar.Icons.REPORT;
+import static com.ddiehl.android.htn.listings.links.LinkOptionsBar.Icons.SAVE;
+import static com.ddiehl.android.htn.listings.links.LinkOptionsBar.Icons.SHARE;
+import static com.ddiehl.android.htn.listings.links.LinkOptionsBar.Icons.UPVOTE;
 
 
 public class CommentsLinkViewHolder extends BaseLinkViewHolder {

@@ -43,11 +43,11 @@ import com.ddiehl.android.htn.navigation.ConfirmExitDialog;
 import com.ddiehl.android.htn.navigation.ConfirmSignOutDialog;
 import com.ddiehl.android.htn.navigation.RedditNavigationView;
 import com.ddiehl.android.htn.navigation.SubredditNavigationDialog;
+import com.ddiehl.android.htn.navigation.WebViewActivity;
 import com.ddiehl.android.htn.settings.SettingsActivity;
 import com.ddiehl.android.htn.settings.SettingsManager;
 import com.ddiehl.android.htn.subscriptions.SubscriptionManagerActivity;
 import com.ddiehl.android.htn.utils.AndroidUtils;
-import com.ddiehl.android.htn.web.WebViewActivity;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 

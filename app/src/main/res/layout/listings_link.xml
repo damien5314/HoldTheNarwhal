@@ -118,7 +118,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
-                    <com.ddiehl.android.htn.view.widgets.ColorSwapTextView
+                    <com.ddiehl.android.htn.view.ColorSwapTextView
                             android:id="@+id/link_author"
                             style="@style/LinkMetadataTextViewDark"
                             android:layout_width="wrap_content"
@@ -176,14 +176,14 @@
 
             </LinearLayout>
 
-            <com.ddiehl.android.htn.view.widgets.SquareImageView
+            <com.ddiehl.android.htn.view.SquareImageView
                     android:id="@+id/link_thumbnail"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent" />
 
         </LinearLayout>
 
-        <com.ddiehl.android.htn.view.widgets.MarkdownTextView
+        <com.ddiehl.android.htn.view.MarkdownTextView
                 android:id="@+id/link_self_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

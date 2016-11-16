@@ -1,4 +1,4 @@
-package com.ddiehl.android.htn.web;
+package com.ddiehl.android.htn.navigation;
 
 import android.net.MailTo;
 import android.os.Build;

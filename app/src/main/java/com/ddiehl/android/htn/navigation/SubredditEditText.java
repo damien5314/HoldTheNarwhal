@@ -1,4 +1,4 @@
-package com.ddiehl.android.htn.view.widgets;
+package com.ddiehl.android.htn.navigation;
 
 import android.content.Context;
 import android.support.v7.widget.AppCompatEditText;

@@ -1,4 +1,4 @@
-package com.ddiehl.android.htn.view.viewholders;
+package com.ddiehl.android.htn.listings.links;
 
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
@@ -6,7 +6,6 @@ import android.view.View;
 
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.listings.BaseListingsPresenter;
-import com.ddiehl.android.htn.listings.links.LinkView;
 import com.ddiehl.android.htn.listings.subreddit.ThumbnailMode;
 
 import butterknife.OnClick;

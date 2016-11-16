@@ -1,4 +1,4 @@
-package com.ddiehl.android.htn;
+package com.ddiehl.android.htn.navigation;
 
 import android.net.Uri;
 import android.os.Bundle;

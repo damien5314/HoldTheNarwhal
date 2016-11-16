@@ -13,7 +13,7 @@ import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.utils.AndroidUtils;
 import com.ddiehl.android.htn.utils.Utils;
 import com.ddiehl.android.htn.view.MarkdownTextFragment;
-import com.ddiehl.android.htn.view.widgets.MarkdownTextView;
+import com.ddiehl.android.htn.view.MarkdownTextView;
 
 import java.io.InputStream;
 
