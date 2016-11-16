@@ -1,4 +1,4 @@
-package com.ddiehl.android.htn.presenter;
+package com.ddiehl.android.htn.listings;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -8,13 +8,10 @@ import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.ThumbnailMode;
 import com.ddiehl.android.htn.analytics.Analytics;
+import com.ddiehl.android.htn.listings.inbox.PrivateMessageView;
 import com.ddiehl.android.htn.settings.SettingsManager;
 import com.ddiehl.android.htn.utils.AndroidUtils;
-import com.ddiehl.android.htn.view.CommentView;
-import com.ddiehl.android.htn.view.LinkView;
-import com.ddiehl.android.htn.view.ListingsView;
 import com.ddiehl.android.htn.view.MainView;
-import com.ddiehl.android.htn.view.PrivateMessageView;
 import com.ddiehl.android.htn.view.RedditNavigationView;
 
 import java.io.IOException;

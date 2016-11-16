@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
-import com.ddiehl.android.htn.view.adapters.ItemTouchHelperAdapter;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;

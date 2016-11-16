@@ -10,8 +10,8 @@ import android.widget.TextView;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
-import com.ddiehl.android.htn.presenter.BaseListingsPresenter;
-import com.ddiehl.android.htn.view.CommentView;
+import com.ddiehl.android.htn.listings.BaseListingsPresenter;
+import com.ddiehl.android.htn.listings.CommentView;
 import com.ddiehl.timesincetextview.TimeSinceTextView;
 
 import javax.inject.Inject;

@@ -1,7 +1,7 @@
 package com.ddiehl.android.htn.listings.inbox;
 
 import com.ddiehl.android.htn.R;
-import com.ddiehl.android.htn.presenter.BaseListingsPresenter;
+import com.ddiehl.android.htn.listings.BaseListingsPresenter;
 import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.android.htn.view.RedditNavigationView;
 

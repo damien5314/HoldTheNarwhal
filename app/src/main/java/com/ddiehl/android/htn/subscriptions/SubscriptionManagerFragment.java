@@ -18,7 +18,6 @@ import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.subredditinfo.SubredditInfoActivity;
 import com.ddiehl.android.htn.subredditinfo.SubredditInfoFragment;
-import com.ddiehl.android.htn.view.adapters.SimpleItemTouchHelperCallback;
 import com.ddiehl.android.htn.view.fragments.BaseFragment;
 
 import java.io.IOException;

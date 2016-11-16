@@ -1,4 +1,4 @@
-package com.ddiehl.android.htn.view;
+package com.ddiehl.android.htn.listings.inbox;
 
 import android.view.ContextMenu;
 import android.view.View;

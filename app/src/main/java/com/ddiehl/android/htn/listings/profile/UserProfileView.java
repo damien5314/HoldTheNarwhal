@@ -2,9 +2,9 @@ package com.ddiehl.android.htn.listings.profile;
 
 import android.support.annotation.NonNull;
 
-import com.ddiehl.android.htn.view.CommentView;
-import com.ddiehl.android.htn.view.LinkView;
-import com.ddiehl.android.htn.view.ListingsView;
+import com.ddiehl.android.htn.listings.CommentView;
+import com.ddiehl.android.htn.listings.LinkView;
+import com.ddiehl.android.htn.listings.ListingsView;
 
 import java.util.List;
 

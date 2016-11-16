@@ -1,4 +1,4 @@
-package com.ddiehl.android.htn.view.adapters;
+package com.ddiehl.android.htn.subscriptions;
 
 
 public interface ItemTouchHelperAdapter {

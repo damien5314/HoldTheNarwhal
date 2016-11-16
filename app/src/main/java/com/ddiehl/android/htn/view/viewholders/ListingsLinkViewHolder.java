@@ -6,8 +6,8 @@ import android.view.View;
 
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.ThumbnailMode;
-import com.ddiehl.android.htn.presenter.BaseListingsPresenter;
-import com.ddiehl.android.htn.view.LinkView;
+import com.ddiehl.android.htn.listings.BaseListingsPresenter;
+import com.ddiehl.android.htn.listings.LinkView;
 
 import butterknife.OnClick;
 import rxreddit.model.Link;

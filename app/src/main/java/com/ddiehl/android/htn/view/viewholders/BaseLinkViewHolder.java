@@ -12,8 +12,8 @@ import android.widget.TextView;
 
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.ThumbnailMode;
-import com.ddiehl.android.htn.presenter.BaseListingsPresenter;
-import com.ddiehl.android.htn.view.LinkView;
+import com.ddiehl.android.htn.listings.BaseListingsPresenter;
+import com.ddiehl.android.htn.listings.LinkView;
 import com.ddiehl.android.htn.view.widgets.ColorSwapTextView;
 import com.ddiehl.timesincetextview.TimeSinceTextView;
 import com.squareup.picasso.Picasso;

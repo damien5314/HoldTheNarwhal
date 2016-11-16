@@ -12,8 +12,8 @@ import android.widget.TextView;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
-import com.ddiehl.android.htn.presenter.LinkCommentsPresenter;
-import com.ddiehl.android.htn.view.LinkCommentsView;
+import com.ddiehl.android.htn.listings.comments.LinkCommentsPresenter;
+import com.ddiehl.android.htn.listings.comments.LinkCommentsView;
 import com.ddiehl.android.htn.view.widgets.ColorSwapTextView;
 import com.ddiehl.timesincetextview.TimeSinceTextView;
 

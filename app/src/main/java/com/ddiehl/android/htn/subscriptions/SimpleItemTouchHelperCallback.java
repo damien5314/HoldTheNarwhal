@@ -1,4 +1,4 @@
-package com.ddiehl.android.htn.view.adapters;
+package com.ddiehl.android.htn.subscriptions;
 
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;

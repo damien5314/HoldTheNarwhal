@@ -16,8 +16,8 @@ import android.view.ViewGroup;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
-import com.ddiehl.android.htn.view.PrivateMessageView;
-import com.ddiehl.android.htn.view.adapters.PrivateMessageAdapter;
+import com.ddiehl.android.htn.listings.inbox.PrivateMessageAdapter;
+import com.ddiehl.android.htn.listings.inbox.PrivateMessageView;
 import com.google.gson.Gson;
 import com.hannesdorfmann.fragmentargs.FragmentArgs;
 import com.hannesdorfmann.fragmentargs.annotation.Arg;

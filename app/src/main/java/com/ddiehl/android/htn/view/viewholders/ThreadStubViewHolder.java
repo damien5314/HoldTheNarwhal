@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
-import com.ddiehl.android.htn.presenter.BaseListingsPresenter;
+import com.ddiehl.android.htn.listings.BaseListingsPresenter;
 
 import javax.inject.Inject;
 

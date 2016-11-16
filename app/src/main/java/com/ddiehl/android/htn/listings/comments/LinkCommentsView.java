@@ -1,4 +1,8 @@
-package com.ddiehl.android.htn.view;
+package com.ddiehl.android.htn.listings.comments;
+
+import com.ddiehl.android.htn.listings.CommentView;
+import com.ddiehl.android.htn.listings.LinkView;
+import com.ddiehl.android.htn.listings.ListingsView;
 
 public interface LinkCommentsView extends ListingsView, LinkView, CommentView {
 

@@ -9,9 +9,9 @@ import android.widget.TextView;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
-import com.ddiehl.android.htn.presenter.BaseListingsPresenter;
+import com.ddiehl.android.htn.listings.BaseListingsPresenter;
+import com.ddiehl.android.htn.listings.inbox.PrivateMessageView;
 import com.ddiehl.android.htn.utils.Utils;
-import com.ddiehl.android.htn.view.PrivateMessageView;
 import com.ddiehl.timesincetextview.TimeSince;
 
 import java.util.List;

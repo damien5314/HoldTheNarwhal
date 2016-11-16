@@ -1,11 +1,9 @@
-package com.ddiehl.android.htn.presenter;
+package com.ddiehl.android.htn.listings.comments;
 
 import android.support.annotation.NonNull;
 
 import com.ddiehl.android.htn.R;
-import com.ddiehl.android.htn.model.CommentBank;
-import com.ddiehl.android.htn.model.CommentBankList;
-import com.ddiehl.android.htn.view.LinkCommentsView;
+import com.ddiehl.android.htn.listings.BaseListingsPresenter;
 import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.android.htn.view.RedditNavigationView;
 
@@ -55,7 +53,7 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
 
     @Override
     public void refreshData() {
-        int numItems = mListings.size();
+        int numItems = getListings().size();
         mCommentBank.clear();
         mLinkCommentsView.notifyItemRangeRemoved(0, numItems);
         getNextData();

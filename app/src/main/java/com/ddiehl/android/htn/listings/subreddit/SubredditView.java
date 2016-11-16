@@ -1,7 +1,7 @@
 package com.ddiehl.android.htn.listings.subreddit;
 
-import com.ddiehl.android.htn.view.LinkView;
-import com.ddiehl.android.htn.view.ListingsView;
+import com.ddiehl.android.htn.listings.LinkView;
+import com.ddiehl.android.htn.listings.ListingsView;
 
 public interface SubredditView extends ListingsView, LinkView {
 

@@ -1,4 +1,4 @@
-package com.ddiehl.android.htn.model;
+package com.ddiehl.android.htn.listings.comments;
 
 import android.support.annotation.Nullable;
 

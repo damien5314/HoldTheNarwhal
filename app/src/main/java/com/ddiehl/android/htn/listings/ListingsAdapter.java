@@ -1,4 +1,4 @@
-package com.ddiehl.android.htn.view.adapters;
+package com.ddiehl.android.htn.listings;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -8,10 +8,7 @@ import android.view.ViewGroup;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.ThumbnailMode;
 import com.ddiehl.android.htn.listings.inbox.InboxPresenter;
-import com.ddiehl.android.htn.presenter.BaseListingsPresenter;
-import com.ddiehl.android.htn.view.CommentView;
-import com.ddiehl.android.htn.view.LinkView;
-import com.ddiehl.android.htn.view.PrivateMessageView;
+import com.ddiehl.android.htn.listings.inbox.PrivateMessageView;
 import com.ddiehl.android.htn.view.viewholders.BaseLinkViewHolder;
 import com.ddiehl.android.htn.view.viewholders.ListingsCommentViewHolder;
 import com.ddiehl.android.htn.view.viewholders.ListingsLinkViewHolder;

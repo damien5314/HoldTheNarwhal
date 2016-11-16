@@ -34,6 +34,7 @@ import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.analytics.Analytics;
+import com.ddiehl.android.htn.listings.comments.LinkCommentsActivity;
 import com.ddiehl.android.htn.listings.inbox.InboxActivity;
 import com.ddiehl.android.htn.listings.profile.UserProfileActivity;
 import com.ddiehl.android.htn.listings.subreddit.SubredditActivity;

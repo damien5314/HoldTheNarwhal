@@ -1,4 +1,4 @@
-package com.ddiehl.android.htn.view.adapters;
+package com.ddiehl.android.htn.listings.comments;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -7,8 +7,7 @@ import android.view.ViewGroup;
 
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.ThumbnailMode;
-import com.ddiehl.android.htn.presenter.LinkCommentsPresenter;
-import com.ddiehl.android.htn.view.LinkCommentsView;
+import com.ddiehl.android.htn.listings.ListingsAdapter;
 import com.ddiehl.android.htn.view.viewholders.BaseLinkViewHolder;
 import com.ddiehl.android.htn.view.viewholders.CommentsLinkViewHolder;
 import com.ddiehl.android.htn.view.viewholders.ThreadCommentViewHolder;
