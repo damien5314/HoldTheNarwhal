@@ -72,15 +72,6 @@ public class LinkCommentsFragment extends BaseListingsFragment
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-
-        if (!mLinkCommentsPresenter.hasData()) {
-            mLinkCommentsPresenter.refreshData();
-        }
-    }
-
-    @Override
     public void onDestroy() {
         mLinkCommentsPresenter.clearData();
         notifyDataSetChanged();
