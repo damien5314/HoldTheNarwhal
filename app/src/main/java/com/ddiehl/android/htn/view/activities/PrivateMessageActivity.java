@@ -49,13 +49,13 @@ public class PrivateMessageActivity extends FragmentActivityCompat {
     }
 
     @Override
-    Fragment getFragment() {
+    protected Fragment getFragment() {
         return new PrivateMessageFragmentBuilder(getJson())
                 .build();
     }
 
     @Override
-    String getFragmentTag() {
+    protected String getFragmentTag() {
         return PrivateMessageFragment.TAG;
     }
 }

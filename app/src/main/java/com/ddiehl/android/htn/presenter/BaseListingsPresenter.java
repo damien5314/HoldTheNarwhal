@@ -77,6 +77,10 @@ public abstract class BaseListingsPresenter
         mPrivateMessageView = messageView;
     }
 
+    public List<Listing> getListings() {
+        return mListings;
+    }
+
     public boolean hasData() {
         return mListings.size() != 0;
     }
@@ -117,9 +121,9 @@ public abstract class BaseListingsPresenter
         }
     }
 
-    abstract void requestPreviousData();
+    protected abstract void requestPreviousData();
 
-    abstract void requestNextData();
+    protected abstract void requestNextData();
 
     @Override
     public void onFirstItemShown() {

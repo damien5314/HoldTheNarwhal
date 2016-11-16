@@ -1,4 +1,4 @@
-package com.ddiehl.android.htn.view.fragments;
+package com.ddiehl.android.htn.listings.inbox;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,10 +13,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ddiehl.android.htn.R;
-import com.ddiehl.android.htn.presenter.InboxPresenter;
 import com.ddiehl.android.htn.utils.AndroidUtils;
-import com.ddiehl.android.htn.view.InboxView;
 import com.ddiehl.android.htn.view.adapters.ListingsAdapter;
+import com.ddiehl.android.htn.view.fragments.BaseListingsFragment;
 import com.hannesdorfmann.fragmentargs.FragmentArgs;
 import com.hannesdorfmann.fragmentargs.annotation.Arg;
 import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs;

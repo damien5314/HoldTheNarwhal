@@ -27,7 +27,7 @@ public class SubredditPresenter extends BaseListingsPresenter {
     }
 
     @Override
-    void requestPreviousData() {
+    protected void requestPreviousData() {
         String subreddit = mSubredditView.getSubreddit();
         if (subreddit != null
                 && !subreddit.equals("all")

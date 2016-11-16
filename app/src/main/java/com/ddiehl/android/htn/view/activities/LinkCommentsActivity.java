@@ -28,13 +28,13 @@ public class LinkCommentsActivity extends FragmentActivityCompat {
     }
 
     @Override
-    Fragment getFragment() {
+    protected Fragment getFragment() {
         return new LinkCommentsFragmentBuilder(getArticleId(), getCommentId(), getSubreddit())
                 .build();
     }
 
     @Override
-    String getFragmentTag() {
+    protected String getFragmentTag() {
         return LinkCommentsFragment.TAG;
     }
 

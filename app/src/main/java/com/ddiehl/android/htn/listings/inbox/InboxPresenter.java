@@ -1,7 +1,7 @@
-package com.ddiehl.android.htn.presenter;
+package com.ddiehl.android.htn.listings.inbox;
 
 import com.ddiehl.android.htn.R;
-import com.ddiehl.android.htn.view.InboxView;
+import com.ddiehl.android.htn.presenter.BaseListingsPresenter;
 import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.android.htn.view.RedditNavigationView;
 
@@ -23,12 +23,12 @@ public class InboxPresenter extends BaseListingsPresenter {
     }
 
     @Override
-    void requestPreviousData() {
+    protected void requestPreviousData() {
         requestData(false);
     }
 
     @Override
-    void requestNextData() {
+    protected void requestNextData() {
         requestData(true);
     }
 
@@ -71,7 +71,7 @@ public class InboxPresenter extends BaseListingsPresenter {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         result -> {
-                            for (Listing listing : mListings) {
+                            for (Listing listing : getListings()) {
                                 if (listing instanceof PrivateMessage) {
                                     ((PrivateMessage) listing).markUnread(false);
                                 }

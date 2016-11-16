@@ -35,6 +35,7 @@ import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.SettingsManager;
 import com.ddiehl.android.htn.analytics.Analytics;
+import com.ddiehl.android.htn.listings.inbox.InboxActivity;
 import com.ddiehl.android.htn.subscriptions.SubscriptionManagerActivity;
 import com.ddiehl.android.htn.utils.AndroidUtils;
 import com.ddiehl.android.htn.view.RedditNavigationView;

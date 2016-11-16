@@ -35,7 +35,7 @@ public class UserProfilePresenter extends BaseListingsPresenter {
     }
 
     @Override
-    void requestPreviousData() {
+    protected void requestPreviousData() {
         if ("summary".equals(mSummaryView.getShow())) {
             getSummaryData();
         } else {

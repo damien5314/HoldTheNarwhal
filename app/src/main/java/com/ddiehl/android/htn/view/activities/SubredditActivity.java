@@ -30,7 +30,7 @@ public class SubredditActivity extends FragmentActivityCompat {
     }
 
     @Override
-    Fragment getFragment() {
+    protected Fragment getFragment() {
         return new SubredditFragmentBuilder()
                 .subreddit(getSubreddit())
                 .sort(getSort())
@@ -39,7 +39,7 @@ public class SubredditActivity extends FragmentActivityCompat {
     }
 
     @Override
-    String getFragmentTag() {
+    protected String getFragmentTag() {
         return SubredditFragment.TAG;
     }
 

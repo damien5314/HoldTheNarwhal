@@ -28,13 +28,13 @@ public class UserProfileActivity extends FragmentActivityCompat {
     }
 
     @Override
-    Fragment getFragment() {
+    protected Fragment getFragment() {
         return new UserProfileFragmentBuilder(getShow(), getSort(), getTimespan(), getUsername())
                 .build();
     }
 
     @Override
-    String getFragmentTag() {
+    protected String getFragmentTag() {
         return UserProfileFragment.TAG;
     }
 

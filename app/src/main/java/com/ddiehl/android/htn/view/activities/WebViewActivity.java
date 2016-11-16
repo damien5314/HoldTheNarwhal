@@ -23,13 +23,13 @@ public class WebViewActivity extends FragmentActivityCompat {
     }
 
     @Override
-    Fragment getFragment() {
+    protected Fragment getFragment() {
         return new WebViewFragmentBuilder(getUrl())
                 .build();
     }
 
     @Override
-    String getFragmentTag() {
+    protected String getFragmentTag() {
         return WebViewFragment.TAG;
     }
 

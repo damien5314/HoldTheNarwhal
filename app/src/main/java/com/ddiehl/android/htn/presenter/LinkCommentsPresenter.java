@@ -62,12 +62,12 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
     }
 
     @Override
-    void requestPreviousData() {
+    protected void requestPreviousData() {
         // Comments aren't paginated the same as a listings endpoint
     }
 
     @Override
-    void requestNextData() {
+    protected void requestNextData() {
         if (!mDataRequested) {
             mDataRequested = true;
             mRedditService.loadLinkComments(

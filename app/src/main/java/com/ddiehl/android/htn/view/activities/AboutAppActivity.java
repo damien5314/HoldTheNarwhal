@@ -19,12 +19,12 @@ public class AboutAppActivity extends FragmentActivityCompat {
     }
 
     @Override
-    Fragment getFragment() {
+    protected Fragment getFragment() {
         return AboutAppFragment.newInstance();
     }
 
     @Override
-    String getFragmentTag() {
+    protected String getFragmentTag() {
         return AboutAppFragment.TAG;
     }
 

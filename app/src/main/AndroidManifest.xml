@@ -56,7 +56,7 @@
                 android:name=".view.activities.LinkCommentsActivity" />
 
         <activity
-                android:name=".view.activities.InboxActivity" />
+                android:name=".listings.inbox.InboxActivity" />
 
         <activity
                 android:name=".view.activities.UserProfileActivity" />

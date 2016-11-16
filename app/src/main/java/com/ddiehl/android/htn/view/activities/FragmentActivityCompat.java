@@ -6,9 +6,9 @@ import com.ddiehl.android.htn.R;
 
 public abstract class FragmentActivityCompat extends BaseActivity {
 
-    abstract Fragment getFragment();
+    protected abstract Fragment getFragment();
 
-    abstract String getFragmentTag();
+    protected abstract String getFragmentTag();
 
     @Override
     public void onStart() {
