@@ -34,6 +34,7 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
     private final CommentBank mCommentBank;
     private Link mLinkContext;
     private Listing mReplyTarget = null;
+    private boolean mDataRequested = false;
 
     public LinkCommentsPresenter(MainView main, RedditNavigationView navigationView, LinkCommentsView view) {
         super(main, navigationView, view, view, view, null);
@@ -67,28 +68,34 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
 
     @Override
     void requestNextData() {
-        mMainView.showSpinner();
-        mRedditService.loadLinkComments(
-                mLinkCommentsView.getSubreddit(), mLinkCommentsView.getArticleId(),
-                mLinkCommentsView.getSort(), mLinkCommentsView.getCommentId()
-        )
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnTerminate(mMainView::dismissSpinner)
-                .subscribe(
-                        showLinkComments(),
-                        error -> {
-                            if (error instanceof IOException) {
-                                String message = mContext.getString(R.string.error_network_unavailable);
-                                mMainView.showError(message);
-                            } else {
-                                Timber.w(error, "Error retrieving comment listings");
-                                String message = mContext.getString(R.string.error_get_link_comments);
-                                mMainView.showError(message);
+        if (!mDataRequested) {
+            mDataRequested = true;
+            mRedditService.loadLinkComments(
+                    mLinkCommentsView.getSubreddit(), mLinkCommentsView.getArticleId(),
+                    mLinkCommentsView.getSort(), mLinkCommentsView.getCommentId()
+            )
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .doOnSubscribe(mMainView::showSpinner)
+                    .doOnTerminate(() -> {
+                        mDataRequested = false;
+                        mMainView.dismissSpinner();
+                    })
+                    .subscribe(
+                            showLinkComments(),
+                            error -> {
+                                if (error instanceof IOException) {
+                                    String message = mContext.getString(R.string.error_network_unavailable);
+                                    mMainView.showError(message);
+                                } else {
+                                    Timber.w(error, "Error retrieving comment listings");
+                                    String message = mContext.getString(R.string.error_get_link_comments);
+                                    mMainView.showError(message);
+                                }
                             }
-                        }
-                );
-        mAnalytics.logLoadLinkComments(mLinkCommentsView.getSort());
+                    );
+            mAnalytics.logLoadLinkComments(mLinkCommentsView.getSort());
+        }
     }
 
     private Action1<List<ListingResponse>> showLinkComments() {
