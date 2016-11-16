@@ -30,7 +30,7 @@ subprojects {
     ext {
         compileSdkVersion = 24
         targetSdkVersion = 24
-        buildToolsVersion = "24.0.2"
+        buildToolsVersion = "25.0.0"
         supportLibraryVersion = "24.2.1"
         contraintLayoutVersion = "1.0.0-alpha3"
         playServicesVersion = "9.6.1"
