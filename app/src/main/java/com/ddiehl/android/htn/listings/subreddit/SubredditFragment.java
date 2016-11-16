@@ -1,4 +1,4 @@
-package com.ddiehl.android.htn.view.fragments;
+package com.ddiehl.android.htn.listings.subreddit;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,12 +15,12 @@ import android.view.ViewGroup;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.SettingsManager;
-import com.ddiehl.android.htn.presenter.SubredditPresenter;
-import com.ddiehl.android.htn.view.SubredditView;
 import com.ddiehl.android.htn.view.adapters.ListingsAdapter;
 import com.ddiehl.android.htn.view.dialogs.ChooseLinkSortDialog;
 import com.ddiehl.android.htn.view.dialogs.ChooseTimespanDialog;
 import com.ddiehl.android.htn.view.dialogs.NsfwWarningDialog;
+import com.ddiehl.android.htn.view.fragments.BaseListingsFragment;
+import com.ddiehl.android.htn.view.fragments.UserProfileFragment;
 import com.hannesdorfmann.fragmentargs.FragmentArgs;
 import com.hannesdorfmann.fragmentargs.annotation.Arg;
 import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs;

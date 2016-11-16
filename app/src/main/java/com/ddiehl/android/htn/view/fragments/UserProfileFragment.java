@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
+import com.ddiehl.android.htn.listings.subreddit.SubredditFragment;
 import com.ddiehl.android.htn.presenter.UserProfilePresenter;
 import com.ddiehl.android.htn.utils.AndroidUtils;
 import com.ddiehl.android.htn.view.UserProfileView;

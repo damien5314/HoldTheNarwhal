@@ -45,7 +45,7 @@
         </activity>
 
         <activity
-                android:name=".view.activities.SubredditActivity">
+                android:name=".listings.subreddit.SubredditActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
