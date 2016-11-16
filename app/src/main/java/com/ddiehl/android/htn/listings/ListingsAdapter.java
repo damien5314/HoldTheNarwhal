@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ddiehl.android.htn.R;
-import com.ddiehl.android.htn.ThumbnailMode;
 import com.ddiehl.android.htn.listings.inbox.InboxPresenter;
 import com.ddiehl.android.htn.listings.inbox.PrivateMessageView;
 import com.ddiehl.android.htn.view.viewholders.BaseLinkViewHolder;

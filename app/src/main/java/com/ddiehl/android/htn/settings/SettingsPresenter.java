@@ -3,8 +3,8 @@ package com.ddiehl.android.htn.settings;
 import android.content.Context;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
-import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
+import com.ddiehl.android.htn.identity.IdentityManager;
 import com.ddiehl.android.htn.utils.AndroidUtils;
 
 import java.io.IOException;

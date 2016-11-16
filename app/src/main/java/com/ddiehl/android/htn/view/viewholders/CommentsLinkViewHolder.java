@@ -10,9 +10,9 @@ import android.util.DisplayMetrics;
 import android.view.View;
 
 import com.ddiehl.android.htn.R;
-import com.ddiehl.android.htn.ThumbnailMode;
 import com.ddiehl.android.htn.listings.BaseListingsPresenter;
 import com.ddiehl.android.htn.listings.LinkView;
+import com.ddiehl.android.htn.listings.ThumbnailMode;
 import com.ddiehl.android.htn.view.widgets.LinkOptionsBar;
 
 import java.util.List;

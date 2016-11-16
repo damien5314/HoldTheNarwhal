@@ -31,22 +31,23 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
-import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.analytics.Analytics;
+import com.ddiehl.android.htn.identity.IdentityManager;
 import com.ddiehl.android.htn.listings.comments.LinkCommentsActivity;
 import com.ddiehl.android.htn.listings.inbox.InboxActivity;
 import com.ddiehl.android.htn.listings.inbox.PrivateMessageActivity;
 import com.ddiehl.android.htn.listings.profile.UserProfileActivity;
 import com.ddiehl.android.htn.listings.subreddit.SubredditActivity;
+import com.ddiehl.android.htn.navigation.ConfirmExitDialog;
+import com.ddiehl.android.htn.navigation.ConfirmSignOutDialog;
+import com.ddiehl.android.htn.navigation.RedditNavigationView;
+import com.ddiehl.android.htn.navigation.SubredditNavigationDialog;
 import com.ddiehl.android.htn.settings.SettingsActivity;
 import com.ddiehl.android.htn.settings.SettingsManager;
 import com.ddiehl.android.htn.subscriptions.SubscriptionManagerActivity;
 import com.ddiehl.android.htn.utils.AndroidUtils;
-import com.ddiehl.android.htn.view.RedditNavigationView;
-import com.ddiehl.android.htn.view.dialogs.ConfirmExitDialog;
-import com.ddiehl.android.htn.view.dialogs.ConfirmSignOutDialog;
-import com.ddiehl.android.htn.view.dialogs.SubredditNavigationDialog;
+import com.ddiehl.android.htn.web.WebViewActivity;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 

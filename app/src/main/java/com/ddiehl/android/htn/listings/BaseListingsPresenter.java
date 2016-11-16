@@ -4,15 +4,14 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
-import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
-import com.ddiehl.android.htn.ThumbnailMode;
 import com.ddiehl.android.htn.analytics.Analytics;
+import com.ddiehl.android.htn.identity.IdentityManager;
 import com.ddiehl.android.htn.listings.inbox.PrivateMessageView;
+import com.ddiehl.android.htn.navigation.RedditNavigationView;
 import com.ddiehl.android.htn.settings.SettingsManager;
 import com.ddiehl.android.htn.utils.AndroidUtils;
 import com.ddiehl.android.htn.view.MainView;
-import com.ddiehl.android.htn.view.RedditNavigationView;
 
 import java.io.IOException;
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package com.ddiehl.android.htn;
+package com.ddiehl.android.htn.identity;
 
 import rx.functions.Action1;
 import rxreddit.model.UserIdentity;

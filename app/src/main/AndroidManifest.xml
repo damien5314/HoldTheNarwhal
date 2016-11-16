@@ -71,7 +71,7 @@
                 android:name=".about.AboutAppActivity" />
 
         <activity
-                android:name=".view.activities.WebViewActivity" />
+                android:name=".web.WebViewActivity" />
 
         <activity
                 android:name="rxreddit.android.SignInActivity" />

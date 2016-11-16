@@ -1,4 +1,4 @@
-package com.ddiehl.android.htn;
+package com.ddiehl.android.htn.identity;
 
 import android.content.Context;
 import android.content.SharedPreferences;

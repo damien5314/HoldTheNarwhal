@@ -19,7 +19,6 @@ import com.ddiehl.android.htn.listings.ChooseTimespanDialog;
 import com.ddiehl.android.htn.listings.ListingsAdapter;
 import com.ddiehl.android.htn.listings.profile.UserProfileFragment;
 import com.ddiehl.android.htn.settings.SettingsManager;
-import com.ddiehl.android.htn.view.dialogs.NsfwWarningDialog;
 import com.ddiehl.android.htn.view.fragments.BaseListingsFragment;
 import com.hannesdorfmann.fragmentargs.FragmentArgs;
 import com.hannesdorfmann.fragmentargs.annotation.Arg;

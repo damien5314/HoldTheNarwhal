@@ -7,7 +7,7 @@ import android.support.annotation.Nullable;
 
 import com.ddiehl.android.htn.BuildConfig;
 import com.ddiehl.android.htn.HoldTheNarwhal;
-import com.ddiehl.android.htn.IdentityManager;
+import com.ddiehl.android.htn.identity.IdentityManager;
 import com.ddiehl.android.htn.settings.SettingsManager;
 import com.ddiehl.android.htn.utils.Utils;
 import com.flurry.android.FlurryAgent;

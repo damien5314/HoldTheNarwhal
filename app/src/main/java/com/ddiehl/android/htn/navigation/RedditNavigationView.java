@@ -1,4 +1,4 @@
-package com.ddiehl.android.htn.view;
+package com.ddiehl.android.htn.navigation;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;

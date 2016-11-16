@@ -18,14 +18,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
-import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.analytics.Analytics;
+import com.ddiehl.android.htn.identity.IdentityManager;
 import com.ddiehl.android.htn.listings.subreddit.SubredditActivity;
+import com.ddiehl.android.htn.navigation.RedditNavigationView;
 import com.ddiehl.android.htn.utils.AndroidUtils;
 import com.ddiehl.android.htn.utils.MenuTintUtils;
 import com.ddiehl.android.htn.view.MainView;
-import com.ddiehl.android.htn.view.RedditNavigationView;
 
 import java.io.IOException;
 

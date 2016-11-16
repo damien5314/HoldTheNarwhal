@@ -5,9 +5,9 @@ import android.support.v4.content.ContextCompat;
 import android.view.View;
 
 import com.ddiehl.android.htn.R;
-import com.ddiehl.android.htn.ThumbnailMode;
 import com.ddiehl.android.htn.listings.BaseListingsPresenter;
 import com.ddiehl.android.htn.listings.LinkView;
+import com.ddiehl.android.htn.listings.ThumbnailMode;
 
 import butterknife.OnClick;
 import rxreddit.model.Link;
