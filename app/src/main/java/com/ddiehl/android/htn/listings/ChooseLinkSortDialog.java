@@ -1,4 +1,4 @@
-package com.ddiehl.android.htn.view.dialogs;
+package com.ddiehl.android.htn.listings;
 
 import android.app.Dialog;
 import android.content.DialogInterface;

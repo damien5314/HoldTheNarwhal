@@ -1,4 +1,4 @@
-package com.ddiehl.android.htn.view;
+package com.ddiehl.android.htn.utils;
 
 import android.graphics.drawable.Drawable;
 import android.support.v4.graphics.drawable.DrawableCompat;

@@ -14,11 +14,11 @@ import android.view.ViewGroup;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
+import com.ddiehl.android.htn.listings.ChooseLinkSortDialog;
+import com.ddiehl.android.htn.listings.ChooseTimespanDialog;
 import com.ddiehl.android.htn.listings.ListingsAdapter;
 import com.ddiehl.android.htn.listings.profile.UserProfileFragment;
 import com.ddiehl.android.htn.settings.SettingsManager;
-import com.ddiehl.android.htn.view.dialogs.ChooseLinkSortDialog;
-import com.ddiehl.android.htn.view.dialogs.ChooseTimespanDialog;
 import com.ddiehl.android.htn.view.dialogs.NsfwWarningDialog;
 import com.ddiehl.android.htn.view.fragments.BaseListingsFragment;
 import com.hannesdorfmann.fragmentargs.FragmentArgs;

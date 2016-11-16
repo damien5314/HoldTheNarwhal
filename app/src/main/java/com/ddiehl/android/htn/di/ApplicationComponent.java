@@ -2,6 +2,7 @@ package com.ddiehl.android.htn.di;
 
 import com.ddiehl.android.htn.analytics.FlurryAnalytics;
 import com.ddiehl.android.htn.listings.BaseListingsPresenter;
+import com.ddiehl.android.htn.listings.inbox.PrivateMessageActivity;
 import com.ddiehl.android.htn.listings.inbox.PrivateMessageAdapter;
 import com.ddiehl.android.htn.listings.profile.UserProfileFragment;
 import com.ddiehl.android.htn.listings.profile.UserProfilePresenter;
@@ -14,7 +15,6 @@ import com.ddiehl.android.htn.subredditinfo.SubredditInfoLoader;
 import com.ddiehl.android.htn.subscriptions.SubscriptionManagerAdapter;
 import com.ddiehl.android.htn.subscriptions.SubscriptionManagerPresenter;
 import com.ddiehl.android.htn.view.activities.BaseActivity;
-import com.ddiehl.android.htn.view.activities.PrivateMessageActivity;
 import com.ddiehl.android.htn.view.fragments.BaseFragment;
 import com.ddiehl.android.htn.view.fragments.BaseListingsFragment;
 import com.ddiehl.android.htn.view.fragments.LinkCommentsFragment;

@@ -15,13 +15,13 @@ import android.view.View;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
+import com.ddiehl.android.htn.listings.AddCommentDialog;
+import com.ddiehl.android.htn.listings.ChooseCommentSortDialog;
 import com.ddiehl.android.htn.listings.ListingsAdapter;
 import com.ddiehl.android.htn.listings.comments.LinkCommentsAdapter;
 import com.ddiehl.android.htn.listings.comments.LinkCommentsPresenter;
 import com.ddiehl.android.htn.listings.comments.LinkCommentsView;
 import com.ddiehl.android.htn.settings.SettingsManager;
-import com.ddiehl.android.htn.view.dialogs.AddCommentDialog;
-import com.ddiehl.android.htn.view.dialogs.ChooseCommentSortDialog;
 import com.hannesdorfmann.fragmentargs.FragmentArgs;
 import com.hannesdorfmann.fragmentargs.annotation.Arg;
 import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs;

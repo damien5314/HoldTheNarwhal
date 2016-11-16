@@ -62,13 +62,13 @@
                 android:name=".listings.profile.UserProfileActivity" />
 
         <activity
-                android:name=".view.activities.PrivateMessageActivity" />
+                android:name=".listings.inbox.PrivateMessageActivity" />
 
         <activity
                 android:name=".settings.SettingsActivity" />
 
         <activity
-                android:name=".view.activities.AboutAppActivity" />
+                android:name=".about.AboutAppActivity" />
 
         <activity
                 android:name=".view.activities.WebViewActivity" />

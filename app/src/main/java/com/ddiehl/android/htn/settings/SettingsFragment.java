@@ -24,8 +24,8 @@ import android.view.ViewGroup;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
-import com.ddiehl.android.htn.view.MenuTintUtils;
-import com.ddiehl.android.htn.view.activities.AboutAppActivity;
+import com.ddiehl.android.htn.about.AboutAppActivity;
+import com.ddiehl.android.htn.utils.MenuTintUtils;
 
 import javax.inject.Inject;
 

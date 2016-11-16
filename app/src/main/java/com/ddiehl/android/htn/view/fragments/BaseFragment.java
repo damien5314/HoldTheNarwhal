@@ -23,8 +23,8 @@ import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.analytics.Analytics;
 import com.ddiehl.android.htn.listings.subreddit.SubredditActivity;
 import com.ddiehl.android.htn.utils.AndroidUtils;
+import com.ddiehl.android.htn.utils.MenuTintUtils;
 import com.ddiehl.android.htn.view.MainView;
-import com.ddiehl.android.htn.view.MenuTintUtils;
 import com.ddiehl.android.htn.view.RedditNavigationView;
 
 import java.io.IOException;
