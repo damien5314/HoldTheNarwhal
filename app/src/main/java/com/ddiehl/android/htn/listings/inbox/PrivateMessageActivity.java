@@ -6,9 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
-import com.ddiehl.android.htn.view.activities.FragmentActivityCompat;
-import com.ddiehl.android.htn.view.fragments.PrivateMessageFragment;
-import com.ddiehl.android.htn.view.fragments.PrivateMessageFragmentBuilder;
+import com.ddiehl.android.htn.view.FragmentActivityCompat;
 import com.google.gson.Gson;
 
 import java.util.List;

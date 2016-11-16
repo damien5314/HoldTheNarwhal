@@ -6,8 +6,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ddiehl.android.htn.R;
+import com.ddiehl.android.htn.listings.comments.CommentView;
 import com.ddiehl.android.htn.listings.inbox.InboxPresenter;
 import com.ddiehl.android.htn.listings.inbox.PrivateMessageView;
+import com.ddiehl.android.htn.listings.links.LinkView;
+import com.ddiehl.android.htn.listings.subreddit.ThumbnailMode;
 import com.ddiehl.android.htn.view.viewholders.BaseLinkViewHolder;
 import com.ddiehl.android.htn.view.viewholders.ListingsCommentViewHolder;
 import com.ddiehl.android.htn.view.viewholders.ListingsLinkViewHolder;

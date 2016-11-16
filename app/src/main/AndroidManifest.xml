@@ -19,7 +19,7 @@
                 android:value="eaccaaf37ee22836fe15fff1daa0c745f6e061e2" />
 
         <activity
-                android:name=".view.activities.DeepLinkDispatcher"
+                android:name=".DeepLinkDispatcher"
                 android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />

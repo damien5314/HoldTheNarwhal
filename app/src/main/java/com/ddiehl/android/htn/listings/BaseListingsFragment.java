@@ -1,4 +1,4 @@
-package com.ddiehl.android.htn.view.fragments;
+package com.ddiehl.android.htn.listings;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -18,10 +18,8 @@ import android.view.ViewGroup;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
-import com.ddiehl.android.htn.listings.BaseListingsPresenter;
-import com.ddiehl.android.htn.listings.ListingsAdapter;
-import com.ddiehl.android.htn.listings.ListingsView;
 import com.ddiehl.android.htn.listings.subreddit.SubredditActivity;
+import com.ddiehl.android.htn.view.BaseFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

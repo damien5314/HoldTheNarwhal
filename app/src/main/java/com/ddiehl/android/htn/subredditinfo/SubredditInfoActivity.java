@@ -6,7 +6,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 
 import com.ddiehl.android.htn.R;
-import com.ddiehl.android.htn.view.activities.BaseActivity;
+import com.ddiehl.android.htn.view.BaseActivity;
 
 
 public class SubredditInfoActivity extends BaseActivity {

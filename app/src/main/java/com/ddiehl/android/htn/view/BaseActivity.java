@@ -1,4 +1,4 @@
-package com.ddiehl.android.htn.view.activities;
+package com.ddiehl.android.htn.view;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;

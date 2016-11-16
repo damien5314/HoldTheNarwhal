@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.ddiehl.android.htn.view.activities.FragmentActivity;
+import com.ddiehl.android.htn.view.FragmentActivity;
 
 public class SettingsActivity extends FragmentActivity {
 

@@ -1,4 +1,4 @@
-package com.ddiehl.android.htn.listings;
+package com.ddiehl.android.htn.listings.links;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;

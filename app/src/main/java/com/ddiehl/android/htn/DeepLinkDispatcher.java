@@ -1,8 +1,10 @@
-package com.ddiehl.android.htn.view.activities;
+package com.ddiehl.android.htn;
 
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+
+import com.ddiehl.android.htn.view.BaseActivity;
 
 import java.util.List;
 

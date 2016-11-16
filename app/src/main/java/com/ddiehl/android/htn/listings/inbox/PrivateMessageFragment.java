@@ -1,4 +1,4 @@
-package com.ddiehl.android.htn.view.fragments;
+package com.ddiehl.android.htn.listings.inbox;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -16,8 +16,7 @@ import android.view.ViewGroup;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
-import com.ddiehl.android.htn.listings.inbox.PrivateMessageAdapter;
-import com.ddiehl.android.htn.listings.inbox.PrivateMessageView;
+import com.ddiehl.android.htn.view.BaseFragment;
 import com.google.gson.Gson;
 import com.hannesdorfmann.fragmentargs.FragmentArgs;
 import com.hannesdorfmann.fragmentargs.annotation.Arg;

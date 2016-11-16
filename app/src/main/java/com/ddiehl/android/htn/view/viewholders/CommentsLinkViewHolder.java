@@ -11,8 +11,8 @@ import android.view.View;
 
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.listings.BaseListingsPresenter;
-import com.ddiehl.android.htn.listings.LinkView;
-import com.ddiehl.android.htn.listings.ThumbnailMode;
+import com.ddiehl.android.htn.listings.links.LinkView;
+import com.ddiehl.android.htn.listings.subreddit.ThumbnailMode;
 import com.ddiehl.android.htn.view.widgets.LinkOptionsBar;
 
 import java.util.List;

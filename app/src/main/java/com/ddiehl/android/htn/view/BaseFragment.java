@@ -1,4 +1,4 @@
-package com.ddiehl.android.htn.view.fragments;
+package com.ddiehl.android.htn.view;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -25,7 +25,7 @@ import com.ddiehl.android.htn.listings.subreddit.SubredditActivity;
 import com.ddiehl.android.htn.navigation.RedditNavigationView;
 import com.ddiehl.android.htn.utils.AndroidUtils;
 import com.ddiehl.android.htn.utils.MenuTintUtils;
-import com.ddiehl.android.htn.view.MainView;
+import com.ddiehl.android.htn.web.WebViewFragment;
 
 import java.io.IOException;
 

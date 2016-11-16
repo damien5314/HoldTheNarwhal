@@ -1,4 +1,4 @@
-package com.ddiehl.android.htn.view.fragments;
+package com.ddiehl.android.htn.listings.comments;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -15,12 +15,8 @@ import android.view.View;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
-import com.ddiehl.android.htn.listings.AddCommentDialog;
-import com.ddiehl.android.htn.listings.ChooseCommentSortDialog;
+import com.ddiehl.android.htn.listings.BaseListingsFragment;
 import com.ddiehl.android.htn.listings.ListingsAdapter;
-import com.ddiehl.android.htn.listings.comments.LinkCommentsAdapter;
-import com.ddiehl.android.htn.listings.comments.LinkCommentsPresenter;
-import com.ddiehl.android.htn.listings.comments.LinkCommentsView;
 import com.ddiehl.android.htn.settings.SettingsManager;
 import com.hannesdorfmann.fragmentargs.FragmentArgs;
 import com.hannesdorfmann.fragmentargs.annotation.Arg;

@@ -5,8 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
-import com.ddiehl.android.htn.view.activities.FragmentActivityCompat;
-import com.ddiehl.android.htn.view.fragments.AboutAppFragment;
+import com.ddiehl.android.htn.view.FragmentActivityCompat;
 
 public class AboutAppActivity extends FragmentActivityCompat {
 

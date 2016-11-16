@@ -1,4 +1,4 @@
-package com.ddiehl.android.htn.view.fragments;
+package com.ddiehl.android.htn.view;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
