@@ -1,4 +1,4 @@
-package com.ddiehl.android.htn.view.fragments;
+package com.ddiehl.android.htn.listings.profile;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -23,12 +23,11 @@ import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.listings.subreddit.SubredditFragment;
-import com.ddiehl.android.htn.presenter.UserProfilePresenter;
 import com.ddiehl.android.htn.utils.AndroidUtils;
-import com.ddiehl.android.htn.view.UserProfileView;
 import com.ddiehl.android.htn.view.adapters.ListingsAdapter;
 import com.ddiehl.android.htn.view.dialogs.ChooseLinkSortDialog;
 import com.ddiehl.android.htn.view.dialogs.ChooseTimespanDialog;
+import com.ddiehl.android.htn.view.fragments.BaseListingsFragment;
 import com.hannesdorfmann.fragmentargs.FragmentArgs;
 import com.hannesdorfmann.fragmentargs.annotation.Arg;
 import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs;

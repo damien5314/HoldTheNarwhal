@@ -1,14 +1,14 @@
-package com.ddiehl.android.htn.presenter;
+package com.ddiehl.android.htn.listings.profile;
 
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
+import com.ddiehl.android.htn.presenter.BaseListingsPresenter;
 import com.ddiehl.android.htn.utils.Utils;
 import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.android.htn.view.RedditNavigationView;
-import com.ddiehl.android.htn.view.UserProfileView;
 
 import java.io.IOException;
 

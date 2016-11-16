@@ -1,11 +1,10 @@
-package com.ddiehl.android.htn.view.activities;
+package com.ddiehl.android.htn.listings.profile;
 
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 
-import com.ddiehl.android.htn.view.fragments.UserProfileFragment;
-import com.ddiehl.android.htn.view.fragments.UserProfileFragmentBuilder;
+import com.ddiehl.android.htn.view.activities.FragmentActivityCompat;
 
 public class UserProfileActivity extends FragmentActivityCompat {
 

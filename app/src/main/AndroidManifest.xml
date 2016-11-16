@@ -59,7 +59,7 @@
                 android:name=".listings.inbox.InboxActivity" />
 
         <activity
-                android:name=".view.activities.UserProfileActivity" />
+                android:name=".listings.profile.UserProfileActivity" />
 
         <activity
                 android:name=".view.activities.PrivateMessageActivity" />
