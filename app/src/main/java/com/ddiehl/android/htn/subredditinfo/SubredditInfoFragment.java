@@ -121,14 +121,14 @@ public class SubredditInfoFragment extends BaseFragment {
                 showError(message);
             } else {
                 Timber.e(error, "Error loading subreddit info");
+            }
 
-                // Pass error back to target fragment or Activity
-                if (getTargetFragment() != null) {
-                    getTargetFragment().onActivityResult(getTargetRequestCode(), RESULT_GET_INFO_ERROR, null);
-                } else {
-                    getActivity().setResult(RESULT_GET_INFO_ERROR);
-                    finish();
-                }
+            // Pass error back to target fragment or Activity
+            if (getTargetFragment() != null) {
+                getTargetFragment().onActivityResult(getTargetRequestCode(), RESULT_GET_INFO_ERROR, null);
+            } else {
+                getActivity().setResult(RESULT_GET_INFO_ERROR);
+                finish();
             }
         };
     }
