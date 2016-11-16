@@ -27,6 +27,8 @@ import com.ddiehl.android.htn.view.MenuTintUtils;
 import com.ddiehl.android.htn.view.RedditNavigationView;
 import com.ddiehl.android.htn.view.activities.SubredditActivity;
 
+import java.io.IOException;
+
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
@@ -35,6 +37,7 @@ import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import rxreddit.api.RedditService;
 import rxreddit.model.UserAccessToken;
+import timber.log.Timber;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -115,9 +118,16 @@ public abstract class BaseFragment extends Fragment implements MainView {
                 .subscribe(
                         getUserIdentity(),
                         error -> {
-                            String message = getString(R.string.error_get_user_identity);
-                            showError(error, message);
-                        });
+                            if (error instanceof IOException) {
+                                String message = getString(R.string.error_network_unavailable);
+                                showError(message);
+                            } else {
+                                Timber.w(error, "Error processing authentication callback");
+                                String message = getString(R.string.error_get_user_identity);
+                                showError(message);
+                            }
+                        }
+                );
     }
 
     private Action1<UserAccessToken> getUserIdentity() {
@@ -129,8 +139,14 @@ public abstract class BaseFragment extends Fragment implements MainView {
                             mIdentityManager.saveUserIdentity(user);
                         },
                         error -> {
-                            String message = getString(R.string.error_get_user_identity);
-                            showError(error, message);
+                            if (error instanceof IOException) {
+                                String message = getString(R.string.error_network_unavailable);
+                                showError(message);
+                            } else {
+                                Timber.w(error, "Error getting user identity");
+                                String message = getString(R.string.error_get_user_identity);
+                                showError(message);
+                            }
                         });
     }
 
@@ -195,7 +211,7 @@ public abstract class BaseFragment extends Fragment implements MainView {
     }
 
     @Override
-    public void showError(Throwable error, @NonNull CharSequence message) {
+    public void showError(@NonNull CharSequence message) {
         Snackbar.make(getChromeView(), message, Snackbar.LENGTH_SHORT).show();
     }
 

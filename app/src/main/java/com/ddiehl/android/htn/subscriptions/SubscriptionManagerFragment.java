@@ -21,6 +21,7 @@ import com.ddiehl.android.htn.subredditinfo.SubredditInfoFragment;
 import com.ddiehl.android.htn.view.adapters.SimpleItemTouchHelperCallback;
 import com.ddiehl.android.htn.view.fragments.BaseFragment;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -171,9 +172,14 @@ public class SubscriptionManagerFragment extends BaseFragment implements Subscri
     }
 
     Action1<Throwable> onSubscriptionsLoadError() {
-        return throwable -> {
-            Timber.e(throwable, "Error loading subreddit subscriptions");
-            showError(throwable, getString(R.string.subscriptions_load_failed));
+        return error -> {
+            if (error instanceof IOException) {
+                String message = getString(R.string.error_network_unavailable);
+                showError(message);
+            } else {
+                Timber.w(error, "Error loading subreddit subscriptions");
+                showError(getString(R.string.subscriptions_load_failed));
+            }
         };
     }
 
@@ -252,9 +258,16 @@ public class SubscriptionManagerFragment extends BaseFragment implements Subscri
             // Add subreddit back into the adapter
             mAdapter.add(position, subreddit);
 
-            // Show error messaging
-            Timber.e(error, "Error unsubscribing from /r/%s", subreddit.getDisplayName());
-            showError(error, getString(R.string.unsubscribe_error, subreddit.getDisplayName()));
+            // Show error
+            if (error instanceof IOException) {
+                String message = getString(R.string.error_network_unavailable);
+                showError(message);
+            } else {
+                // Show error messaging
+                Timber.w(error, "Error unsubscribing from /r/%s", subreddit.getDisplayName());
+                String message = getString(R.string.unsubscribe_error, subreddit.getDisplayName());
+                showError(message);
+            }
         });
     }
 
@@ -307,8 +320,14 @@ public class SubscriptionManagerFragment extends BaseFragment implements Subscri
 
     Action1<Throwable> onResubscribeError(final @NonNull Subreddit subreddit) {
         return error -> getActivity().runOnUiThread(() -> {
-            Timber.e(error, "Error resubscribing to /r/%s", subreddit.getDisplayName());
-            showError(error, getString(R.string.resubscribe_error, subreddit.getDisplayName()));
+            if (error instanceof IOException) {
+                String message = getString(R.string.error_network_unavailable);
+                showError(message);
+            } else {
+                Timber.w(error, "Error resubscribing to /r/%s", subreddit.getDisplayName());
+                String message = getString(R.string.resubscribe_error, subreddit.getDisplayName());
+                showError(message);
+            }
         });
     }
 
@@ -328,7 +347,7 @@ public class SubscriptionManagerFragment extends BaseFragment implements Subscri
             case REQUEST_GET_SUBREDDIT_INFO:
                 if (resultCode == SubredditInfoFragment.RESULT_GET_INFO_ERROR) {
                     String message = getString(R.string.error_get_subreddit_info);
-                    showError(null, message);
+                    showError(message);
                 }
                 break;
         }

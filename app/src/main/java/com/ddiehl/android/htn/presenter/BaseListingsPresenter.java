@@ -17,6 +17,7 @@ import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.android.htn.view.PrivateMessageView;
 import com.ddiehl.android.htn.view.RedditNavigationView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -99,7 +100,8 @@ public abstract class BaseListingsPresenter
             if (AndroidUtils.isConnectedToNetwork(mContext)) {
                 requestPreviousData();
             } else {
-                mMainView.showToast(mContext.getString(R.string.error_network_unavailable));
+                String message = mContext.getString(R.string.error_network_unavailable);
+                mMainView.showToast(message);
             }
         }
     }
@@ -109,7 +111,8 @@ public abstract class BaseListingsPresenter
             if (AndroidUtils.isConnectedToNetwork(mContext)) {
                 requestNextData();
             } else {
-                mMainView.showToast(mContext.getString(R.string.error_network_unavailable));
+                String message = mContext.getString(R.string.error_network_unavailable);
+                mMainView.showToast(message);
             }
         }
     }
@@ -179,7 +182,7 @@ public abstract class BaseListingsPresenter
                 mNextPageListingId = null;
 
                 String message = mContext.getString(R.string.error_get_links);
-                mMainView.showError(new NullPointerException(), message);
+                mMainView.showError(message);
             } else {
                 if (append) {
                     int lastIndex = mListings.size() - 1;
@@ -381,13 +384,22 @@ public abstract class BaseListingsPresenter
         } else {
             mRedditService.vote(votable.getKind() + "_" + votable.getId(), direction)
                     .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(response -> {
-                        votable.applyVote(direction);
-                        mListingsView.notifyItemChanged(getIndexOf((Listing) votable));
-                    }, e -> {
-                        String message = mContext.getString(R.string.vote_failed);
-                        mMainView.showError(e, message);
-                    });
+                    .subscribe(
+                            response -> {
+                                votable.applyVote(direction);
+                                mListingsView.notifyItemChanged(getIndexOf((Listing) votable));
+                            },
+                            error -> {
+                                if (error instanceof IOException) {
+                                    String message = mContext.getString(R.string.error_network_unavailable);
+                                    mMainView.showError(message);
+                                } else {
+                                    Timber.w(error, "Error voting on listing");
+                                    String message = mContext.getString(R.string.vote_failed);
+                                    mMainView.showError(message);
+                                }
+                            }
+                    );
             mAnalytics.logVote(votable.getKind(), direction);
         }
     }
@@ -402,28 +414,45 @@ public abstract class BaseListingsPresenter
     private void save(Savable savable, boolean toSave) {
         mRedditService.save(savable.getFullName(), null, toSave)
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(response -> {
-                    savable.isSaved(toSave);
-                    mListingsView.notifyItemChanged(getIndexOf((Listing) savable));
-                }, e -> {
-                    String message = mContext.getString(R.string.save_failed);
-                    mMainView.showError(e, message);
-                });
+                .subscribe(
+                        response -> {
+                            savable.isSaved(toSave);
+                            mListingsView.notifyItemChanged(getIndexOf((Listing) savable));
+                        },
+                        error -> {
+                            if (error instanceof IOException) {
+                                String message = mContext.getString(R.string.error_network_unavailable);
+                                mMainView.showError(message);
+                            } else {
+                                Timber.w(error, "Error saving listing");
+                                String message = mContext.getString(R.string.save_failed);
+                                mMainView.showError(message);
+                            }
+                        }
+                );
     }
 
     private void hide(Hideable hideable, boolean toHide) {
         mRedditService.hide(hideable.getFullName(), toHide)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(response -> {
-                    int pos = getIndexOf((Listing) hideable);
-                    mListings.remove(pos);
-                    mListingsView.notifyItemRemoved(pos);
-                }, e -> {
-                    Timber.e(e);
-                    String message = mContext.getString(R.string.hide_failed);
-                    mMainView.showError(e, message);
-                });
+                .subscribe(
+                        response -> {
+                            int pos = getIndexOf((Listing) hideable);
+                            mListings.remove(pos);
+                            mListingsView.notifyItemRemoved(pos);
+                        },
+                        error -> {
+                            if (error instanceof IOException) {
+                                String message = mContext.getString(R.string.error_network_unavailable);
+                                mMainView.showError(message);
+                            } else {
+                                Timber.w(error, "Error hiding listing");
+                                String message = mContext.getString(R.string.hide_failed);
+                                mMainView.showError(message);
+                            }
+                        }
+                );
     }
 
     public boolean shouldShowNsfwTag() {
@@ -459,34 +488,46 @@ public abstract class BaseListingsPresenter
         mMainView.showToast(mContext.getString(R.string.implementation_pending));
     }
 
-    public void markMessageRead(@NonNull PrivateMessage message) {
-        String fullname = message.getFullName();
+    public void markMessageRead(@NonNull PrivateMessage pm) {
+        String fullname = pm.getFullName();
         mRedditService.markMessagesRead(fullname)
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        _void -> {
-                            message.markUnread(false);
-                            mListingsView.notifyItemChanged(getIndexOf(message));
+                        result -> {
+                            pm.markUnread(false);
+                            mListingsView.notifyItemChanged(getIndexOf(pm));
                         },
                         error -> {
-                            String errorMessage = mContext.getString(R.string.error_xxx);
-                            mMainView.showError(error, errorMessage);
+                            if (error instanceof IOException) {
+                                String message = mContext.getString(R.string.error_network_unavailable);
+                                mMainView.showError(message);
+                            } else {
+                                Timber.w(error, "Error marking message read");
+                                String errorMessage = mContext.getString(R.string.error_xxx);
+                                mMainView.showError(errorMessage);
+                            }
                         }
                 );
     }
 
-    public void markMessageUnread(@NonNull PrivateMessage message) {
-        String fullname = message.getFullName();
+    public void markMessageUnread(@NonNull PrivateMessage pm) {
+        String fullname = pm.getFullName();
         mRedditService.markMessagesUnread(fullname)
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        _void -> {
-                            message.markUnread(true);
-                            mListingsView.notifyItemChanged(getIndexOf(message));
+                        result -> {
+                            pm.markUnread(true);
+                            mListingsView.notifyItemChanged(getIndexOf(pm));
                         },
                         error -> {
-                            String errorMessage = mContext.getString(R.string.error_xxx);
-                            mMainView.showError(error, errorMessage);
+                            if (error instanceof IOException) {
+                                String message = mContext.getString(R.string.error_network_unavailable);
+                                mMainView.showError(message);
+                            } else {
+                                Timber.w(error, "Error marking message unread");
+                                String errorMessage = mContext.getString(R.string.error_xxx);
+                                mMainView.showError(errorMessage);
+                            }
                         }
                 );
     }

@@ -7,12 +7,15 @@ import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.android.htn.view.RedditNavigationView;
 import com.ddiehl.android.htn.view.SubredditView;
 
+import java.io.IOException;
+
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import rxreddit.model.Link;
 import rxreddit.model.ListingResponse;
 import rxreddit.model.Subreddit;
+import timber.log.Timber;
 
 public class SubredditPresenter extends BaseListingsPresenter {
 
@@ -61,11 +64,19 @@ public class SubredditPresenter extends BaseListingsPresenter {
                     mMainView.dismissSpinner();
                     mNextRequested = false;
                 })
-                .subscribe(onSubredditInfoLoaded(),
-                        e -> {
-                            String message = mContext.getString(R.string.error_get_subreddit_info);
-                            mMainView.showError(e, message);
-                        });
+                .subscribe(
+                        onSubredditInfoLoaded(),
+                        error -> {
+                            if (error instanceof IOException) {
+                                String message = mContext.getString(R.string.error_network_unavailable);
+                                mMainView.showError(message);
+                            } else {
+                                Timber.w(error, "Error loading subreddit info");
+                                String message = mContext.getString(R.string.error_get_subreddit_info);
+                                mMainView.showError(message);
+                            }
+                        }
+                );
     }
 
     private void getSubredditLinks(boolean append) {
@@ -99,9 +110,16 @@ public class SubredditPresenter extends BaseListingsPresenter {
                             }
                         },
                         error -> {
-                            String message = mContext.getString(R.string.error_get_links);
-                            mMainView.showError(error, message);
-                        });
+                            if (error instanceof IOException) {
+                                String message = mContext.getString(R.string.error_network_unavailable);
+                                mMainView.showError(message);
+                            } else {
+                                Timber.w(error, "Error loading links");
+                                String message = mContext.getString(R.string.error_get_links);
+                                mMainView.showError(message);
+                            }
+                        }
+                );
     }
 
     private Link getLinkFromListingResponse(@NonNull ListingResponse response) {

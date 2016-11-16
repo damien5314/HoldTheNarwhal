@@ -19,7 +19,7 @@ public interface MainView {
 
     void showToast(@NonNull CharSequence msg);
 
-    void showError(Throwable error, CharSequence message);
+    void showError(@NonNull CharSequence message);
 
     void doSendEmail(MailTo mailTo);
 }

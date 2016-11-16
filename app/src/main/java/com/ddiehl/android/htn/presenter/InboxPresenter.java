@@ -5,10 +5,13 @@ import com.ddiehl.android.htn.view.InboxView;
 import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.android.htn.view.RedditNavigationView;
 
+import java.io.IOException;
+
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rxreddit.model.Listing;
 import rxreddit.model.PrivateMessage;
+import timber.log.Timber;
 
 public class InboxPresenter extends BaseListingsPresenter {
 
@@ -43,11 +46,19 @@ public class InboxPresenter extends BaseListingsPresenter {
                     mMainView.dismissSpinner();
                     mNextRequested = false;
                 })
-                .subscribe(onListingsLoaded(append),
-                        e -> {
-                            String message = mContext.getString(R.string.error_get_inbox);
-                            mMainView.showError(e, message);
-                        });
+                .subscribe(
+                        onListingsLoaded(append),
+                        error -> {
+                            if (error instanceof IOException) {
+                                String message = mContext.getString(R.string.error_network_unavailable);
+                                mMainView.showError(message);
+                            } else {
+                                Timber.w(error, "Error retrieving inbox listings");
+                                String message = mContext.getString(R.string.error_get_inbox);
+                                mMainView.showError(message);
+                            }
+                        }
+                );
     }
 
     public void requestData() {
@@ -59,7 +70,7 @@ public class InboxPresenter extends BaseListingsPresenter {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        _void -> {
+                        result -> {
                             for (Listing listing : mListings) {
                                 if (listing instanceof PrivateMessage) {
                                     ((PrivateMessage) listing).markUnread(false);
@@ -68,9 +79,16 @@ public class InboxPresenter extends BaseListingsPresenter {
                             mInboxView.notifyDataSetChanged();
                         },
                         error -> {
-                            String message = mContext.getString(R.string.error_xxx);
-                            mMainView.showError(error, message);
-                        });
+                            if (error instanceof IOException) {
+                                String message = mContext.getString(R.string.error_network_unavailable);
+                                mMainView.showError(message);
+                            } else {
+                                Timber.w(error, "Error marking messages read");
+                                String message = mContext.getString(R.string.error_xxx);
+                                mMainView.showError(message);
+                            }
+                        }
+                );
     }
 
     public void onViewSelected(String show) {

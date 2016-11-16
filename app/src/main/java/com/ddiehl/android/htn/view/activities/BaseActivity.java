@@ -44,7 +44,7 @@ import com.ddiehl.android.htn.view.dialogs.SubredditNavigationDialog;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
-import java.net.UnknownHostException;
+import java.io.IOException;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -324,7 +324,9 @@ public abstract class BaseActivity extends AppCompatActivity implements
     protected void onLogIn() {
         if (AndroidUtils.isConnectedToNetwork(this)) {
             showLoginView();
-        } else showToast(getString(R.string.error_network_unavailable));
+        } else {
+            showToast(getString(R.string.error_network_unavailable));
+        }
 
         mAnalytics.logDrawerLogIn();
     }
@@ -538,19 +540,20 @@ public abstract class BaseActivity extends AppCompatActivity implements
                 .observeOn(AndroidSchedulers.mainThread())
                 .flatMap(getUserIdentity())
                 .subscribe(
-                        result -> {
-                        },
+                        result -> { },
                         error -> {
-                            Timber.e(error, "Error during sign in");
-                            showError(error, getString(R.string.error_get_user_identity));
+                            if (error instanceof IOException) {
+                                String message = getString(R.string.error_network_unavailable);
+                                showError(message);
+                            } else {
+                                Timber.w(error, "Error during sign in");
+                                showError(getString(R.string.error_get_user_identity));
+                            }
                         }
                 );
     }
 
-    private void showError(Throwable error, String message) {
-        if (error instanceof UnknownHostException) {
-            message = getString(R.string.error_network_unavailable);
-        }
+    private void showError(String message) {
         Snackbar.make(mDrawerLayout, message, Snackbar.LENGTH_LONG).show();
     }
 

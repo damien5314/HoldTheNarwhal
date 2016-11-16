@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -26,6 +25,7 @@ import com.hannesdorfmann.fragmentargs.FragmentArgs;
 import com.hannesdorfmann.fragmentargs.annotation.Arg;
 import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
@@ -116,7 +116,12 @@ public class SubredditInfoFragment extends BaseFragment {
 
     Action1<Throwable> onSubredditInfoLoadError() {
         return error -> {
-            Timber.e("Error loading subreddit info", error);
+            if (error instanceof IOException) {
+                String message = getString(R.string.error_network_unavailable);
+                showError(message);
+            } else {
+                Timber.e(error, "Error loading subreddit info");
+            }
 
             // Pass error back to target fragment or Activity
             if (getTargetFragment() != null) {
@@ -206,21 +211,27 @@ public class SubredditInfoFragment extends BaseFragment {
 
     Action1<Throwable> onSubredditSubscribeError() {
         return (error) -> {
-            Timber.e(error, "Error subscribing to /r/%s", mSubreddit);
-
-            String errorMsg = getString(R.string.subscribe_error, mSubreddit);
-            Snackbar.make(mCoordinatorLayout, errorMsg, Snackbar.LENGTH_LONG)
-                    .show();
+            if (error instanceof IOException) {
+                String message = getString(R.string.error_network_unavailable);
+                showError(message);
+            } else {
+                Timber.w(error, "Error subscribing to /r/%s", mSubreddit);
+                String message = getString(R.string.subscribe_error, mSubreddit);
+                showError(message);
+            }
         };
     }
 
     Action1<Throwable> onSubredditUnsubscribeError() {
         return (error) -> {
-            Timber.e(error, "Error unsubscribing from /r/%s", mSubreddit);
-
-            String errorMsg = getString(R.string.unsubscribe_error, mSubreddit);
-            Snackbar.make(mCoordinatorLayout, errorMsg, Snackbar.LENGTH_LONG)
-                    .show();
+            if (error instanceof IOException) {
+                String message = getString(R.string.error_network_unavailable);
+                showError(message);
+            } else {
+                Timber.w(error, "Error unsubscribing from /r/%s", mSubreddit);
+                String message = getString(R.string.unsubscribe_error, mSubreddit);
+                showError(message);
+            }
         };
     }
 
