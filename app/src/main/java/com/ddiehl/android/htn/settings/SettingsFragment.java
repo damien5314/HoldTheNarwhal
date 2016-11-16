@@ -1,4 +1,4 @@
-package com.ddiehl.android.htn.view.fragments;
+package com.ddiehl.android.htn.settings;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -24,10 +24,7 @@ import android.view.ViewGroup;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
-import com.ddiehl.android.htn.SettingsManagerImpl;
-import com.ddiehl.android.htn.presenter.SettingsPresenter;
 import com.ddiehl.android.htn.view.MenuTintUtils;
-import com.ddiehl.android.htn.view.SettingsView;
 import com.ddiehl.android.htn.view.activities.AboutAppActivity;
 
 import javax.inject.Inject;

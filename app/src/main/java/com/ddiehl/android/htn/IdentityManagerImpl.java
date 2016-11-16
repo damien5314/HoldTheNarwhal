@@ -3,6 +3,8 @@ package com.ddiehl.android.htn;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.ddiehl.android.htn.settings.SettingsManager;
+
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;

@@ -15,8 +15,8 @@ import android.view.View;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
-import com.ddiehl.android.htn.SettingsManager;
 import com.ddiehl.android.htn.presenter.LinkCommentsPresenter;
+import com.ddiehl.android.htn.settings.SettingsManager;
 import com.ddiehl.android.htn.view.LinkCommentsView;
 import com.ddiehl.android.htn.view.adapters.LinkCommentsAdapter;
 import com.ddiehl.android.htn.view.adapters.ListingsAdapter;

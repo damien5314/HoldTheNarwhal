@@ -1,13 +1,11 @@
-package com.ddiehl.android.htn.presenter;
+package com.ddiehl.android.htn.settings;
 
 import android.content.Context;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.IdentityManager;
 import com.ddiehl.android.htn.R;
-import com.ddiehl.android.htn.SettingsManager;
 import com.ddiehl.android.htn.utils.AndroidUtils;
-import com.ddiehl.android.htn.view.SettingsView;
 
 import java.io.IOException;
 

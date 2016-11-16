@@ -1,11 +1,11 @@
-package com.ddiehl.android.htn.view.activities;
+package com.ddiehl.android.htn.settings;
 
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.ddiehl.android.htn.view.fragments.SettingsFragment;
+import com.ddiehl.android.htn.view.activities.FragmentActivity;
 
 public class SettingsActivity extends FragmentActivity {
 
@@ -19,12 +19,12 @@ public class SettingsActivity extends FragmentActivity {
     }
 
     @Override
-    Fragment getFragment() {
+    protected Fragment getFragment() {
         return new SettingsFragment();
     }
 
     @Override
-    String getFragmentTag() {
+    protected String getFragmentTag() {
         return SettingsFragment.TAG;
     }
 

@@ -14,8 +14,8 @@ import android.view.ViewGroup;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
-import com.ddiehl.android.htn.SettingsManager;
 import com.ddiehl.android.htn.listings.profile.UserProfileFragment;
+import com.ddiehl.android.htn.settings.SettingsManager;
 import com.ddiehl.android.htn.view.adapters.ListingsAdapter;
 import com.ddiehl.android.htn.view.dialogs.ChooseLinkSortDialog;
 import com.ddiehl.android.htn.view.dialogs.ChooseTimespanDialog;

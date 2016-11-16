@@ -65,7 +65,7 @@
                 android:name=".view.activities.PrivateMessageActivity" />
 
         <activity
-                android:name=".view.activities.SettingsActivity" />
+                android:name=".settings.SettingsActivity" />
 
         <activity
                 android:name=".view.activities.AboutAppActivity" />

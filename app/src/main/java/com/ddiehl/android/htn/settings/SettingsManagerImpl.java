@@ -1,8 +1,9 @@
-package com.ddiehl.android.htn;
+package com.ddiehl.android.htn.settings;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.analytics.Analytics;
 
 import java.util.HashMap;
