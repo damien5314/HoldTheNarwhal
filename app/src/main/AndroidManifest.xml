@@ -19,7 +19,7 @@
                 android:value="eaccaaf37ee22836fe15fff1daa0c745f6e061e2" />
 
         <activity
-                android:name=".view.activities.DeepLinkDispatcher"
+                android:name=".navigation.DeepLinkDispatcher"
                 android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -45,7 +45,7 @@
         </activity>
 
         <activity
-                android:name=".view.activities.SubredditActivity">
+                android:name=".listings.subreddit.SubredditActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -53,25 +53,25 @@
         </activity>
 
         <activity
-                android:name=".view.activities.LinkCommentsActivity" />
+                android:name=".listings.comments.LinkCommentsActivity" />
 
         <activity
-                android:name=".view.activities.InboxActivity" />
+                android:name=".listings.inbox.InboxActivity" />
 
         <activity
-                android:name=".view.activities.UserProfileActivity" />
+                android:name=".listings.profile.UserProfileActivity" />
 
         <activity
-                android:name=".view.activities.PrivateMessageActivity" />
+                android:name=".listings.inbox.PrivateMessageActivity" />
 
         <activity
-                android:name=".view.activities.SettingsActivity" />
+                android:name=".settings.SettingsActivity" />
 
         <activity
-                android:name=".view.activities.AboutAppActivity" />
+                android:name=".about.AboutAppActivity" />
 
         <activity
-                android:name=".view.activities.WebViewActivity" />
+                android:name=".navigation.WebViewActivity" />
 
         <activity
                 android:name="rxreddit.android.SignInActivity" />

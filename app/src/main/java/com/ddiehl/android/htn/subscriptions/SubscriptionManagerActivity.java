@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
 import com.ddiehl.android.htn.R;
-import com.ddiehl.android.htn.view.activities.BaseActivity;
+import com.ddiehl.android.htn.view.BaseActivity;
 
 public class SubscriptionManagerActivity extends BaseActivity {
 

@@ -26,8 +26,6 @@ import android.util.Patterns;
 import android.webkit.WebView;
 import android.widget.TextView;
 
-import com.ddiehl.android.htn.view.widgets.URLSpanNoUnderline;
-
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;

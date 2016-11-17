@@ -28,7 +28,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1">
 
-                <com.ddiehl.android.htn.view.widgets.ColorSwapTextView
+                <com.ddiehl.android.htn.view.ColorSwapTextView
                         android:id="@+id/comment_author"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -131,7 +131,7 @@
 
     </FrameLayout>
 
-    <com.ddiehl.android.htn.view.widgets.MarkdownTextView
+    <com.ddiehl.android.htn.view.MarkdownTextView
             android:id="@+id/comment_body"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"

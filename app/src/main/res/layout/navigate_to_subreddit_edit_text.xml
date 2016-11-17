@@ -9,7 +9,7 @@
         android:paddingLeft="@dimen/navigation_drawer_item_margin"
         android:paddingRight="@dimen/navigation_drawer_item_margin">
 
-    <com.ddiehl.android.htn.view.widgets.SubredditEditText
+    <com.ddiehl.android.htn.navigation.SubredditEditText
             android:id="@+id/drawer_navigate_to_subreddit_text"
             android:layout_width="@dimen/navigation_drawer_width"
             android:layout_height="wrap_content"

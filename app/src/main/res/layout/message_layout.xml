@@ -101,7 +101,7 @@
 
                 </LinearLayout>
 
-                <com.ddiehl.android.htn.view.widgets.MarkdownTextView
+                <com.ddiehl.android.htn.view.MarkdownTextView
                         android:id="@+id/last_message_body"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

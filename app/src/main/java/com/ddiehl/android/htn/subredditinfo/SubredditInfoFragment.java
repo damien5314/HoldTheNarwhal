@@ -20,7 +20,7 @@ import android.widget.TextView;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.subscriptions.SubscriptionManagerPresenter;
-import com.ddiehl.android.htn.view.fragments.BaseFragment;
+import com.ddiehl.android.htn.view.BaseFragment;
 import com.hannesdorfmann.fragmentargs.FragmentArgs;
 import com.hannesdorfmann.fragmentargs.annotation.Arg;
 import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs;

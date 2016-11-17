@@ -4,13 +4,13 @@ import android.content.Context;
 import android.support.v4.content.ContextCompat;
 
 import com.ddiehl.android.htn.BuildConfig;
-import com.ddiehl.android.htn.IdentityManager;
-import com.ddiehl.android.htn.IdentityManagerImpl;
 import com.ddiehl.android.htn.R;
-import com.ddiehl.android.htn.SettingsManager;
-import com.ddiehl.android.htn.SettingsManagerImpl;
 import com.ddiehl.android.htn.analytics.Analytics;
 import com.ddiehl.android.htn.analytics.FlurryAnalytics;
+import com.ddiehl.android.htn.identity.IdentityManager;
+import com.ddiehl.android.htn.identity.IdentityManagerImpl;
+import com.ddiehl.android.htn.settings.SettingsManager;
+import com.ddiehl.android.htn.settings.SettingsManagerImpl;
 import com.google.gson.Gson;
 
 import java.io.File;
