@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string name="front_page_title">front page</string>
     <plurals name="link_score">
         <item quantity="one">%d point</item>
@@ -14,6 +15,9 @@
         <item quantity="other">%d comments</item>
     </plurals>
     <string name="hidden_score_placeholder">\?</string>
-  <string name="link_parent_text">you are viewing a single comment\'s thread, tap here to view
-    the full list of comments</string>
+    <string name="link_parent_text">you are viewing a single comment\'s thread, tap here to view
+        the full list of comments</string>
+    <string name="listings_link_saved_description">saved</string>
+    <string name="listings_link_stickied_description">stickied</string>
+
 </resources>

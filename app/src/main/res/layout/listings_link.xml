@@ -161,15 +161,17 @@
                     <ImageView
                             android:id="@+id/link_saved_view"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_height="@dimen/listings_link_icon_size"
                             android:src="@drawable/ic_save_black_24dp"
+                            android:contentDescription="@string/listings_link_saved_description"
                             android:tint="@color/icons" />
 
                     <ImageView
                             android:id="@+id/link_stickied_view"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_height="@dimen/listings_link_icon_size"
                             android:src="@drawable/ic_class_black_24dp"
+                            android:contentDescription="@string/listings_link_stickied_description"
                             android:tint="@color/icons" />
 
                 </LinearLayout>
