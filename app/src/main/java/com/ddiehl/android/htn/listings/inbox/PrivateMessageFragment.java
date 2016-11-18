@@ -1,5 +1,6 @@
 package com.ddiehl.android.htn.listings.inbox;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -16,6 +17,7 @@ import android.view.ViewGroup;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
+import com.ddiehl.android.htn.listings.ReportActivity;
 import com.ddiehl.android.htn.view.BaseFragment;
 import com.google.gson.Gson;
 import com.hannesdorfmann.fragmentargs.FragmentArgs;
@@ -34,6 +36,8 @@ import rxreddit.model.PrivateMessage;
 public class PrivateMessageFragment extends BaseFragment implements PrivateMessageView {
 
     public static final String TAG = PrivateMessageFragment.class.getSimpleName();
+
+    private static final int REQUEST_REPORT_MESSAGE = 1000;
 
     @Arg String mJson;
 
@@ -110,5 +114,11 @@ public class PrivateMessageFragment extends BaseFragment implements PrivateMessa
     @Override
     protected View getChromeView() {
         return mCoordinatorLayout;
+    }
+
+    @Override
+    public void openReportView(@NonNull PrivateMessage message) {
+        Intent intent = ReportActivity.getIntent(getContext(), message.getFullName());
+        startActivityForResult(intent, REQUEST_REPORT_MESSAGE);
     }
 }

@@ -32,6 +32,8 @@ import timber.log.Timber;
 public abstract class BaseListingsFragment extends BaseFragment
         implements ListingsView, SwipeRefreshLayout.OnRefreshListener {
 
+    private static final int REQUEST_REPORT_LISTING = 1000;
+
     private static final String LINK_BASE_URL = "http://www.reddit.com";
 
     @BindView(R.id.recycler_view) protected RecyclerView mRecyclerView;
@@ -377,6 +379,21 @@ public abstract class BaseListingsFragment extends BaseFragment
         Intent i = new Intent(Intent.ACTION_VIEW, uri);
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(i);
+    }
+
+    public void openReportView(@NonNull Link link) {
+        Intent intent = ReportActivity.getIntent(getContext(), link.getFullName());
+        startActivityForResult(intent, REQUEST_REPORT_LISTING);
+    }
+
+    public void openReportView(@NonNull Comment comment) {
+        Intent intent = ReportActivity.getIntent(getContext(), comment.getFullName());
+        startActivityForResult(intent, REQUEST_REPORT_LISTING);
+    }
+
+    public void openReportView(@NonNull PrivateMessage message) {
+        Intent intent = ReportActivity.getIntent(getContext(), message.getFullName());
+        startActivityForResult(intent, REQUEST_REPORT_LISTING);
     }
 
     @Override
