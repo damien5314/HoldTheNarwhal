@@ -20,6 +20,7 @@ import rx.schedulers.Schedulers;
 import rxreddit.api.RedditService;
 import rxreddit.model.ReportForm;
 import rxreddit.model.SubredditRules;
+import timber.log.Timber;
 
 
 /**
@@ -55,7 +56,8 @@ public class ReportActivity extends TransparentBaseActivity
         HoldTheNarwhal.getApplicationComponent().inject(this);
         setTitle(null);
 
-        getReportDetails();
+//        getReportDetails();
+        showReportDialogWithRules(null, SITE_RULES);
     }
 
     String getListingFullname() {
@@ -63,8 +65,9 @@ public class ReportActivity extends TransparentBaseActivity
     }
 
     void getReportDetails() {
+        showSpinner();
         mRedditService.getReportForm(getListingFullname())
-                .doOnSubscribe(this::showSpinner)
+//                .doOnSubscribe(this::showSpinner)
                 .doOnUnsubscribe(this::dismissSpinner)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -73,6 +76,7 @@ public class ReportActivity extends TransparentBaseActivity
 
     Action1<Throwable> onGetReportFormError() {
         return (error) -> {
+            Timber.e(error);
             setResult(RESULT_GET_REPORT_FORM_ERROR);
             finish();
         };
@@ -105,16 +109,24 @@ public class ReportActivity extends TransparentBaseActivity
     @Override
     public void onRuleSubmitted(String rule) {
         Toast.makeText(this, rule, Toast.LENGTH_LONG).show();
+        finish();
     }
 
     @Override
     public void onSiteRuleSubmitted(String rule) {
         Toast.makeText(this, "Site rule: " + rule, Toast.LENGTH_LONG).show();
+        finish();
     }
 
     @Override
     public void onOtherSubmitted(String reason) {
         Toast.makeText(this, "Other: " + reason, Toast.LENGTH_LONG).show();
+        finish();
+    }
+
+    @Override
+    public void onCancelled() {
+        finish();
     }
 
     //endregion
