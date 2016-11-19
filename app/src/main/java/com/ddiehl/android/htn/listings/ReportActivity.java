@@ -15,6 +15,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
@@ -61,28 +62,36 @@ public class ReportActivity extends TransparentBaseActivity
         setTitle(null);
     }
 
+    @Nullable String getSubredditName() {
+        return getIntent().getStringExtra(EXTRA_SUBREDDIT);
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
 
         Fragment fragment = getSupportFragmentManager().findFragmentByTag(ReportDialog.TAG);
         if (fragment == null) {
-            getReportDetails();
+            loadReportDialog();
         }
     }
 
-    @Nullable String getSubredditName() {
-        return getIntent().getStringExtra(EXTRA_SUBREDDIT);
+    void loadReportDialog() {
+        if (getSubredditName() != null) {
+            getSubredditRules()
+                    .subscribe(onSubredditRulesRetrieved(), onGetSubredditRulesError());
+        } else {
+            showReportDialogWithRules(null, SITE_RULES);
+        }
     }
 
-    void getReportDetails() {
+    Observable<SubredditRules> getSubredditRules() {
         showSpinner();
-        mRedditService.getSubredditRules(getSubredditName())
+        return mRedditService.getSubredditRules(getSubredditName())
 //                .doOnSubscribe(this::showSpinner)
                 .doOnUnsubscribe(this::dismissSpinner)
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(onSubredditRulesRetrieved(), onGetSubredditRulesError());
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     Action1<Throwable> onGetSubredditRulesError() {
