@@ -382,17 +382,17 @@ public abstract class BaseListingsFragment extends BaseFragment
     }
 
     public void openReportView(@NonNull Link link) {
-        Intent intent = ReportActivity.getIntent(getContext(), link.getFullName());
+        Intent intent = ReportActivity.getIntent(getContext(), link.getSubreddit());
         startActivityForResult(intent, REQUEST_REPORT_LISTING);
     }
 
     public void openReportView(@NonNull Comment comment) {
-        Intent intent = ReportActivity.getIntent(getContext(), comment.getFullName());
+        Intent intent = ReportActivity.getIntent(getContext(), comment.getSubreddit());
         startActivityForResult(intent, REQUEST_REPORT_LISTING);
     }
 
     public void openReportView(@NonNull PrivateMessage message) {
-        Intent intent = ReportActivity.getIntent(getContext(), message.getFullName());
+        Intent intent = ReportActivity.getIntent(getContext(), null);
         startActivityForResult(intent, REQUEST_REPORT_LISTING);
     }
 

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.widget.Toast;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
@@ -18,7 +19,6 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import rxreddit.api.RedditService;
-import rxreddit.model.ReportForm;
 import rxreddit.model.SubredditRules;
 import timber.log.Timber;
 
@@ -30,9 +30,9 @@ import timber.log.Timber;
 public class ReportActivity extends TransparentBaseActivity
         implements ReportDialog.Listener {
 
-    public static final String EXTRA_LISTING_FULLNAME = "EXTRA_LISTING_FULLNAME";
+    public static final String EXTRA_SUBREDDIT = "EXTRA_SUBREDDIT";
 
-    public static final int RESULT_GET_REPORT_FORM_ERROR = 10;
+    public static final int RESULT_GET_SUBREDDIT_RULES_ERROR = 10;
     public static final int RESULT_REPORT_ERROR = 11;
     public static final int RESULT_REPORT_SUCCESS = Activity.RESULT_OK;
 
@@ -42,9 +42,13 @@ public class ReportActivity extends TransparentBaseActivity
             "Threatening, harrassing, or inciting violence"
     };
 
-    public static Intent getIntent(Context context, String fullname) {
+    public static Intent getIntent(Context context, @Nullable String subreddit) {
         Intent intent = new Intent(context, ReportActivity.class);
-        intent.putExtra(EXTRA_LISTING_FULLNAME, fullname);
+
+        if (subreddit != null) {
+            intent.putExtra(EXTRA_SUBREDDIT, subreddit);
+        }
+
         return intent;
     }
 
@@ -55,36 +59,43 @@ public class ReportActivity extends TransparentBaseActivity
         super.onCreate(savedInstanceState);
         HoldTheNarwhal.getApplicationComponent().inject(this);
         setTitle(null);
-
-//        getReportDetails();
-        showReportDialogWithRules(null, SITE_RULES);
     }
 
-    String getListingFullname() {
-        return getIntent().getStringExtra(EXTRA_LISTING_FULLNAME);
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(ReportDialog.TAG);
+        if (fragment == null) {
+            getReportDetails();
+        }
+    }
+
+    @Nullable String getSubredditName() {
+        return getIntent().getStringExtra(EXTRA_SUBREDDIT);
     }
 
     void getReportDetails() {
         showSpinner();
-        mRedditService.getReportForm(getListingFullname())
+        mRedditService.getSubredditRules(getSubredditName())
 //                .doOnSubscribe(this::showSpinner)
                 .doOnUnsubscribe(this::dismissSpinner)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(onReportFormRetrieved(), onGetReportFormError());
+                .subscribe(onSubredditRulesRetrieved(), onGetSubredditRulesError());
     }
 
-    Action1<Throwable> onGetReportFormError() {
+    Action1<Throwable> onGetSubredditRulesError() {
         return (error) -> {
             Timber.e(error);
-            setResult(RESULT_GET_REPORT_FORM_ERROR);
+            setResult(RESULT_GET_SUBREDDIT_RULES_ERROR);
             finish();
         };
     }
 
-    Action1<ReportForm> onReportFormRetrieved() {
-        return (form) -> {
-            List<SubredditRules.Rule> rules = form.getRules();
+    Action1<SubredditRules> onSubredditRulesRetrieved() {
+        return (result) -> {
+            List<SubredditRules.Rule> rules = result.getRules();
 
             // Get short names for each rule
             String[] ruleNames = new String[rules.size()];
