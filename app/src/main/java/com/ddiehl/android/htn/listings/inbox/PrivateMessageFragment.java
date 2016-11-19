@@ -118,7 +118,7 @@ public class PrivateMessageFragment extends BaseFragment implements PrivateMessa
 
     @Override
     public void openReportView(@NonNull PrivateMessage message) {
-        Intent intent = ReportActivity.getIntent(getContext(), message.getFullName());
+        Intent intent = ReportActivity.getIntent(getContext(), message.getFullName(), null);
         startActivityForResult(intent, REQUEST_REPORT_MESSAGE);
     }
 }

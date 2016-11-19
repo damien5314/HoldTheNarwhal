@@ -287,9 +287,7 @@ public abstract class BaseListingsPresenter
     }
 
     public void reportLink(@NonNull Link link) {
-        if (link.isArchived()) {
-            mMainView.showToast(mContext.getString(R.string.listing_archived));
-        } else if (!mRedditService.isUserAuthorized()) {
+        if (!mRedditService.isUserAuthorized()) {
             mMainView.showToast(mContext.getString(R.string.user_required));
         } else {
             mLinkView.openReportView(link);

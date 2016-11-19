@@ -4,9 +4,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.widget.Toast;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.view.TransparentBaseActivity;
@@ -31,6 +31,7 @@ import timber.log.Timber;
 public class ReportActivity extends TransparentBaseActivity
         implements ReportDialog.Listener {
 
+    public static final String EXTRA_LISTING_ID = "EXTRA_LISTING_ID";
     public static final String EXTRA_SUBREDDIT = "EXTRA_SUBREDDIT";
 
     public static final int RESULT_GET_SUBREDDIT_RULES_ERROR = 10;
@@ -43,8 +44,11 @@ public class ReportActivity extends TransparentBaseActivity
             "Threatening, harrassing, or inciting violence"
     };
 
-    public static Intent getIntent(Context context, @Nullable String subreddit) {
+    public static Intent getIntent(
+            Context context, @NonNull String listingId, @Nullable String subreddit) {
         Intent intent = new Intent(context, ReportActivity.class);
+
+        intent.putExtra(EXTRA_LISTING_ID, listingId);
 
         if (subreddit != null) {
             intent.putExtra(EXTRA_SUBREDDIT, subreddit);
@@ -60,6 +64,10 @@ public class ReportActivity extends TransparentBaseActivity
         super.onCreate(savedInstanceState);
         HoldTheNarwhal.getApplicationComponent().inject(this);
         setTitle(null);
+    }
+
+    @NonNull String getListingId() {
+        return getIntent().getStringExtra(EXTRA_LISTING_ID);
     }
 
     @Nullable String getSubredditName() {
@@ -124,24 +132,47 @@ public class ReportActivity extends TransparentBaseActivity
         dialog.show(getSupportFragmentManager(), ReportDialog.TAG);
     }
 
+    void report(String rule, String siteRule, String other) {
+        showSpinner();
+        mRedditService.report(getListingId(), rule, siteRule, other)
+//                .doOnSubscribe(this::showSpinner)
+                .doOnUnsubscribe(this::dismissSpinner)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(onReported(), onReportError());
+    }
+
+    private Action1<Throwable> onReportError() {
+        return (error) -> {
+            Timber.d(error, "Listing report error");
+            setResult(RESULT_REPORT_SUCCESS);
+            finish();
+        };
+    }
+
+    private Action1<Void> onReported() {
+        return (result) -> {
+            Timber.d("Listing report successful");
+            setResult(RESULT_REPORT_ERROR);
+            finish();
+        };
+    }
+
     //region ReportDialog.Listener
 
     @Override
     public void onRuleSubmitted(String rule) {
-        Toast.makeText(this, rule, Toast.LENGTH_LONG).show();
-        finish();
+        report(rule, null, null);
     }
 
     @Override
     public void onSiteRuleSubmitted(String rule) {
-        Toast.makeText(this, "Site rule: " + rule, Toast.LENGTH_LONG).show();
-        finish();
+        report(null, rule, null);
     }
 
     @Override
     public void onOtherSubmitted(String reason) {
-        Toast.makeText(this, "Other: " + reason, Toast.LENGTH_LONG).show();
-        finish();
+        report(null, null, reason);
     }
 
     @Override
