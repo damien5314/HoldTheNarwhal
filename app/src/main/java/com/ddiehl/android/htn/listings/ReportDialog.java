@@ -18,17 +18,14 @@ import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs;
 @FragmentWithArgs
 public class ReportDialog extends DialogFragment {
 
+    public static final String TAG = ReportDialog.class.getSimpleName();
+
     public interface Listener {
         void onRuleSubmitted(String rule);
         void onSiteRuleSubmitted(String rule);
         void onOtherSubmitted(String reason);
         void onCancelled();
     }
-
-    public static final String TAG = ReportDialog.class.getSimpleName();
-    public static final String EXTRA_RULE = "EXTRA_RULE";
-    public static final String EXTRA_SITE_RULE = "EXTRA_SITE_RULE";
-    public static final String EXTRA_OTHER = "EXTRA_OTHER";
 
     @Arg String[] mRules;
     @Arg String[] mSiteRules;
