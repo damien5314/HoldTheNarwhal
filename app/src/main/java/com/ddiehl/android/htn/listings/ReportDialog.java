@@ -76,7 +76,7 @@ public class ReportDialog extends DialogFragment {
                     mSelectedIndex = index;
                 })
                 .setPositiveButton(R.string.report_submit, onSubmit())
-                .setNegativeButton(R.string.report_cancel, onCancel())
+                .setNegativeButton(R.string.report_cancel, onCancelButton())
                 .create();
     }
 
@@ -98,11 +98,14 @@ public class ReportDialog extends DialogFragment {
         };
     }
 
-    DialogInterface.OnClickListener onCancel() {
-        return (dialogInterface, which) -> {
-            mListener.onCancelled();
-            dismiss();
-        };
+    DialogInterface.OnClickListener onCancelButton() {
+        return (dialogInterface, index) -> onCancel(dialogInterface);
+    }
+
+    @Override
+    public void onCancel(DialogInterface dialog) {
+        super.onCancel(dialog);
+        mListener.onCancelled();
     }
 
     private void submit(@Nullable String rule, @Nullable String siteRule, @Nullable String other) {
