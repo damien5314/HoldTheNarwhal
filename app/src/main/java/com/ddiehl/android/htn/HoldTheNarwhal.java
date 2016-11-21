@@ -1,6 +1,7 @@
 package com.ddiehl.android.htn;
 
 import android.app.Application;
+import android.os.Build;
 
 import com.crashlytics.android.Crashlytics;
 import com.ddiehl.android.htn.di.ApplicationComponent;
@@ -11,6 +12,8 @@ import com.ddiehl.android.logging.CrashlyticsLoggingTree;
 import com.ddiehl.android.logging.LogcatLogger;
 import com.ddiehl.android.logging.LogcatLoggingTree;
 import com.squareup.picasso.Picasso;
+
+import java.util.Arrays;
 
 import io.fabric.sdk.android.Fabric;
 import timber.log.Timber;
@@ -48,9 +51,27 @@ public class HoldTheNarwhal extends Application {
                             .loggingEnabled(false)
                             .build());
         }
+
+        // Add logging for CPU ABI support
+        logSupportedCpuAbis();
     }
 
     public static ApplicationComponent getApplicationComponent() {
         return mComponent;
+    }
+
+    void logSupportedCpuAbis() {
+        String debugString;
+        if (Build.VERSION.SDK_INT >= 21) {
+            String[] supported = Build.SUPPORTED_ABIS;
+            debugString = Arrays.toString(supported);
+        } else {
+            debugString = String.format(
+                    "(0) %s, (1) %s",
+                    Build.CPU_ABI, Build.CPU_ABI2
+            );
+        }
+
+        Timber.i("Supported ABIs: %s", debugString);
     }
 }
