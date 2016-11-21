@@ -1,6 +1,7 @@
 package com.ddiehl.android.htn.di;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 
 import com.ddiehl.android.htn.BuildConfig;
@@ -24,6 +25,7 @@ import rxreddit.RxRedditUtil;
 import rxreddit.android.AndroidAccessTokenManager;
 import rxreddit.android.AndroidUtil;
 import rxreddit.api.RedditService;
+import timber.log.Timber;
 
 @Module
 public class ApplicationModule {
@@ -81,11 +83,16 @@ public class ApplicationModule {
     }
 
     @Singleton
-    @Provides
+    @Provides @Nullable
     Bypass providesBypass(Context context) {
-        Bypass.Options options = new Bypass.Options();
-        options.setBlockQuoteColor(
-                ContextCompat.getColor(context, R.color.markdown_quote_block));
-        return new Bypass(context, options);
+        try {
+            Bypass.Options options = new Bypass.Options();
+            options.setBlockQuoteColor(
+                    ContextCompat.getColor(context, R.color.markdown_quote_block));
+            return new Bypass(context, options);
+        } catch (UnsatisfiedLinkError error) {
+            Timber.e(error, "Unable to load Bypass");
+            return null;
+        }
     }
 }

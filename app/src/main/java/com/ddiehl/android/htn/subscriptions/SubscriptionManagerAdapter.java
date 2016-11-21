@@ -1,6 +1,7 @@
 package com.ddiehl.android.htn.subscriptions;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -102,7 +103,7 @@ public class SubscriptionManagerAdapter extends RecyclerView.Adapter<Subscriptio
 
     public static class VH extends RecyclerView.ViewHolder {
 
-        @Inject Bypass mBypass;
+        @Inject @Nullable Bypass mBypass;
 
         @BindView(R.id.name) TextView mName;
         @BindView(R.id.public_description) TextView mPublicDescription;
@@ -125,8 +126,13 @@ public class SubscriptionManagerAdapter extends RecyclerView.Adapter<Subscriptio
 
             // Set public description
             String publicDescription = subreddit.getPublicDescription();
-            CharSequence description = mBypass.markdownToSpannable(publicDescription);
-            mPublicDescription.setText(description);
+            if (mBypass != null) {
+                mPublicDescription.setText(
+                        mBypass.markdownToSpannable(publicDescription)
+                );
+            } else {
+                mPublicDescription.setText(publicDescription);
+            }
 
             // Set subreddit icon
             String iconUrl = subreddit.getIconImg();
