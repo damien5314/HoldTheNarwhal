@@ -1,6 +1,7 @@
 package com.ddiehl.android.htn.view;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatTextView;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
@@ -16,7 +17,7 @@ import in.uncod.android.bypass.Bypass;
 
 public class MarkdownTextView extends AppCompatTextView {
 
-    @Inject Bypass mBypass;
+    @Inject @Nullable Bypass mBypass;
 
     private CharSequence mRawText;
 
@@ -55,18 +56,22 @@ public class MarkdownTextView extends AppCompatTextView {
             SpannableString s = SpannableString.valueOf(formatted);
 
             // Add links for /r/ and /u/ patterns
-            Linkify.addLinks(s, Pattern.compile("\\s/*[ru](ser)*/[^ \n]*"), "https://www.reddit.com", null,
+            Linkify.addLinks(
+                    s, Pattern.compile("\\s/*[ru](ser)*/[^ \n]*"), "https://www.reddit.com", null,
                     (match, url) -> {
                         url = url.trim();
                         if (!url.startsWith("/")) url = "/" + url;
                         return url;
-                    });
+                    }
+            );
 
             // Add links missing protocol
-            Linkify.addLinks(s, Pattern.compile("\\swww\\.[^ \\n]*"), "http://", null,
+            Linkify.addLinks(
+                    s, Pattern.compile("\\swww\\.[^ \\n]*"), "http://", null,
                     (match, url) -> {
                         return url.trim();
-                    });
+                    }
+            );
 
             // Add links with any protocol
             Linkify.addLinks(s, Pattern.compile("[a-z]+://[^ \\n]*"), null);

@@ -49,7 +49,7 @@ public class SubredditInfoFragment extends BaseFragment {
     public static final String TAG = SubredditInfoFragment.class.getSimpleName();
     public static final int RESULT_GET_INFO_ERROR = -1000;
 
-    @Inject Bypass mBypass;
+    @Inject @Nullable Bypass mBypass;
 
     @BindView(R.id.coordinator_layout) CoordinatorLayout mCoordinatorLayout;
     @BindView(R.id.subreddit_info_parent) View mParentViewGroup;
@@ -282,8 +282,13 @@ public class SubredditInfoFragment extends BaseFragment {
 
         // Show public description text
         String publicDescription = subreddit.getPublicDescription();
-        CharSequence formattedDescription = mBypass.markdownToSpannable(publicDescription);
-        mPublicDescription.setText(formattedDescription);
+        if (mBypass != null) {
+            mPublicDescription.setText(
+                    mBypass.markdownToSpannable(publicDescription)
+            );
+        } else {
+            mPublicDescription.setText(publicDescription);
+        }
     }
 
     String formatDate(final long createdUtc) {
@@ -314,8 +319,13 @@ public class SubredditInfoFragment extends BaseFragment {
         categoryView.setText(getTextForCategory(category));
 
         String description = rule.getDescription().trim();
-        CharSequence descriptionText = mBypass.markdownToSpannable(description);
-        descriptionView.setText(descriptionText);
+        if (mBypass != null) {
+            descriptionView.setText(
+                    mBypass.markdownToSpannable(description)
+            );
+        } else {
+            descriptionView.setText(description);
+        }
 
         mRulesLayout.addView(view);
     }
