@@ -39,6 +39,11 @@ public class SubredditEditText extends AppCompatEditText {
             return;
         }
 
+        if (input.toString().equals(" ")) {
+            input.clear();
+            return;
+        }
+
         if (!input.toString().startsWith("/r/")) {
             input.insert(0, "/r/");
             return;
