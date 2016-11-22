@@ -22,5 +22,6 @@
     <string name="report_submit">report</string>
     <string name="report_cancel">cancel</string>
     <string name="report_menu_title">Report</string>
+    <string name="report_successful">report successful</string>
 
 </resources>

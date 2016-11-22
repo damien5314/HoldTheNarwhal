@@ -2,6 +2,7 @@ package com.ddiehl.android.htn.listings.inbox;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import rxreddit.model.PrivateMessage;
+import timber.log.Timber;
 
 public class PrivateMessageAdapter extends RecyclerView.Adapter<PrivateMessageAdapter.VH> {
 
@@ -48,7 +50,8 @@ public class PrivateMessageAdapter extends RecyclerView.Adapter<PrivateMessageAd
         holder.bind(message);
     }
 
-    public static class VH extends RecyclerView.ViewHolder {
+    public static class VH extends RecyclerView.ViewHolder
+            implements View.OnCreateContextMenuListener {
 
         @Inject protected Context mAppContext;
         @Inject protected IdentityManager mIdentityManager;
@@ -70,6 +73,9 @@ public class PrivateMessageAdapter extends RecyclerView.Adapter<PrivateMessageAd
         }
 
         public void bind(PrivateMessage message) {
+            // Register viewholder with context menu
+            itemView.setOnClickListener(View::showContextMenu);
+
             ((View) mConversationSubject.getParent()).setVisibility(View.GONE);
             // Collapse the "view more messages" view
             mCollapsedMessagesLayout.setVisibility(View.GONE);
@@ -90,7 +96,13 @@ public class PrivateMessageAdapter extends RecyclerView.Adapter<PrivateMessageAd
             mLastMessageMetadata.setText(text);
             mLastMessageBody.setText(message.getBody());
             mUnreadMessageIndicator.setVisibility(
-                    message.isUnread() ? View.VISIBLE : View.GONE);
+                    message.isUnread() ? View.VISIBLE : View.GONE
+            );
+        }
+
+        @Override
+        public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+            Timber.d("Creating Context menu for Private Message");
         }
     }
 }

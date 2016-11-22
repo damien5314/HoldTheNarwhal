@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu;
@@ -30,6 +31,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import butterknife.BindView;
+import rxreddit.model.Listing;
 import rxreddit.model.PrivateMessage;
 
 @FragmentWithArgs
@@ -120,5 +122,24 @@ public class PrivateMessageFragment extends BaseFragment implements PrivateMessa
     public void openReportView(@NonNull PrivateMessage message) {
         Intent intent = ReportActivity.getIntent(getContext(), message.getFullName(), null);
         startActivityForResult(intent, REQUEST_REPORT_MESSAGE);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case REQUEST_REPORT_MESSAGE:
+                if (resultCode == ReportActivity.RESULT_REPORT_SUCCESS) {
+                    // TODO
+//                    showReportSuccessToast(mListingSelected);
+                }
+                break;
+            default:
+                super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    void showReportSuccessToast(@NonNull Listing listing) {
+        Snackbar.make(getChromeView(), R.string.report_successful, Snackbar.LENGTH_LONG)
+                .show();
     }
 }

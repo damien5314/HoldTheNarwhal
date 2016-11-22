@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -140,6 +141,24 @@ public abstract class BaseListingsFragment extends BaseFragment
                 return true;
         }
         return false;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case REQUEST_REPORT_LISTING:
+                if (resultCode == ReportActivity.RESULT_REPORT_SUCCESS) {
+                    showReportSuccessToast(mListingSelected);
+                }
+                break;
+            default:
+                super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    void showReportSuccessToast(@NonNull Listing listing) {
+        Snackbar.make(getChromeView(), R.string.report_successful, Snackbar.LENGTH_LONG)
+                .show();
     }
 
     public void showLinkContextMenu(ContextMenu menu, View view, Link link) {
