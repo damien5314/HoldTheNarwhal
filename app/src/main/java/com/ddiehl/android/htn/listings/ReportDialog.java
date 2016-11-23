@@ -11,12 +11,11 @@ import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 import android.widget.RadioButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ddiehl.android.htn.R;
-import com.ddiehl.android.htn.view.SelectedIndexChangeListener;
 import com.hannesdorfmann.fragmentargs.FragmentArgs;
 import com.hannesdorfmann.fragmentargs.annotation.Arg;
 import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs;
@@ -32,16 +31,20 @@ public class ReportDialog extends DialogFragment {
     public static final String TAG = ReportDialog.class.getSimpleName();
 
     public interface Listener {
+
         void onRuleSubmitted(String rule);
+
         void onSiteRuleSubmitted(String rule);
+
         void onOtherSubmitted(String reason);
+
         void onCancelled();
     }
 
     @Arg String[] mRules;
     @Arg String[] mSiteRules;
 
-    int mSelectedIndex;
+    int mSelectedIndex = -1;
     Listener mListener;
 
     @Override
@@ -73,9 +76,8 @@ public class ReportDialog extends DialogFragment {
         }
     }
 
-    int mRuleSelectedIndex = -1;
-
-    @NonNull @Override
+    @NonNull
+    @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Concatenate all options into single array
         String[] reportOptions = new String[mRules.length + mSiteRules.length];
@@ -86,26 +88,29 @@ public class ReportDialog extends DialogFragment {
         // Create dialog with options
         LayoutInflater inflater = LayoutInflater.from(getContext());
 
-        ViewGroup parent = (ViewGroup) inflater.inflate(R.layout.report_dialog_view, null, false);
+        ViewGroup view = (ViewGroup) inflater.inflate(R.layout.report_dialog_view, null, false);
+        ViewGroup parent = findById(view, R.id.dialog_view_group);
 //        ViewGroup parent = findById(view, R.id.dialog_view_group);
 
         for (int i = 0; i < reportOptions.length; i++) {
             View optionView = inflater.inflate(R.layout.report_dialog_view_choice_item, parent, false);
 
-            // Set checked state change listener that saves selected index
+            // Set checked state change listener that caches selected index
             RadioButton selector = findById(optionView, R.id.report_choice_item_selector);
-            selector.setOnCheckedChangeListener(new SelectedIndexChangeListener(i) {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    if (isChecked) {
-                        mRuleSelectedIndex = getSelectedIndex();
-                    }
+            final int index = i;
+            selector.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                if (isChecked) {
+                    mSelectedIndex = index;
                 }
             });
 
             // Set text for option
             TextView optionText = findById(optionView, R.id.report_choice_item_text);
             optionText.setText(reportOptions[i]);
+
+            optionText.setOnClickListener((optionTextView) -> {
+                selector.setChecked(true);
+            });
 
             // Add view to parent
             parent.addView(optionView);
@@ -119,7 +124,7 @@ public class ReportDialog extends DialogFragment {
                 .setPositiveButton(R.string.report_submit, onSubmit())
                 .setNegativeButton(R.string.report_cancel, onCancelButton())
 //                .setView(R.layout.report_dialog_view)
-                .setView(parent)
+                .setView(view)
                 .create();
 
         return dialog;
@@ -155,17 +160,20 @@ public class ReportDialog extends DialogFragment {
 
     private void submit(@Nullable String rule, @Nullable String siteRule, @Nullable String other) {
         if (rule != null) {
-            mListener.onRuleSubmitted(rule);
+            Toast.makeText(getContext(), "rule: " + rule, Toast.LENGTH_SHORT).show();
+//            mListener.onRuleSubmitted(rule);
             dismiss();
         }
 
         if (siteRule != null) {
-            mListener.onSiteRuleSubmitted(siteRule);
+            Toast.makeText(getContext(), "site rule: " + siteRule, Toast.LENGTH_SHORT).show();
+//            mListener.onSiteRuleSubmitted(siteRule);
             dismiss();
         }
 
         if (other != null) {
-            mListener.onOtherSubmitted(other);
+            Toast.makeText(getContext(), "other: " + other, Toast.LENGTH_SHORT).show();
+//            mListener.onOtherSubmitted(other);
             dismiss();
         }
     }
