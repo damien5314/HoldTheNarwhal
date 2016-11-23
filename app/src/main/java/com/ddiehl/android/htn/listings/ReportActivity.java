@@ -11,6 +11,7 @@ import android.support.v4.app.Fragment;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.view.TransparentBaseActivity;
 
+import java.io.IOException;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -104,7 +105,11 @@ public class ReportActivity extends TransparentBaseActivity
 
     Action1<Throwable> onGetSubredditRulesError() {
         return (error) -> {
-            Timber.e(error);
+            if (error instanceof IOException) {
+                Timber.w(error);
+            } else {
+                Timber.e(error);
+            }
             setResult(RESULT_GET_SUBREDDIT_RULES_ERROR);
             finish();
         };
