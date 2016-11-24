@@ -19,9 +19,6 @@
         the full list of comments</string>
     <string name="listings_link_saved_description">saved</string>
     <string name="listings_link_stickied_description">stickied</string>
-    <string name="report_submit">report</string>
-    <string name="report_cancel">cancel</string>
-    <string name="report_menu_title">Report</string>
     <string name="report_successful">report successful</string>
 
 </resources>
