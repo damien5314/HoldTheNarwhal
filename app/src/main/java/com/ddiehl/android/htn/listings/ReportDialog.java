@@ -11,7 +11,9 @@ import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.ddiehl.android.htn.R;
@@ -82,25 +84,32 @@ public class ReportDialog extends DialogFragment {
         String[] reportOptions = new String[mRules.length + mSiteRules.length];
         System.arraycopy(mRules, 0, reportOptions, 0, mRules.length);
         System.arraycopy(mSiteRules, 0, reportOptions, mRules.length, mSiteRules.length);
-        Timber.d("Report options passed: " + reportOptions.length);
+        final int numOptions = reportOptions.length;
+        Timber.d("Report options passed: " + numOptions);
 
         // Create dialog with options
         LayoutInflater inflater = LayoutInflater.from(getContext());
 
         ViewGroup view = (ViewGroup) inflater.inflate(R.layout.report_dialog_view, null, false);
-        ViewGroup parent = findById(view, R.id.dialog_view_group);
+        final RadioGroup parent = findById(view, R.id.dialog_view_group);
 //        ViewGroup parent = findById(view, R.id.dialog_view_group);
 
-        for (int i = 0; i < reportOptions.length; i++) {
+        // Add 'other' dialog item
+        View otherOptionView = inflater.inflate(R.layout.report_dialog_view_edit_item, parent, false);
+        RadioButton otherSelector = findById(otherOptionView, R.id.report_choice_item_selector);
+
+        // Add rest of option views
+        for (int i = 0; i < numOptions; i++) {
             View optionView = inflater.inflate(R.layout.report_dialog_view_choice_item, parent, false);
 
             RadioButton selector = findById(optionView, R.id.report_choice_item_selector);
-            // Set ID so RadioGroup limits one checked button at a time
             selector.setId(i);
 
             // Set checked state change listener that caches selected index
             final int index = i;
             selector.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                parent.clearCheck();
+                otherSelector.setChecked(false);
                 if (isChecked) {
                     mSelectedIndex = index;
                 }
@@ -113,14 +122,23 @@ public class ReportDialog extends DialogFragment {
             parent.addView(optionView);
         }
 
+        otherSelector.setId(numOptions);
+        otherSelector.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            Timber.d("Checked the 'other' option");
+            parent.clearCheck();
+            if (isChecked) {
+                mSelectedIndex = numOptions;
+                otherSelector.setChecked(true);
+            }
+        });
+
+        parent.addView(otherOptionView);
+
+        // Build AlertDialog from custom view
         AlertDialog dialog = new AlertDialog.Builder(getContext())
                 .setTitle(R.string.report_menu_title)
-//                .setSingleChoiceItems(reportOptions, -1, (dialogInterface, index) -> {
-//                    mSelectedIndex = index;
-//                })
                 .setPositiveButton(R.string.report_submit, onSubmit())
                 .setNegativeButton(R.string.report_cancel, onCancelButton())
-//                .setView(R.layout.report_dialog_view)
                 .setView(view)
                 .create();
 
@@ -139,8 +157,11 @@ public class ReportDialog extends DialogFragment {
             }
             // Otherwise, submit the other reason
             else {
-                // TODO Support "other" reports
-                submit(null, null, "");
+                EditText otherText = findById(getDialog(), R.id.report_choice_edit_text);
+                String input = otherText.getText()
+                        .toString()
+                        .trim();
+                submit(null, null, input);
             }
         };
     }
