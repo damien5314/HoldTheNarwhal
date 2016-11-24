@@ -12,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioButton;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ddiehl.android.htn.R;
@@ -95,8 +94,11 @@ public class ReportDialog extends DialogFragment {
         for (int i = 0; i < reportOptions.length; i++) {
             View optionView = inflater.inflate(R.layout.report_dialog_view_choice_item, parent, false);
 
-            // Set checked state change listener that caches selected index
             RadioButton selector = findById(optionView, R.id.report_choice_item_selector);
+            // Set ID so RadioGroup limits one checked button at a time
+            selector.setId(i);
+
+            // Set checked state change listener that caches selected index
             final int index = i;
             selector.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 if (isChecked) {
@@ -105,12 +107,7 @@ public class ReportDialog extends DialogFragment {
             });
 
             // Set text for option
-            TextView optionText = findById(optionView, R.id.report_choice_item_text);
-            optionText.setText(reportOptions[i]);
-
-            optionText.setOnClickListener((optionTextView) -> {
-                selector.setChecked(true);
-            });
+            selector.setText(reportOptions[i]);
 
             // Add view to parent
             parent.addView(optionView);
