@@ -30,6 +30,9 @@ import rxreddit.model.Listing;
 import rxreddit.model.PrivateMessage;
 import timber.log.Timber;
 
+import static com.ddiehl.android.htn.listings.ReportActivity.RESULT_REPORT_ERROR;
+import static com.ddiehl.android.htn.listings.ReportActivity.RESULT_REPORT_SUCCESS;
+
 public abstract class BaseListingsFragment extends BaseFragment
         implements ListingsView, SwipeRefreshLayout.OnRefreshListener {
 
@@ -147,8 +150,12 @@ public abstract class BaseListingsFragment extends BaseFragment
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case REQUEST_REPORT_LISTING:
-                if (resultCode == ReportActivity.RESULT_REPORT_SUCCESS) {
-                    showReportSuccessToast(mListingSelected);
+                switch (resultCode) {
+                    case RESULT_REPORT_SUCCESS:
+                        showReportSuccessToast(mListingSelected);
+                        break;
+                    case RESULT_REPORT_ERROR:
+                        showReportErrorToast(mListingSelected);
                 }
                 break;
             default:
@@ -158,6 +165,11 @@ public abstract class BaseListingsFragment extends BaseFragment
 
     void showReportSuccessToast(@NonNull Listing listing) {
         Snackbar.make(getChromeView(), R.string.report_successful, Snackbar.LENGTH_LONG)
+                .show();
+    }
+
+    void showReportErrorToast(@NonNull Listing listing) {
+        Snackbar.make(getChromeView(), R.string.report_error, Snackbar.LENGTH_LONG)
                 .show();
     }
 

@@ -138,9 +138,8 @@ public class ReportActivity extends TransparentBaseActivity
     }
 
     void report(String rule, String siteRule, String other) {
-        showSpinner();
         mRedditService.report(getListingId(), rule, siteRule, other)
-//                .doOnSubscribe(this::showSpinner)
+                .doOnSubscribe(this::showSpinner)
                 .doOnUnsubscribe(this::dismissSpinner)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
