@@ -20,4 +20,10 @@
     <string name="report_menu_title">Report</string>
     <string name="report_other_hint">other reason</string>
 
+    <string-array name="report_site_rules">
+        <item>Spam</item>
+        <item>Personal and confidential information</item>
+        <item>Threatening, harassing, or inciting violence</item>
+    </string-array>
+
 </resources>

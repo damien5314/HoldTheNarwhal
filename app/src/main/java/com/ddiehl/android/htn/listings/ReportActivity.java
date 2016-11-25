@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
+import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.view.TransparentBaseActivity;
 
 import java.io.IOException;
@@ -38,12 +39,6 @@ public class ReportActivity extends TransparentBaseActivity
     public static final int RESULT_GET_SUBREDDIT_RULES_ERROR = 10;
     public static final int RESULT_REPORT_ERROR = 11;
     public static final int RESULT_REPORT_SUCCESS = Activity.RESULT_OK;
-
-    static final String[] SITE_RULES = {
-            "Spam",
-            "Personal and confidential information",
-            "Threatening, harrassing, or inciting violence"
-    };
 
     public static Intent getIntent(
             Context context, @NonNull String listingId, @Nullable String subreddit) {
@@ -92,8 +87,12 @@ public class ReportActivity extends TransparentBaseActivity
                     .doOnUnsubscribe(this::dismissSpinner)
                     .subscribe(onSubredditRulesRetrieved(), onGetSubredditRulesError());
         } else {
-            showReportDialogWithRules(null, SITE_RULES);
+            showReportDialogWithRules(null, getSiteRulesList());
         }
+    }
+
+    String[] getSiteRulesList() {
+        return getResources().getStringArray(R.array.report_site_rules);
     }
 
     Observable<SubredditRules> getSubredditRules() {
@@ -125,7 +124,7 @@ public class ReportActivity extends TransparentBaseActivity
             }
 
             // Show dialog
-            showReportDialogWithRules(ruleNames, SITE_RULES);
+            showReportDialogWithRules(ruleNames, getSiteRulesList());
         };
     }
 
