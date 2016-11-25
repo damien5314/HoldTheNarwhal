@@ -14,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Toast;
 
 import com.ddiehl.android.htn.R;
 import com.hannesdorfmann.fragmentargs.FragmentArgs;
@@ -177,21 +176,17 @@ public class ReportDialog extends DialogFragment {
     }
 
     private void submit(@Nullable String rule, @Nullable String siteRule, @Nullable String other) {
-        if (rule != null) {
-            Toast.makeText(getContext(), "rule: " + rule, Toast.LENGTH_SHORT).show();
-//            mListener.onRuleSubmitted(rule);
-            dismiss();
-        }
-
-        if (siteRule != null) {
-            Toast.makeText(getContext(), "site rule: " + siteRule, Toast.LENGTH_SHORT).show();
-//            mListener.onSiteRuleSubmitted(siteRule);
-            dismiss();
-        }
-
         if (other != null) {
-            Toast.makeText(getContext(), "other: " + other, Toast.LENGTH_SHORT).show();
-//            mListener.onOtherSubmitted(other);
+//            Toast.makeText(getContext(), "other: " + other, Toast.LENGTH_SHORT).show();
+            mListener.onOtherSubmitted(other);
+            dismiss();
+        } else if (rule != null) {
+//            Toast.makeText(getContext(), "rule: " + rule, Toast.LENGTH_SHORT).show();
+            mListener.onRuleSubmitted(rule);
+            dismiss();
+        } else if (siteRule != null) {
+//            Toast.makeText(getContext(), "site rule: " + siteRule, Toast.LENGTH_SHORT).show();
+            mListener.onSiteRuleSubmitted(siteRule);
             dismiss();
         }
     }
