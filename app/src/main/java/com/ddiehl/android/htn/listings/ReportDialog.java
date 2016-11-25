@@ -1,5 +1,6 @@
 package com.ddiehl.android.htn.listings;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -19,8 +20,6 @@ import com.ddiehl.android.htn.R;
 import com.hannesdorfmann.fragmentargs.FragmentArgs;
 import com.hannesdorfmann.fragmentargs.annotation.Arg;
 import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs;
-
-import timber.log.Timber;
 
 import static butterknife.ButterKnife.findById;
 
@@ -79,28 +78,27 @@ public class ReportDialog extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        // Concatenate all options into single array
-        String[] reportOptions = new String[mRules.length + mSiteRules.length];
-        System.arraycopy(mRules, 0, reportOptions, 0, mRules.length);
-        System.arraycopy(mSiteRules, 0, reportOptions, mRules.length, mSiteRules.length);
+        String[] reportOptions = getReportOptions(mRules, mSiteRules);
         final int numOptions = reportOptions.length;
-        Timber.d("Report options passed: " + numOptions);
 
         // Create dialog with options
         LayoutInflater inflater = LayoutInflater.from(getContext());
 
+        // Inflate parent RadioGroup
+        @SuppressLint("InflateParams")
         ViewGroup view = (ViewGroup) inflater.inflate(R.layout.report_dialog_view, null, false);
         final RadioGroup parent = findById(view, R.id.dialog_view_group);
-//        ViewGroup parent = findById(view, R.id.dialog_view_group);
 
-        // Add 'other' dialog item
+        // Inflate 'other' dialog item
         View otherOptionView = inflater.inflate(R.layout.report_dialog_view_edit_item, parent, false);
         RadioButton otherSelector = findById(otherOptionView, R.id.report_choice_item_selector);
 
         // Add rest of option views
         for (int i = 0; i < numOptions; i++) {
+            // Inflate item view
             View optionView = inflater.inflate(R.layout.report_dialog_view_choice_item, parent, false);
 
+            // Get RadioButton and set ID so the RadioGroup can properly manage checked state
             RadioButton selector = findById(optionView, R.id.report_choice_item_selector);
             selector.setId(i);
 
@@ -121,9 +119,7 @@ public class ReportDialog extends DialogFragment {
             parent.addView(optionView);
         }
 
-        otherSelector.setId(numOptions);
         otherSelector.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            Timber.d("Checked the 'other' option");
             parent.clearCheck();
             if (isChecked) {
                 mSelectedIndex = numOptions;
@@ -134,14 +130,23 @@ public class ReportDialog extends DialogFragment {
         parent.addView(otherOptionView);
 
         // Build AlertDialog from custom view
-        AlertDialog dialog = new AlertDialog.Builder(getContext())
+
+        return new AlertDialog.Builder(getContext())
                 .setTitle(R.string.report_menu_title)
                 .setPositiveButton(R.string.report_submit, onSubmit())
                 .setNegativeButton(R.string.report_cancel, onCancelButton())
                 .setView(view)
                 .create();
+    }
 
-        return dialog;
+    /**
+     * Concatenate all options into single array
+     */
+    String[] getReportOptions(String[] rules, String[] siteRules) {
+        String[] reportOptions = new String[rules.length + siteRules.length];
+        System.arraycopy(rules, 0, reportOptions, 0, rules.length);
+        System.arraycopy(siteRules, 0, reportOptions, rules.length, siteRules.length);
+        return reportOptions;
     }
 
     DialogInterface.OnClickListener onSubmit() {
