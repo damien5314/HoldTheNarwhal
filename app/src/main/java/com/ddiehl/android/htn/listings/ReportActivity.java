@@ -88,6 +88,8 @@ public class ReportActivity extends TransparentBaseActivity
     void loadReportDialog() {
         if (getSubredditName() != null) {
             getSubredditRules()
+                    .doOnSubscribe(this::showSpinner)
+                    .doOnUnsubscribe(this::dismissSpinner)
                     .subscribe(onSubredditRulesRetrieved(), onGetSubredditRulesError());
         } else {
             showReportDialogWithRules(null, SITE_RULES);
@@ -95,10 +97,7 @@ public class ReportActivity extends TransparentBaseActivity
     }
 
     Observable<SubredditRules> getSubredditRules() {
-        showSpinner();
         return mRedditService.getSubredditRules(getSubredditName())
-//                .doOnSubscribe(this::showSpinner)
-                .doOnUnsubscribe(this::dismissSpinner)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
@@ -139,10 +138,10 @@ public class ReportActivity extends TransparentBaseActivity
 
     void report(String rule, String siteRule, String other) {
         mRedditService.report(getListingId(), rule, siteRule, other)
-                .doOnSubscribe(this::showSpinner)
-                .doOnUnsubscribe(this::dismissSpinner)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe(this::showSpinner)
+                .doOnUnsubscribe(this::dismissSpinner)
                 .subscribe(onReported(), onReportError());
     }
 
