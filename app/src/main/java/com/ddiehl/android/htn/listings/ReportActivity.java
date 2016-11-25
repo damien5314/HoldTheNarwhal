@@ -150,7 +150,7 @@ public class ReportActivity extends TransparentBaseActivity
     private Action1<Throwable> onReportError() {
         return (error) -> {
             Timber.d(error, "Listing report error");
-            setResult(RESULT_REPORT_SUCCESS);
+            setResult(RESULT_REPORT_ERROR);
             finish();
         };
     }
@@ -158,7 +158,7 @@ public class ReportActivity extends TransparentBaseActivity
     private Action1<Void> onReported() {
         return (result) -> {
             Timber.d("Listing report successful");
-            setResult(RESULT_REPORT_ERROR);
+            setResult(RESULT_REPORT_SUCCESS);
             finish();
         };
     }
