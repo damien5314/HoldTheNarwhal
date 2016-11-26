@@ -174,7 +174,9 @@ public class ReportActivity extends TransparentBaseActivity
 
     @Override
     public void onOtherSubmitted(String reason) {
-        report(null, null, reason);
+        // API does not properly save reasons passed in the 'other_reason' field,
+        // so just pass it in the 'reason' field
+        report(reason, null, null);
     }
 
     @Override
