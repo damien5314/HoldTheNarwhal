@@ -3,6 +3,7 @@ package com.ddiehl.android.htn.di;
 import com.ddiehl.android.htn.analytics.FlurryAnalytics;
 import com.ddiehl.android.htn.listings.BaseListingsFragment;
 import com.ddiehl.android.htn.listings.BaseListingsPresenter;
+import com.ddiehl.android.htn.listings.ReportActivity;
 import com.ddiehl.android.htn.listings.comments.LinkCommentsFragment;
 import com.ddiehl.android.htn.listings.comments.ListingsCommentViewHolder;
 import com.ddiehl.android.htn.listings.comments.ThreadCommentViewHolder;
@@ -43,6 +44,7 @@ public interface ApplicationComponent {
     void inject(BaseActivity activity);
     void inject(PrivateMessageActivity activity);
     void inject(SettingsActivity activity);
+    void inject(ReportActivity activity);
 
     // Fragments
     void inject(BaseFragment fragment);

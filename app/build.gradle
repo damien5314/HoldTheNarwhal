@@ -39,6 +39,7 @@ android {
 
     buildTypes {
         debug {
+            compileSdkVersion 24
             debuggable true
             minifyEnabled false
             applicationIdSuffix ".debug"

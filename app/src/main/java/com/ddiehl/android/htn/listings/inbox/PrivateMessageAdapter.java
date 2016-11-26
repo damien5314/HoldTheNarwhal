@@ -70,27 +70,44 @@ public class PrivateMessageAdapter extends RecyclerView.Adapter<PrivateMessageAd
         }
 
         public void bind(PrivateMessage message) {
-            ((View) mConversationSubject.getParent()).setVisibility(View.GONE);
+            // Hide conversation subject
+            ((View) mConversationSubject.getParent())
+                    .setVisibility(View.GONE);
+
             // Collapse the "view more messages" view
             mCollapsedMessagesLayout.setVisibility(View.GONE);
+
             // Hide the indentation and remove background
             mMessageIndentation.setVisibility(View.GONE);
+
             // Show message metadata and text
             mConversationSubject.setText(message.getSubject());
             boolean isToMe = Utils.equals(
                     mIdentityManager.getUserIdentity().getName(), message.getDestination());
+
+            // Build 'from' text
             String from = mAppContext.getString(
-                    isToMe ? R.string.message_metadata_from : R.string.message_metadata_to);
+                    isToMe ? R.string.message_metadata_from : R.string.message_metadata_to
+            );
             from = String.format(from,
                     isToMe ? message.getAuthor() : message.getDestination());
+
+            // Build 'sent' text
             String sent = mAppContext.getString(R.string.message_metadata_sent);
             sent = String.format(sent, TimeSince.getFormattedDateString(
                     message.getCreatedUtc(), false, mAppContext));
+
+            // Set message metadata
             String text = from + " " + sent;
             mLastMessageMetadata.setText(text);
+
+            // Set text for message body
             mLastMessageBody.setText(message.getBody());
+
+            // Show/hide unread message indicator
             mUnreadMessageIndicator.setVisibility(
-                    message.isUnread() ? View.VISIBLE : View.GONE);
+                    message.isUnread() ? View.VISIBLE : View.GONE
+            );
         }
     }
 }

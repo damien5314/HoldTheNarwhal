@@ -18,4 +18,6 @@ public interface CommentView {
     void openCommentInBrowser(@NonNull Comment comment);
 
     void openReplyView(@NonNull Listing listing);
+
+    void openReportView(@NonNull Comment comment);
 }

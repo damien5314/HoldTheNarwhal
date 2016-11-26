@@ -287,12 +287,10 @@ public abstract class BaseListingsPresenter
     }
 
     public void reportLink(@NonNull Link link) {
-        if (link.isArchived()) {
-            mMainView.showToast(mContext.getString(R.string.listing_archived));
-        } else if (!mRedditService.isUserAuthorized()) {
+        if (!mRedditService.isUserAuthorized()) {
             mMainView.showToast(mContext.getString(R.string.user_required));
         } else {
-            mMainView.showToast(mContext.getString(R.string.implementation_pending));
+            mLinkView.openReportView(link);
         }
     }
 
@@ -363,7 +361,7 @@ public abstract class BaseListingsPresenter
         } else if (!mRedditService.isUserAuthorized()) {
             mMainView.showToast(mContext.getString(R.string.user_required));
         } else {
-            mMainView.showToast(mContext.getString(R.string.implementation_pending));
+            mCommentView.openReportView(comment);
         }
     }
 
@@ -548,7 +546,7 @@ public abstract class BaseListingsPresenter
     }
 
     public void reportMessage(@NonNull PrivateMessage message) {
-        mMainView.showToast(mContext.getString(R.string.implementation_pending));
+        mPrivateMessageView.openReportView(message);
     }
 
     public void blockUser(@NonNull PrivateMessage message) {

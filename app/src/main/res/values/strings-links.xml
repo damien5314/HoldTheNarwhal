@@ -19,5 +19,7 @@
         the full list of comments</string>
     <string name="listings_link_saved_description">saved</string>
     <string name="listings_link_stickied_description">stickied</string>
+    <string name="report_successful">report successful</string>
+    <string name="report_error">error submitting report, please try again later</string>
 
 </resources>

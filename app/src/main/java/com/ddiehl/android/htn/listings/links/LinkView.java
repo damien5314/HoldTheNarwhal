@@ -25,4 +25,6 @@ public interface LinkView {
     void openLinkInBrowser(@NonNull Link link);
 
     void openCommentsInBrowser(@NonNull Link link);
+
+    void openReportView(@NonNull Link link);
 }

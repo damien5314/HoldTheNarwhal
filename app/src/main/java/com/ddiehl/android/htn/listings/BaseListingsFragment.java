@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -29,8 +30,13 @@ import rxreddit.model.Listing;
 import rxreddit.model.PrivateMessage;
 import timber.log.Timber;
 
+import static com.ddiehl.android.htn.listings.ReportActivity.RESULT_REPORT_ERROR;
+import static com.ddiehl.android.htn.listings.ReportActivity.RESULT_REPORT_SUCCESS;
+
 public abstract class BaseListingsFragment extends BaseFragment
         implements ListingsView, SwipeRefreshLayout.OnRefreshListener {
+
+    private static final int REQUEST_REPORT_LISTING = 1000;
 
     private static final String LINK_BASE_URL = "http://www.reddit.com";
 
@@ -138,6 +144,33 @@ public abstract class BaseListingsFragment extends BaseFragment
                 return true;
         }
         return false;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case REQUEST_REPORT_LISTING:
+                switch (resultCode) {
+                    case RESULT_REPORT_SUCCESS:
+                        showReportSuccessToast(mListingSelected);
+                        break;
+                    case RESULT_REPORT_ERROR:
+                        showReportErrorToast(mListingSelected);
+                }
+                break;
+            default:
+                super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    void showReportSuccessToast(@NonNull Listing listing) {
+        Snackbar.make(getChromeView(), R.string.report_successful, Snackbar.LENGTH_LONG)
+                .show();
+    }
+
+    void showReportErrorToast(@NonNull Listing listing) {
+        Snackbar.make(getChromeView(), R.string.report_error, Snackbar.LENGTH_LONG)
+                .show();
     }
 
     public void showLinkContextMenu(ContextMenu menu, View view, Link link) {
@@ -377,6 +410,27 @@ public abstract class BaseListingsFragment extends BaseFragment
         Intent i = new Intent(Intent.ACTION_VIEW, uri);
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(i);
+    }
+
+    public void openReportView(@NonNull Link link) {
+        Intent intent = ReportActivity.getIntent(
+                getContext(), link.getFullName(), link.getSubreddit()
+        );
+        startActivityForResult(intent, REQUEST_REPORT_LISTING);
+    }
+
+    public void openReportView(@NonNull Comment comment) {
+        Intent intent = ReportActivity.getIntent(
+                getContext(), comment.getFullName(), comment.getSubreddit()
+        );
+        startActivityForResult(intent, REQUEST_REPORT_LISTING);
+    }
+
+    public void openReportView(@NonNull PrivateMessage message) {
+        Intent intent = ReportActivity.getIntent(
+                getContext(), message.getFullname(), null
+        );
+        startActivityForResult(intent, REQUEST_REPORT_LISTING);
     }
 
     @Override

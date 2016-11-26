@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.ddiehl.android.htn">
+<manifest package="com.ddiehl.android.htn"
+          xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -11,8 +11,8 @@
             android:allowBackup="true"
             android:icon="@mipmap/ic_launcher"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme"
-            android:supportsRtl="true">
+            android:supportsRtl="true"
+            android:theme="@style/AppTheme">
 
         <meta-data
                 android:name="io.fabric.ApiKey"
@@ -81,6 +81,10 @@
 
         <activity
                 android:name=".subredditinfo.SubredditInfoActivity" />
+
+        <activity
+                android:name=".listings.ReportActivity"
+                android:theme="@style/TransparentTheme" />
 
     </application>
 
