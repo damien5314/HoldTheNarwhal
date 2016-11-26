@@ -139,12 +139,8 @@ public class SubscriptionManagerAdapter extends RecyclerView.Adapter<Subscriptio
             String iconUrl = subreddit.getIconImg();
             if (!TextUtils.isEmpty(iconUrl)) {
                 Context context = mSubscriptionIcon.getContext();
-                float widthDp = context.getResources().getDimension(R.dimen.subscription_icon_width);
-                float heightDp = context.getResources().getDimension(R.dimen.subscription_icon_height);
-
                 Glide.with(context)
                         .load(iconUrl)
-//                        .override((int) widthDp, (int) heightDp)
                         .fitCenter()
                         .into(mSubscriptionIcon);
             } else {
