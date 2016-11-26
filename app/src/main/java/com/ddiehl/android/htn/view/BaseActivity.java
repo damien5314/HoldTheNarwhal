@@ -30,6 +30,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.analytics.Analytics;
@@ -49,7 +50,6 @@ import com.ddiehl.android.htn.settings.SettingsManager;
 import com.ddiehl.android.htn.subscriptions.SubscriptionManagerActivity;
 import com.ddiehl.android.htn.utils.AndroidUtils;
 import com.google.gson.Gson;
-import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.util.List;
@@ -468,7 +468,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
 
     @Override
     public void showSubredditImage(String url) {
-        Picasso.with(this)
+        Glide.with(this)
                 .load(url)
                 .into(mHeaderImage);
     }

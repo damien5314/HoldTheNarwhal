@@ -84,7 +84,7 @@ public class AndroidUtils {
      * @param dp A value in dp (density independent pixels) unit. Which we need to convert into pixels
      * @return A float value to represent px equivalent to dp depending on device density
      */
-    public static float convertDpToPixel(float dp) {
+    public static float dpToPx(float dp) {
         Resources resources = Resources.getSystem();
         DisplayMetrics metrics = resources.getDisplayMetrics();
         return dp * (metrics.densityDpi / 160f);
@@ -97,7 +97,7 @@ public class AndroidUtils {
      * @param px A value in px (pixels) unit. Which we need to convert into db
      * @return A float value to represent dp equivalent to px value
      */
-    public static float convertPixelsToDp(float px) {
+    public static float pxToDp(float px) {
         Resources resources = Resources.getSystem();
         DisplayMetrics metrics = resources.getDisplayMetrics();
         return px / (metrics.densityDpi / 160f);

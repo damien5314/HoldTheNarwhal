@@ -10,12 +10,12 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.listings.BaseListingsPresenter;
 import com.ddiehl.android.htn.listings.subreddit.ThumbnailMode;
 import com.ddiehl.android.htn.view.ColorSwapTextView;
 import com.ddiehl.timesincetextview.TimeSinceTextView;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -196,9 +196,8 @@ public abstract class BaseLinkViewHolder extends RecyclerView.ViewHolder
             @NonNull Link link, @NonNull ThumbnailMode mode);
 
     protected void loadThumbnail(@Nullable String url) {
-        Picasso.with(mContext)
+        Glide.with(mContext)
                 .load(url)
-                .fit()
                 .centerCrop()
                 .into(mLinkThumbnail);
     }

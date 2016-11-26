@@ -9,8 +9,8 @@
 
     <ImageView
             android:id="@+id/subscription_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/subscription_icon_width"
+            android:layout_height="@dimen/subscription_icon_height"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
