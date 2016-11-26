@@ -78,6 +78,7 @@ public class ReportDialog extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        // Get report options
         String[] reportOptions = getReportOptions(mRules, mSiteRules);
         final int numOptions = reportOptions.length;
 
@@ -119,6 +120,7 @@ public class ReportDialog extends DialogFragment {
             parent.addView(optionView);
         }
 
+        // Set checked listener for 'other' field
         otherSelector.setOnCheckedChangeListener((buttonView, isChecked) -> {
             parent.clearCheck();
             if (isChecked) {
@@ -127,10 +129,10 @@ public class ReportDialog extends DialogFragment {
             }
         });
 
+        // Add other option view
         parent.addView(otherOptionView);
 
         // Build AlertDialog from custom view
-
         return new AlertDialog.Builder(getContext())
                 .setTitle(R.string.report_menu_title)
                 .setPositiveButton(R.string.report_submit, onSubmit())
@@ -139,10 +141,8 @@ public class ReportDialog extends DialogFragment {
                 .create();
     }
 
-    /**
-     * Concatenate all options into single array
-     */
     String[] getReportOptions(String[] rules, String[] siteRules) {
+        // Concatenate all options into single array
         String[] reportOptions = new String[rules.length + siteRules.length];
         System.arraycopy(rules, 0, reportOptions, 0, rules.length);
         System.arraycopy(siteRules, 0, reportOptions, rules.length, siteRules.length);
@@ -182,15 +182,12 @@ public class ReportDialog extends DialogFragment {
 
     private void submit(@Nullable String rule, @Nullable String siteRule, @Nullable String other) {
         if (other != null) {
-//            Toast.makeText(getContext(), "other: " + other, Toast.LENGTH_SHORT).show();
             mListener.onOtherSubmitted(other);
             dismiss();
         } else if (rule != null) {
-//            Toast.makeText(getContext(), "rule: " + rule, Toast.LENGTH_SHORT).show();
             mListener.onRuleSubmitted(rule);
             dismiss();
         } else if (siteRule != null) {
-//            Toast.makeText(getContext(), "site rule: " + siteRule, Toast.LENGTH_SHORT).show();
             mListener.onSiteRuleSubmitted(siteRule);
             dismiss();
         }

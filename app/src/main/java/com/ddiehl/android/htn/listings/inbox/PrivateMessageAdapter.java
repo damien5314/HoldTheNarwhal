@@ -2,7 +2,6 @@ package com.ddiehl.android.htn.listings.inbox;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +21,6 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import rxreddit.model.PrivateMessage;
-import timber.log.Timber;
 
 public class PrivateMessageAdapter extends RecyclerView.Adapter<PrivateMessageAdapter.VH> {
 
@@ -50,8 +48,7 @@ public class PrivateMessageAdapter extends RecyclerView.Adapter<PrivateMessageAd
         holder.bind(message);
     }
 
-    public static class VH extends RecyclerView.ViewHolder
-            implements View.OnCreateContextMenuListener {
+    public static class VH extends RecyclerView.ViewHolder {
 
         @Inject protected Context mAppContext;
         @Inject protected IdentityManager mIdentityManager;
@@ -73,36 +70,44 @@ public class PrivateMessageAdapter extends RecyclerView.Adapter<PrivateMessageAd
         }
 
         public void bind(PrivateMessage message) {
-            // Register viewholder with context menu
-            itemView.setOnClickListener(View::showContextMenu);
+            // Hide conversation subject
+            ((View) mConversationSubject.getParent())
+                    .setVisibility(View.GONE);
 
-            ((View) mConversationSubject.getParent()).setVisibility(View.GONE);
             // Collapse the "view more messages" view
             mCollapsedMessagesLayout.setVisibility(View.GONE);
+
             // Hide the indentation and remove background
             mMessageIndentation.setVisibility(View.GONE);
+
             // Show message metadata and text
             mConversationSubject.setText(message.getSubject());
             boolean isToMe = Utils.equals(
                     mIdentityManager.getUserIdentity().getName(), message.getDestination());
+
+            // Build 'from' text
             String from = mAppContext.getString(
-                    isToMe ? R.string.message_metadata_from : R.string.message_metadata_to);
+                    isToMe ? R.string.message_metadata_from : R.string.message_metadata_to
+            );
             from = String.format(from,
                     isToMe ? message.getAuthor() : message.getDestination());
+
+            // Build 'sent' text
             String sent = mAppContext.getString(R.string.message_metadata_sent);
             sent = String.format(sent, TimeSince.getFormattedDateString(
                     message.getCreatedUtc(), false, mAppContext));
+
+            // Set message metadata
             String text = from + " " + sent;
             mLastMessageMetadata.setText(text);
+
+            // Set text for message body
             mLastMessageBody.setText(message.getBody());
+
+            // Show/hide unread message indicator
             mUnreadMessageIndicator.setVisibility(
                     message.isUnread() ? View.VISIBLE : View.GONE
             );
-        }
-
-        @Override
-        public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-            Timber.d("Creating Context menu for Private Message");
         }
     }
 }

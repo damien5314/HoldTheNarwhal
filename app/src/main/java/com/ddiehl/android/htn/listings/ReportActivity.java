@@ -103,10 +103,8 @@ public class ReportActivity extends TransparentBaseActivity
 
     Action1<Throwable> onGetSubredditRulesError() {
         return (error) -> {
-            if (error instanceof IOException) {
-                Timber.w(error);
-            } else {
-                Timber.e(error);
+            if (!(error instanceof IOException)) {
+                Timber.e(error, "Error getting subreddit rules");
             }
             setResult(RESULT_GET_SUBREDDIT_RULES_ERROR);
             finish();
@@ -146,7 +144,9 @@ public class ReportActivity extends TransparentBaseActivity
 
     private Action1<Throwable> onReportError() {
         return (error) -> {
-            Timber.d(error, "Listing report error");
+            if (!(error instanceof IOException)) {
+                Timber.e(error, "Error submitting report");
+            }
             setResult(RESULT_REPORT_ERROR);
             finish();
         };
@@ -154,7 +154,6 @@ public class ReportActivity extends TransparentBaseActivity
 
     private Action1<Void> onReported() {
         return (result) -> {
-            Timber.d("Listing report successful");
             setResult(RESULT_REPORT_SUCCESS);
             finish();
         };
