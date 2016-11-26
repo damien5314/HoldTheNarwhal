@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.identity.IdentityManager;
@@ -31,7 +32,6 @@ import com.ddiehl.android.htn.utils.AndroidUtils;
 import com.hannesdorfmann.fragmentargs.FragmentArgs;
 import com.hannesdorfmann.fragmentargs.annotation.Arg;
 import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs;
-import com.squareup.picasso.Picasso;
 
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
@@ -386,7 +386,7 @@ public class UserProfileFragment extends BaseListingsFragment
             imageView.setContentDescription(name);
             imageView.setOnClickListener(
                     view -> Toast.makeText(view.getContext(), name, Toast.LENGTH_SHORT).show());
-            Picasso.with(getActivity())
+            Glide.with(getActivity())
                     .load(trophy.getIcon70())
                     .into(imageView);
             mTrophies.addView(imageView);

@@ -34,7 +34,7 @@ subprojects {
         supportLibraryVersion = "25.0.1"
         contraintLayoutVersion = "1.0.0-alpha3"
         playServicesVersion = "10.0.0"
-        picassoVersion = "2.5.2"
+        glideVersion = "3.7.0"
         butterknifeVersion = "8.4.0"
         rxRedditVersion = "c0a5a606de876b4a07ab652afb09f747a0294583"
         rxAndroidVersion = "1.2.1"

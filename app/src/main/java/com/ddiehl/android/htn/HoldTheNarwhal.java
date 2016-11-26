@@ -11,7 +11,6 @@ import com.ddiehl.android.logging.CrashlyticsLogger;
 import com.ddiehl.android.logging.CrashlyticsLoggingTree;
 import com.ddiehl.android.logging.LogcatLogger;
 import com.ddiehl.android.logging.LogcatLoggingTree;
-import com.squareup.picasso.Picasso;
 
 import java.util.Arrays;
 
@@ -41,15 +40,6 @@ public class HoldTheNarwhal extends Application {
         } else {
             Timber.Tree tree = new CrashlyticsLoggingTree(new CrashlyticsLogger());
             Timber.plant(tree);
-        }
-
-        if (BuildConfig.DEBUG) {
-            Picasso.setSingletonInstance(
-                    new Picasso.Builder(this)
-//              .memoryCache(Cache.NONE)
-//              .indicatorsEnabled(true)
-                            .loggingEnabled(false)
-                            .build());
         }
 
         // Add logging for CPU ABI support
