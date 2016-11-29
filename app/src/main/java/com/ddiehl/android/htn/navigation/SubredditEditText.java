@@ -79,9 +79,8 @@ public class SubredditEditText extends AppCompatEditText {
                     return;
                 }
 
-                // Extra check (edge case?)
-                CharSequence cs = input.subSequence(0, 3);
-                if (!cs.toString().equals("/r/") || input.toString().contains(" ")) {
+                // Extra check if user typed a space
+                if (!input.subSequence(0, 3).equals("/r/") || input.toString().contains(" ")) {
                     removeTextChangedListener(mTextChangedListener);
                     input.replace(0, input.length(), before);
                     addTextChangedListener(mTextChangedListener);
