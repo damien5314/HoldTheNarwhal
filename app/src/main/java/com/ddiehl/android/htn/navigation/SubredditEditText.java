@@ -50,10 +50,12 @@ public class SubredditEditText extends AppCompatEditText {
 
             @Override
             public void afterTextChanged(Editable input) {
-                if (input.length() == 0) { // Blank field
+                // Blank field
+                if (input.length() == 0) {
                     return;
                 }
 
+                // Trim single spaces
                 if (input.toString().equals(" ")) {
                     removeTextChangedListener(mTextChangedListener);
                     input.clear();
@@ -61,6 +63,7 @@ public class SubredditEditText extends AppCompatEditText {
                     return;
                 }
 
+                // If input doesn't start with the subreddit link prefix, add it
                 if (!input.toString().startsWith("/r/")) {
                     removeTextChangedListener(mTextChangedListener);
                     input.insert(0, "/r/");
@@ -68,6 +71,7 @@ public class SubredditEditText extends AppCompatEditText {
                     return;
                 }
 
+                // If input is length 3 ("/r/"), just clear the field
                 if (input.length() == 3) {
                     removeTextChangedListener(mTextChangedListener);
                     input.clear();
@@ -75,6 +79,7 @@ public class SubredditEditText extends AppCompatEditText {
                     return;
                 }
 
+                // Extra check (edge case?)
                 CharSequence cs = input.subSequence(0, 3);
                 if (!cs.toString().equals("/r/") || input.toString().contains(" ")) {
                     removeTextChangedListener(mTextChangedListener);
