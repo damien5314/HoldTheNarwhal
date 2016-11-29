@@ -16,7 +16,9 @@ import java.util.List;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
+import rxreddit.model.FriendInfo;
 import rxreddit.model.Listing;
 import rxreddit.model.UserIdentity;
 import timber.log.Timber;
@@ -62,7 +64,8 @@ public class UserProfilePresenter extends BaseListingsPresenter {
         mRedditService.loadUserProfile(
                 mSummaryView.getShow(), mSummaryView.getUsernameContext(),
                 mSummaryView.getSort(), mSummaryView.getTimespan(),
-                before, after)
+                before, after
+        )
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(() -> {
@@ -94,19 +97,16 @@ public class UserProfilePresenter extends BaseListingsPresenter {
         refreshData();
     }
 
-    Observable<UserIdentity> getUserInfo() {
+    Observable<UserInfoTuple> getUserInfo() {
         return mRedditService.getUserInfo(mSummaryView.getUsernameContext())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe(() -> {
-                    mMainView.showSpinner();
-                    mNextRequested = true;
+                .map(userIdentity -> {
+                    UserInfoTuple info = new UserInfoTuple();
+                    info.identity = userIdentity;
+                    return info;
                 })
-                .doOnTerminate(() -> {
-                    mMainView.dismissSpinner();
-                    mNextRequested = false;
-                })
-                .doOnNext(getFriendInfo());
+                .flatMap(getFriendInfo());
     }
 
     Observable<List<Listing>> getTrophies() {
@@ -116,28 +116,40 @@ public class UserProfilePresenter extends BaseListingsPresenter {
     }
 
     static class UserInfoTuple {
-
         public UserIdentity identity;
+        public FriendInfo friend;
         public List<Listing> trophies;
     }
 
     private void getSummaryData() {
         Observable.combineLatest(
                 getUserInfo(), getTrophies(),
-                (userIdentity, listings) -> {
-                    UserInfoTuple tuple = new UserInfoTuple();
-                    tuple.identity = userIdentity;
+                (tuple, listings) -> {
                     tuple.trophies = listings;
                     return tuple;
                 }
         )
+                .doOnSubscribe(() -> {
+                    mMainView.showSpinner();
+                    mNextRequested = true;
+                })
+                .doOnUnsubscribe(() -> {
+                    mMainView.dismissSpinner();
+                    mNextRequested = false;
+                })
                 .subscribe(onGetUserInfo(), onGetUserInfoError());
     }
 
     Action1<UserInfoTuple> onGetUserInfo() {
         return (info) -> {
+            // Show user info and trophies
             mSummaryView.showUserInfo(info.identity);
             mSummaryView.showTrophies(info.trophies);
+
+            // Show friend note if we received it, and user is gold
+            if (info.identity != null && info.identity.isGold() && info.friend != null) {
+                mSummaryView.showFriendNote(info.friend.getNote());
+            }
         };
     }
 
@@ -154,30 +166,18 @@ public class UserProfilePresenter extends BaseListingsPresenter {
         };
     }
 
-    private Action1<UserIdentity> getFriendInfo() {
-        return user -> {
-            if (user.isFriend()) {
-                mRedditService.getFriendInfo(user.getName())
+    private Func1<UserInfoTuple, Observable<UserInfoTuple>> getFriendInfo() {
+        return (tuple) -> {
+            if (tuple.identity.isFriend()) {
+                return mRedditService.getFriendInfo(tuple.identity.getName())
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(
-                                response -> {
-                                    UserIdentity self = mIdentityManager.getUserIdentity();
-                                    if (self != null && self.isGold()) {
-                                        mSummaryView.showFriendNote(response.getNote());
-                                    }
-                                },
-                                error -> {
-                                    if (error instanceof IOException) {
-                                        String message = mContext.getString(R.string.error_network_unavailable);
-                                        mMainView.showError(message);
-                                    } else {
-                                        Timber.w(error, "Error getting friend info");
-                                        String message = mContext.getString(R.string.error_get_friend_info);
-                                        mMainView.showError(message);
-                                    }
-                                }
-                        );
+                        .map(friendInfo -> {
+                            tuple.friend = friendInfo;
+                            return tuple;
+                        });
+            } else {
+                return Observable.just(tuple);
             }
         };
     }
@@ -186,7 +186,7 @@ public class UserProfilePresenter extends BaseListingsPresenter {
         mRedditService.addFriend(mSummaryView.getUsernameContext())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe(() -> mMainView.showSpinner())
+                .doOnSubscribe(mMainView::showSpinner)
                 .doOnTerminate(mMainView::dismissSpinner)
                 .subscribe(
                         response -> {
