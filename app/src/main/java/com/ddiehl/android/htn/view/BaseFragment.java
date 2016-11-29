@@ -200,7 +200,7 @@ public abstract class BaseFragment extends Fragment implements MainView {
     public void dismissSpinner() {
         mDialogCount--;
         if (mDialogCount < 0) mDialogCount = 0;
-        if (mLoadingOverlay != null && mLoadingOverlay.isShowing() && mDialogCount == 0) {
+        if (mLoadingOverlay != null && mLoadingOverlay.isShowing() && mDialogCount == 0 && isAdded()) {
             mLoadingOverlay.dismiss();
         }
     }
