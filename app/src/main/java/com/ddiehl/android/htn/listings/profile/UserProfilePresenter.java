@@ -11,10 +11,13 @@ import com.ddiehl.android.htn.utils.Utils;
 import com.ddiehl.android.htn.view.MainView;
 
 import java.io.IOException;
+import java.util.List;
 
+import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
+import rxreddit.model.Listing;
 import rxreddit.model.UserIdentity;
 import timber.log.Timber;
 
@@ -91,8 +94,8 @@ public class UserProfilePresenter extends BaseListingsPresenter {
         refreshData();
     }
 
-    private void getSummaryData() {
-        mRedditService.getUserInfo(mSummaryView.getUsernameContext())
+    Observable<UserIdentity> getUserInfo() {
+        return mRedditService.getUserInfo(mSummaryView.getUsernameContext())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(() -> {
@@ -103,36 +106,52 @@ public class UserProfilePresenter extends BaseListingsPresenter {
                     mMainView.dismissSpinner();
                     mNextRequested = false;
                 })
-                .doOnNext(getFriendInfo())
-                .subscribe(
-                        mSummaryView::showUserInfo,
-                        error -> {
-                            if (error instanceof IOException) {
-                                String message = mContext.getString(R.string.error_network_unavailable);
-                                mMainView.showError(message);
-                            } else {
-                                Timber.w(error, "Error loading friend info");
-                                String message = mContext.getString(R.string.error_get_user_info);
-                                mMainView.showError(message);
-                            }
-                        }
-                );
-        mRedditService.getUserTrophies(mSummaryView.getUsernameContext())
+                .doOnNext(getFriendInfo());
+    }
+
+    Observable<List<Listing>> getTrophies() {
+        return mRedditService.getUserTrophies(mSummaryView.getUsernameContext())
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        mSummaryView::showTrophies,
-                        error -> {
-                            if (error instanceof IOException) {
-                                String message = mContext.getString(R.string.error_network_unavailable);
-                                mMainView.showError(message);
-                            } else {
-                                Timber.w(error, "Error loading user trophies");
-                                String message = mContext.getString(R.string.error_get_user_trophies);
-                                mMainView.showError(message);
-                            }
-                        }
-                );
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    static class UserInfoTuple {
+
+        public UserIdentity identity;
+        public List<Listing> trophies;
+    }
+
+    private void getSummaryData() {
+        Observable.combineLatest(
+                getUserInfo(), getTrophies(),
+                (userIdentity, listings) -> {
+                    UserInfoTuple tuple = new UserInfoTuple();
+                    tuple.identity = userIdentity;
+                    tuple.trophies = listings;
+                    return tuple;
+                }
+        )
+                .subscribe(onGetUserInfo(), onGetUserInfoError());
+    }
+
+    Action1<UserInfoTuple> onGetUserInfo() {
+        return (info) -> {
+            mSummaryView.showUserInfo(info.identity);
+            mSummaryView.showTrophies(info.trophies);
+        };
+    }
+
+    Action1<Throwable> onGetUserInfoError() {
+        return (error) -> {
+            if (error instanceof IOException) {
+                String message = mContext.getString(R.string.error_network_unavailable);
+                mMainView.showError(message);
+            } else {
+                Timber.w(error, "Error loading friend info");
+                String message = mContext.getString(R.string.error_get_user_info);
+                mMainView.showError(message);
+            }
+        };
     }
 
     private Action1<UserIdentity> getFriendInfo() {
