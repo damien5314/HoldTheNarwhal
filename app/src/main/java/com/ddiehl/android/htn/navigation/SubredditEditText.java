@@ -35,6 +35,8 @@ public class SubredditEditText extends AppCompatEditText {
         addTextChangedListener(mTextChangedListener);
     }
 
+    static final String SUBREDDIT_PREFIX = "r/";
+
     TextWatcher getTextChangedListener() {
         return new TextWatcher() {
             private CharSequence before;
@@ -64,15 +66,15 @@ public class SubredditEditText extends AppCompatEditText {
                 }
 
                 // If input doesn't start with the subreddit link prefix, add it
-                if (!input.toString().startsWith("/r/")) {
+                if (!input.toString().startsWith(SUBREDDIT_PREFIX)) {
                     removeTextChangedListener(mTextChangedListener);
-                    input.insert(0, "/r/");
+                    input.insert(0, SUBREDDIT_PREFIX);
                     addTextChangedListener(mTextChangedListener);
                     return;
                 }
 
                 // If input is length 3 ("/r/"), just clear the field
-                if (input.length() == 3) {
+                if (input.length() == SUBREDDIT_PREFIX.length()) {
                     removeTextChangedListener(mTextChangedListener);
                     input.clear();
                     addTextChangedListener(mTextChangedListener);
@@ -80,7 +82,8 @@ public class SubredditEditText extends AppCompatEditText {
                 }
 
                 // Extra check if user typed a space
-                if (!input.subSequence(0, 3).equals("/r/") || input.toString().contains(" ")) {
+                if (!input.toString().subSequence(0, SUBREDDIT_PREFIX.length()).equals(SUBREDDIT_PREFIX)
+                        || input.toString().contains(" ")) {
                     removeTextChangedListener(mTextChangedListener);
                     input.replace(0, input.length(), before);
                     addTextChangedListener(mTextChangedListener);
