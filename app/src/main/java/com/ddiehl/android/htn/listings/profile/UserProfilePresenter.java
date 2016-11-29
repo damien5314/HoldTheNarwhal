@@ -25,6 +25,12 @@ import timber.log.Timber;
 
 public class UserProfilePresenter extends BaseListingsPresenter {
 
+    static class UserInfoTuple {
+        public UserIdentity user;
+        public FriendInfo friend;
+        public List<Listing> trophies;
+    }
+
     private final UserProfileView mSummaryView;
 
     public UserProfilePresenter(MainView main, RedditNavigationView navigationView, UserProfileView view) {
@@ -101,9 +107,9 @@ public class UserProfilePresenter extends BaseListingsPresenter {
         return mRedditService.getUserInfo(mSummaryView.getUsernameContext())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .map(userIdentity -> {
+                .map(identity -> {
                     UserInfoTuple info = new UserInfoTuple();
-                    info.identity = userIdentity;
+                    info.user = identity;
                     return info;
                 })
                 .flatMap(getFriendInfo());
@@ -115,17 +121,12 @@ public class UserProfilePresenter extends BaseListingsPresenter {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    static class UserInfoTuple {
-        public UserIdentity identity;
-        public FriendInfo friend;
-        public List<Listing> trophies;
-    }
-
     private void getSummaryData() {
         Observable.combineLatest(
                 getUserInfo(), getTrophies(),
-                (tuple, listings) -> {
-                    tuple.trophies = listings;
+                // Combine trophies into the user info tuple
+                (tuple, trophies) -> {
+                    tuple.trophies = trophies;
                     return tuple;
                 }
         )
@@ -143,11 +144,11 @@ public class UserProfilePresenter extends BaseListingsPresenter {
     Action1<UserInfoTuple> onGetUserInfo() {
         return (info) -> {
             // Show user info and trophies
-            mSummaryView.showUserInfo(info.identity);
+            mSummaryView.showUserInfo(info.user);
             mSummaryView.showTrophies(info.trophies);
 
             // Show friend note if we received it, and user is gold
-            if (info.identity != null && info.identity.isGold() && info.friend != null) {
+            if (info.user != null && info.user.isGold() && info.friend != null) {
                 mSummaryView.showFriendNote(info.friend.getNote());
             }
         };
@@ -168,8 +169,8 @@ public class UserProfilePresenter extends BaseListingsPresenter {
 
     private Func1<UserInfoTuple, Observable<UserInfoTuple>> getFriendInfo() {
         return (tuple) -> {
-            if (tuple.identity.isFriend()) {
-                return mRedditService.getFriendInfo(tuple.identity.getName())
+            if (tuple.user.isFriend()) {
+                return mRedditService.getFriendInfo(tuple.user.getName())
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .map(friendInfo -> {
