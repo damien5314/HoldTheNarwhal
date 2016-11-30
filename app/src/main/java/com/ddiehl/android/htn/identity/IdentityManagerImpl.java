@@ -48,7 +48,15 @@ public class IdentityManagerImpl implements IdentityManager {
     @Override
     public UserIdentity getUserIdentity() {
         if (mUserIdentity == null) {
-            mUserIdentity = getSavedUserIdentity();
+            UserIdentity identity = getSavedUserIdentity();
+
+            // Pass user identity to Crashlytics
+            if (identity != null) {
+                String hashedUsername = Utils.getMd5HexString(identity.getName());
+                Crashlytics.setUserIdentifier(hashedUsername);
+            }
+
+            mUserIdentity = identity;
         }
         return mUserIdentity;
     }
@@ -78,10 +86,6 @@ public class IdentityManagerImpl implements IdentityManager {
 
     @Override
     public void saveUserIdentity(@NonNull UserIdentity identity) {
-        // Pass user identity to Crashlytics
-        String hashedUsername = Utils.getMd5HexString(identity.getName());
-        Crashlytics.setUserIdentifier(hashedUsername);
-
         mUserIdentity = identity;
         Boolean hasMail = identity.hasMail();
         String name = identity.getName();
