@@ -7,6 +7,8 @@ import android.support.v4.app.Fragment;
 
 import com.ddiehl.android.htn.view.FragmentActivityCompat;
 
+import timber.log.Timber;
+
 public class LinkCommentsActivity extends FragmentActivityCompat {
 
     private static final String EXTRA_SUBREDDIT = "EXTRA_SUBREDDIT";
@@ -52,6 +54,7 @@ public class LinkCommentsActivity extends FragmentActivityCompat {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Timber.i("Showing LinkCommentsActivity: %s", getSubreddit());
         showTabs(false);
     }
 }

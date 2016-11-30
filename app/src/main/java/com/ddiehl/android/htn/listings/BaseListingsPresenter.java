@@ -187,6 +187,8 @@ public abstract class BaseListingsPresenter
                 String message = mContext.getString(R.string.error_get_links);
                 mMainView.showError(message);
             } else {
+                Timber.i("Loaded %d listings", listings.size());
+
                 if (append) {
                     int lastIndex = mListings.size() - 1;
                     mListings.addAll(listings);

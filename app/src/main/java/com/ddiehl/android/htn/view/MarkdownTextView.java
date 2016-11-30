@@ -14,6 +14,7 @@ import java.util.regex.Pattern;
 import javax.inject.Inject;
 
 import in.uncod.android.bypass.Bypass;
+import timber.log.Timber;
 
 public class MarkdownTextView extends AppCompatTextView {
 
@@ -49,6 +50,8 @@ public class MarkdownTextView extends AppCompatTextView {
     @Override
     public void setText(CharSequence text, BufferType type) {
         mRawText = text;
+        Timber.i("Setting markdown text, length %d", text.length());
+
         if (isInEditMode() || mBypass == null) {
             super.setText(text, type);
         } else {

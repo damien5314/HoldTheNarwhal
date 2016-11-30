@@ -27,7 +27,7 @@ public class DeepLinkDispatcher extends BaseActivity {
 
     // TODO Analytics
     private void processDeepLink(@NonNull Uri uri) {
-        Timber.d("Deep Link: %s", uri.toString());
+        Timber.i("Deep link: %s", uri.toString());
         List<String> segments = uri.getPathSegments();
         if (segments.size() == 0) {
             // Front page

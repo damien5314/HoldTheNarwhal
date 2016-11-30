@@ -33,10 +33,13 @@ public class InboxPresenter extends BaseListingsPresenter {
     }
 
     private void requestData(boolean append) {
-        // TODO Analytics
+        String show = mInboxView.getShow();
+        Timber.i("Getting inbox (%s)", show);
+
         String prevId = append ? null : mPrevPageListingId;
         String nextId = append ? mNextPageListingId : null;
-        mRedditService.getInbox(mInboxView.getShow(), prevId, nextId)
+
+        mRedditService.getInbox(show, prevId, nextId)
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(() -> {
                     mMainView.showSpinner();

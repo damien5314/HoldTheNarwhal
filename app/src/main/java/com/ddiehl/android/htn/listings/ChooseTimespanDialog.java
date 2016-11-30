@@ -11,6 +11,8 @@ import android.support.v7.app.AlertDialog;
 
 import com.ddiehl.android.htn.R;
 
+import timber.log.Timber;
+
 public class ChooseTimespanDialog extends DialogFragment {
 
     public static final String TAG = ChooseTimespanDialog.class.getSimpleName();
@@ -47,10 +49,17 @@ public class ChooseTimespanDialog extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(R.string.menu_timespan_title)
                 .setSingleChoiceItems(R.array.timespan_options, selectedItem, (dialog, which) -> {
-                    String selectedChoice = getResources().getStringArray(R.array.timespan_option_values)[which];
+                    String timespan =
+                            getResources().getStringArray(R.array.timespan_option_values)[which];
+                    Timber.i("Timespan selected: %s", timespan);
+
                     Intent data = new Intent();
-                    data.putExtra(EXTRA_TIMESPAN, selectedChoice);
-                    getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, data);
+                    data.putExtra(EXTRA_TIMESPAN, timespan);
+
+                    getTargetFragment().onActivityResult(
+                            getTargetRequestCode(), Activity.RESULT_OK, data
+                    );
+
                     dismiss();
                 });
         return builder.create();

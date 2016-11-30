@@ -143,6 +143,8 @@ public class UserProfilePresenter extends BaseListingsPresenter {
 
     Action1<UserInfoTuple> onGetUserInfo() {
         return (info) -> {
+            Timber.i("Showing user profile summary: %s", info.user.getId());
+
             // Show user info and trophies
             mSummaryView.showUserInfo(info.user);
             mSummaryView.showTrophies(info.trophies);

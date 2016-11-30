@@ -9,6 +9,8 @@ import android.support.v7.app.AlertDialog;
 
 import com.ddiehl.android.htn.R;
 
+import timber.log.Timber;
+
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 
@@ -19,13 +21,18 @@ public class NsfwWarningDialog extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        Timber.i("Showing NSFW warning dialog");
         return new AlertDialog.Builder(getActivity())
                 .setTitle(R.string.dialog_nsfw_title)
                 .setMessage(R.string.dialog_nsfw_message)
-                .setPositiveButton(R.string.dialog_nsfw_confirm, (dialog, which) ->
-                        getTargetFragment().onActivityResult(getTargetRequestCode(), RESULT_OK, null))
+                .setPositiveButton(R.string.dialog_nsfw_confirm, onConfirm())
                 .setNegativeButton(R.string.dialog_nsfw_decline, (dialog, which) -> onCancel(dialog))
                 .create();
+    }
+
+    DialogInterface.OnClickListener onConfirm() {
+        return (dialog, which) ->
+                getTargetFragment().onActivityResult(getTargetRequestCode(), RESULT_OK, null);
     }
 
     @Override

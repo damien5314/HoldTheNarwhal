@@ -82,6 +82,7 @@ public class SubredditInfoFragment extends BaseFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Timber.i("Showing subreddit info: %s", mSubreddit);
 
         HoldTheNarwhal.getApplicationComponent().inject(this);
         FragmentArgs.inject(this);

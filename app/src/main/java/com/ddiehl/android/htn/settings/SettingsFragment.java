@@ -30,6 +30,7 @@ import com.ddiehl.android.htn.utils.MenuTintUtils;
 import javax.inject.Inject;
 
 import rxreddit.model.UserIdentity;
+import timber.log.Timber;
 
 public class SettingsFragment extends PreferenceFragment
         implements SettingsView, SharedPreferences.OnSharedPreferenceChangeListener {
@@ -67,6 +68,7 @@ public class SettingsFragment extends PreferenceFragment
     @Override
     public void onStart() {
         super.onStart();
+        Timber.i("Showing settings");
         getActivity().setTitle(R.string.settings_fragment_title);
     }
 
