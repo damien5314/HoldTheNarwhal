@@ -54,7 +54,7 @@ public class LinkCommentsActivity extends FragmentActivityCompat {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Timber.i("Showing LinkCommentsActivity: %s", getSubreddit());
+        Timber.i("Showing LinkCommentsActivity: %s", getArticleId());
         showTabs(false);
     }
 }
