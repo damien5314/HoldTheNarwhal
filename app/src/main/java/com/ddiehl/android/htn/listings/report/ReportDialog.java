@@ -1,4 +1,4 @@
-package com.ddiehl.android.htn.listings;
+package com.ddiehl.android.htn.listings.report;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;

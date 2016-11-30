@@ -1,4 +1,4 @@
-package com.ddiehl.android.htn.listings;
+package com.ddiehl.android.htn.listings.report;
 
 import android.app.Activity;
 import android.content.Context;
@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
+import com.ddiehl.android.htn.listings.ReportDialogBuilder;
 import com.ddiehl.android.htn.view.TransparentBaseActivity;
 
 import java.io.IOException;
