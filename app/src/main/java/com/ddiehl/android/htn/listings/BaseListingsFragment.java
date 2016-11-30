@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
+import com.ddiehl.android.htn.listings.report.ReportActivity;
 import com.ddiehl.android.htn.listings.subreddit.SubredditActivity;
 import com.ddiehl.android.htn.view.BaseFragment;
 
@@ -30,8 +31,8 @@ import rxreddit.model.Listing;
 import rxreddit.model.PrivateMessage;
 import timber.log.Timber;
 
-import static com.ddiehl.android.htn.listings.ReportActivity.RESULT_REPORT_ERROR;
-import static com.ddiehl.android.htn.listings.ReportActivity.RESULT_REPORT_SUCCESS;
+import static com.ddiehl.android.htn.listings.report.ReportActivity.RESULT_REPORT_ERROR;
+import static com.ddiehl.android.htn.listings.report.ReportActivity.RESULT_REPORT_SUCCESS;
 
 public abstract class BaseListingsFragment extends BaseFragment
         implements ListingsView, SwipeRefreshLayout.OnRefreshListener {

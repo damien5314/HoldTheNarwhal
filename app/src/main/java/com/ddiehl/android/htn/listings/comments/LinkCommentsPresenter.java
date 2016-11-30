@@ -105,13 +105,13 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
             // Get link
             ListingResponse linkResponse = listingResponseList.get(0);
             mLinkContext = (Link) linkResponse.getData().getChildren().get(0);
+            Timber.i("Link: %s", mLinkContext.getFullName());
 
-            // Get comments
+            // Get comments and flatten the comment tree
             ListingResponse commentsResponse = listingResponseList.get(1);
             List<Listing> comments = commentsResponse.getData().getChildren();
-
-            // Flatten the returned comment tree
             RxRedditUtil.flattenCommentList(comments);
+            Timber.i("Comments: %d", comments.size());
 
             // Add comments to CommentBank
             mCommentBank.clear();
@@ -158,6 +158,7 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
             if (comments == null || comments.size() == 0) {
                 mCommentBank.remove(parentStub);
             } else {
+                Timber.i("More comments: %d", comments.size());
                 setDepthForCommentsList(comments, parentStub);
                 int stubIndex = mCommentBank.indexOf(parentStub);
                 parentStub.removeChildren(comments);
@@ -281,7 +282,8 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
                             }
                             mCommentBank.add(position, comment);
                             mLinkCommentsView.notifyItemInserted(
-                                    mCommentBank.visibleIndexOf(comment));
+                                    mCommentBank.visibleIndexOf(comment)
+                            );
                         },
                         error -> {
                             if (error instanceof IOException) {

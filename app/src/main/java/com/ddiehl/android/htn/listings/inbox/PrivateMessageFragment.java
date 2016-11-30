@@ -18,7 +18,7 @@ import android.view.ViewGroup;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
-import com.ddiehl.android.htn.listings.ReportActivity;
+import com.ddiehl.android.htn.listings.report.ReportActivity;
 import com.ddiehl.android.htn.view.BaseFragment;
 import com.google.gson.Gson;
 import com.hannesdorfmann.fragmentargs.FragmentArgs;

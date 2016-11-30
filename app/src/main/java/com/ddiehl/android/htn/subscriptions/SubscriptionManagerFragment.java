@@ -68,6 +68,7 @@ public class SubscriptionManagerFragment extends BaseFragment implements Subscri
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Timber.i("Showing subscriptions");
         HoldTheNarwhal.getApplicationComponent().inject(this);
 
         mPresenter = new SubscriptionManagerPresenter();
@@ -192,6 +193,7 @@ public class SubscriptionManagerFragment extends BaseFragment implements Subscri
             for (Listing l : listings) {
                 subreddits.add((Subreddit) l);
             }
+            Timber.i("Subscriptions loaded: %d", subreddits.size());
 
             mAdapter.addAll(subreddits);
         };

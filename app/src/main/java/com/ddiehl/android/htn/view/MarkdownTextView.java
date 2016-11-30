@@ -49,6 +49,7 @@ public class MarkdownTextView extends AppCompatTextView {
     @Override
     public void setText(CharSequence text, BufferType type) {
         mRawText = text;
+
         if (isInEditMode() || mBypass == null) {
             super.setText(text, type);
         } else {
