@@ -32,7 +32,7 @@ subprojects {
         targetSdkVersion = 25
         buildToolsVersion = "25.0.0"
         supportLibraryVersion = "25.0.1"
-        contraintLayoutVersion = "1.0.0-alpha3"
+        contraintLayoutVersion = "1.0.0-beta4"
         playServicesVersion = "10.0.1"
         glideVersion = "3.7.0"
         butterknifeVersion = "8.4.0"
