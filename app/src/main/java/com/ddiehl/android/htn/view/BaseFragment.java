@@ -157,11 +157,8 @@ public abstract class BaseFragment extends Fragment implements MainView {
         startActivity(i);
     }
 
-    private int mDialogCount = 0;
-
     @Override
     public void showSpinner() {
-        mDialogCount++;
         if (mLoadingOverlay == null) {
             mLoadingOverlay = new ProgressDialog(getContext(), R.style.ProgressDialog);
             mLoadingOverlay.setCancelable(false);
@@ -198,9 +195,7 @@ public abstract class BaseFragment extends Fragment implements MainView {
 
     @Override
     public void dismissSpinner() {
-        mDialogCount--;
-        if (mDialogCount < 0) mDialogCount = 0;
-        if (mLoadingOverlay != null && mLoadingOverlay.isShowing() && mDialogCount == 0) {
+        if (mLoadingOverlay != null && mLoadingOverlay.isShowing() && isAdded()) {
             mLoadingOverlay.dismiss();
         }
     }

@@ -11,6 +11,7 @@ import android.widget.EditText;
 import com.ddiehl.android.htn.R;
 
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
 public class SubredditNavigationDialog extends DialogFragment {
 
@@ -45,22 +46,31 @@ public class SubredditNavigationDialog extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        Timber.i("Showing subreddit navigation dialog");
+
         Dialog dialog = new Dialog(getActivity());
+
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.navigate_to_subreddit_edit_text);
+
         ButterKnife.findById(dialog, R.id.drawer_navigate_to_subreddit_go)
                 .setOnClickListener((v) -> {
-                    EditText vInput = ButterKnife.findById(dialog,
+                    EditText inputEditText = ButterKnife.findById(dialog,
                             R.id.drawer_navigate_to_subreddit_text);
-                    String inputSubreddit = vInput.getText().toString();
-                    if (inputSubreddit.equals("")) return;
+                    String inputSubreddit = inputEditText.getText().toString();
+
+                    if (inputSubreddit.equals("")) {
+                        return;
+                    }
 
                     inputSubreddit = inputSubreddit.substring(3);
                     inputSubreddit = inputSubreddit.trim();
-                    vInput.setText("");
+                    inputEditText.setText("");
+
                     dialog.dismiss();
                     mListener.onSubredditNavigationConfirmed(inputSubreddit);
                 });
+
         return dialog;
     }
 }

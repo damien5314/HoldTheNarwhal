@@ -2,8 +2,11 @@ package com.ddiehl.android.htn.identity;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.support.annotation.NonNull;
 
+import com.crashlytics.android.Crashlytics;
 import com.ddiehl.android.htn.settings.SettingsManager;
+import com.ddiehl.android.htn.utils.Utils;
 
 import java.util.Date;
 import java.util.HashSet;
@@ -45,7 +48,15 @@ public class IdentityManagerImpl implements IdentityManager {
     @Override
     public UserIdentity getUserIdentity() {
         if (mUserIdentity == null) {
-            mUserIdentity = getSavedUserIdentity();
+            UserIdentity identity = getSavedUserIdentity();
+
+            // Pass user identity to Crashlytics
+            if (identity != null) {
+                String hashedUsername = Utils.getMd5HexString(identity.getName());
+                Crashlytics.setUserIdentifier(hashedUsername);
+            }
+
+            mUserIdentity = identity;
         }
         return mUserIdentity;
     }
@@ -74,7 +85,7 @@ public class IdentityManagerImpl implements IdentityManager {
     }
 
     @Override
-    public void saveUserIdentity(UserIdentity identity) {
+    public void saveUserIdentity(@NonNull UserIdentity identity) {
         mUserIdentity = identity;
         Boolean hasMail = identity.hasMail();
         String name = identity.getName();
@@ -117,6 +128,9 @@ public class IdentityManagerImpl implements IdentityManager {
 
     @Override
     public void clearSavedUserIdentity() {
+        // Clear identity from Crashlytics
+        Crashlytics.setUserIdentifier(null);
+
         mUserIdentity = null;
         mContext.getSharedPreferences(PREFS_USER_IDENTITY, Context.MODE_PRIVATE)
                 .edit().clear().apply();

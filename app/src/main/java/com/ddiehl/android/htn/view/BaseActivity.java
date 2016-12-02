@@ -401,10 +401,18 @@ public abstract class BaseActivity extends AppCompatActivity implements
             extras.putBinder(EXTRA_CUSTOM_TABS_SESSION, null);
             extras.putInt(EXTRA_CUSTOM_TABS_TOOLBAR_COLOR, ContextCompat.getColor(this, R.color.primary));
             intent.putExtras(extras);
-            startActivity(intent);
-        } else {
-            showWebViewForURL(url);
+
+            // Check if Activity exists to handle the Intent
+            // Should resolve https://fabric.io/projects11111111111476634619/android/apps/com.ddiehl.android.htn/issues/583bb8cd0aeb16625b5bed8c
+            if (intent.resolveActivity(getPackageManager()) != null) {
+                Timber.e("No Activity found that can handle custom tabs Intent");
+                startActivity(intent);
+                return;
+            }
         }
+
+        // Show web view for URL if we didn't show it in custom tabs
+        showWebViewForURL(url);
     }
 
     private void showWebViewForURL(@NonNull String url) {

@@ -1,4 +1,4 @@
-package com.ddiehl.android.htn.listings;
+package com.ddiehl.android.htn.listings.report;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 
 import com.ddiehl.android.htn.R;
 import com.hannesdorfmann.fragmentargs.FragmentArgs;
@@ -114,7 +115,8 @@ public class ReportDialog extends DialogFragment {
             });
 
             // Set text for option
-            selector.setText(reportOptions[i]);
+            TextView selectorText = findById(optionView, R.id.report_choice_text);
+            selectorText.setText(reportOptions[i]);
 
             // Add view to parent
             parent.addView(optionView);

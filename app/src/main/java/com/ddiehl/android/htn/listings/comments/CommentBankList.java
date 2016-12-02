@@ -184,18 +184,23 @@ public class CommentBankList implements CommentBank {
     @Override
     public void collapseAllThreadsUnder(@Nullable Integer score) {
         if (score == null) return;
-        Listing current;
-        Comment comment;
+
         for (int i = 0; i < mData.size(); i++) {
-            current = mData.get(i);
+            Listing current = mData.get(i);
+
+            // Check if we're actually looking at a comment and not a stub
             if (!(current instanceof Comment)) {
                 continue;
             }
-            comment = (Comment) current;
+            Comment comment = (Comment) current;
+
+            // If the comment is collaped, it's already hidden, ignore
             if (comment.isCollapsed()) {
                 continue;
             }
-            if (comment.getScore() < score) {
+
+            // If comment has score and it's less than the minimum score, hide it
+            if (comment.getScore() != null && comment.getScore() < score) {
                 setThreadVisible(i, false);
             }
         }

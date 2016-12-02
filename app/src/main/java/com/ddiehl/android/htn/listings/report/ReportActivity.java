@@ -1,4 +1,4 @@
-package com.ddiehl.android.htn.listings;
+package com.ddiehl.android.htn.listings.report;
 
 import android.app.Activity;
 import android.content.Context;
@@ -163,16 +163,19 @@ public class ReportActivity extends TransparentBaseActivity
 
     @Override
     public void onRuleSubmitted(String rule) {
+        Timber.i("Report submitted for rule");
         report(rule, null, null);
     }
 
     @Override
     public void onSiteRuleSubmitted(String rule) {
+        Timber.i("Report submitted for site rule");
         report(null, rule, null);
     }
 
     @Override
     public void onOtherSubmitted(String reason) {
+        Timber.i("Report submitted for other reason");
         // API does not properly save reasons passed in the 'other_reason' field,
         // so just pass it in the 'reason' field
         report(reason, null, null);

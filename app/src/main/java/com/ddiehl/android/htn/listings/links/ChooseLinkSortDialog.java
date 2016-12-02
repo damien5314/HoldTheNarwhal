@@ -10,6 +10,8 @@ import android.support.v7.app.AlertDialog;
 
 import com.ddiehl.android.htn.R;
 
+import timber.log.Timber;
+
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 
@@ -50,6 +52,7 @@ public class ChooseLinkSortDialog extends DialogFragment {
         builder.setTitle(R.string.menu_sort_title)
                 .setSingleChoiceItems(R.array.link_sort_options, selectedItem, (dialog, which) -> {
                     String sort = getResources().getStringArray(R.array.link_sort_option_values)[which];
+                    Timber.i("Selected link sort: %s", sort);
                     finish(sort);
                 });
         return builder.create();

@@ -7,6 +7,8 @@ import android.support.v4.app.Fragment;
 
 import com.ddiehl.android.htn.view.FragmentActivityCompat;
 
+import timber.log.Timber;
+
 public class AboutAppActivity extends FragmentActivityCompat {
 
     public static Intent getIntent(Context context) {
@@ -31,6 +33,7 @@ public class AboutAppActivity extends FragmentActivityCompat {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Timber.i("Showing about app");
         showTabs(false);
     }
 }

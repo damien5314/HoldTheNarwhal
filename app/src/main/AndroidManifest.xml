@@ -87,7 +87,7 @@
                 android:name=".subredditinfo.SubredditInfoActivity" />
 
         <activity
-                android:name=".listings.ReportActivity"
+                android:name=".listings.report.ReportActivity"
                 android:theme="@style/TransparentTheme" />
 
     </application>

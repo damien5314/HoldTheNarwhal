@@ -7,6 +7,8 @@ import android.support.v4.app.Fragment;
 
 import com.ddiehl.android.htn.view.FragmentActivityCompat;
 
+import timber.log.Timber;
+
 public class SubredditActivity extends FragmentActivityCompat {
 
     public static final String TAG = SubredditActivity.class.getSimpleName();
@@ -57,6 +59,7 @@ public class SubredditActivity extends FragmentActivityCompat {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Timber.i("Showing subreddit: %s", getSubreddit());
         showTabs(false);
     }
 }

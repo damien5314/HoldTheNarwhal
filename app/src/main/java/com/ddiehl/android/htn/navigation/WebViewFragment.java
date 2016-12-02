@@ -88,6 +88,7 @@ public class WebViewFragment extends BaseFragment {
 
         // Load url
         mWebView.loadUrl(mUrl);
+        Timber.i("Showing WebView for URL: %s", mUrl);
 
         return view;
     }
