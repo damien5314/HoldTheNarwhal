@@ -45,6 +45,7 @@ public class SettingsFragment extends PreferenceFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Timber.i("Showing settings");
         HoldTheNarwhal.getApplicationComponent().inject(this);
 
         setRetainInstance(true);
@@ -68,26 +69,21 @@ public class SettingsFragment extends PreferenceFragment
     @Override
     public void onStart() {
         super.onStart();
-        Timber.i("Showing settings");
         getActivity().setTitle(R.string.settings_fragment_title);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
         getActivity().getSharedPreferences(SettingsManagerImpl.PREFS_USER, Context.MODE_PRIVATE)
                 .registerOnSharedPreferenceChangeListener(this);
 
         if (mSettingsPresenter.isUserAuthorized()) {
-            mSettingsPresenter.refresh(true);
+            boolean pullFromServer = mSettingsPresenter.isRefreshable();
+            mSettingsPresenter.refresh(pullFromServer);
         }
     }
 
     @Override
-    public void onPause() {
+    public void onStop() {
         getActivity().getSharedPreferences(SettingsManagerImpl.PREFS_USER, Context.MODE_PRIVATE)
                 .unregisterOnSharedPreferenceChangeListener(this);
-        super.onPause();
+        super.onStop();
     }
 
     @Override
@@ -176,13 +172,13 @@ public class SettingsFragment extends PreferenceFragment
     }
 
     @Override
-    public void showSpinner(String message) {
+    public void showSpinner() {
         if (mLoadingOverlay == null) {
             mLoadingOverlay = new ProgressDialog(getView().getContext(), R.style.ProgressDialog);
             mLoadingOverlay.setCancelable(false);
             mLoadingOverlay.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         }
-        mLoadingOverlay.setMessage(message);
+//        mLoadingOverlay.setMessage(message);
         mLoadingOverlay.show();
     }
 

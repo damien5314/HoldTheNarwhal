@@ -6,7 +6,7 @@ public interface SettingsView {
 
     void showToast(String message);
 
-    void showSpinner(String message);
+    void showSpinner();
 
     void dismissSpinner();
 }

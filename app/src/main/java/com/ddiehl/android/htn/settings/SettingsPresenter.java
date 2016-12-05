@@ -33,9 +33,10 @@ public class SettingsPresenter {
     public void refresh(boolean pullFromServer) {
         boolean showUser = mSettingsManager.hasFromRemote();
         mSettingsView.showPreferences(showUser);
+
         if (pullFromServer) {
             if (AndroidUtils.isConnectedToNetwork(mContext)) {
-                getData();
+                loadServerData();
             } else {
                 String message = mContext.getString(R.string.error_network_unavailable);
                 mSettingsView.showToast(message);
@@ -43,11 +44,12 @@ public class SettingsPresenter {
         }
     }
 
-    private void getData() {
-        mSettingsView.showSpinner(null);
+    void loadServerData() {
         mRedditService.getUserSettings()
-                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .doOnTerminate(mSettingsView::dismissSpinner)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe(mSettingsView::showSpinner)
+                .doOnUnsubscribe(mSettingsView::dismissSpinner)
                 .doOnNext(mSettingsManager::saveUserSettings)
                 .subscribe(
                         settings -> refresh(false),
@@ -65,7 +67,7 @@ public class SettingsPresenter {
     }
 
     public boolean isRefreshable() {
-        return mSettingsManager.hasFromRemote();
+        return !mSettingsManager.hasFromRemote();
     }
 
     public boolean isUserAuthorized() {
