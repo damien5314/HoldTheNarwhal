@@ -377,20 +377,36 @@ public class UserProfileFragment extends BaseListingsFragment
     @Override
     public void showTrophies(List<Listing> trophies) {
         mTrophies.removeAllViews();
-        if (trophies == null || trophies.size() == 0) return; // Nothing to show
+
+        if (trophies == null || trophies.size() == 0) {
+            return; // Nothing to show
+        }
+
         LayoutInflater inflater = getActivity().getLayoutInflater();
         for (Listing listing : trophies) {
-            ImageView imageView = (ImageView) inflater.inflate(R.layout.trophy_layout, mTrophies, false);
             Trophy trophy = (Trophy) listing;
             String name = trophy.getName();
+
+            // Inflate trophy layout
+            ImageView imageView = (ImageView) inflater.inflate(R.layout.trophy_layout, mTrophies, false);
+
+            // Set accessible description
             imageView.setContentDescription(name);
+
+            // Show toast on click
             imageView.setOnClickListener(
-                    view -> Toast.makeText(view.getContext(), name, Toast.LENGTH_SHORT).show());
+                    view -> Toast.makeText(view.getContext(), name, Toast.LENGTH_SHORT).show()
+            );
+
+            // Load image
             Glide.with(getActivity())
                     .load(trophy.getIcon70())
                     .into(imageView);
+
+            // Add view to GridLayout
             mTrophies.addView(imageView);
         }
+
         // Calculate and set number of columns
         final int trophiesWidth = mTrophies.getWidth();
         final int trophyMargin = ((GridLayout.LayoutParams) mTrophies.getChildAt(0).getLayoutParams())
