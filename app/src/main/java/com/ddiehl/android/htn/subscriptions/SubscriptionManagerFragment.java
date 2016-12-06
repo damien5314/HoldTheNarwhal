@@ -85,6 +85,9 @@ public class SubscriptionManagerFragment extends BaseFragment implements Subscri
 
         mSwipeRefreshLayout.setOnRefreshListener(onSwipeRefresh());
 
+        // FIXME
+        // The problem lies here, when the view is recreated on rotation, we are reinstantiating an adapter
+        // which holds the data. But why is the Adapter lost on rotation if we are retaining the instance?
         initListView(mRecyclerView);
 
         mSearchButton.setOnClickListener(button -> {
@@ -113,30 +116,34 @@ public class SubscriptionManagerFragment extends BaseFragment implements Subscri
         recyclerView.setLayoutManager(layoutManager);
 
         // Initialize adapter
-        SubscriptionManagerAdapter adapter = new SubscriptionManagerAdapter(this, mPresenter);
-        recyclerView.setAdapter(adapter);
+        if (mAdapter == null) {
+            SubscriptionManagerAdapter adapter = new SubscriptionManagerAdapter(this, mPresenter);
 
-        // Add scroll listener for fetching more items
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                final int first = layoutManager.findFirstVisibleItemPosition();
-                final int last = layoutManager.findLastVisibleItemPosition();
+            // Add scroll listener for fetching more items
+            recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                    final int first = layoutManager.findFirstVisibleItemPosition();
+                    final int last = layoutManager.findLastVisibleItemPosition();
 
-                if (first != 0 && last == mAdapter.getItemCount() - 1
-                        && mNextPageId != null) {
-                    requestNextPage();
+                    if (first != 0 && last == mAdapter.getItemCount() - 1
+                            && mNextPageId != null) {
+                        requestNextPage();
+                    }
                 }
-            }
-        });
+            });
 
-        // Add touch helper for handling swipe gestures
-        ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter);
-        ItemTouchHelper helper = new ItemTouchHelper(callback);
-        helper.attachToRecyclerView(recyclerView);
+            // Add touch helper for handling swipe gestures
+            ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter);
+            ItemTouchHelper helper = new ItemTouchHelper(callback);
+            helper.attachToRecyclerView(recyclerView);
 
-        // Cache adapter
-        mAdapter = adapter;
+            // Cache adapter
+            mAdapter = adapter;
+        }
+
+        // Set to RecyclerView
+        recyclerView.setAdapter(mAdapter);
     }
 
     @Override
