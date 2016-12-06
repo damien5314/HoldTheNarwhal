@@ -408,11 +408,9 @@ public class UserProfileFragment extends BaseListingsFragment
         }
 
         // Calculate and set number of columns
-        final int trophiesWidth = mTrophies.getWidth();
-        final int trophyMargin = ((GridLayout.LayoutParams) mTrophies.getChildAt(0).getLayoutParams())
-                .rightMargin;
-        final int imageWidth = 70; // We always retrieve the 70px version
-        final int columns = trophiesWidth / (imageWidth + trophyMargin);
+        GridLayout.LayoutParams params = (GridLayout.LayoutParams) mTrophies.getChildAt(0)
+                .getLayoutParams();
+        final int columns = mTrophies.getWidth() / (params.width + params.rightMargin);
         mTrophies.setColumnCount(columns);
     }
 
