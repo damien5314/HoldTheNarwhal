@@ -86,8 +86,8 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onStart() {
+        super.onStart();
 
         // Load subreddit image into drawer header
         Subreddit subredditInfo = mSubredditPresenter.getSubredditInfo();

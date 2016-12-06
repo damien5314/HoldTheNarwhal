@@ -147,8 +147,8 @@ public class SubscriptionManagerFragment extends BaseFragment implements Subscri
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onStart() {
+        super.onStart();
 
         if (!mAdapter.hasData()) {
             requestNextPage();
