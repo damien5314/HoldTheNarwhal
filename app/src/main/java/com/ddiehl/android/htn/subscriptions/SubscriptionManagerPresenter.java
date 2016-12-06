@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
+import com.ddiehl.android.htn.subredditinfo.InfoTuple;
 
 import javax.inject.Inject;
 
@@ -41,5 +42,19 @@ public class SubscriptionManagerPresenter {
     public Observable<Void> unsubscribe(Subreddit subreddit) {
         String name = subreddit.getDisplayName();
         return mRedditService.unsubscribe(name);
+    }
+
+    public Observable<InfoTuple> getSubredditInfo(final @NonNull String subreddit) {
+        return Observable.combineLatest(
+                mRedditService.getSubredditInfo(subreddit),
+                mRedditService.getSubredditRules(subreddit),
+//                mRedditService.getSubredditSidebar(subreddit),
+                (subreddit2, rules) -> {
+                    InfoTuple tuple = new InfoTuple();
+                    tuple.subreddit = subreddit2;
+                    tuple.rules = rules;
+                    return tuple;
+                }
+        );
     }
 }

@@ -65,8 +65,7 @@ public class SubredditInfoFragment extends BaseFragment {
 
     @Arg String mSubreddit;
 
-    SubredditInfoLoader mSubredditInfoLoader;
-    SubscriptionManagerPresenter mSubscriptionManager;
+    SubscriptionManagerPresenter mSubscriptionManagerPresenter;
     InfoTuple mSubredditInfo;
 
     @Override
@@ -87,8 +86,7 @@ public class SubredditInfoFragment extends BaseFragment {
         HoldTheNarwhal.getApplicationComponent().inject(this);
         FragmentArgs.inject(this);
 
-        mSubredditInfoLoader = new SubredditInfoLoader();
-        mSubscriptionManager = new SubscriptionManagerPresenter();
+        mSubscriptionManagerPresenter = new SubscriptionManagerPresenter();
 
         setTitle("");
     }
@@ -107,12 +105,16 @@ public class SubredditInfoFragment extends BaseFragment {
     }
 
     void loadSubredditInfo() {
-        mSubredditInfoLoader.getSubredditInfo(mSubreddit)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe(this::showSpinner)
-                .doOnUnsubscribe(this::dismissSpinner)
-                .subscribe(onSubredditInfoLoaded(), onSubredditInfoLoadError());
+        if (mSubredditInfo == null) {
+            mSubscriptionManagerPresenter.getSubredditInfo(mSubreddit)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .doOnSubscribe(this::showSpinner)
+                    .doOnUnsubscribe(this::dismissSpinner)
+                    .subscribe(onSubredditInfoLoaded(), onSubredditInfoLoadError());
+        } else {
+            onSubredditInfoLoaded().call(mSubredditInfo);
+        }
     }
 
     Action1<Throwable> onSubredditInfoLoadError() {
@@ -169,7 +171,7 @@ public class SubredditInfoFragment extends BaseFragment {
                 mSubscribeButtonLayout.setEnabled(false);
 
                 // Subscribe to subreddit
-                mSubscriptionManager.subscribe(subreddit)
+                mSubscriptionManagerPresenter.subscribe(subreddit)
                         .doOnUnsubscribe(() -> showSubscribeButton(mSubredditInfo.subreddit))
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
@@ -198,7 +200,7 @@ public class SubredditInfoFragment extends BaseFragment {
                 mSubscribeButtonLayout.setEnabled(false);
 
                 // Unsubscribe from subreddit
-                mSubscriptionManager.unsubscribe(subreddit)
+                mSubscriptionManagerPresenter.unsubscribe(subreddit)
                         .doOnUnsubscribe(() -> showSubscribeButton(mSubredditInfo.subreddit))
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
