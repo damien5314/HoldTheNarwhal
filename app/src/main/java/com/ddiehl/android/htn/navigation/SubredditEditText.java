@@ -109,8 +109,12 @@ public class SubredditEditText extends AppCompatEditText {
 
     public String getInput() {
         String input = getText().toString();
-        // Trim the "r/" portion of the input field
-        input = input.substring(SUBREDDIT_PREFIX.length());
-        return input;
+        if (input.equals("")) {
+            return "";
+        } else {
+            // Trim the "r/" portion of the input field
+            input = input.substring(SUBREDDIT_PREFIX.length());
+            return input;
+        }
     }
 }
