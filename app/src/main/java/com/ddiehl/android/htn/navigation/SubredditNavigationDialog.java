@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.view.Window;
-import android.widget.EditText;
 
 import com.ddiehl.android.htn.R;
 
@@ -55,20 +54,18 @@ public class SubredditNavigationDialog extends DialogFragment {
 
         ButterKnife.findById(dialog, R.id.drawer_navigate_to_subreddit_go)
                 .setOnClickListener((v) -> {
-                    EditText inputEditText = ButterKnife.findById(dialog,
-                            R.id.drawer_navigate_to_subreddit_text);
-                    String inputSubreddit = inputEditText.getText().toString();
+                    SubredditEditText inputEditText = ButterKnife.findById(
+                            dialog, R.id.drawer_navigate_to_subreddit_text
+                    );
+                    String input = inputEditText.getInput();
 
-                    if (inputSubreddit.equals("")) {
-                        return;
+                    if (!input.equals("")) {
+                        input = input.trim();
+                        inputEditText.setText("");
+
+                        dialog.dismiss();
+                        mListener.onSubredditNavigationConfirmed(input);
                     }
-
-                    inputSubreddit = inputSubreddit.substring(3);
-                    inputSubreddit = inputSubreddit.trim();
-                    inputEditText.setText("");
-
-                    dialog.dismiss();
-                    mListener.onSubredditNavigationConfirmed(inputSubreddit);
                 });
 
         return dialog;

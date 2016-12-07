@@ -17,6 +17,8 @@ import butterknife.OnFocusChange;
 
 public class SubredditEditText extends AppCompatEditText {
 
+    private static final String SUBREDDIT_PREFIX = "r/";
+
     TextWatcher mTextChangedListener;
 
     public SubredditEditText(Context context) {
@@ -34,8 +36,6 @@ public class SubredditEditText extends AppCompatEditText {
         mTextChangedListener = getTextChangedListener();
         addTextChangedListener(mTextChangedListener);
     }
-
-    static final String SUBREDDIT_PREFIX = "r/";
 
     TextWatcher getTextChangedListener() {
         return new TextWatcher() {
@@ -105,5 +105,16 @@ public class SubredditEditText extends AppCompatEditText {
     @OnEditorAction
     boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
         return actionId == EditorInfo.IME_ACTION_DONE;
+    }
+
+    public String getInput() {
+        String input = getText().toString();
+        if (input.equals("")) {
+            return "";
+        } else {
+            // Trim the "r/" portion of the input field
+            input = input.substring(SUBREDDIT_PREFIX.length());
+            return input;
+        }
     }
 }
