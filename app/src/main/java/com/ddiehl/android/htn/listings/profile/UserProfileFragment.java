@@ -14,12 +14,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.GridLayout;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.identity.IdentityManager;
@@ -29,6 +25,7 @@ import com.ddiehl.android.htn.listings.ListingsAdapter;
 import com.ddiehl.android.htn.listings.links.ChooseLinkSortDialog;
 import com.ddiehl.android.htn.listings.subreddit.SubredditFragment;
 import com.ddiehl.android.htn.utils.AndroidUtils;
+import com.ddiehl.android.htn.utils.Utils;
 import com.hannesdorfmann.fragmentargs.FragmentArgs;
 import com.hannesdorfmann.fragmentargs.annotation.Arg;
 import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs;
@@ -72,7 +69,7 @@ public class UserProfileFragment extends BaseListingsFragment
     @BindView(R.id.user_friend_button) Button mFriendButton;
     @BindView(R.id.user_friend_note_edit) TextView mFriendNote;
     @BindView(R.id.user_friend_note_confirm) Button mFriendNoteSave;
-    @BindView(R.id.user_trophies) GridLayout mTrophies;
+    @BindView(R.id.user_trophies) TrophyCase mTrophies;
 
     @Arg String mUsername;
     @Arg String mShow;
@@ -382,36 +379,11 @@ public class UserProfileFragment extends BaseListingsFragment
             return; // Nothing to show
         }
 
-        LayoutInflater inflater = getActivity().getLayoutInflater();
-        for (Listing listing : trophies) {
-            Trophy trophy = (Trophy) listing;
-            String name = trophy.getName();
+        // Convert to list of Trophies
+        List<Trophy> trophyList = Utils.convert(trophies);
 
-            // Inflate trophy layout
-            ImageView imageView = (ImageView) inflater.inflate(R.layout.trophy_layout, mTrophies, false);
-
-            // Set accessible description
-            imageView.setContentDescription(name);
-
-            // Show toast on click
-            imageView.setOnClickListener(
-                    view -> Toast.makeText(view.getContext(), name, Toast.LENGTH_SHORT).show()
-            );
-
-            // Load image
-            Glide.with(getActivity())
-                    .load(trophy.getIcon70())
-                    .into(imageView);
-
-            // Add view to GridLayout
-            mTrophies.addView(imageView);
-        }
-
-        // Calculate and set number of columns
-        GridLayout.LayoutParams params = (GridLayout.LayoutParams) mTrophies.getChildAt(0)
-                .getLayoutParams();
-        final int columns = mTrophies.getWidth() / (params.width + params.rightMargin);
-        mTrophies.setColumnCount(columns);
+        // Bind to TrophyCase
+        mTrophies.bind(trophyList);
     }
 
     private TabLayout.Tab getCurrentSelectedTab() {

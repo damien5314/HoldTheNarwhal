@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import java.util.UUID;
 
@@ -89,5 +91,14 @@ public class Utils {
      */
     public static boolean equals(Object a, Object b) {
         return (a == null) ? (b == null) : a.equals(b);
+    }
+
+    public static <T, R> List<R> convert(List<T> list) {
+        List<R> result = new ArrayList<>(list.size());
+        for (T item : list) {
+            //noinspection unchecked - that's the point
+            result.add((R) item);
+        }
+        return result;
     }
 }
