@@ -7,9 +7,9 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
-import android.widget.EditText;
 
 import com.ddiehl.android.htn.R;
+import com.ddiehl.android.htn.navigation.SubredditEditText;
 
 import butterknife.ButterKnife;
 
@@ -33,9 +33,8 @@ public class SubredditSearchDialog extends DialogFragment {
     }
 
     void onConfirm() {
-        EditText editText = ButterKnife.findById(getDialog(), R.id.search_input_field);
-        String input = editText.getText().toString();
-        input = input.substring(3); // Trim the "/r/" portion of the input field
+        SubredditEditText editText = ButterKnife.findById(getDialog(), R.id.search_input_field);
+        String input = editText.getInput();
 
         if (TextUtils.isEmpty(input)) {
             onSearchCancelled();
