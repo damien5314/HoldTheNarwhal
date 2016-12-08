@@ -85,9 +85,6 @@ public class SubscriptionManagerFragment extends BaseFragment implements Subscri
 
         mSwipeRefreshLayout.setOnRefreshListener(onSwipeRefresh());
 
-        // FIXME
-        // The problem lies here, when the view is recreated on rotation, we are reinstantiating an adapter
-        // which holds the data. But why is the Adapter lost on rotation if we are retaining the instance?
         initListView(mRecyclerView);
 
         mSearchButton.setOnClickListener(button -> {
