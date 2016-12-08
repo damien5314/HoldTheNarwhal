@@ -50,11 +50,12 @@ public class SubredditInfoActivity extends BaseActivity {
     }
 
     void showInfoFragment() {
-        Fragment fragment = new SubredditInfoFragmentBuilder(mSubreddit)
-                .build();
-
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, fragment, SubredditInfoFragment.TAG)
-                .commit();
+        if (getSupportFragmentManager().findFragmentByTag(SubredditInfoFragment.TAG) == null) {
+            Fragment fragment = new SubredditInfoFragmentBuilder(mSubreddit)
+                    .build();
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, fragment, SubredditInfoFragment.TAG)
+                    .commit();
+        }
     }
 }

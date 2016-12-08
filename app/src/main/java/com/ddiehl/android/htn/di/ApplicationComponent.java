@@ -20,7 +20,6 @@ import com.ddiehl.android.htn.settings.SettingsActivity;
 import com.ddiehl.android.htn.settings.SettingsFragment;
 import com.ddiehl.android.htn.settings.SettingsPresenter;
 import com.ddiehl.android.htn.subredditinfo.SubredditInfoFragment;
-import com.ddiehl.android.htn.subredditinfo.SubredditInfoLoader;
 import com.ddiehl.android.htn.subscriptions.SubscriptionManagerAdapter;
 import com.ddiehl.android.htn.subscriptions.SubscriptionManagerPresenter;
 import com.ddiehl.android.htn.view.BaseActivity;
@@ -70,7 +69,6 @@ public interface ApplicationComponent {
     void inject(UserProfilePresenter presenter);
     void inject(SettingsPresenter presenter);
     void inject(SubscriptionManagerPresenter presenter);
-    void inject(SubredditInfoLoader loader);
 
     // Views
     void inject(MarkdownTextView view);

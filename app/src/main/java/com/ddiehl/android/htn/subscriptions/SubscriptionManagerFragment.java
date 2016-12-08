@@ -113,35 +113,39 @@ public class SubscriptionManagerFragment extends BaseFragment implements Subscri
         recyclerView.setLayoutManager(layoutManager);
 
         // Initialize adapter
-        SubscriptionManagerAdapter adapter = new SubscriptionManagerAdapter(this, mPresenter);
-        recyclerView.setAdapter(adapter);
+        if (mAdapter == null) {
+            SubscriptionManagerAdapter adapter = new SubscriptionManagerAdapter(this, mPresenter);
 
-        // Add scroll listener for fetching more items
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                final int first = layoutManager.findFirstVisibleItemPosition();
-                final int last = layoutManager.findLastVisibleItemPosition();
+            // Add scroll listener for fetching more items
+            recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                    final int first = layoutManager.findFirstVisibleItemPosition();
+                    final int last = layoutManager.findLastVisibleItemPosition();
 
-                if (first != 0 && last == mAdapter.getItemCount() - 1
-                        && mNextPageId != null) {
-                    requestNextPage();
+                    if (first != 0 && last == mAdapter.getItemCount() - 1
+                            && mNextPageId != null) {
+                        requestNextPage();
+                    }
                 }
-            }
-        });
+            });
 
-        // Add touch helper for handling swipe gestures
-        ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter);
-        ItemTouchHelper helper = new ItemTouchHelper(callback);
-        helper.attachToRecyclerView(recyclerView);
+            // Add touch helper for handling swipe gestures
+            ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter);
+            ItemTouchHelper helper = new ItemTouchHelper(callback);
+            helper.attachToRecyclerView(recyclerView);
 
-        // Cache adapter
-        mAdapter = adapter;
+            // Cache adapter
+            mAdapter = adapter;
+        }
+
+        // Set to RecyclerView
+        recyclerView.setAdapter(mAdapter);
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onStart() {
+        super.onStart();
 
         if (!mAdapter.hasData()) {
             requestNextPage();

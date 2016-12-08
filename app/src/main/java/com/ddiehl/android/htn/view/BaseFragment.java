@@ -63,6 +63,7 @@ public abstract class BaseFragment extends Fragment implements MainView {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
         HoldTheNarwhal.getApplicationComponent().inject(this);
     }
 

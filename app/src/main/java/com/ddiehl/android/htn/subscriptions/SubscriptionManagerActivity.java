@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.view.BaseActivity;
@@ -22,6 +23,11 @@ public class SubscriptionManagerActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Set window background color
+        int bgColor = ContextCompat.getColor(this, R.color.white);
+        getWindow().getDecorView().setBackgroundColor(bgColor);
+
         showTabs(false);
         showFragment();
     }

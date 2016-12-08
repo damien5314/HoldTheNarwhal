@@ -108,8 +108,8 @@ public abstract class BaseListingsFragment extends BaseFragment
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onStart() {
+        super.onStart();
 
         // FIXME Do we need to check mNextRequested here?
         if (!mListingsPresenter.hasData()) {
