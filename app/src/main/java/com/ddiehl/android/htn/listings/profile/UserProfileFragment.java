@@ -69,7 +69,7 @@ public class UserProfileFragment extends BaseListingsFragment
     @BindView(R.id.user_friend_button) Button mFriendButton;
     @BindView(R.id.user_friend_note_edit) TextView mFriendNote;
     @BindView(R.id.user_friend_note_confirm) Button mFriendNoteSave;
-    @BindView(R.id.user_trophies) TrophyCase mTrophies;
+    @BindView(R.id.user_trophies) TrophyCaseLayout mTrophies;
 
     @Arg String mUsername;
     @Arg String mShow;

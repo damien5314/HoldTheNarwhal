@@ -19,24 +19,24 @@ import rxreddit.model.Listing;
 import rxreddit.model.Trophy;
 
 
-public class TrophyCase extends GridLayout {
+public class TrophyCaseLayout extends GridLayout {
 
     private static final @LayoutRes int TROPHY_LAYOUT_RES = R.layout.trophy;
 
-    public TrophyCase(Context context) {
+    public TrophyCaseLayout(Context context) {
         super(context);
     }
 
-    public TrophyCase(Context context, AttributeSet attrs) {
+    public TrophyCaseLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public TrophyCase(Context context, AttributeSet attrs, int defStyleAttr) {
+    public TrophyCaseLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-    public TrophyCase(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public TrophyCaseLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 

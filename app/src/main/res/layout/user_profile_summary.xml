@@ -124,7 +124,7 @@
 
         </LinearLayout>
 
-        <com.ddiehl.android.htn.listings.profile.TrophyCase
+        <com.ddiehl.android.htn.listings.profile.TrophyCaseLayout
                 android:id="@+id/user_trophies"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
