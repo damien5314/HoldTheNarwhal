@@ -58,8 +58,12 @@ public class MarkdownTextView extends AppCompatTextView {
         if (isInEditMode() || mBypass == null) {
             super.setText(text, type);
         } else {
-            Pattern redditLinkMatcher = Pattern.compile("(?:^)/?[ru]/\\S+", Pattern.MULTILINE);
-            Pattern missingProtocolMatcher = Pattern.compile("(http|https?://)?www\\.[^ \\n]*");
+            Pattern redditLinkMatcher = Pattern.compile(
+                    "(?:^)/?[ru]/\\S+", Pattern.MULTILINE
+            );
+            Pattern missingProtocolMatcher = Pattern.compile(
+                    "((http)s?://)?www\\.[^\\s\\)]*", Pattern.MULTILINE
+            );
             Pattern anyProtocolMatcher = Pattern.compile("[a-z]+://[^ \\n]*");
 
             // Find links in the text and surround them with autolink tags '<>' before processing
@@ -83,12 +87,12 @@ public class MarkdownTextView extends AppCompatTextView {
             );
 
             // Add links missing protocol
-//            Linkify.addLinks(
-//                    s, missingProtocolMatcher, "http://", null,
-//                    (match, url) -> {
-//                        return url.trim();
-//                    }
-//            );
+            Linkify.addLinks(
+                    formatted, missingProtocolMatcher, "http://", null,
+                    (match, url) -> {
+                        return url.trim();
+                    }
+            );
 
             // Add links with any protocol
 //            Linkify.addLinks(s, anyProtocolMatcher, null);
