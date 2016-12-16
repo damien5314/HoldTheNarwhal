@@ -87,7 +87,7 @@ public class MarkdownParser {
                 string.insert(spanStart, "_");
                 // Add an underscore to the string at the end of the StyleSpan
                 int spanEnd = string.getSpanEnd(innerSpan);
-                string.insert(spanEnd + 1, "_");
+                string.insert(spanEnd, "_");
                 // Remove the StyleSpan from the string
                 string.removeSpan(innerSpan);
             }

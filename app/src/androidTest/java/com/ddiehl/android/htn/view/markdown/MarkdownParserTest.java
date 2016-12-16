@@ -127,7 +127,7 @@ public class MarkdownParserTest {
     }
 
     @Test
-    public void convert_linkWithUnderscores_hasNoInnerFormatting() throws Exception {
+    public void convert_urlWithUnderscores_hasNoInnerFormatting() throws Exception {
         MarkdownParser parser = getParser();
 
         CharSequence formatted = parser.convert(
@@ -137,6 +137,21 @@ public class MarkdownParserTest {
 
         StyleSpan[] styleSpans = result.getSpans(0, result.length(), StyleSpan.class);
         assertEquals(0, styleSpans.length);
+    }
+
+    @Test
+    public void convert_urlWithUnderscores_matchesSpanUrl() throws Exception {
+        MarkdownParser parser = getParser();
+
+        String url = "https://www.reddit.com/r/Android/comments/3vjmcx/google_play_music_is_simply_marvellous/";
+        CharSequence formatted = parser.convert(url);
+        SpannableString result = SpannableString.valueOf(formatted);
+
+        URLSpan[] urlSpans = result.getSpans(0, result.length(), URLSpan.class);
+        assertEquals(1, urlSpans.length);
+
+        URLSpan urlSpan = urlSpans[0];
+        assertEquals(url, urlSpan.getURL());
     }
 
     @Test
