@@ -12,6 +12,7 @@ import com.ddiehl.android.htn.identity.IdentityManager;
 import com.ddiehl.android.htn.identity.IdentityManagerImpl;
 import com.ddiehl.android.htn.settings.SettingsManager;
 import com.ddiehl.android.htn.settings.SettingsManagerImpl;
+import com.ddiehl.android.htn.view.markdown.MarkdownParser;
 import com.google.gson.Gson;
 
 import java.io.File;
@@ -94,5 +95,10 @@ public class ApplicationModule {
             Timber.e(error, "Unable to load Bypass");
             return null;
         }
+    }
+
+    @Provides @Nullable
+    MarkdownParser providesMarkdownParser(@Nullable Bypass bypass) {
+        return new MarkdownParser(bypass);
     }
 }
