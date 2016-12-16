@@ -1,10 +1,12 @@
 package com.ddiehl.android.htn.view.markdown;
 
+import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.StyleSpan;
 import android.text.style.URLSpan;
 
 import com.ddiehl.android.htn.view.Linkify;
+import com.ddiehl.android.htn.view.URLSpanNoUnderline;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,20 +70,40 @@ public class MarkdownParser {
     }
 
     void convertFormattingWithinLinks(SpannableStringBuilder string) {
+        // Get all URLSpans within our formatted SpannableString
         URLSpan[] spans = string.getSpans(0, string.length(), URLSpan.class);
 
-        for (URLSpan span : spans) {
-            int start = string.getSpanStart(span);
-            int end = string.getSpanEnd(span);
+        // For each URLSpan within the full string
+        for (URLSpan urlSpan : spans) {
+            // Cache the start and end of the span
+            int start = string.getSpanStart(urlSpan);
+            int end = string.getSpanEnd(urlSpan);
 
+            // Find any StyleSpans within the URLSpan (always? caused because of underscores)
             StyleSpan[] innerSpans = string.getSpans(start, end, StyleSpan.class);
             for (StyleSpan innerSpan : innerSpans) {
+                // Add an underscore to the string at the start of the StyleSpan
                 int spanStart = string.getSpanStart(innerSpan);
-                int spanEnd = string.getSpanEnd(innerSpan);
                 string.insert(spanStart, "_");
+                // Add an underscore to the string at the end of the StyleSpan
+                int spanEnd = string.getSpanEnd(innerSpan);
                 string.insert(spanEnd + 1, "_");
+                // Remove the StyleSpan from the string
                 string.removeSpan(innerSpan);
             }
+
+            // Recalculate the bounds of the URLSpan, since it's been modified
+            int correctedSpanStart = string.getSpanStart(urlSpan);
+            int correctedSpanEnd = string.getSpanEnd(urlSpan);
+            // Get the corrected URL which is the substring from the corrected span's start and end
+            CharSequence correctedUrl = string.subSequence(correctedSpanStart, correctedSpanEnd);
+
+            // Remove the old span and add a new one with the corrected URL
+            string.removeSpan(urlSpan);
+            string.setSpan(
+                    new URLSpanNoUnderline(correctedUrl.toString()),
+                    correctedSpanStart, correctedSpanEnd, Spannable.SPAN_INCLUSIVE_INCLUSIVE
+            );
         }
     }
 
