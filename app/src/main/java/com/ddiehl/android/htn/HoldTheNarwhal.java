@@ -2,11 +2,13 @@ package com.ddiehl.android.htn;
 
 import android.app.Application;
 import android.os.Build;
+import android.support.annotation.VisibleForTesting;
 
 import com.crashlytics.android.Crashlytics;
 import com.ddiehl.android.htn.di.ApplicationComponent;
 import com.ddiehl.android.htn.di.ApplicationModule;
 import com.ddiehl.android.htn.di.DaggerApplicationComponent;
+import com.ddiehl.android.htn.di.SharedModule;
 import com.ddiehl.android.logging.CrashlyticsLogger;
 import com.ddiehl.android.logging.CrashlyticsLoggingTree;
 import com.ddiehl.android.logging.LogcatLogger;
@@ -29,6 +31,7 @@ public class HoldTheNarwhal extends Application {
 
         mComponent = DaggerApplicationComponent.builder()
                 .applicationModule(new ApplicationModule(this))
+                .sharedModule(new SharedModule())
                 .build();
 
 //    LeakCanary.install(this);
@@ -48,6 +51,11 @@ public class HoldTheNarwhal extends Application {
 
     public static ApplicationComponent getApplicationComponent() {
         return mComponent;
+    }
+
+    @VisibleForTesting
+    public static void setTestComponent(ApplicationComponent testComponent) {
+        mComponent = testComponent;
     }
 
     void logSupportedCpuAbis() {

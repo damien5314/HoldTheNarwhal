@@ -6,12 +6,12 @@ import dagger.Module;
 import dagger.Provides;
 
 @Module
-public class ApplicationModule {
+public class TestApplicationModule {
 
-    private final Context mContext;
+    Context mContext;
 
-    public ApplicationModule(Context context) {
-        mContext = context.getApplicationContext();
+    public TestApplicationModule(Context context) {
+        mContext = context;
     }
 
     @Provides

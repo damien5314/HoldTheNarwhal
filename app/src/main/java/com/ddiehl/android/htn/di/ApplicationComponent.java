@@ -32,7 +32,8 @@ import dagger.Component;
 
 @Singleton
 @Component(modules = {
-        ApplicationModule.class
+        ApplicationModule.class,
+        SharedModule.class,
 })
 public interface ApplicationComponent {
 
