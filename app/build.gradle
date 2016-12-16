@@ -114,7 +114,11 @@ dependencies {
     compile "com.hannesdorfmann.fragmentargs:annotation:$project.ext.fragmentArgsVersion"
     apt "com.hannesdorfmann.fragmentargs:processor:$project.ext.fragmentArgsVersion"
 
-    // Debugging dependencies
     debugCompile "com.squareup.leakcanary:leakcanary-android:$project.ext.leakCanaryVersion"
     releaseCompile "com.squareup.leakcanary:leakcanary-android-no-op:$project.ext.leakCanaryVersion"
+
+    // Test dependencies
+    testCompile "junit:junit:$project.ext.junitVersion"
+    testCompile "org.robolectric:robolectric:$project.ext.robolectricVersion"
+    testCompile "org.mockito:mockito-core:$project.ext.mockitoVersion"
 }
