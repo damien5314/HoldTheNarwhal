@@ -184,4 +184,34 @@ public class MarkdownParserTest {
         URLSpan span = urlSpans[0];
         assertEquals("https://www.reddit.com/" + url, span.getURL());
     }
+
+    @Test
+    public void convert_redditUserLink_leadingSlash_hasUrlSpan() {
+        MarkdownParser parser = getParser();
+        String url = "/u/andrewsmith1984";
+
+        CharSequence formatted = parser.convert(url);
+        SpannableString result = SpannableString.valueOf(formatted);
+
+        URLSpan[] urlSpans = result.getSpans(0, result.length(), URLSpan.class);
+        assertEquals(1, urlSpans.length);
+
+        URLSpan span = urlSpans[0];
+        assertEquals("https://www.reddit.com" + url, span.getURL());
+    }
+
+    @Test
+    public void convert_redditUserLink_noLeadingSlash_hasUrlSpan() {
+        MarkdownParser parser = getParser();
+        String url = "u/andrewsmith1984";
+
+        CharSequence formatted = parser.convert(url);
+        SpannableString result = SpannableString.valueOf(formatted);
+
+        URLSpan[] urlSpans = result.getSpans(0, result.length(), URLSpan.class);
+        assertEquals(1, urlSpans.length);
+
+        URLSpan span = urlSpans[0];
+        assertEquals("https://www.reddit.com/" + url, span.getURL());
+    }
 }
