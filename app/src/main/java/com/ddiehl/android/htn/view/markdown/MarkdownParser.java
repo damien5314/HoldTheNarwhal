@@ -1,12 +1,10 @@
 package com.ddiehl.android.htn.view.markdown;
 
-import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.StyleSpan;
 import android.text.style.URLSpan;
 
 import com.ddiehl.android.htn.view.Linkify;
-import com.ddiehl.android.htn.view.URLSpanNoUnderline;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,24 +36,46 @@ public class MarkdownParser {
 //            autolink(sb, missingProtocolMatcher);
 //            autolink(sb, anyProtocolMatcher);
 
-        CharSequence markdown = mBypass.markdownToSpannable(text.toString());
+        CharSequence markdown = mBypass.markdownToSpannable(text);
         SpannableStringBuilder formatted = new SpannableStringBuilder(markdown);
 
-        // Add links for /r/ and /u/ patterns
+        // Pre-parse the formatted string for matches that are going to be linkified, removing
+        // any StyleSpans (probably italicized sections from _underscores_)
+        Matcher matcher = redditLinkMatcher.matcher(formatted);
+        while (matcher.find()) {
+            StyleSpan[] styleSpans = formatted.getSpans(matcher.start(), matcher.end(), StyleSpan.class);
+            for (StyleSpan styleSpan : styleSpans) {
+                formatted.insert(formatted.getSpanStart(styleSpan), "_");
+                formatted.insert(formatted.getSpanEnd(styleSpan), "_");
+                formatted.removeSpan(styleSpan);
+            }
+        }
+
+        // Linkify links for /r/ and /u/ patterns
         Linkify.addLinks(
-                formatted, redditLinkMatcher, "https://www.reddit.com", null,
+                formatted, redditLinkMatcher, null, null,
                 (match, url) -> {
                     url = url.trim();
                     if (!url.startsWith("/")) {
                         url = "/" + url;
                     }
-                    return url;
+                    return "https://www.reddit.com" + url;
                 }
         );
 
+        Matcher matcher2 = missingProtocolMatcher.matcher(formatted);
+        while (matcher2.find()) {
+            StyleSpan[] styleSpans = formatted.getSpans(matcher2.start(), matcher2.end(), StyleSpan.class);
+            for (StyleSpan styleSpan : styleSpans) {
+                formatted.insert(formatted.getSpanStart(styleSpan), "_");
+                formatted.insert(formatted.getSpanEnd(styleSpan), "_");
+                formatted.removeSpan(styleSpan);
+            }
+        }
+
         // Add links missing protocol
         Linkify.addLinks(
-                formatted, missingProtocolMatcher, "http://", null,
+                formatted, missingProtocolMatcher, "https://", null,
                 (match, url) -> {
                     return url.trim();
                 }
@@ -72,6 +92,10 @@ public class MarkdownParser {
     void convertFormattingWithinLinks(SpannableStringBuilder string) {
         // Get all URLSpans within our formatted SpannableString
         URLSpan[] spans = string.getSpans(0, string.length(), URLSpan.class);
+
+        // FIXME
+        // this method is screwing up spans that have a different URL than the actual text
+        // (such as "r/Android")
 
         // For each URLSpan within the full string
         for (URLSpan urlSpan : spans) {
@@ -99,11 +123,11 @@ public class MarkdownParser {
             CharSequence correctedUrl = string.subSequence(correctedSpanStart, correctedSpanEnd);
 
             // Remove the old span and add a new one with the corrected URL
-            string.removeSpan(urlSpan);
-            string.setSpan(
-                    new URLSpanNoUnderline(correctedUrl.toString()),
-                    correctedSpanStart, correctedSpanEnd, Spannable.SPAN_INCLUSIVE_INCLUSIVE
-            );
+//            string.removeSpan(urlSpan);
+//            string.setSpan(
+//                    new URLSpanNoUnderline(correctedUrl.toString()),
+//                    correctedSpanStart, correctedSpanEnd, Spannable.SPAN_INCLUSIVE_INCLUSIVE
+//            );
         }
     }
 

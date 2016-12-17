@@ -80,7 +80,8 @@ public class MarkdownParserTest {
         assertEquals(1, urlSpans.length);
 
         URLSpan span = urlSpans[0];
-        assertEquals(url, span.getURL());
+        assertEquals("https://" + url, span.getURL());
+        assertEquals(url, formatted.toString());
     }
 
     @Test
