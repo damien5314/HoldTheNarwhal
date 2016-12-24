@@ -26,14 +26,17 @@ public class MarkdownParser {
         Pattern redditLinkMatcher = Pattern.compile(
                 "(?:^)/?[ru]/\\S+", Pattern.MULTILINE
         );
-        Pattern missingProtocolMatcher = Pattern.compile(
+        Pattern httpProtocolMatchers = Pattern.compile(
                 "((http)s?://)?www\\.[^\\s\\)]*", Pattern.MULTILINE
+        );
+        Pattern noProtocolMatchers = Pattern.compile(
+                "(?:^)((http)s?://){0}www\\.[^\\s\\)]*", Pattern.MULTILINE
         );
         Pattern anyProtocolMatcher = Pattern.compile("[a-z]+://[^ \\n]*");
 
         // Find links in the text and surround them with autolink tags '<>' before processing
 //            autolink(sb, redditLinkMatcher);
-//            autolink(sb, missingProtocolMatcher);
+//            autolink(sb, httpProtocolMatchers);
 //            autolink(sb, anyProtocolMatcher);
 
         CharSequence markdown = mBypass.markdownToSpannable(text);
@@ -63,7 +66,7 @@ public class MarkdownParser {
                 }
         );
 
-        Matcher matcher2 = missingProtocolMatcher.matcher(formatted);
+        Matcher matcher2 = httpProtocolMatchers.matcher(formatted);
         while (matcher2.find()) {
             StyleSpan[] styleSpans = formatted.getSpans(matcher2.start(), matcher2.end(), StyleSpan.class);
             for (StyleSpan styleSpan : styleSpans) {
@@ -75,7 +78,17 @@ public class MarkdownParser {
 
         // Add links missing protocol
         Linkify.addLinks(
-                formatted, missingProtocolMatcher, "https://", null,
+                formatted, httpProtocolMatchers, null, null,
+                (match, url) -> {
+                    return url.trim();
+                }
+        );
+
+        // Accidentally added extra URLSpans when there is already a protocol :(
+
+        // Add links missing protocol
+        Linkify.addLinks(
+                formatted, noProtocolMatchers, "https://", null,
                 (match, url) -> {
                     return url.trim();
                 }
