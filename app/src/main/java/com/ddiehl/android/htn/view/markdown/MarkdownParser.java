@@ -23,11 +23,15 @@ public class MarkdownParser {
 
     public CharSequence convert(String text) {
 
+        // Now we're adding 2 URLSpans in certain test cases
+        // Perhaps we need to move the Linkify call for redditLinkMatcher to the end
+        // or have some process to remove URLSpans within URLSpans
+
         Pattern redditLinkMatcher = Pattern.compile(
-                "(?:^)/?[ru]/\\S+", Pattern.MULTILINE
+                "/?[ru]/\\S+", Pattern.MULTILINE
         );
         Pattern httpProtocolMatchers = Pattern.compile(
-                "((http)s?://)?www\\.[^\\s\\)]*", Pattern.MULTILINE
+                "(?:^)((http)s?://)?www\\.[^\\s\\)]*", Pattern.MULTILINE
         );
         Pattern noProtocolMatchers = Pattern.compile(
                 "(?:^)((http)s?://){0}www\\.[^\\s\\)]*", Pattern.MULTILINE
@@ -83,8 +87,6 @@ public class MarkdownParser {
                     return url.trim();
                 }
         );
-
-        // Accidentally added extra URLSpans when there is already a protocol :(
 
         // Add links missing protocol
         Linkify.addLinks(
