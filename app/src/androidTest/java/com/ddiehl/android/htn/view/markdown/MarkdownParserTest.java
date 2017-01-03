@@ -124,7 +124,7 @@ public class MarkdownParserTest {
 
         URLSpan span = urlSpans[0];
         assertEquals(url.indexOf("/r/"), result.getSpanStart(span));
-        assertEquals("https://" + url, span.getURL());
+        assertEquals("https://www." + url, span.getURL());
     }
 
     @Test

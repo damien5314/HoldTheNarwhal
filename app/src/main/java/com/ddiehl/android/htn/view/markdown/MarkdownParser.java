@@ -30,10 +30,10 @@ public class MarkdownParser {
         Pattern redditLinkMatcher = Pattern.compile(
                 "/?[ru]/\\S+", Pattern.MULTILINE
         );
-        Pattern httpProtocolMatchers = Pattern.compile(
+        Pattern httpProtocolMatcher = Pattern.compile(
                 "(?:^)((http)s?://)?www\\.[^\\s\\)]*", Pattern.MULTILINE
         );
-        Pattern noProtocolMatchers = Pattern.compile(
+        Pattern noProtocolMatcher = Pattern.compile(
                 "(?:^)((http)s?://){0}www\\.[^\\s\\)]*", Pattern.MULTILINE
         );
         Pattern anyProtocolMatcher = Pattern.compile("[a-z]+://[^ \\n]*");
@@ -70,7 +70,7 @@ public class MarkdownParser {
                 }
         );
 
-        Matcher matcher2 = httpProtocolMatchers.matcher(formatted);
+        Matcher matcher2 = httpProtocolMatcher.matcher(formatted);
         while (matcher2.find()) {
             StyleSpan[] styleSpans = formatted.getSpans(matcher2.start(), matcher2.end(), StyleSpan.class);
             for (StyleSpan styleSpan : styleSpans) {
@@ -82,7 +82,7 @@ public class MarkdownParser {
 
         // Add links missing protocol
         Linkify.addLinks(
-                formatted, httpProtocolMatchers, null, null,
+                formatted, httpProtocolMatcher, null, null,
                 (match, url) -> {
                     return url.trim();
                 }
@@ -90,7 +90,7 @@ public class MarkdownParser {
 
         // Add links missing protocol
         Linkify.addLinks(
-                formatted, noProtocolMatchers, "https://", null,
+                formatted, noProtocolMatcher, "https://", null,
                 (match, url) -> {
                     return url.trim();
                 }
@@ -99,12 +99,12 @@ public class MarkdownParser {
         // Add links with any protocol
 //            Linkify.addLinks(s, anyProtocolMatcher, null);
 
-        convertFormattingWithinLinks(formatted);
+        removeFormattingWithinLinks(formatted);
 
         return formatted;
     }
 
-    void convertFormattingWithinLinks(SpannableStringBuilder string) {
+    void removeFormattingWithinLinks(SpannableStringBuilder string) {
         // Get all URLSpans within our formatted SpannableString
         URLSpan[] spans = string.getSpans(0, string.length(), URLSpan.class);
 
