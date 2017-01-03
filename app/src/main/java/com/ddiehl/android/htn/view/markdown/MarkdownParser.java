@@ -12,6 +12,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import in.uncod.android.bypass.Bypass;
+import timber.log.Timber;
 
 public class MarkdownParser {
 
@@ -100,6 +101,7 @@ public class MarkdownParser {
 //            Linkify.addLinks(s, anyProtocolMatcher, null);
 
         removeFormattingWithinLinks(formatted);
+        removeLinksWithinLinks(formatted);
 
         return formatted;
     }
@@ -143,6 +145,45 @@ public class MarkdownParser {
 //                    new URLSpanNoUnderline(correctedUrl.toString()),
 //                    correctedSpanStart, correctedSpanEnd, Spannable.SPAN_INCLUSIVE_INCLUSIVE
 //            );
+        }
+    }
+
+    void removeLinksWithinLinks(SpannableStringBuilder formatted) {
+        URLSpan[] urlSpans = formatted.getSpans(0, formatted.length(), URLSpan.class);
+
+        // FIXME
+        // This currently runs in o(n^2), see if we can optimize it somehow so we don't cause
+        // bottlenecks in parsing markdown with a lot of URLSpans
+        for (int i = 0; i < urlSpans.length; i++) {
+            URLSpan urlSpan = urlSpans[i];
+            if (urlSpan == null) {
+                continue;
+            }
+
+            int spanStart = formatted.getSpanStart(urlSpan);
+            int spanEnd = formatted.getSpanEnd(urlSpan);
+            Timber.d("SPAN(%d - %d)", spanStart, spanEnd);
+
+            // Look ahead to spans that start before the end of this span, and remove them
+            for (int j = 0; j < urlSpans.length; j++) {
+                URLSpan nextSpan = urlSpans[j];
+                // If we nulled out the span before, or we're at the same span, move onto the next one
+                if (nextSpan == null || urlSpan == nextSpan) {
+                    continue;
+                }
+
+                // Check if this span starts before the last one ends
+                int nextSpanStart = formatted.getSpanStart(nextSpan);
+                int nextSpanEnd = formatted.getSpanEnd(nextSpan);
+                Timber.d("NEXT(%d - %d)", nextSpanStart, nextSpanEnd);
+
+                if (nextSpanStart >= spanStart && nextSpanStart <= spanEnd) {
+                    Timber.d("This span starts and ends within the current span, so remove it");
+                    // Remove span and null it out so we don't check it later
+                    formatted.removeSpan(nextSpan);
+                    urlSpans[j] = null;
+                }
+            }
         }
     }
 
