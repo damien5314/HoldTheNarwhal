@@ -254,4 +254,38 @@ public class MarkdownParserTest {
         URLSpan span = urlSpans[0];
         assertEquals(url, span.getURL());
     }
+
+    @Test
+    public void convert_urlEndingWithParens_hasUrlSpan() {
+        MarkdownParser parser = getParser();
+        String url = "https://en.wikipedia.org/wiki/Shake_Hands_with_the_Devil_(book)";
+
+        CharSequence formatted = parser.convert(url);
+        SpannableString result = SpannableString.valueOf(formatted);
+
+        URLSpan[] urlSpans = result.getSpans(0, result.length(), URLSpan.class);
+        assertEquals(1, urlSpans.length);
+
+        URLSpan span = urlSpans[0];
+        assertEquals(url, span.getURL());
+    }
+
+    // TODO
+    // Fix the below method first, the above is probably broken for the same reason (subdomains
+    // aren't recognized as valid URLs) but that one will also have another bug once this is fixed.
+
+    @Test
+    public void convert_urlWithNonWwwSubdomain_hasUrlSpan() {
+        MarkdownParser parser = getParser();
+        String url = "https://help.github.com/";
+
+        CharSequence formatted = parser.convert(url);
+        SpannableString result = SpannableString.valueOf(formatted);
+
+        URLSpan[] urlSpans = result.getSpans(0, result.length(), URLSpan.class);
+        assertEquals(1, urlSpans.length);
+
+        URLSpan span = urlSpans[0];
+        assertEquals(url, span.getURL());
+    }
 }
