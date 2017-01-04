@@ -214,4 +214,44 @@ public class MarkdownParserTest {
         URLSpan span = urlSpans[0];
         assertEquals("https://www.reddit.com/" + url, span.getURL());
     }
+
+    @Test
+    public void convert_textWithRSlash_noUrlSpan() {
+        MarkdownParser parser = getParser();
+
+        // Text has `r/` but should not be linked
+        CharSequence formatted = parser.convert("/user/damien5314");
+        SpannableString result = SpannableString.valueOf(formatted);
+
+        URLSpan[] urlSpans = result.getSpans(0, result.length(), URLSpan.class);
+        assertEquals(0, urlSpans.length);
+    }
+
+    @Test
+    public void convert_textWithUSlash_noUrlSpan() {
+        MarkdownParser parser = getParser();
+
+        // Text has `u/` but should not be linked
+        CharSequence formatted = parser.convert("/fuuu/damien5314");
+        SpannableString result = SpannableString.valueOf(formatted);
+
+        URLSpan[] urlSpans = result.getSpans(0, result.length(), URLSpan.class);
+        assertEquals(0, urlSpans.length);
+    }
+
+    @Test
+    public void convert_textStartingWithParens_hasUrlSpan() {
+        MarkdownParser parser = getParser();
+        String url = "https://www.reddit.com/r/Android/comments/3vjmcx/google_play_music/";
+        String text = "(" + url + ")"; // Surround url with parens `()`
+
+        CharSequence formatted = parser.convert(text);
+        SpannableString result = SpannableString.valueOf(formatted);
+
+        URLSpan[] urlSpans = result.getSpans(0, result.length(), URLSpan.class);
+        assertEquals(1, urlSpans.length);
+
+        URLSpan span = urlSpans[0];
+        assertEquals(url, span.getURL());
+    }
 }

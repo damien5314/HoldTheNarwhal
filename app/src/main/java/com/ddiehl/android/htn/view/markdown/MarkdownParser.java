@@ -23,13 +23,8 @@ public class MarkdownParser {
     }
 
     public CharSequence convert(String text) {
-
-        // Now we're adding 2 URLSpans in certain test cases
-        // Perhaps we need to move the Linkify call for redditLinkMatcher to the end
-        // or have some process to remove URLSpans within URLSpans
-
         Pattern redditLinkMatcher = Pattern.compile(
-                "/?[ru]/\\S+", Pattern.MULTILINE
+                "(?:(^|/))/?[ru]/[^\\s\\)]*", Pattern.MULTILINE
         );
         Pattern httpProtocolMatcher = Pattern.compile(
                 "(?:^)((http)s?://)?www\\.[^\\s\\)]*", Pattern.MULTILINE
