@@ -58,20 +58,21 @@ public class MarkdownParser {
         // Consider trying the typical Patterns.WEB_URL regex and see how many tests pass
         // Possibly modify off of that regex to fit some edge cases
 
-        DLinkify.addLinks(formatted, Patterns.WEB_URL, null, null, (match, url) -> url);
+        DLinkify.addLinks(formatted, Patterns.WEB_URL, null);
 
         // Linkify links for /r/ and /u/ patterns
-        DLinkify.addLinks(
-                formatted, redditLinkMatcher, null, null,
-                (match, url) -> {
-                    url = url.trim();
-                    if (!url.startsWith("/")) {
-                        url = "/" + url;
-                    }
-                    return "https://www.reddit.com" + url;
-                }
-        );
+//        DLinkify.addLinks(
+//                formatted, redditLinkMatcher, null, null,
+//                (match, url) -> {
+//                    url = url.trim();
+//                    if (!url.startsWith("/")) {
+//                        url = "/" + url;
+//                    }
+//                    return "https://www.reddit.com" + url;
+//                }
+//        );
 
+        // TODO Does this need to match on Patterns.WEB_URL too?
         Matcher matcher2 = httpProtocolMatcher.matcher(formatted);
         while (matcher2.find()) {
             StyleSpan[] styleSpans = formatted.getSpans(matcher2.start(), matcher2.end(), StyleSpan.class);
@@ -83,23 +84,23 @@ public class MarkdownParser {
         }
 
         // Add links missing protocol
-        DLinkify.addLinks(
-                formatted, httpProtocolMatcher, null, null,
-                (match, url) -> {
-                    return url.trim();
-                }
-        );
-
-        // Add links missing protocol
-        DLinkify.addLinks(
-                formatted, noProtocolMatcher, "https://", null,
-                (match, url) -> {
-                    return url.trim();
-                }
-        );
-
-      // Add links with any protocol
-        DLinkify.addLinks(formatted, anyProtocolMatcher, null);
+//        DLinkify.addLinks(
+//                formatted, httpProtocolMatcher, null, null,
+//                (match, url) -> {
+//                    return url.trim();
+//                }
+//        );
+//
+//        // Add links missing protocol
+//        DLinkify.addLinks(
+//                formatted, noProtocolMatcher, "https://", null,
+//                (match, url) -> {
+//                    return url.trim();
+//                }
+//        );
+//
+//      // Add links with any protocol
+//        DLinkify.addLinks(formatted, anyProtocolMatcher, null);
 
         removeFormattingWithinLinks(formatted);
         removeLinksWithinLinks(formatted);
