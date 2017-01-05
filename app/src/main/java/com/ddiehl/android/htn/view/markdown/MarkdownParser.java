@@ -1,13 +1,16 @@
 package com.ddiehl.android.htn.view.markdown;
 
+import android.support.annotation.NonNull;
 import android.text.SpannableStringBuilder;
 import android.text.style.StyleSpan;
 import android.text.style.URLSpan;
+import android.util.Patterns;
 
 import com.ddiehl.android.htn.view.DLinkify;
 import com.ddiehl.android.htn.view.DPatterns;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -33,15 +36,10 @@ public class MarkdownParser {
 
         // Pre-parse the formatted string for matches that are going to be linkified, removing
         // any StyleSpans (probably italicized sections from _underscores_)
-        Matcher matcher = redditLinkMatcher.matcher(formatted);
-        while (matcher.find()) {
-            StyleSpan[] styleSpans = formatted.getSpans(matcher.start(), matcher.end(), StyleSpan.class);
-            for (StyleSpan styleSpan : styleSpans) {
-                formatted.insert(formatted.getSpanStart(styleSpan), "_");
-                formatted.insert(formatted.getSpanEnd(styleSpan), "_");
-                formatted.removeSpan(styleSpan);
-            }
-        }
+//        removeStyleSpansFromLinksMatchingPattern(formatted, Pattern.compile(DPatterns.WEB_URL_WITH_PROTOCOL));
+//        removeStyleSpansFromLinksMatchingPattern(formatted, Pattern.compile(DPatterns.WEB_URL_WITHOUT_PROTOCOL));
+        removeStyleSpansFromLinksMatchingPattern(formatted, Patterns.WEB_URL);
+        removeStyleSpansFromLinksMatchingPattern(formatted, redditLinkMatcher);
 
         // Add links for URLs with a protocol
         DLinkify.addLinks(formatted, Pattern.compile(DPatterns.WEB_URL_WITH_PROTOCOL), null);
@@ -79,6 +77,41 @@ public class MarkdownParser {
         removeLinksWithinLinks(formatted);
 
         return formatted;
+    }
+
+    void removeStyleSpansFromLinksMatchingPattern(
+            @NonNull SpannableStringBuilder text, @NonNull Pattern pattern) {
+        Timber.d("[DCD] PATTERN " + pattern.toString());
+
+        Matcher matcher = pattern.matcher(text);
+
+        List<Integer> indices = new ArrayList<>();
+        int matchCount = 0;
+
+        while (matcher.find()) {
+            Timber.d("[DCD] Match[%d-%d]: %s", matcher.start(), matcher.end(), text.subSequence(matcher.start(), matcher.end()));
+            matchCount++;
+            StyleSpan[] styleSpans = text.getSpans(matcher.start(), matcher.end(), StyleSpan.class);
+            for (StyleSpan styleSpan : styleSpans) {
+                indices.add(text.getSpanStart(styleSpan));
+                indices.add(text.getSpanEnd(styleSpan));
+//                text.insert(text.getSpanStart(styleSpan), "_");
+//                text.insert(text.getSpanEnd(styleSpan), "_");
+                text.removeSpan(styleSpan);
+            }
+        }
+        Timber.d("[DCD] MATCH COUNT: " + matchCount);
+
+        // `getSpans` does not return spans in the order they appear in the string it seems?
+        // So the matched indices end up coming out of order
+        Collections.sort(indices);
+
+        // Now take the list of indices and actually apply the results, in reverse order
+        // TODO Maybe do this more efficiently if the array keeps having to shift earlier modifications
+        for (int i = indices.size() - 1; i >= 0; i--) {
+            int index = indices.get(i);
+            text.insert(index, "_");
+        }
     }
 
     void removeFormattingWithinLinks(SpannableStringBuilder string) {
@@ -150,7 +183,7 @@ public class MarkdownParser {
                 // Check if this span starts before the last one ends
                 int nextSpanStart = formatted.getSpanStart(nextSpan);
                 int nextSpanEnd = formatted.getSpanEnd(nextSpan);
-                Timber.d("NEXT(%d - %d)", nextSpanStart, nextSpanEnd);
+//                Timber.d("NEXT(%d - %d)", nextSpanStart, nextSpanEnd);
 
                 if (nextSpanStart >= spanStart && nextSpanStart <= spanEnd) {
                     Timber.d("This span starts and ends within the current span, so remove it");

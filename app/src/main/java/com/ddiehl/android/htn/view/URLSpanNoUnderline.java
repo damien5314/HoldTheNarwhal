@@ -10,6 +10,8 @@ import android.text.style.URLSpan;
 import android.util.Log;
 import android.view.View;
 
+import timber.log.Timber;
+
 /**
  * http://stackoverflow.com/questions/4096851/remove-underline-from-links-in-textview-android
  * http://stackoverflow.com/questions/35944727/android-handle-override-interrupt-intent-from-the-same-activity-that-fired-it
@@ -28,6 +30,8 @@ public class URLSpanNoUnderline extends URLSpan {
 
     @Override
     public void onClick(View widget) {
+        Timber.d("[DCD] OPENING URL: %s", getURL());
+
         Uri uri = Uri.parse(getURL());
         Context context = widget.getContext();
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
