@@ -53,7 +53,7 @@ import timber.log.Timber;
  * created.
  */
 
-public class Linkify {
+public class DLinkify {
 
     /**
      * Bit field indicating that web URLs should be matched in methods that

@@ -3,8 +3,9 @@ package com.ddiehl.android.htn.view.markdown;
 import android.text.SpannableStringBuilder;
 import android.text.style.StyleSpan;
 import android.text.style.URLSpan;
+import android.util.Patterns;
 
-import com.ddiehl.android.htn.view.Linkify;
+import com.ddiehl.android.htn.view.DLinkify;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,8 +55,13 @@ public class MarkdownParser {
             }
         }
 
+        // Consider trying the typical Patterns.WEB_URL regex and see how many tests pass
+        // Possibly modify off of that regex to fit some edge cases
+
+        DLinkify.addLinks(formatted, Patterns.WEB_URL, null, null, (match, url) -> url);
+
         // Linkify links for /r/ and /u/ patterns
-        Linkify.addLinks(
+        DLinkify.addLinks(
                 formatted, redditLinkMatcher, null, null,
                 (match, url) -> {
                     url = url.trim();
@@ -77,7 +83,7 @@ public class MarkdownParser {
         }
 
         // Add links missing protocol
-        Linkify.addLinks(
+        DLinkify.addLinks(
                 formatted, httpProtocolMatcher, null, null,
                 (match, url) -> {
                     return url.trim();
@@ -85,15 +91,15 @@ public class MarkdownParser {
         );
 
         // Add links missing protocol
-        Linkify.addLinks(
+        DLinkify.addLinks(
                 formatted, noProtocolMatcher, "https://", null,
                 (match, url) -> {
                     return url.trim();
                 }
         );
 
-        // Add links with any protocol
-//            Linkify.addLinks(s, anyProtocolMatcher, null);
+      // Add links with any protocol
+        DLinkify.addLinks(formatted, anyProtocolMatcher, null);
 
         removeFormattingWithinLinks(formatted);
         removeLinksWithinLinks(formatted);
