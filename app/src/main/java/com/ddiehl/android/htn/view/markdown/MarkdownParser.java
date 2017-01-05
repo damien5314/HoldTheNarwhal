@@ -3,9 +3,9 @@ package com.ddiehl.android.htn.view.markdown;
 import android.text.SpannableStringBuilder;
 import android.text.style.StyleSpan;
 import android.text.style.URLSpan;
-import android.util.Patterns;
 
 import com.ddiehl.android.htn.view.DLinkify;
+import com.ddiehl.android.htn.view.DPatterns;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,10 +55,12 @@ public class MarkdownParser {
             }
         }
 
-        // Consider trying the typical Patterns.WEB_URL regex and see how many tests pass
-        // Possibly modify off of that regex to fit some edge cases
+        // Add links for URLs with a protocol
+        DLinkify.addLinks(formatted, Pattern.compile(DPatterns.WEB_URL_WITH_PROTOCOL), null);
 
-        DLinkify.addLinks(formatted, Patterns.WEB_URL, null);
+        // Add links with `https://` prepended to links without a protocol
+        DLinkify.addLinks(formatted, Pattern.compile(DPatterns.WEB_URL_WITHOUT_PROTOCOL), null, null,
+                (match, url) -> "https://" + url);
 
         // Linkify links for /r/ and /u/ patterns
 //        DLinkify.addLinks(
@@ -72,8 +74,7 @@ public class MarkdownParser {
 //                }
 //        );
 
-        // TODO Does this need to match on Patterns.WEB_URL too?
-        Matcher matcher2 = httpProtocolMatcher.matcher(formatted);
+        Matcher matcher2 = DPatterns.WEB_URL.matcher(formatted);
         while (matcher2.find()) {
             StyleSpan[] styleSpans = formatted.getSpans(matcher2.start(), matcher2.end(), StyleSpan.class);
             for (StyleSpan styleSpan : styleSpans) {
