@@ -27,18 +27,6 @@ public class MarkdownParser {
         Pattern redditLinkMatcher = Pattern.compile(
                 "(?:(^|/))/?[ru]/[^\\s\\)]*", Pattern.MULTILINE
         );
-        Pattern httpProtocolMatcher = Pattern.compile(
-                "(?:^)((http)s?://)?www\\.[^\\s\\)]*", Pattern.MULTILINE
-        );
-        Pattern noProtocolMatcher = Pattern.compile(
-                "(?:^)((http)s?://){0}www\\.[^\\s\\)]*", Pattern.MULTILINE
-        );
-        Pattern anyProtocolMatcher = Pattern.compile("[a-z]+://[^ \\n]*");
-
-        // Find links in the text and surround them with autolink tags '<>' before processing
-//            autolink(sb, redditLinkMatcher);
-//            autolink(sb, httpProtocolMatchers);
-//            autolink(sb, anyProtocolMatcher);
 
         CharSequence markdown = mBypass.markdownToSpannable(text);
         SpannableStringBuilder formatted = new SpannableStringBuilder(markdown);
@@ -63,16 +51,16 @@ public class MarkdownParser {
                 (match, url) -> "https://" + url);
 
         // Linkify links for /r/ and /u/ patterns
-//        DLinkify.addLinks(
-//                formatted, redditLinkMatcher, null, null,
-//                (match, url) -> {
-//                    url = url.trim();
-//                    if (!url.startsWith("/")) {
-//                        url = "/" + url;
-//                    }
-//                    return "https://www.reddit.com" + url;
-//                }
-//        );
+        DLinkify.addLinks(
+                formatted, redditLinkMatcher, null, null,
+                (match, url) -> {
+                    url = url.trim();
+                    if (!url.startsWith("/")) {
+                        url = "/" + url;
+                    }
+                    return "https://www.reddit.com" + url;
+                }
+        );
 
         Matcher matcher2 = DPatterns.WEB_URL.matcher(formatted);
         while (matcher2.find()) {
@@ -84,26 +72,10 @@ public class MarkdownParser {
             }
         }
 
-        // Add links missing protocol
-//        DLinkify.addLinks(
-//                formatted, httpProtocolMatcher, null, null,
-//                (match, url) -> {
-//                    return url.trim();
-//                }
-//        );
-//
-//        // Add links missing protocol
-//        DLinkify.addLinks(
-//                formatted, noProtocolMatcher, "https://", null,
-//                (match, url) -> {
-//                    return url.trim();
-//                }
-//        );
-//
-//      // Add links with any protocol
-//        DLinkify.addLinks(formatted, anyProtocolMatcher, null);
-
+        // Get rid of any styling that may have happened within links
         removeFormattingWithinLinks(formatted);
+
+        // Clear up anything we might have double-linked
         removeLinksWithinLinks(formatted);
 
         return formatted;
