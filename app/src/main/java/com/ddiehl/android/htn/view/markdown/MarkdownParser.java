@@ -60,15 +60,16 @@ public class MarkdownParser {
                 }
         );
 
-        Matcher matcher2 = DPatterns.WEB_URL.matcher(formatted);
-        while (matcher2.find()) {
-            StyleSpan[] styleSpans = formatted.getSpans(matcher2.start(), matcher2.end(), StyleSpan.class);
-            for (StyleSpan styleSpan : styleSpans) {
-                formatted.insert(formatted.getSpanStart(styleSpan), "_");
-                formatted.insert(formatted.getSpanEnd(styleSpan), "_");
-                formatted.removeSpan(styleSpan);
-            }
-        }
+        // Isn't this deprecated by `removeStyleSpansFromLinksMatchingPattern`
+//        Matcher matcher2 = DPatterns.WEB_URL.matcher(formatted);
+//        while (matcher2.find()) {
+//            StyleSpan[] styleSpans = formatted.getSpans(matcher2.start(), matcher2.end(), StyleSpan.class);
+//            for (StyleSpan styleSpan : styleSpans) {
+//                formatted.insert(formatted.getSpanStart(styleSpan), "_");
+//                formatted.insert(formatted.getSpanEnd(styleSpan), "_");
+//                formatted.removeSpan(styleSpan);
+//            }
+//        }
 
         // Get rid of any styling that may have happened within links
         removeFormattingWithinLinks(formatted);
