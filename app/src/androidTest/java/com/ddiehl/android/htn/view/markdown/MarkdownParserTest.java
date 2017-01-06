@@ -5,11 +5,15 @@ import android.text.SpannableString;
 import android.text.style.StyleSpan;
 import android.text.style.URLSpan;
 
+import com.ddiehl.android.logging.ConsoleLogger;
+import com.ddiehl.android.logging.ConsoleLoggingTree;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import in.uncod.android.bypass.Bypass;
+import timber.log.Timber;
 
 import static android.support.test.InstrumentationRegistry.getContext;
 import static org.junit.Assert.assertEquals;
@@ -31,6 +35,8 @@ public class MarkdownParserTest {
 //                .build();
 //        HoldTheNarwhal.setTestComponent(component);
 //        component.inject(this);
+
+        Timber.plant(new ConsoleLoggingTree(new ConsoleLogger()));
     }
 
     @Test
@@ -259,15 +265,21 @@ public class MarkdownParserTest {
     public void convert_urlEndingWithParens_hasUrlSpan() {
         MarkdownParser parser = getParser();
         String url = "https://en.wikipedia.org/wiki/Shake_Hands_with_the_Devil_(book)";
+        // FIXME
+        // For some reason, the Patterns.WEB_URL regex doesn't capture the ending parenthesis
+        // only when the URL has newlines before it.
+        String text = url + "\n\n" + url;
 
-        CharSequence formatted = parser.convert(url);
+        CharSequence formatted = parser.convert(text);
         SpannableString result = SpannableString.valueOf(formatted);
 
         URLSpan[] urlSpans = result.getSpans(0, result.length(), URLSpan.class);
-        assertEquals(1, urlSpans.length);
+        assertEquals(2, urlSpans.length);
 
-        URLSpan span = urlSpans[0];
-        assertEquals(url, span.getURL());
+        for (int i = urlSpans.length - 1; i >= 0; i--) {
+            URLSpan span = urlSpans[i];
+            assertEquals(url, span.getURL());
+        }
     }
 
     // TODO
@@ -288,7 +300,4 @@ public class MarkdownParserTest {
         URLSpan span = urlSpans[0];
         assertEquals(url, span.getURL());
     }
-
-//    @Test
-//    public void convert_
 }
