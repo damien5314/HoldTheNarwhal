@@ -4,10 +4,8 @@ import android.support.annotation.NonNull;
 import android.text.SpannableStringBuilder;
 import android.text.style.StyleSpan;
 import android.text.style.URLSpan;
-import android.util.Patterns;
 
 import com.ddiehl.android.htn.view.DLinkify;
-import com.ddiehl.android.htn.view.DPatterns;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,6 +24,16 @@ public class MarkdownParser {
         mBypass = bypass;
     }
 
+    Pattern THE_PATTERN_WITH_PROTOCOL = Pattern.compile(
+            "\\(*\\b((https?|ftp|file)://)[a-zA-Z-]*\\.[-a-zA-Z0-9+&@#/%?=~_|!:,.;(]*[-a-zA-Z0-9+&@#/%=~_|)]",
+            Pattern.MULTILINE
+    );
+
+    Pattern THE_PATTERN_NO_PROTOCOL = Pattern.compile(
+            "\\(*\\b[a-zA-Z-]*\\.[-a-zA-Z0-9+&@#/%?=~_|!:,.;(]*[-a-zA-Z0-9+&@#/%=~_|)]",
+            Pattern.MULTILINE
+    );
+
     public CharSequence convert(String text) {
         Pattern redditLinkMatcher = Pattern.compile(
                 "(?:(^|/))/?[ru]/[^\\s\\)]*", Pattern.MULTILINE
@@ -38,14 +46,15 @@ public class MarkdownParser {
         // any StyleSpans (probably italicized sections from _underscores_)
 //        removeStyleSpansFromLinksMatchingPattern(formatted, Pattern.compile(DPatterns.WEB_URL_WITH_PROTOCOL));
 //        removeStyleSpansFromLinksMatchingPattern(formatted, Pattern.compile(DPatterns.WEB_URL_WITHOUT_PROTOCOL));
-        removeStyleSpansFromLinksMatchingPattern(formatted, Patterns.WEB_URL);
+        removeStyleSpansFromLinksMatchingPattern(formatted, THE_PATTERN_WITH_PROTOCOL);
+        removeStyleSpansFromLinksMatchingPattern(formatted, THE_PATTERN_NO_PROTOCOL);
         removeStyleSpansFromLinksMatchingPattern(formatted, redditLinkMatcher);
 
         // Add links for URLs with a protocol
-        DLinkify.addLinks(formatted, Pattern.compile(DPatterns.WEB_URL_WITH_PROTOCOL), null);
+        DLinkify.addLinks(formatted, THE_PATTERN_WITH_PROTOCOL, null);
 
         // Add links with `https://` prepended to links without a protocol
-        DLinkify.addLinks(formatted, Pattern.compile(DPatterns.WEB_URL_WITHOUT_PROTOCOL), null, null,
+        DLinkify.addLinks(formatted, THE_PATTERN_NO_PROTOCOL, null, null,
                 (match, url) -> "https://" + url);
 
         // Linkify links for /r/ and /u/ patterns
@@ -78,7 +87,29 @@ public class MarkdownParser {
         // Clear up anything we might have double-linked
         removeLinksWithinLinks(formatted);
 
+        // Remove parentheses from links that are surrounded with them
+        removeLinksSurroundedWithParentheses(formatted);
+
         return formatted;
+    }
+
+    private void removeLinksSurroundedWithParentheses(SpannableStringBuilder text) {
+        URLSpan[] urlSpans = text.getSpans(0, text.length(), URLSpan.class);
+
+        for (int i = 0; i < urlSpans.length; i++) {
+            URLSpan urlSpan = urlSpans[i];
+
+            int spanStart = text.getSpanStart(urlSpan);
+            int spanEnd = text.getSpanEnd(urlSpan);
+            String linkText = text.subSequence(spanStart, spanEnd).toString();
+            if (linkText.startsWith("(") && linkText.endsWith(")")) {
+                String url = urlSpan.getURL();
+                String newUrl = url.substring(1, url.length() - 1);
+
+                text.removeSpan(urlSpan);
+                text.setSpan(new URLSpan(newUrl), spanStart + 1, spanEnd - 1, SpannableStringBuilder.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+        }
     }
 
     void removeStyleSpansFromLinksMatchingPattern(
