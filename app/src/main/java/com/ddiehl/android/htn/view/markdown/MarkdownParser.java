@@ -60,7 +60,7 @@ public class MarkdownParser {
                 }
         );
 
-        // Isn't this deprecated by `removeStyleSpansFromLinksMatchingPattern`
+        // Isn't this deprecated by `removeStyleSpansFromLinksMatchingPattern`?
 //        Matcher matcher2 = DPatterns.WEB_URL.matcher(formatted);
 //        while (matcher2.find()) {
 //            StyleSpan[] styleSpans = formatted.getSpans(matcher2.start(), matcher2.end(), StyleSpan.class);
@@ -71,8 +71,9 @@ public class MarkdownParser {
 //            }
 //        }
 
+        // NOTE: Also think this was deprecated by `removeStyleSpansFromLinksMatchingPattern`
         // Get rid of any styling that may have happened within links
-        removeFormattingWithinLinks(formatted);
+//        removeFormattingWithinLinks(formatted);
 
         // Clear up anything we might have double-linked
         removeLinksWithinLinks(formatted);
