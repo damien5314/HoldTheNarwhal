@@ -267,12 +267,25 @@ public class MarkdownParserTest {
     }
 
     @Test
-    public void convert_urlEndingWithParens_hasUrlSpan() {
+    public void convert_urlWithTrailingParens_hasUrlSpans() {
         MarkdownParser parser = getParser();
         String url = "https://en.wikipedia.org/wiki/Shake_Hands_with_the_Devil_(book)";
+
+        CharSequence formatted = parser.convert(url);
+        SpannableString result = SpannableString.valueOf(formatted);
+
+        URLSpan[] urlSpans = result.getSpans(0, result.length(), URLSpan.class);
+        assertEquals(1, urlSpans.length);
+        assertEquals(url, urlSpans[0].getURL());
+    }
+
+    @Test
+    public void convert_multilineUrlWithTrailingParens_hasUrlSpans() {
+        MarkdownParser parser = getParser();
         // FIXME
         // For some reason, the Patterns.WEB_URL regex doesn't capture the ending parenthesis
         // only when the URL has newlines before it.
+        String url = "https://en.wikipedia.org/wiki/Shake_Hands_with_the_Devil_(book)";
         String text = url + "\n\n" + url;
 
         CharSequence formatted = parser.convert(text);
@@ -281,8 +294,24 @@ public class MarkdownParserTest {
         URLSpan[] urlSpans = result.getSpans(0, result.length(), URLSpan.class);
         assertEquals(2, urlSpans.length);
 
-        for (int i = urlSpans.length - 1; i >= 0; i--) {
-            URLSpan span = urlSpans[i];
+        for (URLSpan span : urlSpans) {
+            assertEquals(url, span.getURL());
+        }
+    }
+
+    @Test
+    public void convert_multilineUrlWithTrailingSlash_hasUrlSpans() {
+        MarkdownParser parser = getParser();
+        String url = "https://en.wikipedia.org/wiki/";
+        String text = url + "\n\n" + url;
+
+        CharSequence formatted = parser.convert(text);
+        SpannableString result = SpannableString.valueOf(formatted);
+
+        URLSpan[] urlSpans = result.getSpans(0, result.length(), URLSpan.class);
+        assertEquals(2, urlSpans.length);
+
+        for (URLSpan span : urlSpans) {
             assertEquals(url, span.getURL());
         }
     }
