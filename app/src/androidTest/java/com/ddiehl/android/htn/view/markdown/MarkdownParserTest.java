@@ -361,8 +361,56 @@ public class MarkdownParserTest {
     @Test
     public void convert_subredditLinkWithinText_hasCorrectFormatting() {
         MarkdownParser parser = getParser();
+        String subredditLink = "r/cats";
+        String text = String.format("Let's check out %s, to see cat photos.", subredditLink);
+
+        CharSequence formatted = parser.convert(text);
+        SpannableString result = SpannableString.valueOf(formatted);
+
+        URLSpan[] urlSpans = result.getSpans(0, result.length(), URLSpan.class);
+        assertEquals(1, urlSpans.length);
+
+        URLSpan span = urlSpans[0];
+        assertEquals("https://www.reddit.com/" + subredditLink, span.getURL());
+    }
+
+    @Test
+    public void convert_subredditLinkWithinText_withLeadingSlash_hasCorrectFormatting() {
+        MarkdownParser parser = getParser();
         String subredditLink = "/r/cats";
-        String text = String.format("Let's check out %s.", subredditLink);
+        String text = String.format("Let's check out %s, to see cat photos.", subredditLink);
+
+        CharSequence formatted = parser.convert(text);
+        SpannableString result = SpannableString.valueOf(formatted);
+
+        URLSpan[] urlSpans = result.getSpans(0, result.length(), URLSpan.class);
+        assertEquals(1, urlSpans.length);
+
+        URLSpan span = urlSpans[0];
+        assertEquals("https://www.reddit.com" + subredditLink, span.getURL());
+    }
+
+    @Test
+    public void convert_subredditLinkWithinText_withinParens_hasCorrectFormatting() {
+        MarkdownParser parser = getParser();
+        String subredditLink = "r/cats";
+        String text = String.format("Have you been to that subreddit (%s)?", subredditLink);
+
+        CharSequence formatted = parser.convert(text);
+        SpannableString result = SpannableString.valueOf(formatted);
+
+        URLSpan[] urlSpans = result.getSpans(0, result.length(), URLSpan.class);
+        assertEquals(1, urlSpans.length);
+
+        URLSpan span = urlSpans[0];
+        assertEquals("https://www.reddit.com/" + subredditLink, span.getURL());
+    }
+
+    @Test
+    public void convert_subredditLinkWithinText_withinParens_withLeadingSlash_hasCorrectFormatting() {
+        MarkdownParser parser = getParser();
+        String subredditLink = "/r/cats";
+        String text = String.format("Have you been to that subreddit (%s)?", subredditLink);
 
         CharSequence formatted = parser.convert(text);
         SpannableString result = SpannableString.valueOf(formatted);
