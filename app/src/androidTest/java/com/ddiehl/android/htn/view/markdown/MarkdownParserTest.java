@@ -9,7 +9,6 @@ import com.ddiehl.android.logging.ConsoleLogger;
 import com.ddiehl.android.logging.ConsoleLoggingTree;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -107,8 +106,7 @@ public class MarkdownParserTest {
     }
 
     @Test
-    @Ignore("Using Patterns.WEB_URL actually links strings with only a host, which is fine")
-    public void convert_hostOnly_hasNoFormatting() {
+    public void convert_hostOnly_hasUrlSpan() {
         MarkdownParser parser = getParser();
         String url = "reddit.com/wiki/index";
 
@@ -116,11 +114,11 @@ public class MarkdownParserTest {
         SpannableString result = SpannableString.valueOf(formatted);
 
         Object[] spans = result.getSpans(0, result.length(), Object.class);
-        assertEquals(0, spans.length);
+        assertEquals(1, spans.length);
     }
 
     @Test
-    public void convert_hostOnlyWithSubredditLink_hasOnlySubredditLinkFormatted() {
+    public void convert_hostOnlyWithSubredditLink_hasUrlSpan() {
         MarkdownParser parser = getParser();
         String url = "reddit.com/r/Android/comments/3vjmcx/";
 
@@ -132,9 +130,6 @@ public class MarkdownParserTest {
 
         URLSpan span = urlSpans[0];
         assertEquals("https://" + url, span.getURL());
-        // Using Patterns.WEB_URL will actually link the whole string,
-        // even though this isn't the behavior on reddit itself
-//        assertEquals(url.indexOf("/r/"), result.getSpanStart(span));
         assertEquals(0, result.getSpanStart(span));
     }
 
@@ -282,9 +277,6 @@ public class MarkdownParserTest {
     @Test
     public void convert_multilineUrlWithTrailingParens_hasUrlSpans() {
         MarkdownParser parser = getParser();
-        // FIXME
-        // For some reason, the Patterns.WEB_URL regex doesn't capture the ending parenthesis
-        // only when the URL has newlines before it.
         String url = "https://en.wikipedia.org/wiki/Shake_Hands_with_the_Devil_(book)";
         String text = url + "\n\n" + url;
 
@@ -315,10 +307,6 @@ public class MarkdownParserTest {
             assertEquals(url, span.getURL());
         }
     }
-
-    // TODO
-    // Fix the below method first, the above is probably broken for the same reason (subdomains
-    // aren't recognized as valid URLs) but that one will also have another bug once this is fixed.
 
     @Test
     public void convert_urlWithNonWwwSubdomain_hasUrlSpan() {
