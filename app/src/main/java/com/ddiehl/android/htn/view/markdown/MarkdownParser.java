@@ -36,7 +36,7 @@ public class MarkdownParser {
 
     public CharSequence convert(String text) {
         Pattern redditLinkMatcher = Pattern.compile(
-                "(?:(^|/))/?[ru]/[^\\s\\)]*", Pattern.MULTILINE
+                "(?:(^|/))/?[ru]/[\\p{Alnum}_-]*", Pattern.MULTILINE
         );
 
         CharSequence markdown = mBypass.markdownToSpannable(text);
