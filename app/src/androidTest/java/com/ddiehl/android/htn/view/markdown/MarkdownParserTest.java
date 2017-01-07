@@ -136,10 +136,9 @@ public class MarkdownParserTest {
     @Test
     public void convert_urlWithUnderscores_hasNoInnerFormatting() throws Exception {
         MarkdownParser parser = getParser();
+        String url = "https://www.reddit.com/r/Android/comments/3vjmcx/google_play_music_is_simply_marvellous/";
 
-        CharSequence formatted = parser.convert(
-                "https://www.reddit.com/r/Android/comments/3vjmcx/google_play_music_is_simply_marvellous/"
-        );
+        CharSequence formatted = parser.convert(url);
         SpannableString result = SpannableString.valueOf(formatted);
 
         StyleSpan[] styleSpans = result.getSpans(0, result.length(), StyleSpan.class);
@@ -149,8 +148,8 @@ public class MarkdownParserTest {
     @Test
     public void convert_urlWithUnderscores_matchesSpanUrl() throws Exception {
         MarkdownParser parser = getParser();
-
         String url = "https://www.reddit.com/r/Android/comments/3vjmcx/google_play_music_is_simply_marvellous/";
+
         CharSequence formatted = parser.convert(url);
         SpannableString result = SpannableString.valueOf(formatted);
 
@@ -321,5 +320,41 @@ public class MarkdownParserTest {
 
         URLSpan span = urlSpans[0];
         assertEquals(url, span.getURL());
+    }
+
+    @Test
+    public void convert_urlWithinText_hasUrlSpan() {
+        MarkdownParser parser = getParser();
+        String url = "https://help.github.com/";
+        String text = "This URL (" + url + ") occurs within text";
+
+        CharSequence formatted = parser.convert(text);
+        SpannableString result = SpannableString.valueOf(formatted);
+
+        URLSpan[] urlSpans = result.getSpans(0, result.length(), URLSpan.class);
+        assertEquals(1, urlSpans.length);
+
+        URLSpan span = urlSpans[0];
+        assertEquals(url, span.getURL());
+    }
+
+    @Test
+    public void convert_textWithMarkdownLinks_doNotReformatLinks() {
+        MarkdownParser parser = getParser();
+        String linkText = "link to GitHub";
+        String url = "https://help.github.com/";
+        String text = String.format("this is a [%s](%s)", linkText, url);
+
+        CharSequence formatted = parser.convert(text);
+        SpannableString result = SpannableString.valueOf(formatted);
+
+        URLSpan[] urlSpans = result.getSpans(0, result.length(), URLSpan.class);
+        assertEquals(1, urlSpans.length);
+
+        URLSpan span = urlSpans[0];
+        assertEquals(url, span.getURL());
+
+        String expected = "this is a link to GitHub";
+        assertEquals(expected, formatted.toString());
     }
 }
