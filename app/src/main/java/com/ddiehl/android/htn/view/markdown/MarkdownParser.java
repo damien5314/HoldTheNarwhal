@@ -24,31 +24,30 @@ public class MarkdownParser {
         mBypass = bypass;
     }
 
-    Pattern THE_PATTERN_WITH_PROTOCOL = Pattern.compile(
+    static final Pattern THE_PATTERN_WITH_PROTOCOL = Pattern.compile(
             "\\(*\\b((https?|ftp|file)://)[a-zA-Z-]*\\.[-a-zA-Z0-9+&@#/%?=~_|!:,.;(]*[-a-zA-Z0-9+&@#/%=~_|)]",
             Pattern.MULTILINE
     );
 
-    Pattern THE_PATTERN_NO_PROTOCOL = Pattern.compile(
+    static final Pattern THE_PATTERN_NO_PROTOCOL = Pattern.compile(
             "\\(*\\b[a-zA-Z-]*\\.[-a-zA-Z0-9+&@#/%?=~_|!:,.;(]*[-a-zA-Z0-9+&@#/%=~_|)]",
             Pattern.MULTILINE
     );
 
+    static final Pattern REDDIT_LINK_PATTERN = Pattern.compile(
+            "(?:(^|/))/?[ru]/[\\p{Alnum}_-]*", Pattern.MULTILINE
+    );
+
     public CharSequence convert(String text) {
-        Pattern redditLinkMatcher = Pattern.compile(
-                "(?:(^|/))/?[ru]/[\\p{Alnum}_-]*", Pattern.MULTILINE
-        );
 
         CharSequence markdown = mBypass.markdownToSpannable(text);
         SpannableStringBuilder formatted = new SpannableStringBuilder(markdown);
 
         // Pre-parse the formatted string for matches that are going to be linkified, removing
         // any StyleSpans (probably italicized sections from _underscores_)
-//        removeStyleSpansFromLinksMatchingPattern(formatted, Pattern.compile(DPatterns.WEB_URL_WITH_PROTOCOL));
-//        removeStyleSpansFromLinksMatchingPattern(formatted, Pattern.compile(DPatterns.WEB_URL_WITHOUT_PROTOCOL));
         removeStyleSpansFromLinksMatchingPattern(formatted, THE_PATTERN_WITH_PROTOCOL);
         removeStyleSpansFromLinksMatchingPattern(formatted, THE_PATTERN_NO_PROTOCOL);
-        removeStyleSpansFromLinksMatchingPattern(formatted, redditLinkMatcher);
+        removeStyleSpansFromLinksMatchingPattern(formatted, REDDIT_LINK_PATTERN);
 
         // Add links for URLs with a protocol
         DLinkify.addLinks(formatted, THE_PATTERN_WITH_PROTOCOL, null);
@@ -59,7 +58,7 @@ public class MarkdownParser {
 
         // Linkify links for /r/ and /u/ patterns
         DLinkify.addLinks(
-                formatted, redditLinkMatcher, null, null,
+                formatted, REDDIT_LINK_PATTERN, null, null,
                 (match, url) -> {
                     url = url.trim();
                     if (!url.startsWith("/")) {
@@ -69,39 +68,23 @@ public class MarkdownParser {
                 }
         );
 
-        // Isn't this deprecated by `removeStyleSpansFromLinksMatchingPattern`?
-//        Matcher matcher2 = DPatterns.WEB_URL.matcher(formatted);
-//        while (matcher2.find()) {
-//            StyleSpan[] styleSpans = formatted.getSpans(matcher2.start(), matcher2.end(), StyleSpan.class);
-//            for (StyleSpan styleSpan : styleSpans) {
-//                formatted.insert(formatted.getSpanStart(styleSpan), "_");
-//                formatted.insert(formatted.getSpanEnd(styleSpan), "_");
-//                formatted.removeSpan(styleSpan);
-//            }
-//        }
-
-        // NOTE: Also think this was deprecated by `removeStyleSpansFromLinksMatchingPattern`
-        // Get rid of any styling that may have happened within links
-//        removeFormattingWithinLinks(formatted);
-
         // Clear up anything we might have double-linked
         removeLinksWithinLinks(formatted);
 
         // Remove parentheses from links that are surrounded with them
-        removeLinksSurroundedWithParentheses(formatted);
+        fixLinksSurroundedWithParentheses(formatted);
 
         return formatted;
     }
 
-    private void removeLinksSurroundedWithParentheses(SpannableStringBuilder text) {
+    private void fixLinksSurroundedWithParentheses(SpannableStringBuilder text) {
         URLSpan[] urlSpans = text.getSpans(0, text.length(), URLSpan.class);
 
-        for (int i = 0; i < urlSpans.length; i++) {
-            URLSpan urlSpan = urlSpans[i];
-
+        for (URLSpan urlSpan : urlSpans) {
             int spanStart = text.getSpanStart(urlSpan);
             int spanEnd = text.getSpanEnd(urlSpan);
             String linkText = text.subSequence(spanStart, spanEnd).toString();
+
             if (linkText.startsWith("(") && linkText.endsWith(")")) {
                 String url = urlSpan.getURL();
                 String newUrl = url.substring(1, url.length() - 1);
@@ -144,48 +127,6 @@ public class MarkdownParser {
         for (int i = indices.size() - 1; i >= 0; i--) {
             int index = indices.get(i);
             text.insert(index, "_");
-        }
-    }
-
-    void removeFormattingWithinLinks(SpannableStringBuilder string) {
-        // Get all URLSpans within our formatted SpannableString
-        URLSpan[] spans = string.getSpans(0, string.length(), URLSpan.class);
-
-        // FIXME
-        // this method is screwing up spans that have a different URL than the actual text
-        // (such as "r/Android")
-
-        // For each URLSpan within the full string
-        for (URLSpan urlSpan : spans) {
-            // Cache the start and end of the span
-            int start = string.getSpanStart(urlSpan);
-            int end = string.getSpanEnd(urlSpan);
-
-            // Find any StyleSpans within the URLSpan (always? caused because of underscores)
-            StyleSpan[] innerSpans = string.getSpans(start, end, StyleSpan.class);
-            for (StyleSpan innerSpan : innerSpans) {
-                // Add an underscore to the string at the start of the StyleSpan
-                int spanStart = string.getSpanStart(innerSpan);
-                string.insert(spanStart, "_");
-                // Add an underscore to the string at the end of the StyleSpan
-                int spanEnd = string.getSpanEnd(innerSpan);
-                string.insert(spanEnd, "_");
-                // Remove the StyleSpan from the string
-                string.removeSpan(innerSpan);
-            }
-
-            // Recalculate the bounds of the URLSpan, since it's been modified
-            int correctedSpanStart = string.getSpanStart(urlSpan);
-            int correctedSpanEnd = string.getSpanEnd(urlSpan);
-            // Get the corrected URL which is the substring from the corrected span's start and end
-            CharSequence correctedUrl = string.subSequence(correctedSpanStart, correctedSpanEnd);
-
-            // Remove the old span and add a new one with the corrected URL
-//            string.removeSpan(urlSpan);
-//            string.setSpan(
-//                    new URLSpanNoUnderline(correctedUrl.toString()),
-//                    correctedSpanStart, correctedSpanEnd, Spannable.SPAN_INCLUSIVE_INCLUSIVE
-//            );
         }
     }
 
