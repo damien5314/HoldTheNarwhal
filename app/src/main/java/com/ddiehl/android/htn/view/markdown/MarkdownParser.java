@@ -1,11 +1,13 @@
 package com.ddiehl.android.htn.view.markdown;
 
 import android.support.annotation.NonNull;
+import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.StyleSpan;
 import android.text.style.URLSpan;
 
 import com.ddiehl.android.htn.view.DLinkify;
+import com.ddiehl.android.htn.view.URLSpanNoUnderline;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -73,34 +75,9 @@ public class MarkdownParser {
         // Remove parentheses from links that are surrounded with them
         fixLinksSurroundedWithParentheses(formatted);
 
+        convertUrlSpansToNoUnderlineForm(formatted);
+
         return formatted;
-    }
-
-    private void fixLinksSurroundedWithParentheses(SpannableStringBuilder text) {
-        URLSpan[] urlSpans = text.getSpans(0, text.length(), URLSpan.class);
-
-        for (URLSpan urlSpan : urlSpans) {
-            int spanStart = text.getSpanStart(urlSpan);
-            int spanEnd = text.getSpanEnd(urlSpan);
-            String linkText = text.subSequence(spanStart, spanEnd).toString();
-
-            if (linkText.startsWith("(") && linkText.endsWith(")")) {
-                StringBuilder url = new StringBuilder(urlSpan.getURL());
-
-                // https://www.reddit.com/(r/cats)
-                int startIndex = url.indexOf(linkText);
-                int endIndex = startIndex + linkText.length() - 1;
-
-                url.deleteCharAt(endIndex);
-                url.deleteCharAt(startIndex);
-
-//                String newUrl = url.substring(1, url.length() - 1);
-
-                text.removeSpan(urlSpan);
-//                text.setSpan(new URLSpan(newUrl), spanStart + 1, spanEnd - 1, SpannableStringBuilder.SPAN_EXCLUSIVE_EXCLUSIVE);
-                text.setSpan(new URLSpan(url.toString()), spanStart + 1, spanEnd - 1, SpannableStringBuilder.SPAN_EXCLUSIVE_EXCLUSIVE);
-            }
-        }
     }
 
     void removeStyleSpansFromLinksMatchingPattern(
@@ -174,6 +151,51 @@ public class MarkdownParser {
                     urlSpans[j] = null;
                 }
             }
+        }
+    }
+
+    void fixLinksSurroundedWithParentheses(SpannableStringBuilder text) {
+        URLSpan[] urlSpans = text.getSpans(0, text.length(), URLSpan.class);
+
+        for (URLSpan urlSpan : urlSpans) {
+            int spanStart = text.getSpanStart(urlSpan);
+            int spanEnd = text.getSpanEnd(urlSpan);
+            String linkText = text.subSequence(spanStart, spanEnd).toString();
+
+            if (linkText.startsWith("(") && linkText.endsWith(")")) {
+                StringBuilder url = new StringBuilder(urlSpan.getURL());
+
+                // https://www.reddit.com/(r/cats)
+                int startIndex = url.indexOf(linkText);
+                int endIndex = startIndex + linkText.length() - 1;
+
+                url.deleteCharAt(endIndex);
+                url.deleteCharAt(startIndex);
+
+//                String newUrl = url.substring(1, url.length() - 1);
+
+                text.removeSpan(urlSpan);
+//                text.setSpan(new URLSpan(newUrl), spanStart + 1, spanEnd - 1, SpannableStringBuilder.SPAN_EXCLUSIVE_EXCLUSIVE);
+                text.setSpan(new URLSpan(url.toString()), spanStart + 1, spanEnd - 1, SpannableStringBuilder.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+        }
+    }
+
+    void convertUrlSpansToNoUnderlineForm(SpannableStringBuilder text) {
+        URLSpan[] urlSpans = text.getSpans(0, text.length(), URLSpan.class);
+
+        for (URLSpan urlSpan : urlSpans) {
+            if (urlSpan instanceof URLSpanNoUnderline) {
+                // Already correct type
+                continue;
+            }
+
+            int start = text.getSpanStart(urlSpan);
+            int end = text.getSpanEnd(urlSpan);
+            String url = urlSpan.getURL();
+
+            text.removeSpan(urlSpan);
+            text.setSpan(new URLSpanNoUnderline(url), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
     }
 
