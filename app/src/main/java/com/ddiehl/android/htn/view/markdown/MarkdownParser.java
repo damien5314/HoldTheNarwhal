@@ -30,7 +30,7 @@ public class MarkdownParser {
     );
 
     static final Pattern THE_PATTERN_NO_PROTOCOL = Pattern.compile(
-            "\\(*\\bwww\\.[a-zA-Z-]*\\.([-a-zA-Z0-9+&@#/%?=~_|!:,;(]*|\\.?)[-a-zA-Z0-9+&@#/%=~_|)]\\s",
+            "\\(*\\bwww\\.[a-zA-Z-]*\\.([-a-zA-Z0-9+&@#/%?=~_|!:,;(]*|\\.?)[-a-zA-Z0-9+&@#/%=~_|)]",
             Pattern.MULTILINE
     );
 
