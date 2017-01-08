@@ -30,7 +30,7 @@ public class MarkdownParser {
     );
 
     static final Pattern THE_PATTERN_NO_PROTOCOL = Pattern.compile(
-            "\\(*\\b[a-zA-Z-]*\\.[-a-zA-Z0-9+&@#/%?=~_|!:,.;(]*[-a-zA-Z0-9+&@#/%=~_|)]",
+            "\\(*\\bwww\\.[a-zA-Z-]*\\.([-a-zA-Z0-9+&@#/%?=~_|!:,;(]*|\\.?)[-a-zA-Z0-9+&@#/%=~_|)]\\s",
             Pattern.MULTILINE
     );
 
@@ -39,7 +39,6 @@ public class MarkdownParser {
     );
 
     public CharSequence convert(String text) {
-
         CharSequence markdown = mBypass.markdownToSpannable(text);
         SpannableStringBuilder formatted = new SpannableStringBuilder(markdown);
 
