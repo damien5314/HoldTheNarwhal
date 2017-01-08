@@ -35,7 +35,7 @@ public class MarkdownParser {
     );
 
     static final Pattern REDDIT_LINK_PATTERN = Pattern.compile(
-            "(?:(\\b|/))/?[ru]/[\\p{Alnum}_-]*", Pattern.MULTILINE
+            "\\(?(?:(\\b|/))/?[ru]/[\\p{Alnum}_-]*([-a-zA-Z0-9+&@#/%?=~_|!:,;(]*|\\.?)[-a-zA-Z0-9+&@#/%=~_|)]", Pattern.MULTILINE
     );
 
     public CharSequence convert(String text) {
@@ -60,7 +60,7 @@ public class MarkdownParser {
                 formatted, REDDIT_LINK_PATTERN, null, null,
                 (match, url) -> {
                     url = url.trim();
-                    if (!url.startsWith("/")) {
+                    if (!url.startsWith("/") && !url.startsWith("(/")) {
                         url = "/" + url;
                     }
                     return "https://www.reddit.com" + url;
@@ -85,11 +85,20 @@ public class MarkdownParser {
             String linkText = text.subSequence(spanStart, spanEnd).toString();
 
             if (linkText.startsWith("(") && linkText.endsWith(")")) {
-                String url = urlSpan.getURL();
-                String newUrl = url.substring(1, url.length() - 1);
+                StringBuilder url = new StringBuilder(urlSpan.getURL());
+
+                // https://www.reddit.com/(r/cats)
+                int startIndex = url.indexOf(linkText);
+                int endIndex = startIndex + linkText.length() - 1;
+
+                url.deleteCharAt(endIndex);
+                url.deleteCharAt(startIndex);
+
+//                String newUrl = url.substring(1, url.length() - 1);
 
                 text.removeSpan(urlSpan);
-                text.setSpan(new URLSpan(newUrl), spanStart + 1, spanEnd - 1, SpannableStringBuilder.SPAN_EXCLUSIVE_EXCLUSIVE);
+//                text.setSpan(new URLSpan(newUrl), spanStart + 1, spanEnd - 1, SpannableStringBuilder.SPAN_EXCLUSIVE_EXCLUSIVE);
+                text.setSpan(new URLSpan(url.toString()), spanStart + 1, spanEnd - 1, SpannableStringBuilder.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
         }
     }
