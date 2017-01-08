@@ -120,7 +120,7 @@ public class MarkdownParserTest {
     @Test
     public void convert_hostOnlyWithSubredditLink_hasUrlSpan() {
         MarkdownParser parser = getParser();
-        String subredditPath = "/r/Android/comments/3vjmcx/";
+        String subredditPath = "/r/Android/comments/3vjmcx/google_play_music_is_simply_marvellous/";
         String url = "reddit.com" + subredditPath;
 
         CharSequence formatted = parser.convert(url);
@@ -131,6 +131,7 @@ public class MarkdownParserTest {
 
         URLSpan span = urlSpans[0];
         assertEquals(url.indexOf(subredditPath), result.getSpanStart(span));
+        assertEquals(url.length(), result.getSpanEnd(span));
 //        assertEquals("https://" + url, span.getURL());
 //        assertEquals(0, result.getSpanStart(span));
     }
