@@ -421,4 +421,16 @@ public class MarkdownParserTest {
         URLSpan span = urlSpans[0];
         assertEquals("https://www.reddit.com" + subredditLink, span.getURL());
     }
+
+    @Test
+    public void convert_ellipsisInText_hasNoUrlSpan() {
+        MarkdownParser parser = getParser();
+        String text = "this text....should not have a link in it";
+
+        CharSequence formatted = parser.convert(text);
+        SpannableString result = SpannableString.valueOf(formatted);
+
+        URLSpan[] urlSpans = result.getSpans(0, result.length(), URLSpan.class);
+        assertEquals(0, urlSpans.length);
+    }
 }
