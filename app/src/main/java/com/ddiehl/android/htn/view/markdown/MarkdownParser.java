@@ -37,7 +37,8 @@ public class MarkdownParser {
     );
 
     static final Pattern REDDIT_LINK_PATTERN = Pattern.compile(
-            "\\(?(?:(\\b|/))/?[ru]/[\\p{Alnum}_-]*([-a-zA-Z0-9+&@#/%?=~_|!:,;(]*|\\.?)[-a-zA-Z0-9+&@#/%=~_|)]", Pattern.MULTILINE
+            "\\(?(?:(\\b|/))/?[ru]/[\\p{Alnum}_-]*([-a-zA-Z0-9+&@#/%?=~_|!:,;(]*|\\.?)[-a-zA-Z0-9+&@#/%=~_|)]",
+            Pattern.MULTILINE
     );
 
     public CharSequence convert(String text) {

@@ -436,4 +436,24 @@ public class MarkdownParserTest {
         URLSpan[] urlSpans = result.getSpans(0, result.length(), URLSpan.class);
         assertEquals(0, urlSpans.length);
     }
+
+    @Test
+    public void convert_boldedRedditLink_hasCorrectFormatting() {
+        testStylingRedditLinks("/u/FooBar");
+        testStylingRedditLinks("u/FooBar");
+        testStylingRedditLinks("/u/Foo_Bar");
+    }
+
+    private void testStylingRedditLinks(String redditLink) {
+        MarkdownParser parser = getParser();
+        String text = String.format("this text **%s** should be stylized", redditLink);
+
+        CharSequence formatted = parser.convert(text);
+        SpannableString result = SpannableString.valueOf(formatted);
+
+        URLSpan[] urlSpans = result.getSpans(0, result.length(), URLSpan.class);
+        assertEquals(1, urlSpans.length);
+        assertEquals("this text " + redditLink + " should be stylized", result.toString());
+        assertEquals("https://www.reddit.com" + redditLink, urlSpans[0].getURL());
+    }
 }
