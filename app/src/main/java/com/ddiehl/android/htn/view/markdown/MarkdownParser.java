@@ -5,8 +5,8 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.StyleSpan;
 import android.text.style.URLSpan;
+import android.text.util.Linkify;
 
-import com.ddiehl.android.htn.view.DLinkify;
 import com.ddiehl.android.htn.view.URLSpanNoUnderline;
 
 import java.util.ArrayList;
@@ -52,14 +52,14 @@ public class MarkdownParser {
         removeStyleSpansFromLinksMatchingPattern(formatted, REDDIT_LINK_PATTERN);
 
         // Add links for URLs with a protocol
-        DLinkify.addLinks(formatted, THE_PATTERN_WITH_PROTOCOL, null);
+        Linkify.addLinks(formatted, THE_PATTERN_WITH_PROTOCOL, null);
 
         // Add links with `https://` prepended to links without a protocol
-        DLinkify.addLinks(formatted, THE_PATTERN_NO_PROTOCOL, null, null,
+        Linkify.addLinks(formatted, THE_PATTERN_NO_PROTOCOL, null, null,
                 (match, url) -> "https://" + url);
 
         // Linkify links for /r/ and /u/ patterns
-        DLinkify.addLinks(
+        Linkify.addLinks(
                 formatted, REDDIT_LINK_PATTERN, null, null,
                 (match, url) -> {
                     url = url.trim();
