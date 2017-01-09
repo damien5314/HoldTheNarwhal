@@ -439,12 +439,12 @@ public class MarkdownParserTest {
 
     @Test
     public void convert_boldedRedditLink_hasCorrectFormatting() {
-        testStylingRedditLinks("/u/FooBar");
-        testStylingRedditLinks("u/FooBar");
-        testStylingRedditLinks("/u/Foo_Bar");
+        testStylingRedditLinks("/u/FooBar", "https://www.reddit.com/u/FooBar");
+        testStylingRedditLinks("u/FooBar", "https://www.reddit.com/u/FooBar");
+        testStylingRedditLinks("/u/Foo_Bar", "https://www.reddit.com/u/Foo_Bar");
     }
 
-    private void testStylingRedditLinks(String redditLink) {
+    private void testStylingRedditLinks(String redditLink, String expectedUrl) {
         MarkdownParser parser = getParser();
         String text = String.format("this text **%s** should be stylized", redditLink);
 
@@ -454,6 +454,6 @@ public class MarkdownParserTest {
         URLSpan[] urlSpans = result.getSpans(0, result.length(), URLSpan.class);
         assertEquals(1, urlSpans.length);
         assertEquals("this text " + redditLink + " should be stylized", result.toString());
-        assertEquals("https://www.reddit.com" + redditLink, urlSpans[0].getURL());
+        assertEquals(expectedUrl, urlSpans[0].getURL());
     }
 }

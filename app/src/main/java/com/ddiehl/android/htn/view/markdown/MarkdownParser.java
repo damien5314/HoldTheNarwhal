@@ -95,11 +95,15 @@ public class MarkdownParser {
             matchCount++;
             StyleSpan[] styleSpans = text.getSpans(matcher.start(), matcher.end(), StyleSpan.class);
             for (StyleSpan styleSpan : styleSpans) {
-                indices.add(text.getSpanStart(styleSpan));
-                indices.add(text.getSpanEnd(styleSpan));
-//                text.insert(text.getSpanStart(styleSpan), "_");
-//                text.insert(text.getSpanEnd(styleSpan), "_");
-                text.removeSpan(styleSpan);
+                int spanStart = text.getSpanStart(styleSpan);
+                int spanEnd = text.getSpanEnd(styleSpan);
+                // Don't remove StyleSpans that cover the FULL match
+                if (spanStart > matcher.start() || spanEnd < matcher.end()) {
+                    // Add indices to index cache
+                    indices.add(spanStart);
+                    indices.add(spanEnd);
+                    text.removeSpan(styleSpan);
+                }
             }
         }
         Timber.d("[DCD] MATCH COUNT: " + matchCount);
