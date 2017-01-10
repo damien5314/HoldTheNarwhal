@@ -134,10 +134,8 @@
                             android:layout_alignParentEnd="true"
                             android:layout_alignParentRight="true"
                             tools:text="/r/AskReddit" />
-
-                    <com.ddiehl.android.htn.view.ColorSwapTextView
-                            android:id="@+id/link_author"
-                            style="@style/LinkMetadataTextViewDark"
+                    
+                    <FrameLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentLeft="true"
@@ -145,10 +143,18 @@
                             android:layout_toLeftOf="@id/link_subreddit"
                             android:layout_toStartOf="@id/link_subreddit"
                             android:layout_marginEnd="4dp"
-                            android:layout_marginRight="4dp"
-                            android:ellipsize="end"
-                            android:maxLines="1"
-                            tools:text="/u/andrewsmith1984" />
+                            android:layout_marginRight="4dp" >
+
+                        <com.ddiehl.android.htn.view.ColorSwapTextView
+                                android:id="@+id/link_author"
+                                style="@style/LinkMetadataTextViewDark"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:ellipsize="end"
+                                android:maxLines="1"
+                                tools:text="/u/andrewsmith1984" />
+
+                    </FrameLayout>
 
                 </RelativeLayout>
 
