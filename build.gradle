@@ -5,7 +5,7 @@ buildscript {
         maven { url 'https://maven.fabric.io/public' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.2'
+        classpath 'com.android.tools.build:gradle:2.2.3'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
         classpath 'com.jakewharton.hugo:hugo-plugin:1.2.1'
         classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.6.1'
@@ -31,7 +31,7 @@ subprojects {
         compileSdkVersion = 25
         targetSdkVersion = 25
         buildToolsVersion = "25.0.0"
-        supportLibraryVersion = "25.0.1"
+        supportLibraryVersion = "25.1.0"
         contraintLayoutVersion = "1.0.0-beta4"
         playServicesVersion = "10.0.1"
         glideVersion = "3.7.0"
