@@ -26,12 +26,12 @@ public class MarkdownParser {
         mBypass = bypass;
     }
 
-    static final Pattern THE_PATTERN_WITH_PROTOCOL = Pattern.compile(
+    static final Pattern URL_PATTERN_WITH_PROTOCOL = Pattern.compile(
             "\\(*\\b((https?|ftp|file)://)[a-zA-Z-]*\\.[-a-zA-Z0-9+&@#/%?=~_|!:,.;(]*[-a-zA-Z0-9+&@#/%=~_|)]",
             Pattern.MULTILINE
     );
 
-    static final Pattern THE_PATTERN_NO_PROTOCOL = Pattern.compile(
+    static final Pattern URL_PATTERN_NO_PROTOCOL = Pattern.compile(
             "\\(*\\bwww\\.[a-zA-Z-]*\\.([-a-zA-Z0-9+&@#/%?=~_|!:,;(]*|\\.?)[-a-zA-Z0-9+&@#/%=~_|)]",
             Pattern.MULTILINE
     );
@@ -47,15 +47,15 @@ public class MarkdownParser {
 
         // Pre-parse the formatted string for matches that are going to be linkified, removing
         // any StyleSpans (probably italicized sections from _underscores_)
-        removeStyleSpansFromLinksMatchingPattern(formatted, THE_PATTERN_WITH_PROTOCOL);
-        removeStyleSpansFromLinksMatchingPattern(formatted, THE_PATTERN_NO_PROTOCOL);
+        removeStyleSpansFromLinksMatchingPattern(formatted, URL_PATTERN_WITH_PROTOCOL);
+        removeStyleSpansFromLinksMatchingPattern(formatted, URL_PATTERN_NO_PROTOCOL);
         removeStyleSpansFromLinksMatchingPattern(formatted, REDDIT_LINK_PATTERN);
 
         // Add links for URLs with a protocol
-        Linkify.addLinks(formatted, THE_PATTERN_WITH_PROTOCOL, null);
+        Linkify.addLinks(formatted, URL_PATTERN_WITH_PROTOCOL, null);
 
         // Add links with `https://` prepended to links without a protocol
-        Linkify.addLinks(formatted, THE_PATTERN_NO_PROTOCOL, null, null,
+        Linkify.addLinks(formatted, URL_PATTERN_NO_PROTOCOL, null, null,
                 (match, url) -> "https://" + url);
 
         // Linkify links for /r/ and /u/ patterns
