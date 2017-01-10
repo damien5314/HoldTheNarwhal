@@ -11,7 +11,9 @@ import com.ddiehl.android.htn.view.URLSpanNoUnderline;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -41,7 +43,68 @@ public class MarkdownParser {
             Pattern.MULTILINE
     );
 
+    /*
+        (1) Pre-parse the unformatted markdown text, searching for matches against our Linkify patterns
+            (1) For each match, remove the underscores while caching their positions in the string
+            (2) Store each link in a Map of links to the list of removed underscores
+        (2) Process markdown text through Bypass
+        (3) Remove URLSpans within outer URLSpans
+        (4) For each link in the Map created in step (1), search for all matches.
+            (1) Restore the underscores to both the link text and its URLSpan using its list of underscores.
+     */
+
+    Map<String, List<Integer>> processUnderscoresInLinks(String input) {
+        // Create StringBuilder for removing underscores easily
+        StringBuilder text = new StringBuilder(input);
+
+        // Map of links to a list of the positions of removed underscores within the links
+        Map<String, List<Integer>> linkMap = new HashMap<>();
+
+        // Compile list of link markers for each pattern
+        List<LinkMarker> links = new ArrayList<>();
+        links.addAll(getMarkersForPattern(input, URL_PATTERN_WITH_PROTOCOL));
+        links.addAll(getMarkersForPattern(input, URL_PATTERN_NO_PROTOCOL));
+        links.addAll(getMarkersForPattern(input, REDDIT_LINK_PATTERN));
+
+        // Remove LinkMarkers occurring within other LinkMarkers, so we don't process the same text twice
+        cleanListOfMarkers(links);
+
+        return linkMap;
+    }
+
+    void cleanListOfMarkers(final List<LinkMarker> links) {
+        // TODO
+    }
+
+    List<LinkMarker> getMarkersForPattern(final String text, final Pattern pattern) {
+        // List of indices of matches against a link regex
+        // We want to cache a list of indices and do all of the removal later
+        List<LinkMarker> links = new ArrayList<>();
+
+        Matcher matcher = pattern.matcher(text);
+        while (matcher.find()) {
+            LinkMarker marker = new LinkMarker(matcher.start(), matcher.end());
+            links.add(marker);
+        }
+
+        return links;
+    }
+
+    static class LinkMarker {
+        public int start;
+        public int end;
+
+        public LinkMarker(int start, int end) {
+            this.start = start;
+            this.end = end;
+        }
+    }
+
     public CharSequence convert(String text) {
+
+        Map<String, List<Integer>> linkMap = processUnderscoresInLinks(text);
+
+
         CharSequence markdown = mBypass.markdownToSpannable(text);
         SpannableStringBuilder formatted = new SpannableStringBuilder(markdown);
 
