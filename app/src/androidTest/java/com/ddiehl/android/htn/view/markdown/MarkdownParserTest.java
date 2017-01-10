@@ -438,9 +438,17 @@ public class MarkdownParserTest {
     }
 
     @Test
-    public void convert_boldedRedditLink_hasCorrectFormatting() {
+    public void convert_boldedRedditLink_leadingSlash_hasCorrectFormatting() {
         testStylingRedditLinks("/u/FooBar", "https://www.reddit.com/u/FooBar");
+    }
+
+    @Test
+    public void convert_boldedRedditLink_noLeadingSlash_hasCorrectFormatting() {
         testStylingRedditLinks("u/FooBar", "https://www.reddit.com/u/FooBar");
+    }
+
+    @Test
+    public void convert_boldedRedditLink_innerUnderscore_hasCorrectFormatting() {
         testStylingRedditLinks("/u/Foo_Bar", "https://www.reddit.com/u/Foo_Bar");
     }
 
