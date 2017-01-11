@@ -14,6 +14,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -88,6 +89,8 @@ public class MarkdownParser {
             // Add the cleaned link string to our link map, with its list of underscores
             linkMap.put(link.toString(), underscores);
         }
+
+        // TODO Optimization- Remove all links from map without underscores
 
         // Copy changes to the passed StringBuilder so the changes are synced
         // TODO This is somewhat bad style, we should try to refactor
@@ -177,9 +180,10 @@ public class MarkdownParser {
 
         // Pre-parse the formatted string for matches that are going to be linkified, removing
         // any StyleSpans (probably italicized sections from _underscores_)
-        removeStyleSpansFromLinksMatchingPattern(formatted, URL_PATTERN_WITH_PROTOCOL);
-        removeStyleSpansFromLinksMatchingPattern(formatted, URL_PATTERN_NO_PROTOCOL);
-        removeStyleSpansFromLinksMatchingPattern(formatted, REDDIT_LINK_PATTERN);
+//        removeStyleSpansFromLinksMatchingPattern(formatted, URL_PATTERN_WITH_PROTOCOL);
+//        removeStyleSpansFromLinksMatchingPattern(formatted, URL_PATTERN_NO_PROTOCOL);
+//        removeStyleSpansFromLinksMatchingPattern(formatted, REDDIT_LINK_PATTERN);
+        // NOTE: Should no longer be necessary with the underscore processing refactor
 
         // Add links for URLs with a protocol
         Linkify.addLinks(formatted, URL_PATTERN_WITH_PROTOCOL, null);
@@ -206,9 +210,52 @@ public class MarkdownParser {
         // Remove parentheses from links that are surrounded with them
         fixLinksSurroundedWithParentheses(formatted);
 
+        // Restore underscores to the formatted string using the map we previously made
+        restoreUnderscoresToText(formatted, linkMap);
+
+        // Convert normal URLSpans to the NoUnderline form
         convertUrlSpansToNoUnderlineForm(formatted);
 
         return formatted;
+    }
+
+    void restoreUnderscoresToText(SpannableStringBuilder text, Map<String, List<Integer>> linkMap) {
+        Set<String> links = linkMap.keySet();
+
+        for (String link : links) {
+            // Search for instances of the link within the text
+            int currentIndex = text.toString().indexOf(link);
+            while (currentIndex != -1) {
+                // Get the list of underscore indices
+                List<Integer> underscores = linkMap.get(link);
+
+                // Get the URLSpan starting at the index and ending at the end of the link
+                URLSpan[] spans = text.getSpans(currentIndex, link.length(), URLSpan.class);
+                URLSpan span = spans[0];
+                StringBuilder url = new StringBuilder(span.getURL());
+
+                StringBuilder newLinkText = new StringBuilder(link);
+
+                // Add underscores to the text and URL at specified indices
+                int linkUrlOffset = url.indexOf(link);
+                for (int index : underscores) {
+                    // FIXME: These indices need to be in reverse order for this to work
+                    newLinkText.insert(index, "_");
+                    url.insert(linkUrlOffset + index, "_");
+                }
+
+                // Replace link within full text with the updated link text
+                text.replace(currentIndex, link.length(), newLinkText);
+
+                // Replace span with one for the corrected URL
+                text.removeSpan(span);
+                URLSpan newSpan = new URLSpanNoUnderline(url.toString());
+                text.setSpan(newSpan, currentIndex, newLinkText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                // Find next instance
+                currentIndex = text.toString().indexOf(link, currentIndex + 1);
+            }
+        }
     }
 
     void removeStyleSpansFromLinksMatchingPattern(
