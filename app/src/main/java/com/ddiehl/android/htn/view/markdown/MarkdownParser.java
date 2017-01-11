@@ -71,16 +71,16 @@ public class MarkdownParser {
         // Remove LinkMarkers occurring within other LinkMarkers, so we don't process the same text twice
         markers = cleanListOfMarkers(markers);
 
+        Collections.sort(markers, (m1, m2) -> m2.start - m1.start);
+
         for (LinkMarker marker : markers) {
-            // Get indices of all underscores occurring within the link
+            // Get indices of all underscores occurring within the link, in descending order
             String substring = input.substring(marker.start, marker.end);
             StringBuilder link = new StringBuilder(substring);
             List<Integer> underscores = getIndicesOfAllUnderscores(substring);
-            // TODO
-            // Add tests to verify the list of underscores should be sorted descending here
 
             // In both the local link and full text, remove the underscores
-            for (int i = underscores.size() - 1; i >= 0; i--) {
+            for (int i = 0; i < underscores.size(); i++) {
                 int index = underscores.get(i);
                 link.deleteCharAt(index);
                 text.deleteCharAt(marker.start + index);
@@ -100,10 +100,10 @@ public class MarkdownParser {
         return linkMap;
     }
 
-    List<Integer> getIndicesOfAllUnderscores(String link) {
+    List<Integer> getIndicesOfAllUnderscores(String text) {
         List<Integer> indices = new ArrayList<>();
-        for (int i = link.length() - 1; i >= 0; i--) {
-            if (link.charAt(i) == '_') {
+        for (int i = text.length() - 1; i >= 0; i--) {
+            if (text.charAt(i) == '_') {
                 indices.add(i);
             }
         }
@@ -113,16 +113,26 @@ public class MarkdownParser {
     List<LinkMarker> cleanListOfMarkers(final List<LinkMarker> links) {
         List<LinkMarker> clean = new ArrayList<>(links);
 
+        List<Integer> indicesToDelete = new ArrayList<>();
+
         // FIXME
         // This currently runs in o(n^2), see if we can optimize it somehow so we don't cause
         // bottlenecks in parsing markdown with a lot of URLSpans
         for (int i = 0; i < clean.size(); i++) {
+            if (indicesToDelete.contains(i)) {
+                continue;
+            }
+
             LinkMarker marker = clean.get(i);
 
             Timber.d("SPAN(%d - %d)", marker.start, marker.end);
 
             // Look ahead to spans that start before the end of this span, and remove them
             for (int j = 0; j < clean.size(); j++) {
+                if (indicesToDelete.contains(j)) {
+                    continue;
+                }
+
                 LinkMarker nextMarker = clean.get(j);
                 // If we're at the same span, move onto the next one
                 if (marker == nextMarker) {
@@ -132,10 +142,16 @@ public class MarkdownParser {
                 // Check if this span starts before the last one ends
                 if (nextMarker.start >= marker.start && nextMarker.start <= marker.end) {
                     Timber.d("This span starts and ends within the current span, so remove it");
-                    // Remove span and null it out so we don't check it later
-                    clean.remove(nextMarker);
+                    indicesToDelete.add(j);
                 }
             }
+        }
+
+        // Remove identified indices for deletion
+        Collections.sort(indicesToDelete);
+        for (int i = indicesToDelete.size() - 1; i >= 0; i--) {
+            int index = indicesToDelete.get(i);
+            clean.remove(index);
         }
 
         return clean;
@@ -230,7 +246,7 @@ public class MarkdownParser {
                 List<Integer> underscores = linkMap.get(link);
 
                 // Get the URLSpan starting at the index and ending at the end of the link
-                URLSpan[] spans = text.getSpans(currentIndex, link.length(), URLSpan.class);
+                URLSpan[] spans = text.getSpans(currentIndex, currentIndex + link.length(), URLSpan.class);
                 URLSpan span = spans[0];
                 StringBuilder url = new StringBuilder(span.getURL());
 
@@ -238,19 +254,19 @@ public class MarkdownParser {
 
                 // Add underscores to the text and URL at specified indices
                 int linkUrlOffset = url.indexOf(link);
-                for (int index : underscores) {
-                    // FIXME: These indices need to be in reverse order for this to work
+                for (int i = underscores.size() - 1; i >= 0; i--) {
+                    int index = underscores.get(i);
                     newLinkText.insert(index, "_");
                     url.insert(linkUrlOffset + index, "_");
                 }
 
                 // Replace link within full text with the updated link text
-                text.replace(currentIndex, link.length(), newLinkText);
+                text.replace(currentIndex, currentIndex + link.length(), newLinkText);
 
                 // Replace span with one for the corrected URL
                 text.removeSpan(span);
                 URLSpan newSpan = new URLSpanNoUnderline(url.toString());
-                text.setSpan(newSpan, currentIndex, newLinkText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                text.setSpan(newSpan, currentIndex, currentIndex + newLinkText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
                 // Find next instance
                 currentIndex = text.toString().indexOf(link, currentIndex + 1);

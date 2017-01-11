@@ -1,7 +1,9 @@
 package com.ddiehl.android.htn.view.markdown;
 
 import android.support.test.runner.AndroidJUnit4;
+import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
 import android.text.style.StyleSpan;
 import android.text.style.URLSpan;
 
@@ -11,6 +13,11 @@ import com.ddiehl.android.logging.ConsoleLoggingTree;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import in.uncod.android.bypass.Bypass;
 import timber.log.Timber;
@@ -463,5 +470,121 @@ public class MarkdownParserTest {
         assertEquals(1, urlSpans.length);
         assertEquals("this text " + redditLink + " should be stylized", result.toString());
         assertEquals(expectedUrl, urlSpans[0].getURL());
+    }
+
+    @Test
+    public void getMarkersForPattern() {
+        MarkdownParser parser = getParser();
+        String link = "https://www.reddit.com/";
+        String text = String.format("this is a test with a link %s and some extra text", link);
+
+        List<MarkdownParser.LinkMarker> markers =
+                parser.getMarkersForPattern(text, MarkdownParser.URL_PATTERN_WITH_PROTOCOL);
+
+        // Verify only 1 marker was found
+        assertEquals(1, markers.size());
+
+        MarkdownParser.LinkMarker marker = markers.get(0);
+
+        // Verify start index and end index are at the correct places
+        assertEquals(text.indexOf(link), marker.start);
+        assertEquals(text.indexOf(link) + link.length(), marker.end);
+    }
+
+    @Test
+    public void cleanListOfLinkMarkers_shareStartPoint() {
+        MarkdownParser parser = getParser();
+        List<MarkdownParser.LinkMarker> markers = new ArrayList<>();
+        markers.add(new MarkdownParser.LinkMarker(0, 10));
+        markers.add(new MarkdownParser.LinkMarker(0, 9));
+
+        List<MarkdownParser.LinkMarker> clean = parser.cleanListOfMarkers(markers);
+        assertEquals(1, clean.size());
+        MarkdownParser.LinkMarker marker = clean.get(0);
+        assertEquals(0, marker.start);
+        assertEquals(10, marker.end);
+    }
+
+    @Test
+    public void cleanListOfLinkMarkers_shareEndPoint() {
+        MarkdownParser parser = getParser();
+        List<MarkdownParser.LinkMarker> markers = new ArrayList<>();
+        markers.add(new MarkdownParser.LinkMarker(0, 10));
+        markers.add(new MarkdownParser.LinkMarker(1, 10));
+
+        List<MarkdownParser.LinkMarker> clean = parser.cleanListOfMarkers(markers);
+        assertEquals(1, clean.size());
+        MarkdownParser.LinkMarker marker = clean.get(0);
+        assertEquals(0, marker.start);
+        assertEquals(10, marker.end);
+    }
+
+    @Test
+    public void cleanListOfLinkMarkers_nested() {
+        MarkdownParser parser = getParser();
+        List<MarkdownParser.LinkMarker> markers = new ArrayList<>();
+        markers.add(new MarkdownParser.LinkMarker(27, 78));
+        markers.add(new MarkdownParser.LinkMarker(35, 78));
+        markers.add(new MarkdownParser.LinkMarker(49, 78));
+
+        List<MarkdownParser.LinkMarker> clean = parser.cleanListOfMarkers(markers);
+
+        assertEquals(1, clean.size());
+        MarkdownParser.LinkMarker marker = clean.get(0);
+        assertEquals(27, marker.start);
+        assertEquals(78, marker.end);
+    }
+
+    @Test
+    public void getIndicesOfAllUnderscores() {
+        MarkdownParser parser = getParser();
+        String text = "_abc_abc_abc_abc_";
+
+        List<Integer> indices = parser.getIndicesOfAllUnderscores(text);
+        assertEquals(5, indices.size());
+        assertEquals(16, (int) indices.get(0));
+        assertEquals(12, (int) indices.get(1));
+        assertEquals(8, (int) indices.get(2));
+        assertEquals(4, (int) indices.get(3));
+        assertEquals(0, (int) indices.get(4));
+    }
+
+    @Test
+    public void processUnderscoresInLinks() {
+        MarkdownParser parser = getParser();
+        StringBuilder link = new StringBuilder("https://www.google.com/link_with_some_underscores");
+        String stripped = "https://www.google.com/linkwithsomeunderscores";
+
+        Map<String, List<Integer>> map = parser.processUnderscoresInLinks(link);
+
+        // Verify only one link is present in the map
+        assertEquals(1, map.size());
+
+        // Verify link has indices mapped to it and with the correct count
+        List<Integer> indices = map.get(stripped);
+        assertNotNull(indices);
+        assertEquals(3, indices.size());
+
+        // Verify StringBuilder passed into function is modified to match stripped link
+        assertEquals(link.toString(), stripped);
+    }
+
+    @Test
+    public void restoreUnderscoresToText() {
+        MarkdownParser parser = getParser();
+        // Create link Spannable with underscores stripped
+        String link = "https://www.google.com/link_with_some_underscores";
+        String strippedLink = "https://www.google.com/linkwithsomeunderscores";
+        SpannableStringBuilder text = new SpannableStringBuilder(strippedLink);
+        text.setSpan(new URLSpan(strippedLink), 0, strippedLink.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        // Create map of links to underscores
+        Map<String, List<Integer>> linkMap = new HashMap<>();
+        List<Integer> underscores = parser.getIndicesOfAllUnderscores(link);
+        linkMap.put(text.toString(), underscores);
+
+        parser.restoreUnderscoresToText(text, linkMap);
+
+        assertEquals(link, text.toString());
     }
 }
