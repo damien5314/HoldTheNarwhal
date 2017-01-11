@@ -53,25 +53,58 @@ public class MarkdownParser {
             (1) Restore the underscores to both the link text and its URLSpan using its list of underscores.
      */
 
-    Map<String, List<Integer>> processUnderscoresInLinks(String input) {
-        // Create StringBuilder for removing underscores easily
+    Map<String, List<Integer>> processUnderscoresInLinks(StringBuilder input) {
+        // Create a copy of the input text so we can modify it
+        // while still pulling substrings from the original string.
         StringBuilder text = new StringBuilder(input);
 
         // Map of links to a list of the positions of removed underscores within the links
         Map<String, List<Integer>> linkMap = new HashMap<>();
 
         // Compile list of link markers for each pattern
-        List<LinkMarker> links = new ArrayList<>();
-        links.addAll(getMarkersForPattern(input, URL_PATTERN_WITH_PROTOCOL));
-        links.addAll(getMarkersForPattern(input, URL_PATTERN_NO_PROTOCOL));
-        links.addAll(getMarkersForPattern(input, REDDIT_LINK_PATTERN));
+        List<LinkMarker> markers = new ArrayList<>();
+        markers.addAll(getMarkersForPattern(input, URL_PATTERN_WITH_PROTOCOL));
+        markers.addAll(getMarkersForPattern(input, URL_PATTERN_NO_PROTOCOL));
+        markers.addAll(getMarkersForPattern(input, REDDIT_LINK_PATTERN));
 
         // Remove LinkMarkers occurring within other LinkMarkers, so we don't process the same text twice
-        links = cleanListOfMarkers(links);
+        markers = cleanListOfMarkers(markers);
 
+        for (LinkMarker marker : markers) {
+            // Get indices of all underscores occurring within the link
+            String substring = input.substring(marker.start, marker.end);
+            StringBuilder link = new StringBuilder(substring);
+            List<Integer> underscores = getIndicesOfAllUnderscores(substring);
+            // TODO
+            // Add tests to verify the list of underscores should be sorted descending here
 
+            // In both the local link and full text, remove the underscores
+            for (int i = underscores.size() - 1; i >= 0; i--) {
+                int index = underscores.get(i);
+                link.deleteCharAt(index);
+                text.deleteCharAt(marker.start + index);
+            }
+
+            // Add the cleaned link string to our link map, with its list of underscores
+            linkMap.put(link.toString(), underscores);
+        }
+
+        // Copy changes to the passed StringBuilder so the changes are synced
+        // TODO This is somewhat bad style, we should try to refactor
+        input.delete(0, input.length());
+        input.append(text);
 
         return linkMap;
+    }
+
+    List<Integer> getIndicesOfAllUnderscores(String link) {
+        List<Integer> indices = new ArrayList<>();
+        for (int i = link.length() - 1; i >= 0; i--) {
+            if (link.charAt(i) == '_') {
+                indices.add(i);
+            }
+        }
+        return indices;
     }
 
     List<LinkMarker> cleanListOfMarkers(final List<LinkMarker> links) {
@@ -105,7 +138,7 @@ public class MarkdownParser {
         return clean;
     }
 
-    List<LinkMarker> getMarkersForPattern(final String text, final Pattern pattern) {
+    List<LinkMarker> getMarkersForPattern(final CharSequence text, final Pattern pattern) {
         // List of indices of matches against a link regex
         // We want to cache a list of indices and do all of the removal later
         List<LinkMarker> links = new ArrayList<>();
@@ -131,10 +164,15 @@ public class MarkdownParser {
 
     public CharSequence convert(String text) {
 
-        Map<String, List<Integer>> linkMap = processUnderscoresInLinks(text);
+        StringBuilder result = new StringBuilder(text);
 
+        // Remove all underscores from the input string and get a map of the links within the string
+        // to the positions of the underscores within the links.
+        Map<String, List<Integer>> linkMap = processUnderscoresInLinks(result);
 
-        CharSequence markdown = mBypass.markdownToSpannable(text);
+        // Process markdown for the cleaned string as usual
+        // Underscores have all been removed, therefore should not interfere with the formatting.
+        CharSequence markdown = mBypass.markdownToSpannable(result.toString());
         SpannableStringBuilder formatted = new SpannableStringBuilder(markdown);
 
         // Pre-parse the formatted string for matches that are going to be linkified, removing
