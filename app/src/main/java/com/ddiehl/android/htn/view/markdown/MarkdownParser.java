@@ -67,13 +67,42 @@ public class MarkdownParser {
         links.addAll(getMarkersForPattern(input, REDDIT_LINK_PATTERN));
 
         // Remove LinkMarkers occurring within other LinkMarkers, so we don't process the same text twice
-        cleanListOfMarkers(links);
+        links = cleanListOfMarkers(links);
+
+
 
         return linkMap;
     }
 
-    void cleanListOfMarkers(final List<LinkMarker> links) {
-        // TODO
+    List<LinkMarker> cleanListOfMarkers(final List<LinkMarker> links) {
+        List<LinkMarker> clean = new ArrayList<>(links);
+
+        // FIXME
+        // This currently runs in o(n^2), see if we can optimize it somehow so we don't cause
+        // bottlenecks in parsing markdown with a lot of URLSpans
+        for (int i = 0; i < clean.size(); i++) {
+            LinkMarker marker = clean.get(i);
+
+            Timber.d("SPAN(%d - %d)", marker.start, marker.end);
+
+            // Look ahead to spans that start before the end of this span, and remove them
+            for (int j = 0; j < clean.size(); j++) {
+                LinkMarker nextMarker = clean.get(j);
+                // If we're at the same span, move onto the next one
+                if (marker == nextMarker) {
+                    continue;
+                }
+
+                // Check if this span starts before the last one ends
+                if (nextMarker.start >= marker.start && nextMarker.start <= marker.end) {
+                    Timber.d("This span starts and ends within the current span, so remove it");
+                    // Remove span and null it out so we don't check it later
+                    clean.remove(nextMarker);
+                }
+            }
+        }
+
+        return clean;
     }
 
     List<LinkMarker> getMarkersForPattern(final String text, final Pattern pattern) {
