@@ -446,20 +446,20 @@ public class MarkdownParserTest {
 
     @Test
     public void convert_boldedRedditLink_leadingSlash_hasCorrectFormatting() {
-        testStylingRedditLinks("/u/FooBar", "https://www.reddit.com/u/FooBar");
+        testBoldedRedditLinks("/u/FooBar", "https://www.reddit.com/u/FooBar");
     }
 
     @Test
     public void convert_boldedRedditLink_noLeadingSlash_hasCorrectFormatting() {
-        testStylingRedditLinks("u/FooBar", "https://www.reddit.com/u/FooBar");
+        testBoldedRedditLinks("u/FooBar", "https://www.reddit.com/u/FooBar");
     }
 
     @Test
     public void convert_boldedRedditLink_innerUnderscore_hasCorrectFormatting() {
-        testStylingRedditLinks("/u/Foo_Bar", "https://www.reddit.com/u/Foo_Bar");
+        testBoldedRedditLinks("/u/Foo_Bar", "https://www.reddit.com/u/Foo_Bar");
     }
 
-    private void testStylingRedditLinks(String redditLink, String expectedUrl) {
+    private void testBoldedRedditLinks(String redditLink, String expectedUrl) {
         MarkdownParser parser = getParser();
         String text = String.format("this text **%s** should be stylized", redditLink);
 
@@ -470,6 +470,34 @@ public class MarkdownParserTest {
         assertEquals(1, urlSpans.length);
         assertEquals("this text " + redditLink + " should be stylized", result.toString());
         assertEquals(expectedUrl, urlSpans[0].getURL());
+    }
+
+    @Test
+    public void convert_italicizedRedditLink_innerUnderscore_hasCorrectFormatting() {
+        MarkdownParser parser = getParser();
+        String redditLink = "/u/Foo_Bar";
+        String text = "_" + redditLink + "_";
+
+        CharSequence formatted = parser.convert(text);
+        SpannableString result = SpannableString.valueOf(formatted);
+
+        URLSpan[] urlSpans = result.getSpans(0, result.length(), URLSpan.class);
+        assertEquals(1, urlSpans.length);
+        assertEquals(redditLink, result.toString());
+    }
+
+    @Test
+    public void convert_duplicateLinksWithoutUnderscores_areRestoredCorrectly() {
+        MarkdownParser parser = getParser();
+        String link1 = "/u/FooBar";
+        String link2 = "/u/Foo_Bar";
+        String text = "**" + link1 + "**" + " " + "**" + link2 + "**";
+        String expected = link1 + " " + link2;
+
+        CharSequence formatted = parser.convert(text);
+        SpannableString result = SpannableString.valueOf(formatted);
+
+        assertEquals(expected, formatted.toString());
     }
 
     @Test
@@ -586,5 +614,17 @@ public class MarkdownParserTest {
         parser.restoreUnderscoresToText(text, linkMap);
 
         assertEquals(link, text.toString());
+    }
+
+    @Test
+    public void convert_italicizedText_underscores_hasCorrectFormatting() {
+        MarkdownParser parser = getParser();
+        String redditLink = "foo";
+        String text = "_" + redditLink + "_";
+
+        CharSequence formatted = parser.convert(text);
+        SpannableString result = SpannableString.valueOf(formatted);
+
+        assertEquals(redditLink, result.toString());
     }
 }
