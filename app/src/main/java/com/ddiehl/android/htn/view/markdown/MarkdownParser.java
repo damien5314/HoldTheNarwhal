@@ -1,9 +1,7 @@
 package com.ddiehl.android.htn.view.markdown;
 
-import android.support.annotation.NonNull;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
-import android.text.style.StyleSpan;
 import android.text.style.URLSpan;
 import android.text.util.Linkify;
 
@@ -23,36 +21,71 @@ import timber.log.Timber;
 
 public class MarkdownParser {
 
+    static final Pattern URL_PATTERN_WITH_PROTOCOL = Pattern.compile(
+            "\\(*\\b((https?|ftp|file)://)[a-zA-Z-]*\\.[-a-zA-Z0-9+&@#/%?=~_|!:,.;(]*[-a-zA-Z0-9+&@#/%=~_|)]",
+            Pattern.MULTILINE
+    );
+    static final Pattern URL_PATTERN_NO_PROTOCOL = Pattern.compile(
+            "\\(*\\bwww\\.[a-zA-Z-]*\\.([-a-zA-Z0-9+&@#/%?=~_|!:,;(]*|\\.?)[-a-zA-Z0-9+&@#/%=~_|)]",
+            Pattern.MULTILINE
+    );
+    static final Pattern REDDIT_LINK_PATTERN = Pattern.compile(
+            "\\(?(?:(\\b|/))/?[ru]/[\\p{Alnum}_-]*([-a-zA-Z0-9+&@#/%?=~_|!:,;(]*|\\.?)[-a-zA-Z0-9+&@#/%=~_|)]",
+            Pattern.MULTILINE
+    );
+
     Bypass mBypass;
 
     public MarkdownParser(Bypass bypass) {
         mBypass = bypass;
     }
 
-    static final Pattern URL_PATTERN_WITH_PROTOCOL = Pattern.compile(
-            "\\(*\\b((https?|ftp|file)://)[a-zA-Z-]*\\.[-a-zA-Z0-9+&@#/%?=~_|!:,.;(]*[-a-zA-Z0-9+&@#/%=~_|)]",
-            Pattern.MULTILINE
-    );
+    public CharSequence convert(String text) {
 
-    static final Pattern URL_PATTERN_NO_PROTOCOL = Pattern.compile(
-            "\\(*\\bwww\\.[a-zA-Z-]*\\.([-a-zA-Z0-9+&@#/%?=~_|!:,;(]*|\\.?)[-a-zA-Z0-9+&@#/%=~_|)]",
-            Pattern.MULTILINE
-    );
+        StringBuilder result = new StringBuilder(text);
 
-    static final Pattern REDDIT_LINK_PATTERN = Pattern.compile(
-            "\\(?(?:(\\b|/))/?[ru]/[\\p{Alnum}_-]*([-a-zA-Z0-9+&@#/%?=~_|!:,;(]*|\\.?)[-a-zA-Z0-9+&@#/%=~_|)]",
-            Pattern.MULTILINE
-    );
+        // Remove all underscores from the input string and get a map of the links within the string
+        // to the positions of the underscores within the links.
+        Map<String, List<Integer>> linkMap = processUnderscoresInLinks(result);
 
-    /*
-        (1) Pre-parse the unformatted markdown text, searching for matches against our Linkify patterns
-            (1) For each match, remove the underscores while caching their positions in the string
-            (2) Store each link in a Map of links to the list of removed underscores
-        (2) Process markdown text through Bypass
-        (3) Remove URLSpans within outer URLSpans
-        (4) For each link in the Map created in step (1), search for all matches.
-            (1) Restore the underscores to both the link text and its URLSpan using its list of underscores.
-     */
+        // Process markdown for the cleaned string as usual
+        // Underscores have all been removed, therefore should not interfere with the formatting.
+        CharSequence markdown = mBypass.markdownToSpannable(result.toString());
+        SpannableStringBuilder formatted = new SpannableStringBuilder(markdown);
+
+        // Add links for URLs with a protocol
+        Linkify.addLinks(formatted, URL_PATTERN_WITH_PROTOCOL, null);
+
+        // Add links with `https://` prepended to links without a protocol
+        Linkify.addLinks(formatted, URL_PATTERN_NO_PROTOCOL, null, null,
+                (match, url) -> "https://" + url);
+
+        // Linkify links for /r/ and /u/ patterns
+        Linkify.addLinks(
+                formatted, REDDIT_LINK_PATTERN, null, null,
+                (match, url) -> {
+                    url = url.trim();
+                    if (!url.startsWith("/") && !url.startsWith("(/")) {
+                        url = "/" + url;
+                    }
+                    return "https://www.reddit.com" + url;
+                }
+        );
+
+        // Clear up anything we might have double-linked
+        removeLinksWithinLinks(formatted);
+
+        // Remove parentheses from links that are surrounded with them
+        fixLinksSurroundedWithParentheses(formatted);
+
+        // Restore underscores to the formatted string using the map we previously made
+        restoreUnderscoresToText(formatted, linkMap);
+
+        // Convert normal URLSpans to the NoUnderline form
+        convertUrlSpansToNoUnderlineForm(formatted);
+
+        return formatted;
+    }
 
     Map<String, List<Integer>> processUnderscoresInLinks(StringBuilder input) {
         // Create a copy of the input text so we can modify it
@@ -100,14 +133,18 @@ public class MarkdownParser {
         return linkMap;
     }
 
-    List<Integer> getIndicesOfAllUnderscores(String text) {
-        List<Integer> indices = new ArrayList<>();
-        for (int i = text.length() - 1; i >= 0; i--) {
-            if (text.charAt(i) == '_') {
-                indices.add(i);
-            }
+    List<LinkMarker> getMarkersForPattern(final CharSequence text, final Pattern pattern) {
+        // List of indices of matches against a link regex
+        // We want to cache a list of indices and do all of the removal later
+        List<LinkMarker> links = new ArrayList<>();
+
+        Matcher matcher = pattern.matcher(text);
+        while (matcher.find()) {
+            LinkMarker marker = new LinkMarker(matcher.start(), matcher.end());
+            links.add(marker);
         }
-        return indices;
+
+        return links;
     }
 
     List<LinkMarker> cleanListOfMarkers(final List<LinkMarker> links) {
@@ -157,160 +194,14 @@ public class MarkdownParser {
         return clean;
     }
 
-    List<LinkMarker> getMarkersForPattern(final CharSequence text, final Pattern pattern) {
-        // List of indices of matches against a link regex
-        // We want to cache a list of indices and do all of the removal later
-        List<LinkMarker> links = new ArrayList<>();
-
-        Matcher matcher = pattern.matcher(text);
-        while (matcher.find()) {
-            LinkMarker marker = new LinkMarker(matcher.start(), matcher.end());
-            links.add(marker);
-        }
-
-        return links;
-    }
-
-    static class LinkMarker {
-        public int start;
-        public int end;
-
-        public LinkMarker(int start, int end) {
-            this.start = start;
-            this.end = end;
-        }
-    }
-
-    public CharSequence convert(String text) {
-
-        StringBuilder result = new StringBuilder(text);
-
-        // Remove all underscores from the input string and get a map of the links within the string
-        // to the positions of the underscores within the links.
-        Map<String, List<Integer>> linkMap = processUnderscoresInLinks(result);
-
-        // Process markdown for the cleaned string as usual
-        // Underscores have all been removed, therefore should not interfere with the formatting.
-        CharSequence markdown = mBypass.markdownToSpannable(result.toString());
-        SpannableStringBuilder formatted = new SpannableStringBuilder(markdown);
-
-        // Pre-parse the formatted string for matches that are going to be linkified, removing
-        // any StyleSpans (probably italicized sections from _underscores_)
-//        removeStyleSpansFromLinksMatchingPattern(formatted, URL_PATTERN_WITH_PROTOCOL);
-//        removeStyleSpansFromLinksMatchingPattern(formatted, URL_PATTERN_NO_PROTOCOL);
-//        removeStyleSpansFromLinksMatchingPattern(formatted, REDDIT_LINK_PATTERN);
-        // NOTE: Should no longer be necessary with the underscore processing refactor
-
-        // Add links for URLs with a protocol
-        Linkify.addLinks(formatted, URL_PATTERN_WITH_PROTOCOL, null);
-
-        // Add links with `https://` prepended to links without a protocol
-        Linkify.addLinks(formatted, URL_PATTERN_NO_PROTOCOL, null, null,
-                (match, url) -> "https://" + url);
-
-        // Linkify links for /r/ and /u/ patterns
-        Linkify.addLinks(
-                formatted, REDDIT_LINK_PATTERN, null, null,
-                (match, url) -> {
-                    url = url.trim();
-                    if (!url.startsWith("/") && !url.startsWith("(/")) {
-                        url = "/" + url;
-                    }
-                    return "https://www.reddit.com" + url;
-                }
-        );
-
-        // Clear up anything we might have double-linked
-        removeLinksWithinLinks(formatted);
-
-        // Remove parentheses from links that are surrounded with them
-        fixLinksSurroundedWithParentheses(formatted);
-
-        // Restore underscores to the formatted string using the map we previously made
-        restoreUnderscoresToText(formatted, linkMap);
-
-        // Convert normal URLSpans to the NoUnderline form
-        convertUrlSpansToNoUnderlineForm(formatted);
-
-        return formatted;
-    }
-
-    void restoreUnderscoresToText(SpannableStringBuilder text, Map<String, List<Integer>> linkMap) {
-        Set<String> links = linkMap.keySet();
-
-        for (String link : links) {
-            // Search for instances of the link within the text
-            int currentIndex = text.toString().indexOf(link);
-            while (currentIndex != -1) {
-                // Get the list of underscore indices
-                List<Integer> underscores = linkMap.get(link);
-
-                // Get the URLSpan starting at the index and ending at the end of the link
-                URLSpan[] spans = text.getSpans(currentIndex, currentIndex + link.length(), URLSpan.class);
-                URLSpan span = spans[0];
-                StringBuilder url = new StringBuilder(span.getURL());
-
-                StringBuilder newLinkText = new StringBuilder(link);
-
-                // Add underscores to the text and URL at specified indices
-                int linkUrlOffset = url.indexOf(link);
-                for (int i = underscores.size() - 1; i >= 0; i--) {
-                    int index = underscores.get(i);
-                    newLinkText.insert(index, "_");
-                    url.insert(linkUrlOffset + index, "_");
-                }
-
-                // Replace link within full text with the updated link text
-                text.replace(currentIndex, currentIndex + link.length(), newLinkText);
-
-                // Replace span with one for the corrected URL
-                text.removeSpan(span);
-                URLSpan newSpan = new URLSpanNoUnderline(url.toString());
-                text.setSpan(newSpan, currentIndex, currentIndex + newLinkText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-                // Find next instance
-                currentIndex = text.toString().indexOf(link, currentIndex + 1);
-            }
-        }
-    }
-
-    void removeStyleSpansFromLinksMatchingPattern(
-            @NonNull SpannableStringBuilder text, @NonNull Pattern pattern) {
-        Timber.d("[DCD] PATTERN " + pattern.toString());
-
-        Matcher matcher = pattern.matcher(text);
-
+    List<Integer> getIndicesOfAllUnderscores(String text) {
         List<Integer> indices = new ArrayList<>();
-        int matchCount = 0;
-
-        while (matcher.find()) {
-            Timber.d("[DCD] Match[%d-%d]: %s", matcher.start(), matcher.end(), text.subSequence(matcher.start(), matcher.end()));
-            matchCount++;
-            StyleSpan[] styleSpans = text.getSpans(matcher.start(), matcher.end(), StyleSpan.class);
-            for (StyleSpan styleSpan : styleSpans) {
-                int spanStart = text.getSpanStart(styleSpan);
-                int spanEnd = text.getSpanEnd(styleSpan);
-                // Don't remove StyleSpans that cover the FULL match
-                if (spanStart > matcher.start() || spanEnd < matcher.end()) {
-                    // Add indices to index cache
-                    indices.add(spanStart);
-                    indices.add(spanEnd);
-                    text.removeSpan(styleSpan);
-                }
+        for (int i = text.length() - 1; i >= 0; i--) {
+            if (text.charAt(i) == '_') {
+                indices.add(i);
             }
         }
-        Timber.d("[DCD] MATCH COUNT: " + matchCount);
-
-        // `getSpans` does not return spans in the order they appear in the string it seems?
-        // So the matched indices end up coming out of order
-        Collections.sort(indices);
-
-        // Now take the list of indices and actually apply the results, in reverse order
-        // TODO Maybe do this more efficiently if the array keeps having to shift earlier modifications
-        for (int i = indices.size() - 1; i >= 0; i--) {
-            int index = indices.get(i);
-            text.insert(index, "_");
-        }
+        return indices;
     }
 
     void removeLinksWithinLinks(SpannableStringBuilder formatted) {
@@ -363,18 +254,53 @@ public class MarkdownParser {
             if (linkText.startsWith("(") && linkText.endsWith(")")) {
                 StringBuilder url = new StringBuilder(urlSpan.getURL());
 
-                // https://www.reddit.com/(r/cats)
                 int startIndex = url.indexOf(linkText);
                 int endIndex = startIndex + linkText.length() - 1;
 
                 url.deleteCharAt(endIndex);
                 url.deleteCharAt(startIndex);
 
-//                String newUrl = url.substring(1, url.length() - 1);
-
                 text.removeSpan(urlSpan);
-//                text.setSpan(new URLSpan(newUrl), spanStart + 1, spanEnd - 1, SpannableStringBuilder.SPAN_EXCLUSIVE_EXCLUSIVE);
                 text.setSpan(new URLSpan(url.toString()), spanStart + 1, spanEnd - 1, SpannableStringBuilder.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+        }
+    }
+
+    void restoreUnderscoresToText(SpannableStringBuilder text, Map<String, List<Integer>> linkMap) {
+        Set<String> links = linkMap.keySet();
+
+        for (String link : links) {
+            // Search for instances of the link within the text
+            int currentIndex = text.toString().indexOf(link);
+            while (currentIndex != -1) {
+                // Get the list of underscore indices
+                List<Integer> underscores = linkMap.get(link);
+
+                // Get the URLSpan starting at the index and ending at the end of the link
+                URLSpan[] spans = text.getSpans(currentIndex, currentIndex + link.length(), URLSpan.class);
+                URLSpan span = spans[0];
+                StringBuilder url = new StringBuilder(span.getURL());
+
+                StringBuilder newLinkText = new StringBuilder(link);
+
+                // Add underscores to the text and URL at specified indices
+                int linkUrlOffset = url.indexOf(link);
+                for (int i = underscores.size() - 1; i >= 0; i--) {
+                    int index = underscores.get(i);
+                    newLinkText.insert(index, "_");
+                    url.insert(linkUrlOffset + index, "_");
+                }
+
+                // Replace link within full text with the updated link text
+                text.replace(currentIndex, currentIndex + link.length(), newLinkText);
+
+                // Replace span with one for the corrected URL
+                text.removeSpan(span);
+                URLSpan newSpan = new URLSpanNoUnderline(url.toString());
+                text.setSpan(newSpan, currentIndex, currentIndex + newLinkText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                // Find next instance
+                currentIndex = text.toString().indexOf(link, currentIndex + 1);
             }
         }
     }
@@ -397,18 +323,13 @@ public class MarkdownParser {
         }
     }
 
-    void autolink(StringBuilder builder, Pattern pattern) {
-        List<Integer> matchIndices = new ArrayList<>();
-        Matcher matcher = pattern.matcher(builder);
-        while (matcher.find()) {
-            matchIndices.add(matcher.start());
-            matchIndices.add(matcher.end());
-        }
+    static class LinkMarker {
+        public int start;
+        public int end;
 
-        int i = matchIndices.size() - 1;
-        while (i > 0) {
-            builder.insert(matchIndices.get(i--), ">");
-            builder.insert(matchIndices.get(i--), "<");
+        public LinkMarker(int start, int end) {
+            this.start = start;
+            this.end = end;
         }
     }
 }
