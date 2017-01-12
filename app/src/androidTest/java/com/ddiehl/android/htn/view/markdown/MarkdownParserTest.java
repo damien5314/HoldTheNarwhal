@@ -485,6 +485,11 @@ public class MarkdownParserTest {
 
         URLSpan[] urlSpans = result.getSpans(0, result.length(), URLSpan.class);
         assertEquals(1, urlSpans.length);
+        // FIXME
+        // This is failing because we strip the trailing underscore when we pre-process matching links
+        // for underscores, so when we pass it through the markdown parser, there is no underscore to
+        // complete the formatting.
+        // This may cause issues when users try to italicize any reddit link with underscores.
         assertEquals(redditLink, result.toString());
     }
 
@@ -499,6 +504,10 @@ public class MarkdownParserTest {
         CharSequence formatted = parser.convert(text);
         SpannableString result = SpannableString.valueOf(formatted);
 
+        // FIXME (extreme edge case)
+        // This is currently failing because we store stripped links in the Map returned from
+        // processUnderscoresInLinks so we match both the stripped and original versions when
+        // we go to restore the underscores.
         assertEquals(expected, formatted.toString());
     }
 
