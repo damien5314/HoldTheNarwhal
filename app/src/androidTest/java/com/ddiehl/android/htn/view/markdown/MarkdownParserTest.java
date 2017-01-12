@@ -15,6 +15,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +24,7 @@ import in.uncod.android.bypass.Bypass;
 import timber.log.Timber;
 
 import static android.support.test.InstrumentationRegistry.getContext;
+import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -619,12 +621,48 @@ public class MarkdownParserTest {
     @Test
     public void convert_italicizedText_underscores_hasCorrectFormatting() {
         MarkdownParser parser = getParser();
-        String redditLink = "foo";
-        String text = "_" + redditLink + "_";
+        String text = "foo";
+        String italics = "_" + text + "_";
+
+        CharSequence formatted = parser.convert(italics);
+        SpannableString result = SpannableString.valueOf(formatted);
+
+        assertEquals(italics, result.toString());
+    }
+
+    @Test
+    public void convert_duplicateLinksThatAreSubstringsOfOneAnother_haveCorrectFormatting() {
+        MarkdownParser parser = getParser();
+        String redditLink = "/r/subreddit/some_link_with_underscores";
+        String httpLink = "https://www.reddit.com" + redditLink;
+        String text = httpLink + "\n\n" + redditLink;
 
         CharSequence formatted = parser.convert(text);
         SpannableString result = SpannableString.valueOf(formatted);
 
-        assertEquals(redditLink, result.toString());
+        assertEquals(text, formatted.toString());
+
+        URLSpan[] spans = result.getSpans(0, text.length(), URLSpan.class);
+        assertEquals(2, spans.length);
+
+        List<URLSpan> spanList = asList(spans);
+        Collections.sort(
+                spanList, (o1, o2) -> result.getSpanStart(o1) - result.getSpanStart(o2)
+        );
+
+        // Verify they have the same URL
+        assertEquals(httpLink, spanList.get(0).getURL());
+        assertEquals(httpLink, spanList.get(1).getURL());
+
+        // Verify the HTTP link span starts and ends at its text length
+        // FIXME
+        // This is currently failing because we replace instances of links within the text
+        // without checking if they are a substring of another match
+        assertEquals(0, result.getSpanStart(spanList.get(0)));
+        assertEquals(httpLink.length(), result.getSpanEnd(spanList.get(0)));
+
+        // Verify the reddit link span starts and ends at the correct place
+        assertEquals(httpLink.length() + 2, result.getSpanStart(spanList.get(1)));
+        assertEquals(result.length(), result.getSpanEnd(spanList.get(1)));
     }
 }
