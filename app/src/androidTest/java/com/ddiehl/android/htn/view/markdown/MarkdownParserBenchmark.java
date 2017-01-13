@@ -2,19 +2,18 @@ package com.ddiehl.android.htn.view.markdown;
 
 import android.support.test.runner.AndroidJUnit4;
 
+import com.ddiehl.android.htn.TestUtils;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.util.concurrent.TimeUnit;
-
 import in.uncod.android.bypass.Bypass;
-import timber.log.Timber;
 
 import static android.support.test.InstrumentationRegistry.getContext;
 
 /**
  * 01-12 20:02:40.078 MarkdownParserBenchmark: 10000 iterations took 22071 MILLISECONDS
- * 01-12 20:05:22.045 MarkdownParserBenchmark: 10000 iterations took 1672 MILLISECONDS
+ * 01-12 20:22:44.819 I/TestUtils: MarkdownParser.convert(): 1686 MILLISECONDS
  */
 @RunWith(AndroidJUnit4.class)
 public class MarkdownParserBenchmark {
@@ -32,18 +31,12 @@ public class MarkdownParserBenchmark {
     public void benchmark() {
         MarkdownParser parser = getParser();
 
-        int iterations = 10000;
+        TestUtils.logDuration("MarkdownParser.convert()", () -> {
+            int iterations = 10000;
 
-        long startTime = System.nanoTime();
-
-        for (int i = 0; i < iterations; i++) {
-            parser.convert(BENCHMARK_TEXT);
-        }
-
-        long endTime = System.nanoTime();
-
-        long elapsed = TimeUnit.MILLISECONDS.convert(endTime - startTime, TimeUnit.NANOSECONDS);
-
-        Timber.i("%d iterations took %d %s", iterations, elapsed, TimeUnit.MILLISECONDS.name());
+            for (int i = 0; i < iterations; i++) {
+                parser.convert(BENCHMARK_TEXT);
+            }
+        });
     }
 }
