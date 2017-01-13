@@ -103,13 +103,19 @@ public class MarkdownParser {
         // Remove LinkMarkers occurring within other LinkMarkers, so we don't process the same text twice
         markers = cleanListOfMarkers(markers);
 
+        // Sort the list of markers in reverse order of appearance in the input
         Collections.sort(markers, (m1, m2) -> m2.start - m1.start);
 
         for (LinkMarker marker : markers) {
             // Get indices of all underscores occurring within the link, in descending order
             String substring = input.substring(marker.start, marker.end);
             StringBuilder link = new StringBuilder(substring);
+
             List<Integer> underscores = getIndicesOfAllUnderscores(substring);
+            if (underscores.size() == 0) {
+                // Links without underscores don't affect formatting, so ignore them
+                continue;
+            }
 
             // In both the local link and full text, remove the underscores
             for (int i = 0; i < underscores.size(); i++) {
@@ -121,8 +127,6 @@ public class MarkdownParser {
             // Add the cleaned link string to our link map, with its list of underscores
             linkMap.put(link.toString(), underscores);
         }
-
-        // TODO Optimization- Remove all links from map without underscores
 
         // Copy changes to the passed StringBuilder so the changes are synced
         // TODO This is somewhat bad style, we should try to refactor

@@ -14,6 +14,7 @@ import static android.support.test.InstrumentationRegistry.getContext;
 /**
  * 01-12 20:02:40.078 MarkdownParserBenchmark: 10000 iterations took 22071 MILLISECONDS
  * 01-12 20:22:44.819 I/TestUtils: MarkdownParser.convert(): 1686 MILLISECONDS
+ * 01-12 22:54:46.920 I/TestUtils: MarkdownParser.convert(): 2163 MILLISECONDS
  */
 @RunWith(AndroidJUnit4.class)
 public class MarkdownParserBenchmark {

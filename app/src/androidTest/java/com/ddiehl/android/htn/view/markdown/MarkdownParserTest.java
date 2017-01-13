@@ -677,4 +677,18 @@ public class MarkdownParserTest {
         assertEquals(httpLink.length() + 2, result.getSpanStart(spanList.get(1)));
         assertEquals(result.length(), result.getSpanEnd(spanList.get(1)));
     }
+
+    @Test
+    public void processUnderscoresInLinks_linksWithoutUnderscores_removedFromMap() {
+        MarkdownParser parser = getParser();
+
+        StringBuilder input = new StringBuilder();
+        input.append("https://www.google.com/link1").append("\n\n");
+        input.append("https://www.google.com/link1_2_3").append("\n\n");
+        input.append("https://www.google.com/link2").append("\n\n");
+        input.append("https://www.google.com/link2_3_4");
+
+        Map<String, List<Integer>> linkMap = parser.processUnderscoresInLinks(input);
+        assertEquals(2, linkMap.size());
+    }
 }
