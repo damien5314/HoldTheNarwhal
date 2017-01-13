@@ -17,7 +17,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import in.uncod.android.bypass.Bypass;
-import timber.log.Timber;
 
 public class MarkdownParser {
 
@@ -162,7 +161,7 @@ public class MarkdownParser {
 
             LinkMarker marker = clean.get(i);
 
-            Timber.d("SPAN(%d - %d)", marker.start, marker.end);
+//            Timber.d("SPAN(%d - %d)", marker.start, marker.end);
 
             // Look ahead to spans that start before the end of this span, and remove them
             for (int j = 0; j < clean.size(); j++) {
@@ -178,7 +177,7 @@ public class MarkdownParser {
 
                 // Check if this span starts before the last one ends
                 if (nextMarker.start >= marker.start && nextMarker.start <= marker.end) {
-                    Timber.d("This span starts and ends within the current span, so remove it");
+//                    Timber.d("This span starts and ends within the current span, so remove it");
                     indicesToDelete.add(j);
                 }
             }
@@ -218,7 +217,7 @@ public class MarkdownParser {
 
             int spanStart = formatted.getSpanStart(urlSpan);
             int spanEnd = formatted.getSpanEnd(urlSpan);
-            Timber.d("SPAN(%d - %d)", spanStart, spanEnd);
+//            Timber.d("SPAN(%d - %d)", spanStart, spanEnd);
 
             // Look ahead to spans that start before the end of this span, and remove them
             for (int j = 0; j < urlSpans.length; j++) {
@@ -234,7 +233,7 @@ public class MarkdownParser {
 //                Timber.d("NEXT(%d - %d)", nextSpanStart, nextSpanEnd);
 
                 if (nextSpanStart >= spanStart && nextSpanStart <= spanEnd) {
-                    Timber.d("This span starts and ends within the current span, so remove it");
+//                    Timber.d("This span starts and ends within the current span, so remove it");
                     // Remove span and null it out so we don't check it later
                     formatted.removeSpan(nextSpan);
                     urlSpans[j] = null;
