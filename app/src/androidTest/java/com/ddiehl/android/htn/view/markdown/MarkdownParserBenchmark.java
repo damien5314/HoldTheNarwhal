@@ -48,7 +48,7 @@ public class MarkdownParserBenchmark {
     public void benchmark2() throws IOException {
         InputStream open = getContext()
                 .getAssets()
-                .open("test_links_500.txt");
+                .open("test_links_100.txt");
         String text = TestUtils.getTextFromInputStream(open);
         MarkdownParser parser = getParser();
 
