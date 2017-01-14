@@ -476,11 +476,13 @@ public class MarkdownParserTest {
         assertEquals(expectedUrl, urlSpans[0].getURL());
     }
 
-    @Test
-    @Ignore("This is failing because we strip the trailing underscore when we pre-process " +
-            "matching links for underscores, so when we pass it through the markdown parser, " +
-            "there is no underscore to complete the formatting. This may cause issues when users " +
-            "try to italicize any reddit link with underscores.")
+    /**
+     * This is failing because we strip the trailing underscore when we pre-process matching
+     * links for underscores, so when we pass it through the markdown parser, there is
+     * no underscore to complete the formatting.
+     * This may cause issues when users try to italicize any reddit link with underscores.
+     */
+    @Test @Ignore
     public void convert_italicizedRedditLink_innerUnderscore_hasCorrectFormatting() {
         MarkdownParser parser = getParser();
         String redditLink = "/u/Foo_Bar";
@@ -494,10 +496,12 @@ public class MarkdownParserTest {
         assertEquals(redditLink, result.toString());
     }
 
-    @Test
-    @Ignore("This is currently failing because we store stripped links in the Map returned " +
-            "from processUnderscoresInLinks so we match both the stripped and original versions " +
-            "when we go to restore the underscores.")
+    /**
+     * This is currently failing because we store stripped links in the Map returned from
+     * processUnderscoresInLinks so we match both the stripped and original versions
+     * when we go to restore the underscores.
+     */
+    @Test @Ignore
     public void convert_duplicateLinksWithoutUnderscores_areRestoredCorrectly() {
         MarkdownParser parser = getParser();
         String link1 = "/u/FooBar";
@@ -643,9 +647,11 @@ public class MarkdownParserTest {
         assertEquals(Typeface.ITALIC, spans[0].getStyle());
     }
 
-    @Test
-    @Ignore("This is currently failing because we replace instances of links within the text " +
-            "without checking if they are a substring of another match")
+    /**
+     * This is currently failing because we replace instances of links within the text
+     * without checking if they are a substring of another match
+     */
+    @Test @Ignore
     public void convert_duplicateLinksThatAreSubstringsOfOneAnother_haveCorrectFormatting() {
         MarkdownParser parser = getParser();
         String redditLink = "/r/subreddit/some_link_with_underscores";
