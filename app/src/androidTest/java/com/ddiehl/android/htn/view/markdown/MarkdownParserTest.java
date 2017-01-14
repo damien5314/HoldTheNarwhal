@@ -1,6 +1,7 @@
 package com.ddiehl.android.htn.view.markdown;
 
 import android.graphics.Typeface;
+import android.support.annotation.Nullable;
 import android.support.test.runner.AndroidJUnit4;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -8,6 +9,9 @@ import android.text.SpannableStringBuilder;
 import android.text.style.StyleSpan;
 import android.text.style.URLSpan;
 
+import com.ddiehl.android.htn.di.DaggerTestComponent;
+import com.ddiehl.android.htn.di.SharedModule;
+import com.ddiehl.android.htn.di.TestComponent;
 import com.ddiehl.android.logging.ConsoleLogger;
 import com.ddiehl.android.logging.ConsoleLoggingTree;
 
@@ -22,30 +26,32 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import in.uncod.android.bypass.Bypass;
 import timber.log.Timber;
 
-import static android.support.test.InstrumentationRegistry.getContext;
+import static android.support.test.InstrumentationRegistry.getTargetContext;
 import static java.util.Arrays.asList;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
 
 @RunWith(AndroidJUnit4.class)
 public class MarkdownParserTest {
 
-    static MarkdownParser getParser() {
-        Bypass bypass = new Bypass(getContext());
-        return new MarkdownParser(bypass);
+    @Inject @Nullable
+    Bypass mBypass;
+
+    MarkdownParser getParser() {
+        return new MarkdownParser(mBypass);
     }
 
     @Before
     public void setUp() {
-//        TestApplicationComponent component = DaggerTestApplicationComponent.builder()
-//                .testApplicationModule(new TestApplicationModule(getContext()))
-//                .sharedModule(new SharedModule())
-//                .build();
-//        HoldTheNarwhal.setTestComponent(component);
-//        component.inject(this);
+        TestComponent component = DaggerTestComponent.builder()
+                .sharedModule(new SharedModule(getTargetContext()))
+                .build();
+        component.inject(this);
 
         Timber.plant(new ConsoleLoggingTree(new ConsoleLogger()));
     }

@@ -109,6 +109,7 @@ dependencies {
 
     compile "com.google.dagger:dagger:$project.ext.daggerVersion"
     apt "com.google.dagger:dagger-compiler:$project.ext.daggerVersion"
+    testApt "com.google.dagger:dagger-compiler:$project.ext.daggerVersion"
 
     compile "uk.co.chrisjenx:calligraphy:$project.ext.calligraphyVersion"
 

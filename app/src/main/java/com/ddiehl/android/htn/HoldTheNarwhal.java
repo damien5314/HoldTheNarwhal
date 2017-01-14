@@ -30,8 +30,8 @@ public class HoldTheNarwhal extends Application {
         Fabric.with(this, new Crashlytics());
 
         mComponent = DaggerApplicationComponent.builder()
-                .applicationModule(new ApplicationModule(this))
-                .sharedModule(new SharedModule())
+                .applicationModule(new ApplicationModule())
+                .sharedModule(new SharedModule(this))
                 .build();
 
 //    LeakCanary.install(this);

@@ -9,11 +9,10 @@ import dagger.Component;
 @Singleton
 @Component(
         modules = {
-                TestApplicationModule.class,
-                SharedModule.class,
+                SharedModule.class
         }
 )
-public interface TestApplicationComponent extends ApplicationComponent {
+public interface TestComponent {
 
     void inject(MarkdownParserTest test);
 }
