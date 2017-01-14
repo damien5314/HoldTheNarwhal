@@ -7,6 +7,9 @@ import com.ddiehl.android.htn.TestUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.io.IOException;
+import java.io.InputStream;
+
 import in.uncod.android.bypass.Bypass;
 
 import static android.support.test.InstrumentationRegistry.getContext;
@@ -39,5 +42,16 @@ public class MarkdownParserBenchmark {
                 parser.convert(BENCHMARK_TEXT);
             }
         });
+    }
+
+    @Test
+    public void benchmark2() throws IOException {
+        InputStream open = getContext()
+                .getAssets()
+                .open("test_links_500.txt");
+        String text = TestUtils.getTextFromInputStream(open);
+        MarkdownParser parser = getParser();
+
+        TestUtils.logDuration("Convert test link file", () -> parser.convert(text));
     }
 }

@@ -1,7 +1,13 @@
 package com.ddiehl.android.htn;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.concurrent.TimeUnit;
 
 import timber.log.Timber;
@@ -19,5 +25,30 @@ public class TestUtils {
         long elapsed = unit.convert(endTime - startTime, TimeUnit.NANOSECONDS);
 
         Timber.i("%s: %d %s", tag, elapsed, unit.name());
+    }
+
+    @Nullable
+    public static String getTextFromInputStream(@NonNull InputStream in) throws IOException {
+        try {
+            BufferedReader br = new BufferedReader(new InputStreamReader(in));
+            try {
+                StringBuilder sb = new StringBuilder();
+                String line = br.readLine();
+                while (line != null) {
+                    sb.append(line);
+                    sb.append("\n");
+                    line = br.readLine();
+                }
+                return sb.toString();
+            } finally {
+                try {
+                    br.close();
+                } catch (IOException ignored) {
+                }
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
