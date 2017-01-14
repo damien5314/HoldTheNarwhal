@@ -120,13 +120,7 @@ dependencies {
     releaseCompile "com.squareup.leakcanary:leakcanary-android-no-op:$project.ext.leakCanaryVersion"
 
     // Test dependencies
-//    testCompile "junit:junit:$project.ext.junitVersion"
-//    testCompile "org.robolectric:robolectric:$project.ext.robolectricVersion"
-//    testCompile "org.mockito:mockito-core:$project.ext.mockitoVersion"
-//    testApt "com.google.dagger:dagger-compiler:$project.ext.daggerVersion"
-
     androidTestCompile "junit:junit:$project.ext.junitVersion"
-//    androidTestCompile "org.robolectric:robolectric:$project.ext.robolectricVersion"
     androidTestCompile "org.mockito:mockito-core:$project.ext.mockitoVersion"
     androidTestApt "com.google.dagger:dagger-compiler:$project.ext.daggerVersion"
 
