@@ -2,16 +2,15 @@ package com.ddiehl.android.htn.di;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 
 import com.ddiehl.android.htn.BuildConfig;
-import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.analytics.Analytics;
 import com.ddiehl.android.htn.analytics.FlurryAnalytics;
 import com.ddiehl.android.htn.identity.IdentityManager;
 import com.ddiehl.android.htn.identity.IdentityManagerImpl;
 import com.ddiehl.android.htn.settings.SettingsManager;
 import com.ddiehl.android.htn.settings.SettingsManagerImpl;
+import com.ddiehl.android.htn.view.markdown.MarkdownParser;
 import com.google.gson.Gson;
 
 import java.io.File;
@@ -25,21 +24,9 @@ import rxreddit.RxRedditUtil;
 import rxreddit.android.AndroidAccessTokenManager;
 import rxreddit.android.AndroidUtil;
 import rxreddit.api.RedditService;
-import timber.log.Timber;
 
 @Module
 public class ApplicationModule {
-
-    private final Context mContext;
-
-    public ApplicationModule(Context context) {
-        mContext = context.getApplicationContext();
-    }
-
-    @Provides
-    Context providesContext() {
-        return mContext;
-    }
 
     @Singleton
     @Provides
@@ -82,17 +69,12 @@ public class ApplicationModule {
         return redditService.getGson();
     }
 
-    @Singleton
     @Provides @Nullable
-    Bypass providesBypass(Context context) {
-        try {
-            Bypass.Options options = new Bypass.Options();
-            options.setBlockQuoteColor(
-                    ContextCompat.getColor(context, R.color.markdown_quote_block));
-            return new Bypass(context, options);
-        } catch (UnsatisfiedLinkError error) {
-            Timber.e(error, "Unable to load Bypass");
+    MarkdownParser providesMarkdownParser(@Nullable Bypass bypass) {
+        if (bypass == null) {
             return null;
+        } else {
+            return new MarkdownParser(bypass);
         }
     }
 }

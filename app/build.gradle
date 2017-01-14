@@ -26,6 +26,7 @@ android {
         buildConfigField "long", "BUILD_TIME_UTC", "" + getTime()
         buildConfigField "String", "REDDIT_APP_ID", "\"" + REDDIT_APP_ID + "\""
         buildConfigField "String", "REDDIT_REDIRECT_URI", "\"" + REDDIT_REDIRECT_URI + "\""
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
     signingConfigs {
@@ -108,13 +109,22 @@ dependencies {
 
     compile "com.google.dagger:dagger:$project.ext.daggerVersion"
     apt "com.google.dagger:dagger-compiler:$project.ext.daggerVersion"
+    testApt "com.google.dagger:dagger-compiler:$project.ext.daggerVersion"
 
     compile "uk.co.chrisjenx:calligraphy:$project.ext.calligraphyVersion"
 
     compile "com.hannesdorfmann.fragmentargs:annotation:$project.ext.fragmentArgsVersion"
     apt "com.hannesdorfmann.fragmentargs:processor:$project.ext.fragmentArgsVersion"
 
-    // Debugging dependencies
     debugCompile "com.squareup.leakcanary:leakcanary-android:$project.ext.leakCanaryVersion"
     releaseCompile "com.squareup.leakcanary:leakcanary-android-no-op:$project.ext.leakCanaryVersion"
+
+    // Test dependencies
+    androidTestCompile "junit:junit:$project.ext.junitVersion"
+    androidTestCompile "org.mockito:mockito-core:$project.ext.mockitoVersion"
+    androidTestApt "com.google.dagger:dagger-compiler:$project.ext.daggerVersion"
+
+    androidTestCompile "com.android.support:support-annotations:$project.ext.supportLibraryVersion"
+    androidTestCompile 'com.android.support.test:runner:0.5'
+    androidTestCompile 'com.android.support.test:rules:0.5'
 }

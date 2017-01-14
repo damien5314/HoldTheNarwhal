@@ -3,21 +3,17 @@ package com.ddiehl.android.htn.view;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatTextView;
-import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
 import android.util.AttributeSet;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
-
-import java.util.regex.Pattern;
+import com.ddiehl.android.htn.view.markdown.MarkdownParser;
 
 import javax.inject.Inject;
 
-import in.uncod.android.bypass.Bypass;
-
 public class MarkdownTextView extends AppCompatTextView {
 
-    @Inject @Nullable Bypass mBypass;
+    @Inject @Nullable MarkdownParser mMarkdownParser;
 
     private CharSequence mRawText;
 
@@ -50,34 +46,11 @@ public class MarkdownTextView extends AppCompatTextView {
     public void setText(CharSequence text, BufferType type) {
         mRawText = text;
 
-        if (isInEditMode() || mBypass == null) {
+        if (isInEditMode() || mMarkdownParser == null) {
             super.setText(text, type);
         } else {
-            CharSequence formatted = mBypass.markdownToSpannable(text.toString());
-            SpannableString s = SpannableString.valueOf(formatted);
-
-            // Add links for /r/ and /u/ patterns
-            Linkify.addLinks(
-                    s, Pattern.compile("\\s/*[ru](ser)*/[^ \n]*"), "https://www.reddit.com", null,
-                    (match, url) -> {
-                        url = url.trim();
-                        if (!url.startsWith("/")) url = "/" + url;
-                        return url;
-                    }
-            );
-
-            // Add links missing protocol
-            Linkify.addLinks(
-                    s, Pattern.compile("\\swww\\.[^ \\n]*"), "http://", null,
-                    (match, url) -> {
-                        return url.trim();
-                    }
-            );
-
-            // Add links with any protocol
-            Linkify.addLinks(s, Pattern.compile("[a-z]+://[^ \\n]*"), null);
-
-            super.setText(s, type);
+            CharSequence formatted = mMarkdownParser.convert(text.toString());
+            super.setText(formatted, type);
         }
     }
 }
