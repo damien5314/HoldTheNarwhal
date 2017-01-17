@@ -1,16 +1,14 @@
 package com.ddiehl.android.htn.view;
 
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.provider.Browser;
 import android.text.TextPaint;
 import android.text.style.URLSpan;
-import android.util.Log;
 import android.view.View;
 
-import timber.log.Timber;
+import static com.ddiehl.android.htn.utils.AndroidUtils.safeStartActivity;
 
 /**
  * http://stackoverflow.com/questions/4096851/remove-underline-from-links-in-textview-android
@@ -30,19 +28,10 @@ public class URLSpanNoUnderline extends URLSpan {
 
     @Override
     public void onClick(View widget) {
-        Timber.d("[DCD] OPENING URL: %s", getURL());
-
         Uri uri = Uri.parse(getURL());
         Context context = widget.getContext();
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         intent.putExtra(Browser.EXTRA_APPLICATION_ID, context.getPackageName());
-
-        // Put your custom intent handling in here
-
-        try {
-            context.startActivity(intent);
-        } catch (ActivityNotFoundException e) {
-            Log.w("URLSpan", "Actvity was not found for intent, " + intent.toString());
-        }
+        safeStartActivity(widget.getContext(), intent);
     }
 }
