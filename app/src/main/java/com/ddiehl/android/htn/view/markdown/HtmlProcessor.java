@@ -6,6 +6,8 @@ import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 
+import com.ddiehl.android.htn.utils.AndroidUtils;
+
 import static android.text.Html.FROM_HTML_MODE_LEGACY;
 
 public class HtmlProcessor {
@@ -27,6 +29,9 @@ public class HtmlProcessor {
 
         // Strip any trailing new lines
         trimTrailingNewLines(formatted);
+
+        // Convert URLSpans to no underline form
+        AndroidUtils.convertUrlSpansToNoUnderlineForm(formatted);
 
         return formatted;
     }

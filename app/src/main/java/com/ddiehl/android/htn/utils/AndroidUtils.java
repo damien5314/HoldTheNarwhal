@@ -13,10 +13,14 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.URLSpan;
 import android.util.DisplayMetrics;
 import android.view.ViewGroup;
 
 import com.ddiehl.android.htn.BuildConfig;
+import com.ddiehl.android.htn.view.URLSpanNoUnderline;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -132,6 +136,24 @@ public class AndroidUtils {
             RuntimeException exception =
                     new RuntimeException("Unable to handle this Uri: " + intent.getDataString());
             Timber.e(exception);
+        }
+    }
+
+    public static void convertUrlSpansToNoUnderlineForm(SpannableStringBuilder text) {
+        URLSpan[] urlSpans = text.getSpans(0, text.length(), URLSpan.class);
+
+        for (URLSpan urlSpan : urlSpans) {
+            if (urlSpan instanceof URLSpanNoUnderline) {
+                // Already correct type
+                continue;
+            }
+
+            int start = text.getSpanStart(urlSpan);
+            int end = text.getSpanEnd(urlSpan);
+            String url = urlSpan.getURL();
+
+            text.removeSpan(urlSpan);
+            text.setSpan(new URLSpanNoUnderline(url), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
     }
 }
