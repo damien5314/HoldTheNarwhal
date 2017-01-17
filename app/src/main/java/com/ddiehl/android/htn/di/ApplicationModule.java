@@ -10,6 +10,7 @@ import com.ddiehl.android.htn.identity.IdentityManager;
 import com.ddiehl.android.htn.identity.IdentityManagerImpl;
 import com.ddiehl.android.htn.settings.SettingsManager;
 import com.ddiehl.android.htn.settings.SettingsManagerImpl;
+import com.ddiehl.android.htn.view.markdown.HtmlProcessor;
 import com.ddiehl.android.htn.view.markdown.MarkdownParser;
 import com.google.gson.Gson;
 
@@ -76,5 +77,10 @@ public class ApplicationModule {
         } else {
             return new MarkdownParser(bypass);
         }
+    }
+
+    @Provides
+    HtmlProcessor providesHtmlProcessor() {
+        return new HtmlProcessor();
     }
 }
