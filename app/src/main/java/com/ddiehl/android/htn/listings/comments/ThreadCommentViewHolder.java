@@ -136,8 +136,7 @@ public class ThreadCommentViewHolder extends RecyclerView.ViewHolder
 
     private void showBody(Comment comment) {
         mBodyView.setMovementMethod(LinkMovementMethod.getInstance());
-//        if (mMarkdownParser != null) {
-        if (false) {
+        if (mMarkdownParser != null) {
             CharSequence formatted = mMarkdownParser.convert(comment.getBody());
             mBodyView.setText(formatted);
         } else {

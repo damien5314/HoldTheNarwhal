@@ -1,7 +1,11 @@
 package com.ddiehl.android.htn.listings.inbox;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
 import android.view.ContextMenu;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +15,8 @@ import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.listings.BaseListingsPresenter;
 import com.ddiehl.android.htn.utils.Utils;
+import com.ddiehl.android.htn.view.markdown.HtmlProcessor;
+import com.ddiehl.android.htn.view.markdown.MarkdownParser;
 import com.ddiehl.timesincetextview.TimeSince;
 
 import java.util.List;
@@ -27,6 +33,9 @@ public class ListingsMessageViewHolder extends RecyclerView.ViewHolder
         implements View.OnCreateContextMenuListener {
 
     @Inject protected Context mAppContext;
+    @Inject @Nullable MarkdownParser mMarkdownParser;
+    @Inject HtmlProcessor mHtmlProcessor;
+
     private final PrivateMessageView mPrivateMessageView;
     private final BaseListingsPresenter mMessagePresenter;
     private PrivateMessage mMessage;
@@ -91,9 +100,21 @@ public class ListingsMessageViewHolder extends RecyclerView.ViewHolder
                 messageToShow.getCreatedUtc(), false, mAppContext));
         String text = from + " " + sent;
         mLastMessageMetadata.setText(text);
+        setTextToBody(mLastMessageBody, messageToShow);
         mLastMessageBody.setText(messageToShow.getBody());
         mUnreadMessageIndicator.setVisibility(
                 message.isUnread() ? View.VISIBLE : View.GONE);
+    }
+
+    void setTextToBody(@NonNull TextView view, @NonNull PrivateMessage message) {
+        view.setMovementMethod(LinkMovementMethod.getInstance());
+        if (mMarkdownParser != null) {
+            CharSequence formatted = mMarkdownParser.convert(message.getBody());
+            view.setText(formatted);
+        } else {
+            Spanned formatted = mHtmlProcessor.convert(message.getBodyHtml());
+            view.setText(formatted);
+        }
     }
 
     @Override

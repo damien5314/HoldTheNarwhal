@@ -9,19 +9,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.utils.Utils;
+import com.ddiehl.android.htn.view.markdown.MarkdownParser;
 
 import java.io.InputStream;
+
+import javax.inject.Inject;
 
 public class MarkdownTextFragment extends Fragment {
 
     public static final String ARG_TEXT = "arg_text";
 
-    private String mText;
+    @Inject @Nullable MarkdownParser mMarkdownParser;
 
-    public MarkdownTextFragment() {
-    }
+    private String mText;
 
     public static Fragment newInstance(@NonNull String text) {
         Fragment f = new MarkdownTextFragment();
@@ -39,6 +42,8 @@ public class MarkdownTextFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        HoldTheNarwhal.getApplicationComponent().inject(this);
+
         Bundle args = getArguments();
         mText = args.getString(ARG_TEXT, "");
     }
@@ -48,7 +53,14 @@ public class MarkdownTextFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = View.inflate(getActivity(), R.layout.fragment_markdown_text, null);
         TextView tv = (TextView) v.findViewById(R.id.markdown_text_view);
-        tv.setText(mText);
+
+        if (mMarkdownParser != null) {
+            CharSequence formatted = mMarkdownParser.convert(mText);
+            tv.setText(formatted);
+        } else {
+            tv.setText(mText);
+        }
+
         return v;
     }
 }

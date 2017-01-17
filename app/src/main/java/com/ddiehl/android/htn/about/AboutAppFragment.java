@@ -7,13 +7,13 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.ddiehl.android.htn.BuildConfig;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.utils.AndroidUtils;
 import com.ddiehl.android.htn.utils.Utils;
 import com.ddiehl.android.htn.view.MarkdownTextFragment;
-import com.ddiehl.android.htn.view.MarkdownTextView;
 
 import java.io.InputStream;
 
@@ -44,7 +44,7 @@ public class AboutAppFragment extends MarkdownTextFragment {
         CharSequence ins = String.format("Version %1$s\n\nReleased %2$s\n\n",
                 BuildConfig.VERSION_NAME,
                 AndroidUtils.getBuildTimeFormatted());
-        MarkdownTextView tv = ButterKnife.findById(view, R.id.markdown_text_view);
+        TextView tv = ButterKnife.findById(view, R.id.markdown_text_view);
         tv.setText(TextUtils.concat(ins, tv.getText()));
         return view;
     }

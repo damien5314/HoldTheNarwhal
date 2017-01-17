@@ -11,6 +11,7 @@ import com.ddiehl.android.htn.listings.inbox.ListingsMessageViewHolder;
 import com.ddiehl.android.htn.listings.inbox.PrivateMessageActivity;
 import com.ddiehl.android.htn.listings.inbox.PrivateMessageAdapter;
 import com.ddiehl.android.htn.listings.inbox.PrivateMessageFragment;
+import com.ddiehl.android.htn.listings.links.BaseLinkViewHolder;
 import com.ddiehl.android.htn.listings.profile.UserProfileFragment;
 import com.ddiehl.android.htn.listings.profile.UserProfilePresenter;
 import com.ddiehl.android.htn.listings.report.ReportActivity;
@@ -24,7 +25,7 @@ import com.ddiehl.android.htn.subscriptions.SubscriptionManagerAdapter;
 import com.ddiehl.android.htn.subscriptions.SubscriptionManagerPresenter;
 import com.ddiehl.android.htn.view.BaseActivity;
 import com.ddiehl.android.htn.view.BaseFragment;
-import com.ddiehl.android.htn.view.MarkdownTextView;
+import com.ddiehl.android.htn.view.MarkdownTextFragment;
 
 import javax.inject.Singleton;
 
@@ -56,6 +57,7 @@ public interface ApplicationComponent {
     void inject(WebViewFragment fragment);
     void inject(LinkCommentsFragment fragment);
     void inject(SubredditInfoFragment fragment);
+    void inject(MarkdownTextFragment fragment);
 
     // ViewHolders
     void inject(ThreadCommentViewHolder vh);
@@ -64,13 +66,11 @@ public interface ApplicationComponent {
     void inject(ListingsCommentViewHolder vh);
     void inject(PrivateMessageAdapter.VH vh);
     void inject(SubscriptionManagerAdapter.VH vh);
+    void inject(BaseLinkViewHolder vh);
 
     // Presenters
     void inject(BaseListingsPresenter presenter);
     void inject(UserProfilePresenter presenter);
     void inject(SettingsPresenter presenter);
     void inject(SubscriptionManagerPresenter presenter);
-
-    // Views
-    void inject(MarkdownTextView view);
 }
