@@ -30,6 +30,7 @@ import rxreddit.model.Link;
 import rxreddit.model.Listing;
 
 import static android.app.Activity.RESULT_OK;
+import static com.ddiehl.android.htn.utils.AndroidUtils.safeStartActivity;
 
 @FragmentWithArgs
 public class LinkCommentsFragment extends BaseListingsFragment
@@ -117,9 +118,9 @@ public class LinkCommentsFragment extends BaseListingsFragment
     @Override
     public void openCommentInBrowser(@NonNull Comment comment) {
         Uri uri = Uri.parse(comment.getUrl());
-        Intent i = new Intent(Intent.ACTION_VIEW, uri);
-        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(i);
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        safeStartActivity(getContext(), intent);
     }
 
     @Override
@@ -144,17 +145,17 @@ public class LinkCommentsFragment extends BaseListingsFragment
     @Override
     public void openLinkInBrowser(@NonNull Link link) {
         Uri uri = Uri.parse(link.getUrl());
-        Intent i = new Intent(Intent.ACTION_VIEW, uri);
-        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(i);
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        safeStartActivity(getContext(), intent);
     }
 
     @Override
     public void openCommentsInBrowser(@NonNull Link link) {
         Uri uri = Uri.parse("http://www.reddit.com" + link.getPermalink());
-        Intent i = new Intent(Intent.ACTION_VIEW, uri);
-        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(i);
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        safeStartActivity(getContext(), intent);
     }
 
     @Override

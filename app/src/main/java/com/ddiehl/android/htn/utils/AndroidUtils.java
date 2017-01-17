@@ -123,4 +123,15 @@ public class AndroidUtils {
         drawable.setColorFilter(color, PorterDuff.Mode.SRC_IN);
         return drawable;
     }
+
+    public static void safeStartActivity(@NonNull Context context, @NonNull Intent intent) {
+        if (intent.resolveActivity(context.getPackageManager()) != null) {
+            context.startActivity(intent);
+        } else {
+            // Log incorrect Uri
+            RuntimeException exception =
+                    new RuntimeException("Unable to handle this Uri: " + intent.getDataString());
+            Timber.e(exception);
+        }
+    }
 }

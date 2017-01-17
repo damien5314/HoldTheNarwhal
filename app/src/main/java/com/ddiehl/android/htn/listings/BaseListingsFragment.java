@@ -33,6 +33,7 @@ import timber.log.Timber;
 
 import static com.ddiehl.android.htn.listings.report.ReportActivity.RESULT_REPORT_ERROR;
 import static com.ddiehl.android.htn.listings.report.ReportActivity.RESULT_REPORT_SUCCESS;
+import static com.ddiehl.android.htn.utils.AndroidUtils.safeStartActivity;
 
 public abstract class BaseListingsFragment extends BaseFragment
         implements ListingsView, SwipeRefreshLayout.OnRefreshListener {
@@ -359,16 +360,16 @@ public abstract class BaseListingsFragment extends BaseFragment
 
     public void openLinkInBrowser(@NonNull Link link) {
         Uri uri = Uri.parse(link.getUrl());
-        Intent i = new Intent(Intent.ACTION_VIEW, uri);
-        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(i);
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        safeStartActivity(getContext(), intent);
     }
 
     public void openCommentsInBrowser(@NonNull Link link) {
         Uri uri = Uri.parse(LINK_BASE_URL + link.getPermalink());
-        Intent i = new Intent(Intent.ACTION_VIEW, uri);
-        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(i);
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        safeStartActivity(getContext(), intent);
     }
 
     public void openLinkInWebView(@NonNull Link link) {
@@ -408,9 +409,9 @@ public abstract class BaseListingsFragment extends BaseFragment
 
     public void openCommentInBrowser(@NonNull Comment comment) {
         Uri uri = Uri.parse(comment.getUrl());
-        Intent i = new Intent(Intent.ACTION_VIEW, uri);
-        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(i);
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        safeStartActivity(getContext(), intent);
     }
 
     public void openReportView(@NonNull Link link) {
