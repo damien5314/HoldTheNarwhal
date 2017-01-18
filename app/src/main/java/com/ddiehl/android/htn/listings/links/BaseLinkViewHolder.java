@@ -5,19 +5,26 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
 import android.view.ContextMenu;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.listings.BaseListingsPresenter;
 import com.ddiehl.android.htn.listings.subreddit.ThumbnailMode;
 import com.ddiehl.android.htn.view.ColorSwapTextView;
+import com.ddiehl.android.htn.view.markdown.HtmlProcessor;
+import com.ddiehl.android.htn.view.markdown.MarkdownParser;
 import com.ddiehl.timesincetextview.TimeSinceTextView;
 
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -31,6 +38,9 @@ public abstract class BaseLinkViewHolder extends RecyclerView.ViewHolder
     protected final LinkView mLinkView;
     protected final BaseListingsPresenter mLinkPresenter;
     protected Link mLink;
+
+    @Inject @Nullable MarkdownParser mMarkdownParser;
+    @Inject HtmlProcessor mHtmlProcessor;
 
     @BindView(R.id.link_view) protected View mView;
     @BindView(R.id.link_saved_view) protected View mSavedView;
@@ -49,6 +59,7 @@ public abstract class BaseLinkViewHolder extends RecyclerView.ViewHolder
 
     public BaseLinkViewHolder(View view, LinkView linkView, BaseListingsPresenter presenter) {
         super(view);
+        HoldTheNarwhal.getApplicationComponent().inject(this);
         mContext = view.getContext().getApplicationContext();
         mLinkView = linkView;
         mLinkPresenter = presenter;
@@ -88,12 +99,22 @@ public abstract class BaseLinkViewHolder extends RecyclerView.ViewHolder
     }
 
     protected void showSelfText(@NonNull Link link, boolean showSelfText) {
-//    mLinkView.setVisibility(View.VISIBLE);
-        if (link.getSelftext() != null && !link.getSelftext().equals("") && showSelfText) {
-            mSelfText.setText(link.getSelftext());
+        if (link.getSelftext() != null && !"".equals(link.getSelftext()) && showSelfText) {
+            setTextToView(mSelfText, link);
             mSelfText.setVisibility(View.VISIBLE);
         } else {
             mSelfText.setVisibility(View.GONE);
+        }
+    }
+
+    void setTextToView(@NonNull TextView view, @NonNull Link link) {
+        view.setMovementMethod(LinkMovementMethod.getInstance());
+        if (mMarkdownParser != null) {
+            CharSequence formatted = mMarkdownParser.convert(link.getSelftext());
+            view.setText(formatted);
+        } else {
+            Spanned formatted = mHtmlProcessor.convert(link.getSelftextHtml());
+            view.setText(formatted);
         }
     }
 

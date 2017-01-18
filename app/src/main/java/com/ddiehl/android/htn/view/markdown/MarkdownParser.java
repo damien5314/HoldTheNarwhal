@@ -5,6 +5,7 @@ import android.text.SpannableStringBuilder;
 import android.text.style.URLSpan;
 import android.text.util.Linkify;
 
+import com.ddiehl.android.htn.utils.AndroidUtils;
 import com.ddiehl.android.htn.view.URLSpanNoUnderline;
 
 import java.util.ArrayList;
@@ -81,7 +82,7 @@ public class MarkdownParser {
         restoreUnderscoresToText(formatted, linkMap);
 
         // Convert normal URLSpans to the NoUnderline form
-        convertUrlSpansToNoUnderlineForm(formatted);
+        AndroidUtils.convertUrlSpansToNoUnderlineForm(formatted);
 
         return formatted;
     }
@@ -305,24 +306,6 @@ public class MarkdownParser {
                 // Find next instance
                 currentIndex = text.toString().indexOf(link, currentIndex + 1);
             }
-        }
-    }
-
-    void convertUrlSpansToNoUnderlineForm(SpannableStringBuilder text) {
-        URLSpan[] urlSpans = text.getSpans(0, text.length(), URLSpan.class);
-
-        for (URLSpan urlSpan : urlSpans) {
-            if (urlSpan instanceof URLSpanNoUnderline) {
-                // Already correct type
-                continue;
-            }
-
-            int start = text.getSpanStart(urlSpan);
-            int end = text.getSpanEnd(urlSpan);
-            String url = urlSpan.getURL();
-
-            text.removeSpan(urlSpan);
-            text.setSpan(new URLSpanNoUnderline(url), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
     }
 

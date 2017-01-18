@@ -207,7 +207,7 @@
 
         </LinearLayout>
 
-        <com.ddiehl.android.htn.view.MarkdownTextView
+        <TextView
                 android:id="@+id/link_self_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
