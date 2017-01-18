@@ -29,7 +29,6 @@ public class CustomQuoteSpan implements LeadingMarginSpan, ParcelableSpan {
 
     private static final int STRIPE_WIDTH = 4;
     private static final int GAP_WIDTH = 16;
-    private static final int STRIPE_HEIGHT_ADJUSTMENT = 0;
 
     private final int mColor;
 
@@ -90,13 +89,7 @@ public class CustomQuoteSpan implements LeadingMarginSpan, ParcelableSpan {
         p.setStyle(Paint.Style.FILL);
         p.setColor(mColor);
 
-        c.drawRect(
-                x,
-                top - STRIPE_HEIGHT_ADJUSTMENT,
-                x + dir * STRIPE_WIDTH,
-                bottom + STRIPE_HEIGHT_ADJUSTMENT,
-                p
-        );
+        c.drawRect(x, top, x + dir * STRIPE_WIDTH, bottom, p);
 
         p.setStyle(style);
         p.setColor(color);
