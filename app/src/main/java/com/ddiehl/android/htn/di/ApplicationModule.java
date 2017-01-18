@@ -72,6 +72,7 @@ public class ApplicationModule {
 
     @Provides @Nullable
     MarkdownParser providesMarkdownParser(@Nullable Bypass bypass) {
+//        return null;
         if (bypass == null) {
             return null;
         } else {
@@ -80,7 +81,7 @@ public class ApplicationModule {
     }
 
     @Provides
-    HtmlProcessor providesHtmlProcessor() {
-        return new HtmlProcessor();
+    HtmlProcessor providesHtmlProcessor(Context context) {
+        return new HtmlProcessor(context);
     }
 }

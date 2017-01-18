@@ -1,5 +1,6 @@
 package com.ddiehl.android.htn.view.markdown;
 
+import android.content.Context;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.text.Html;
@@ -14,6 +15,12 @@ import com.ddiehl.android.htn.view.URLSpanNoUnderline;
 import static android.text.Html.FROM_HTML_MODE_LEGACY;
 
 public class HtmlProcessor {
+
+    Context mContext;
+
+    public HtmlProcessor(Context context) {
+        mContext = context;
+    }
 
     public Spanned convert(String text) {
         SpannableStringBuilder formatted;
@@ -37,6 +44,8 @@ public class HtmlProcessor {
 
         // Convert URLSpans to no underline form
         AndroidUtils.convertUrlSpansToNoUnderlineForm(formatted);
+
+        AndroidUtils.convertQuoteSpansToCustom(mContext, formatted);
 
         return formatted;
     }

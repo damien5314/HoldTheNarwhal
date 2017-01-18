@@ -26,6 +26,7 @@ import com.ddiehl.android.htn.subscriptions.SubscriptionManagerPresenter;
 import com.ddiehl.android.htn.view.BaseActivity;
 import com.ddiehl.android.htn.view.BaseFragment;
 import com.ddiehl.android.htn.view.MarkdownTextFragment;
+import com.ddiehl.android.htn.view.markdown.HtmlProcessor;
 
 import javax.inject.Singleton;
 
@@ -37,9 +38,6 @@ import dagger.Component;
         SharedModule.class,
 })
 public interface ApplicationComponent {
-
-    // Managers
-    void inject(FlurryAnalytics analytics);
 
     // Activities
     void inject(BaseActivity activity);
@@ -73,4 +71,8 @@ public interface ApplicationComponent {
     void inject(UserProfilePresenter presenter);
     void inject(SettingsPresenter presenter);
     void inject(SubscriptionManagerPresenter presenter);
+
+    // Misc
+    void inject(FlurryAnalytics analytics);
+    void inject(HtmlProcessor htmlProcessor);
 }

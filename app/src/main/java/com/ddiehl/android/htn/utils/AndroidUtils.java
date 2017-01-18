@@ -7,6 +7,7 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
@@ -15,11 +16,14 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
+import android.text.style.CustomQuoteSpan;
+import android.text.style.QuoteSpan;
 import android.text.style.URLSpan;
 import android.util.DisplayMetrics;
 import android.view.ViewGroup;
 
 import com.ddiehl.android.htn.BuildConfig;
+import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.view.URLSpanNoUnderline;
 
 import java.text.SimpleDateFormat;
@@ -154,6 +158,22 @@ public class AndroidUtils {
 
             text.removeSpan(urlSpan);
             text.setSpan(new URLSpanNoUnderline(url), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+    }
+
+    public static void convertQuoteSpansToCustom(
+            @NonNull Context context, @NonNull SpannableStringBuilder text) {
+        QuoteSpan[] spans = text.getSpans(0, text.length(), QuoteSpan.class);
+
+        for (QuoteSpan span : spans) {
+            int start = text.getSpanStart(span);
+            int end = text.getSpanEnd(span);
+
+            @ColorInt int quoteColor = ContextCompat.getColor(context, R.color.markdown_quote_block);
+            CustomQuoteSpan newSpan = new CustomQuoteSpan(quoteColor);
+
+            text.removeSpan(span);
+            text.setSpan(newSpan, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
     }
 }
