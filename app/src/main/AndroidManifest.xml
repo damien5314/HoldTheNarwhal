@@ -11,7 +11,7 @@
     <application
             android:name="com.ddiehl.android.htn.HoldTheNarwhal"
             android:allowBackup="true"
-            android:icon="@mipmap/ic_launcher_3"
+            android:icon="@mipmap/ic_launcher_5"
             android:label="@string/app_name"
             android:resizeableActivity="true"
             android:supportsRtl="true"
