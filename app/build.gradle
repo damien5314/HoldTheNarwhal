@@ -1,5 +1,4 @@
 apply plugin: "com.android.application"
-apply plugin: "android-apt"
 apply plugin: "me.tatarka.retrolambda"
 apply plugin: "com.jakewharton.hugo"
 apply plugin: "com.getkeepsafe.dexcount"
@@ -95,7 +94,7 @@ dependencies {
     compile "com.github.bumptech.glide:glide:$project.ext.glideVersion"
 
     compile "com.jakewharton:butterknife:$project.ext.butterknifeVersion"
-    apt "com.jakewharton:butterknife-compiler:$project.ext.butterknifeVersion"
+    annotationProcessor "com.jakewharton:butterknife-compiler:$project.ext.butterknifeVersion"
 
     compile "com.github.damien5314.RxReddit:library:$project.ext.rxRedditVersion"
     compile "com.github.damien5314.RxReddit:android:$project.ext.rxRedditVersion"
@@ -108,13 +107,12 @@ dependencies {
     compile "com.github.damien5314:TimeSinceTextView:$project.ext.timeSinceTextViewVersion"
 
     compile "com.google.dagger:dagger:$project.ext.daggerVersion"
-    apt "com.google.dagger:dagger-compiler:$project.ext.daggerVersion"
-    testApt "com.google.dagger:dagger-compiler:$project.ext.daggerVersion"
+    annotationProcessor "com.google.dagger:dagger-compiler:$project.ext.daggerVersion"
 
     compile "uk.co.chrisjenx:calligraphy:$project.ext.calligraphyVersion"
 
     compile "com.hannesdorfmann.fragmentargs:annotation:$project.ext.fragmentArgsVersion"
-    apt "com.hannesdorfmann.fragmentargs:processor:$project.ext.fragmentArgsVersion"
+    annotationProcessor "com.hannesdorfmann.fragmentargs:processor:$project.ext.fragmentArgsVersion"
 
     debugCompile "com.squareup.leakcanary:leakcanary-android:$project.ext.leakCanaryVersion"
     releaseCompile "com.squareup.leakcanary:leakcanary-android-no-op:$project.ext.leakCanaryVersion"
@@ -122,7 +120,7 @@ dependencies {
     // Test dependencies
     androidTestCompile "junit:junit:$project.ext.junitVersion"
     androidTestCompile "org.mockito:mockito-core:$project.ext.mockitoVersion"
-    androidTestApt "com.google.dagger:dagger-compiler:$project.ext.daggerVersion"
+    androidTestAnnotationProcessor "com.google.dagger:dagger-compiler:$project.ext.daggerVersion"
 
     androidTestCompile "com.android.support:support-annotations:$project.ext.supportLibraryVersion"
     androidTestCompile 'com.android.support.test:runner:0.5'
