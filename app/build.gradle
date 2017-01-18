@@ -19,8 +19,8 @@ android {
         applicationId "com.ddiehl.android.htn"
         minSdkVersion 15
         targetSdkVersion project.ext.targetSdkVersion
-        versionCode 12
-        versionName "0.7"
+        versionCode 13
+        versionName "0.8"
         resConfigs "en"
         buildConfigField "long", "BUILD_TIME_UTC", "" + getTime()
         buildConfigField "String", "REDDIT_APP_ID", "\"" + REDDIT_APP_ID + "\""
@@ -39,7 +39,6 @@ android {
 
     buildTypes {
         debug {
-            compileSdkVersion 24
             debuggable true
             minifyEnabled false
             applicationIdSuffix ".debug"
