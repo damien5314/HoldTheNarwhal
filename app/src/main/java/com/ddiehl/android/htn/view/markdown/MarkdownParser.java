@@ -3,10 +3,10 @@ package com.ddiehl.android.htn.view.markdown;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.URLSpan;
-import android.text.style.URLSpanNoUnderline;
 import android.text.util.Linkify;
 
 import com.ddiehl.android.htn.utils.AndroidUtils;
+import com.ddiehl.android.htn.view.text.style.URLSpanNoUnderline;
 
 import java.util.ArrayList;
 import java.util.Collections;

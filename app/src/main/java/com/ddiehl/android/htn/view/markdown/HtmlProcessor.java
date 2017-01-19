@@ -8,9 +8,9 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.URLSpan;
-import android.text.style.URLSpanNoUnderline;
 
 import com.ddiehl.android.htn.utils.AndroidUtils;
+import com.ddiehl.android.htn.view.text.style.URLSpanNoUnderline;
 
 import static android.text.Html.FROM_HTML_MODE_LEGACY;
 
