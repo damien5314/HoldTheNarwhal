@@ -24,7 +24,7 @@ import android.view.ViewGroup;
 import com.ddiehl.android.htn.BuildConfig;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.view.text.CustomQuoteSpan;
-import com.ddiehl.android.htn.view.text.URLSpanNoUnderline;
+import com.ddiehl.android.htn.view.text.NoUnderlineURLSpan;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -147,7 +147,7 @@ public class AndroidUtils {
         URLSpan[] urlSpans = text.getSpans(0, text.length(), URLSpan.class);
 
         for (URLSpan urlSpan : urlSpans) {
-            if (urlSpan instanceof URLSpanNoUnderline) {
+            if (urlSpan instanceof NoUnderlineURLSpan) {
                 // Already correct type
                 continue;
             }
@@ -157,7 +157,7 @@ public class AndroidUtils {
             String url = urlSpan.getURL();
 
             text.removeSpan(urlSpan);
-            text.setSpan(new URLSpanNoUnderline(url), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            text.setSpan(new NoUnderlineURLSpan(url), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
     }
 

@@ -10,7 +10,7 @@ import android.text.Spanned;
 import android.text.style.URLSpan;
 
 import com.ddiehl.android.htn.utils.AndroidUtils;
-import com.ddiehl.android.htn.view.text.URLSpanNoUnderline;
+import com.ddiehl.android.htn.view.text.NoUnderlineURLSpan;
 
 import static android.text.Html.FROM_HTML_MODE_LEGACY;
 
@@ -72,7 +72,7 @@ public class HtmlProcessor {
                 String newUrl = "https://www.reddit.com" + url;
                 // Remove old span and set new one
                 text.removeSpan(span);
-                text.setSpan(new URLSpanNoUnderline(newUrl), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                text.setSpan(new NoUnderlineURLSpan(newUrl), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
         }
     }

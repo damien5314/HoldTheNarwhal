@@ -14,9 +14,9 @@ import static com.ddiehl.android.htn.utils.AndroidUtils.safeStartActivity;
  * http://stackoverflow.com/questions/4096851/remove-underline-from-links-in-textview-android
  * http://stackoverflow.com/questions/35944727/android-handle-override-interrupt-intent-from-the-same-activity-that-fired-it
  */
-public class URLSpanNoUnderline extends URLSpan {
+public class NoUnderlineURLSpan extends URLSpan {
 
-    public URLSpanNoUnderline(String url) {
+    public NoUnderlineURLSpan(String url) {
         super(url);
     }
 
