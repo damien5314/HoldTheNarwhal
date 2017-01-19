@@ -18,7 +18,7 @@ import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.listings.BaseListingsPresenter;
 import com.ddiehl.android.htn.listings.subreddit.ThumbnailMode;
 import com.ddiehl.android.htn.view.ColorSwapTextView;
-import com.ddiehl.android.htn.view.markdown.HtmlProcessor;
+import com.ddiehl.android.htn.view.markdown.HtmlParser;
 import com.ddiehl.android.htn.view.markdown.MarkdownParser;
 import com.ddiehl.timesincetextview.TimeSinceTextView;
 
@@ -40,7 +40,7 @@ public abstract class BaseLinkViewHolder extends RecyclerView.ViewHolder
     protected Link mLink;
 
     @Inject @Nullable MarkdownParser mMarkdownParser;
-    @Inject HtmlProcessor mHtmlProcessor;
+    @Inject HtmlParser mHtmlParser;
 
     @BindView(R.id.link_view) protected View mView;
     @BindView(R.id.link_saved_view) protected View mSavedView;
@@ -113,7 +113,7 @@ public abstract class BaseLinkViewHolder extends RecyclerView.ViewHolder
             CharSequence formatted = mMarkdownParser.convert(link.getSelftext());
             view.setText(formatted);
         } else {
-            Spanned formatted = mHtmlProcessor.convert(link.getSelftextHtml());
+            Spanned formatted = mHtmlParser.convert(link.getSelftextHtml());
             view.setText(formatted);
         }
     }

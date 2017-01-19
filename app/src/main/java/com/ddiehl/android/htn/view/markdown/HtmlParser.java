@@ -14,11 +14,11 @@ import com.ddiehl.android.htn.view.text.NoUnderlineURLSpan;
 
 import static android.text.Html.FROM_HTML_MODE_LEGACY;
 
-public class HtmlProcessor {
+public class HtmlParser {
 
     Context mContext;
 
-    public HtmlProcessor(Context context) {
+    public HtmlParser(Context context) {
         mContext = context;
     }
 

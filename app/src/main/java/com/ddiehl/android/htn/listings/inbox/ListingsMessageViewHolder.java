@@ -15,7 +15,7 @@ import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.listings.BaseListingsPresenter;
 import com.ddiehl.android.htn.utils.Utils;
-import com.ddiehl.android.htn.view.markdown.HtmlProcessor;
+import com.ddiehl.android.htn.view.markdown.HtmlParser;
 import com.ddiehl.android.htn.view.markdown.MarkdownParser;
 import com.ddiehl.timesincetextview.TimeSince;
 
@@ -34,7 +34,7 @@ public class ListingsMessageViewHolder extends RecyclerView.ViewHolder
 
     @Inject protected Context mAppContext;
     @Inject @Nullable MarkdownParser mMarkdownParser;
-    @Inject HtmlProcessor mHtmlProcessor;
+    @Inject HtmlParser mHtmlParser;
 
     private final PrivateMessageView mPrivateMessageView;
     private final BaseListingsPresenter mMessagePresenter;
@@ -112,7 +112,7 @@ public class ListingsMessageViewHolder extends RecyclerView.ViewHolder
             CharSequence formatted = mMarkdownParser.convert(message.getBody());
             view.setText(formatted);
         } else {
-            Spanned formatted = mHtmlProcessor.convert(message.getBodyHtml());
+            Spanned formatted = mHtmlParser.convert(message.getBodyHtml());
             view.setText(formatted);
         }
     }

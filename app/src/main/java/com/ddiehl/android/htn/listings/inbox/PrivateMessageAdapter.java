@@ -15,7 +15,7 @@ import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.identity.IdentityManager;
 import com.ddiehl.android.htn.utils.Utils;
-import com.ddiehl.android.htn.view.markdown.HtmlProcessor;
+import com.ddiehl.android.htn.view.markdown.HtmlParser;
 import com.ddiehl.android.htn.view.markdown.MarkdownParser;
 import com.ddiehl.timesincetextview.TimeSince;
 
@@ -59,7 +59,7 @@ public class PrivateMessageAdapter extends RecyclerView.Adapter<PrivateMessageAd
         @Inject protected Context mAppContext;
         @Inject protected IdentityManager mIdentityManager;
         @Inject @Nullable MarkdownParser mMarkdownParser;
-        @Inject HtmlProcessor mHtmlProcessor;
+        @Inject HtmlParser mHtmlParser;
 
         @BindView(R.id.conversation_subject) protected TextView mConversationSubject;
         @BindView(R.id.conversation_body_layout) protected ViewGroup mConversationBodyLayout;
@@ -124,7 +124,7 @@ public class PrivateMessageAdapter extends RecyclerView.Adapter<PrivateMessageAd
                 CharSequence formatted = mMarkdownParser.convert(message.getBody());
                 view.setText(formatted);
             } else {
-                Spanned formatted = mHtmlProcessor.convert(message.getBodyHtml());
+                Spanned formatted = mHtmlParser.convert(message.getBodyHtml());
                 view.setText(formatted);
             }
         }

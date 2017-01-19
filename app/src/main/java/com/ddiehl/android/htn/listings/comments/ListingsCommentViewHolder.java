@@ -13,7 +13,7 @@ import android.widget.TextView;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.listings.BaseListingsPresenter;
-import com.ddiehl.android.htn.view.markdown.HtmlProcessor;
+import com.ddiehl.android.htn.view.markdown.HtmlParser;
 import com.ddiehl.android.htn.view.markdown.MarkdownParser;
 import com.ddiehl.timesincetextview.TimeSinceTextView;
 
@@ -29,7 +29,7 @@ public class ListingsCommentViewHolder extends RecyclerView.ViewHolder
 
     @Inject Context mAppContext;
     @Inject @Nullable MarkdownParser mMarkdownParser;
-    @Inject HtmlProcessor mHtmlProcessor;
+    @Inject HtmlParser mHtmlParser;
     private CommentView mCommentView;
     private BaseListingsPresenter mCommentPresenter;
     private Comment mComment;
@@ -155,7 +155,7 @@ public class ListingsCommentViewHolder extends RecyclerView.ViewHolder
             CharSequence formatted = mMarkdownParser.convert(comment.getBody().trim());
             mBodyView.setText(formatted);
         } else {
-            Spanned formatted = mHtmlProcessor.convert(comment.getBodyHtml());
+            Spanned formatted = mHtmlParser.convert(comment.getBodyHtml());
             mBodyView.setText(formatted);
         }
     }
