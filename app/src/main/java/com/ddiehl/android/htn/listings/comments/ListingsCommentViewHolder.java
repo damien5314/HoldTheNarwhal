@@ -1,8 +1,10 @@
 package com.ddiehl.android.htn.listings.comments;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.text.Spanned;
 import android.view.ContextMenu;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +13,8 @@ import android.widget.TextView;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.listings.BaseListingsPresenter;
+import com.ddiehl.android.htn.view.markdown.HtmlProcessor;
+import com.ddiehl.android.htn.view.markdown.MarkdownParser;
 import com.ddiehl.timesincetextview.TimeSinceTextView;
 
 import javax.inject.Inject;
@@ -23,7 +27,9 @@ import rxreddit.model.Comment;
 public class ListingsCommentViewHolder extends RecyclerView.ViewHolder
         implements View.OnCreateContextMenuListener {
 
-    @Inject protected Context mAppContext;
+    @Inject Context mAppContext;
+    @Inject @Nullable MarkdownParser mMarkdownParser;
+    @Inject HtmlProcessor mHtmlProcessor;
     private CommentView mCommentView;
     private BaseListingsPresenter mCommentPresenter;
     private Comment mComment;
@@ -145,7 +151,13 @@ public class ListingsCommentViewHolder extends RecyclerView.ViewHolder
     }
 
     private void showBody(Comment comment) {
-        mBodyView.setText(comment.getBody().trim());
+        if (mMarkdownParser != null) {
+            CharSequence formatted = mMarkdownParser.convert(comment.getBody().trim());
+            mBodyView.setText(formatted);
+        } else {
+            Spanned formatted = mHtmlProcessor.convert(comment.getBodyHtml());
+            mBodyView.setText(formatted);
+        }
     }
 
     private void showScore(Comment comment) {
