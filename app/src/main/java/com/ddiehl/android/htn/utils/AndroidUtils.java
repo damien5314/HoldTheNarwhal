@@ -16,13 +16,14 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
+import android.text.style.BulletSpan;
 import android.text.style.QuoteSpan;
 import android.text.style.URLSpan;
 import android.util.DisplayMetrics;
 import android.view.ViewGroup;
 
 import com.ddiehl.android.htn.BuildConfig;
-import com.ddiehl.android.htn.R;
+import com.ddiehl.android.htn.view.text.CustomBulletSpan;
 import com.ddiehl.android.htn.view.text.CustomQuoteSpan;
 import com.ddiehl.android.htn.view.text.NoUnderlineURLSpan;
 
@@ -162,15 +163,28 @@ public class AndroidUtils {
     }
 
     public static void convertQuoteSpansToCustom(
-            @NonNull Context context, @NonNull SpannableStringBuilder text) {
+            @NonNull SpannableStringBuilder text, @ColorInt int color) {
         QuoteSpan[] spans = text.getSpans(0, text.length(), QuoteSpan.class);
 
         for (QuoteSpan span : spans) {
             int start = text.getSpanStart(span);
             int end = text.getSpanEnd(span);
 
-            @ColorInt int quoteColor = ContextCompat.getColor(context, R.color.markdown_quote_block);
-            CustomQuoteSpan newSpan = new CustomQuoteSpan(quoteColor);
+            CustomQuoteSpan newSpan = new CustomQuoteSpan(color);
+
+            text.removeSpan(span);
+            text.setSpan(newSpan, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+    }
+
+    public static void convertBulletSpansToCustom(@NonNull SpannableStringBuilder text) {
+        BulletSpan[] spans = text.getSpans(0, text.length(), BulletSpan.class);
+
+        for (BulletSpan span : spans) {
+            int start = text.getSpanStart(span);
+            int end = text.getSpanEnd(span);
+
+            CustomBulletSpan newSpan = new CustomBulletSpan(16);
 
             text.removeSpan(span);
             text.setSpan(newSpan, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
