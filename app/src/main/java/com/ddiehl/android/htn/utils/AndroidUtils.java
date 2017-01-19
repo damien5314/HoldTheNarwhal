@@ -19,12 +19,12 @@ import android.text.SpannableStringBuilder;
 import android.text.style.CustomQuoteSpan;
 import android.text.style.QuoteSpan;
 import android.text.style.URLSpan;
+import android.text.style.URLSpanNoUnderline;
 import android.util.DisplayMetrics;
 import android.view.ViewGroup;
 
 import com.ddiehl.android.htn.BuildConfig;
 import com.ddiehl.android.htn.R;
-import com.ddiehl.android.htn.view.URLSpanNoUnderline;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

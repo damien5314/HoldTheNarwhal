@@ -1,11 +1,10 @@
-package com.ddiehl.android.htn.view;
+package android.text.style;
 
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.provider.Browser;
 import android.text.TextPaint;
-import android.text.style.URLSpan;
 import android.view.View;
 
 import static com.ddiehl.android.htn.utils.AndroidUtils.safeStartActivity;
