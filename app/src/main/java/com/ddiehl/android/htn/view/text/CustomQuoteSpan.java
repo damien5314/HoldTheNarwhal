@@ -63,9 +63,6 @@ public class CustomQuoteSpan implements LeadingMarginSpan, ParcelableSpan {
         writeToParcelInternal(dest, flags);
     }
 
-    /**
-     * @hide
-     */
     public void writeToParcelInternal(Parcel dest, int flags) {
         dest.writeInt(mColor);
     }
