@@ -1,4 +1,4 @@
-package com.ddiehl.android.htn.view.text.style;
+package com.ddiehl.android.htn.view.text;
 
 import android.content.Context;
 import android.content.Intent;

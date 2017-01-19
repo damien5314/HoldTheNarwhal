@@ -23,8 +23,8 @@ import android.view.ViewGroup;
 
 import com.ddiehl.android.htn.BuildConfig;
 import com.ddiehl.android.htn.R;
-import com.ddiehl.android.htn.view.text.style.CustomQuoteSpan;
-import com.ddiehl.android.htn.view.text.style.URLSpanNoUnderline;
+import com.ddiehl.android.htn.view.text.CustomQuoteSpan;
+import com.ddiehl.android.htn.view.text.URLSpanNoUnderline;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

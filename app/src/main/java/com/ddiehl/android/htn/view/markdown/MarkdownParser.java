@@ -6,7 +6,7 @@ import android.text.style.URLSpan;
 import android.text.util.Linkify;
 
 import com.ddiehl.android.htn.utils.AndroidUtils;
-import com.ddiehl.android.htn.view.text.style.URLSpanNoUnderline;
+import com.ddiehl.android.htn.view.text.URLSpanNoUnderline;
 
 import java.util.ArrayList;
 import java.util.Collections;

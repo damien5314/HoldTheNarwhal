@@ -10,7 +10,7 @@ import android.text.Spanned;
 import android.text.style.URLSpan;
 
 import com.ddiehl.android.htn.utils.AndroidUtils;
-import com.ddiehl.android.htn.view.text.style.URLSpanNoUnderline;
+import com.ddiehl.android.htn.view.text.URLSpanNoUnderline;
 
 import static android.text.Html.FROM_HTML_MODE_LEGACY;
 

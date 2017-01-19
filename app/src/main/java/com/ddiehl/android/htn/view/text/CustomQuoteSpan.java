@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.ddiehl.android.htn.view.text.style;
+package com.ddiehl.android.htn.view.text;
 
 import android.annotation.SuppressLint;
 import android.graphics.Canvas;
