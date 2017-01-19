@@ -16,7 +16,7 @@ import android.widget.TextView;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.view.ColorSwapTextView;
-import com.ddiehl.android.htn.view.markdown.HtmlProcessor;
+import com.ddiehl.android.htn.view.markdown.HtmlParser;
 import com.ddiehl.android.htn.view.markdown.MarkdownParser;
 import com.ddiehl.timesincetextview.TimeSinceTextView;
 
@@ -33,7 +33,7 @@ public class ThreadCommentViewHolder extends RecyclerView.ViewHolder
 
     @Inject Context mContext;
     @Inject @Nullable MarkdownParser mMarkdownParser;
-    @Inject HtmlProcessor mHtmlProcessor;
+    @Inject HtmlParser mHtmlParser;
 
     private final LinkCommentsView mLinkCommentsView;
     private final LinkCommentsPresenter mLinkCommentsPresenter;
@@ -140,7 +140,7 @@ public class ThreadCommentViewHolder extends RecyclerView.ViewHolder
             CharSequence formatted = mMarkdownParser.convert(comment.getBody());
             mBodyView.setText(formatted);
         } else {
-            Spanned formatted = mHtmlProcessor.convert(comment.getBodyHtml());
+            Spanned formatted = mHtmlParser.convert(comment.getBodyHtml());
             mBodyView.setText(formatted);
         }
     }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package android.text.style;
+package com.ddiehl.android.htn.view.text;
 
 import android.annotation.SuppressLint;
 import android.graphics.Canvas;
@@ -23,6 +23,7 @@ import android.os.Parcel;
 import android.support.annotation.ColorInt;
 import android.text.Layout;
 import android.text.ParcelableSpan;
+import android.text.style.LeadingMarginSpan;
 
 @SuppressLint("ParcelCreator")
 public class CustomQuoteSpan implements LeadingMarginSpan, ParcelableSpan {
@@ -62,9 +63,6 @@ public class CustomQuoteSpan implements LeadingMarginSpan, ParcelableSpan {
         writeToParcelInternal(dest, flags);
     }
 
-    /**
-     * @hide
-     */
     public void writeToParcelInternal(Parcel dest, int flags) {
         dest.writeInt(mColor);
     }

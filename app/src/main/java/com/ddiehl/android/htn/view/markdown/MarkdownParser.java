@@ -6,7 +6,7 @@ import android.text.style.URLSpan;
 import android.text.util.Linkify;
 
 import com.ddiehl.android.htn.utils.AndroidUtils;
-import com.ddiehl.android.htn.view.URLSpanNoUnderline;
+import com.ddiehl.android.htn.view.text.NoUnderlineURLSpan;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -300,7 +300,7 @@ public class MarkdownParser {
 
                 // Replace span with one for the corrected URL
                 text.removeSpan(span);
-                URLSpan newSpan = new URLSpanNoUnderline(url.toString());
+                URLSpan newSpan = new NoUnderlineURLSpan(url.toString());
                 text.setSpan(newSpan, currentIndex, currentIndex + newLinkText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
                 // Find next instance

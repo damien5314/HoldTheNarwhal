@@ -26,7 +26,7 @@ import com.ddiehl.android.htn.subscriptions.SubscriptionManagerPresenter;
 import com.ddiehl.android.htn.view.BaseActivity;
 import com.ddiehl.android.htn.view.BaseFragment;
 import com.ddiehl.android.htn.view.MarkdownTextFragment;
-import com.ddiehl.android.htn.view.markdown.HtmlProcessor;
+import com.ddiehl.android.htn.view.markdown.HtmlParser;
 
 import javax.inject.Singleton;
 
@@ -74,5 +74,5 @@ public interface ApplicationComponent {
 
     // Misc
     void inject(FlurryAnalytics analytics);
-    void inject(HtmlProcessor htmlProcessor);
+    void inject(HtmlParser htmlParser);
 }
