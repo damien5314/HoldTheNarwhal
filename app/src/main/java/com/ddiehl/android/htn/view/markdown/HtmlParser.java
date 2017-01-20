@@ -13,7 +13,12 @@ import android.text.style.URLSpan;
 
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.utils.AndroidUtils;
+import com.ddiehl.android.htn.view.text.CustomBulletSpan;
 import com.ddiehl.android.htn.view.text.NoUnderlineURLSpan;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import static android.text.Html.FROM_HTML_MODE_LEGACY;
 
@@ -53,7 +58,30 @@ public class HtmlParser {
 
         AndroidUtils.convertBulletSpansToCustom(formatted);
 
+        removeBreaksInBetweenConsecutiveBulletSpans(formatted);
+
         return formatted;
+    }
+
+    void removeBreaksInBetweenConsecutiveBulletSpans(@NonNull SpannableStringBuilder text) {
+        CustomBulletSpan[] spans = text.getSpans(0, text.length(), CustomBulletSpan.class);
+        List<CustomBulletSpan> spanList = Arrays.asList(spans);
+
+        Collections.sort(
+                spanList,
+                (o1, o2) -> text.getSpanStart(o1) - text.getSpanStart(o2) // Swap these?
+        );
+
+        for (int i = spanList.size() - 1; i > 0; i--) {
+            // If this span starts 2 characters (newlines) after the one before it
+            int spanStart = text.getSpanStart(spanList.get(i));
+            int nextSpanEnd = text.getSpanEnd(spanList.get(i - 1));
+
+            if (spanStart - 1 == nextSpanEnd && text.charAt(spanStart - 1) == '\n') {
+                // Remove one of the newline characters
+                text.delete(spanStart - 1, spanStart);
+            }
+        }
     }
 
     void trimTrailingNewLines(@NonNull SpannableStringBuilder text) {
