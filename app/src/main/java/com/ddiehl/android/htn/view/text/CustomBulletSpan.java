@@ -34,8 +34,9 @@ public class CustomBulletSpan implements LeadingMarginSpan, ParcelableSpan {
     private final int mColor;
 
     private static final int BULLET_RADIUS = 3;
+    public static final int STANDARD_GAP_WIDTH = 32;
+
     private static Path sBulletPath = null;
-    public static final int STANDARD_GAP_WIDTH = 2;
 
     public CustomBulletSpan() {
         mGapWidth = STANDARD_GAP_WIDTH;
@@ -110,11 +111,11 @@ public class CustomBulletSpan implements LeadingMarginSpan, ParcelableSpan {
                 }
 
                 c.save();
-                c.translate(x + dir * BULLET_RADIUS, (top + bottom) / 2.0f);
+                c.translate(x + dir * BULLET_RADIUS + mGapWidth / 2, (top + bottom) / 2.0f);
                 c.drawPath(sBulletPath, p);
                 c.restore();
             } else {
-                c.drawCircle(x + dir * BULLET_RADIUS, (top + bottom) / 2.0f, BULLET_RADIUS, p);
+                c.drawCircle(x + dir * BULLET_RADIUS + mGapWidth / 2, (top + bottom) / 2.0f, BULLET_RADIUS, p);
             }
 
             if (mWantColor) {
