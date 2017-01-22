@@ -35,7 +35,8 @@
                 <data android:scheme="https" />
                 <data android:host="reddit.com" />
                 <data android:host="*.reddit.com" />
-                <data android:pathPattern="" />
+                <data android:pathPattern=""
+                      tools:ignore="GoogleAppIndexingUrlError" />
                 <data android:pathPattern="/" />
                 <data android:pathPattern="/hot" />
                 <data android:pathPattern="/new" />
@@ -89,6 +90,9 @@
         <activity
                 android:name=".listings.report.ReportActivity"
                 android:theme="@style/TransparentTheme" />
+
+        <activity
+                android:name=".listings.subreddit.submission.SubmitPostActivity" />
 
     </application>
 
