@@ -8,6 +8,7 @@ import android.support.v4.app.DialogFragment;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
+import android.view.inputmethod.EditorInfo;
 
 import com.ddiehl.android.htn.R;
 
@@ -72,6 +73,13 @@ public class SubredditNavigationDialog extends DialogFragment {
             }
         });
 
+        mEditText.setOnEditorActionListener((v, actionId, event) -> {
+            if (enterKeyPressed(actionId, event)) {
+                mSubmitButton.callOnClick();
+            }
+            return false;
+        });
+
         mEditText.setOnKeyListener((v, keyCode, event) -> {
             if (enterKeyPressed(keyCode, event)) {
                 mSubmitButton.callOnClick();
@@ -83,6 +91,7 @@ public class SubredditNavigationDialog extends DialogFragment {
     }
 
     boolean enterKeyPressed(int keyCode, KeyEvent event) {
-        return event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER;
+        return keyCode == EditorInfo.IME_ACTION_DONE ||
+                (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER);
     }
 }
