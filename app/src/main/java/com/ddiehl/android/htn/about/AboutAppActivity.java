@@ -3,6 +3,7 @@ package com.ddiehl.android.htn.about;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 
 import com.ddiehl.android.htn.view.FragmentActivityCompat;
@@ -20,12 +21,12 @@ public class AboutAppActivity extends FragmentActivityCompat {
         return false;
     }
 
-    @Override
+    @NonNull @Override
     protected Fragment getFragment() {
         return AboutAppFragment.newInstance();
     }
 
-    @Override
+    @NonNull @Override
     protected String getFragmentTag() {
         return AboutAppFragment.TAG;
     }

@@ -3,6 +3,7 @@ package com.ddiehl.android.htn.listings.comments;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 
 import com.ddiehl.android.htn.view.FragmentActivityCompat;
@@ -28,13 +29,13 @@ public class LinkCommentsActivity extends FragmentActivityCompat {
         return false;
     }
 
-    @Override
+    @NonNull @Override
     protected Fragment getFragment() {
         return new LinkCommentsFragmentBuilder(getArticleId(), getCommentId(), getSubreddit())
                 .build();
     }
 
-    @Override
+    @NonNull @Override
     protected String getFragmentTag() {
         return LinkCommentsFragment.TAG;
     }

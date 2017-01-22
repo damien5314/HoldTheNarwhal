@@ -2,6 +2,7 @@ package com.ddiehl.android.htn.listings.inbox;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 
 import com.ddiehl.android.htn.view.FragmentActivityCompat;
@@ -21,13 +22,13 @@ public class InboxActivity extends FragmentActivityCompat {
         return true;
     }
 
-    @Override
+    @NonNull @Override
     protected Fragment getFragment() {
         return new InboxFragmentBuilder(getShow())
                 .build();
     }
 
-    @Override
+    @NonNull @Override
     protected String getFragmentTag() {
         return InboxFragment.TAG;
     }

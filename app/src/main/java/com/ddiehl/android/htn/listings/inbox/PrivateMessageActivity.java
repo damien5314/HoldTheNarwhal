@@ -3,6 +3,7 @@ package com.ddiehl.android.htn.listings.inbox;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
@@ -47,13 +48,13 @@ public class PrivateMessageActivity extends FragmentActivityCompat {
         return getIntent().getStringExtra(EXTRA_MESSAGES);
     }
 
-    @Override
+    @NonNull @Override
     protected Fragment getFragment() {
         return new PrivateMessageFragmentBuilder(getJson())
                 .build();
     }
 
-    @Override
+    @NonNull @Override
     protected String getFragmentTag() {
         return PrivateMessageFragment.TAG;
     }

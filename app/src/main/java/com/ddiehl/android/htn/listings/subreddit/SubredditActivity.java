@@ -3,6 +3,7 @@ package com.ddiehl.android.htn.listings.subreddit;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 
 import com.ddiehl.android.htn.view.FragmentActivityCompat;
@@ -30,7 +31,7 @@ public class SubredditActivity extends FragmentActivityCompat {
         return true;
     }
 
-    @Override
+    @NonNull @Override
     protected Fragment getFragment() {
         return new SubredditFragmentBuilder()
                 .subreddit(getSubreddit())
@@ -39,7 +40,7 @@ public class SubredditActivity extends FragmentActivityCompat {
                 .build();
     }
 
-    @Override
+    @NonNull @Override
     protected String getFragmentTag() {
         return SubredditFragment.TAG;
     }

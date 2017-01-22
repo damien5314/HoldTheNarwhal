@@ -16,6 +16,7 @@ import com.ddiehl.android.htn.listings.profile.UserProfileFragment;
 import com.ddiehl.android.htn.listings.profile.UserProfilePresenter;
 import com.ddiehl.android.htn.listings.report.ReportActivity;
 import com.ddiehl.android.htn.listings.subreddit.SubredditFragment;
+import com.ddiehl.android.htn.listings.subreddit.submission.SubmitPostFragment;
 import com.ddiehl.android.htn.navigation.WebViewFragment;
 import com.ddiehl.android.htn.settings.SettingsActivity;
 import com.ddiehl.android.htn.settings.SettingsFragment;
@@ -56,6 +57,7 @@ public interface ApplicationComponent {
     void inject(LinkCommentsFragment fragment);
     void inject(SubredditInfoFragment fragment);
     void inject(MarkdownTextFragment fragment);
+    void inject(SubmitPostFragment fragment);
 
     // ViewHolders
     void inject(ThreadCommentViewHolder vh);
