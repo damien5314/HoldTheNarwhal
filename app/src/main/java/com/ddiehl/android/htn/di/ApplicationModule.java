@@ -57,8 +57,11 @@ public class ApplicationModule {
                 .appId(BuildConfig.REDDIT_APP_ID)
                 .redirectUri(BuildConfig.REDDIT_REDIRECT_URI)
                 .deviceId(AndroidUtil.getDeviceId(context))
-                .userAgent(RxRedditUtil.getUserAgent(
-                        "android", "com.ddiehl.android.htn", BuildConfig.VERSION_NAME, "damien5314"))
+                .userAgent(
+                        RxRedditUtil.getUserAgent(
+                                "android", "com.ddiehl.android.htn", BuildConfig.VERSION_NAME, "damien5314"
+                        )
+                )
                 .accessTokenManager(new AndroidAccessTokenManager(context))
                 .cache(cacheSize, path)
                 .loggingEnabled(BuildConfig.DEBUG);
@@ -72,12 +75,12 @@ public class ApplicationModule {
 
     @Provides @Nullable
     MarkdownParser providesMarkdownParser(@Nullable Bypass bypass) {
-//        return null;
-        if (bypass == null) {
-            return null;
-        } else {
-            return new MarkdownParser(bypass);
-        }
+        return null; // Force logic to use HtmlParser
+//        if (bypass == null) {
+//            return null;
+//        } else {
+//            return new MarkdownParser(bypass);
+//        }
     }
 
     @Provides
