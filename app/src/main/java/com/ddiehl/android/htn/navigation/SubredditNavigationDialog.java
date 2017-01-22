@@ -5,10 +5,12 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
+import android.view.View;
 import android.view.Window;
 
 import com.ddiehl.android.htn.R;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
 
@@ -17,11 +19,15 @@ public class SubredditNavigationDialog extends DialogFragment {
     public static final String TAG = SubredditNavigationDialog.class.getSimpleName();
 
     public interface Callbacks {
-
         void onSubredditNavigationConfirmed(String subreddit);
-
         void onSubredditNavigationCancelled();
     }
+
+    @BindView(R.id.drawer_navigate_to_subreddit_text)
+    SubredditEditText mEditText;
+
+    @BindView(R.id.drawer_navigate_to_subreddit_go)
+    View mSubmitButton;
 
     private Callbacks mListener;
 
@@ -51,22 +57,19 @@ public class SubredditNavigationDialog extends DialogFragment {
 
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.navigate_to_subreddit_edit_text);
+        ButterKnife.bind(this, dialog);
 
-        ButterKnife.findById(dialog, R.id.drawer_navigate_to_subreddit_go)
-                .setOnClickListener((v) -> {
-                    SubredditEditText inputEditText = ButterKnife.findById(
-                            dialog, R.id.drawer_navigate_to_subreddit_text
-                    );
-                    String input = inputEditText.getInput();
+        mSubmitButton.setOnClickListener((v) -> {
+            String input = mEditText.getInput();
 
-                    if (!input.equals("")) {
-                        input = input.trim();
-                        inputEditText.setText("");
+            if (!input.equals("")) {
+                input = input.trim();
+                mEditText.setText("");
 
-                        dialog.dismiss();
-                        mListener.onSubredditNavigationConfirmed(input);
-                    }
-                });
+                dialog.dismiss();
+                mListener.onSubredditNavigationConfirmed(input);
+            }
+        });
 
         return dialog;
     }
