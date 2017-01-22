@@ -57,10 +57,12 @@ public class SubredditNavigationDialog extends DialogFragment {
 
         Dialog dialog = new Dialog(getActivity());
 
+        // Inflate layout and bind views
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.navigate_to_subreddit_edit_text);
         ButterKnife.bind(this, dialog);
 
+        // Detect taps on the submit button
         mSubmitButton.setOnClickListener((v) -> {
             String input = mEditText.getInput();
 
@@ -73,6 +75,7 @@ public class SubredditNavigationDialog extends DialogFragment {
             }
         });
 
+        // Detect software keyboard "done" event
         mEditText.setOnEditorActionListener((v, actionId, event) -> {
             if (enterKeyPressed(actionId, event)) {
                 mSubmitButton.callOnClick();
@@ -80,6 +83,7 @@ public class SubredditNavigationDialog extends DialogFragment {
             return false;
         });
 
+        // Detect hardware keyboard "enter" key press
         mEditText.setOnKeyListener((v, keyCode, event) -> {
             if (enterKeyPressed(keyCode, event)) {
                 mSubmitButton.callOnClick();
@@ -91,6 +95,8 @@ public class SubredditNavigationDialog extends DialogFragment {
     }
 
     boolean enterKeyPressed(int keyCode, KeyEvent event) {
+        // keyCode can either be an EditorInfo actionId or a KeyEvent keyCode,
+        // just consolidating the logic a tad.
         return keyCode == EditorInfo.IME_ACTION_DONE ||
                 (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER);
     }
