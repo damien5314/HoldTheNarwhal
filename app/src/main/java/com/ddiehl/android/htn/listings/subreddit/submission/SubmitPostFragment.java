@@ -28,6 +28,8 @@ public class SubmitPostFragment extends BaseFragment {
         return mCoordinatorLayout;
     }
 
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
