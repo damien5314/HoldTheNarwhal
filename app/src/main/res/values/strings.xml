@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="submission_activity_title">submit post</string>
+    <string name="submission_type_link">link</string>
+    <string name="submission_type_text">text</string>
+    <string name="submission_title_field_hint">Title</string>
+    <string name="submission_url_field_hint">URL</string>
+    <string name="submission_text_field_hint">Text</string>
+    <string name="submission_send_replies_to_inbox">send replies to my inbox</string>
+    <string name="submission_submit">submit</string>
 </resources>

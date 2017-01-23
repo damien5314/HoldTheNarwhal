@@ -92,7 +92,8 @@
                 android:theme="@style/TransparentTheme" />
 
         <activity
-                android:name=".listings.subreddit.submission.SubmitPostActivity" />
+                android:name=".listings.subreddit.submission.SubmitPostActivity"
+                android:theme="@style/ActivityThemeLightBg" />
 
     </application>
 
