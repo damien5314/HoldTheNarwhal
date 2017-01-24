@@ -101,16 +101,16 @@ public class SubmitPostFragment extends BaseFragment {
     private void onLinkTabSelected() {
         Timber.d("LINK tab selected");
 
-        mUrlEditText.setVisibility(View.VISIBLE);
+        ((View) mUrlEditText.getParent()).setVisibility(View.VISIBLE);
         mImageView.setVisibility(View.VISIBLE);
-        mTextEditText.setVisibility(View.GONE);
+        ((View) mTextEditText.getParent()).setVisibility(View.GONE);
     }
 
     private void onTextTabSelected() {
         Timber.d("TEXT tab selected");
 
-        mUrlEditText.setVisibility(View.GONE);
+        ((View) mUrlEditText.getParent()).setVisibility(View.GONE);
         mImageView.setVisibility(View.GONE);
-        mTextEditText.setVisibility(View.VISIBLE);
+        ((View) mTextEditText.getParent()).setVisibility(View.VISIBLE);
     }
 }
