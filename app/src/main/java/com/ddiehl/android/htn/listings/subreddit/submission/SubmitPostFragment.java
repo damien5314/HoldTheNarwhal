@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TabLayout;
+import android.support.design.widget.TextInputLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,7 @@ import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import timber.log.Timber;
 
 @FragmentWithArgs
@@ -101,16 +103,21 @@ public class SubmitPostFragment extends BaseFragment {
     private void onLinkTabSelected() {
         Timber.d("LINK tab selected");
 
-        ((View) mUrlEditText.getParent()).setVisibility(View.VISIBLE);
+        ((TextInputLayout) mUrlEditText.getParent()).setVisibility(View.VISIBLE);
         mImageView.setVisibility(View.VISIBLE);
-        ((View) mTextEditText.getParent()).setVisibility(View.GONE);
+        ((TextInputLayout) mTextEditText.getParent()).setVisibility(View.GONE);
     }
 
     private void onTextTabSelected() {
         Timber.d("TEXT tab selected");
 
-        ((View) mUrlEditText.getParent()).setVisibility(View.GONE);
+        ((TextInputLayout) mUrlEditText.getParent()).setVisibility(View.GONE);
         mImageView.setVisibility(View.GONE);
-        ((View) mTextEditText.getParent()).setVisibility(View.VISIBLE);
+        ((TextInputLayout) mTextEditText.getParent()).setVisibility(View.VISIBLE);
+    }
+
+    @OnClick(R.id.submission_submit)
+    void onSubmitClicked() {
+        // TODO
     }
 }
