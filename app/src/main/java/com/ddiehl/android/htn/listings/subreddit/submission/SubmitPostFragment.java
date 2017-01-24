@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.ImageView;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
@@ -37,8 +36,6 @@ public class SubmitPostFragment extends BaseFragment {
     TabLayout mSubmissionTypeTabs;
     @BindView(R.id.submission_url)
     EditText mUrlEditText;
-    @BindView(R.id.submission_image)
-    ImageView mImageView;
     @BindView(R.id.submission_title)
     EditText mTitleEditText;
     @BindView(R.id.submission_text)
@@ -104,7 +101,6 @@ public class SubmitPostFragment extends BaseFragment {
         Timber.d("LINK tab selected");
 
         ((TextInputLayout) mUrlEditText.getParent()).setVisibility(View.VISIBLE);
-        mImageView.setVisibility(View.VISIBLE);
         ((TextInputLayout) mTextEditText.getParent()).setVisibility(View.GONE);
     }
 
@@ -112,7 +108,6 @@ public class SubmitPostFragment extends BaseFragment {
         Timber.d("TEXT tab selected");
 
         ((TextInputLayout) mUrlEditText.getParent()).setVisibility(View.GONE);
-        mImageView.setVisibility(View.GONE);
         ((TextInputLayout) mTextEditText.getParent()).setVisibility(View.VISIBLE);
     }
 

@@ -40,15 +40,6 @@
 
             </android.support.design.widget.TextInputLayout>
 
-            <ImageView
-                    android:id="@+id/submission_image"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:minHeight="96dp"
-                    android:contentDescription="@null"
-                    android:src="@drawable/ic_insert_photo_black_24dp"
-                    android:tint="@color/gray70" />
-
             <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
