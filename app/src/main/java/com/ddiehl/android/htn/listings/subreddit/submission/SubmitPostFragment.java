@@ -1,12 +1,12 @@
 package com.ddiehl.android.htn.listings.subreddit.submission;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TabLayout;
-import android.support.design.widget.TextInputLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +26,8 @@ import butterknife.OnClick;
 import timber.log.Timber;
 
 @FragmentWithArgs
-public class SubmitPostFragment extends BaseFragment {
+public class SubmitPostFragment extends BaseFragment
+        implements SubmitPostView {
 
     public static final String TAG = SubmitPostFragment.class.getSimpleName();
 
@@ -45,11 +46,15 @@ public class SubmitPostFragment extends BaseFragment {
     @BindView(R.id.submission_submit)
     Button mSubmitButton;
 
-    @Override protected int getLayoutResId() {
+    SubmitPostPresenter mPresenter;
+
+    @Override
+    protected int getLayoutResId() {
         return R.layout.submission_fragment;
     }
 
-    @Override protected View getChromeView() {
+    @Override
+    protected View getChromeView() {
         return mCoordinatorLayout;
     }
 
@@ -60,7 +65,8 @@ public class SubmitPostFragment extends BaseFragment {
         FragmentArgs.inject(this);
     }
 
-    @NonNull @Override
+    @NonNull
+    @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle state) {
         View view = super.onCreateView(inflater, container, state);
         ButterKnife.bind(this, view);
@@ -74,7 +80,8 @@ public class SubmitPostFragment extends BaseFragment {
 
     TabLayout.OnTabSelectedListener getOnTabSelectedListener() {
         return new TabLayout.OnTabSelectedListener() {
-            @Override public void onTabSelected(TabLayout.Tab tab) {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
                 String tag = (String) tab.getTag();
                 if ("link".equals(tag)) {
                     onLinkTabSelected();
@@ -83,9 +90,11 @@ public class SubmitPostFragment extends BaseFragment {
                 }
             }
 
-            @Override public void onTabUnselected(TabLayout.Tab tab) { /* no-op */ }
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) { /* no-op */ }
 
-            @Override public void onTabReselected(TabLayout.Tab tab) { /* no-op */ }
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) { /* no-op */ }
         };
     }
 
@@ -100,19 +109,34 @@ public class SubmitPostFragment extends BaseFragment {
     private void onLinkTabSelected() {
         Timber.d("LINK tab selected");
 
-        ((TextInputLayout) mUrlEditText.getParent()).setVisibility(View.VISIBLE);
-        ((TextInputLayout) mTextEditText.getParent()).setVisibility(View.GONE);
+        ((View) mUrlEditText.getParent()).setVisibility(View.VISIBLE);
+        ((View) mTextEditText.getParent()).setVisibility(View.GONE);
     }
 
     private void onTextTabSelected() {
         Timber.d("TEXT tab selected");
 
-        ((TextInputLayout) mUrlEditText.getParent()).setVisibility(View.GONE);
-        ((TextInputLayout) mTextEditText.getParent()).setVisibility(View.VISIBLE);
+        ((View) mUrlEditText.getParent()).setVisibility(View.GONE);
+        ((View) mTextEditText.getParent()).setVisibility(View.VISIBLE);
     }
 
     @OnClick(R.id.submission_submit)
     void onSubmitClicked() {
+        mPresenter.submit();
+    }
+
+    @Override
+    public void dismissAfterConfirmation() {
+        getActivity().setResult(Activity.RESULT_OK);
         // TODO
+        // Set model data as result so the subreddit Activity
+        // can trigger navigation to the post just submitted
+        getActivity().finish();
+    }
+
+    @Override
+    public void dismissAfterCancel() {
+        getActivity().setResult(Activity.RESULT_CANCELED);
+        getActivity().finish();
     }
 }
