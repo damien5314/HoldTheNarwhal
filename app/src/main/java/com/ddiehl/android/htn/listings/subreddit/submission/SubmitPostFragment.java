@@ -7,12 +7,12 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TabLayout;
+import android.support.design.widget.TextInputEditText;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.EditText;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
@@ -23,7 +23,8 @@ import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import timber.log.Timber;
+
+import static com.ddiehl.android.htn.utils.AndroidUtils.getTextInputLayout;
 
 @FragmentWithArgs
 public class SubmitPostFragment extends BaseFragment
@@ -36,11 +37,11 @@ public class SubmitPostFragment extends BaseFragment
     @BindView(R.id.submission_type_tabs)
     TabLayout mSubmissionTypeTabs;
     @BindView(R.id.submission_url)
-    EditText mUrlEditText;
+    TextInputEditText mUrlEditText;
     @BindView(R.id.submission_title)
-    EditText mTitleEditText;
+    TextInputEditText mTitleEditText;
     @BindView(R.id.submission_text)
-    EditText mTextEditText;
+    TextInputEditText mTextEditText;
     @BindView(R.id.send_replies_to_inbox)
     CheckBox mSendRepliesToInboxCheckbox;
     @BindView(R.id.submission_submit)
@@ -107,17 +108,13 @@ public class SubmitPostFragment extends BaseFragment
     }
 
     private void onLinkTabSelected() {
-        Timber.d("LINK tab selected");
-
-        ((View) mUrlEditText.getParent()).setVisibility(View.VISIBLE);
-        ((View) mTextEditText.getParent()).setVisibility(View.GONE);
+        getTextInputLayout(mUrlEditText).setVisibility(View.VISIBLE);
+        getTextInputLayout(mTextEditText).setVisibility(View.GONE);
     }
 
     private void onTextTabSelected() {
-        Timber.d("TEXT tab selected");
-
-        ((View) mUrlEditText.getParent()).setVisibility(View.GONE);
-        ((View) mTextEditText.getParent()).setVisibility(View.VISIBLE);
+        getTextInputLayout(mUrlEditText).setVisibility(View.GONE);
+        getTextInputLayout(mTextEditText).setVisibility(View.VISIBLE);
     }
 
     @OnClick(R.id.submission_submit)
