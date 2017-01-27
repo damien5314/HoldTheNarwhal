@@ -74,7 +74,6 @@ public interface ApplicationComponent {
     void inject(UserProfilePresenter presenter);
     void inject(SettingsPresenter presenter);
     void inject(SubscriptionManagerPresenter presenter);
-
     void inject(SubmitPostPresenter presenter);
 
     // Misc

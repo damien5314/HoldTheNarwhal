@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -19,6 +20,7 @@ import com.ddiehl.android.htn.listings.ChooseTimespanDialog;
 import com.ddiehl.android.htn.listings.ListingsAdapter;
 import com.ddiehl.android.htn.listings.links.ChooseLinkSortDialog;
 import com.ddiehl.android.htn.listings.profile.UserProfileFragment;
+import com.ddiehl.android.htn.listings.subreddit.submission.SubmitPostActivity;
 import com.ddiehl.android.htn.settings.SettingsManager;
 import com.hannesdorfmann.fragmentargs.FragmentArgs;
 import com.hannesdorfmann.fragmentargs.annotation.Arg;
@@ -28,6 +30,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import rxreddit.model.Link;
 import rxreddit.model.Subreddit;
 
@@ -46,6 +49,8 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
 
     @BindView(R.id.coordinator_layout)
     CoordinatorLayout mCoordinatorLayout;
+    @BindView(R.id.submit_new_post)
+    FloatingActionButton mSubmitNewPostButton;
 
     SubredditPresenter mSubredditPresenter;
 
@@ -76,6 +81,12 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
         View view = super.onCreateView(inflater, container, state);
         ButterKnife.bind(this, view);
+
+        // Show submit button if we're on a valid subreddit
+        mSubmitNewPostButton.setVisibility(
+                "damien5314apitest".equals(mSubreddit) ? View.VISIBLE : View.GONE
+        );
+
         return view;
     }
 
@@ -118,6 +129,12 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
             String formatter = getString(R.string.link_subreddit);
             setTitle(String.format(formatter, getSubreddit()));
         }
+    }
+
+    @OnClick(R.id.submit_new_post)
+    void onSubmitNewPostClicked() {
+        Intent intent = SubmitPostActivity.getIntent(getContext(), mSubreddit);
+        startActivityForResult(intent, REQUEST_SUBMIT_NEW_POST);
     }
 
     @Override

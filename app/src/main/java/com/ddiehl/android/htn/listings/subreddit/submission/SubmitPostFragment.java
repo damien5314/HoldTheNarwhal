@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.TextInputEditText;
 import android.view.LayoutInflater;
@@ -18,6 +19,7 @@ import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.view.BaseFragment;
 import com.hannesdorfmann.fragmentargs.FragmentArgs;
+import com.hannesdorfmann.fragmentargs.annotation.Arg;
 import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs;
 
 import butterknife.BindView;
@@ -31,6 +33,10 @@ public class SubmitPostFragment extends BaseFragment
         implements SubmitPostView {
 
     public static final String TAG = SubmitPostFragment.class.getSimpleName();
+
+    public static final int RESULT_SUBMIT_SUCCESS = Activity.RESULT_OK;
+
+    @Arg String mSubreddit;
 
     @BindView(R.id.coordinator_layout)
     CoordinatorLayout mCoordinatorLayout;
@@ -64,6 +70,7 @@ public class SubmitPostFragment extends BaseFragment
         super.onCreate(savedInstanceState);
         HoldTheNarwhal.getApplicationComponent().inject(this);
         FragmentArgs.inject(this);
+        mPresenter = new SubmitPostPresenter(this);
     }
 
     @NonNull
@@ -74,7 +81,7 @@ public class SubmitPostFragment extends BaseFragment
 
         mSubmissionTypeTabs.addOnTabSelectedListener(getOnTabSelectedListener());
         TabLayout.Tab linkTab = addNewTab(mSubmissionTypeTabs, R.string.submission_type_link, "link");
-        TabLayout.Tab textTab = addNewTab(mSubmissionTypeTabs, R.string.submission_type_text, "text");
+        TabLayout.Tab textTab = addNewTab(mSubmissionTypeTabs, R.string.submission_type_text, "self");
 
         return view;
     }
@@ -86,7 +93,7 @@ public class SubmitPostFragment extends BaseFragment
                 String tag = (String) tab.getTag();
                 if ("link".equals(tag)) {
                     onLinkTabSelected();
-                } else if ("text".equals(tag)) {
+                } else if ("self".equals(tag)) {
                     onTextTabSelected();
                 }
             }
@@ -119,7 +126,17 @@ public class SubmitPostFragment extends BaseFragment
 
     @OnClick(R.id.submission_submit)
     void onSubmitClicked() {
-        mPresenter.submit();
+        int position = mSubmissionTypeTabs.getSelectedTabPosition();
+        TabLayout.Tab selected = mSubmissionTypeTabs.getTabAt(position);
+
+        if (selected == null) {
+            throw new RuntimeException("Invalid selected tab position");
+        }
+        if ("link".equals(selected.getTag())) {
+            mPresenter.submit("link");
+        } else {
+            mPresenter.submit("self");
+        }
     }
 
     @Override
@@ -135,5 +152,40 @@ public class SubmitPostFragment extends BaseFragment
     public void dismissAfterCancel() {
         getActivity().setResult(Activity.RESULT_CANCELED);
         getActivity().finish();
+    }
+
+    @Override
+    public String getSubreddit() {
+        return mSubreddit;
+    }
+
+    @Override
+    public String getTitle() {
+        return mTitleEditText.getText().toString();
+    }
+
+    @Override
+    public String getUrl() {
+        return mUrlEditText.getText().toString();
+    }
+
+    @Override
+    public String getText() {
+        return mTextEditText.getText().toString();
+    }
+
+    @Override
+    public boolean getSendReplies() {
+        return mSendRepliesToInboxCheckbox.isChecked();
+    }
+
+    @Override
+    public void onPostSubmitted(Void result) {
+        finish(RESULT_SUBMIT_SUCCESS, null);
+    }
+
+    @Override
+    public void onSubmitError(Throwable error) {
+        Snackbar.make(getChromeView(), R.string.submission_submit_error, Snackbar.LENGTH_LONG);
     }
 }
