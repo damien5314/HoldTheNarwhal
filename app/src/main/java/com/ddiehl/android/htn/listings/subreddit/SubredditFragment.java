@@ -83,9 +83,8 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
         ButterKnife.bind(this, view);
 
         // Show submit button if we're on a valid subreddit
-        mSubmitNewPostButton.setVisibility(
-                "damien5314apitest".equals(mSubreddit) ? View.VISIBLE : View.GONE
-        );
+        boolean showSubmitButton = mSubreddit != null && !"all".equals(mSubreddit);
+        mSubmitNewPostButton.setVisibility(showSubmitButton ? View.VISIBLE : View.GONE);
 
         return view;
     }
