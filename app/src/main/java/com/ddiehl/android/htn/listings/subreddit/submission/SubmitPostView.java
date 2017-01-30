@@ -1,5 +1,7 @@
 package com.ddiehl.android.htn.listings.subreddit.submission;
 
+import rxreddit.model.SubmitPostResponse;
+
 interface SubmitPostView {
 
     void dismissAfterConfirmation();
@@ -16,7 +18,7 @@ interface SubmitPostView {
 
     boolean getSendReplies();
 
-    void onPostSubmitted(Void result);
+    void onPostSubmitted(SubmitPostResponse result);
 
     void onSubmitError(Throwable error);
 }

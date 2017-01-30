@@ -18,9 +18,11 @@ import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.listings.BaseListingsFragment;
 import com.ddiehl.android.htn.listings.ChooseTimespanDialog;
 import com.ddiehl.android.htn.listings.ListingsAdapter;
+import com.ddiehl.android.htn.listings.comments.LinkCommentsActivity;
 import com.ddiehl.android.htn.listings.links.ChooseLinkSortDialog;
 import com.ddiehl.android.htn.listings.profile.UserProfileFragment;
 import com.ddiehl.android.htn.listings.subreddit.submission.SubmitPostActivity;
+import com.ddiehl.android.htn.listings.subreddit.submission.SubmitPostFragment;
 import com.ddiehl.android.htn.settings.SettingsManager;
 import com.hannesdorfmann.fragmentargs.FragmentArgs;
 import com.hannesdorfmann.fragmentargs.annotation.Arg;
@@ -292,6 +294,11 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
                 boolean result = resultCode == RESULT_OK;
                 onNsfwSelected(result);
                 break;
+            case REQUEST_SUBMIT_NEW_POST:
+                String subreddit = data.getStringExtra(SubmitPostFragment.EXTRA_SUBMIT_SUBREDDIT);
+                String id = data.getStringExtra(SubmitPostFragment.EXTRA_SUBMIT_ID);
+                onPostSubmitted(subreddit, id);
+                break;
         }
     }
 
@@ -327,6 +334,11 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
         mTimespan = timespan;
         getActivity().invalidateOptionsMenu();
         mListingsPresenter.onSortChanged();
+    }
+
+    private void onPostSubmitted(String subreddit, String linkId) {
+        Intent intent = LinkCommentsActivity.getIntent(getContext(), subreddit, linkId, null);
+        startActivity(intent);
     }
 
     //endregion
