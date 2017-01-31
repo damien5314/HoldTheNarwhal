@@ -1,6 +1,5 @@
 package com.ddiehl.android.htn.view.markdown;
 
-import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.URLSpan;
 import android.text.util.Linkify;
@@ -18,6 +17,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import in.uncod.android.bypass.Bypass;
+
+import static android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE;
 
 public class MarkdownParser {
 
@@ -261,11 +262,16 @@ public class MarkdownParser {
                 int startIndex = url.indexOf(linkText);
                 int endIndex = startIndex + linkText.length() - 1;
 
-                url.deleteCharAt(endIndex);
-                url.deleteCharAt(startIndex);
+                // Check to ensure the start of the link text was found
+                // This won't be the case in custom markdown links
+                if (startIndex != -1) {
+                    url.deleteCharAt(endIndex);
+                    url.deleteCharAt(startIndex);
 
-                text.removeSpan(urlSpan);
-                text.setSpan(new URLSpan(url.toString()), spanStart + 1, spanEnd - 1, SpannableStringBuilder.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    text.removeSpan(urlSpan);
+                    URLSpan newSpan = new URLSpan(url.toString());
+                    text.setSpan(newSpan, spanStart + 1, spanEnd - 1, SPAN_EXCLUSIVE_EXCLUSIVE);
+                }
             }
         }
     }
@@ -301,7 +307,7 @@ public class MarkdownParser {
                 // Replace span with one for the corrected URL
                 text.removeSpan(span);
                 URLSpan newSpan = new NoUnderlineURLSpan(url.toString());
-                text.setSpan(newSpan, currentIndex, currentIndex + newLinkText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                text.setSpan(newSpan, currentIndex, currentIndex + newLinkText.length(), SPAN_EXCLUSIVE_EXCLUSIVE);
 
                 // Find next instance
                 currentIndex = text.toString().indexOf(link, currentIndex + 1);

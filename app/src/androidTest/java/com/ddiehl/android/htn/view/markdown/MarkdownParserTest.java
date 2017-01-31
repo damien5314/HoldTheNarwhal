@@ -294,6 +294,22 @@ public class MarkdownParserTest {
     }
 
     @Test
+    public void convert_markdownLinkWithSurroundingParens_isFormattedProperly() {
+        MarkdownParser parser = getParser();
+        String url = "foo://www.bar.com";
+        String text = "(foo bar)";
+        String markdown = String.format("[%s](%s)", text, url);
+
+        CharSequence formatted = parser.convert(markdown);
+        SpannableString result = SpannableString.valueOf(formatted);
+
+        URLSpan[] urlSpans = result.getSpans(0, result.length(), URLSpan.class);
+        assertEquals(1, urlSpans.length);
+        assertEquals(url, urlSpans[0].getURL());
+        assertEquals(text, result.toString());
+    }
+
+    @Test
     public void convert_multilineUrlWithTrailingParens_hasUrlSpans() {
         MarkdownParser parser = getParser();
         String url = "https://en.wikipedia.org/wiki/Shake_Hands_with_the_Devil_(book)";
