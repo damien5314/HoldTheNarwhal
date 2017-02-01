@@ -194,9 +194,7 @@ public class AndroidUtils {
         }
     }
 
-    public static
-    @NonNull
-    TextInputLayout getTextInputLayout(@NonNull TextInputEditText editText) {
+    public static @NonNull TextInputLayout getTextInputLayout(@NonNull TextInputEditText editText) {
         ViewParent parent = editText.getParent();
 
         // Keep searching until we reach the top of the view stack if necessary

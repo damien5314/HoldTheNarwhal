@@ -4,10 +4,6 @@ import rxreddit.model.SubmitPostResponse;
 
 interface SubmitPostView {
 
-    void dismissAfterConfirmation();
-
-    void dismissAfterCancel();
-
     String getSubreddit();
 
     String getTitle();
@@ -21,4 +17,6 @@ interface SubmitPostView {
     void onPostSubmitted(SubmitPostResponse result);
 
     void onSubmitError(Throwable error);
+
+    void dismissAfterCancel();
 }

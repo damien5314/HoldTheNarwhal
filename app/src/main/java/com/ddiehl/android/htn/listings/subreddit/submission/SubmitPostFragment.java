@@ -148,21 +148,6 @@ public class SubmitPostFragment extends BaseFragment
     }
 
     @Override
-    public void dismissAfterConfirmation() {
-        getActivity().setResult(Activity.RESULT_OK);
-        // TODO
-        // Set model data as result so the subreddit Activity
-        // can trigger navigation to the post just submitted
-        getActivity().finish();
-    }
-
-    @Override
-    public void dismissAfterCancel() {
-        getActivity().setResult(Activity.RESULT_CANCELED);
-        getActivity().finish();
-    }
-
-    @Override
     public String getSubreddit() {
         return mSubreddit;
     }
@@ -208,5 +193,11 @@ public class SubmitPostFragment extends BaseFragment
     @Override
     public void onSubmitError(Throwable error) {
         Snackbar.make(getChromeView(), R.string.submission_submit_error, Snackbar.LENGTH_LONG);
+    }
+
+    @Override
+    public void dismissAfterCancel() {
+        getActivity().setResult(Activity.RESULT_CANCELED);
+        getActivity().finish();
     }
 }
