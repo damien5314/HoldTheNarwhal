@@ -13,6 +13,8 @@ import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
+import android.support.design.widget.TextInputEditText;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -21,6 +23,7 @@ import android.text.style.QuoteSpan;
 import android.text.style.URLSpan;
 import android.util.DisplayMetrics;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 
 import com.ddiehl.android.htn.BuildConfig;
 import com.ddiehl.android.htn.view.text.CustomBulletSpan;
@@ -189,5 +192,21 @@ public class AndroidUtils {
             text.removeSpan(span);
             text.setSpan(newSpan, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
+    }
+
+    public static @NonNull TextInputLayout getTextInputLayout(@NonNull TextInputEditText editText) {
+        ViewParent parent = editText.getParent();
+
+        // Keep searching until we reach the top of the view stack if necessary
+        while (parent != null) {
+            if (parent instanceof TextInputLayout) {
+                return (TextInputLayout) parent;
+            } else {
+                parent = parent.getParent();
+            }
+        }
+
+        // If we didn't find a TextInputLayout, throw an exception
+        throw new RuntimeException("no TextInputLayout found");
     }
 }

@@ -43,11 +43,13 @@ import static android.app.Activity.RESULT_OK;
 
 public abstract class BaseFragment extends Fragment implements MainView {
 
+    // FIXME: Should these all be in BaseFragment?
     protected static final int REQUEST_CHOOSE_SORT = 1;
     protected static final int REQUEST_CHOOSE_TIMESPAN = 2;
     protected static final int REQUEST_NSFW_WARNING = 3;
     protected static final int REQUEST_ADD_COMMENT = 4;
     protected static final int REQUEST_SIGN_IN = 5;
+    protected static final int REQUEST_SUBMIT_NEW_POST = 6;
 
     @Inject protected RedditService mRedditService;
     @Inject protected IdentityManager mIdentityManager;
@@ -189,7 +191,7 @@ public abstract class BaseFragment extends Fragment implements MainView {
         if (getTargetFragment() != null) {
             getTargetFragment().onActivityResult(getTargetRequestCode(), resultCode, data);
         } else {
-            getActivity().setResult(resultCode);
+            getActivity().setResult(resultCode, data);
             getActivity().finish();
         }
     }

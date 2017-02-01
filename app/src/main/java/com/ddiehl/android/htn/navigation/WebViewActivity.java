@@ -2,6 +2,7 @@ package com.ddiehl.android.htn.navigation;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 
 import com.ddiehl.android.htn.view.FragmentActivityCompat;
@@ -21,13 +22,13 @@ public class WebViewActivity extends FragmentActivityCompat {
         return false;
     }
 
-    @Override
+    @NonNull @Override
     protected Fragment getFragment() {
         return new WebViewFragmentBuilder(getUrl())
                 .build();
     }
 
-    @Override
+    @NonNull @Override
     protected String getFragmentTag() {
         return WebViewFragment.TAG;
     }

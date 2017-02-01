@@ -37,7 +37,7 @@ subprojects {
         glideVersion = "3.7.0"
         glideOkhttpVersion = "1.4.0@aar"
         butterknifeVersion = "8.4.0"
-        rxRedditVersion = "c0a5a606de876b4a07ab652afb09f747a0294583"
+        rxRedditVersion = "ef739c3a5bba7c49e6f027dd8c4da8bc7e147aa6"
         rxAndroidVersion = "1.2.1"
         rxJavaVersion = "1.2.3"
         rxJavaProguardVersion = "1.2.3.0"

@@ -174,6 +174,8 @@ public abstract class BaseActivity extends AppCompatActivity implements
                         .setFontAttrId(R.attr.fontPath)
                         .build()
         );
+
+        showTabs(false);
     }
 
     private String getFont() {

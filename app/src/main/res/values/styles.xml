@@ -14,6 +14,10 @@
         <item name="android:windowBackground">@color/primary_light</item>
     </style>
 
+    <style name="ActivityThemeLightBg" parent="AppTheme">
+        <item name="android:windowBackground">@color/white</item>
+    </style>
+
     <style name="ToolbarThemeLightText" parent="AppTheme">
         <item name="android:textColorPrimary">@color/icons</item>
         <item name="actionMenuTextColor">@color/icons</item>
