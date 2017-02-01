@@ -191,7 +191,7 @@ public abstract class BaseFragment extends Fragment implements MainView {
         if (getTargetFragment() != null) {
             getTargetFragment().onActivityResult(getTargetRequestCode(), resultCode, data);
         } else {
-            getActivity().setResult(resultCode);
+            getActivity().setResult(resultCode, data);
             getActivity().finish();
         }
     }
