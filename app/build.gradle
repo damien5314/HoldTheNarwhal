@@ -98,7 +98,7 @@ dependencies {
 
     compile "com.github.damien5314.RxReddit:library:$project.ext.rxRedditVersion"
     compile "com.github.damien5314.RxReddit:android:$project.ext.rxRedditVersion"
-    debugCompile "com.github.damien5314.RxReddit:mock:$project.ext.rxRedditVersion"
+    debugCompile project(':mock-api')
 
     compile "io.reactivex:rxandroid:$project.ext.rxAndroidVersion"
     compile "io.reactivex:rxjava:$project.ext.rxJavaVersion"

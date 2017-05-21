@@ -50,7 +50,7 @@ public class ApplicationModule {
     @Singleton
     @Provides
     RedditService providesRedditService(Context context) {
-//    return new RedditServiceMock();
+//        return new RedditServiceMock();
         final int cacheSize = 10 * 1024 * 1024; // 10 MiB
         File path = new File(context.getCacheDir().getAbsolutePath(), "htn-http-cache");
         RedditService.Builder builder = new RedditService.Builder()
