@@ -6,12 +6,12 @@ repositories {
 }
 
 android {
-    compileSdkVersion 24
+    compileSdkVersion project.ext.compileSdkVersion
     buildToolsVersion "$project.ext.buildToolsVersion"
 
     defaultConfig {
         minSdkVersion 15
-        targetSdkVersion 24
+        targetSdkVersion project.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
     }
