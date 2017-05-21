@@ -138,11 +138,9 @@ public abstract class BaseListingsFragment extends BaseFragment
         switch (item.getItemId()) {
             case R.id.action_refresh:
                 mListingsPresenter.refreshData();
-                mAnalytics.logOptionRefresh();
                 return true;
             case R.id.action_settings:
                 mRedditNavigationView.showSettings();
-                mAnalytics.logOptionSettings();
                 return true;
         }
         return false;
@@ -373,7 +371,6 @@ public abstract class BaseListingsFragment extends BaseFragment
     }
 
     public void openLinkInWebView(@NonNull Link link) {
-        mAnalytics.logOpenLink(link);
         mRedditNavigationView.openURL(link.getUrl());
     }
 
@@ -474,6 +471,5 @@ public abstract class BaseListingsFragment extends BaseFragment
     public void onRefresh() {
         mSwipeRefreshLayout.setRefreshing(false);
         mListingsPresenter.refreshData();
-        mAnalytics.logOptionRefresh();
     }
 }

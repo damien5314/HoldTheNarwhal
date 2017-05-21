@@ -19,7 +19,6 @@ import android.view.ViewGroup;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
-import com.ddiehl.android.htn.analytics.Analytics;
 import com.ddiehl.android.htn.identity.IdentityManager;
 import com.ddiehl.android.htn.listings.subreddit.SubredditActivity;
 import com.ddiehl.android.htn.navigation.RedditNavigationView;
@@ -53,7 +52,6 @@ public abstract class BaseFragment extends Fragment implements MainView {
 
     @Inject protected RedditService mRedditService;
     @Inject protected IdentityManager mIdentityManager;
-    @Inject protected Analytics mAnalytics;
 
     protected RedditNavigationView mRedditNavigationView;
     ProgressDialog mLoadingOverlay;

@@ -227,7 +227,6 @@ public class LinkCommentsFragment extends BaseListingsFragment
                 return true;
             case R.id.action_change_sort:
                 showSortOptionsMenu();
-                mAnalytics.logOptionChangeSort();
                 return true;
             case R.id.action_link_view_subreddit:
                 mListingsPresenter.openLinkSubreddit(link);
@@ -253,8 +252,6 @@ public class LinkCommentsFragment extends BaseListingsFragment
     }
 
     private void onSortSelected(@NonNull String sort) {
-        mAnalytics.logOptionChangeSort(sort);
-
         if (sort.equals(mSort)) return;
 
         mSort = sort;
@@ -284,7 +281,6 @@ public class LinkCommentsFragment extends BaseListingsFragment
     public void onRefresh() {
         mSwipeRefreshLayout.setRefreshing(false);
         mLinkCommentsPresenter.refreshData();
-        mAnalytics.logOptionRefresh();
     }
 
     @Override

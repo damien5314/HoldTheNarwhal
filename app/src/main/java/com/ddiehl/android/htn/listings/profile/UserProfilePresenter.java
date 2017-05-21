@@ -56,7 +56,6 @@ public class UserProfilePresenter extends BaseListingsPresenter {
 
     @Override
     public void requestNextData() {
-        mAnalytics.logLoadUserProfile(mSummaryView.getShow(), mSummaryView.getSort(), mSummaryView.getTimespan());
         if ("summary".equals(mSummaryView.getShow())) {
             getSummaryData();
         } else {
