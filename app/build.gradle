@@ -7,6 +7,7 @@ apply plugin: 'io.fabric'
 
 repositories {
     maven { url 'https://maven.fabric.io/public' }
+    maven { url "https://jitpack.io" }
 }
 
 android {
@@ -60,7 +61,7 @@ android {
     }
 }
 
-def getTime() {
+static def getTime() {
     return (Calendar.getInstance().timeInMillis / 1000).longValue()
 }
 
