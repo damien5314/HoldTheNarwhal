@@ -23,7 +23,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,7 +32,6 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
-import com.ddiehl.android.htn.analytics.Analytics;
 import com.ddiehl.android.htn.identity.IdentityManager;
 import com.ddiehl.android.htn.listings.comments.LinkCommentsActivity;
 import com.ddiehl.android.htn.listings.inbox.InboxActivity;
@@ -103,7 +101,6 @@ public abstract class BaseActivity extends AppCompatActivity implements
     @Inject protected RedditService mRedditService;
     @Inject protected IdentityManager mIdentityManager;
     @Inject protected SettingsManager mSettingsManager;
-    @Inject protected Analytics mAnalytics;
     @Inject protected Gson mGson;
 
     ActionBarDrawerToggle mDrawerToggle;
@@ -239,15 +236,11 @@ public abstract class BaseActivity extends AppCompatActivity implements
 
         boolean isLoggedIn = user != null && user.getName() != null;
         updateNavigationItems(isLoggedIn);
-
-        mAnalytics.setUserIdentity(user == null ? null : user.getName());
-        mAnalytics.startSession();
     }
 
     @Override
     protected void onPause() {
         mIdentityManager.unregisterUserIdentityChangeListener(this);
-        mAnalytics.endSession();
         super.onPause();
     }
 
@@ -327,7 +320,6 @@ public abstract class BaseActivity extends AppCompatActivity implements
 
     protected void onNavigateToSubreddit() {
         showSubredditNavigationView();
-        mAnalytics.logDrawerNavigateToSubreddit();
     }
 
     protected void onLogIn() {
@@ -336,39 +328,31 @@ public abstract class BaseActivity extends AppCompatActivity implements
         } else {
             showToast(getString(R.string.error_network_unavailable));
         }
-
-        mAnalytics.logDrawerLogIn();
     }
 
     protected void onShowInbox() {
         showInbox();
-        mAnalytics.logDrawerShowInbox();
     }
 
     protected void onShowUserProfile() {
         String name = mIdentityManager.getUserIdentity().getName();
         showUserProfile(name, "summary", "new");
-        mAnalytics.logDrawerUserProfile();
     }
 
     protected void onShowSubreddits() {
         showUserSubreddits();
-        mAnalytics.logDrawerUserSubreddits();
     }
 
     protected void onShowFrontPage() {
         showSubreddit(null, null, null);
-        mAnalytics.logDrawerFrontPage();
     }
 
     protected void onShowAllListings() {
         showSubreddit("all", null, null);
-        mAnalytics.logDrawerAllSubreddits();
     }
 
     protected void onShowRandomSubreddit() {
         showSubreddit("random", null, null);
-        mAnalytics.logDrawerRandomSubreddit();
     }
 
     public void showLoginView() {
@@ -438,14 +422,12 @@ public abstract class BaseActivity extends AppCompatActivity implements
     //  @OnClick(R.id.sign_out_button)
     void onSignOut() {
         new ConfirmSignOutDialog().show(getSupportFragmentManager(), ConfirmSignOutDialog.TAG);
-        mAnalytics.logClickedSignOut();
     }
 
     public void signOutUser() {
         closeNavigationDrawer();
         mRedditService.revokeAuthentication();
         mIdentityManager.clearSavedUserIdentity();
-        mAnalytics.logSignOut();
     }
 
     @Override
@@ -585,18 +567,6 @@ public abstract class BaseActivity extends AppCompatActivity implements
     public void showInboxMessages(@NonNull List<PrivateMessage> messages) {
         Intent intent = PrivateMessageActivity.getIntent(this, mGson, messages);
         startActivity(intent);
-    }
-
-    @Override
-    public boolean onKeyUp(int keycode, KeyEvent e) {
-        switch (keycode) {
-            case KeyEvent.KEYCODE_MENU:
-                if (getSupportActionBar() != null) {
-                    getSupportActionBar().openOptionsMenu();
-                    return true;
-                }
-        }
-        return super.onKeyUp(keycode, e);
     }
 
     protected void showToast(@NonNull String message) {

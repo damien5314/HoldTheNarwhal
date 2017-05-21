@@ -92,7 +92,6 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
                                 }
                             }
                     );
-            mAnalytics.logLoadLinkComments(mLinkCommentsView.getSort());
         }
     }
 
@@ -149,7 +148,6 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
                             }
                         }
                 );
-        mAnalytics.logLoadMoreChildren(mLinkCommentsView.getSort());
     }
 
     private Action1<MoreChildrenResponse> showMoreComments(@NonNull CommentStub parentStub) {

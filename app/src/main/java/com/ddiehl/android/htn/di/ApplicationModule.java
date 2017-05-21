@@ -4,8 +4,6 @@ import android.content.Context;
 import android.support.annotation.Nullable;
 
 import com.ddiehl.android.htn.BuildConfig;
-import com.ddiehl.android.htn.analytics.Analytics;
-import com.ddiehl.android.htn.analytics.FlurryAnalytics;
 import com.ddiehl.android.htn.identity.IdentityManager;
 import com.ddiehl.android.htn.identity.IdentityManagerImpl;
 import com.ddiehl.android.htn.settings.SettingsManager;
@@ -31,20 +29,14 @@ public class ApplicationModule {
 
     @Singleton
     @Provides
-    Analytics providesAnalytics() {
-        return new FlurryAnalytics();
-    }
-
-    @Singleton
-    @Provides
     IdentityManager providesIdentityManager(Context context, SettingsManager settingsManager) {
         return new IdentityManagerImpl(context, settingsManager);
     }
 
     @Singleton
     @Provides
-    SettingsManager providesSettingsManager(Context context, Analytics analytics, RedditService service) {
-        return new SettingsManagerImpl(context, analytics, service);
+    SettingsManager providesSettingsManager(Context context, RedditService service) {
+        return new SettingsManagerImpl(context, service);
     }
 
     @Singleton

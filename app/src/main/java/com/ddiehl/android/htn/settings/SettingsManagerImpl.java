@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.ddiehl.android.htn.R;
-import com.ddiehl.android.htn.analytics.Analytics;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -85,15 +84,13 @@ public class SettingsManagerImpl implements SettingsManager {
             "highlight_new_comments, default_comment_sort, hide_locationbar";
 
     private final Context mContext;
-    private final Analytics mAnalytics;
     private final RedditService mRedditService; // FIXME: Bad dependency
     private final SharedPreferences mSharedPreferences;
 
     private boolean mIsChanging = false;
 
-    public SettingsManagerImpl(Context context, Analytics analytics, RedditService service) {
+    public SettingsManagerImpl(Context context, RedditService service) {
         mContext = context;
-        mAnalytics = analytics;
         mRedditService = service;
         mSharedPreferences = mContext.getSharedPreferences(PREFS_USER, Context.MODE_PRIVATE);
         mSharedPreferences.registerOnSharedPreferenceChangeListener(this);
@@ -118,7 +115,6 @@ public class SettingsManagerImpl implements SettingsManager {
         switch (key) {
             case SettingsManagerImpl.PREF_ALLOW_ANALYTICS:
                 boolean allowed = sp.getBoolean(PREF_ALLOW_ANALYTICS, false);
-                mAnalytics.setEnabled(allowed);
                 break;
             default:
                 Object p = getValueFromKey(sp, key);
@@ -157,7 +153,6 @@ public class SettingsManagerImpl implements SettingsManager {
         }
 
         Map prefs = sp.getAll();
-        mAnalytics.logSettingChanged(key, prefs.get(key).toString());
 
         mIsChanging = false;
     }

@@ -229,11 +229,9 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
         switch (item.getItemId()) {
             case R.id.action_change_sort:
                 showSortOptionsMenu();
-                mAnalytics.logOptionChangeSort();
                 return true;
             case R.id.action_change_timespan:
                 showTimespanOptionsMenu();
-                mAnalytics.logOptionChangeTimespan();
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -313,8 +311,6 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
     }
 
     private void onSortSelected(@NonNull String sort) {
-        mAnalytics.logOptionChangeSort(sort);
-
         if (sort.equals(mSort)) return;
 
         if (sort.equals("top") || sort.equals("controversial")) {
@@ -328,8 +324,6 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
     }
 
     private void onTimespanSelected(@NonNull String timespan) {
-        mAnalytics.logOptionChangeTimespan(timespan);
-
         mSort = mSelectedSort;
         mTimespan = timespan;
         getActivity().invalidateOptionsMenu();

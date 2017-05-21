@@ -5,9 +5,9 @@ buildscript {
         COMPILE_SDK_VERSION = 25
         TARGET_SDK_VERSION = 25
         BUILD_TOOLS_VERSION = "25.0.0"
-        supportLibraryVersion = "25.1.0"
+        supportLibraryVersion = "25.3.1"
         contraintLayoutVersion = "1.0.0-beta4"
-        playServicesVersion = "10.0.1"
+        playServicesVersion = "10.2.6"
         glideVersion = "3.7.0"
         glideOkhttpVersion = "1.4.0@aar"
         butterknifeVersion = "8.4.0"
@@ -29,7 +29,6 @@ buildscript {
     }
     dependencies {
         classpath "com.android.tools.build:gradle:$ANDROID_GRADLE_PLUGIN"
-        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
         classpath 'com.jakewharton.hugo:hugo-plugin:1.2.1'
         classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.6.1'
         classpath 'com.github.ben-manes:gradle-versions-plugin:0.13.0'

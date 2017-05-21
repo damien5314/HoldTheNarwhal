@@ -1,6 +1,5 @@
 package com.ddiehl.android.htn.di;
 
-import com.ddiehl.android.htn.analytics.FlurryAnalytics;
 import com.ddiehl.android.htn.listings.BaseListingsFragment;
 import com.ddiehl.android.htn.listings.BaseListingsPresenter;
 import com.ddiehl.android.htn.listings.comments.LinkCommentsFragment;
@@ -28,7 +27,6 @@ import com.ddiehl.android.htn.subscriptions.SubscriptionManagerPresenter;
 import com.ddiehl.android.htn.view.BaseActivity;
 import com.ddiehl.android.htn.view.BaseFragment;
 import com.ddiehl.android.htn.view.MarkdownTextFragment;
-import com.ddiehl.android.htn.view.markdown.HtmlParser;
 
 import javax.inject.Singleton;
 
@@ -77,6 +75,5 @@ public interface ApplicationComponent {
     void inject(SubmitPostPresenter presenter);
 
     // Misc
-    void inject(FlurryAnalytics analytics);
-    void inject(HtmlParser htmlParser);
+//    void inject(HtmlParser htmlParser);
 }

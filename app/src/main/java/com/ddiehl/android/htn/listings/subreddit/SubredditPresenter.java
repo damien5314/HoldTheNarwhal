@@ -80,9 +80,6 @@ public class SubredditPresenter extends BaseListingsPresenter {
     }
 
     private void getSubredditLinks(boolean append) {
-        mAnalytics.logLoadSubreddit(
-                mSubredditView.getSubreddit(), mSubredditView.getSort(), mSubredditView.getTimespan());
-
         final String before = append ? null : mPrevPageListingId;
         final String after = append ? mNextPageListingId : null;
         final String subreddit = mSubredditView.getSubreddit();

@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
-import com.ddiehl.android.htn.analytics.Analytics;
 import com.ddiehl.android.htn.identity.IdentityManager;
 import com.ddiehl.android.htn.listings.comments.CommentView;
 import com.ddiehl.android.htn.listings.inbox.PrivateMessageView;
@@ -47,7 +46,6 @@ public abstract class BaseListingsPresenter
     @Inject protected IdentityManager mIdentityManager;
     @Inject protected SettingsManager mSettingsManager;
     @Inject protected RedditService mRedditService;
-    @Inject protected Analytics mAnalytics;
 
     final List<Listing> mListings = new ArrayList<>();
 
@@ -235,7 +233,6 @@ public abstract class BaseListingsPresenter
             return;
         }
         save(link, true);
-        mAnalytics.logSave(link.getKind(), null, true);
     }
 
     public void unsaveLink(@NonNull Link link) {
@@ -244,7 +241,6 @@ public abstract class BaseListingsPresenter
             return;
         }
         save(link, false);
-        mAnalytics.logSave(link.getKind(), null, false);
     }
 
     public void shareLink(@NonNull Link link) {
@@ -275,7 +271,6 @@ public abstract class BaseListingsPresenter
         }
 
         hide(link, true);
-        mAnalytics.logHide(link.getKind(), true);
     }
 
     public void unhideLink(@NonNull Link link) {
@@ -285,7 +280,6 @@ public abstract class BaseListingsPresenter
         }
 
         hide(link, false);
-        mAnalytics.logHide(link.getKind(), false);
     }
 
     public void reportLink(@NonNull Link link) {
@@ -333,7 +327,6 @@ public abstract class BaseListingsPresenter
             return;
         }
         save(comment, true);
-        mAnalytics.logSave(comment.getKind(), null, true);
     }
 
     public void unsaveComment(@NonNull Comment comment) {
@@ -342,7 +335,6 @@ public abstract class BaseListingsPresenter
             return;
         }
         save(comment, false);
-        mAnalytics.logSave(comment.getKind(), null, false);
     }
 
     public void shareComment(@NonNull Comment comment) {
@@ -403,7 +395,6 @@ public abstract class BaseListingsPresenter
                                 }
                             }
                     );
-            mAnalytics.logVote(votable.getKind(), direction);
         }
     }
 
