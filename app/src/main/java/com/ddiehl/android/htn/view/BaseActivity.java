@@ -23,7 +23,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -568,18 +567,6 @@ public abstract class BaseActivity extends AppCompatActivity implements
     public void showInboxMessages(@NonNull List<PrivateMessage> messages) {
         Intent intent = PrivateMessageActivity.getIntent(this, mGson, messages);
         startActivity(intent);
-    }
-
-    @Override
-    public boolean onKeyUp(int keycode, KeyEvent e) {
-        switch (keycode) {
-            case KeyEvent.KEYCODE_MENU:
-                if (getSupportActionBar() != null) {
-                    getSupportActionBar().openOptionsMenu();
-                    return true;
-                }
-        }
-        return super.onKeyUp(keycode, e);
     }
 
     protected void showToast(@NonNull String message) {
