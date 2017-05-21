@@ -10,15 +10,15 @@ repositories {
 }
 
 android {
-    compileSdkVersion project.ext.compileSdkVersion
-    buildToolsVersion "$project.ext.buildToolsVersion"
+    compileSdkVersion COMPILE_SDK_VERSION
+    buildToolsVersion BUILD_TOOLS_VERSION
 
     useLibrary "org.apache.http.legacy"
 
     defaultConfig {
         applicationId "com.ddiehl.android.htn"
         minSdkVersion 15
-        targetSdkVersion project.ext.targetSdkVersion
+        targetSdkVersion TARGET_SDK_VERSION
         versionCode 13
         versionName "0.8"
         resConfigs "en"
@@ -81,48 +81,48 @@ dependencies {
     compile project(":bypass")
     compile project(":logging")
 
-    compile "com.android.support:appcompat-v7:$project.ext.supportLibraryVersion"
-    compile "com.android.support:design:$project.ext.supportLibraryVersion"
-    compile "com.android.support:recyclerview-v7:$project.ext.supportLibraryVersion"
-    compile "com.android.support:cardview-v7:$project.ext.supportLibraryVersion"
-    compile "com.android.support.constraint:constraint-layout:$project.ext.contraintLayoutVersion"
+    compile "com.android.support:appcompat-v7:$supportLibraryVersion"
+    compile "com.android.support:design:$supportLibraryVersion"
+    compile "com.android.support:recyclerview-v7:$supportLibraryVersion"
+    compile "com.android.support:cardview-v7:$supportLibraryVersion"
+    compile "com.android.support.constraint:constraint-layout:$contraintLayoutVersion"
 
     // Required for Flurry
-    compile "com.google.android.gms:play-services-analytics:$project.ext.playServicesVersion"
+    compile "com.google.android.gms:play-services-analytics:$playServicesVersion"
 
-    compile "com.github.bumptech.glide:glide:$project.ext.glideVersion"
-    compile "com.github.bumptech.glide:okhttp3-integration:$project.ext.glideOkhttpVersion"
+    compile "com.github.bumptech.glide:glide:$glideVersion"
+    compile "com.github.bumptech.glide:okhttp3-integration:$glideOkhttpVersion"
 
-    compile "com.jakewharton:butterknife:$project.ext.butterknifeVersion"
-    annotationProcessor "com.jakewharton:butterknife-compiler:$project.ext.butterknifeVersion"
+    compile "com.jakewharton:butterknife:$butterknifeVersion"
+    annotationProcessor "com.jakewharton:butterknife-compiler:$butterknifeVersion"
 
-    compile "com.github.damien5314.RxReddit:library:$project.ext.rxRedditVersion"
-    compile "com.github.damien5314.RxReddit:android:$project.ext.rxRedditVersion"
+    compile "com.github.damien5314.RxReddit:library:$rxRedditVersion"
+    compile "com.github.damien5314.RxReddit:android:$rxRedditVersion"
     debugCompile project(':mock-api')
 
-    compile "io.reactivex:rxandroid:$project.ext.rxAndroidVersion"
-    compile "io.reactivex:rxjava:$project.ext.rxJavaVersion"
-    compile "com.artemzin.rxjava:proguard-rules:$project.ext.rxJavaProguardVersion"
+    compile "io.reactivex:rxandroid:$rxAndroidVersion"
+    compile "io.reactivex:rxjava:$rxJavaVersion"
+    compile "com.artemzin.rxjava:proguard-rules:$rxJavaProguardVersion"
 
-    compile "com.github.damien5314:TimeSinceTextView:$project.ext.timeSinceTextViewVersion"
+    compile "com.github.damien5314:TimeSinceTextView:$timeSinceTextViewVersion"
 
-    compile "com.google.dagger:dagger:$project.ext.daggerVersion"
-    annotationProcessor "com.google.dagger:dagger-compiler:$project.ext.daggerVersion"
+    compile "com.google.dagger:dagger:$daggerVersion"
+    annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
 
-    compile "uk.co.chrisjenx:calligraphy:$project.ext.calligraphyVersion"
+    compile "uk.co.chrisjenx:calligraphy:$calligraphyVersion"
 
-    compile "com.hannesdorfmann.fragmentargs:annotation:$project.ext.fragmentArgsVersion"
-    annotationProcessor "com.hannesdorfmann.fragmentargs:processor:$project.ext.fragmentArgsVersion"
+    compile "com.hannesdorfmann.fragmentargs:annotation:$fragmentArgsVersion"
+    annotationProcessor "com.hannesdorfmann.fragmentargs:processor:$fragmentArgsVersion"
 
-    debugCompile "com.squareup.leakcanary:leakcanary-android:$project.ext.leakCanaryVersion"
-    releaseCompile "com.squareup.leakcanary:leakcanary-android-no-op:$project.ext.leakCanaryVersion"
+    debugCompile "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"
+    releaseCompile "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
 
     // Test dependencies
-    androidTestCompile "junit:junit:$project.ext.junitVersion"
-    androidTestCompile "org.mockito:mockito-core:$project.ext.mockitoVersion"
-    androidTestAnnotationProcessor "com.google.dagger:dagger-compiler:$project.ext.daggerVersion"
+    androidTestCompile "junit:junit:$junitVersion"
+    androidTestCompile "org.mockito:mockito-core:$mockitoVersion"
+    androidTestAnnotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
 
-    androidTestCompile "com.android.support:support-annotations:$project.ext.supportLibraryVersion"
+    androidTestCompile "com.android.support:support-annotations:$supportLibraryVersion"
     androidTestCompile 'com.android.support.test:runner:0.5'
     androidTestCompile 'com.android.support.test:rules:0.5'
 }

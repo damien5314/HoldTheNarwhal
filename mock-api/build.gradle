@@ -16,7 +16,7 @@ group = 'com.github.damien5314'
 apply plugin: 'me.tatarka.retrolambda'
 
 dependencies {
-    compile "com.github.damien5314.RxReddit:library:$project.ext.rxRedditVersion"
+    compile "com.github.damien5314.RxReddit:library:$rxRedditVersion"
     testCompile "org.jetbrains.kotlin:kotlin-stdlib:$KOTLIN_VERSION"
     testCompile "junit:junit:$junitVersion"
 }
