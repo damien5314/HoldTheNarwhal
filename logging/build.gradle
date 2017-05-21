@@ -7,11 +7,11 @@ repositories {
 
 android {
     compileSdkVersion 24
-    buildToolsVersion "$project.ext.buildToolsVersion"
+    buildToolsVersion BUILD_TOOLS_VERSION
 
     defaultConfig {
         minSdkVersion 15
-        targetSdkVersion 24
+        targetSdkVersion TARGET_SDK_VERSION
         versionCode 1
         versionName "1.0"
     }
@@ -25,13 +25,13 @@ android {
 }
 
 dependencies {
-    compile "com.android.support:appcompat-v7:$project.ext.supportLibraryVersion"
+    compile "com.android.support:appcompat-v7:$supportLibraryVersion"
 
     compile "com.jakewharton.timber:timber:4.3.1"
     compile("com.crashlytics.sdk.android:crashlytics:2.5.1@aar") {
         transitive = true
     }
 
-    testCompile "junit:junit:$project.ext.junitVersion"
-    testCompile "org.mockito:mockito-core:$project.ext.mockitoVersion"
+    testCompile "junit:junit:$junitVersion"
+    testCompile "org.mockito:mockito-core:$mockitoVersion"
 }
