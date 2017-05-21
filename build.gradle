@@ -11,7 +11,7 @@ buildscript {
         glideVersion = "3.7.0"
         glideOkhttpVersion = "1.4.0@aar"
         butterknifeVersion = "8.4.0"
-        rxRedditVersion = "ef739c3a5bba7c49e6f027dd8c4da8bc7e147aa6"
+        rxRedditVersion = "77a26bda6dd210fde320341ace317d49d9d8414b"
         rxAndroidVersion = "1.2.1"
         rxJavaVersion = "1.2.3"
         rxJavaProguardVersion = "1.2.3.0"
