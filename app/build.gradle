@@ -58,9 +58,19 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    // Renames APK to our standard format `buildType-versionName_versionCode-RCx.apk
+    applicationVariants.all { variant ->
+        variant.outputs.each { output ->
+            output.outputFile = new File(
+                    output.outputFile.parent,
+                    variant.buildType.name + "-" + variant.versionName + "_" + variant.versionCode + ".apk"
+            )
+        }
+    }
 }
 
-def getTime() {
+static def getTime() {
     return (Calendar.getInstance().timeInMillis / 1000).longValue()
 }
 
