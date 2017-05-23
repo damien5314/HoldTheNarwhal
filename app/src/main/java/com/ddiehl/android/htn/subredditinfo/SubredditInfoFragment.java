@@ -36,9 +36,8 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import in.uncod.android.bypass.Bypass;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import rxreddit.model.Subreddit;
 import rxreddit.model.SubredditRules;
 import timber.log.Timber;
@@ -109,42 +108,38 @@ public class SubredditInfoFragment extends BaseFragment {
             mSubscriptionManagerPresenter.getSubredditInfo(mSubreddit)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .doOnSubscribe(this::showSpinner)
-                    .doOnUnsubscribe(this::dismissSpinner)
-                    .subscribe(onSubredditInfoLoaded(), onSubredditInfoLoadError());
+                    .doOnSubscribe(disposable -> showSpinner())
+                    .doOnDispose(this::dismissSpinner)
+                    .subscribe(this::onSubredditInfoLoaded, this::onSubredditInfoLoadError);
         } else {
-            onSubredditInfoLoaded().call(mSubredditInfo);
+            onSubredditInfoLoaded(mSubredditInfo);
         }
     }
 
-    Action1<Throwable> onSubredditInfoLoadError() {
-        return error -> {
-            if (error instanceof IOException) {
-                String message = getString(R.string.error_network_unavailable);
-                showError(message);
-            } else {
-                Timber.e(error, "Error loading subreddit info");
-            }
+    void onSubredditInfoLoadError(Throwable error) {
+        if (error instanceof IOException) {
+            String message = getString(R.string.error_network_unavailable);
+            showError(message);
+        } else {
+            Timber.e(error, "Error loading subreddit info");
+        }
 
-            // Pass error back to target fragment or Activity
-            if (getTargetFragment() != null) {
-                getTargetFragment().onActivityResult(getTargetRequestCode(), RESULT_GET_INFO_ERROR, null);
-            } else {
-                getActivity().setResult(RESULT_GET_INFO_ERROR);
-                finish();
-            }
-        };
+        // Pass error back to target fragment or Activity
+        if (getTargetFragment() != null) {
+            getTargetFragment().onActivityResult(getTargetRequestCode(), RESULT_GET_INFO_ERROR, null);
+        } else {
+            getActivity().setResult(RESULT_GET_INFO_ERROR);
+            finish();
+        }
     }
 
-    Action1<InfoTuple> onSubredditInfoLoaded() {
-        return tuple -> {
-            mSubredditInfo = tuple;
-            mParentViewGroup.setVisibility(View.VISIBLE);
+    void onSubredditInfoLoaded(InfoTuple tuple) {
+        mSubredditInfo = tuple;
+        mParentViewGroup.setVisibility(View.VISIBLE);
 
-            showSubscribeButton(tuple.subreddit);
-            showSubredditInfo(tuple.subreddit);
-            showSubredditRules(tuple.rules);
-        };
+        showSubscribeButton(tuple.subreddit);
+        showSubredditInfo(tuple.subreddit);
+        showSubredditRules(tuple.rules);
     }
 
     void showSubscribeButton(final @NonNull Subreddit subreddit) {
@@ -172,12 +167,12 @@ public class SubredditInfoFragment extends BaseFragment {
 
                 // Subscribe to subreddit
                 mSubscriptionManagerPresenter.subscribe(subreddit)
-                        .doOnUnsubscribe(() -> showSubscribeButton(mSubredditInfo.subreddit))
+                        .doOnDispose(() -> showSubscribeButton(mSubredditInfo.subreddit))
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(
-                                (result) -> subreddit.setUserIsSubscriber(true),
-                                onSubredditSubscribeError()
+                                () -> subreddit.setUserIsSubscriber(true),
+                                this::onSubredditSubscribeError
                         );
             });
         }
@@ -201,41 +196,37 @@ public class SubredditInfoFragment extends BaseFragment {
 
                 // Unsubscribe from subreddit
                 mSubscriptionManagerPresenter.unsubscribe(subreddit)
-                        .doOnUnsubscribe(() -> showSubscribeButton(mSubredditInfo.subreddit))
+                        .doOnDispose(() -> showSubscribeButton(mSubredditInfo.subreddit))
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(
-                                (result) -> subreddit.setUserIsSubscriber(false),
-                                onSubredditUnsubscribeError()
+                                () -> subreddit.setUserIsSubscriber(false),
+                                this::onSubredditUnsubscribeError
                         );
             });
         }
     }
 
-    Action1<Throwable> onSubredditSubscribeError() {
-        return (error) -> {
-            if (error instanceof IOException) {
-                String message = getString(R.string.error_network_unavailable);
-                showError(message);
-            } else {
-                Timber.w(error, "Error subscribing to /r/%s", mSubreddit);
-                String message = getString(R.string.subscribe_error, mSubreddit);
-                showError(message);
-            }
-        };
+    void onSubredditSubscribeError(Throwable error) {
+        if (error instanceof IOException) {
+            String message = getString(R.string.error_network_unavailable);
+            showError(message);
+        } else {
+            Timber.w(error, "Error subscribing to /r/%s", mSubreddit);
+            String message = getString(R.string.subscribe_error, mSubreddit);
+            showError(message);
+        }
     }
 
-    Action1<Throwable> onSubredditUnsubscribeError() {
-        return (error) -> {
-            if (error instanceof IOException) {
-                String message = getString(R.string.error_network_unavailable);
-                showError(message);
-            } else {
-                Timber.w(error, "Error unsubscribing from /r/%s", mSubreddit);
-                String message = getString(R.string.unsubscribe_error, mSubreddit);
-                showError(message);
-            }
-        };
+    void onSubredditUnsubscribeError(Throwable error) {
+        if (error instanceof IOException) {
+            String message = getString(R.string.error_network_unavailable);
+            showError(message);
+        } else {
+            Timber.w(error, "Error unsubscribing from /r/%s", mSubreddit);
+            String message = getString(R.string.unsubscribe_error, mSubreddit);
+            showError(message);
+        }
     }
 
     void showSubredditInfo(final @NonNull Subreddit subreddit) {

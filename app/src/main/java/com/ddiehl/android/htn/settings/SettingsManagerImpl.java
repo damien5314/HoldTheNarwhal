@@ -10,8 +10,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import rxreddit.api.RedditService;
 import rxreddit.model.UserSettings;
 import timber.log.Timber;
@@ -149,9 +149,10 @@ public class SettingsManagerImpl implements SettingsManager {
         if (changedSettings.size() > 0 && mRedditService.isUserAuthorized()) {
             // Post SettingsUpdate event with changed keys and values
             mRedditService.updateUserSettings(changedSettings)
-                    .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(
-                            result -> Timber.d("Settings updated successfully"),
+                            () -> Timber.d("Settings updated successfully"),
                             error -> Timber.w(error, "Error updating settings")
                     );
         }

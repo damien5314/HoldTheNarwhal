@@ -32,11 +32,9 @@ import java.io.IOException;
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import rxreddit.api.RedditService;
-import rxreddit.model.UserAccessToken;
 import timber.log.Timber;
 
 import static android.app.Activity.RESULT_OK;
@@ -119,7 +117,7 @@ public abstract class BaseFragment extends Fragment implements MainView {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        getUserIdentity(),
+                        token -> getUserIdentity(),
                         error -> {
                             if (error instanceof IOException) {
                                 String message = getString(R.string.error_network_unavailable);
@@ -133,8 +131,8 @@ public abstract class BaseFragment extends Fragment implements MainView {
                 );
     }
 
-    private Action1<UserAccessToken> getUserIdentity() {
-        return token -> mRedditService.getUserIdentity()
+    private void getUserIdentity() {
+        mRedditService.getUserIdentity()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(

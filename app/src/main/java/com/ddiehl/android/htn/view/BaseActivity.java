@@ -58,11 +58,11 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 import rx.functions.Action1;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
 import rxreddit.android.SignInActivity;
 import rxreddit.api.RedditService;
 import rxreddit.model.PrivateMessage;
@@ -574,7 +574,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
         Snackbar.make(mDrawerLayout, message, Snackbar.LENGTH_LONG).show();
     }
 
-    private Func1<UserAccessToken, Observable<UserIdentity>> getUserIdentity() {
+    private Function<UserAccessToken, Observable<UserIdentity>> getUserIdentity() {
         return token -> mRedditService.getUserIdentity()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

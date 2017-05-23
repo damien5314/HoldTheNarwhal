@@ -9,9 +9,9 @@ import com.ddiehl.android.htn.view.MainView;
 
 import java.io.IOException;
 
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 import rxreddit.model.Link;
 import rxreddit.model.ListingResponse;
 import rxreddit.model.Subreddit;
@@ -58,8 +58,9 @@ public class SubredditPresenter extends BaseListingsPresenter {
 
     private void loadSubredditInfo(@NonNull String subreddit) {
         mRedditService.getSubredditInfo(subreddit)
-                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe(mMainView::showSpinner)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe(disposable -> mMainView.showSpinner())
                 .doOnTerminate(() -> {
                     mMainView.dismissSpinner();
                     mNextRequested = false;
@@ -88,8 +89,9 @@ public class SubredditPresenter extends BaseListingsPresenter {
         final String subreddit = mSubredditView.getSubreddit();
 
         mRedditService.loadLinks(subreddit, mSubredditView.getSort(), mSubredditView.getTimespan(), before, after)
-                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe(() -> {
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe(disposable -> {
                     mMainView.showSpinner();
                     if (append) mNextRequested = true;
                     else mBeforeRequested = true;
@@ -101,7 +103,7 @@ public class SubredditPresenter extends BaseListingsPresenter {
                 })
                 .subscribe(
                         response -> {
-                            onListingsLoaded(append).call(response);
+                            onListingsLoaded(response, append);
 
                             if ("random".equals(subreddit)) {
                                 Link link = getLinkFromListingResponse(response);
@@ -136,7 +138,7 @@ public class SubredditPresenter extends BaseListingsPresenter {
         return (Link) response.getData().getChildren().get(0);
     }
 
-    private Action1<Subreddit> onSubredditInfoLoaded() {
+    private Consumer<Subreddit> onSubredditInfoLoaded() {
         return info -> {
             mSubredditInfo = info;
 

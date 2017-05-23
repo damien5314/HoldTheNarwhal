@@ -17,10 +17,9 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import rxreddit.api.RedditService;
 import rxreddit.model.SubredditRules;
 import timber.log.Timber;
@@ -83,9 +82,9 @@ public class ReportActivity extends TransparentBaseActivity
     void loadReportDialog() {
         if (getSubredditName() != null) {
             getSubredditRules()
-                    .doOnSubscribe(this::showSpinner)
-                    .doOnUnsubscribe(this::dismissSpinner)
-                    .subscribe(onSubredditRulesRetrieved(), onGetSubredditRulesError());
+                    .doOnSubscribe(disposable -> showSpinner())
+                    .doOnDispose(this::dismissSpinner)
+                    .subscribe(this::onSubredditRulesRetrieved, this::onGetSubredditRulesError);
         } else {
             showReportDialogWithRules(null, getSiteRulesList());
         }
@@ -101,29 +100,25 @@ public class ReportActivity extends TransparentBaseActivity
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    Action1<Throwable> onGetSubredditRulesError() {
-        return (error) -> {
-            if (!(error instanceof IOException)) {
-                Timber.e(error, "Error getting subreddit rules");
-            }
-            setResult(RESULT_GET_SUBREDDIT_RULES_ERROR);
-            finish();
-        };
+    void onGetSubredditRulesError(Throwable error) {
+        if (!(error instanceof IOException)) {
+            Timber.e(error, "Error getting subreddit rules");
+        }
+        setResult(RESULT_GET_SUBREDDIT_RULES_ERROR);
+        finish();
     }
 
-    Action1<SubredditRules> onSubredditRulesRetrieved() {
-        return (result) -> {
-            List<SubredditRules.Rule> rules = result.getRules();
+    void onSubredditRulesRetrieved(SubredditRules result) {
+        List<SubredditRules.Rule> rules = result.getRules();
 
-            // Get short names for each rule
-            String[] ruleNames = new String[rules.size()];
-            for (int i = 0; i < rules.size(); i++) {
-                ruleNames[i] = rules.get(i).getShortName();
-            }
+        // Get short names for each rule
+        String[] ruleNames = new String[rules.size()];
+        for (int i = 0; i < rules.size(); i++) {
+            ruleNames[i] = rules.get(i).getShortName();
+        }
 
-            // Show dialog
-            showReportDialogWithRules(ruleNames, getSiteRulesList());
-        };
+        // Show dialog
+        showReportDialogWithRules(ruleNames, getSiteRulesList());
     }
 
     void showReportDialogWithRules(String[] subredditRules, String[] siteRules) {
@@ -137,26 +132,22 @@ public class ReportActivity extends TransparentBaseActivity
         mRedditService.report(getListingId(), rule, siteRule, other)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe(this::showSpinner)
-                .doOnUnsubscribe(this::dismissSpinner)
-                .subscribe(onReported(), onReportError());
+                .doOnSubscribe(disposable -> showSpinner())
+                .doOnDispose(this::dismissSpinner)
+                .subscribe(this::onReported, this::onReportError);
     }
 
-    private Action1<Throwable> onReportError() {
-        return (error) -> {
-            if (!(error instanceof IOException)) {
-                Timber.e(error, "Error submitting report");
-            }
-            setResult(RESULT_REPORT_ERROR);
-            finish();
-        };
+    private void onReportError(Throwable error) {
+        if (!(error instanceof IOException)) {
+            Timber.e(error, "Error submitting report");
+        }
+        setResult(RESULT_REPORT_ERROR);
+        finish();
     }
 
-    private Action1<Void> onReported() {
-        return (result) -> {
-            setResult(RESULT_REPORT_SUCCESS);
-            finish();
-        };
+    private void onReported() {
+        setResult(RESULT_REPORT_SUCCESS);
+        finish();
     }
 
     //region ReportDialog.Listener

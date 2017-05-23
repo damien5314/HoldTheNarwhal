@@ -11,8 +11,8 @@ import java.io.IOException;
 
 import javax.inject.Inject;
 
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import rxreddit.api.RedditService;
 import timber.log.Timber;
 
@@ -48,8 +48,8 @@ public class SettingsPresenter {
         mRedditService.getUserSettings()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe(mSettingsView::showSpinner)
-                .doOnUnsubscribe(mSettingsView::dismissSpinner)
+                .doOnSubscribe(disposable -> mSettingsView.showSpinner())
+                .doOnDispose(mSettingsView::dismissSpinner)
                 .doOnNext(mSettingsManager::saveUserSettings)
                 .subscribe(
                         settings -> refresh(false),

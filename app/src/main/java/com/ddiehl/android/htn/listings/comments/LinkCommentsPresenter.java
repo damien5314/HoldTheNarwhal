@@ -11,9 +11,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import rxreddit.RxRedditUtil;
 import rxreddit.model.AbsComment;
 import rxreddit.model.Comment;
@@ -74,13 +73,13 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
             )
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .doOnSubscribe(mMainView::showSpinner)
+                    .doOnSubscribe(disposable -> mMainView.showSpinner())
                     .doOnTerminate(() -> {
                         mDataRequested = false;
                         mMainView.dismissSpinner();
                     })
                     .subscribe(
-                            showLinkComments(),
+                            this::onLoadLinkComments,
                             error -> {
                                 if (error instanceof IOException) {
                                     String message = mContext.getString(R.string.error_network_unavailable);
@@ -96,35 +95,33 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
         }
     }
 
-    private Action1<List<ListingResponse>> showLinkComments() {
-        return listingResponseList -> {
-            if (listingResponseList == null) return;
+    private void onLoadLinkComments(List<ListingResponse> listingResponseList) {
+        if (listingResponseList == null) return;
 
-            mLinkCommentsView.refreshOptionsMenu();
+        mLinkCommentsView.refreshOptionsMenu();
 
-            // Get link
-            ListingResponse linkResponse = listingResponseList.get(0);
-            mLinkContext = (Link) linkResponse.getData().getChildren().get(0);
-            Timber.i("Link: %s", mLinkContext.getFullName());
+        // Get link
+        ListingResponse linkResponse = listingResponseList.get(0);
+        mLinkContext = (Link) linkResponse.getData().getChildren().get(0);
+        Timber.i("Link: %s", mLinkContext.getFullName());
 
-            // Get comments and flatten the comment tree
-            ListingResponse commentsResponse = listingResponseList.get(1);
-            List<Listing> comments = commentsResponse.getData().getChildren();
-            RxRedditUtil.flattenCommentList(comments);
-            Timber.i("Comments: %d", comments.size());
+        // Get comments and flatten the comment tree
+        ListingResponse commentsResponse = listingResponseList.get(1);
+        List<Listing> comments = commentsResponse.getData().getChildren();
+        RxRedditUtil.flattenCommentList(comments);
+        Timber.i("Comments: %d", comments.size());
 
-            // Add comments to CommentBank
-            mCommentBank.clear();
-            mCommentBank.addAll(comments);
+        // Add comments to CommentBank
+        mCommentBank.clear();
+        mCommentBank.addAll(comments);
 
-            // Collapse all threads under the user's minimum score
-            Integer minScore = mSettingsManager.getMinCommentScore();
-            mCommentBank.collapseAllThreadsUnder(minScore);
+        // Collapse all threads under the user's minimum score
+        Integer minScore = mSettingsManager.getMinCommentScore();
+        mCommentBank.collapseAllThreadsUnder(minScore);
 
-            // Notify adapter
-            // TODO Specify commentsAdded
-            mLinkCommentsView.notifyDataSetChanged();
-        };
+        // Notify adapter
+        // TODO Specify commentsAdded
+        mLinkCommentsView.notifyDataSetChanged();
     }
 
     @Override
@@ -133,11 +130,12 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
         // Truncate list of children to 20
         children = children.subList(0, Math.min(MAX_CHILDREN_PER_REQUEST, children.size()));
         mRedditService.loadMoreChildren(mLinkContext.getId(), children, mLinkCommentsView.getSort())
-                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe(mMainView::showSpinner)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe(disposable -> mMainView.showSpinner())
                 .doOnTerminate(mMainView::dismissSpinner)
                 .subscribe(
-                        showMoreComments(parentStub),
+                        response -> onLoadMoreChildren(response, parentStub),
                         error -> {
                             if (error instanceof IOException) {
                                 String message = mContext.getString(R.string.error_network_unavailable);
@@ -152,25 +150,23 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
         mAnalytics.logLoadMoreChildren(mLinkCommentsView.getSort());
     }
 
-    private Action1<MoreChildrenResponse> showMoreComments(@NonNull CommentStub parentStub) {
-        return response -> {
-            List<Listing> comments = response.getChildComments();
-            if (comments == null || comments.size() == 0) {
-                mCommentBank.remove(parentStub);
-            } else {
-                Timber.i("More comments: %d", comments.size());
-                setDepthForCommentsList(comments, parentStub);
-                int stubIndex = mCommentBank.indexOf(parentStub);
-                parentStub.removeChildren(comments);
-                parentStub.setCount(parentStub.getChildren().size());
-                if (parentStub.getCount() == 0) mCommentBank.remove(stubIndex);
-                mCommentBank.addAll(stubIndex, comments);
-            }
-            Integer minScore = mSettingsManager.getMinCommentScore();
-            mCommentBank.collapseAllThreadsUnder(minScore);
-            // TODO Specify commentRemoved and commentsAdded
-            mLinkCommentsView.notifyDataSetChanged();
-        };
+    private void onLoadMoreChildren(MoreChildrenResponse response, @NonNull CommentStub parentStub) {
+        List<Listing> comments = response.getChildComments();
+        if (comments == null || comments.size() == 0) {
+            mCommentBank.remove(parentStub);
+        } else {
+            Timber.i("More comments: %d", comments.size());
+            setDepthForCommentsList(comments, parentStub);
+            int stubIndex = mCommentBank.indexOf(parentStub);
+            parentStub.removeChildren(comments);
+            parentStub.setCount(parentStub.getChildren().size());
+            if (parentStub.getCount() == 0) mCommentBank.remove(stubIndex);
+            mCommentBank.addAll(stubIndex, comments);
+        }
+        Integer minScore = mSettingsManager.getMinCommentScore();
+        mCommentBank.collapseAllThreadsUnder(minScore);
+        // TODO Specify commentRemoved and commentsAdded
+        mLinkCommentsView.notifyDataSetChanged();
     }
 
     /**
