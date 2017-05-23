@@ -59,10 +59,6 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-
-    packagingOptions {
-        exclude 'META-INF/rxjava.properties' // Temporary until RxJava1 is removed
-    }
 }
 
 static def getTime() {

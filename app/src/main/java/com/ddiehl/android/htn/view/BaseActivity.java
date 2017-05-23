@@ -62,7 +62,6 @@ import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
-import rx.functions.Action1;
 import rxreddit.android.SignInActivity;
 import rxreddit.api.RedditService;
 import rxreddit.model.PrivateMessage;
@@ -252,21 +251,19 @@ public abstract class BaseActivity extends AppCompatActivity implements
     }
 
     @Override
-    public Action1<UserIdentity> onUserIdentityChanged() {
-        return identity -> {
-            // Restart activity
-            Intent newIntent = (Intent) getIntent().clone();
-            boolean isAuthenticated = identity != null;
+    public void onUserIdentityChanged(UserIdentity identity) {
+        // Restart activity
+        Intent newIntent = (Intent) getIntent().clone();
+        boolean isAuthenticated = identity != null;
 
-            // Clear the task stack if we're no longer authenticated
-            // This prevents the user from going back to content they aren't allowed to see
-            newIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        // Clear the task stack if we're no longer authenticated
+        // This prevents the user from going back to content they aren't allowed to see
+        newIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
 
-            // Add extra to indicate that this activity was restarted due to a change in authentication state
-            newIntent.putExtra(EXTRA_AUTHENTICATION_STATE_CHANGE, isAuthenticated);
+        // Add extra to indicate that this activity was restarted due to a change in authentication state
+        newIntent.putExtra(EXTRA_AUTHENTICATION_STATE_CHANGE, isAuthenticated);
 
-            startActivity(newIntent);
-        };
+        startActivity(newIntent);
     }
 
     protected void updateUserIdentity(@Nullable UserIdentity identity) {

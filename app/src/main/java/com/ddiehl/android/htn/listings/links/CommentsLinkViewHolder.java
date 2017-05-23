@@ -17,7 +17,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import rx.functions.Action0;
 import rxreddit.model.Link;
 
 import static com.ddiehl.android.htn.listings.links.LinkOptionsBar.Icons.DOWNVOTE;
@@ -39,42 +38,40 @@ public class CommentsLinkViewHolder extends BaseLinkViewHolder {
     public CommentsLinkViewHolder(View view, LinkView linkView, BaseListingsPresenter presenter) {
         super(view, linkView, presenter);
         mLinkOptionsBar.showIcons(false, HIDE, SHARE);
-        mLinkOptionsBar.setOnIconClickListener(REPLY, onReplyClicked());
-        mLinkOptionsBar.setOnIconClickListener(UPVOTE, onUpvoteClicked());
-        mLinkOptionsBar.setOnIconClickListener(DOWNVOTE, onDownvoteClicked());
-        mLinkOptionsBar.setOnIconClickListener(SAVE, onSaveClicked());
-        mLinkOptionsBar.setOnIconClickListener(HIDE, onHideClicked());
-        mLinkOptionsBar.setOnIconClickListener(REPORT, onReportClicked());
+        mLinkOptionsBar.setOnIconClickListener(REPLY, this::onReplyClicked);
+        mLinkOptionsBar.setOnIconClickListener(UPVOTE, this::onUpvoteClicked);
+        mLinkOptionsBar.setOnIconClickListener(DOWNVOTE, this::onDownvoteClicked);
+        mLinkOptionsBar.setOnIconClickListener(SAVE, this::onSaveClicked);
+        mLinkOptionsBar.setOnIconClickListener(HIDE, this::onHideClicked);
+        mLinkOptionsBar.setOnIconClickListener(REPORT, this::onReportClicked);
     }
 
-    Action0 onReplyClicked() {
-        return () -> mLinkPresenter.replyToLink(mLink);
+    void onReplyClicked() {
+        mLinkPresenter.replyToLink(mLink);
     }
 
-    Action0 onUpvoteClicked() {
-        return () -> mLinkPresenter.upvoteLink(mLink);
+    void onUpvoteClicked() {
+        mLinkPresenter.upvoteLink(mLink);
     }
 
-    Action0 onDownvoteClicked() {
-        return () -> mLinkPresenter.downvoteLink(mLink);
+    void onDownvoteClicked() {
+        mLinkPresenter.downvoteLink(mLink);
     }
 
-    Action0 onSaveClicked() {
-        return () -> {
-            if (mLink.isSaved()) {
-                mLinkPresenter.unsaveLink(mLink);
-            } else {
-                mLinkPresenter.saveLink(mLink);
-            }
-        };
+    void onSaveClicked() {
+        if (mLink.isSaved()) {
+            mLinkPresenter.unsaveLink(mLink);
+        } else {
+            mLinkPresenter.saveLink(mLink);
+        }
     }
 
-    Action0 onHideClicked() {
-        return () -> mLinkPresenter.hideLink(mLink);
+    void onHideClicked() {
+        mLinkPresenter.hideLink(mLink);
     }
 
-    Action0 onReportClicked() {
-        return () -> mLinkPresenter.reportLink(mLink);
+    void onReportClicked() {
+        mLinkPresenter.reportLink(mLink);
     }
 
     @OnClick(R.id.link_comment_count)
