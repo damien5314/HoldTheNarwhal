@@ -17,7 +17,6 @@ import com.ddiehl.android.htn.R;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import rx.functions.Action0;
 
 public class LinkOptionsBar extends LinearLayout {
 
@@ -124,28 +123,28 @@ public class LinkOptionsBar extends LinearLayout {
         }
     }
 
-    public void setOnIconClickListener(Icons icon, Action0 callback) {
+    public void setOnIconClickListener(Icons icon, Runnable callback) {
         switch (icon) {
             case REPLY:
-                mLinkReply.setOnClickListener((view) -> callback.call());
+                mLinkReply.setOnClickListener((view) -> callback.run());
                 break;
             case UPVOTE:
-                mLinkUpvote.setOnClickListener((view) -> callback.call());
+                mLinkUpvote.setOnClickListener((view) -> callback.run());
                 break;
             case DOWNVOTE:
-                mLinkDownvote.setOnClickListener((view) -> callback.call());
+                mLinkDownvote.setOnClickListener((view) -> callback.run());
                 break;
             case SAVE:
-                mLinkSave.setOnClickListener((view) -> callback.call());
+                mLinkSave.setOnClickListener((view) -> callback.run());
                 break;
             case SHARE:
-                mLinkShare.setOnClickListener((view) -> callback.call());
+                mLinkShare.setOnClickListener((view) -> callback.run());
                 break;
             case HIDE:
-                mLinkHide.setOnClickListener((view) -> callback.call());
+                mLinkHide.setOnClickListener((view) -> callback.run());
                 break;
             case REPORT:
-                mLinkReport.setOnClickListener((view) -> callback.call());
+                mLinkReport.setOnClickListener((view) -> callback.run());
                 break;
         }
     }

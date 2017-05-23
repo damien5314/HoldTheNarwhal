@@ -6,9 +6,9 @@ import com.ddiehl.android.htn.HoldTheNarwhal;
 
 import javax.inject.Inject;
 
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import rxreddit.api.RedditService;
 
 public class SubmitPostPresenter {
@@ -16,7 +16,7 @@ public class SubmitPostPresenter {
     @Inject RedditService mRedditService;
 
     SubmitPostView mSubmitPostView;
-    Subscription mSubmitSubscription;
+    Disposable mSubmitSubscription;
 
     public SubmitPostPresenter(SubmitPostView view) {
         HoldTheNarwhal.getApplicationComponent().inject(this);
@@ -66,7 +66,7 @@ public class SubmitPostPresenter {
     }
 
     public void cancelSubmit() {
-        mSubmitSubscription.unsubscribe();
+        mSubmitSubscription.dispose();
         mSubmitPostView.dismissAfterCancel();
     }
 }

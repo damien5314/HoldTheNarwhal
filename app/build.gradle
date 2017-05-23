@@ -7,6 +7,7 @@ apply plugin: 'io.fabric'
 
 repositories {
     maven { url 'https://maven.fabric.io/public' }
+    maven { url "https://jitpack.io" }
 }
 
 android {
@@ -110,9 +111,8 @@ dependencies {
     compile "com.github.damien5314.RxReddit:android:$rxRedditVersion"
     debugCompile project(':mock-api')
 
-    compile "io.reactivex:rxandroid:$rxAndroidVersion"
-    compile "io.reactivex:rxjava:$rxJavaVersion"
-    compile "com.artemzin.rxjava:proguard-rules:$rxJavaProguardVersion"
+    compile "io.reactivex.rxjava2:rxjava:$RXJAVA_VERSION"
+    compile "io.reactivex.rxjava2:rxandroid:$RXANDROID_VERSION"
 
     compile "com.github.damien5314:TimeSinceTextView:$timeSinceTextViewVersion"
 

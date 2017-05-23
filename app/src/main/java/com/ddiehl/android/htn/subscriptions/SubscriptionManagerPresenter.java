@@ -8,9 +8,10 @@ import com.ddiehl.android.htn.subredditinfo.InfoTuple;
 
 import javax.inject.Inject;
 
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import io.reactivex.Completable;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import rxreddit.api.RedditService;
 import rxreddit.model.ListingResponse;
 import rxreddit.model.Subreddit;
@@ -34,12 +35,12 @@ public class SubscriptionManagerPresenter {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public Observable<Void> subscribe(Subreddit subreddit) {
+    public Completable subscribe(Subreddit subreddit) {
         String name = subreddit.getDisplayName();
         return mRedditService.subscribe(name);
     }
 
-    public Observable<Void> unsubscribe(Subreddit subreddit) {
+    public Completable unsubscribe(Subreddit subreddit) {
         String name = subreddit.getDisplayName();
         return mRedditService.unsubscribe(name);
     }

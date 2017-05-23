@@ -1,6 +1,5 @@
 package com.ddiehl.android.htn.identity;
 
-import rx.functions.Action1;
 import rxreddit.model.UserIdentity;
 
 public interface IdentityManager {
@@ -17,6 +16,6 @@ public interface IdentityManager {
 
     interface Callbacks {
 
-        Action1<UserIdentity> onUserIdentityChanged();
+        void onUserIdentityChanged(UserIdentity identity);
     }
 }

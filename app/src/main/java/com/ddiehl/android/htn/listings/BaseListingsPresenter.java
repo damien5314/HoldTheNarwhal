@@ -21,9 +21,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import rxreddit.api.RedditService;
 import rxreddit.model.Comment;
 import rxreddit.model.CommentStub;
@@ -163,42 +162,40 @@ public abstract class BaseListingsPresenter
         return mSettingsManager.getShowControversiality();
     }
 
-    protected Action1<ListingResponse> onListingsLoaded(boolean append) {
-        return (response) -> {
-            mMainView.dismissSpinner();
+    protected void onListingsLoaded(ListingResponse response, boolean append) {
+        mMainView.dismissSpinner();
 
-            if (append) mNextRequested = false;
-            else mBeforeRequested = false;
+        if (append) mNextRequested = false;
+        else mBeforeRequested = false;
 
-            if (response == null) {
-                mMainView.showToast(mContext.getString(R.string.error_xxx));
-                return;
-            }
+        if (response == null) {
+            mMainView.showToast(mContext.getString(R.string.error_xxx));
+            return;
+        }
 
-            ListingResponseData data = response.getData();
-            List<Listing> listings = data.getChildren();
+        ListingResponseData data = response.getData();
+        List<Listing> listings = data.getChildren();
 
-            if (listings == null) {
-                mPrevPageListingId = null;
-                mNextPageListingId = null;
+        if (listings == null) {
+            mPrevPageListingId = null;
+            mNextPageListingId = null;
 
-                String message = mContext.getString(R.string.error_get_links);
-                mMainView.showError(message);
+            String message = mContext.getString(R.string.error_get_links);
+            mMainView.showError(message);
+        } else {
+            Timber.i("Loaded %d listings", listings.size());
+
+            if (append) {
+                int lastIndex = mListings.size() - 1;
+                mListings.addAll(listings);
+                mNextPageListingId = data.getAfter();
+                mListingsView.notifyItemRangeInserted(lastIndex + 1, listings.size());
             } else {
-                Timber.i("Loaded %d listings", listings.size());
-
-                if (append) {
-                    int lastIndex = mListings.size() - 1;
-                    mListings.addAll(listings);
-                    mNextPageListingId = data.getAfter();
-                    mListingsView.notifyItemRangeInserted(lastIndex + 1, listings.size());
-                } else {
-                    mListings.addAll(0, listings);
-                    mPrevPageListingId = listings.size() == 0 ? null : listings.get(0).getFullName();
-                    mListingsView.notifyItemRangeInserted(0, listings.size());
-                }
+                mListings.addAll(0, listings);
+                mPrevPageListingId = listings.size() == 0 ? null : listings.get(0).getFullName();
+                mListingsView.notifyItemRangeInserted(0, listings.size());
             }
-        };
+        }
     }
 
     public void openLink(@NonNull Link link) {
@@ -378,9 +375,10 @@ public abstract class BaseListingsPresenter
             mMainView.showToast(mContext.getString(R.string.user_required));
         } else {
             mRedditService.vote(votable.getKind() + "_" + votable.getId(), direction)
-                    .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(
-                            response -> {
+                            () -> {
                                 votable.applyVote(direction);
                                 mListingsView.notifyItemChanged(getIndexOf((Listing) votable));
                             },
@@ -409,7 +407,7 @@ public abstract class BaseListingsPresenter
         mRedditService.save(savable.getFullName(), null, toSave)
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        response -> {
+                        () -> {
                             savable.isSaved(toSave);
                             mListingsView.notifyItemChanged(getIndexOf((Listing) savable));
                         },
@@ -431,7 +429,7 @@ public abstract class BaseListingsPresenter
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        response -> {
+                        () -> {
                             int pos = getIndexOf((Listing) hideable);
                             mListings.remove(pos);
                             mListingsView.notifyItemRemoved(pos);
@@ -487,7 +485,7 @@ public abstract class BaseListingsPresenter
         mRedditService.markMessagesRead(fullname)
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        result -> {
+                        () -> {
                             pm.markUnread(false);
                             mListingsView.notifyItemChanged(getIndexOf(pm));
                         },
@@ -509,7 +507,7 @@ public abstract class BaseListingsPresenter
         mRedditService.markMessagesUnread(fullname)
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        result -> {
+                        () -> {
                             pm.markUnread(true);
                             mListingsView.notifyItemChanged(getIndexOf(pm));
                         },

@@ -13,11 +13,10 @@ import com.ddiehl.android.htn.view.MainView;
 import java.io.IOException;
 import java.util.List;
 
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 import rxreddit.model.FriendInfo;
 import rxreddit.model.Listing;
 import rxreddit.model.UserIdentity;
@@ -73,7 +72,7 @@ public class UserProfilePresenter extends BaseListingsPresenter {
         )
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe(() -> {
+                .doOnSubscribe(disposable -> {
                     mMainView.showSpinner();
                     if (append) mNextRequested = true;
                     else mBeforeRequested = true;
@@ -84,7 +83,7 @@ public class UserProfilePresenter extends BaseListingsPresenter {
                     else mBeforeRequested = false;
                 })
                 .subscribe(
-                        onListingsLoaded(append),
+                        listings -> onListingsLoaded(listings, append),
                         error -> {
                             if (error instanceof IOException) {
                                 String message = mContext.getString(R.string.error_network_unavailable);
@@ -129,46 +128,42 @@ public class UserProfilePresenter extends BaseListingsPresenter {
                     return tuple;
                 }
         )
-                .doOnSubscribe(() -> {
+                .doOnSubscribe(disposable -> {
                     mMainView.showSpinner();
                     mNextRequested = true;
                 })
-                .doOnUnsubscribe(() -> {
+                .doOnDispose(() -> {
                     mMainView.dismissSpinner();
                     mNextRequested = false;
                 })
-                .subscribe(onGetUserInfo(), onGetUserInfoError());
+                .subscribe(this::onGetUserInfo, this::onGetUserInfoError);
     }
 
-    Action1<UserInfoTuple> onGetUserInfo() {
-        return (info) -> {
-            Timber.i("Showing user profile summary: %s", info.user.getId());
+    void onGetUserInfo(UserInfoTuple info) {
+        Timber.i("Showing user profile summary: %s", info.user.getId());
 
-            // Show user info and trophies
-            mSummaryView.showUserInfo(info.user);
-            mSummaryView.showTrophies(info.trophies);
+        // Show user info and trophies
+        mSummaryView.showUserInfo(info.user);
+        mSummaryView.showTrophies(info.trophies);
 
-            // Show friend note if we received it, and user is gold
-            if (info.user != null && info.user.isGold() && info.friend != null) {
-                mSummaryView.showFriendNote(info.friend.getNote());
-            }
-        };
+        // Show friend note if we received it, and user is gold
+        if (info.user != null && info.user.isGold() && info.friend != null) {
+            mSummaryView.showFriendNote(info.friend.getNote());
+        }
     }
 
-    Action1<Throwable> onGetUserInfoError() {
-        return (error) -> {
-            if (error instanceof IOException) {
-                String message = mContext.getString(R.string.error_network_unavailable);
-                mMainView.showError(message);
-            } else {
-                Timber.w(error, "Error loading friend info");
-                String message = mContext.getString(R.string.error_get_user_info);
-                mMainView.showError(message);
-            }
-        };
+    void onGetUserInfoError(Throwable error) {
+        if (error instanceof IOException) {
+            String message = mContext.getString(R.string.error_network_unavailable);
+            mMainView.showError(message);
+        } else {
+            Timber.w(error, "Error loading friend info");
+            String message = mContext.getString(R.string.error_get_user_info);
+            mMainView.showError(message);
+        }
     }
 
-    private Func1<UserInfoTuple, Observable<UserInfoTuple>> getFriendInfo() {
+    private Function<UserInfoTuple, Observable<UserInfoTuple>> getFriendInfo() {
         return (tuple) -> {
             if (tuple.user.isFriend()) {
                 return mRedditService.getFriendInfo(tuple.user.getName())
@@ -188,10 +183,10 @@ public class UserProfilePresenter extends BaseListingsPresenter {
         mRedditService.addFriend(mSummaryView.getUsernameContext())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe(mMainView::showSpinner)
+                .doOnSubscribe(disposable -> mMainView.showSpinner())
                 .doOnTerminate(mMainView::dismissSpinner)
                 .subscribe(
-                        response -> {
+                        () -> {
                             mSummaryView.setFriendButtonState(true);
                             UserIdentity self = mIdentityManager.getUserIdentity();
                             if (self != null && self.isGold()) {
@@ -216,10 +211,10 @@ public class UserProfilePresenter extends BaseListingsPresenter {
         mRedditService.deleteFriend(mSummaryView.getUsernameContext())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe(mMainView::showSpinner)
+                .doOnSubscribe(disposable -> mMainView.showSpinner())
                 .doOnTerminate(mMainView::dismissSpinner)
                 .subscribe(
-                        response -> {
+                        () -> {
                             mSummaryView.setFriendButtonState(false);
                             mSummaryView.hideFriendNote();
                             mMainView.showToast(mContext.getString(R.string.user_friend_delete_confirm));
@@ -248,7 +243,7 @@ public class UserProfilePresenter extends BaseListingsPresenter {
                     .observeOn(AndroidSchedulers.mainThread())
                     .doOnTerminate(mMainView::dismissSpinner)
                     .subscribe(
-                            result -> {
+                            () -> {
                                 String message = mContext.getString(R.string.user_friend_note_save_confirm);
                                 mMainView.showToast(message);
                             },

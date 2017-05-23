@@ -150,7 +150,7 @@ public class IdentityManagerImpl implements IdentityManager {
 
     private void notifyListeners() {
         for (Callbacks listener : mListeners) {
-            listener.onUserIdentityChanged().call(mUserIdentity);
+            listener.onUserIdentityChanged(mUserIdentity);
         }
     }
 }

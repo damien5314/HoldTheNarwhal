@@ -7,8 +7,8 @@ import com.ddiehl.android.htn.view.MainView;
 
 import java.io.IOException;
 
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import rxreddit.model.Listing;
 import rxreddit.model.PrivateMessage;
 import timber.log.Timber;
@@ -40,8 +40,9 @@ public class InboxPresenter extends BaseListingsPresenter {
         String nextId = append ? mNextPageListingId : null;
 
         mRedditService.getInbox(show, prevId, nextId)
-                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe(() -> {
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe(disposable -> {
                     mMainView.showSpinner();
                     mNextRequested = true;
                 })
@@ -50,7 +51,7 @@ public class InboxPresenter extends BaseListingsPresenter {
                     mNextRequested = false;
                 })
                 .subscribe(
-                        onListingsLoaded(append),
+                        listings -> onListingsLoaded(listings, append),
                         error -> {
                             if (error instanceof IOException) {
                                 String message = mContext.getString(R.string.error_network_unavailable);
@@ -73,7 +74,7 @@ public class InboxPresenter extends BaseListingsPresenter {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        result -> {
+                        () -> {
                             for (Listing listing : getListings()) {
                                 if (listing instanceof PrivateMessage) {
                                     ((PrivateMessage) listing).markUnread(false);

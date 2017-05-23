@@ -56,11 +56,10 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 import rxreddit.android.SignInActivity;
 import rxreddit.api.RedditService;
 import rxreddit.model.PrivateMessage;
@@ -245,21 +244,19 @@ public abstract class BaseActivity extends AppCompatActivity implements
     }
 
     @Override
-    public Action1<UserIdentity> onUserIdentityChanged() {
-        return identity -> {
-            // Restart activity
-            Intent newIntent = (Intent) getIntent().clone();
-            boolean isAuthenticated = identity != null;
+    public void onUserIdentityChanged(UserIdentity identity) {
+        // Restart activity
+        Intent newIntent = (Intent) getIntent().clone();
+        boolean isAuthenticated = identity != null;
 
-            // Clear the task stack if we're no longer authenticated
-            // This prevents the user from going back to content they aren't allowed to see
-            newIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        // Clear the task stack if we're no longer authenticated
+        // This prevents the user from going back to content they aren't allowed to see
+        newIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
 
-            // Add extra to indicate that this activity was restarted due to a change in authentication state
-            newIntent.putExtra(EXTRA_AUTHENTICATION_STATE_CHANGE, isAuthenticated);
+        // Add extra to indicate that this activity was restarted due to a change in authentication state
+        newIntent.putExtra(EXTRA_AUTHENTICATION_STATE_CHANGE, isAuthenticated);
 
-            startActivity(newIntent);
-        };
+        startActivity(newIntent);
     }
 
     protected void updateUserIdentity(@Nullable UserIdentity identity) {
@@ -556,7 +553,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
         Snackbar.make(mDrawerLayout, message, Snackbar.LENGTH_LONG).show();
     }
 
-    private Func1<UserAccessToken, Observable<UserIdentity>> getUserIdentity() {
+    private Function<UserAccessToken, Observable<UserIdentity>> getUserIdentity() {
         return token -> mRedditService.getUserIdentity()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
