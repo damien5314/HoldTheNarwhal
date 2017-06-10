@@ -2,8 +2,8 @@ buildscript {
     ext {
         KOTLIN_VERSION = "1.1.2-2"
         ANDROID_GRADLE_PLUGIN = "2.3.2"
-        COMPILE_SDK_VERSION = 25
-        TARGET_SDK_VERSION = 25
+        COMPILE_SDK_VERSION = 26
+        TARGET_SDK_VERSION = 26
         BUILD_TOOLS_VERSION = "25.0.0"
         supportLibraryVersion = "25.3.1"
         contraintLayoutVersion = "1.0.2"
@@ -29,8 +29,8 @@ buildscript {
     dependencies {
         classpath "com.android.tools.build:gradle:$ANDROID_GRADLE_PLUGIN"
         classpath 'com.jakewharton.hugo:hugo-plugin:1.2.1'
-        classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.6.1'
-        classpath 'com.github.ben-manes:gradle-versions-plugin:0.13.0'
+        classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.6.4'
+        classpath 'com.github.ben-manes:gradle-versions-plugin:0.14.0'
         //noinspection GradleDynamicVersion
         classpath 'io.fabric.tools:gradle:1.+'
     }
