@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        KOTLIN_VERSION = "1.1.2-2"
+        KOTLIN_VERSION = "1.1.2-4"
         ANDROID_GRADLE_PLUGIN = "2.3.2"
         COMPILE_SDK_VERSION = 26
         TARGET_SDK_VERSION = 26
@@ -38,7 +38,7 @@ buildscript {
 }
 
 plugins {
-    id "me.tatarka.retrolambda" version "3.3.0"
+    id "me.tatarka.retrolambda" version "3.6.0"
 }
 
 allprojects {
