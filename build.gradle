@@ -11,7 +11,7 @@ buildscript {
         GLIDE_VERSION = "3.7.0"
         GLIDE_OKHTTP_VERSION = "1.4.0@aar"
         BUTTERKNIFE_VERSION = "8.4.0"
-        RXREDDIT_VERSION = "77a26bda6dd210fde320341ace317d49d9d8414b"
+        RXREDDIT_VERSION = "0972604dc6c8fdad52c007084a7133abebf5c1ab"
         RXJAVA_VERSION = "2.1.0"
         RXANDROID_VERSION = "2.0.1"
         TIMESINCETEXTVIEW_VERSION = "1.3"
@@ -27,6 +27,7 @@ buildscript {
         jcenter()
         maven { url 'https://maven.fabric.io/public' }
         maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+        maven { url "https://maven.google.com" }
     }
     dependencies {
         classpath "com.android.tools.build:gradle:$ANDROID_GRADLE_PLUGIN"
