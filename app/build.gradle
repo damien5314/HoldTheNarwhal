@@ -5,9 +5,9 @@ apply plugin: "com.github.ben-manes.versions"
 apply plugin: 'io.fabric'
 
 repositories {
+    maven { url "https://maven.google.com/" }
     maven { url 'https://maven.fabric.io/public' }
     maven { url "https://jitpack.io" }
-    maven { url "https://maven.google.com/" }
 }
 
 android {
