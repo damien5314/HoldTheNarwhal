@@ -24,7 +24,6 @@ public class SettingsManagerImpl implements SettingsManager {
     public static final String PREF_DEVICE_ID = "pref_device_id";
     public static final String PREF_ALLOW_ANALYTICS = "pref_allow_analytics";
     public static final String PREF_ALLOW_ANALYTICS_ASKED = "pref_allow_analytics_asked";
-    public static final String PREF_USE_CHROME_TABS = "pref_use_chrome_tabs";
     public static final String PREF_FONT = "pref_font";
 
     // reddit settings
@@ -305,11 +304,6 @@ public class SettingsManagerImpl implements SettingsManager {
         mContext.getSharedPreferences(PREFS_USER, Context.MODE_PRIVATE).edit()
                 .putBoolean(PREF_ALLOW_ANALYTICS_ASKED, b)
                 .apply();
-    }
-
-    @Override
-    public boolean customTabsEnabled() {
-        return mSharedPreferences.getBoolean(PREF_USE_CHROME_TABS, true);
     }
 
     @Override

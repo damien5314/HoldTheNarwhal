@@ -19,8 +19,6 @@ public interface SettingsManager
 
     void setAnalyticsEnabled(boolean b);
 
-    boolean customTabsEnabled();
-
     String getFont();
 
     boolean askedForAnalytics();
