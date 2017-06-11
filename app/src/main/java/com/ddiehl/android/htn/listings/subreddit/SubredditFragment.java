@@ -293,9 +293,11 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
                 onNsfwSelected(result);
                 break;
             case REQUEST_SUBMIT_NEW_POST:
-                String subreddit = data.getStringExtra(SubmitPostFragment.EXTRA_SUBMIT_SUBREDDIT);
-                String id = data.getStringExtra(SubmitPostFragment.EXTRA_SUBMIT_ID);
-                onPostSubmitted(subreddit, id);
+                if (data != null) {
+                    String subreddit = data.getStringExtra(SubmitPostFragment.EXTRA_SUBMIT_SUBREDDIT);
+                    String id = data.getStringExtra(SubmitPostFragment.EXTRA_SUBMIT_ID);
+                    onPostSubmitted(subreddit, id);
+                }
                 break;
         }
     }
