@@ -9,46 +9,18 @@
 
 # Add any project specific keep options here:
 
-### Okio, OkHttp, Retrofit ###
+# OkHttp3, Retrofit2
 -dontwarn okio.**
--keep class com.squareup.okhttp3.** { *; }
--keep interface com.squareup.okhttp3.** { *; }
--dontwarn com.squareup.okhttp3.**
--dontwarn retrofit2.**
--keep class retrofit2.** { *; }
--keepattributes Signature
--keepattributes Exceptions
--keepclasseswithmembers class * { # Do we need this one?
-  @retrofit2.http.* <methods>;
-}
--dontwarn com.squareup.picasso.**
+-dontwarn javax.annotation.**
+-dontwarn retrofit2.Platform$Java8 # https://stackoverflow.com/a/36011233/3238938
 
 ### Gson models ###
 -keep class rxreddit.model.** { *; }
-
-### Flurry ###
--dontwarn com.flurry.**
-
-### Debugging ###
-#-renamesourcefileattribute SourceFile
-#-keepattributes SourceFile, LineNumberTable
 
 ### ??? ###
 -keepattributes Signature
 -keepattributes *Annotation*
 -keep class sun.misc.Unsafe { *; }
-
-### Butter Knife ###
--keep class butterknife.** { *; }
--dontwarn butterknife.internal.**
--keep class **$$ViewBinder { *; }
--keepclasseswithmembernames class * { @butterknife.* <fields>; }
--keepclasseswithmembernames class * { @butterknife.* <methods>; }
--dontwarn butterknife.Views$InjectViewProcessor
--dontwarn com.gc.materialdesign.views.**
-
-### Retrolambda and RxAndroid ###
--dontwarn java.lang.invoke.*
 
 # Bypass
 -keep class in.uncod.android.bypass.** { *; }
