@@ -404,11 +404,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
     }
 
     private boolean canUseCustomTabs() {
-        return Build.VERSION.SDK_INT >= 18 && customTabsEnabled();
-    }
-
-    private boolean customTabsEnabled() {
-        return mSettingsManager.customTabsEnabled();
+        return Build.VERSION.SDK_INT >= 18;
     }
 
     public void showUserSubreddits() {
