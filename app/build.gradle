@@ -1,5 +1,4 @@
 apply plugin: "com.android.application"
-apply plugin: "me.tatarka.retrolambda"
 apply plugin: "com.jakewharton.hugo"
 apply plugin: "com.getkeepsafe.dexcount"
 apply plugin: "com.github.ben-manes.versions"
@@ -8,6 +7,7 @@ apply plugin: 'io.fabric'
 repositories {
     maven { url 'https://maven.fabric.io/public' }
     maven { url "https://jitpack.io" }
+    maven { url "https://maven.google.com/" }
 }
 
 android {
@@ -62,11 +62,8 @@ android {
 
     // Renames APK to our standard format `buildType-versionName_versionCode-RCx.apk
     applicationVariants.all { variant ->
-        variant.outputs.each { output ->
-            output.outputFile = new File(
-                    output.outputFile.parent,
-                    variant.buildType.name + "-" + variant.versionName + "_" + variant.versionCode + ".apk"
-            )
+        variant.outputs.all { output ->
+            outputFileName = variant.buildType.name + "-" + variant.versionName + "_" + variant.versionCode + "-RC0.apk"
         }
     }
 }
@@ -79,12 +76,6 @@ def getLocalProperty(String s) {
     Properties properties = new Properties()
     properties.load(project.rootProject.file("local.properties").newDataInputStream())
     return properties.getProperty(s)
-}
-
-retrolambda {
-    jdk getLocalProperty("jdk8.dir")
-    oldJdk getLocalProperty("jdk7.dir")
-    javaVersion JavaVersion.VERSION_1_7
 }
 
 dependencies {
