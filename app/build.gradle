@@ -64,7 +64,7 @@ android {
     // Renames APK to our standard format `buildType-versionName_versionCode-RCx.apk
     applicationVariants.all { variant ->
         variant.outputs.all { output ->
-            outputFileName = variant.buildType.name + "-" + variant.versionName + "_" + variant.versionCode + "-RC0.apk"
+            outputFileName = "${variant.buildType.name}-${variant.versionName}_${variant.versionCode}-RC0.apk"
         }
     }
 }
