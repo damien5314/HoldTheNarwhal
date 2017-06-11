@@ -12,7 +12,10 @@
 # OkHttp3, Retrofit2
 -dontwarn okio.**
 -dontwarn javax.annotation.**
--dontwarn retrofit2.Platform$Java8 # https://stackoverflow.com/a/36011233/3238938
+-dontnote retrofit2.Platform
+-dontwarn retrofit2.Platform$Java8
+-keepattributes Signature
+-keepattributes Exceptions
 
 ### Gson models ###
 -keep class rxreddit.model.** { *; }
@@ -29,6 +32,7 @@
 -keepattributes *Annotation*
 -keepattributes SourceFile,LineNumberTable
 -keep public class * extends java.lang.Exception
+-printmapping mapping.txt
 -keep class com.crashlytics.** { *; }
 -dontwarn com.crashlytics.**
 
