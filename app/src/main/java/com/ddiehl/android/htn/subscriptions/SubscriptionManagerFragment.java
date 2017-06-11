@@ -165,7 +165,7 @@ public class SubscriptionManagerFragment extends BaseFragment implements Subscri
     void loadSubscriptions(@NonNull String where, @Nullable String before, @Nullable String after) {
         mGetSubscriptionsObservable = mPresenter.getSubscriptions(where, before, after)
                 .doOnSubscribe(disposable -> showSpinner())
-                .doOnDispose(() -> {
+                .doFinally(() -> {
                     dismissSpinner();
                     mGetSubscriptionsObservable = null;
                 });

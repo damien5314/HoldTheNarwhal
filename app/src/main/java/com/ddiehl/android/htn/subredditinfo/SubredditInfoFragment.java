@@ -109,7 +109,7 @@ public class SubredditInfoFragment extends BaseFragment {
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .doOnSubscribe(disposable -> showSpinner())
-                    .doOnDispose(this::dismissSpinner)
+                    .doFinally(this::dismissSpinner)
                     .subscribe(this::onSubredditInfoLoaded, this::onSubredditInfoLoadError);
         } else {
             onSubredditInfoLoaded(mSubredditInfo);
