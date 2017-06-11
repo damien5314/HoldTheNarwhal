@@ -164,7 +164,7 @@ public abstract class BaseFragment extends Fragment implements MainView {
             mLoadingOverlay.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         }
 //        mLoadingOverlay.setMessage(message);
-//        mLoadingOverlay.show();
+        mLoadingOverlay.show();
     }
 
     @Override
