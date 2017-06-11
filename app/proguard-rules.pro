@@ -46,6 +46,6 @@
   public *;
 }
 
-# Google Play Services
--dontwarn android.content.**
--keep class android.content.**
+# Google Play Services; random files that are giving us trouble, but not sure why
+-dontwarn android.content.ServiceConnection$$CC
+-keep class android.content.ServiceConnection$$CC
