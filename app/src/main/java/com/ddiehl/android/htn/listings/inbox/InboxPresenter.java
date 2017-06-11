@@ -46,7 +46,7 @@ public class InboxPresenter extends BaseListingsPresenter {
                     mMainView.showSpinner();
                     mNextRequested = true;
                 })
-                .doOnTerminate(() -> {
+                .doFinally(() -> {
                     mMainView.dismissSpinner();
                     mNextRequested = false;
                 })
