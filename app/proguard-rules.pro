@@ -16,6 +16,9 @@
 -dontwarn retrofit2.Platform$Java8
 -keepattributes Signature
 -keepattributes Exceptions
+-keepclasseswithmembers class * { # Do we need this one?
+  @retrofit2.http.* <methods>;
+}
 
 ### Gson models ###
 -keep class rxreddit.model.** { *; }
@@ -42,3 +45,7 @@
   **[] $VALUES;
   public *;
 }
+
+# Google Play Services
+-dontwarn android.content.**
+-keep class android.content.**
