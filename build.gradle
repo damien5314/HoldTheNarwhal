@@ -1,17 +1,17 @@
 buildscript {
     ext {
         KOTLIN_VERSION = "1.1.2-4"
-        ANDROID_GRADLE_PLUGIN = "2.3.2"
+        ANDROID_GRADLE_PLUGIN = "3.0.0-alpha3"
         COMPILE_SDK_VERSION = 26
         TARGET_SDK_VERSION = 26
-        BUILD_TOOLS_VERSION = "25.0.0"
+        BUILD_TOOLS_VERSION = "26.0.0"
         SUPPORT_LIBRARY_VERSION = "25.3.1"
         CONSTRAINT_LAYOUT_VERSION = "1.0.2"
         PLAY_SERVICES_VERSION = "10.2.6"
         GLIDE_VERSION = "3.7.0"
         GLIDE_OKHTTP_VERSION = "1.4.0@aar"
         BUTTERKNIFE_VERSION = "8.4.0"
-        RXREDDIT_VERSION = "77a26bda6dd210fde320341ace317d49d9d8414b"
+        RXREDDIT_VERSION = "ee0916ca6f26574e8da8b88fe662e4a0c3267d24"
         RXJAVA_VERSION = "2.1.0"
         RXANDROID_VERSION = "2.0.1"
         TIMESINCETEXTVIEW_VERSION = "1.3"
@@ -25,26 +25,18 @@ buildscript {
     }
     repositories {
         jcenter()
+        maven { url "https://maven.google.com" }
         maven { url 'https://maven.fabric.io/public' }
+        maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
     }
     dependencies {
         classpath "com.android.tools.build:gradle:$ANDROID_GRADLE_PLUGIN"
         classpath 'com.jakewharton.hugo:hugo-plugin:1.2.1'
-        classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.6.4'
+        classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.7.0-SNAPSHOT'
         classpath 'com.github.ben-manes:gradle-versions-plugin:0.14.0'
         //noinspection GradleDynamicVersion
         classpath 'io.fabric.tools:gradle:1.+'
-    }
-}
-
-plugins {
-    id "me.tatarka.retrolambda" version "3.6.0"
-}
-
-allprojects {
-    repositories {
-        jcenter()
-        maven { url "https://jitpack.io" }
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$KOTLIN_VERSION"
     }
 }
 
