@@ -49,7 +49,7 @@ public class SettingsPresenter {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(disposable -> mSettingsView.showSpinner())
-                .doOnDispose(mSettingsView::dismissSpinner)
+                .doFinally(mSettingsView::dismissSpinner)
                 .doOnNext(mSettingsManager::saveUserSettings)
                 .subscribe(
                         settings -> refresh(false),

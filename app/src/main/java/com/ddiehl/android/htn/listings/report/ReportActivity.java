@@ -83,7 +83,7 @@ public class ReportActivity extends TransparentBaseActivity
         if (getSubredditName() != null) {
             getSubredditRules()
                     .doOnSubscribe(disposable -> showSpinner())
-                    .doOnDispose(this::dismissSpinner)
+                    .doFinally(this::dismissSpinner)
                     .subscribe(this::onSubredditRulesRetrieved, this::onGetSubredditRulesError);
         } else {
             showReportDialogWithRules(null, getSiteRulesList());

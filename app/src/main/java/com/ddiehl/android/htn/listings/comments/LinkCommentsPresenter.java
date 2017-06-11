@@ -74,7 +74,7 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .doOnSubscribe(disposable -> mMainView.showSpinner())
-                    .doOnTerminate(() -> {
+                    .doFinally(() -> {
                         mDataRequested = false;
                         mMainView.dismissSpinner();
                     })
@@ -132,7 +132,7 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(disposable -> mMainView.showSpinner())
-                .doOnTerminate(mMainView::dismissSpinner)
+                .doFinally(mMainView::dismissSpinner)
                 .subscribe(
                         response -> onLoadMoreChildren(response, parentStub),
                         error -> {

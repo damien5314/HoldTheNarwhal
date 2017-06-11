@@ -61,7 +61,7 @@ public class SubredditPresenter extends BaseListingsPresenter {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(disposable -> mMainView.showSpinner())
-                .doOnTerminate(() -> {
+                .doFinally(() -> {
                     mMainView.dismissSpinner();
                     mNextRequested = false;
                 })
@@ -93,7 +93,7 @@ public class SubredditPresenter extends BaseListingsPresenter {
                     if (append) mNextRequested = true;
                     else mBeforeRequested = true;
                 })
-                .doOnTerminate(() -> {
+                .doFinally(() -> {
                     mMainView.dismissSpinner();
                     if (append) mNextRequested = false;
                     else mBeforeRequested = false;
