@@ -2,6 +2,7 @@ package com.ddiehl.android.htn.listings.inbox;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 
@@ -15,6 +16,12 @@ public class InboxActivity extends FragmentActivityCompat {
         Intent intent = new Intent(context, InboxActivity.class);
         intent.putExtra(EXTRA_SHOW, show);
         return intent;
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        showTabs(true);
     }
 
     @Override
