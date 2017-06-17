@@ -142,7 +142,7 @@
                                 android:layout_height="wrap_content"
                                 android:ellipsize="end"
                                 android:maxLines="1"
-                                tools:text="/u/andrewsmith1984" />
+                                tools:text="u/andrewsmith1984" />
 
                     </FrameLayout>
 
