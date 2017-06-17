@@ -19,7 +19,7 @@
     <string name="timespan_year">year</string>
     <string name="timespan_all">all</string>
     <string name="menu_action_link">%1$s &#091;%2$s&#093;</string>
-    <string name="menu_action_comment">&#091;%2$s&#093; /u/%1$s</string>
+    <string name="menu_action_comment">&#091;%2$s&#093; u/%1$s</string>
     <!--<string name="menu_action_link">%s</string>-->
     <!--<string name="menu_action_comment">%s</string>-->
     <string name="action_settings">settings</string>
@@ -32,8 +32,8 @@
     <string name="action_share">share</string>
     <string name="action_save">save</string>
     <string name="action_unsave">unsave</string>
-    <string name="action_view_subreddit">view /r/%s</string>
-    <string name="action_view_user_profile">view /u/%s</string>
+    <string name="action_view_subreddit">view r/%s</string>
+    <string name="action_view_user_profile">view u/%s</string>
     <string name="action_hide">hide</string>
     <string name="action_unhide">unhide</string>
     <string name="action_open_in_browser">view in browser</string>
