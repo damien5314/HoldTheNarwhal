@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="nsfw">nsfw</string>
-    <string name="username_formatter">u/%s</string>
-    <string name="user_required">you must sign in to do that</string>
-    <string name="implementation_pending">coming soon</string>
-    <string name="welcome_user">welcome, %s</string>
-    <string name="user_signed_out">signed out</string>
-</resources>
