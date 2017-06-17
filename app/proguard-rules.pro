@@ -35,7 +35,7 @@
 -keepattributes *Annotation*
 -keepattributes SourceFile,LineNumberTable
 -keep public class * extends java.lang.Exception
--printmapping mapping.txt
+#-printmapping mapping.txt # This must not be present for Fabric plugin to upload mapping file
 -keep class com.crashlytics.** { *; }
 -dontwarn com.crashlytics.**
 
