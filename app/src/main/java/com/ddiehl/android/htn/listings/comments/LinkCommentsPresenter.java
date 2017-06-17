@@ -149,20 +149,34 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
     }
 
     private void onLoadMoreChildren(MoreChildrenResponse response, @NonNull CommentStub parentStub) {
+        final int stubIndex = mCommentBank.indexOf(parentStub);
+        if (stubIndex == -1) {
+            // Parent comment stub is no longer in the list, we've probably already processed this response
+            return;
+        }
+
         List<Listing> comments = response.getChildComments();
+
         if (comments == null || comments.size() == 0) {
             mCommentBank.remove(parentStub);
         } else {
             Timber.i("More comments: %d", comments.size());
+
             setDepthForCommentsList(comments, parentStub);
-            int stubIndex = mCommentBank.indexOf(parentStub);
+
             parentStub.removeChildren(comments);
             parentStub.setCount(parentStub.getChildren().size());
-            if (parentStub.getCount() == 0) mCommentBank.remove(stubIndex);
+
+            if (parentStub.getCount() == 0) {
+                mCommentBank.remove(stubIndex);
+            }
+
             mCommentBank.addAll(stubIndex, comments);
         }
+
         Integer minScore = mSettingsManager.getMinCommentScore();
         mCommentBank.collapseAllThreadsUnder(minScore);
+
         // TODO Specify commentRemoved and commentsAdded
         mLinkCommentsView.notifyDataSetChanged();
     }
