@@ -21,8 +21,8 @@ android {
         applicationId "com.ddiehl.android.htn"
         minSdkVersion 15
         targetSdkVersion TARGET_SDK_VERSION
-        versionCode 14
-        versionName "0.9"
+        versionCode 15
+        versionName "0.10"
         resConfigs "en"
         buildConfigField "long", "BUILD_TIME_UTC", "" + getTime()
         buildConfigField "String", "REDDIT_APP_ID", "\"" + REDDIT_APP_ID + "\""
