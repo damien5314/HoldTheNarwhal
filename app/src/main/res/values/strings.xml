@@ -10,7 +10,6 @@
     <string name="drawer_close">Close navigation drawer</string>
 
     <!-- Comments -->
-    <string name="comments_fragment_title">comments</string>
     <string name="comment_score">%d</string>
     <string name="continue_thread">continue thread</string>
     <plurals name="more_comments">
@@ -83,11 +82,6 @@
     <string name="dialog_sign_out_ok">OK</string>
     <string name="dialog_sign_out_cancel">Cancel</string>
     <string name="dialog_settings_default_comment_sort">sort comments by</string>
-    <string name="dialog_analytics_title">Privacy Note</string>
-    <string name="dialog_analytics_message">This app collects anonymous usage statistics to aid
-    development of new features. You can disable this any time in settings.</string>
-    <string name="dialog_analytics_accept">Dismiss</string>
-    <string name="dialog_analytics_decline">Disable</string>
     <string name="dialog_nsfw_title">Over 18?</string>
     <string name="dialog_nsfw_message">You must be over 18 to view content on this subreddit</string>
     <string name="dialog_nsfw_confirm">Continue</string>
@@ -108,8 +102,6 @@
     <string name="vote_failed">vote failed, please try again</string>
     <string name="save_failed">save failed, please try again</string>
     <string name="hide_failed">hide failed, please try again</string>
-    <string name="link_hidden">link hidden</string>
-    <string name="user_settings_update_confirm">settings updated</string>
     <string name="user_friend_note_save_confirm">friend note saved</string>
     <string name="user_friend_note_save_error">error saving friend note</string>
     <string name="user_friend_add_button_text">add to friends</string>
@@ -121,11 +113,6 @@
     <string name="error_xxx">an error has occurred</string>
     <string name="error_network_unavailable">no network connection</string>
     <string name="error_private_subreddit">this subreddit is private</string>
-    <string name="error_404">page not found</string>
-    <string name="error_500">reddit is experiencing issues, try again later</string>
-    <string name="error_503">reddit is unavailable, try again soon</string>
-    <string name="error_520">reddit is in maintenance</string>
-    <string name="error_authentication">error during authentication</string>
     <string name="error_get_user_identity">error getting user info</string>
     <string name="error_get_user_settings">error loading settings</string>
     <string name="error_get_link_comments">error loading link comments</string>
@@ -134,10 +121,7 @@
     <string name="error_get_links">error loading links</string>
     <string name="error_get_subreddit_info">error loading subreddit info</string>
     <string name="error_get_user_info">error loading user info</string>
-    <string name="error_get_user_trophies">error loading user profile</string>
-    <string name="error_get_friend_info">error getting friend info</string>
     <string name="error_get_user_profile_listings">error loading profile listings</string>
-    <string name="error_user_settings_update">error updating settings</string>
     <string name="error_get_inbox">error getting inbox</string>
 
     <!-- Inbox -->
@@ -214,7 +198,6 @@
     <string name="pref_numsites">number of links to show</string>
     <string name="pref_min_link_score">minimum score to display</string>
     <string name="pref_min_link_score_hint">leave blank to show all</string>
-    <string name="pref_ignore_suggested_sort">ignore suggested sorts</string>
     <string name="pref_highlight_controversial">label controversial comments (†)</string>
     <string name="pref_min_comment_score">minimum score to display</string>
     <string name="pref_min_comment_score_hint">@string/pref_min_link_score_hint</string>
@@ -280,7 +263,6 @@
     <string name="subscriptions_load_failed">failed to load subscriptions, try again later</string>
     <string name="subscription_icon">subreddit icon</string>
     <string name="subscribe">subscribe</string>
-    <string name="unsubscribe">unsubscribe</string>
     <string name="subscribed">subscribed</string>
     <string name="subscribe_error">Error subscribing to /r/%s</string>
     <string name="unsubscribing_subreddit">unsubscribing from /r/%s</string>
@@ -294,16 +276,10 @@
     <string name="subreddit_search_input_hint">/r/AskReddit</string>
     <string name="subreddit_search_dialog_title">search for subreddit</string>
     <string name="subreddit_search_dialog_confirm">search</string>
-    <plurals name="num_subscribers">
-        <item quantity="one">%s subscriber</item>
-        <item quantity="other">%s subscribers</item>
-    </plurals>
     <string name="subscribers">subscribers</string>
     <string name="created">created</string>
-    <string name="created_format">created %s</string>
     <string name="description">description</string>
     <string name="rules">rules</string>
-    <string name="sidebar">sidebar</string>
     <string name="subreddit_category_link">Posts only</string>
     <string name="subreddit_category_comment">Comments only</string>
     <string name="subreddit_category_all">Posts and Comments</string>
