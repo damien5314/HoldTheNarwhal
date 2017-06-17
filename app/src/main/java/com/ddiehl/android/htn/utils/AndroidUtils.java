@@ -187,10 +187,8 @@ public class AndroidUtils {
             int start = text.getSpanStart(span);
             int end = text.getSpanEnd(span);
 
-            CustomBulletSpan newSpan = new CustomBulletSpan(16);
-
             text.removeSpan(span);
-            text.setSpan(newSpan, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            text.setSpan(new CustomBulletSpan(16), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
     }
 
