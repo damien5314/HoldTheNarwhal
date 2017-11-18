@@ -25,13 +25,13 @@ android {
 }
 
 dependencies {
-    compile "com.android.support:appcompat-v7:$SUPPORT_LIBRARY_VERSION"
+    implementation "com.android.support:appcompat-v7:$SUPPORT_LIBRARY_VERSION"
 
-    compile "com.jakewharton.timber:timber:$TIMBER_VERSION"
-    compile("com.crashlytics.sdk.android:crashlytics:2.6.8@aar") {
+    implementation "com.jakewharton.timber:timber:$TIMBER_VERSION"
+    implementation("com.crashlytics.sdk.android:crashlytics:2.6.8@aar") {
         transitive = true
     }
 
-    testCompile "junit:junit:$JUNIT_VERSION"
-    testCompile "org.mockito:mockito-core:$MOCKITO_VERSION"
+    testImplementation "junit:junit:$JUNIT_VERSION"
+    testImplementation "org.mockito:mockito-core:$MOCKITO_VERSION"
 }
