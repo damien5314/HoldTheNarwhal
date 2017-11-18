@@ -1,7 +1,9 @@
-apply plugin: "com.android.application"
-apply plugin: "com.jakewharton.hugo"
-apply plugin: "com.getkeepsafe.dexcount"
-apply plugin: "com.github.ben-manes.versions"
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'com.jakewharton.hugo'
+apply plugin: 'com.getkeepsafe.dexcount'
+apply plugin: 'com.github.ben-manes.versions'
 apply plugin: 'io.fabric'
 
 repositories {
@@ -80,48 +82,53 @@ def getLocalProperty(String s) {
 }
 
 dependencies {
-    compile fileTree(include: "*.jar", dir: "libs")
-    compile project(":bypass")
-    compile project(":logging")
+    implementation fileTree(include: "*.jar", dir: "libs")
+    implementation project(":bypass")
+    implementation project(":logging")
 
-    compile "com.android.support:appcompat-v7:$SUPPORT_LIBRARY_VERSION"
-    compile "com.android.support:design:$SUPPORT_LIBRARY_VERSION"
-    compile "com.android.support:recyclerview-v7:$SUPPORT_LIBRARY_VERSION"
-    compile "com.android.support:cardview-v7:$SUPPORT_LIBRARY_VERSION"
-    compile "com.android.support.constraint:constraint-layout:$CONSTRAINT_LAYOUT_VERSION"
+    implementation "com.android.support:appcompat-v7:$SUPPORT_LIBRARY_VERSION"
+    implementation "com.android.support:design:$SUPPORT_LIBRARY_VERSION"
+    implementation "com.android.support:recyclerview-v7:$SUPPORT_LIBRARY_VERSION"
+    implementation "com.android.support:cardview-v7:$SUPPORT_LIBRARY_VERSION"
+    implementation "com.android.support.constraint:constraint-layout:$CONSTRAINT_LAYOUT_VERSION"
 
-    compile "com.github.bumptech.glide:glide:$GLIDE_VERSION"
-    compile "com.github.bumptech.glide:okhttp3-integration:$GLIDE_OKHTTP_VERSION"
+    implementation("com.crashlytics.sdk.android:crashlytics:2.6.8@aar") {
+        transitive = true
+    }
 
-    compile "com.jakewharton:butterknife:$BUTTERKNIFE_VERSION"
-    annotationProcessor "com.jakewharton:butterknife-compiler:$BUTTERKNIFE_VERSION"
+    implementation "com.github.bumptech.glide:glide:$GLIDE_VERSION"
+    implementation "com.github.bumptech.glide:okhttp3-integration:$GLIDE_OKHTTP_VERSION"
 
-    compile "com.github.damien5314.RxReddit:library:$RXREDDIT_VERSION"
-    compile "com.github.damien5314.RxReddit:android:$RXREDDIT_VERSION"
-    debugCompile project(':mock-api')
+    implementation "com.jakewharton:butterknife:$BUTTERKNIFE_VERSION"
+    kapt "com.jakewharton:butterknife-compiler:$BUTTERKNIFE_VERSION"
 
-    compile "io.reactivex.rxjava2:rxjava:$RXJAVA_VERSION"
-    compile "io.reactivex.rxjava2:rxandroid:$RXANDROID_VERSION"
+    implementation "com.github.damien5314.RxReddit:library:$RXREDDIT_VERSION"
+    implementation "com.github.damien5314.RxReddit:android:$RXREDDIT_VERSION"
+    debugImplementation project(':mock-api')
 
-    compile "com.github.damien5314:TimeSinceTextView:$TIMESINCETEXTVIEW_VERSION"
+    implementation "io.reactivex.rxjava2:rxjava:$RXJAVA_VERSION"
+    implementation "io.reactivex.rxjava2:rxandroid:$RXANDROID_VERSION"
 
-    compile "com.google.dagger:dagger:$DAGGER_VERSION"
-    annotationProcessor "com.google.dagger:dagger-compiler:$DAGGER_VERSION"
+    implementation "com.github.damien5314:TimeSinceTextView:$TIMESINCETEXTVIEW_VERSION"
 
-    compile "uk.co.chrisjenx:calligraphy:$CALLIGRAPHY_VERSION"
+    implementation "com.google.dagger:dagger:$DAGGER_VERSION"
+    kapt "com.google.dagger:dagger-compiler:$DAGGER_VERSION"
 
-    compile "com.hannesdorfmann.fragmentargs:annotation:$FRAGMENTARGS_VERSION"
-    annotationProcessor "com.hannesdorfmann.fragmentargs:processor:$FRAGMENTARGS_VERSION"
+    implementation "uk.co.chrisjenx:calligraphy:$CALLIGRAPHY_VERSION"
 
-    debugCompile "com.squareup.leakcanary:leakcanary-android:$LEAK_CANARY_VERSION"
-    releaseCompile "com.squareup.leakcanary:leakcanary-android-no-op:$LEAK_CANARY_VERSION"
+    implementation "com.hannesdorfmann.fragmentargs:annotation:$FRAGMENTARGS_VERSION"
+    kapt "com.hannesdorfmann.fragmentargs:processor:$FRAGMENTARGS_VERSION"
+
+    implementation "com.jakewharton.timber:timber:$TIMBER_VERSION"
+    debugImplementation "com.squareup.leakcanary:leakcanary-android:$LEAK_CANARY_VERSION"
+    releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$LEAK_CANARY_VERSION"
 
     // Test dependencies
-    androidTestCompile "junit:junit:$JUNIT_VERSION"
-    androidTestCompile "org.mockito:mockito-core:$MOCKITO_VERSION"
-    androidTestAnnotationProcessor "com.google.dagger:dagger-compiler:$DAGGER_VERSION"
+    androidTestImplementation "junit:junit:$JUNIT_VERSION"
+    androidTestImplementation "org.mockito:mockito-core:$MOCKITO_VERSION"
+    kaptAndroidTest "com.google.dagger:dagger-compiler:$DAGGER_VERSION"
 
-    androidTestCompile "com.android.support:support-annotations:$SUPPORT_LIBRARY_VERSION"
-    androidTestCompile 'com.android.support.test:runner:0.5'
-    androidTestCompile 'com.android.support.test:rules:0.5'
+    androidTestImplementation "com.android.support:support-annotations:$SUPPORT_LIBRARY_VERSION"
+    androidTestImplementation 'com.android.support.test:runner:0.5'
+    androidTestImplementation 'com.android.support.test:rules:0.5'
 }
