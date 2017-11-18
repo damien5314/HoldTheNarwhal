@@ -29,6 +29,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import rxreddit.model.Image;
 import rxreddit.model.Link;
 
 public abstract class BaseLinkViewHolder extends RecyclerView.ViewHolder
@@ -196,19 +197,19 @@ public abstract class BaseLinkViewHolder extends RecyclerView.ViewHolder
     }
 
     protected String getPreviewUrl(@NonNull Link link) {
-        List<Link.Preview.Image> images = link.getPreviewImages();
+        List<Image> images = link.getPreviewImages();
         if (images == null || images.size() == 0) return null;
-        Link.Preview.Image imageToDisplay;
+        Image imageToDisplay;
         // Retrieve preview image to display
-        Link.Preview.Image image = images.get(0);
-        Link.Preview.Image.Variants variants = image.getVariants();
-        if (variants != null && variants.nsfw != null) {
-            imageToDisplay = variants.nsfw;
+        Image image = images.get(0);
+        Image.Variants variants = image.getVariants();
+        if (variants != null && variants.getNsfw() != null) {
+            imageToDisplay = variants.getNsfw();
         } else {
             imageToDisplay = image;
         }
-        List<Link.Preview.Image.Res> resolutions = imageToDisplay.getResolutions();
-        Link.Preview.Image.Res res =
+        List<Image.Res> resolutions = imageToDisplay.getResolutions();
+        Image.Res res =
                 resolutions.size() > 0 ? resolutions.get(0) : imageToDisplay.getSource();
         return res.getUrl();
     }

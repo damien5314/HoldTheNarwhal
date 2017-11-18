@@ -20,6 +20,7 @@ import rxreddit.model.CommentStub;
 import rxreddit.model.Link;
 import rxreddit.model.Listing;
 import rxreddit.model.ListingResponse;
+import rxreddit.model.Media;
 import rxreddit.model.MoreChildrenResponse;
 import timber.log.Timber;
 
@@ -241,7 +242,16 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
     public void openLink(@NonNull Link link) {
         // Overriding this so we don't keep opening link comments over and over
         if (!link.isSelf()) {
-            mLinkCommentsView.openLinkInWebView(link);
+            final Media media = link.getMedia();
+            if (media != null) {
+                final Media.RedditVideo redditVideo = media.getRedditVideo();
+                if (redditVideo != null) {
+                    Timber.d("[dcd] RedditVideo present: %s", redditVideo.getFallbackUrl());
+                    mLinkCommentsView.openUrlInWebView(redditVideo.getFallbackUrl());
+                    return;
+                }
+            }
+            mLinkCommentsView.openUrlInWebView(link.getUrl());
         }
     }
 

@@ -370,8 +370,8 @@ public abstract class BaseListingsFragment extends BaseFragment
         safeStartActivity(getContext(), intent);
     }
 
-    public void openLinkInWebView(@NonNull Link link) {
-        mRedditNavigationView.openURL(link.getUrl());
+    public void openUrlInWebView(@NonNull String url) {
+        mRedditNavigationView.openURL(url);
     }
 
     public void showCommentsForLink(
