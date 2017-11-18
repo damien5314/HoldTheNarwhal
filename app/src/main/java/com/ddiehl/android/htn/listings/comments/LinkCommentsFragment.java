@@ -259,8 +259,8 @@ public class LinkCommentsFragment extends BaseListingsFragment
     }
 
     @Override
-    public void openLinkInWebView(@NonNull Link link) {
-        mRedditNavigationView.openURL(link.getUrl());
+    public void openUrlInWebView(@NonNull String url) {
+        mRedditNavigationView.openURL(url);
     }
 
     @Override

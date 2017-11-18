@@ -11,7 +11,7 @@ public interface LinkView {
 
     void showLinkContextMenu(ContextMenu menu, View view, Link link);
 
-    void openLinkInWebView(@NonNull Link link);
+    void openUrlInWebView(@NonNull String url);
 
     void showCommentsForLink(
             @NonNull String subreddit, @NonNull String linkId, @Nullable String commentId);

@@ -21,6 +21,7 @@ import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import rxreddit.api.RedditService;
+import rxreddit.model.SubredditRule;
 import rxreddit.model.SubredditRules;
 import timber.log.Timber;
 
@@ -109,7 +110,7 @@ public class ReportActivity extends TransparentBaseActivity
     }
 
     void onSubredditRulesRetrieved(SubredditRules result) {
-        List<SubredditRules.Rule> rules = result.getRules();
+        List<SubredditRule> rules = result.getRules();
 
         // Get short names for each rule
         String[] ruleNames = new String[rules.size()];

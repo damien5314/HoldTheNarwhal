@@ -39,6 +39,7 @@ import in.uncod.android.bypass.Bypass;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import rxreddit.model.Subreddit;
+import rxreddit.model.SubredditRule;
 import rxreddit.model.SubredditRules;
 import timber.log.Timber;
 
@@ -292,12 +293,12 @@ public class SubredditInfoFragment extends BaseFragment {
     }
 
     void showSubredditRules(SubredditRules rules) {
-        for (SubredditRules.Rule rule : rules.getRules()) {
+        for (SubredditRule rule : rules.getRules()) {
             addToRules(rule);
         }
     }
 
-    void addToRules(SubredditRules.Rule rule) {
+    void addToRules(SubredditRule rule) {
         // Inflate layout and bind views
         View view = LayoutInflater.from(getContext())
                 .inflate(R.layout.subreddit_rule, mRulesLayout, false);

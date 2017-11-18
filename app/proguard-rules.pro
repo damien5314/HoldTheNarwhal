@@ -21,6 +21,7 @@
 }
 
 ### Gson models ###
+# TODO remove this
 -keep class rxreddit.model.** { *; }
 
 ### ??? ###

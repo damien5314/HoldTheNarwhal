@@ -31,6 +31,7 @@ import rxreddit.model.Link;
 import rxreddit.model.Listing;
 import rxreddit.model.ListingResponse;
 import rxreddit.model.ListingResponseData;
+import rxreddit.model.Media;
 import rxreddit.model.PrivateMessage;
 import rxreddit.model.Savable;
 import rxreddit.model.Subreddit;
@@ -202,7 +203,16 @@ public abstract class BaseListingsPresenter
         if (link.isSelf()) {
             mLinkView.showCommentsForLink(link.getSubreddit(), link.getId(), null);
         } else {
-            mLinkView.openLinkInWebView(link);
+            final Media media = link.getMedia();
+            if (media != null) {
+                final Media.RedditVideo redditVideo = media.getRedditVideo();
+                if (redditVideo != null) {
+                    Timber.d("[dcd] RedditVideo present: %s", redditVideo.getFallbackUrl());
+                    mLinkView.openUrlInWebView(redditVideo.getFallbackUrl());
+                    return;
+                }
+            }
+            mLinkView.openUrlInWebView(link.getUrl());
         }
     }
 

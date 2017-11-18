@@ -17,6 +17,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import rxreddit.model.Image;
 import rxreddit.model.Link;
 
 import static com.ddiehl.android.htn.listings.links.LinkOptionsBar.Icons.DOWNVOTE;
@@ -114,8 +115,8 @@ public class CommentsLinkViewHolder extends BaseLinkViewHolder {
         // Nsfw/ThumbnailMode is inconsequential here, just show the best preview for screen size
         String url = null;
         if (link.getPreviewImages() != null) {
-            List<Link.Preview.Image> images = link.getPreviewImages();
-            Link.Preview.Image.Res image = images.get(0).getSource();
+            List<Image> images = link.getPreviewImages();
+            Image.Res image = images.get(0).getSource();
             url = image.getUrl();
             int height = image.getHeight();
             DisplayMetrics display = mContext.getResources().getDisplayMetrics();
