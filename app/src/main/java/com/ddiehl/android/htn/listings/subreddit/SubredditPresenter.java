@@ -86,6 +86,7 @@ public class SubredditPresenter extends BaseListingsPresenter {
         final String subreddit = mSubredditView.getSubreddit();
 
         mRedditService.loadLinks(subreddit, mSubredditView.getSort(), mSubredditView.getTimespan(), before, after)
+                .flatMap(this::checkNullResponse)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(disposable -> {

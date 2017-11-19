@@ -40,6 +40,7 @@ public class InboxPresenter extends BaseListingsPresenter {
         String nextId = append ? mNextPageListingId : null;
 
         mRedditService.getInbox(show, prevId, nextId)
+                .flatMap(this::checkNullResponse)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(disposable -> {

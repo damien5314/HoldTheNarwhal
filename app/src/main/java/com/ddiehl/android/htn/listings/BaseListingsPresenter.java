@@ -21,6 +21,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import rxreddit.api.RedditService;
@@ -177,25 +179,27 @@ public abstract class BaseListingsPresenter
         ListingResponseData data = response.getData();
         List<Listing> listings = data.getChildren();
 
-        if (listings == null) {
+        Timber.i("Loaded %d listings", listings.size());
+
+        if (append) {
+            int lastIndex = mListings.size() - 1;
+            mListings.addAll(listings);
+            mNextPageListingId = data.getAfter();
+            mListingsView.notifyItemRangeInserted(lastIndex + 1, listings.size());
+        } else {
+            mListings.addAll(0, listings);
+            mPrevPageListingId = listings.size() == 0 ? null : listings.get(0).getFullName();
+            mListingsView.notifyItemRangeInserted(0, listings.size());
+        }
+    }
+
+    protected ObservableSource<ListingResponse> checkNullResponse(ListingResponse listingResponse) {
+        if (listingResponse.getData().getChildren() == null) {
             mPrevPageListingId = null;
             mNextPageListingId = null;
-
-            String message = mContext.getString(R.string.error_get_links);
-            mMainView.showError(message);
+            return Observable.error(new NullPointerException("no links"));
         } else {
-            Timber.i("Loaded %d listings", listings.size());
-
-            if (append) {
-                int lastIndex = mListings.size() - 1;
-                mListings.addAll(listings);
-                mNextPageListingId = data.getAfter();
-                mListingsView.notifyItemRangeInserted(lastIndex + 1, listings.size());
-            } else {
-                mListings.addAll(0, listings);
-                mPrevPageListingId = listings.size() == 0 ? null : listings.get(0).getFullName();
-                mListingsView.notifyItemRangeInserted(0, listings.size());
-            }
+            return Observable.just(listingResponse);
         }
     }
 
@@ -207,7 +211,6 @@ public abstract class BaseListingsPresenter
             if (media != null) {
                 final Media.RedditVideo redditVideo = media.getRedditVideo();
                 if (redditVideo != null) {
-                    Timber.d("[dcd] RedditVideo present: %s", redditVideo.getFallbackUrl());
                     mLinkView.openUrlInWebView(redditVideo.getFallbackUrl());
                     return;
                 }
