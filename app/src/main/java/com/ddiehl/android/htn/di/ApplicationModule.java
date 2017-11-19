@@ -44,20 +44,18 @@ public class ApplicationModule {
     RedditService providesRedditService(Context context) {
 //        return new RedditServiceMock();
         final int cacheSize = 10 * 1024 * 1024; // 10 MiB
-        File path = new File(context.getCacheDir().getAbsolutePath(), "htn-http-cache");
-        RedditService.Builder builder = new RedditService.Builder()
+        File path = new File(context.getCacheDir(), "htn-http-cache");
+        final String userAgent = RxRedditUtil.getUserAgent(
+                "android", "com.ddiehl.android.htn", BuildConfig.VERSION_NAME, "damien5314");
+        return new RedditService.Builder()
                 .appId(BuildConfig.REDDIT_APP_ID)
                 .redirectUri(BuildConfig.REDDIT_REDIRECT_URI)
                 .deviceId(AndroidUtil.getDeviceId(context))
-                .userAgent(
-                        RxRedditUtil.getUserAgent(
-                                "android", "com.ddiehl.android.htn", BuildConfig.VERSION_NAME, "damien5314"
-                        )
-                )
+                .userAgent(userAgent)
                 .accessTokenManager(new AndroidAccessTokenManager(context))
                 .cache(cacheSize, path)
-                .loggingEnabled(BuildConfig.DEBUG);
-        return builder.build();
+                .loggingEnabled(BuildConfig.DEBUG)
+                .build();
     }
 
     @Provides
