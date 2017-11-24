@@ -20,7 +20,7 @@ android {
 
     sourceSets {
         main.java.srcDirs += 'library/platform/android/library/src'
-        main.jniLibs.srcDirs += 'library/platform/android/library/libs'
+//        main.jniLibs.srcDirs += 'library/platform/android/library/libs'
     }
 }
 
