@@ -23,10 +23,6 @@
 
 #-keep,allowobfuscation class rxreddit.model.** { *; }
 
-
-### Trial zone
-
-### Safe zone
 #-keep class rxreddit.model.Listing** { *; }
 #-keep class rxreddit.model.Link** { *; }
 #-keep class rxreddit.model.Image** { *; }
@@ -64,6 +60,10 @@
 #-keep class rxreddit.model.UserIdentityListing** { *; }
 #-keep class rxreddit.model.UserSettings** { *; }
 #-keep class rxreddit.model.Votable** { *; }
+
+### Trial zone
+
+### Safe zone
 
 ### ??? ###
 -keepattributes Signature
