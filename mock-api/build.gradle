@@ -7,9 +7,9 @@ repositories {
 }
 
 dependencies {
-    compile "com.github.damien5314.RxReddit:library:$RXREDDIT_VERSION"
-    compile "io.reactivex.rxjava2:rxjava:$RXJAVA_VERSION"
+    implementation "com.github.damien5314.RxReddit:library:$RXREDDIT_VERSION"
+    implementation "io.reactivex.rxjava2:rxjava:$RXJAVA_VERSION"
 
-    testCompile "org.jetbrains.kotlin:kotlin-stdlib:$KOTLIN_VERSION"
-    testCompile "junit:junit:$JUNIT_VERSION"
+    testImplementation "org.jetbrains.kotlin:kotlin-stdlib:$KOTLIN_VERSION"
+    testImplementation "junit:junit:$JUNIT_VERSION"
 }

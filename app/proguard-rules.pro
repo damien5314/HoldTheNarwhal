@@ -20,10 +20,6 @@
   @retrofit2.http.* <methods>;
 }
 
-### Gson models ###
-# TODO remove this
--keep class rxreddit.model.** { *; }
-
 ### ??? ###
 -keepattributes Signature
 -keepattributes *Annotation*

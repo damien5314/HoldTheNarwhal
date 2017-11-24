@@ -70,6 +70,7 @@ public class UserProfilePresenter extends BaseListingsPresenter {
                 mSummaryView.getSort(), mSummaryView.getTimespan(),
                 before, after
         )
+                .flatMap(this::checkNullResponse)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(disposable -> {
