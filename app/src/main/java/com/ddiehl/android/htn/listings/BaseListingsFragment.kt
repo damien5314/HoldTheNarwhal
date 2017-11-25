@@ -22,7 +22,6 @@ import rxreddit.model.Comment
 import rxreddit.model.Link
 import rxreddit.model.Listing
 import rxreddit.model.PrivateMessage
-import timber.log.Timber
 
 abstract class BaseListingsFragment : BaseFragment(), ListingsView, SwipeRefreshLayout.OnRefreshListener {
 
@@ -33,30 +32,26 @@ abstract class BaseListingsFragment : BaseFragment(), ListingsView, SwipeRefresh
 
     @BindView(R.id.recycler_view)
     lateinit var recyclerView: RecyclerView
+    protected lateinit var swipeRefreshLayout: SwipeRefreshLayout
 
     protected lateinit var listingsPresenter: BaseListingsPresenter
     protected abstract val listingsAdapter: ListingsAdapter
-    protected var callbacks: ListingsView.Callbacks? = null
-
-    protected lateinit var swipeRefreshLayout: SwipeRefreshLayout
-    protected var listingSelected: Listing? = null
+    protected lateinit var callbacks: ListingsView.Callbacks
+    private var listingSelected: Listing? = null
 
     private val onScrollListener: RecyclerView.OnScrollListener
         get() = object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                with(recyclerView.layoutManager as LinearLayoutManager) {
+                    handleScroll(childCount, itemCount, findFirstVisibleItemPosition())
+                }
+            }
 
-            internal var mFirstVisibleItem: Int = 0
-            internal var mVisibleItemCount: Int = 0
-            internal var mTotalItemCount: Int = 0
-
-            override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
-                val mgr = recyclerView!!.layoutManager as LinearLayoutManager
-                mVisibleItemCount = mgr.childCount
-                mTotalItemCount = mgr.itemCount
-                mFirstVisibleItem = mgr.findFirstVisibleItemPosition()
-                if (mFirstVisibleItem == 0) {
-                    callbacks!!.onFirstItemShown()
-                } else if (mVisibleItemCount + mFirstVisibleItem >= mTotalItemCount) {
-                    callbacks!!.onLastItemShown()
+            private fun handleScroll(visible: Int, total: Int, firstVisible: Int) {
+                if (firstVisible == 0) {
+                    callbacks.onFirstItemShown()
+                } else if (visible + firstVisible >= total) {
+                    callbacks.onLastItemShown()
                 }
             }
         }
@@ -69,12 +64,9 @@ abstract class BaseListingsFragment : BaseFragment(), ListingsView, SwipeRefresh
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, state: Bundle?): View {
-        val view = super.onCreateView(inflater, container, state)
-
-        // Initialize list view
-        instantiateListView()
-
-        return view
+        return super.onCreateView(inflater, container, state).also {
+            instantiateListView()
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -84,10 +76,12 @@ abstract class BaseListingsFragment : BaseFragment(), ListingsView, SwipeRefresh
     }
 
     private fun instantiateListView() {
-        recyclerView.layoutManager = LinearLayoutManager(activity)
-        recyclerView.clearOnScrollListeners()
-        recyclerView.addOnScrollListener(onScrollListener)
-        recyclerView.adapter = listingsAdapter
+        with(recyclerView) {
+            layoutManager = LinearLayoutManager(activity)
+            clearOnScrollListeners()
+            addOnScrollListener(onScrollListener)
+            adapter = listingsAdapter
+        }
     }
 
     override fun onStart() {
@@ -108,9 +102,8 @@ abstract class BaseListingsFragment : BaseFragment(), ListingsView, SwipeRefresh
         super.onDestroy()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.listings, menu)
-    }
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater)
+            = inflater.inflate(R.menu.listings, menu)
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
@@ -137,26 +130,24 @@ abstract class BaseListingsFragment : BaseFragment(), ListingsView, SwipeRefresh
     }
 
     private fun showReportSuccessToast(listing: Listing) {
-        Snackbar.make(chromeView, R.string.report_successful, Snackbar.LENGTH_LONG)
-                .show()
+        Snackbar.make(chromeView, R.string.report_successful, Snackbar.LENGTH_LONG).show()
     }
 
     private fun showReportErrorToast(listing: Listing) {
-        Snackbar.make(chromeView, R.string.report_error, Snackbar.LENGTH_LONG)
-                .show()
+        Snackbar.make(chromeView, R.string.report_error, Snackbar.LENGTH_LONG).show()
     }
 
     open fun showLinkContextMenu(menu: ContextMenu, view: View, link: Link) {
         listingSelected = link
-        activity!!.menuInflater.inflate(R.menu.link_context, menu)
+        activity?.menuInflater?.inflate(R.menu.link_context, menu)
 
         // Build title for menu
         val score = if (link.score == null) {
             view.context.getString(R.string.hidden_score_placeholder)
         } else {
-            link.score!!.toString()
+            link.score.toString()
         }
-        val title = String.format(getString(R.string.menu_action_link), link.title, score)
+        val title = getString(R.string.menu_action_link).format(link.title, score)
         menu.setHeaderTitle(title)
 
         // Set state of hide/unhide
@@ -164,13 +155,11 @@ abstract class BaseListingsFragment : BaseFragment(), ListingsView, SwipeRefresh
         menu.findItem(R.id.action_link_unhide).isVisible = link.isHidden
 
         // Set subreddit for link in the view subreddit menu item
-        val subreddit = String.format(
-                getString(R.string.action_view_subreddit), link.subreddit)
+        val subreddit = getString(R.string.action_view_subreddit).format(link.subreddit)
         menu.findItem(R.id.action_link_view_subreddit).title = subreddit
 
         // Set username for link in the view user profile menu item
-        val username = String.format(
-                getString(R.string.action_view_user_profile), link.author)
+        val username = getString(R.string.action_view_user_profile).format(link.author)
         menu.findItem(R.id.action_link_view_user_profile).title = username
 
         // Hide user profile for posts by deleted users
@@ -185,20 +174,19 @@ abstract class BaseListingsFragment : BaseFragment(), ListingsView, SwipeRefresh
 
     fun showCommentContextMenu(menu: ContextMenu, view: View, comment: Comment) {
         listingSelected = comment
-        activity!!.menuInflater.inflate(R.menu.comment_context, menu)
+        activity?.menuInflater?.inflate(R.menu.comment_context, menu)
 
         // Build title for menu
-        val score = if (comment.score == null)
+        val score = if (comment.score == null) {
             view.context.getString(R.string.hidden_score_placeholder)
-        else
+        } else {
             comment.score!!.toString()
-        val title = String.format(getString(R.string.menu_action_comment),
-                comment.author, score)
+        }
+        val title = getString(R.string.menu_action_comment).format(comment.author, score)
         menu.setHeaderTitle(title)
 
         // Set username for listing in the user profile menu item
-        val username = String.format(
-                getString(R.string.action_view_user_profile), comment.author)
+        val username = getString(R.string.action_view_user_profile).format(comment.author)
         menu.findItem(R.id.action_comment_view_user_profile).title = username
 
         // Hide save/unsave option
@@ -225,8 +213,8 @@ abstract class BaseListingsFragment : BaseFragment(), ListingsView, SwipeRefresh
         menu.findItem(R.id.action_message_mark_unread).isVisible = !message.isUnread
     }
 
-    override fun onContextItemSelected(item: MenuItem?): Boolean {
-        when (item!!.itemId) {
+    override fun onContextItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
             R.id.action_link_reply -> {
                 listingsPresenter.replyToLink(listingSelected as Link)
                 return true
@@ -351,32 +339,33 @@ abstract class BaseListingsFragment : BaseFragment(), ListingsView, SwipeRefresh
                 listingsPresenter.replyToMessage(listingSelected as PrivateMessage)
                 return true
             }
-            else -> {
-                Timber.w("No action registered to this context item")
-                return false
-            }
+            else -> throw IllegalArgumentException("no action associated with item: ${item.title}")
         }
     }
 
     open fun openShareView(link: Link) {
-        val i = Intent(Intent.ACTION_SEND)
-        i.type = "text/plain"
-        i.putExtra(Intent.EXTRA_TEXT, LINK_BASE_URL + link.permalink)
-        i.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        startActivity(i)
+        val intent = Intent().apply {
+            action = Intent.ACTION_SEND
+            type = "text/plain"
+            putExtra(Intent.EXTRA_TEXT, LINK_BASE_URL + link.permalink)
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        }
+        startActivity(intent)
     }
 
     open fun openLinkInBrowser(link: Link) {
         val uri = Uri.parse(link.url)
-        val intent = Intent(Intent.ACTION_VIEW, uri)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        val intent = Intent(Intent.ACTION_VIEW, uri).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        }
         safeStartActivity(context, intent)
     }
 
     open fun openCommentsInBrowser(link: Link) {
         val uri = Uri.parse(LINK_BASE_URL + link.permalink)
-        val intent = Intent(Intent.ACTION_VIEW, uri)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        val intent = Intent(Intent.ACTION_VIEW, uri).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        }
         safeStartActivity(context, intent)
     }
 
@@ -416,59 +405,34 @@ abstract class BaseListingsFragment : BaseFragment(), ListingsView, SwipeRefresh
 
     open fun openCommentInBrowser(comment: Comment) {
         val uri = Uri.parse(comment.url)
-        val intent = Intent(Intent.ACTION_VIEW, uri)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        val intent = Intent(Intent.ACTION_VIEW, uri).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        }
         safeStartActivity(context, intent)
     }
 
     fun openReportView(link: Link) {
-        val intent = ReportActivity.getIntent(
-                context, link.fullName, link.subreddit
-        )
+        val intent = ReportActivity.getIntent(context, link.fullName, link.subreddit)
         startActivityForResult(intent, REQUEST_REPORT_LISTING)
     }
 
     fun openReportView(comment: Comment) {
-        val intent = ReportActivity.getIntent(
-                context, comment.fullName, comment.subreddit
-        )
+        val intent = ReportActivity.getIntent(context, comment.fullName, comment.subreddit)
         startActivityForResult(intent, REQUEST_REPORT_LISTING)
     }
 
     fun openReportView(message: PrivateMessage) {
-        val intent = ReportActivity.getIntent(
-                context, message.fullname, null
-        )
+        val intent = ReportActivity.getIntent(context, message.fullname, null)
         startActivityForResult(intent, REQUEST_REPORT_LISTING)
     }
 
-    override fun notifyDataSetChanged() {
-        listingsAdapter.notifyDataSetChanged()
-    }
-
-    override fun notifyItemChanged(position: Int) {
-        listingsAdapter.notifyItemChanged(position)
-    }
-
-    override fun notifyItemInserted(position: Int) {
-        listingsAdapter.notifyItemInserted(position)
-    }
-
-    override fun notifyItemRemoved(position: Int) {
-        listingsAdapter.notifyItemRemoved(position)
-    }
-
-    override fun notifyItemRangeChanged(position: Int, count: Int) {
-        listingsAdapter.notifyItemRangeChanged(position, count)
-    }
-
-    override fun notifyItemRangeInserted(position: Int, count: Int) {
-        listingsAdapter.notifyItemRangeInserted(position, count)
-    }
-
-    override fun notifyItemRangeRemoved(position: Int, count: Int) {
-        listingsAdapter.notifyItemRangeRemoved(position, count)
-    }
+    override fun notifyDataSetChanged() = listingsAdapter.notifyDataSetChanged()
+    override fun notifyItemChanged(position: Int) = listingsAdapter.notifyItemChanged(position)
+    override fun notifyItemInserted(position: Int) = listingsAdapter.notifyItemInserted(position)
+    override fun notifyItemRemoved(position: Int) = listingsAdapter.notifyItemRemoved(position)
+    override fun notifyItemRangeChanged(position: Int, count: Int) = listingsAdapter.notifyItemRangeChanged(position, count)
+    override fun notifyItemRangeInserted(position: Int, count: Int) = listingsAdapter.notifyItemRangeInserted(position, count)
+    override fun notifyItemRangeRemoved(position: Int, count: Int) = listingsAdapter.notifyItemRangeRemoved(position, count)
 
     override fun onRefresh() {
         swipeRefreshLayout.isRefreshing = false
