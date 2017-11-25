@@ -8,6 +8,11 @@
         app:showAsAction="never" />
 
     <item
+        android:id="@+id/action_comment_parent"
+        android:title="@string/action_show_parent"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/action_comment_reply"
         android:title="@string/action_reply"
         app:showAsAction="never" />

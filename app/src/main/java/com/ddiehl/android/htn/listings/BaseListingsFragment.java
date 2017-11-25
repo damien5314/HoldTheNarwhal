@@ -236,6 +236,11 @@ public abstract class BaseListingsFragment extends BaseFragment
         if ("[deleted]".equalsIgnoreCase(comment.getAuthor())) {
             menu.findItem(R.id.action_comment_view_user_profile).setVisible(false);
         }
+
+        // Don't show parent menu option if there is no parent
+        if (comment.getLinkId().equals(comment.getParentId())) {
+            menu.findItem(R.id.action_comment_parent).setVisible(false);
+        }
     }
 
     public void showMessageContextMenu(ContextMenu menu, View view, PrivateMessage message) {
@@ -296,6 +301,9 @@ public abstract class BaseListingsFragment extends BaseFragment
                 return true;
             case R.id.action_comment_permalink:
                 listingsPresenter.openCommentPermalink((Comment) listingSelected);
+                return true;
+            case R.id.action_comment_parent:
+                listingsPresenter.openCommentParent((Comment) listingSelected);
                 return true;
             case R.id.action_comment_reply:
                 listingsPresenter.replyToComment((Comment) listingSelected);
