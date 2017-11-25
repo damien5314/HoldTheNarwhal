@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="@dimen/baseline_spacing">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/baseline_spacing">
 
     <EditText
-            android:id="@+id/comment_edit_text"
-            android:layout_width="320dp"
-            android:layout_height="wrap_content"
-            android:inputType="textMultiLine|textAutoCorrect"
-            android:hint="@string/comment_edit_text_hint"
-            android:minLines="2"
-            android:maxLines="10" />
+        android:id="@+id/comment_edit_text"
+        android:layout_width="320dp"
+        android:layout_height="wrap_content"
+        android:inputType="textMultiLine|textAutoCorrect"
+        android:hint="@string/comment_edit_text_hint"
+        android:minLines="2"
+        android:maxLines="10" />
 
     <Button
-            android:id="@+id/comment_submit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:text="@string/comment_add_submit" />
+        android:id="@+id/comment_submit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:text="@string/comment_add_submit" />
 
 </LinearLayout>

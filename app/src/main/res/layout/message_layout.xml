@@ -1,117 +1,117 @@
 <merge
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="@dimen/link_list_item_margin_vertical"
-            android:paddingBottom="@dimen/link_list_item_margin_vertical"
-            android:paddingLeft="@dimen/link_list_item_margin_horizontal"
-            android:paddingRight="@dimen/link_list_item_margin_horizontal"
-            android:gravity="center_vertical"
-            android:orientation="vertical"
-            android:background="@color/primary_dark">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/link_list_item_margin_vertical"
+        android:paddingBottom="@dimen/link_list_item_margin_vertical"
+        android:paddingLeft="@dimen/link_list_item_margin_horizontal"
+        android:paddingRight="@dimen/link_list_item_margin_horizontal"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:background="@color/primary_dark">
 
         <TextView
-                android:id="@+id/conversation_subject"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textAlignment="viewStart"
-                android:gravity="start"
-                android:fontFamily="sans-serif-light"
-                android:textAppearance="?android:textAppearanceMedium"
-                android:textColor="@android:color/white"
-                tools:text="The brown fox jumped over the white fence"
-                tools:ignore="UnusedAttribute" />
+            android:id="@+id/conversation_subject"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="viewStart"
+            android:gravity="start"
+            android:fontFamily="sans-serif-light"
+            android:textAppearance="?android:textAppearanceMedium"
+            android:textColor="@android:color/white"
+            tools:text="The brown fox jumped over the white fence"
+            tools:ignore="UnusedAttribute" />
 
     </LinearLayout>
 
     <LinearLayout
-            android:id="@+id/conversation_body_layout"
-            android:orientation="vertical"
+        android:id="@+id/conversation_body_layout"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/collapsed_messages_layout"
+            android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-        <LinearLayout
-                android:id="@+id/collapsed_messages_layout"
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
             <TextView
-                    android:id="@+id/collapsed_messages_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/baseline_spacing"
-                    android:textColor="@color/secondary_text"
-                    android:textAppearance="?android:textAppearanceSmall"
-                    tools:text="view 9 more messages" />
+                android:id="@+id/collapsed_messages_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/baseline_spacing"
+                android:textColor="@color/secondary_text"
+                android:textAppearance="?android:textAppearanceSmall"
+                tools:text="view 9 more messages" />
 
         </LinearLayout>
 
         <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/divider" />
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/divider" />
 
         <LinearLayout
-                android:id="@+id/last_message_layout"
-                android:orientation="horizontal"
+            android:id="@+id/last_message_layout"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <View
+                android:id="@+id/message_indentation"
+                android:layout_width="@dimen/comment_indentation_margin"
+                android:layout_height="match_parent"
+                android:background="@color/primary_dark" />
+
+            <LinearLayout
+                android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-            <View
-                    android:id="@+id/message_indentation"
-                    android:layout_width="@dimen/comment_indentation_margin"
-                    android:layout_height="match_parent"
-                    android:background="@color/primary_dark" />
-
-            <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
                 <LinearLayout
-                        android:orientation="horizontal"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/baseline_spacing"
-                        android:layout_marginBottom="@dimen/baseline_spacing"
-                        android:layout_marginLeft="@dimen/baseline_spacing"
-                        android:layout_marginRight="@dimen/baseline_spacing"
-                        tools:ignore="UseCompoundDrawables">
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/baseline_spacing"
+                    android:layout_marginBottom="@dimen/baseline_spacing"
+                    android:layout_marginLeft="@dimen/baseline_spacing"
+                    android:layout_marginRight="@dimen/baseline_spacing"
+                    tools:ignore="UseCompoundDrawables">
 
                     <TextView
-                            android:id="@+id/last_message_metadata"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:textColor="@color/secondary_text"
-                            android:textAppearance="?android:textAppearanceSmall"
-                            tools:text="from simpleredditreader sent 8 days ago" />
+                        android:id="@+id/last_message_metadata"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textColor="@color/secondary_text"
+                        android:textAppearance="?android:textAppearanceSmall"
+                        tools:text="from simpleredditreader sent 8 days ago" />
 
                     <ImageView
-                            android:id="@+id/unread_message_indicator"
-                            android:layout_width="wrap_content"
-                            android:layout_height="@dimen/unread_message_indicator_size"
-                            android:layout_gravity="top"
-                            android:src="@drawable/ic_email_black_24dp"
-                            android:tint="@color/reddit_orangered" />
+                        android:id="@+id/unread_message_indicator"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/unread_message_indicator_size"
+                        android:layout_gravity="top"
+                        android:src="@drawable/ic_email_black_24dp"
+                        android:tint="@color/reddit_orangered" />
 
                 </LinearLayout>
 
                 <TextView
-                        android:id="@+id/last_message_body"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/baseline_spacing"
-                        android:layout_marginLeft="@dimen/baseline_spacing"
-                        android:layout_marginRight="@dimen/baseline_spacing"
-                        android:textColor="@color/primary_text"
-                        android:textColorLink="@color/link_color"
-                        android:textAppearance="?android:textAppearanceSmall"
-                        tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod." />
+                    android:id="@+id/last_message_body"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/baseline_spacing"
+                    android:layout_marginLeft="@dimen/baseline_spacing"
+                    android:layout_marginRight="@dimen/baseline_spacing"
+                    android:textColor="@color/primary_text"
+                    android:textColorLink="@color/link_color"
+                    android:textAppearance="?android:textAppearanceSmall"
+                    tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod." />
 
             </LinearLayout>
 

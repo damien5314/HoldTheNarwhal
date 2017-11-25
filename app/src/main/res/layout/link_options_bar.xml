@@ -1,135 +1,135 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:baselineAligned="false"
-        android:gravity="center"
-        android:orientation="horizontal">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="48dp"
+    android:baselineAligned="false"
+    android:gravity="center"
+    android:orientation="horizontal">
 
     <FrameLayout
-            android:id="@+id/action_link_reply"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="?attr/selectableItemBackground">
+        android:id="@+id/action_link_reply"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="?attr/selectableItemBackground">
 
         <ImageView
-                android:id="@+id/action_link_reply_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:contentDescription="@string/action_reply"
-                android:src="@drawable/ic_reply_black_24dp"
-                android:tint="@color/secondary_text" />
+            android:id="@+id/action_link_reply_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:contentDescription="@string/action_reply"
+            android:src="@drawable/ic_reply_black_24dp"
+            android:tint="@color/secondary_text" />
 
     </FrameLayout>
 
     <FrameLayout
-            android:id="@+id/action_link_upvote"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="?attr/selectableItemBackground">
+        android:id="@+id/action_link_upvote"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="?attr/selectableItemBackground">
 
         <ImageView
-                android:id="@+id/action_link_upvote_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:contentDescription="@string/action_upvote"
-                android:src="@drawable/ic_arrow_upward_black_24dp"
-                android:tint="@color/secondary_text" />
+            android:id="@+id/action_link_upvote_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:contentDescription="@string/action_upvote"
+            android:src="@drawable/ic_arrow_upward_black_24dp"
+            android:tint="@color/secondary_text" />
 
     </FrameLayout>
 
     <FrameLayout
-            android:id="@+id/action_link_downvote"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="?attr/selectableItemBackground">
+        android:id="@+id/action_link_downvote"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="?attr/selectableItemBackground">
 
         <ImageView
-                android:id="@+id/action_link_downvote_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:contentDescription="@string/action_downvote"
-                android:src="@drawable/ic_arrow_downward_black_24dp"
-                android:tint="@color/secondary_text" />
+            android:id="@+id/action_link_downvote_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:contentDescription="@string/action_downvote"
+            android:src="@drawable/ic_arrow_downward_black_24dp"
+            android:tint="@color/secondary_text" />
 
     </FrameLayout>
 
     <FrameLayout
-            android:id="@+id/action_link_save"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="?attr/selectableItemBackground">
+        android:id="@+id/action_link_save"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="?attr/selectableItemBackground">
 
         <ImageView
-                android:id="@+id/action_link_save_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:contentDescription="@string/action_save"
-                android:src="@drawable/ic_save_black_24dp"
-                android:tint="@color/secondary_text" />
+            android:id="@+id/action_link_save_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:contentDescription="@string/action_save"
+            android:src="@drawable/ic_save_black_24dp"
+            android:tint="@color/secondary_text" />
 
     </FrameLayout>
 
     <FrameLayout
-            android:id="@+id/action_link_share"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="?attr/selectableItemBackground">
+        android:id="@+id/action_link_share"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="?attr/selectableItemBackground">
 
         <ImageView
-                android:id="@+id/action_link_share_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:contentDescription="@string/action_share"
-                android:src="@drawable/ic_share_black_24dp"
-                android:tint="@color/secondary_text" />
+            android:id="@+id/action_link_share_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:contentDescription="@string/action_share"
+            android:src="@drawable/ic_share_black_24dp"
+            android:tint="@color/secondary_text" />
 
     </FrameLayout>
 
     <FrameLayout
-            android:id="@+id/action_link_hide"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="?attr/selectableItemBackground">
+        android:id="@+id/action_link_hide"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="?attr/selectableItemBackground">
 
         <ImageView
-                android:id="@+id/action_link_hide_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:contentDescription="@string/action_hide"
-                android:src="@drawable/ic_close_black_24dp"
-                android:tint="@color/secondary_text" />
+            android:id="@+id/action_link_hide_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:contentDescription="@string/action_hide"
+            android:src="@drawable/ic_close_black_24dp"
+            android:tint="@color/secondary_text" />
 
     </FrameLayout>
 
     <FrameLayout
-            android:id="@+id/action_link_report"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="?attr/selectableItemBackground">
+        android:id="@+id/action_link_report"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="?attr/selectableItemBackground">
 
         <ImageView
-                android:id="@+id/action_link_report_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:contentDescription="@string/action_report"
-                android:src="@drawable/ic_report_black_24dp"
-                android:tint="@color/secondary_text" />
+            android:id="@+id/action_link_report_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:contentDescription="@string/action_report"
+            android:src="@drawable/ic_report_black_24dp"
+            android:tint="@color/secondary_text" />
 
     </FrameLayout>
 

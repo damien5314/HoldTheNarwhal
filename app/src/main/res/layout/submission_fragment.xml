@@ -1,94 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout
-        android:id="@+id/coordinator_layout"
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".listings.subreddit.submission.SubmitPostActivity">
+    android:id="@+id/coordinator_layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".listings.subreddit.submission.SubmitPostActivity">
 
     <ScrollView
-            android:id="@+id/submission_content"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+        android:id="@+id/submission_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
         <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:divider="@drawable/spacer_8dp_h"
-                android:orientation="vertical"
-                android:showDividers="beginning|middle">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="@drawable/spacer_8dp_h"
+            android:orientation="vertical"
+            android:showDividers="beginning|middle">
 
             <android.support.design.widget.TabLayout
-                    android:id="@+id/submission_type_tabs"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@null" />
+                android:id="@+id/submission_type_tabs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@null" />
 
             <android.support.design.widget.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="16dp">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp">
 
                 <android.support.design.widget.TextInputEditText
-                        android:id="@+id/submission_url"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/submission_url_field_hint"
-                        android:maxLines="1" />
+                    android:id="@+id/submission_url"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/submission_url_field_hint"
+                    android:maxLines="1" />
 
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="16dp">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp">
 
                 <android.support.design.widget.TextInputEditText
-                        android:id="@+id/submission_title"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/submission_title_field_hint"
-                        android:maxLines="1" />
+                    android:id="@+id/submission_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/submission_title_field_hint"
+                    android:maxLines="1" />
 
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="16dp">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp">
 
                 <android.support.design.widget.TextInputEditText
-                        android:id="@+id/submission_text"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/submission_text_field_hint"
-                        android:maxLines="10"
-                        android:minLines="5" />
+                    android:id="@+id/submission_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/submission_text_field_hint"
+                    android:maxLines="10"
+                    android:minLines="5" />
 
             </android.support.design.widget.TextInputLayout>
 
             <CheckBox
-                    android:id="@+id/send_replies_to_inbox"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="16dp"
-                    android:text="@string/submission_send_replies_to_inbox" />
+                android:id="@+id/send_replies_to_inbox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:text="@string/submission_send_replies_to_inbox" />
 
             <Button
-                    android:id="@+id/submission_submit"
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:layout_margin="16dp"
-                    android:elevation="8dp"
-                    android:background="@color/primary_dark"
-                    android:text="@string/submission_submit"
-                    android:textColor="@color/white"
-                    tools:targetApi="lollipop" />
+                android:id="@+id/submission_submit"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_margin="16dp"
+                android:elevation="8dp"
+                android:background="@color/primary_dark"
+                android:text="@string/submission_submit"
+                android:textColor="@color/white"
+                tools:targetApi="lollipop" />
 
         </LinearLayout>
 

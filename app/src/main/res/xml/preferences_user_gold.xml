@@ -2,22 +2,22 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory
-            android:title="gold options">
+        android:title="gold options">
 
         <CheckBoxPreference
-                android:key="store_visits"
-                android:title="@string/pref_store_visits"
-                android:defaultValue="false" />
+            android:key="store_visits"
+            android:title="@string/pref_store_visits"
+            android:defaultValue="false" />
 
         <CheckBoxPreference
-                android:key="show_gold_expiration"
-                android:title="@string/pref_show_gold_expiration"
-                android:defaultValue="false" />
+            android:key="show_gold_expiration"
+            android:title="@string/pref_show_gold_expiration"
+            android:defaultValue="false" />
 
         <CheckBoxPreference
-                android:key="creddit_autorenew"
-                android:title="@string/pref_creddit_autorenew"
-                android:defaultValue="false" />
+            android:key="creddit_autorenew"
+            android:title="@string/pref_creddit_autorenew"
+            android:defaultValue="false" />
 
     </PreferenceCategory>
 
