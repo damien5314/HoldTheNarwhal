@@ -99,8 +99,8 @@ public class UserProfileFragment extends BaseListingsFragment
         if (TextUtils.isEmpty(mTimespan)) mTimespan = "all";
 
         mUserProfilePresenter = new UserProfilePresenter(this, redditNavigationView, this);
-        listingsPresenter = mUserProfilePresenter;
-        callbacks = mUserProfilePresenter;
+        setListingsPresenter(mUserProfilePresenter);
+        setCallbacks(mUserProfilePresenter);
     }
 
     @NonNull @Override
@@ -202,10 +202,14 @@ public class UserProfileFragment extends BaseListingsFragment
         }
     }
 
-    @Override
+    private ListingsAdapter listingsAdapter;
+
+    @NonNull @Override
     public ListingsAdapter getListingsAdapter() {
-        return new ListingsAdapter(
-                listingsPresenter, this, this, null);
+        if (listingsAdapter == null) {
+            listingsAdapter = new ListingsAdapter(getListingsPresenter(), this, this, null);
+        }
+        return listingsAdapter;
     }
 
     //region Options menu
@@ -302,7 +306,7 @@ public class UserProfileFragment extends BaseListingsFragment
         } else {
             mSort = sort;
             getActivity().invalidateOptionsMenu();
-            listingsPresenter.onSortChanged();
+            getListingsPresenter().onSortChanged();
         }
     }
 
@@ -310,7 +314,7 @@ public class UserProfileFragment extends BaseListingsFragment
         mSort = mSelectedSort;
         mTimespan = timespan;
         getActivity().invalidateOptionsMenu();
-        listingsPresenter.onSortChanged();
+        getListingsPresenter().onSortChanged();
     }
 
     //endregion

@@ -11,7 +11,6 @@ import butterknife.BindView
 import com.ddiehl.android.htn.HoldTheNarwhal
 import com.ddiehl.android.htn.R
 import com.ddiehl.android.htn.listings.BaseListingsFragment
-import com.ddiehl.android.htn.listings.ListingsAdapter
 import com.ddiehl.android.htn.settings.SettingsManager
 import com.ddiehl.android.htn.utils.AndroidUtils.safeStartActivity
 import com.ddiehl.android.htn.view.BaseFragment
@@ -70,9 +69,7 @@ class LinkCommentsFragment : BaseListingsFragment(), LinkCommentsView, SwipeRefr
         return R.layout.link_comments_fragment
     }
 
-    override fun getListingsAdapter(): ListingsAdapter {
-        return LinkCommentsAdapter(this, presenter)
-    }
+    override val listingsAdapter by lazy { LinkCommentsAdapter(this, presenter) }
 
     override fun openShareView(comment: Comment) {
         val intent = Intent().apply {
