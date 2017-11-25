@@ -2,7 +2,6 @@ package com.ddiehl.android.htn.subscriptions;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -20,6 +19,7 @@ import com.ddiehl.android.htn.subredditinfo.SubredditInfoFragment;
 import com.ddiehl.android.htn.view.BaseFragment;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.ArrayList;

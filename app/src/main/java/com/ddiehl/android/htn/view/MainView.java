@@ -1,10 +1,10 @@
 package com.ddiehl.android.htn.view;
 
 import android.net.MailTo;
-import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public interface MainView {
 

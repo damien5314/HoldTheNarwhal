@@ -1,8 +1,7 @@
 package com.ddiehl.android.htn.navigation;
 
-import android.support.annotation.Nullable;
-
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 

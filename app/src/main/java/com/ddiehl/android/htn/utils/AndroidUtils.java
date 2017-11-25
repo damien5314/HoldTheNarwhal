@@ -11,7 +11,6 @@ import android.net.NetworkInfo;
 import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
-import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
@@ -31,6 +30,7 @@ import com.ddiehl.android.htn.view.text.CustomQuoteSpan;
 import com.ddiehl.android.htn.view.text.NoUnderlineURLSpan;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

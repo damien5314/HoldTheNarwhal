@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.MailTo;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
@@ -26,6 +25,7 @@ import com.ddiehl.android.htn.utils.AndroidUtils;
 import com.ddiehl.android.htn.utils.MenuTintUtils;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 

@@ -1,8 +1,7 @@
 package com.ddiehl.android.htn.utils;
 
-import android.support.annotation.Nullable;
-
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.BufferedReader;
 import java.io.File;

@@ -1,7 +1,6 @@
 package com.ddiehl.android.htn.view.markdown;
 
 import android.graphics.Typeface;
-import android.support.annotation.Nullable;
 import android.support.test.runner.AndroidJUnit4;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -15,6 +14,7 @@ import com.ddiehl.android.htn.di.TestComponent;
 import com.ddiehl.android.logging.ConsoleLogger;
 import com.ddiehl.android.logging.ConsoleLoggingTree;
 
+import org.jetbrains.annotations.Nullable;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;

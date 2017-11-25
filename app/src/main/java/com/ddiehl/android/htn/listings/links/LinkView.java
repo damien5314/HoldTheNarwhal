@@ -1,10 +1,10 @@
 package com.ddiehl.android.htn.listings.links;
 
-import android.support.annotation.Nullable;
 import android.view.ContextMenu;
 import android.view.View;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import rxreddit.model.Link;
 

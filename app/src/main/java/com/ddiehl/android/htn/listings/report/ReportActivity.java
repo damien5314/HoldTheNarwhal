@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
@@ -12,6 +11,7 @@ import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.view.TransparentBaseActivity;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.List;

@@ -1,7 +1,6 @@
 package com.ddiehl.android.htn.about;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -14,6 +13,8 @@ import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.utils.AndroidUtils;
 import com.ddiehl.android.htn.utils.Utils;
 import com.ddiehl.android.htn.view.MarkdownTextFragment;
+
+import org.jetbrains.annotations.Nullable;
 
 import java.io.InputStream;
 

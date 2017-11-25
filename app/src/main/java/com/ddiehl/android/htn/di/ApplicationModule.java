@@ -1,7 +1,6 @@
 package com.ddiehl.android.htn.di;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
 
 import com.ddiehl.android.htn.BuildConfig;
 import com.ddiehl.android.htn.identity.IdentityManager;
@@ -11,6 +10,8 @@ import com.ddiehl.android.htn.settings.SettingsManagerImpl;
 import com.ddiehl.android.htn.view.markdown.HtmlParser;
 import com.ddiehl.android.htn.view.markdown.MarkdownParser;
 import com.google.gson.Gson;
+
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 

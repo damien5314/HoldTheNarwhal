@@ -1,7 +1,6 @@
 package com.ddiehl.android.htn.listings.links;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.Spanned;
@@ -22,6 +21,7 @@ import com.ddiehl.android.htn.view.markdown.MarkdownParser;
 import com.ddiehl.timesincetextview.TimeSinceTextView;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 

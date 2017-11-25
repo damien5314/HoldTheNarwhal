@@ -1,7 +1,6 @@
 package com.ddiehl.android.htn.view;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +13,7 @@ import com.ddiehl.android.htn.utils.Utils;
 import com.ddiehl.android.htn.view.markdown.MarkdownParser;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.InputStream;
 

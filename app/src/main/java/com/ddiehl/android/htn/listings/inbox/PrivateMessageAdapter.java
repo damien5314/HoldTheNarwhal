@@ -1,7 +1,6 @@
 package com.ddiehl.android.htn.listings.inbox;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
@@ -19,6 +18,7 @@ import com.ddiehl.android.htn.view.markdown.MarkdownParser;
 import com.ddiehl.timesincetextview.TimeSince;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;

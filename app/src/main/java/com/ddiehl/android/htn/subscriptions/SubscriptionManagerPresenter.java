@@ -1,11 +1,10 @@
 package com.ddiehl.android.htn.subscriptions;
 
-import android.support.annotation.Nullable;
-
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.subredditinfo.InfoTuple;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.inject.Inject;
 
