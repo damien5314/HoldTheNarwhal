@@ -113,7 +113,7 @@ public class PrivateMessageFragment extends BaseFragment implements PrivateMessa
         );
     }
 
-    @Override
+    @NonNull @Override
     protected View getChromeView() {
         return mCoordinatorLayout;
     }

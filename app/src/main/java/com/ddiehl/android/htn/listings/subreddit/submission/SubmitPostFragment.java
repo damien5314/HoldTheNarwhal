@@ -68,7 +68,7 @@ public class SubmitPostFragment extends BaseFragment
         return R.layout.submission_fragment;
     }
 
-    @Override
+    @NonNull @Override
     protected View getChromeView() {
         return mCoordinatorLayout;
     }

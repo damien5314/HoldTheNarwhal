@@ -73,10 +73,10 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
         if (TextUtils.isEmpty(mSort)) mSort = "hot";
         if (TextUtils.isEmpty(mTimespan)) mTimespan = "all";
 
-        SubredditPresenter presenter = new SubredditPresenter(this, mRedditNavigationView, this);
+        SubredditPresenter presenter = new SubredditPresenter(this, redditNavigationView, this);
         mSubredditPresenter = presenter;
-        mListingsPresenter = presenter;
-        mCallbacks = presenter;
+        listingsPresenter = presenter;
+        callbacks = presenter;
     }
 
     @NonNull @Override
@@ -120,7 +120,7 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
     @Override
     public ListingsAdapter getListingsAdapter() {
         return new ListingsAdapter(
-                mListingsPresenter, this, null, null);
+                listingsPresenter, this, null, null);
     }
 
     private void updateTitle() {
@@ -152,7 +152,7 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
     public void notifyItemInserted(int position) {
         super.notifyItemInserted(position);
         if ("random".equals(getSubreddit())) {
-            mSubreddit = ((Link) mListingsPresenter.getListingAt(0)).getSubreddit();
+            mSubreddit = ((Link) listingsPresenter.getListingAt(0)).getSubreddit();
             updateTitle();
         }
     }
@@ -192,7 +192,7 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
         return mTimespan;
     }
 
-    @Override
+    @NonNull @Override
     protected View getChromeView() {
         return mCoordinatorLayout;
     }
@@ -305,7 +305,7 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
     private void onNsfwSelected(boolean allowed) {
         if (allowed) {
             mSettingsManager.setOver18(true);
-            mListingsPresenter.refreshData();
+            listingsPresenter.refreshData();
         } else {
             dismissSpinner();
             finish();
@@ -321,7 +321,7 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
         } else {
             mSort = sort;
             getActivity().invalidateOptionsMenu();
-            mListingsPresenter.onSortChanged();
+            listingsPresenter.onSortChanged();
         }
     }
 
@@ -329,7 +329,7 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
         mSort = mSelectedSort;
         mTimespan = timespan;
         getActivity().invalidateOptionsMenu();
-        mListingsPresenter.onSortChanged();
+        listingsPresenter.onSortChanged();
     }
 
     private void onPostSubmitted(String subreddit, String linkId) {

@@ -49,7 +49,7 @@ public class SubscriptionManagerPresenter {
         return Observable.combineLatest(
                 mRedditService.getSubredditInfo(subreddit),
                 mRedditService.getSubredditRules(subreddit),
-//                mRedditService.getSubredditSidebar(subreddit),
+//                redditService.getSubredditSidebar(subreddit),
                 (subreddit2, rules) -> {
                     InfoTuple tuple = new InfoTuple();
                     tuple.subreddit = subreddit2;

@@ -98,15 +98,15 @@ public class UserProfileFragment extends BaseListingsFragment
         if (TextUtils.isEmpty(mSort)) mSort = "new";
         if (TextUtils.isEmpty(mTimespan)) mTimespan = "all";
 
-        mUserProfilePresenter = new UserProfilePresenter(this, mRedditNavigationView, this);
-        mListingsPresenter = mUserProfilePresenter;
-        mCallbacks = mUserProfilePresenter;
+        mUserProfilePresenter = new UserProfilePresenter(this, redditNavigationView, this);
+        listingsPresenter = mUserProfilePresenter;
+        callbacks = mUserProfilePresenter;
     }
 
     @NonNull @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle state) {
         View view = super.onCreateView(inflater, container, state);
-        mTabLayout = findById(getActivity(), R.id.tab_layout);
+        tabLayout = findById(getActivity(), R.id.tab_layout);
         return view;
     }
 
@@ -133,30 +133,30 @@ public class UserProfileFragment extends BaseListingsFragment
     }
 
     private void initializeUserProfileTabs() {
-        mTabUpvoted = mTabLayout.newTab()
+        mTabUpvoted = tabLayout.newTab()
                 .setText(R.string.navigation_tabs_upvoted)
                 .setTag("upvoted");
-        mTabDownvoted = mTabLayout.newTab()
+        mTabDownvoted = tabLayout.newTab()
                 .setText(R.string.navigation_tabs_downvoted)
                 .setTag("downvoted");
-        mTabHidden = mTabLayout.newTab()
+        mTabHidden = tabLayout.newTab()
                 .setText(R.string.navigation_tabs_hidden)
                 .setTag("hidden");
-        mTabSaved = mTabLayout.newTab()
+        mTabSaved = tabLayout.newTab()
                 .setText(R.string.navigation_tabs_saved)
                 .setTag("saved");
 
-        mTabLayout.removeAllTabs();
-        for (TabLayout.Tab tab : buildDefaultTabs(mTabLayout)) {
-            mTabLayout.addTab(tab, tab.getTag().equals(mShow));
+        tabLayout.removeAllTabs();
+        for (TabLayout.Tab tab : buildDefaultTabs(tabLayout)) {
+            tabLayout.addTab(tab, tab.getTag().equals(mShow));
         }
 
         boolean isAuthenticated = mUserProfilePresenter.isAuthenticatedUser();
-        showAuthenticatedTabs(mTabLayout, isAuthenticated);
+        showAuthenticatedTabs(tabLayout, isAuthenticated);
 
         selectTab(mShow);
 
-        mTabLayout.addOnTabSelectedListener(this);
+        tabLayout.addOnTabSelectedListener(this);
     }
 
     private List<TabLayout.Tab> buildDefaultTabs(TabLayout tabLayout) {
@@ -205,7 +205,7 @@ public class UserProfileFragment extends BaseListingsFragment
     @Override
     public ListingsAdapter getListingsAdapter() {
         return new ListingsAdapter(
-                mListingsPresenter, this, this, null);
+                listingsPresenter, this, this, null);
     }
 
     //region Options menu
@@ -302,7 +302,7 @@ public class UserProfileFragment extends BaseListingsFragment
         } else {
             mSort = sort;
             getActivity().invalidateOptionsMenu();
-            mListingsPresenter.onSortChanged();
+            listingsPresenter.onSortChanged();
         }
     }
 
@@ -310,7 +310,7 @@ public class UserProfileFragment extends BaseListingsFragment
         mSort = mSelectedSort;
         mTimespan = timespan;
         getActivity().invalidateOptionsMenu();
-        mListingsPresenter.onSortChanged();
+        listingsPresenter.onSortChanged();
     }
 
     //endregion
@@ -381,18 +381,18 @@ public class UserProfileFragment extends BaseListingsFragment
     }
 
     private TabLayout.Tab getCurrentSelectedTab() {
-        return mTabLayout.getTabAt(
-                mTabLayout.getSelectedTabPosition());
+        return tabLayout.getTabAt(
+                tabLayout.getSelectedTabPosition());
     }
 
     @Override
     public void selectTab(String show) {
         mShow = show;
 
-        mTabLayout.removeOnTabSelectedListener(this);
+        tabLayout.removeOnTabSelectedListener(this);
 
-        for (int i = 0; i < AndroidUtils.getChildrenInTabLayout(mTabLayout); i++) {
-            TabLayout.Tab tab = mTabLayout.getTabAt(i);
+        for (int i = 0; i < AndroidUtils.getChildrenInTabLayout(tabLayout); i++) {
+            TabLayout.Tab tab = tabLayout.getTabAt(i);
             if (tab != null) {
                 String tag = (String) tab.getTag();
                 if (tag != null && tag.equals(show)) {
@@ -402,7 +402,7 @@ public class UserProfileFragment extends BaseListingsFragment
             }
         }
 
-        mTabLayout.addOnTabSelectedListener(this);
+        tabLayout.addOnTabSelectedListener(this);
 
         showHideView(mShow);
     }
@@ -453,7 +453,7 @@ public class UserProfileFragment extends BaseListingsFragment
         return mTimespan;
     }
 
-    @Override
+    @NonNull @Override
     protected View getChromeView() {
         return mCoordinatorLayout;
     }

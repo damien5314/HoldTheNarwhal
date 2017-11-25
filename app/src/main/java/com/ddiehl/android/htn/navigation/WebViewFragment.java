@@ -179,7 +179,7 @@ public class WebViewFragment extends BaseFragment {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
+    @NonNull @Override
     protected View getChromeView() {
         return mWebView;
     }

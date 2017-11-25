@@ -48,15 +48,16 @@ public abstract class BaseFragment extends Fragment implements MainView {
     protected static final int REQUEST_SIGN_IN = 5;
     protected static final int REQUEST_SUBMIT_NEW_POST = 6;
 
-    @Inject protected RedditService mRedditService;
-    @Inject protected IdentityManager mIdentityManager;
+    @Inject protected RedditService redditService;
+    @Inject protected IdentityManager identityManager;
 
-    protected RedditNavigationView mRedditNavigationView;
-    ProgressDialog mLoadingOverlay;
-    protected TabLayout mTabLayout;
+    protected RedditNavigationView redditNavigationView;
+    ProgressDialog loadingOverlay;
+    protected TabLayout tabLayout;
 
     protected abstract int getLayoutResId();
-    protected abstract View getChromeView();
+
+    protected abstract @NonNull View getChromeView();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -69,7 +70,7 @@ public abstract class BaseFragment extends Fragment implements MainView {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle state) {
         View view = inflater.inflate(getLayoutResId(), container, false);
         ButterKnife.bind(this, view);
-        mTabLayout = ButterKnife.findById(getActivity(), R.id.tab_layout);
+        tabLayout = ButterKnife.findById(getActivity(), R.id.tab_layout);
         return view;
     }
 
@@ -77,13 +78,13 @@ public abstract class BaseFragment extends Fragment implements MainView {
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof RedditNavigationView) {
-            mRedditNavigationView = (RedditNavigationView) context;
+            redditNavigationView = (RedditNavigationView) context;
         }
     }
 
     @Override
     public void onDetach() {
-        mRedditNavigationView = null;
+        redditNavigationView = null;
         super.onDetach();
     }
 
@@ -111,7 +112,7 @@ public abstract class BaseFragment extends Fragment implements MainView {
     }
 
     protected void processAuthenticationCallback(String url) {
-        mRedditService.processAuthenticationCallback(url)
+        redditService.processAuthenticationCallback(url)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
@@ -130,12 +131,12 @@ public abstract class BaseFragment extends Fragment implements MainView {
     }
 
     private void getUserIdentity() {
-        mRedditService.getUserIdentity()
+        redditService.getUserIdentity()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         user -> {
-                            mIdentityManager.saveUserIdentity(user);
+                            identityManager.saveUserIdentity(user);
                         },
                         error -> {
                             if (error instanceof IOException) {
@@ -158,18 +159,18 @@ public abstract class BaseFragment extends Fragment implements MainView {
 
     @Override
     public void showSpinner() {
-        if (mLoadingOverlay == null) {
-            mLoadingOverlay = new ProgressDialog(getContext(), R.style.ProgressDialog);
-            mLoadingOverlay.setCancelable(false);
-            mLoadingOverlay.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        if (loadingOverlay == null) {
+            loadingOverlay = new ProgressDialog(getContext(), R.style.ProgressDialog);
+            loadingOverlay.setCancelable(false);
+            loadingOverlay.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         }
-//        mLoadingOverlay.setMessage(message);
-        mLoadingOverlay.show();
+//        loadingOverlay.setMessage(message);
+        loadingOverlay.show();
     }
 
     @Override
     public void loadImageIntoDrawerHeader(@Nullable String url) {
-        mRedditNavigationView.showSubredditImage(url);
+        redditNavigationView.showSubredditImage(url);
     }
 
     public void finish() {
@@ -194,8 +195,8 @@ public abstract class BaseFragment extends Fragment implements MainView {
 
     @Override
     public void dismissSpinner() {
-        if (mLoadingOverlay != null && mLoadingOverlay.isShowing() && isAdded()) {
-            mLoadingOverlay.dismiss();
+        if (loadingOverlay != null && loadingOverlay.isShowing() && isAdded()) {
+            loadingOverlay.dismiss();
         }
     }
 

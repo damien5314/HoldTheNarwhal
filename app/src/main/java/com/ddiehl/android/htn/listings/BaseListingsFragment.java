@@ -42,14 +42,14 @@ public abstract class BaseListingsFragment extends BaseFragment
 
     private static final String LINK_BASE_URL = "http://www.reddit.com";
 
-    @BindView(R.id.recycler_view) protected RecyclerView mRecyclerView;
+    @BindView(R.id.recycler_view) protected RecyclerView recyclerView;
 
-    protected BaseListingsPresenter mListingsPresenter;
-    protected ListingsAdapter mListingsAdapter;
-    protected ListingsView.Callbacks mCallbacks;
+    protected BaseListingsPresenter listingsPresenter;
+    protected ListingsAdapter listingsAdapter;
+    protected ListingsView.Callbacks callbacks;
 
-    protected SwipeRefreshLayout mSwipeRefreshLayout;
-    protected Listing mListingSelected;
+    protected SwipeRefreshLayout swipeRefreshLayout;
+    protected Listing listingSelected;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -64,7 +64,7 @@ public abstract class BaseListingsFragment extends BaseFragment
         View view = super.onCreateView(inflater, container, state);
 
         // Initialize list view
-        mListingsAdapter = getListingsAdapter();
+        listingsAdapter = getListingsAdapter();
         instantiateListView();
 
         return view;
@@ -75,15 +75,15 @@ public abstract class BaseListingsFragment extends BaseFragment
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mSwipeRefreshLayout = ButterKnife.findById(view, R.id.swipe_refresh_layout);
-        mSwipeRefreshLayout.setOnRefreshListener(this);
+        swipeRefreshLayout = ButterKnife.findById(view, R.id.swipe_refresh_layout);
+        swipeRefreshLayout.setOnRefreshListener(this);
     }
 
     private void instantiateListView() {
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mRecyclerView.clearOnScrollListeners();
-        mRecyclerView.addOnScrollListener(getOnScrollListener());
-        mRecyclerView.setAdapter(mListingsAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.clearOnScrollListeners();
+        recyclerView.addOnScrollListener(getOnScrollListener());
+        recyclerView.setAdapter(listingsAdapter);
     }
 
     private RecyclerView.OnScrollListener getOnScrollListener() {
@@ -100,9 +100,9 @@ public abstract class BaseListingsFragment extends BaseFragment
                 mTotalItemCount = mgr.getItemCount();
                 mFirstVisibleItem = mgr.findFirstVisibleItemPosition();
                 if (mFirstVisibleItem == 0) {
-                    mCallbacks.onFirstItemShown();
+                    callbacks.onFirstItemShown();
                 } else if ((mVisibleItemCount + mFirstVisibleItem) >= mTotalItemCount) {
-                    mCallbacks.onLastItemShown();
+                    callbacks.onLastItemShown();
                 }
             }
         };
@@ -113,17 +113,17 @@ public abstract class BaseListingsFragment extends BaseFragment
         super.onStart();
 
         // FIXME Do we need to check mNextRequested here?
-        if (!mListingsPresenter.hasData()) {
-            mListingsPresenter.refreshData();
+        if (!listingsPresenter.hasData()) {
+            listingsPresenter.refreshData();
         }
     }
 
     @Override
     public void onDestroy() {
-        mRecyclerView.setAdapter(null);
+        recyclerView.setAdapter(null);
 
         // To disable the memory dereferencing functionality just comment these lines
-        mListingsPresenter.clearData();
+        listingsPresenter.clearData();
 
         super.onDestroy();
     }
@@ -137,10 +137,10 @@ public abstract class BaseListingsFragment extends BaseFragment
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_refresh:
-                mListingsPresenter.refreshData();
+                listingsPresenter.refreshData();
                 return true;
             case R.id.action_settings:
-                mRedditNavigationView.showSettings();
+                redditNavigationView.showSettings();
                 return true;
         }
         return false;
@@ -152,10 +152,10 @@ public abstract class BaseListingsFragment extends BaseFragment
             case REQUEST_REPORT_LISTING:
                 switch (resultCode) {
                     case RESULT_REPORT_SUCCESS:
-                        showReportSuccessToast(mListingSelected);
+                        showReportSuccessToast(listingSelected);
                         break;
                     case RESULT_REPORT_ERROR:
-                        showReportErrorToast(mListingSelected);
+                        showReportErrorToast(listingSelected);
                 }
                 break;
             default:
@@ -174,7 +174,7 @@ public abstract class BaseListingsFragment extends BaseFragment
     }
 
     public void showLinkContextMenu(ContextMenu menu, View view, Link link) {
-        mListingSelected = link;
+        listingSelected = link;
         getActivity().getMenuInflater().inflate(R.menu.link_context, menu);
 
         // Build title for menu
@@ -213,7 +213,7 @@ public abstract class BaseListingsFragment extends BaseFragment
     }
 
     public void showCommentContextMenu(ContextMenu menu, View view, Comment comment) {
-        mListingSelected = comment;
+        listingSelected = comment;
         getActivity().getMenuInflater().inflate(R.menu.comment_context, menu);
 
         // Build title for menu
@@ -239,7 +239,7 @@ public abstract class BaseListingsFragment extends BaseFragment
     }
 
     public void showMessageContextMenu(ContextMenu menu, View view, PrivateMessage message) {
-        mListingSelected = message;
+        listingSelected = message;
         getActivity().getMenuInflater().inflate(R.menu.message_context, menu);
 
         // Hide ride/unread option based on state
@@ -253,94 +253,94 @@ public abstract class BaseListingsFragment extends BaseFragment
     public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_link_reply:
-                mListingsPresenter.replyToLink((Link) mListingSelected);
+                listingsPresenter.replyToLink((Link) listingSelected);
                 return true;
             case R.id.action_link_upvote:
-                mListingsPresenter.upvoteLink((Link) mListingSelected);
+                listingsPresenter.upvoteLink((Link) listingSelected);
                 return true;
             case R.id.action_link_downvote:
-                mListingsPresenter.downvoteLink((Link) mListingSelected);
+                listingsPresenter.downvoteLink((Link) listingSelected);
                 return true;
             case R.id.action_link_show_comments:
-                mListingsPresenter.showCommentsForLink((Link) mListingSelected);
+                listingsPresenter.showCommentsForLink((Link) listingSelected);
                 return true;
             case R.id.action_link_save:
-                mListingsPresenter.saveLink((Link) mListingSelected);
+                listingsPresenter.saveLink((Link) listingSelected);
                 return true;
             case R.id.action_link_unsave:
-                mListingsPresenter.unsaveLink((Link) mListingSelected);
+                listingsPresenter.unsaveLink((Link) listingSelected);
                 return true;
             case R.id.action_link_share:
-                mListingsPresenter.shareLink((Link) mListingSelected);
+                listingsPresenter.shareLink((Link) listingSelected);
                 return true;
             case R.id.action_link_view_subreddit:
-                mListingsPresenter.openLinkSubreddit((Link) mListingSelected);
+                listingsPresenter.openLinkSubreddit((Link) listingSelected);
                 return true;
             case R.id.action_link_view_user_profile:
-                mListingsPresenter.openLinkUserProfile((Link) mListingSelected);
+                listingsPresenter.openLinkUserProfile((Link) listingSelected);
                 return true;
             case R.id.action_link_open_in_browser:
-                mListingsPresenter.openLinkInBrowser((Link) mListingSelected);
+                listingsPresenter.openLinkInBrowser((Link) listingSelected);
                 return true;
             case R.id.action_link_open_comments_in_browser:
-                mListingsPresenter.openCommentsInBrowser((Link) mListingSelected);
+                listingsPresenter.openCommentsInBrowser((Link) listingSelected);
                 return true;
             case R.id.action_link_hide:
-                mListingsPresenter.hideLink((Link) mListingSelected);
+                listingsPresenter.hideLink((Link) listingSelected);
                 return true;
             case R.id.action_link_unhide:
-                mListingsPresenter.unhideLink((Link) mListingSelected);
+                listingsPresenter.unhideLink((Link) listingSelected);
                 return true;
             case R.id.action_link_report:
-                mListingsPresenter.reportLink((Link) mListingSelected);
+                listingsPresenter.reportLink((Link) listingSelected);
                 return true;
             case R.id.action_comment_permalink:
-                mListingsPresenter.openCommentPermalink((Comment) mListingSelected);
+                listingsPresenter.openCommentPermalink((Comment) listingSelected);
                 return true;
             case R.id.action_comment_reply:
-                mListingsPresenter.replyToComment((Comment) mListingSelected);
+                listingsPresenter.replyToComment((Comment) listingSelected);
                 return true;
             case R.id.action_comment_upvote:
-                mListingsPresenter.upvoteComment((Comment) mListingSelected);
+                listingsPresenter.upvoteComment((Comment) listingSelected);
                 return true;
             case R.id.action_comment_downvote:
-                mListingsPresenter.downvoteComment((Comment) mListingSelected);
+                listingsPresenter.downvoteComment((Comment) listingSelected);
                 return true;
             case R.id.action_comment_save:
-                mListingsPresenter.saveComment((Comment) mListingSelected);
+                listingsPresenter.saveComment((Comment) listingSelected);
                 return true;
             case R.id.action_comment_unsave:
-                mListingsPresenter.unsaveComment((Comment) mListingSelected);
+                listingsPresenter.unsaveComment((Comment) listingSelected);
                 return true;
             case R.id.action_comment_share:
-                mListingsPresenter.shareComment((Comment) mListingSelected);
+                listingsPresenter.shareComment((Comment) listingSelected);
                 return true;
             case R.id.action_comment_view_user_profile:
-                mListingsPresenter.openCommentUserProfile((Comment) mListingSelected);
+                listingsPresenter.openCommentUserProfile((Comment) listingSelected);
                 return true;
             case R.id.action_comment_open_in_browser:
-                mListingsPresenter.openCommentInBrowser((Comment) mListingSelected);
+                listingsPresenter.openCommentInBrowser((Comment) listingSelected);
                 return true;
             case R.id.action_comment_report:
-                mListingsPresenter.reportComment((Comment) mListingSelected);
+                listingsPresenter.reportComment((Comment) listingSelected);
                 return true;
             case R.id.action_message_show_permalink:
-                mListingsPresenter.showMessagePermalink((PrivateMessage) mListingSelected);
+                listingsPresenter.showMessagePermalink((PrivateMessage) listingSelected);
                 return true;
             case R.id.action_message_report:
-                mListingsPresenter.reportMessage((PrivateMessage) mListingSelected);
+                listingsPresenter.reportMessage((PrivateMessage) listingSelected);
                 return true;
             case R.id.action_message_block_user:
-                mListingsPresenter.blockUser((PrivateMessage) mListingSelected);
+                listingsPresenter.blockUser((PrivateMessage) listingSelected);
                 return true;
             case R.id.action_message_mark_read:
-                mListingsPresenter.markMessageRead((PrivateMessage) mListingSelected);
+                listingsPresenter.markMessageRead((PrivateMessage) listingSelected);
                 return true;
             case R.id.action_message_mark_unread:
-                mListingsPresenter.markMessageUnread((PrivateMessage) mListingSelected);
+                listingsPresenter.markMessageUnread((PrivateMessage) listingSelected);
                 return true;
             case R.id.action_message_reply:
-                mListingsPresenter.replyToMessage((PrivateMessage) mListingSelected);
+                listingsPresenter.replyToMessage((PrivateMessage) listingSelected);
                 return true;
             default:
                 Timber.w("No action registered to this context item");
@@ -371,12 +371,12 @@ public abstract class BaseListingsFragment extends BaseFragment
     }
 
     public void openUrlInWebView(@NonNull String url) {
-        mRedditNavigationView.openURL(url);
+        redditNavigationView.openURL(url);
     }
 
     public void showCommentsForLink(
             @NonNull String subreddit, @NonNull String linkId, @Nullable String commentId) {
-        mRedditNavigationView.showCommentsForLink(subreddit, linkId, commentId);
+        redditNavigationView.showCommentsForLink(subreddit, linkId, commentId);
     }
 
     public void openReplyView(@NonNull Listing listing) {
@@ -397,11 +397,11 @@ public abstract class BaseListingsFragment extends BaseFragment
     }
 
     public void openUserProfileView(@NonNull Link link) {
-        mRedditNavigationView.showUserProfile(link.getAuthor(), null, null);
+        redditNavigationView.showUserProfile(link.getAuthor(), null, null);
     }
 
     public void openUserProfileView(@NonNull Comment comment) {
-        mRedditNavigationView.showUserProfile(comment.getAuthor(), null, null);
+        redditNavigationView.showUserProfile(comment.getAuthor(), null, null);
     }
 
     public void openCommentInBrowser(@NonNull Comment comment) {
@@ -434,42 +434,42 @@ public abstract class BaseListingsFragment extends BaseFragment
 
     @Override
     public void notifyDataSetChanged() {
-        mListingsAdapter.notifyDataSetChanged();
+        listingsAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void notifyItemChanged(int position) {
-        mListingsAdapter.notifyItemChanged(position);
+        listingsAdapter.notifyItemChanged(position);
     }
 
     @Override
     public void notifyItemInserted(int position) {
-        mListingsAdapter.notifyItemInserted(position);
+        listingsAdapter.notifyItemInserted(position);
     }
 
     @Override
     public void notifyItemRemoved(int position) {
-        mListingsAdapter.notifyItemRemoved(position);
+        listingsAdapter.notifyItemRemoved(position);
     }
 
     @Override
     public void notifyItemRangeChanged(int position, int count) {
-        mListingsAdapter.notifyItemRangeChanged(position, count);
+        listingsAdapter.notifyItemRangeChanged(position, count);
     }
 
     @Override
     public void notifyItemRangeInserted(int position, int count) {
-        mListingsAdapter.notifyItemRangeInserted(position, count);
+        listingsAdapter.notifyItemRangeInserted(position, count);
     }
 
     @Override
     public void notifyItemRangeRemoved(int position, int count) {
-        mListingsAdapter.notifyItemRangeRemoved(position, count);
+        listingsAdapter.notifyItemRangeRemoved(position, count);
     }
 
     @Override
     public void onRefresh() {
-        mSwipeRefreshLayout.setRefreshing(false);
-        mListingsPresenter.refreshData();
+        swipeRefreshLayout.setRefreshing(false);
+        listingsPresenter.refreshData();
     }
 }
