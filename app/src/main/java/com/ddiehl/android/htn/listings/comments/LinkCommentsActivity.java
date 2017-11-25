@@ -37,7 +37,7 @@ public class LinkCommentsActivity extends FragmentActivityCompat {
 
     @NonNull @Override
     protected String getFragmentTag() {
-        return LinkCommentsFragment.Companion.getTAG();
+        return LinkCommentsFragment.TAG;
     }
 
     String getSubreddit() {

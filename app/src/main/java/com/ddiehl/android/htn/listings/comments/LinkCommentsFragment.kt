@@ -26,6 +26,7 @@ import javax.inject.Inject
 class LinkCommentsFragment : BaseListingsFragment(), LinkCommentsView, SwipeRefreshLayout.OnRefreshListener {
 
     companion object {
+        @JvmField
         val TAG = LinkCommentsFragment::class.java.simpleName!!
     }
 
