@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.MailTo;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
@@ -25,6 +24,8 @@ import com.ddiehl.android.htn.navigation.RedditNavigationView;
 import com.ddiehl.android.htn.navigation.WebViewFragment;
 import com.ddiehl.android.htn.utils.AndroidUtils;
 import com.ddiehl.android.htn.utils.MenuTintUtils;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 
@@ -57,7 +58,7 @@ public abstract class BaseFragment extends Fragment implements MainView {
 
     protected abstract int getLayoutResId();
 
-    protected abstract @NonNull View getChromeView();
+    protected abstract @NotNull View getChromeView();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -66,7 +67,7 @@ public abstract class BaseFragment extends Fragment implements MainView {
         HoldTheNarwhal.getApplicationComponent().inject(this);
     }
 
-    @NonNull @Override
+    @NotNull @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle state) {
         View view = inflater.inflate(getLayoutResId(), container, false);
         ButterKnife.bind(this, view);
@@ -201,12 +202,12 @@ public abstract class BaseFragment extends Fragment implements MainView {
     }
 
     @Override
-    public void showToast(@NonNull CharSequence msg) {
+    public void showToast(@NotNull CharSequence msg) {
         Snackbar.make(getChromeView(), msg, Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
-    public void showError(@NonNull CharSequence message) {
+    public void showError(@NotNull CharSequence message) {
         Snackbar.make(getChromeView(), message, Snackbar.LENGTH_SHORT).show();
     }
 
@@ -216,7 +217,7 @@ public abstract class BaseFragment extends Fragment implements MainView {
     }
 
     @Override
-    public void setTitle(@NonNull CharSequence title) {
+    public void setTitle(@NotNull CharSequence title) {
         getActivity().setTitle(title);
     }
 }

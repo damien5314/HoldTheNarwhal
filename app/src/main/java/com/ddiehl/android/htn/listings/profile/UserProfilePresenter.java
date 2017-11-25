@@ -1,6 +1,5 @@
 package com.ddiehl.android.htn.listings.profile;
 
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
@@ -9,6 +8,8 @@ import com.ddiehl.android.htn.listings.BaseListingsPresenter;
 import com.ddiehl.android.htn.navigation.RedditNavigationView;
 import com.ddiehl.android.htn.utils.Utils;
 import com.ddiehl.android.htn.view.MainView;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.List;
@@ -234,7 +235,7 @@ public class UserProfilePresenter extends BaseListingsPresenter {
                 );
     }
 
-    public void saveFriendNote(@NonNull String note) {
+    public void saveFriendNote(@NotNull String note) {
         // Note must be non-empty for a positive response
         if (TextUtils.isEmpty(note))
             mMainView.showToast(mContext.getString(R.string.user_friend_empty_note));

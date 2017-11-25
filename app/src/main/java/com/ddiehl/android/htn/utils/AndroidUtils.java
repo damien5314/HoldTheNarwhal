@@ -11,7 +11,6 @@ import android.net.NetworkInfo;
 import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.TextInputEditText;
@@ -31,6 +30,8 @@ import com.ddiehl.android.htn.view.text.CustomBulletSpan;
 import com.ddiehl.android.htn.view.text.CustomQuoteSpan;
 import com.ddiehl.android.htn.view.text.NoUnderlineURLSpan;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -46,7 +47,7 @@ public class AndroidUtils {
         }
     }
 
-    @NonNull
+    @NotNull
     public static Intent getNewEmailIntent(
             @Nullable String address, @Nullable String subject, @Nullable String body, @Nullable String cc) {
         Intent intent = new Intent(Intent.ACTION_SEND);
@@ -62,7 +63,7 @@ public class AndroidUtils {
         return BuildConfig.BUILD_TIME_UTC;
     }
 
-    @NonNull
+    @NotNull
     public static String getBuildTimeFormatted() {
         long t = getBuildTime() * 1000; // convert to ms
         return SimpleDateFormat.getDateInstance().format(new Date(t));
@@ -137,7 +138,7 @@ public class AndroidUtils {
         return drawable;
     }
 
-    public static void safeStartActivity(@Nullable Context context, @NonNull Intent intent) {
+    public static void safeStartActivity(@Nullable Context context, @NotNull Intent intent) {
         if (context == null) return;
 
         final PackageManager packageManager = context.getPackageManager();
@@ -168,7 +169,7 @@ public class AndroidUtils {
     }
 
     public static void convertQuoteSpansToCustom(
-            @NonNull SpannableStringBuilder text, @ColorInt int color) {
+            @NotNull SpannableStringBuilder text, @ColorInt int color) {
         QuoteSpan[] spans = text.getSpans(0, text.length(), QuoteSpan.class);
 
         for (QuoteSpan span : spans) {
@@ -182,7 +183,7 @@ public class AndroidUtils {
         }
     }
 
-    public static void convertBulletSpansToCustom(@NonNull SpannableStringBuilder text) {
+    public static void convertBulletSpansToCustom(@NotNull SpannableStringBuilder text) {
         BulletSpan[] spans = text.getSpans(0, text.length(), BulletSpan.class);
 
         for (BulletSpan span : spans) {
@@ -194,7 +195,7 @@ public class AndroidUtils {
         }
     }
 
-    public static @NonNull TextInputLayout getTextInputLayout(@NonNull TextInputEditText editText) {
+    public static @NotNull TextInputLayout getTextInputLayout(@NotNull TextInputEditText editText) {
         ViewParent parent = editText.getParent();
 
         // Keep searching until we reach the top of the view stack if necessary

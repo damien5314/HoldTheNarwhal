@@ -1,7 +1,6 @@
 package com.ddiehl.android.htn.listings;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
@@ -14,6 +13,8 @@ import com.ddiehl.android.htn.navigation.RedditNavigationView;
 import com.ddiehl.android.htn.settings.SettingsManager;
 import com.ddiehl.android.htn.utils.AndroidUtils;
 import com.ddiehl.android.htn.view.MainView;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -140,7 +141,7 @@ public abstract class BaseListingsPresenter
         }
     }
 
-    public void setData(@NonNull List<Listing> data) {
+    public void setData(@NotNull List<Listing> data) {
         mListings.clear();
         mListings.addAll(data);
     }
@@ -203,7 +204,7 @@ public abstract class BaseListingsPresenter
         }
     }
 
-    public void openLink(@NonNull Link link) {
+    public void openLink(@NotNull Link link) {
         if (link.isSelf()) {
             mLinkView.showCommentsForLink(link.getSubreddit(), link.getId(), null);
         } else {
@@ -219,7 +220,7 @@ public abstract class BaseListingsPresenter
         }
     }
 
-    public void showCommentsForLink(@NonNull Link link) {
+    public void showCommentsForLink(@NotNull Link link) {
         mLinkView.showCommentsForLink(link.getSubreddit(), link.getId(), null);
     }
 
@@ -227,17 +228,17 @@ public abstract class BaseListingsPresenter
         mCommentView.openReplyView(link);
     }
 
-    public void upvoteLink(@NonNull Link link) {
+    public void upvoteLink(@NotNull Link link) {
         int dir = (link.isLiked() == null || !link.isLiked()) ? 1 : 0;
         vote(link, dir);
     }
 
-    public void downvoteLink(@NonNull Link link) {
+    public void downvoteLink(@NotNull Link link) {
         int dir = (link.isLiked() == null || link.isLiked()) ? -1 : 0;
         vote(link, dir);
     }
 
-    public void saveLink(@NonNull Link link) {
+    public void saveLink(@NotNull Link link) {
         if (!mRedditService.isUserAuthorized()) {
             mMainView.showToast(mContext.getString(R.string.user_required));
             return;
@@ -245,7 +246,7 @@ public abstract class BaseListingsPresenter
         save(link, true);
     }
 
-    public void unsaveLink(@NonNull Link link) {
+    public void unsaveLink(@NotNull Link link) {
         if (!mRedditService.isUserAuthorized()) {
             mMainView.showToast(mContext.getString(R.string.user_required));
             return;
@@ -253,28 +254,28 @@ public abstract class BaseListingsPresenter
         save(link, false);
     }
 
-    public void shareLink(@NonNull Link link) {
+    public void shareLink(@NotNull Link link) {
         mLinkView.openShareView(link);
     }
 
-    public void openLinkSubreddit(@NonNull Link link) {
+    public void openLinkSubreddit(@NotNull Link link) {
         String subreddit = link.getSubreddit();
         mLinkView.openSubredditView(subreddit);
     }
 
-    public void openLinkUserProfile(@NonNull Link link) {
+    public void openLinkUserProfile(@NotNull Link link) {
         mLinkView.openUserProfileView(link);
     }
 
-    public void openLinkInBrowser(@NonNull Link link) {
+    public void openLinkInBrowser(@NotNull Link link) {
         mLinkView.openLinkInBrowser(link);
     }
 
-    public void openCommentsInBrowser(@NonNull Link link) {
+    public void openCommentsInBrowser(@NotNull Link link) {
         mLinkView.openCommentsInBrowser(link);
     }
 
-    public void hideLink(@NonNull Link link) {
+    public void hideLink(@NotNull Link link) {
         if (!mRedditService.isUserAuthorized()) {
             mMainView.showToast(mContext.getString(R.string.user_required));
             return;
@@ -283,7 +284,7 @@ public abstract class BaseListingsPresenter
         hide(link, true);
     }
 
-    public void unhideLink(@NonNull Link link) {
+    public void unhideLink(@NotNull Link link) {
         if (!mRedditService.isUserAuthorized()) {
             mMainView.showToast(mContext.getString(R.string.user_required));
             return;
@@ -292,7 +293,7 @@ public abstract class BaseListingsPresenter
         hide(link, false);
     }
 
-    public void reportLink(@NonNull Link link) {
+    public void reportLink(@NotNull Link link) {
         if (!mRedditService.isUserAuthorized()) {
             mMainView.showToast(mContext.getString(R.string.user_required));
         } else {
@@ -301,23 +302,23 @@ public abstract class BaseListingsPresenter
     }
 
     public void showCommentThread(
-            @NonNull String subreddit, @NonNull String linkId, @NonNull String commentId) {
+            @NotNull String subreddit, @NotNull String linkId, @NotNull String commentId) {
         mRedditNavigationView.showCommentsForLink(subreddit, linkId, commentId);
     }
 
-    public void getMoreComments(@NonNull CommentStub comment) {
+    public void getMoreComments(@NotNull CommentStub comment) {
         // Comment stubs cannot appear in a listing view
     }
 
-    public void openCommentPermalink(@NonNull Comment comment) {
+    public void openCommentPermalink(@NotNull Comment comment) {
         showCommentThread(comment.getSubreddit(), comment.getLinkId(), comment.getId());
     }
 
-    public void openCommentParent(@NonNull Comment comment) {
+    public void openCommentParent(@NotNull Comment comment) {
         showCommentThread(comment.getSubreddit(), comment.getLinkId(), comment.getParentId());
     }
 
-    public void replyToComment(@NonNull Comment comment) {
+    public void replyToComment(@NotNull Comment comment) {
         if (comment.isArchived()) {
             mMainView.showToast(mContext.getString(R.string.listing_archived));
         } else {
@@ -325,17 +326,17 @@ public abstract class BaseListingsPresenter
         }
     }
 
-    public void upvoteComment(@NonNull Comment comment) {
+    public void upvoteComment(@NotNull Comment comment) {
         int dir = (comment.isLiked() == null || !comment.isLiked()) ? 1 : 0;
         vote(comment, dir);
     }
 
-    public void downvoteComment(@NonNull Comment comment) {
+    public void downvoteComment(@NotNull Comment comment) {
         int dir = (comment.isLiked() == null || comment.isLiked()) ? -1 : 0;
         vote(comment, dir);
     }
 
-    public void saveComment(@NonNull Comment comment) {
+    public void saveComment(@NotNull Comment comment) {
         if (!mRedditService.isUserAuthorized()) {
             mMainView.showToast(mContext.getString(R.string.user_required));
             return;
@@ -343,7 +344,7 @@ public abstract class BaseListingsPresenter
         save(comment, true);
     }
 
-    public void unsaveComment(@NonNull Comment comment) {
+    public void unsaveComment(@NotNull Comment comment) {
         if (!mRedditService.isUserAuthorized()) {
             mMainView.showToast(mContext.getString(R.string.user_required));
             return;
@@ -351,19 +352,19 @@ public abstract class BaseListingsPresenter
         save(comment, false);
     }
 
-    public void shareComment(@NonNull Comment comment) {
+    public void shareComment(@NotNull Comment comment) {
         mCommentView.openShareView(comment);
     }
 
-    public void openCommentUserProfile(@NonNull Comment comment) {
+    public void openCommentUserProfile(@NotNull Comment comment) {
         mCommentView.openUserProfileView(comment);
     }
 
-    public void openCommentInBrowser(@NonNull Comment comment) {
+    public void openCommentInBrowser(@NotNull Comment comment) {
         mCommentView.openCommentInBrowser(comment);
     }
 
-    public void reportComment(@NonNull Comment comment) {
+    public void reportComment(@NotNull Comment comment) {
         if (comment.isArchived()) {
             mMainView.showToast(mContext.getString(R.string.listing_archived));
         } else if (!mRedditService.isUserAuthorized()) {
@@ -373,7 +374,7 @@ public abstract class BaseListingsPresenter
         }
     }
 
-    public void openCommentLink(@NonNull Comment comment) {
+    public void openCommentLink(@NotNull Comment comment) {
         mRedditNavigationView.showCommentsForLink(comment.getSubreddit(), comment.getLinkId(), null);
     }
 
@@ -493,11 +494,11 @@ public abstract class BaseListingsPresenter
         return mIdentityManager.getUserIdentity();
     }
 
-    public void replyToMessage(@NonNull PrivateMessage message) {
+    public void replyToMessage(@NotNull PrivateMessage message) {
         mMainView.showToast(mContext.getString(R.string.implementation_pending));
     }
 
-    public void markMessageRead(@NonNull PrivateMessage pm) {
+    public void markMessageRead(@NotNull PrivateMessage pm) {
         String fullname = pm.getFullName();
         mRedditService.markMessagesRead(fullname)
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
@@ -519,7 +520,7 @@ public abstract class BaseListingsPresenter
                 );
     }
 
-    public void markMessageUnread(@NonNull PrivateMessage pm) {
+    public void markMessageUnread(@NotNull PrivateMessage pm) {
         String fullname = pm.getFullName();
         mRedditService.markMessagesUnread(fullname)
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
@@ -541,7 +542,7 @@ public abstract class BaseListingsPresenter
                 );
     }
 
-    public void showMessagePermalink(@NonNull PrivateMessage message) {
+    public void showMessagePermalink(@NotNull PrivateMessage message) {
         ListingResponse listingResponse = message.getReplies();
         List<PrivateMessage> messages = new ArrayList<>();
         if (listingResponse != null) {
@@ -553,11 +554,11 @@ public abstract class BaseListingsPresenter
         mRedditNavigationView.showInboxMessages(messages);
     }
 
-    public void reportMessage(@NonNull PrivateMessage message) {
+    public void reportMessage(@NotNull PrivateMessage message) {
         mPrivateMessageView.openReportView(message);
     }
 
-    public void blockUser(@NonNull PrivateMessage message) {
+    public void blockUser(@NotNull PrivateMessage message) {
         mMainView.showToast(mContext.getString(R.string.implementation_pending));
     }
 }

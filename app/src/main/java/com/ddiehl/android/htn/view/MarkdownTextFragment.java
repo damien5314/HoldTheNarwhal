@@ -1,7 +1,6 @@
 package com.ddiehl.android.htn.view;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -13,6 +12,8 @@ import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.utils.Utils;
 import com.ddiehl.android.htn.view.markdown.MarkdownParser;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.io.InputStream;
 
@@ -26,7 +27,7 @@ public class MarkdownTextFragment extends Fragment {
 
     private String mText;
 
-    public static Fragment newInstance(@NonNull String text) {
+    public static Fragment newInstance(@NotNull String text) {
         Fragment f = new MarkdownTextFragment();
         Bundle args = new Bundle();
         args.putString(ARG_TEXT, text);
@@ -34,7 +35,7 @@ public class MarkdownTextFragment extends Fragment {
         return f;
     }
 
-    public static Fragment newInstance(@NonNull InputStream in_s) {
+    public static Fragment newInstance(@NotNull InputStream in_s) {
         String text = Utils.getStringFromInputStream(in_s);
         return newInstance(text);
     }

@@ -1,12 +1,13 @@
 package com.ddiehl.android.htn.listings.links;
 
-import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
 
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.listings.BaseListingsPresenter;
 import com.ddiehl.android.htn.listings.subreddit.ThumbnailMode;
+
+import org.jetbrains.annotations.NotNull;
 
 import butterknife.OnClick;
 import rxreddit.model.Link;
@@ -23,7 +24,7 @@ public class ListingsLinkViewHolder extends BaseLinkViewHolder {
     }
 
     @Override
-    protected void showLiked(@NonNull Link link) {
+    protected void showLiked(@NotNull Link link) {
         if (link.isLiked() == null) {
             mView.setBackgroundColor(
                     ContextCompat.getColor(mContext, R.color.transparent)
@@ -40,7 +41,7 @@ public class ListingsLinkViewHolder extends BaseLinkViewHolder {
     }
 
     @Override
-    protected void showThumbnail(@NonNull Link link, @NonNull ThumbnailMode mode) {
+    protected void showThumbnail(@NotNull Link link, @NotNull ThumbnailMode mode) {
         String url = null;
         if (link.getOver18()) {
             if (mode == ThumbnailMode.NO_THUMBNAIL) {

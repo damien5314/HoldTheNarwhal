@@ -1,10 +1,11 @@
 package com.ddiehl.android.htn.subscriptions;
 
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.subredditinfo.InfoTuple;
+
+import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
 
@@ -29,7 +30,7 @@ public class SubscriptionManagerPresenter {
      * @param where Valid: "subscriber", "contributor", "moderator"
      */
     public Observable<ListingResponse> getSubscriptions(
-            @NonNull String where, @Nullable String beforePageId, @Nullable String nextPageId) {
+            @NotNull String where, @Nullable String beforePageId, @Nullable String nextPageId) {
         return mRedditService.getSubreddits(where, beforePageId, nextPageId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
@@ -45,7 +46,7 @@ public class SubscriptionManagerPresenter {
         return mRedditService.unsubscribe(name);
     }
 
-    public Observable<InfoTuple> getSubredditInfo(final @NonNull String subreddit) {
+    public Observable<InfoTuple> getSubredditInfo(final @NotNull String subreddit) {
         return Observable.combineLatest(
                 mRedditService.getSubredditInfo(subreddit),
                 mRedditService.getSubredditRules(subreddit),

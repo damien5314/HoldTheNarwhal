@@ -3,11 +3,12 @@ package com.ddiehl.android.htn.navigation;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 
 import com.ddiehl.android.htn.R;
+
+import org.jetbrains.annotations.NotNull;
 
 public class ConfirmSignOutDialog extends DialogFragment {
 
@@ -38,7 +39,7 @@ public class ConfirmSignOutDialog extends DialogFragment {
         super.onDetach();
     }
 
-    @NonNull
+    @NotNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         return new AlertDialog.Builder(getActivity())

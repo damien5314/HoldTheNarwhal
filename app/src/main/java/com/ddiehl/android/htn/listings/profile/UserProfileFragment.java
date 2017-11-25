@@ -2,7 +2,6 @@ package com.ddiehl.android.htn.listings.profile;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TabLayout;
@@ -29,6 +28,8 @@ import com.ddiehl.android.htn.utils.Utils;
 import com.hannesdorfmann.fragmentargs.FragmentArgs;
 import com.hannesdorfmann.fragmentargs.annotation.Arg;
 import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
@@ -103,7 +104,7 @@ public class UserProfileFragment extends BaseListingsFragment
         setCallbacks(mUserProfilePresenter);
     }
 
-    @NonNull @Override
+    @NotNull @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle state) {
         View view = super.onCreateView(inflater, container, state);
         tabLayout = findById(getActivity(), R.id.tab_layout);
@@ -204,7 +205,7 @@ public class UserProfileFragment extends BaseListingsFragment
 
     private ListingsAdapter listingsAdapter;
 
-    @NonNull @Override
+    @NotNull @Override
     public ListingsAdapter getListingsAdapter() {
         if (listingsAdapter == null) {
             listingsAdapter = new ListingsAdapter(getListingsPresenter(), this, this, null);
@@ -297,7 +298,7 @@ public class UserProfileFragment extends BaseListingsFragment
     // Cache for sort selected before showing timespan dialog
     private String mSelectedSort;
 
-    private void onSortSelected(@NonNull String sort) {
+    private void onSortSelected(@NotNull String sort) {
         if (sort.equals(mSort)) return;
 
         if (sort.equals("top") || sort.equals("controversial")) {
@@ -310,7 +311,7 @@ public class UserProfileFragment extends BaseListingsFragment
         }
     }
 
-    private void onTimespanSelected(@NonNull String timespan) {
+    private void onTimespanSelected(@NotNull String timespan) {
         mSort = mSelectedSort;
         mTimespan = timespan;
         getActivity().invalidateOptionsMenu();
@@ -320,7 +321,7 @@ public class UserProfileFragment extends BaseListingsFragment
     //endregion
 
     @Override
-    public void showUserInfo(@NonNull UserIdentity user) {
+    public void showUserInfo(@NotNull UserIdentity user) {
         Date createDate = new Date(user.getCreatedUTC() * 1000);
         String created = String.format(
                 getContext().getString(R.string.user_profile_summary_created),
@@ -358,7 +359,7 @@ public class UserProfileFragment extends BaseListingsFragment
     }
 
     @Override
-    public void showFriendNote(@NonNull String note) {
+    public void showFriendNote(@NotNull String note) {
         mFriendNoteLayout.setVisibility(View.VISIBLE);
         mFriendNote.setText(note);
     }
@@ -457,7 +458,7 @@ public class UserProfileFragment extends BaseListingsFragment
         return mTimespan;
     }
 
-    @NonNull @Override
+    @NotNull @Override
     protected View getChromeView() {
         return mCoordinatorLayout;
     }

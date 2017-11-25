@@ -1,15 +1,16 @@
 package com.ddiehl.android.htn.view;
 
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 
 import com.ddiehl.android.htn.R;
 
+import org.jetbrains.annotations.NotNull;
+
 public abstract class FragmentActivityCompat extends BaseActivity {
 
-    protected abstract @NonNull Fragment getFragment();
+    protected abstract @NotNull Fragment getFragment();
 
-    protected abstract @NonNull String getFragmentTag();
+    protected abstract @NotNull String getFragmentTag();
 
     @Override
     public void onStart() {

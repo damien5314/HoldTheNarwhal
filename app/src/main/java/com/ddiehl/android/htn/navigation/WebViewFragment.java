@@ -3,7 +3,6 @@ package com.ddiehl.android.htn.navigation;
 import android.net.MailTo;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -27,6 +26,8 @@ import com.ddiehl.android.htn.view.MainView;
 import com.hannesdorfmann.fragmentargs.FragmentArgs;
 import com.hannesdorfmann.fragmentargs.annotation.Arg;
 import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs;
+
+import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
 
@@ -68,7 +69,7 @@ public class WebViewFragment extends BaseFragment {
         setHasOptionsMenu(true);
     }
 
-    @NonNull @Override
+    @NotNull @Override
     public View onCreateView(
             LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle state) {
         View view = super.onCreateView(inflater, container, state);
@@ -108,7 +109,7 @@ public class WebViewFragment extends BaseFragment {
 
         private final MainView mMainView;
 
-        public Client(@NonNull MainView mainView) {
+        public Client(@NotNull MainView mainView) {
             mMainView = mainView;
         }
 
@@ -179,7 +180,7 @@ public class WebViewFragment extends BaseFragment {
         return super.onOptionsItemSelected(item);
     }
 
-    @NonNull @Override
+    @NotNull @Override
     protected View getChromeView() {
         return mWebView;
     }

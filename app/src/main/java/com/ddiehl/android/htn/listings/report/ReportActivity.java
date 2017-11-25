@@ -4,13 +4,14 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.view.TransparentBaseActivity;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.List;
@@ -41,7 +42,7 @@ public class ReportActivity extends TransparentBaseActivity
     public static final int RESULT_REPORT_SUCCESS = Activity.RESULT_OK;
 
     public static Intent getIntent(
-            Context context, @NonNull String listingId, @Nullable String subreddit) {
+            Context context, @NotNull String listingId, @Nullable String subreddit) {
         Intent intent = new Intent(context, ReportActivity.class);
 
         intent.putExtra(EXTRA_LISTING_ID, listingId);
@@ -62,7 +63,7 @@ public class ReportActivity extends TransparentBaseActivity
         setTitle(null);
     }
 
-    @NonNull String getListingId() {
+    @NotNull String getListingId() {
         return getIntent().getStringExtra(EXTRA_LISTING_ID);
     }
 

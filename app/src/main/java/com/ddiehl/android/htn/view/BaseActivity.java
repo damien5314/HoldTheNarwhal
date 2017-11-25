@@ -10,7 +10,6 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -48,6 +47,8 @@ import com.ddiehl.android.htn.settings.SettingsManager;
 import com.ddiehl.android.htn.subscriptions.SubscriptionManagerActivity;
 import com.ddiehl.android.htn.utils.AndroidUtils;
 import com.google.gson.Gson;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.List;
@@ -280,7 +281,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
     }
 
     @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+    public boolean onNavigationItemSelected(@NotNull MenuItem menuItem) {
         closeNavigationDrawer();
         switch (menuItem.getItemId()) {
             case R.id.drawer_navigate_to_subreddit:
@@ -364,7 +365,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
     }
 
     public void showUserProfile(
-            @NonNull String username, @Nullable String show, @Nullable String sort) {
+            @NotNull String username, @Nullable String show, @Nullable String sort) {
         Intent intent = UserProfileActivity.getIntent(this, username, show, sort);
         startActivity(intent);
     }
@@ -375,7 +376,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
     }
 
     @SuppressLint("NewApi")
-    public void openURL(@NonNull String url) {
+    public void openURL(@NotNull String url) {
         if (canUseCustomTabs()) {
             // If so, present URL in custom tabs instead of WebView
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
@@ -398,7 +399,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
         showWebViewForURL(url);
     }
 
-    private void showWebViewForURL(@NonNull String url) {
+    private void showWebViewForURL(@NotNull String url) {
         Intent intent = WebViewActivity.getIntent(this, url);
         startActivity(intent);
     }
@@ -557,12 +558,12 @@ public abstract class BaseActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void showInboxMessages(@NonNull List<PrivateMessage> messages) {
+    public void showInboxMessages(@NotNull List<PrivateMessage> messages) {
         Intent intent = PrivateMessageActivity.getIntent(this, mGson, messages);
         startActivity(intent);
     }
 
-    protected void showToast(@NonNull String message) {
+    protected void showToast(@NotNull String message) {
         Snackbar.make(mDrawerLayout, message, Snackbar.LENGTH_SHORT).show();
     }
 }

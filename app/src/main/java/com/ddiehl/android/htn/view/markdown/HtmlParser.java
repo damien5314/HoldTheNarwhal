@@ -3,7 +3,6 @@ package com.ddiehl.android.htn.view.markdown;
 import android.content.Context;
 import android.os.Build;
 import android.support.annotation.ColorInt;
-import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.text.Html;
 import android.text.Spannable;
@@ -15,6 +14,8 @@ import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.utils.AndroidUtils;
 import com.ddiehl.android.htn.view.text.CustomBulletSpan;
 import com.ddiehl.android.htn.view.text.NoUnderlineURLSpan;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -63,7 +64,7 @@ public class HtmlParser {
         return formatted;
     }
 
-    void removeBreaksInBetweenConsecutiveBulletSpans(@NonNull SpannableStringBuilder text) {
+    void removeBreaksInBetweenConsecutiveBulletSpans(@NotNull SpannableStringBuilder text) {
         CustomBulletSpan[] spans = text.getSpans(0, text.length(), CustomBulletSpan.class);
         List<CustomBulletSpan> spanList = Arrays.asList(spans);
 
@@ -84,13 +85,13 @@ public class HtmlParser {
         }
     }
 
-    void trimTrailingNewLines(@NonNull SpannableStringBuilder text) {
+    void trimTrailingNewLines(@NotNull SpannableStringBuilder text) {
         while ("\n".equals(text.subSequence(text.length() - 1, text.length()).toString())) {
             text.delete(text.length() - 1, text.length());
         }
     }
 
-    void fixUrlSpansForRedditLinks(@NonNull SpannableStringBuilder text) {
+    void fixUrlSpansForRedditLinks(@NotNull SpannableStringBuilder text) {
         // Get all URLSpans
         URLSpan[] spans = text.getSpans(0, text.length(), URLSpan.class);
 

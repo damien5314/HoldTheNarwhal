@@ -2,7 +2,6 @@ package com.ddiehl.android.htn.subscriptions;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -19,6 +18,8 @@ import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.subredditinfo.SubredditInfoActivity;
 import com.ddiehl.android.htn.subredditinfo.SubredditInfoFragment;
 import com.ddiehl.android.htn.view.BaseFragment;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -100,7 +101,7 @@ public class SubscriptionManagerFragment extends BaseFragment implements Subscri
         };
     }
 
-    @NonNull @Override
+    @NotNull @Override
     protected View getChromeView() {
         return mCoordinatorLayout;
     }
@@ -162,7 +163,7 @@ public class SubscriptionManagerFragment extends BaseFragment implements Subscri
         }
     }
 
-    void loadSubscriptions(@NonNull String where, @Nullable String before, @Nullable String after) {
+    void loadSubscriptions(@NotNull String where, @Nullable String before, @Nullable String after) {
         mGetSubscriptionsObservable = mPresenter.getSubscriptions(where, before, after)
                 .doOnSubscribe(disposable -> showSpinner())
                 .doFinally(() -> {
@@ -198,19 +199,19 @@ public class SubscriptionManagerFragment extends BaseFragment implements Subscri
     }
 
     @Override
-    public void onSubredditClicked(final @NonNull Subreddit subreddit, final int position) {
+    public void onSubredditClicked(final @NotNull Subreddit subreddit, final int position) {
         getInfo(subreddit.getDisplayName());
     }
 
     @Override
-    public void onSubredditDismissed(final @NonNull Subreddit subreddit, final int position) {
+    public void onSubredditDismissed(final @NotNull Subreddit subreddit, final int position) {
         // Unsubscribe from subreddit
         unsubscribe(subreddit, position);
     }
 
     //region Unsubscribe
 
-    void unsubscribe(final @NonNull Subreddit subreddit, final int position) {
+    void unsubscribe(final @NotNull Subreddit subreddit, final int position) {
         mAdapter.remove(subreddit);
 
         mPresenter.unsubscribe(subreddit)
@@ -223,7 +224,7 @@ public class SubscriptionManagerFragment extends BaseFragment implements Subscri
                 );
     }
 
-    void showUnsubscribingView(final @NonNull Subreddit subreddit) {
+    void showUnsubscribingView(final @NotNull Subreddit subreddit) {
         String message = getString(R.string.unsubscribing_subreddit, subreddit.getDisplayName());
         mSnackbar = Snackbar.make(mCoordinatorLayout, message, Snackbar.LENGTH_INDEFINITE);
         mSnackbar.setCallback(new Snackbar.Callback() {
@@ -235,7 +236,7 @@ public class SubscriptionManagerFragment extends BaseFragment implements Subscri
         mSnackbar.show();
     }
 
-    void onSubredditUnsubscribed(final @NonNull Subreddit subreddit, int position) {
+    void onSubredditUnsubscribed(final @NotNull Subreddit subreddit, int position) {
         // Dismiss unsubscribing Snackbar, if it exists
         if (mSnackbar != null) {
             mSnackbar.dismiss();
@@ -248,7 +249,7 @@ public class SubscriptionManagerFragment extends BaseFragment implements Subscri
         snackbar.show();
     }
 
-    void onUnsubscribeError(Throwable error, final @NonNull Subreddit subreddit, int position) {
+    void onUnsubscribeError(Throwable error, final @NotNull Subreddit subreddit, int position) {
         getActivity().runOnUiThread(() -> {
             // Add subreddit back into the adapter
             mAdapter.add(position, subreddit);
@@ -270,7 +271,7 @@ public class SubscriptionManagerFragment extends BaseFragment implements Subscri
 
     //region Resubscribe
 
-    void resubscribe(final @NonNull Subreddit subreddit, int position) {
+    void resubscribe(final @NotNull Subreddit subreddit, int position) {
         mPresenter.subscribe(subreddit)
                 .doOnSubscribe(diposable -> showResubscribingView(subreddit))
                 .subscribeOn(Schedulers.io())
@@ -281,7 +282,7 @@ public class SubscriptionManagerFragment extends BaseFragment implements Subscri
                 );
     }
 
-    void showResubscribingView(final @NonNull Subreddit subreddit) {
+    void showResubscribingView(final @NotNull Subreddit subreddit) {
         String message = getString(R.string.resubscribing_subreddit, subreddit.getDisplayName());
         mSnackbar = Snackbar.make(mCoordinatorLayout, message, Snackbar.LENGTH_INDEFINITE);
         mSnackbar.setCallback(new Snackbar.Callback() {
@@ -293,7 +294,7 @@ public class SubscriptionManagerFragment extends BaseFragment implements Subscri
         mSnackbar.show();
     }
 
-    void onSubredditResubscribed(final @NonNull Subreddit subreddit, final int position) {
+    void onSubredditResubscribed(final @NotNull Subreddit subreddit, final int position) {
         // Dismiss Snackbar, if it exists
         if (mSnackbar != null) {
             mSnackbar.dismiss();
@@ -309,7 +310,7 @@ public class SubscriptionManagerFragment extends BaseFragment implements Subscri
         snackbar.show();
     }
 
-    void onResubscribeError(Throwable error, final @NonNull Subreddit subreddit) {
+    void onResubscribeError(Throwable error, final @NotNull Subreddit subreddit) {
         getActivity().runOnUiThread(() -> {
             if (error instanceof IOException) {
                 String message = getString(R.string.error_network_unavailable);
