@@ -49,9 +49,9 @@ public class InboxFragment extends BaseListingsFragment
 
         if (TextUtils.isEmpty(mShow)) mShow = "inbox";
 
-        mInboxPresenter = new InboxPresenter(this, mRedditNavigationView, this);
-        mListingsPresenter = mInboxPresenter;
-        mCallbacks = mInboxPresenter;
+        mInboxPresenter = new InboxPresenter(this, redditNavigationView, this);
+        setListingsPresenter(mInboxPresenter);
+        setCallbacks(mInboxPresenter);
     }
 
     @NonNull @Override
@@ -69,7 +69,7 @@ public class InboxFragment extends BaseListingsFragment
     public void onResume() {
         super.onResume();
 
-        if (mIdentityManager.getUserIdentity() == null) {
+        if (identityManager.getUserIdentity() == null) {
             // User was signed out, they can't view inbox anymore
             finish();
         } else {
@@ -79,51 +79,56 @@ public class InboxFragment extends BaseListingsFragment
     }
 
     private void initializeTabs() {
-        mTabLayout.removeOnTabSelectedListener(this);
+        tabLayout.removeOnTabSelectedListener(this);
 
         for (TabLayout.Tab tab : buildTabs()) {
-            mTabLayout.addTab(tab);
+            tabLayout.addTab(tab);
         }
 
         selectTab(mShow);
 
-        mTabLayout.addOnTabSelectedListener(this);
+        tabLayout.addOnTabSelectedListener(this);
     }
 
     private List<TabLayout.Tab> buildTabs() {
         return Arrays.asList(
-                mTabLayout.newTab()
+                tabLayout.newTab()
                         .setText(R.string.navigation_tabs_all)
                         .setTag("inbox"),
-                mTabLayout.newTab()
+                tabLayout.newTab()
                         .setText(R.string.navigation_tabs_unread)
                         .setTag("unread"),
-                mTabLayout.newTab()
+                tabLayout.newTab()
                         .setText(R.string.navigation_tabs_messages)
                         .setTag("messages"),
-                mTabLayout.newTab()
+                tabLayout.newTab()
                         .setText(R.string.navigation_tabs_comment_replies)
                         .setTag("comments"),
-                mTabLayout.newTab()
+                tabLayout.newTab()
                         .setText(R.string.navigation_tabs_post_replies)
                         .setTag("selfreply"),
-                mTabLayout.newTab()
+                tabLayout.newTab()
                         .setText(R.string.navigation_tabs_mentions)
                         .setTag("mentions")
 
         );
     }
 
-    @Override
+    private ListingsAdapter listingsAdapter;
+
+    @NonNull @Override
     public ListingsAdapter getListingsAdapter() {
-        return new ListingsAdapter(mListingsPresenter, this, this, this);
+        if (listingsAdapter == null) {
+            listingsAdapter = new ListingsAdapter(getListingsPresenter(), this, this, this);
+        }
+        return listingsAdapter;
     }
 
     @Override
     public void selectTab(@NonNull String show) {
-        mTabLayout.removeOnTabSelectedListener(this);
-        for (int i = 0; i < AndroidUtils.getChildrenInTabLayout(mTabLayout); i++) {
-            TabLayout.Tab tab = mTabLayout.getTabAt(i);
+        tabLayout.removeOnTabSelectedListener(this);
+        for (int i = 0; i < AndroidUtils.getChildrenInTabLayout(tabLayout); i++) {
+            TabLayout.Tab tab = tabLayout.getTabAt(i);
             if (tab != null) {
                 String tag = (String) tab.getTag();
                 if (tag != null && tag.equals(show)) {
@@ -132,7 +137,7 @@ public class InboxFragment extends BaseListingsFragment
                 }
             }
         }
-        mTabLayout.addOnTabSelectedListener(this);
+        tabLayout.addOnTabSelectedListener(this);
     }
 
     @Override
@@ -169,7 +174,7 @@ public class InboxFragment extends BaseListingsFragment
         return mShow;
     }
 
-    @Override
+    @NonNull @Override
     protected View getChromeView() {
         return mCoordinatorLayout;
     }

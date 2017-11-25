@@ -73,7 +73,7 @@ public class SubredditInfoFragment extends BaseFragment {
         return R.layout.subreddit_info_fragment;
     }
 
-    @Override
+    @NonNull @Override
     protected View getChromeView() {
         return mCoordinatorLayout;
     }

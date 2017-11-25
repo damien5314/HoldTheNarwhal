@@ -2,13 +2,13 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
 
     <solid
-            android:color="@color/author_admin_background" />
+        android:color="@color/author_admin_background" />
 
     <corners
-            android:radius="@dimen/distinguished_author_bg_corners" />
+        android:radius="@dimen/distinguished_author_bg_corners" />
 
     <padding
-            android:left="@dimen/distinguished_author_bg_padding"
-            android:right="@dimen/distinguished_author_bg_padding" />
+        android:left="@dimen/distinguished_author_bg_padding"
+        android:right="@dimen/distinguished_author_bg_padding" />
 
 </shape>

@@ -3,53 +3,58 @@
       xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-            android:id="@+id/action_comment_permalink"
-            android:title="@string/action_show_permalink"
-            app:showAsAction="never" />
+        android:id="@+id/action_comment_permalink"
+        android:title="@string/action_show_permalink"
+        app:showAsAction="never" />
 
     <item
-            android:id="@+id/action_comment_reply"
-            android:title="@string/action_reply"
-            app:showAsAction="never" />
+        android:id="@+id/action_comment_parent"
+        android:title="@string/action_show_parent"
+        app:showAsAction="never" />
 
     <item
-            android:id="@+id/action_comment_upvote"
-            android:title="@string/action_upvote"
-            app:showAsAction="never" />
+        android:id="@+id/action_comment_reply"
+        android:title="@string/action_reply"
+        app:showAsAction="never" />
 
     <item
-            android:id="@+id/action_comment_downvote"
-            android:title="@string/action_downvote"
-            app:showAsAction="never" />
+        android:id="@+id/action_comment_upvote"
+        android:title="@string/action_upvote"
+        app:showAsAction="never" />
 
     <item
-            android:id="@+id/action_comment_save"
-            android:title="@string/action_save"
-            app:showAsAction="never" />
+        android:id="@+id/action_comment_downvote"
+        android:title="@string/action_downvote"
+        app:showAsAction="never" />
 
     <item
-            android:id="@+id/action_comment_unsave"
-            android:title="@string/action_unsave"
-            app:showAsAction="never" />
+        android:id="@+id/action_comment_save"
+        android:title="@string/action_save"
+        app:showAsAction="never" />
 
     <item
-            android:id="@+id/action_comment_share"
-            android:title="@string/action_share"
-            app:showAsAction="never" />
+        android:id="@+id/action_comment_unsave"
+        android:title="@string/action_unsave"
+        app:showAsAction="never" />
 
     <item
-            android:id="@+id/action_comment_view_user_profile"
-            android:title="@string/action_view_user_profile"
-            app:showAsAction="never" />
+        android:id="@+id/action_comment_share"
+        android:title="@string/action_share"
+        app:showAsAction="never" />
 
     <item
-            android:id="@+id/action_comment_open_in_browser"
-            android:title="@string/action_open_in_browser"
-            app:showAsAction="never" />
+        android:id="@+id/action_comment_view_user_profile"
+        android:title="@string/action_view_user_profile"
+        app:showAsAction="never" />
 
     <item
-            android:id="@+id/action_comment_report"
-            android:title="@string/action_report"
-            app:showAsAction="never" />
+        android:id="@+id/action_comment_open_in_browser"
+        android:title="@string/action_open_in_browser"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_comment_report"
+        android:title="@string/action_report"
+        app:showAsAction="never" />
 
 </menu>

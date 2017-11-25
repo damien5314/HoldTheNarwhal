@@ -313,6 +313,10 @@ public abstract class BaseListingsPresenter
         showCommentThread(comment.getSubreddit(), comment.getLinkId(), comment.getId());
     }
 
+    public void openCommentParent(@NonNull Comment comment) {
+        showCommentThread(comment.getSubreddit(), comment.getLinkId(), comment.getParentId());
+    }
+
     public void replyToComment(@NonNull Comment comment) {
         if (comment.isArchived()) {
             mMainView.showToast(mContext.getString(R.string.listing_archived));

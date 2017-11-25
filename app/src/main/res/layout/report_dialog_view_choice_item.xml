@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
 
     <RadioButton
-            android:id="@+id/report_choice_item_selector"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp" />
+        android:id="@+id/report_choice_item_selector"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp" />
 
     <TextView
-            android:id="@+id/report_choice_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/report_other_hint"
-            android:includeFontPadding="false"
-            android:textColor="@color/primary_text"
-            android:textSize="18sp"
-            tools:text="Lorem ipsum" />
+        android:id="@+id/report_choice_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/report_other_hint"
+        android:includeFontPadding="false"
+        android:textColor="@color/primary_text"
+        android:textSize="18sp"
+        tools:text="Lorem ipsum" />
 
 </LinearLayout>

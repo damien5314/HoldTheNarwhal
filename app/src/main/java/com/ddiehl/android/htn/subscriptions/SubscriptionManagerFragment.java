@@ -100,7 +100,7 @@ public class SubscriptionManagerFragment extends BaseFragment implements Subscri
         };
     }
 
-    @Override
+    @NonNull @Override
     protected View getChromeView() {
         return mCoordinatorLayout;
     }

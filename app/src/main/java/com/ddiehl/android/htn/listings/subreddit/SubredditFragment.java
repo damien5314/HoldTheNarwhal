@@ -73,14 +73,14 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
         if (TextUtils.isEmpty(mSort)) mSort = "hot";
         if (TextUtils.isEmpty(mTimespan)) mTimespan = "all";
 
-        SubredditPresenter presenter = new SubredditPresenter(this, mRedditNavigationView, this);
+        SubredditPresenter presenter = new SubredditPresenter(this, redditNavigationView, this);
         mSubredditPresenter = presenter;
-        mListingsPresenter = presenter;
-        mCallbacks = presenter;
+        setListingsPresenter(presenter);
+        setCallbacks(presenter);
     }
 
     @NonNull @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle state) {
         View view = super.onCreateView(inflater, container, state);
         ButterKnife.bind(this, view);
 
@@ -92,7 +92,7 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         updateTitle();
     }
@@ -117,10 +117,14 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
         super.onPause();
     }
 
-    @Override
+    private ListingsAdapter listingsAdapter;
+
+    @NonNull @Override
     public ListingsAdapter getListingsAdapter() {
-        return new ListingsAdapter(
-                mListingsPresenter, this, null, null);
+        if (listingsAdapter == null) {
+            listingsAdapter = new ListingsAdapter(listingsPresenter, this, null, null);
+        }
+        return listingsAdapter;
     }
 
     private void updateTitle() {
@@ -152,7 +156,7 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
     public void notifyItemInserted(int position) {
         super.notifyItemInserted(position);
         if ("random".equals(getSubreddit())) {
-            mSubreddit = ((Link) mListingsPresenter.getListingAt(0)).getSubreddit();
+            mSubreddit = ((Link) getListingsPresenter().getListingAt(0)).getSubreddit();
             updateTitle();
         }
     }
@@ -192,7 +196,7 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
         return mTimespan;
     }
 
-    @Override
+    @NonNull @Override
     protected View getChromeView() {
         return mCoordinatorLayout;
     }
@@ -305,7 +309,7 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
     private void onNsfwSelected(boolean allowed) {
         if (allowed) {
             mSettingsManager.setOver18(true);
-            mListingsPresenter.refreshData();
+            getListingsPresenter().refreshData();
         } else {
             dismissSpinner();
             finish();
@@ -321,7 +325,7 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
         } else {
             mSort = sort;
             getActivity().invalidateOptionsMenu();
-            mListingsPresenter.onSortChanged();
+            getListingsPresenter().onSortChanged();
         }
     }
 
@@ -329,7 +333,7 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
         mSort = mSelectedSort;
         mTimespan = timespan;
         getActivity().invalidateOptionsMenu();
-        mListingsPresenter.onSortChanged();
+        getListingsPresenter().onSortChanged();
     }
 
     private void onPostSubmitted(String subreddit, String linkId) {

@@ -2,6 +2,7 @@ package com.ddiehl.android.htn.utils;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -136,15 +137,16 @@ public class AndroidUtils {
         return drawable;
     }
 
-    public static void safeStartActivity(@NonNull Context context, @NonNull Intent intent) {
-        if (intent.resolveActivity(context.getPackageManager()) != null) {
+    public static void safeStartActivity(@Nullable Context context, @NonNull Intent intent) {
+        if (context == null) return;
+
+        final PackageManager packageManager = context.getPackageManager();
+        if (intent.resolveActivity(packageManager) != null) {
             context.startActivity(intent);
-        } else {
-            // Log incorrect Uri
-            RuntimeException exception =
-                    new RuntimeException("Unable to handle this Uri: " + intent.getDataString());
-            Timber.e(exception);
+            return;
         }
+
+        Timber.e(new RuntimeException("Unable to handle this Uri: " + intent.getDataString()));
     }
 
     public static void convertUrlSpansToNoUnderlineForm(SpannableStringBuilder text) {

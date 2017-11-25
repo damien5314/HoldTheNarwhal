@@ -69,6 +69,7 @@
     <string name="action_report">report</string>
     <string name="action_reply">reply</string>
     <string name="action_show_permalink">permalink</string>
+    <string name="action_show_parent">parent</string>
     <string name="action_block_user">block user</string>
     <string name="action_mark_messages_read">mark messages read</string>
     <string name="action_mark_message_read">mark read</string>
