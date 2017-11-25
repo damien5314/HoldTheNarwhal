@@ -36,7 +36,7 @@ public class SharedModule {
             );
             return new Bypass(context, options);
         } catch (UnsatisfiedLinkError error) {
-            Timber.e(error, "Unable to load Bypass");
+            Timber.w("Bypass is unavailable");
             return null;
         }
     }
