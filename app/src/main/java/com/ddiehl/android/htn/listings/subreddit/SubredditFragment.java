@@ -2,7 +2,6 @@ package com.ddiehl.android.htn.listings.subreddit;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.text.TextUtils;
@@ -27,6 +26,8 @@ import com.ddiehl.android.htn.settings.SettingsManager;
 import com.hannesdorfmann.fragmentargs.FragmentArgs;
 import com.hannesdorfmann.fragmentargs.annotation.Arg;
 import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs;
+
+import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
 
@@ -79,8 +80,8 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
         setCallbacks(presenter);
     }
 
-    @NonNull @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle state) {
+    @NotNull @Override
+    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container, Bundle state) {
         View view = super.onCreateView(inflater, container, state);
         ButterKnife.bind(this, view);
 
@@ -92,7 +93,7 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+    public void onViewCreated(@NotNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         updateTitle();
     }
@@ -119,7 +120,7 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
 
     private ListingsAdapter listingsAdapter;
 
-    @NonNull @Override
+    @NotNull @Override
     public ListingsAdapter getListingsAdapter() {
         if (listingsAdapter == null) {
             listingsAdapter = new ListingsAdapter(listingsPresenter, this, null, null);
@@ -196,7 +197,7 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
         return mTimespan;
     }
 
-    @NonNull @Override
+    @NotNull @Override
     protected View getChromeView() {
         return mCoordinatorLayout;
     }
@@ -316,7 +317,7 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
         }
     }
 
-    private void onSortSelected(@NonNull String sort) {
+    private void onSortSelected(@NotNull String sort) {
         if (sort.equals(mSort)) return;
 
         if (sort.equals("top") || sort.equals("controversial")) {
@@ -329,7 +330,7 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
         }
     }
 
-    private void onTimespanSelected(@NonNull String timespan) {
+    private void onTimespanSelected(@NotNull String timespan) {
         mSort = mSelectedSort;
         mTimespan = timespan;
         getActivity().invalidateOptionsMenu();

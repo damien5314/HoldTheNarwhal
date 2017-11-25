@@ -5,11 +5,12 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 
 import com.ddiehl.android.htn.R;
+
+import org.jetbrains.annotations.NotNull;
 
 import timber.log.Timber;
 
@@ -29,7 +30,7 @@ public class ChooseCommentSortDialog extends DialogFragment {
         return dialog;
     }
 
-    @NonNull
+    @NotNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         int selected = -1;

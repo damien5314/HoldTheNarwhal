@@ -1,10 +1,11 @@
 package com.ddiehl.android.htn.di;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 
 import com.ddiehl.android.htn.R;
+
+import org.jetbrains.annotations.Nullable;
 
 import javax.inject.Singleton;
 

@@ -3,8 +3,6 @@ package com.ddiehl.android.htn.listings.subreddit.submission;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
@@ -24,6 +22,9 @@ import com.ddiehl.android.htn.view.BaseFragment;
 import com.hannesdorfmann.fragmentargs.FragmentArgs;
 import com.hannesdorfmann.fragmentargs.annotation.Arg;
 import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -68,7 +69,7 @@ public class SubmitPostFragment extends BaseFragment
         return R.layout.submission_fragment;
     }
 
-    @NonNull @Override
+    @NotNull @Override
     protected View getChromeView() {
         return mCoordinatorLayout;
     }
@@ -81,7 +82,7 @@ public class SubmitPostFragment extends BaseFragment
         mPresenter = new SubmitPostPresenter(this);
     }
 
-    @NonNull
+    @NotNull
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle state) {
         View view = super.onCreateView(inflater, container, state);
@@ -114,7 +115,7 @@ public class SubmitPostFragment extends BaseFragment
         };
     }
 
-    TabLayout.Tab addNewTab(@NonNull TabLayout tabLayout, @StringRes int resId, @NonNull String tag) {
+    TabLayout.Tab addNewTab(@NotNull TabLayout tabLayout, @StringRes int resId, @NotNull String tag) {
         TabLayout.Tab tab = tabLayout.newTab();
         tab.setText(resId);
         tab.setTag(tag);

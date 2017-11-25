@@ -3,10 +3,11 @@ package com.ddiehl.android.htn.listings.profile;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 
 import com.ddiehl.android.htn.view.FragmentActivityCompat;
+
+import org.jetbrains.annotations.NotNull;
 
 public class UserProfileActivity extends FragmentActivityCompat {
 
@@ -34,13 +35,13 @@ public class UserProfileActivity extends FragmentActivityCompat {
         return true;
     }
 
-    @NonNull @Override
+    @NotNull @Override
     protected Fragment getFragment() {
         return new UserProfileFragmentBuilder(getShow(), getSort(), getTimespan(), getUsername())
                 .build();
     }
 
-    @NonNull @Override
+    @NotNull @Override
     protected String getFragmentTag() {
         return UserProfileFragment.TAG;
     }

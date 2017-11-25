@@ -1,8 +1,6 @@
 package com.ddiehl.android.htn.listings.inbox;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
@@ -18,6 +16,9 @@ import com.ddiehl.android.htn.utils.Utils;
 import com.ddiehl.android.htn.view.markdown.HtmlParser;
 import com.ddiehl.android.htn.view.markdown.MarkdownParser;
 import com.ddiehl.timesincetextview.TimeSince;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -106,7 +107,7 @@ public class ListingsMessageViewHolder extends RecyclerView.ViewHolder
                 message.isUnread() ? View.VISIBLE : View.GONE);
     }
 
-    void setTextToBody(@NonNull TextView view, @NonNull PrivateMessage message) {
+    void setTextToBody(@NotNull TextView view, @NotNull PrivateMessage message) {
         view.setMovementMethod(LinkMovementMethod.getInstance());
         if (mMarkdownParser != null) {
             CharSequence formatted = mMarkdownParser.convert(message.getBody());

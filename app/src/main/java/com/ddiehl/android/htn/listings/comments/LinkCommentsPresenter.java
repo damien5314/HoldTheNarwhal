@@ -1,11 +1,11 @@
 package com.ddiehl.android.htn.listings.comments;
 
-import android.support.annotation.NonNull;
-
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.listings.BaseListingsPresenter;
 import com.ddiehl.android.htn.navigation.RedditNavigationView;
 import com.ddiehl.android.htn.view.MainView;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -125,7 +125,7 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
     }
 
     @Override
-    public void getMoreComments(@NonNull CommentStub parentStub) {
+    public void getMoreComments(@NotNull CommentStub parentStub) {
         List<String> children = parentStub.getChildren();
         // Truncate list of children to 20
         children = children.subList(0, Math.min(MAX_CHILDREN_PER_REQUEST, children.size()));
@@ -149,7 +149,7 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
                 );
     }
 
-    private void onLoadMoreChildren(MoreChildrenResponse response, @NonNull CommentStub parentStub) {
+    private void onLoadMoreChildren(MoreChildrenResponse response, @NotNull CommentStub parentStub) {
         final int stubIndex = mCommentBank.indexOf(parentStub);
         if (stubIndex == -1) {
             // Parent comment stub is no longer in the list, we've probably already processed this response
@@ -239,7 +239,7 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
     }
 
     @Override
-    public void openLink(@NonNull Link link) {
+    public void openLink(@NotNull Link link) {
         // Overriding this so we don't keep opening link comments over and over
         if (!link.isSelf()) {
             final Media media = link.getMedia();
@@ -268,7 +268,7 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
     }
 
     @Override
-    public void replyToComment(@NonNull Comment comment) {
+    public void replyToComment(@NotNull Comment comment) {
         if (comment.isArchived()) {
             mMainView.showToast(mContext.getString(R.string.listing_archived));
         } else if (!mRedditService.isUserAuthorized()) {
@@ -279,7 +279,7 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
         }
     }
 
-    public void onCommentSubmitted(@NonNull String commentText) {
+    public void onCommentSubmitted(@NotNull String commentText) {
         String parentId = mReplyTarget.getFullName();
         mRedditService.addComment(parentId, commentText)
                 .subscribeOn(Schedulers.io())
@@ -317,7 +317,7 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
     }
 
     @Override
-    public void openCommentLink(@NonNull Comment comment) {
+    public void openCommentLink(@NotNull Comment comment) {
         // Link is already being displayed with this presenter
     }
 

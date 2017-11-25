@@ -1,7 +1,6 @@
 package com.ddiehl.android.htn.listings.links;
 
 import android.support.annotation.ColorInt;
-import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -12,6 +11,8 @@ import android.view.View;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.listings.BaseListingsPresenter;
 import com.ddiehl.android.htn.listings.subreddit.ThumbnailMode;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -81,7 +82,7 @@ public class CommentsLinkViewHolder extends BaseLinkViewHolder {
     }
 
     @Override
-    protected void showLiked(@NonNull Link link) {
+    protected void showLiked(@NotNull Link link) {
         // Determine tint color based on liked status and tint the buttons appropriately
         @ColorInt int color;
         if (link.isLiked() == null) {
@@ -111,7 +112,7 @@ public class CommentsLinkViewHolder extends BaseLinkViewHolder {
     }
 
     @Override
-    protected void showThumbnail(@NonNull Link link, @NonNull ThumbnailMode mode) {
+    protected void showThumbnail(@NotNull Link link, @NotNull ThumbnailMode mode) {
         // Nsfw/ThumbnailMode is inconsequential here, just show the best preview for screen size
         String url = null;
         if (link.getPreviewImages() != null) {
@@ -144,7 +145,7 @@ public class CommentsLinkViewHolder extends BaseLinkViewHolder {
     }
 
     @Override
-    protected void showSaved(@NonNull Link link) {
+    protected void showSaved(@NotNull Link link) {
         mLinkOptionsBar.setSaved(link.isSaved());
     }
 

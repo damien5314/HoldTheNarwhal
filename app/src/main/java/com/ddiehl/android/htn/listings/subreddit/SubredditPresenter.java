@@ -1,11 +1,11 @@
 package com.ddiehl.android.htn.listings.subreddit;
 
-import android.support.annotation.NonNull;
-
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.listings.BaseListingsPresenter;
 import com.ddiehl.android.htn.navigation.RedditNavigationView;
 import com.ddiehl.android.htn.view.MainView;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 
@@ -56,7 +56,7 @@ public class SubredditPresenter extends BaseListingsPresenter {
         return mSubredditInfo;
     }
 
-    private void loadSubredditInfo(@NonNull String subreddit) {
+    private void loadSubredditInfo(@NotNull String subreddit) {
         mRedditService.getSubredditInfo(subreddit)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -122,7 +122,7 @@ public class SubredditPresenter extends BaseListingsPresenter {
                 );
     }
 
-    private Link getLinkFromListingResponse(@NonNull ListingResponse response) {
+    private Link getLinkFromListingResponse(@NotNull ListingResponse response) {
         if (response.getData() == null) return null;
 
         if (response.getData().getChildren() == null) return null;

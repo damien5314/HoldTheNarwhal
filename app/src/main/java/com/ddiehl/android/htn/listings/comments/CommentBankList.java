@@ -1,6 +1,6 @@
 package com.ddiehl.android.htn.listings.comments;
 
-import android.support.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;

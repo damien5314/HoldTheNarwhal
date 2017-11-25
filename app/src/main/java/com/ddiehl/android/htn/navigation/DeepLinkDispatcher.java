@@ -2,9 +2,10 @@ package com.ddiehl.android.htn.navigation;
 
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 
 import com.ddiehl.android.htn.view.BaseActivity;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -26,7 +27,7 @@ public class DeepLinkDispatcher extends BaseActivity {
     }
 
     // TODO Analytics
-    private void processDeepLink(@NonNull Uri uri) {
+    private void processDeepLink(@NotNull Uri uri) {
         Timber.i("Deep link: %s", uri.toString());
         List<String> segments = uri.getPathSegments();
         if (segments.size() == 0) {

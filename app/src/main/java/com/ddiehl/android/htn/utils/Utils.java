@@ -1,7 +1,7 @@
 package com.ddiehl.android.htn.utils;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -20,14 +20,14 @@ import timber.log.Timber;
 
 public class Utils {
 
-    @NonNull
-    public static String getStringFromInputStream(@NonNull InputStream i) {
+    @NotNull
+    public static String getStringFromInputStream(@NotNull InputStream i) {
         Scanner s = new Scanner(i).useDelimiter("\\A");
         return s.hasNext() ? s.next() : "";
     }
 
     @Nullable
-    public static String getTextFromFile(@NonNull File file) throws IOException {
+    public static String getTextFromFile(@NotNull File file) throws IOException {
         try {
             BufferedReader br = new BufferedReader(new FileReader(file));
             try {
@@ -52,14 +52,14 @@ public class Utils {
         return null;
     }
 
-    @NonNull
+    @NotNull
     public static String getRandomString() {
         return UUID.randomUUID().toString();
     }
 
     // http://www.mkyong.com/java/java-md5-hashing-example/
     @Nullable
-    public static String getMd5HexString(@NonNull String s) {
+    public static String getMd5HexString(@NotNull String s) {
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
             md.update(s.getBytes());

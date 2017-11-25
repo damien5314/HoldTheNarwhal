@@ -1,7 +1,7 @@
 package com.ddiehl.android.htn.navigation;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -10,9 +10,9 @@ import rxreddit.model.PrivateMessage;
 public interface RedditNavigationView {
 
     void showCommentsForLink(
-            @NonNull String subreddit, @NonNull String linkId, @Nullable String commentId);
+            @NotNull String subreddit, @NotNull String linkId, @Nullable String commentId);
 
-    void openURL(@NonNull String url);
+    void openURL(@NotNull String url);
 
     void showSettings();
 
@@ -20,9 +20,9 @@ public interface RedditNavigationView {
 
     void showInbox();
 
-    void showInboxMessages(@NonNull List<PrivateMessage> messages);
+    void showInboxMessages(@NotNull List<PrivateMessage> messages);
 
-    void showUserProfile(@NonNull String username, @Nullable String show, @Nullable String sort);
+    void showUserProfile(@NotNull String username, @Nullable String show, @Nullable String sort);
 
     void showSubredditNavigationView();
 

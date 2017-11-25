@@ -1,12 +1,12 @@
 package com.ddiehl.android.htn.subscriptions;
 
-import android.support.annotation.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 import rxreddit.model.Subreddit;
 
 interface SubscriptionManagerView {
 
-    void onSubredditClicked(@NonNull Subreddit subreddit, int position);
+    void onSubredditClicked(@NotNull Subreddit subreddit, int position);
 
-    void onSubredditDismissed(@NonNull Subreddit subreddit, int position);
+    void onSubredditDismissed(@NotNull Subreddit subreddit, int position);
 }

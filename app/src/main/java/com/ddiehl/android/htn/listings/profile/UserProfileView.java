@@ -1,10 +1,10 @@
 package com.ddiehl.android.htn.listings.profile;
 
-import android.support.annotation.NonNull;
-
 import com.ddiehl.android.htn.listings.ListingsView;
 import com.ddiehl.android.htn.listings.comments.CommentView;
 import com.ddiehl.android.htn.listings.links.LinkView;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -13,9 +13,9 @@ import rxreddit.model.UserIdentity;
 
 public interface UserProfileView extends ListingsView, LinkView, CommentView {
 
-    void showUserInfo(@NonNull UserIdentity user);
+    void showUserInfo(@NotNull UserIdentity user);
 
-    void showFriendNote(@NonNull String note);
+    void showFriendNote(@NotNull String note);
 
     void hideFriendNote();
 

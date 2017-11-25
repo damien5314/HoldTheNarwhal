@@ -1,8 +1,8 @@
 package com.ddiehl.android.htn.listings.subreddit.submission;
 
-import android.support.annotation.NonNull;
-
 import com.ddiehl.android.htn.HoldTheNarwhal;
+
+import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
 
@@ -27,7 +27,7 @@ public class SubmitPostPresenter {
         // TODO
     }
 
-    public void submit(@NonNull String kind) {
+    public void submit(@NotNull String kind) {
         if ("link".equals(kind)) {
             submitLink();
         } else if ("self".equals(kind)) {

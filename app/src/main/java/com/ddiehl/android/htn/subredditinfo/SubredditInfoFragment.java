@@ -1,8 +1,6 @@
 package com.ddiehl.android.htn.subredditinfo;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
@@ -24,6 +22,9 @@ import com.ddiehl.android.htn.view.BaseFragment;
 import com.hannesdorfmann.fragmentargs.FragmentArgs;
 import com.hannesdorfmann.fragmentargs.annotation.Arg;
 import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.text.DateFormat;
@@ -73,7 +74,7 @@ public class SubredditInfoFragment extends BaseFragment {
         return R.layout.subreddit_info_fragment;
     }
 
-    @NonNull @Override
+    @NotNull @Override
     protected View getChromeView() {
         return mCoordinatorLayout;
     }
@@ -143,7 +144,7 @@ public class SubredditInfoFragment extends BaseFragment {
         showSubredditRules(tuple.rules);
     }
 
-    void showSubscribeButton(final @NonNull Subreddit subreddit) {
+    void showSubscribeButton(final @NotNull Subreddit subreddit) {
         Boolean subscribed = subreddit.getUserIsSubscriber();
 
         mSubscribeButtonProgressBar.setVisibility(View.GONE);
@@ -230,7 +231,7 @@ public class SubredditInfoFragment extends BaseFragment {
         }
     }
 
-    void showSubredditInfo(final @NonNull Subreddit subreddit) {
+    void showSubredditInfo(final @NotNull Subreddit subreddit) {
         // Format and show date created
         Long created = subreddit.getCreatedUtc();
         String createdText = formatDate(created);

@@ -1,7 +1,6 @@
 package com.ddiehl.android.htn.listings.inbox;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TabLayout;
 import android.text.TextUtils;
@@ -19,6 +18,8 @@ import com.ddiehl.android.htn.utils.AndroidUtils;
 import com.hannesdorfmann.fragmentargs.FragmentArgs;
 import com.hannesdorfmann.fragmentargs.annotation.Arg;
 import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.List;
@@ -54,7 +55,7 @@ public class InboxFragment extends BaseListingsFragment
         setCallbacks(mInboxPresenter);
     }
 
-    @NonNull @Override
+    @NotNull @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
         View view = super.onCreateView(inflater, container, state);
 
@@ -116,7 +117,7 @@ public class InboxFragment extends BaseListingsFragment
 
     private ListingsAdapter listingsAdapter;
 
-    @NonNull @Override
+    @NotNull @Override
     public ListingsAdapter getListingsAdapter() {
         if (listingsAdapter == null) {
             listingsAdapter = new ListingsAdapter(getListingsPresenter(), this, this, this);
@@ -125,7 +126,7 @@ public class InboxFragment extends BaseListingsFragment
     }
 
     @Override
-    public void selectTab(@NonNull String show) {
+    public void selectTab(@NotNull String show) {
         tabLayout.removeOnTabSelectedListener(this);
         for (int i = 0; i < AndroidUtils.getChildrenInTabLayout(tabLayout); i++) {
             TabLayout.Tab tab = tabLayout.getTabAt(i);
@@ -174,7 +175,7 @@ public class InboxFragment extends BaseListingsFragment
         return mShow;
     }
 
-    @NonNull @Override
+    @NotNull @Override
     protected View getChromeView() {
         return mCoordinatorLayout;
     }

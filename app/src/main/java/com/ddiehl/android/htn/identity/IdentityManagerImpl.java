@@ -2,11 +2,12 @@ package com.ddiehl.android.htn.identity;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.support.annotation.NonNull;
 
 import com.crashlytics.android.Crashlytics;
 import com.ddiehl.android.htn.settings.SettingsManager;
 import com.ddiehl.android.htn.utils.Utils;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Date;
 import java.util.HashSet;
@@ -85,7 +86,7 @@ public class IdentityManagerImpl implements IdentityManager {
     }
 
     @Override
-    public void saveUserIdentity(@NonNull UserIdentity identity) {
+    public void saveUserIdentity(@NotNull UserIdentity identity) {
         mUserIdentity = identity;
         Boolean hasMail = identity.hasMail();
         String name = identity.getName();

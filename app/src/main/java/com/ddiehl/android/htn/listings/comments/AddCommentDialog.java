@@ -4,13 +4,14 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 
 import com.ddiehl.android.htn.R;
+
+import org.jetbrains.annotations.NotNull;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -27,7 +28,7 @@ public class AddCommentDialog extends DialogFragment {
 
     private String mParentFullName;
 
-    public static AddCommentDialog newInstance(@NonNull String parentFullname) {
+    public static AddCommentDialog newInstance(@NotNull String parentFullname) {
         AddCommentDialog dialog = new AddCommentDialog();
         Bundle args = new Bundle();
         args.putString(EXTRA_PARENT_ID, parentFullname);
@@ -41,7 +42,7 @@ public class AddCommentDialog extends DialogFragment {
         mParentFullName = getArguments().getString(EXTRA_PARENT_ID);
     }
 
-    @NonNull
+    @NotNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Dialog dialog = new Dialog(getActivity());

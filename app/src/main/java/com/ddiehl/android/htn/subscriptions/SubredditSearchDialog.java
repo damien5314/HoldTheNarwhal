@@ -3,13 +3,14 @@ package com.ddiehl.android.htn.subscriptions;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.navigation.SubredditEditText;
+
+import org.jetbrains.annotations.NotNull;
 
 import butterknife.ButterKnife;
 
@@ -23,7 +24,7 @@ public class SubredditSearchDialog extends DialogFragment {
 
     public static final String RESULT_SEARCH = "RESULT_SEARCH";
 
-    @NonNull @Override
+    @NotNull @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         return new AlertDialog.Builder(getContext())
                 .setTitle(R.string.subreddit_search_dialog_title)

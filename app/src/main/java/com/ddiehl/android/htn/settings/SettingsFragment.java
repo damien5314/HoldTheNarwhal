@@ -11,7 +11,6 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
-import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
@@ -26,6 +25,8 @@ import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.about.AboutAppActivity;
 import com.ddiehl.android.htn.identity.IdentityManager;
 import com.ddiehl.android.htn.utils.MenuTintUtils;
+
+import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
 
@@ -190,11 +191,11 @@ public class SettingsFragment extends PreferenceFragment
     }
 
     @Override
-    public void showToast(@NonNull String msg) {
+    public void showToast(@NotNull String msg) {
         Snackbar.make(getView(), msg, Snackbar.LENGTH_SHORT).show();
     }
 
-    protected void showError(@NonNull String msg) {
+    protected void showError(@NotNull String msg) {
         Snackbar.make(getView(), msg, Snackbar.LENGTH_SHORT).show();
     }
 }

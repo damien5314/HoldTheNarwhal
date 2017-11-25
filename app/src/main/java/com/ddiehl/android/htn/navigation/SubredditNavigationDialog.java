@@ -3,7 +3,6 @@ package com.ddiehl.android.htn.navigation;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.view.KeyEvent;
 import android.view.View;
@@ -11,6 +10,8 @@ import android.view.Window;
 import android.view.inputmethod.EditorInfo;
 
 import com.ddiehl.android.htn.R;
+
+import org.jetbrains.annotations.NotNull;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -50,7 +51,7 @@ public class SubredditNavigationDialog extends DialogFragment {
         super.onDetach();
     }
 
-    @NonNull
+    @NotNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Timber.i("Showing subreddit navigation dialog");

@@ -1,8 +1,6 @@
 package com.ddiehl.android.htn.listings.links;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.Spanned;
@@ -21,6 +19,9 @@ import com.ddiehl.android.htn.view.ColorSwapTextView;
 import com.ddiehl.android.htn.view.markdown.HtmlParser;
 import com.ddiehl.android.htn.view.markdown.MarkdownParser;
 import com.ddiehl.timesincetextview.TimeSinceTextView;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -79,7 +80,7 @@ public abstract class BaseLinkViewHolder extends RecyclerView.ViewHolder
     }
 
     public void bind(
-            @NonNull Link link, boolean showSelfText, ThumbnailMode mode,
+            @NotNull Link link, boolean showSelfText, ThumbnailMode mode,
             boolean showNsfw, boolean showParentLink) {
         mLink = link;
         showSelfText(link, showSelfText);
@@ -99,7 +100,7 @@ public abstract class BaseLinkViewHolder extends RecyclerView.ViewHolder
         showParentLink(showParentLink);
     }
 
-    protected void showSelfText(@NonNull Link link, boolean showSelfText) {
+    protected void showSelfText(@NotNull Link link, boolean showSelfText) {
         if (link.getSelftext() != null && !"".equals(link.getSelftext()) && showSelfText) {
             setTextToView(mSelfText, link);
             mSelfText.setVisibility(View.VISIBLE);
@@ -108,7 +109,7 @@ public abstract class BaseLinkViewHolder extends RecyclerView.ViewHolder
         }
     }
 
-    void setTextToView(@NonNull TextView view, @NonNull Link link) {
+    void setTextToView(@NotNull TextView view, @NotNull Link link) {
         view.setMovementMethod(LinkMovementMethod.getInstance());
         if (mMarkdownParser != null) {
             CharSequence formatted = mMarkdownParser.convert(link.getSelftext());
@@ -119,7 +120,7 @@ public abstract class BaseLinkViewHolder extends RecyclerView.ViewHolder
         }
     }
 
-    protected void showScore(@NonNull Link link) {
+    protected void showScore(@NotNull Link link) {
         Integer score = link.getScore();
         if (score == null) {
             mLinkScore.setText(
@@ -130,11 +131,11 @@ public abstract class BaseLinkViewHolder extends RecyclerView.ViewHolder
         }
     }
 
-    protected void showTitle(@NonNull Link link) {
+    protected void showTitle(@NotNull Link link) {
         mLinkTitle.setText(link.getTitle());
     }
 
-    protected void showAuthor(@NonNull Link link) {
+    protected void showAuthor(@NotNull Link link) {
         mLinkAuthor.setText(
                 String.format(mContext.getString(R.string.link_author), link.getAuthor()));
         String distinguished = link.getDistinguished();
@@ -159,7 +160,7 @@ public abstract class BaseLinkViewHolder extends RecyclerView.ViewHolder
         }
     }
 
-    protected void showTimestamp(@NonNull Link link) {
+    protected void showTimestamp(@NotNull Link link) {
         long timestamp = link.getCreatedUtc().longValue();
         mLinkTimestamp.setDate(timestamp);
         if (link.isEdited() != null) {
@@ -180,23 +181,23 @@ public abstract class BaseLinkViewHolder extends RecyclerView.ViewHolder
         mLinkTimestamp.setText(edited ? text + "*" : text.toString().replace("*", ""));
     }
 
-    protected void showSubreddit(@NonNull Link link) {
+    protected void showSubreddit(@NotNull Link link) {
         mLinkSubreddit.setText(
                 String.format(mContext.getString(R.string.link_subreddit), link.getSubreddit()));
     }
 
-    protected void showDomain(@NonNull Link link) {
+    protected void showDomain(@NotNull Link link) {
         mLinkDomain.setText(
                 String.format(mContext.getString(R.string.link_domain), link.getDomain()));
     }
 
-    protected void showCommentCount(@NonNull Link link) {
+    protected void showCommentCount(@NotNull Link link) {
         int n = link.getNumComments();
         mLinkComments.setText(
                 mContext.getResources().getQuantityString(R.plurals.link_comment_count, n, n));
     }
 
-    protected String getPreviewUrl(@NonNull Link link) {
+    protected String getPreviewUrl(@NotNull Link link) {
         List<Image> images = link.getPreviewImages();
         if (images == null || images.size() == 0) return null;
         Image imageToDisplay;
@@ -215,7 +216,7 @@ public abstract class BaseLinkViewHolder extends RecyclerView.ViewHolder
     }
 
     abstract protected void showThumbnail(
-            @NonNull Link link, @NonNull ThumbnailMode mode);
+            @NotNull Link link, @NotNull ThumbnailMode mode);
 
     protected void loadThumbnail(@Nullable String url) {
         Glide.with(mContext)
@@ -228,9 +229,9 @@ public abstract class BaseLinkViewHolder extends RecyclerView.ViewHolder
         mNsfwIndicator.setVisibility(b ? View.VISIBLE : View.GONE);
     }
 
-    protected abstract void showLiked(@NonNull Link link);
+    protected abstract void showLiked(@NotNull Link link);
 
-    protected void showGilded(@NonNull Link link) {
+    protected void showGilded(@NotNull Link link) {
         Integer gilded = link.getGilded();
         if (gilded != null && gilded > 0) {
             mGildedText.setText(String.format(mContext.getString(R.string.link_gilded_text), gilded));
@@ -240,12 +241,12 @@ public abstract class BaseLinkViewHolder extends RecyclerView.ViewHolder
         }
     }
 
-    protected void showSaved(@NonNull Link link) {
+    protected void showSaved(@NotNull Link link) {
         boolean saved = link.isSaved();
         mSavedView.setVisibility(saved ? View.VISIBLE : View.INVISIBLE);
     }
 
-    protected void showStickied(@NonNull Link link) {
+    protected void showStickied(@NotNull Link link) {
         boolean stickied = link.getStickied();
         mStickiedView.setVisibility(stickied ? View.VISIBLE : View.INVISIBLE);
     }

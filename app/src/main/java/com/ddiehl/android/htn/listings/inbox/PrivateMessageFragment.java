@@ -3,8 +3,6 @@ package com.ddiehl.android.htn.listings.inbox;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
@@ -24,6 +22,9 @@ import com.google.gson.Gson;
 import com.hannesdorfmann.fragmentargs.FragmentArgs;
 import com.hannesdorfmann.fragmentargs.annotation.Arg;
 import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.List;
@@ -63,7 +64,7 @@ public class PrivateMessageFragment extends BaseFragment implements PrivateMessa
         mAdapter = new PrivateMessageAdapter();
     }
 
-    @NonNull @Override
+    @NotNull @Override
     public View onCreateView(
             LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle state) {
         View view = super.onCreateView(inflater, container, state);
@@ -113,13 +114,13 @@ public class PrivateMessageFragment extends BaseFragment implements PrivateMessa
         );
     }
 
-    @NonNull @Override
+    @NotNull @Override
     protected View getChromeView() {
         return mCoordinatorLayout;
     }
 
     @Override
-    public void openReportView(@NonNull PrivateMessage message) {
+    public void openReportView(@NotNull PrivateMessage message) {
         Intent intent = ReportActivity.getIntent(getContext(), message.getFullName(), null);
         startActivityForResult(intent, REQUEST_REPORT_MESSAGE);
     }
@@ -139,7 +140,7 @@ public class PrivateMessageFragment extends BaseFragment implements PrivateMessa
         }
     }
 
-    void showReportSuccessToast(@NonNull Listing listing) {
+    void showReportSuccessToast(@NotNull Listing listing) {
         Snackbar.make(getChromeView(), R.string.report_successful, Snackbar.LENGTH_LONG)
                 .show();
     }

@@ -1,7 +1,7 @@
 package com.ddiehl.android.htn;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -14,7 +14,7 @@ import timber.log.Timber;
 
 public class TestUtils {
 
-    public static void logDuration(@NonNull String tag, @NonNull Runnable runnable) {
+    public static void logDuration(@NotNull String tag, @NotNull Runnable runnable) {
         long startTime = System.nanoTime();
 
         runnable.run();
@@ -28,7 +28,7 @@ public class TestUtils {
     }
 
     @Nullable
-    public static String getTextFromInputStream(@NonNull InputStream in) throws IOException {
+    public static String getTextFromInputStream(@NotNull InputStream in) throws IOException {
         try {
             BufferedReader br = new BufferedReader(new InputStreamReader(in));
             try {

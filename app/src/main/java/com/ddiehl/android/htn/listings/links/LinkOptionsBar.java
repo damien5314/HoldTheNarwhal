@@ -3,8 +3,6 @@ package com.ddiehl.android.htn.listings.links;
 import android.content.Context;
 import android.os.Build;
 import android.support.annotation.LayoutRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
@@ -14,6 +12,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.ddiehl.android.htn.R;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -149,7 +150,7 @@ public class LinkOptionsBar extends LinearLayout {
         }
     }
 
-    public void setVoted(@NonNull Integer voted) {
+    public void setVoted(@NotNull Integer voted) {
         mVoted = voted;
 
         // Determine tint color based on liked status and tint the buttons appropriately

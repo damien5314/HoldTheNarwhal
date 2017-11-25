@@ -1,8 +1,6 @@
 package com.ddiehl.android.htn.subscriptions;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -14,6 +12,9 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,7 +35,7 @@ public class SubscriptionManagerAdapter extends RecyclerView.Adapter<Subscriptio
     final List<Subreddit> mData = new ArrayList<>();
 
     public SubscriptionManagerAdapter(
-            @NonNull SubscriptionManagerView view, @NonNull SubscriptionManagerPresenter presenter) {
+            @NotNull SubscriptionManagerView view, @NotNull SubscriptionManagerPresenter presenter) {
         mSubscriptionManagerView = view;
         mPresenter = presenter;
     }
