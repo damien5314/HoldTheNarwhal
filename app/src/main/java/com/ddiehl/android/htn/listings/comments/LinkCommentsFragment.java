@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.ContextMenu;
 import android.view.Menu;
@@ -59,7 +60,7 @@ public class LinkCommentsFragment extends BaseListingsFragment
         mLinkCommentsPresenter = new LinkCommentsPresenter(this, mRedditNavigationView, this);
         mListingsPresenter = mLinkCommentsPresenter;
         mSort = mSettingsManager.getCommentSort();
-        mCallbacks = (Callbacks) mListingsPresenter;
+        mCallbacks = mListingsPresenter;
     }
 
     @Override
@@ -169,7 +170,6 @@ public class LinkCommentsFragment extends BaseListingsFragment
                 break;
             case REQUEST_ADD_COMMENT:
                 if (resultCode == RESULT_OK) {
-                    String parentId = data.getStringExtra(AddCommentDialog.EXTRA_PARENT_ID);
                     String commentText = data.getStringExtra(AddCommentDialog.EXTRA_COMMENT_TEXT);
                     mLinkCommentsPresenter.onCommentSubmitted(commentText);
                 }
@@ -179,7 +179,8 @@ public class LinkCommentsFragment extends BaseListingsFragment
 
     @Override
     public void refreshOptionsMenu() {
-        getActivity().supportInvalidateOptionsMenu();
+        final FragmentActivity activity = getActivity();
+        if (activity != null) activity.invalidateOptionsMenu();
     }
 
     @Override
