@@ -20,10 +20,10 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import in.uncod.android.bypass.Bypass;
-import rxreddit.RxRedditUtil;
 import rxreddit.android.AndroidAccessTokenManager;
 import rxreddit.android.AndroidUtil;
 import rxreddit.api.RedditService;
+import rxreddit.util.RxRedditUtil;
 
 @Module
 public class ApplicationModule {

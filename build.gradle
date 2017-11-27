@@ -11,7 +11,7 @@ buildscript {
         GLIDE_VERSION = "3.7.0"
         GLIDE_OKHTTP_VERSION = "1.4.0@aar"
         BUTTERKNIFE_VERSION = "8.4.0"
-        RXREDDIT_VERSION = "6d6f8e0be1288b6dd479d8d9fe85980adb67ddc7"
+        RXREDDIT_VERSION = "cc6b4ca1f588335499a0eb70f55ee7e2829ecffa"
         RXJAVA_VERSION = "2.1.6"
         RXANDROID_VERSION = "2.0.1"
         TIMESINCETEXTVIEW_VERSION = "1.3"
