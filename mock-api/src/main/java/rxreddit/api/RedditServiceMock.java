@@ -12,7 +12,6 @@ import java.util.Map;
 
 import io.reactivex.Completable;
 import io.reactivex.Observable;
-import rxreddit.RxRedditUtil;
 import rxreddit.model.AddCommentResponse;
 import rxreddit.model.Comment;
 import rxreddit.model.FriendInfo;
@@ -28,6 +27,7 @@ import rxreddit.model.TrophyResponse;
 import rxreddit.model.UserAccessToken;
 import rxreddit.model.UserIdentity;
 import rxreddit.model.UserSettings;
+import rxreddit.util.RxRedditUtil;
 
 public class RedditServiceMock extends RedditService {
 
