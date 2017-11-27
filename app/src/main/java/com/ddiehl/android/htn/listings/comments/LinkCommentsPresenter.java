@@ -3,6 +3,7 @@ package com.ddiehl.android.htn.listings.comments;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.listings.BaseListingsPresenter;
 import com.ddiehl.android.htn.navigation.RedditNavigationView;
+import com.ddiehl.android.htn.utils.RedditUtilKt;
 import com.ddiehl.android.htn.view.MainView;
 
 import org.jetbrains.annotations.NotNull;
@@ -13,7 +14,6 @@ import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
-import rxreddit.RxRedditUtil;
 import rxreddit.model.AbsComment;
 import rxreddit.model.Comment;
 import rxreddit.model.CommentStub;
@@ -108,7 +108,7 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
         // Get comments and flatten the comment tree
         ListingResponse commentsResponse = listingResponseList.get(1);
         List<Listing> comments = commentsResponse.getData().getChildren();
-        RxRedditUtil.flattenCommentList(comments);
+        RedditUtilKt.flattenCommentList(comments);
         Timber.i("Comments: %d", comments.size());
 
         // Add comments to CommentBank
