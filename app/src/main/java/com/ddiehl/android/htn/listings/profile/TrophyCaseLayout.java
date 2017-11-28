@@ -10,8 +10,8 @@ import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.ddiehl.android.htn.R;
+import com.ddiehl.android.htn.view.glide.GlideApp;
 
 import java.util.List;
 
@@ -59,7 +59,7 @@ public class TrophyCaseLayout extends GridLayout {
             );
 
             // Load image
-            Glide.with(getContext())
+            GlideApp.with(getContext())
                     .load(trophy.getIcon70())
                     .into(imageView);
 

@@ -10,12 +10,12 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.listings.BaseListingsPresenter;
 import com.ddiehl.android.htn.listings.subreddit.ThumbnailMode;
 import com.ddiehl.android.htn.view.ColorSwapTextView;
+import com.ddiehl.android.htn.view.glide.GlideApp;
 import com.ddiehl.android.htn.view.markdown.HtmlParser;
 import com.ddiehl.android.htn.view.markdown.MarkdownParser;
 import com.ddiehl.timesincetextview.TimeSinceTextView;
@@ -219,7 +219,7 @@ public abstract class BaseLinkViewHolder extends RecyclerView.ViewHolder
             @NotNull Link link, @NotNull ThumbnailMode mode);
 
     protected void loadThumbnail(@Nullable String url) {
-        Glide.with(mContext)
+        GlideApp.with(mContext)
                 .load(url)
                 .centerCrop()
                 .into(mLinkThumbnail);
