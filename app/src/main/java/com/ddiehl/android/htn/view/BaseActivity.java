@@ -27,7 +27,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.identity.IdentityManager;
@@ -45,6 +44,7 @@ import com.ddiehl.android.htn.settings.SettingsActivity;
 import com.ddiehl.android.htn.settings.SettingsManager;
 import com.ddiehl.android.htn.subscriptions.SubscriptionManagerActivity;
 import com.ddiehl.android.htn.utils.AndroidUtils;
+import com.ddiehl.android.htn.view.glide.GlideApp;
 import com.google.gson.Gson;
 
 import org.jetbrains.annotations.NotNull;
@@ -454,7 +454,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
 
     @Override
     public void showSubredditImage(String url) {
-        Glide.with(this)
+        GlideApp.with(this)
                 .load(url)
                 .into(mHeaderImage);
     }

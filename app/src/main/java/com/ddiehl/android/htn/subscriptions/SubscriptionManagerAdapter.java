@@ -9,9 +9,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
+import com.ddiehl.android.htn.view.glide.GlideApp;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -140,7 +140,7 @@ public class SubscriptionManagerAdapter extends RecyclerView.Adapter<Subscriptio
             String iconUrl = subreddit.getIconImg();
             if (!TextUtils.isEmpty(iconUrl)) {
                 Context context = mSubscriptionIcon.getContext();
-                Glide.with(context)
+                GlideApp.with(context)
                         .load(iconUrl)
                         .fitCenter()
                         .into(mSubscriptionIcon);
