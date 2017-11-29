@@ -8,7 +8,8 @@ import rxreddit.model.Listing
  * Flattens list of comments, marking each comment with depth
  */
 fun flattenCommentList(commentList: MutableList<Listing>) {
-    for (i in 0 until commentList.size) {
+    var i = 0
+    while (i < commentList.size) {
         val listing = commentList[i]
         if (listing is Comment) {
             val repliesListing = listing.replies
@@ -26,5 +27,6 @@ fun flattenCommentList(commentList: MutableList<Listing>) {
             val moreComments = listing as CommentStub
             moreComments.depth = moreComments.depth + 1 // Increase depth by 1
         }
+        i++
     }
 }
