@@ -18,6 +18,7 @@ import com.ddiehl.android.htn.listings.subreddit.SubredditFragment;
 import com.ddiehl.android.htn.listings.subreddit.submission.SubmitPostFragment;
 import com.ddiehl.android.htn.listings.subreddit.submission.SubmitPostPresenter;
 import com.ddiehl.android.htn.navigation.WebViewFragment;
+import com.ddiehl.android.htn.notifications.NotificationCheckJobService;
 import com.ddiehl.android.htn.settings.SettingsActivity;
 import com.ddiehl.android.htn.settings.SettingsFragment;
 import com.ddiehl.android.htn.settings.SettingsPresenter;
@@ -26,6 +27,8 @@ import com.ddiehl.android.htn.subscriptions.SubscriptionManagerAdapter;
 import com.ddiehl.android.htn.subscriptions.SubscriptionManagerPresenter;
 import com.ddiehl.android.htn.view.BaseActivity;
 import com.ddiehl.android.htn.view.BaseFragment;
+
+import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Singleton;
 
@@ -70,4 +73,7 @@ public interface ApplicationComponent {
     void inject(SettingsPresenter presenter);
     void inject(SubscriptionManagerPresenter presenter);
     void inject(SubmitPostPresenter presenter);
+
+    // Services
+    void inject(@NotNull NotificationCheckJobService service);
 }

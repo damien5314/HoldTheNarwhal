@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
             android:name="com.ddiehl.android.htn.HoldTheNarwhal"
@@ -94,6 +95,11 @@
         <activity
                 android:name=".listings.subreddit.submission.SubmitPostActivity"
                 android:theme="@style/ActivityThemeLightBg" />
+
+        <service
+            android:name=".notifications.NotificationCheckJobService"
+            android:label="Notification check service"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
 
     </application>
 
