@@ -2,9 +2,15 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'com.jakewharton.hugo'
-apply plugin: 'com.getkeepsafe.dexcount'
 apply plugin: 'com.github.ben-manes.versions'
 apply plugin: 'io.fabric'
+
+// TODO: Remove conditional once below issue is resolved
+// https://github.com/KeepSafe/dexcount-gradle-plugin/issues/235
+def taskRequests = getGradle().getStartParameter().getTaskRequests()
+if (!taskRequests.toString().toLowerCase().contains("debug")) {
+    apply plugin: 'com.getkeepsafe.dexcount'
+}
 
 repositories {
     jcenter()
