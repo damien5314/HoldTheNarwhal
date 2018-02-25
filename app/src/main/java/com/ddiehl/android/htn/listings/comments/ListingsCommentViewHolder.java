@@ -13,10 +13,7 @@ import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.listings.BaseListingsPresenter;
 import com.ddiehl.android.htn.view.markdown.HtmlParser;
-import com.ddiehl.android.htn.view.markdown.MarkdownParser;
 import com.ddiehl.timesincetextview.TimeSinceTextView;
-
-import org.jetbrains.annotations.Nullable;
 
 import javax.inject.Inject;
 
@@ -29,7 +26,6 @@ public class ListingsCommentViewHolder extends RecyclerView.ViewHolder
         implements View.OnCreateContextMenuListener {
 
     @Inject Context mAppContext;
-    @Inject @Nullable MarkdownParser mMarkdownParser;
     @Inject HtmlParser mHtmlParser;
     private CommentView mCommentView;
     private BaseListingsPresenter mCommentPresenter;
@@ -152,13 +148,8 @@ public class ListingsCommentViewHolder extends RecyclerView.ViewHolder
     }
 
     private void showBody(Comment comment) {
-        if (mMarkdownParser != null) {
-            CharSequence formatted = mMarkdownParser.convert(comment.getBody().trim());
-            mBodyView.setText(formatted);
-        } else {
-            Spanned formatted = mHtmlParser.convert(comment.getBodyHtml());
-            mBodyView.setText(formatted);
-        }
+        Spanned formatted = mHtmlParser.convert(comment.getBodyHtml());
+        mBodyView.setText(formatted);
     }
 
     private void showScore(Comment comment) {

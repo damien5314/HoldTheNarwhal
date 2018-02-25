@@ -2,7 +2,6 @@ package com.ddiehl.android.htn.settings;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
@@ -22,7 +21,6 @@ import android.view.ViewGroup;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
-import com.ddiehl.android.htn.about.AboutAppActivity;
 import com.ddiehl.android.htn.identity.IdentityManager;
 import com.ddiehl.android.htn.utils.MenuTintUtils;
 
@@ -106,11 +104,6 @@ public class SettingsFragment extends PreferenceFragment
 
     private void addDefaultPreferences() {
         addPreferencesFromResource(R.xml.preferences_all); // Required for getSharedPreferences()
-        Preference prefAboutApp = findPreference("pref_about_app");
-        prefAboutApp.setOnPreferenceClickListener(preference -> {
-            showAboutApp();
-            return false;
-        });
     }
 
     private void addUserPreferences() {
@@ -165,11 +158,6 @@ public class SettingsFragment extends PreferenceFragment
                 return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    private void showAboutApp() {
-        Intent intent = AboutAppActivity.getIntent(getActivity());
-        startActivity(intent);
     }
 
     @Override

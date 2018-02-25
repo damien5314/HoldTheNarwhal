@@ -26,7 +26,6 @@ import com.ddiehl.android.htn.subscriptions.SubscriptionManagerAdapter;
 import com.ddiehl.android.htn.subscriptions.SubscriptionManagerPresenter;
 import com.ddiehl.android.htn.view.BaseActivity;
 import com.ddiehl.android.htn.view.BaseFragment;
-import com.ddiehl.android.htn.view.MarkdownTextFragment;
 
 import javax.inject.Singleton;
 
@@ -35,7 +34,6 @@ import dagger.Component;
 @Singleton
 @Component(modules = {
         ApplicationModule.class,
-        SharedModule.class,
 })
 public interface ApplicationComponent {
 
@@ -55,7 +53,6 @@ public interface ApplicationComponent {
     void inject(WebViewFragment fragment);
     void inject(LinkCommentsFragment fragment);
     void inject(SubredditInfoFragment fragment);
-    void inject(MarkdownTextFragment fragment);
     void inject(SubmitPostFragment fragment);
 
     // ViewHolders
@@ -73,7 +70,4 @@ public interface ApplicationComponent {
     void inject(SettingsPresenter presenter);
     void inject(SubscriptionManagerPresenter presenter);
     void inject(SubmitPostPresenter presenter);
-
-    // Misc
-//    void inject(HtmlParser htmlParser);
 }

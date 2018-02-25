@@ -8,10 +8,7 @@ import com.ddiehl.android.htn.identity.IdentityManagerImpl;
 import com.ddiehl.android.htn.settings.SettingsManager;
 import com.ddiehl.android.htn.settings.SettingsManagerImpl;
 import com.ddiehl.android.htn.view.markdown.HtmlParser;
-import com.ddiehl.android.htn.view.markdown.MarkdownParser;
 import com.google.gson.Gson;
-
-import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 
@@ -19,7 +16,6 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import in.uncod.android.bypass.Bypass;
 import rxreddit.android.AndroidAccessTokenManager;
 import rxreddit.android.AndroidUtil;
 import rxreddit.api.RedditService;
@@ -27,6 +23,17 @@ import rxreddit.util.RxRedditUtil;
 
 @Module
 public class ApplicationModule {
+
+    private final Context appContext;
+
+    public ApplicationModule(Context context) {
+        appContext = context.getApplicationContext();
+    }
+
+    @Provides
+    public Context providesAppContext() {
+        return appContext;
+    }
 
     @Singleton
     @Provides
@@ -64,18 +71,8 @@ public class ApplicationModule {
         return redditService.getGson();
     }
 
-    @Provides @Nullable
-    MarkdownParser providesMarkdownParser(@Nullable Bypass bypass) {
-        return null; // Force logic to use HtmlParser
-//        if (bypass == null) {
-//            return null;
-//        } else {
-//            return new MarkdownParser(bypass);
-//        }
-    }
-
     @Provides
-    HtmlParser providesHtmlProcessor(Context context) {
+    HtmlParser providesHtmlParser(Context context) {
         return new HtmlParser(context);
     }
 }

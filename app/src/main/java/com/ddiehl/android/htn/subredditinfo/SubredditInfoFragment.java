@@ -5,6 +5,7 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.view.LayoutInflater;
@@ -19,6 +20,7 @@ import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.subscriptions.SubscriptionManagerPresenter;
 import com.ddiehl.android.htn.view.BaseFragment;
+import com.ddiehl.android.htn.view.markdown.HtmlParser;
 import com.hannesdorfmann.fragmentargs.FragmentArgs;
 import com.hannesdorfmann.fragmentargs.annotation.Arg;
 import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs;
@@ -36,7 +38,6 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import in.uncod.android.bypass.Bypass;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import rxreddit.model.Subreddit;
@@ -50,7 +51,7 @@ public class SubredditInfoFragment extends BaseFragment {
     public static final String TAG = SubredditInfoFragment.class.getSimpleName();
     public static final int RESULT_GET_INFO_ERROR = -1000;
 
-    @Inject @Nullable Bypass mBypass;
+    @Inject HtmlParser mHtmlParser;
 
     @BindView(R.id.coordinator_layout) CoordinatorLayout mCoordinatorLayout;
     @BindView(R.id.subreddit_info_parent) View mParentViewGroup;
@@ -277,14 +278,9 @@ public class SubredditInfoFragment extends BaseFragment {
 
 
         // Show public description text
-        String publicDescription = subreddit.getPublicDescription();
-        if (mBypass != null) {
-            mPublicDescription.setText(
-                    mBypass.markdownToSpannable(publicDescription)
-            );
-        } else {
-            mPublicDescription.setText(publicDescription);
-        }
+        final String publicDescription = subreddit.getPublicDescriptionHtml();
+        final Spanned parsedDescription = mHtmlParser.convert(publicDescription);
+        mPublicDescription.setText(parsedDescription);
     }
 
     String formatDate(final long createdUtc) {
@@ -314,14 +310,9 @@ public class SubredditInfoFragment extends BaseFragment {
         String category = rule.getKind();
         categoryView.setText(getTextForCategory(category));
 
-        String description = rule.getDescription().trim();
-        if (mBypass != null) {
-            descriptionView.setText(
-                    mBypass.markdownToSpannable(description)
-            );
-        } else {
-            descriptionView.setText(description);
-        }
+        String description = rule.getDescriptionHtml().trim();
+        final Spanned parsedDescription = mHtmlParser.convert(description);
+        descriptionView.setText(parsedDescription);
 
         mRulesLayout.addView(view);
     }
