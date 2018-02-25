@@ -89,7 +89,6 @@ def getLocalProperty(String s) {
 
 dependencies {
     implementation fileTree(include: "*.jar", dir: "libs")
-    androidTestImplementation project(":bypass")
     implementation project(":logging")
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$KOTLIN_VERSION"
