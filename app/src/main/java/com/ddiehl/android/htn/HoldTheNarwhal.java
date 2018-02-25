@@ -1,6 +1,9 @@
 package com.ddiehl.android.htn;
 
 import android.app.Application;
+import android.app.job.JobInfo;
+import android.app.job.JobScheduler;
+import android.content.Context;
 import android.os.Build;
 import android.support.annotation.VisibleForTesting;
 
@@ -8,6 +11,7 @@ import com.crashlytics.android.Crashlytics;
 import com.ddiehl.android.htn.di.ApplicationComponent;
 import com.ddiehl.android.htn.di.ApplicationModule;
 import com.ddiehl.android.htn.di.DaggerApplicationComponent;
+import com.ddiehl.android.htn.notifications.NotificationCheckJobServiceKt;
 import com.ddiehl.android.logging.CrashlyticsLogger;
 import com.ddiehl.android.logging.CrashlyticsLoggingTree;
 import com.ddiehl.android.logging.LogcatLogger;
@@ -43,6 +47,8 @@ public class HoldTheNarwhal extends Application {
             Timber.plant(tree);
         }
 
+        scheduleInboxNotifications();
+
         // Add logging for CPU ABI support
         logSupportedCpuAbis();
     }
@@ -54,6 +60,19 @@ public class HoldTheNarwhal extends Application {
     @VisibleForTesting
     public static void setTestComponent(ApplicationComponent testComponent) {
         mComponent = testComponent;
+    }
+
+    void scheduleInboxNotifications() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            JobScheduler jobScheduler =
+                    (JobScheduler) getSystemService(Context.JOB_SCHEDULER_SERVICE);
+            if (jobScheduler == null) {
+                return;
+            }
+
+            final JobInfo jobInfo = NotificationCheckJobServiceKt.getJobInfo(this);
+            jobScheduler.schedule(jobInfo);
+        }
     }
 
     void logSupportedCpuAbis() {
