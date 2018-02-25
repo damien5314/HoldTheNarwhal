@@ -24,6 +24,17 @@ import rxreddit.util.RxRedditUtil;
 @Module
 public class ApplicationModule {
 
+    private final Context appContext;
+
+    public ApplicationModule(Context context) {
+        appContext = context.getApplicationContext();
+    }
+
+    @Provides
+    public Context providesAppContext() {
+        return appContext;
+    }
+
     @Singleton
     @Provides
     IdentityManager providesIdentityManager(Context context, SettingsManager settingsManager) {
