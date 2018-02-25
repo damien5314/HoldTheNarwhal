@@ -1,10 +1,10 @@
 buildscript {
     ext {
-        COMPILE_SDK_VERSION = 26
-        TARGET_SDK_VERSION = 26
+        COMPILE_SDK_VERSION = 27
+        TARGET_SDK_VERSION = 27
 
         // Gradle plugins
-        KOTLIN_VERSION = '1.1.61'
+        KOTLIN_VERSION = '1.2.20'
         ANDROID_GRADLE_PLUGIN = '3.0.1'
         HUGO_VERSION = '1.2.1'
         DEXCOUNT_VERSION = '0.7.3'
@@ -12,10 +12,11 @@ buildscript {
         FABRIC_VERSION = '1.22.2'
 
         // Libraries
-        BUILD_TOOLS_VERSION = '26.0.2'
+        BUILD_TOOLS_VERSION = '27.0.3'
         SUPPORT_LIBRARY_VERSION = '27.0.1'
         CONSTRAINT_LAYOUT_VERSION = '1.0.2'
         PLAY_SERVICES_VERSION = '10.2.6'
+        CRASHLYTICS_VERSION = '2.9.0'
         GLIDE_VERSION = '4.3.1'
         GLIDE_OKHTTP_VERSION = '4.1.1'
         BUTTERKNIFE_VERSION = '8.4.0'
