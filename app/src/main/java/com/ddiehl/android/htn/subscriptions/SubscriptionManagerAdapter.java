@@ -2,6 +2,7 @@ package com.ddiehl.android.htn.subscriptions;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.Spanned;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,9 +13,9 @@ import android.widget.TextView;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.view.glide.GlideApp;
+import com.ddiehl.android.htn.view.markdown.HtmlParser;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,7 +25,6 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import in.uncod.android.bypass.Bypass;
 import rxreddit.model.Subreddit;
 
 public class SubscriptionManagerAdapter extends RecyclerView.Adapter<SubscriptionManagerAdapter.VH>
@@ -105,7 +105,7 @@ public class SubscriptionManagerAdapter extends RecyclerView.Adapter<Subscriptio
 
     public static class VH extends RecyclerView.ViewHolder {
 
-        @Inject @Nullable Bypass mBypass;
+        @Inject HtmlParser mHtmlParser;
 
         @BindView(R.id.name) TextView mName;
         @BindView(R.id.public_description) TextView mPublicDescription;
@@ -127,13 +127,12 @@ public class SubscriptionManagerAdapter extends RecyclerView.Adapter<Subscriptio
             mName.setText(subreddit.getDisplayName());
 
             // Set public description
-            String publicDescription = subreddit.getPublicDescription();
-            if (mBypass != null) {
-                mPublicDescription.setText(
-                        mBypass.markdownToSpannable(publicDescription)
-                );
+            String publicDescription = subreddit.getPublicDescriptionHtml();
+            if (publicDescription != null) {
+                final Spanned parsedDescription = mHtmlParser.convert(publicDescription);
+                mPublicDescription.setText(parsedDescription);
             } else {
-                mPublicDescription.setText(publicDescription);
+                mPublicDescription.setText(null);
             }
 
             // Set subreddit icon

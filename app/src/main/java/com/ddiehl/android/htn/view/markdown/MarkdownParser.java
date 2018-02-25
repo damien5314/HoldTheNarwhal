@@ -16,8 +16,6 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import in.uncod.android.bypass.Bypass;
-
 import static android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE;
 
 public class MarkdownParser {
@@ -35,14 +33,13 @@ public class MarkdownParser {
             Pattern.MULTILINE
     );
 
-    Bypass mBypass;
+    final HtmlParser mHtmlParser;
 
-    public MarkdownParser(Bypass bypass) {
-        mBypass = bypass;
+    public MarkdownParser(HtmlParser parser) {
+        mHtmlParser = parser;
     }
 
     public CharSequence convert(String text) {
-
         StringBuilder result = new StringBuilder(text);
 
         // Remove all underscores from the input string and get a map of the links within the string
@@ -51,8 +48,8 @@ public class MarkdownParser {
 
         // Process markdown for the cleaned string as usual
         // Underscores have all been removed, therefore should not interfere with the formatting.
-        CharSequence markdown = mBypass.markdownToSpannable(result.toString());
-        SpannableStringBuilder formatted = new SpannableStringBuilder(markdown);
+        CharSequence parsed = mHtmlParser.convert(result.toString());
+        SpannableStringBuilder formatted = new SpannableStringBuilder(parsed);
 
         // Add links for URLs with a protocol
         Linkify.addLinks(formatted, URL_PATTERN_WITH_PROTOCOL, null);

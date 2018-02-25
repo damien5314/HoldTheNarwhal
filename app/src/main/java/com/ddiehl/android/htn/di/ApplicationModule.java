@@ -11,15 +11,12 @@ import com.ddiehl.android.htn.view.markdown.HtmlParser;
 import com.ddiehl.android.htn.view.markdown.MarkdownParser;
 import com.google.gson.Gson;
 
-import org.jetbrains.annotations.Nullable;
-
 import java.io.File;
 
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import in.uncod.android.bypass.Bypass;
 import rxreddit.android.AndroidAccessTokenManager;
 import rxreddit.android.AndroidUtil;
 import rxreddit.api.RedditService;
@@ -64,14 +61,9 @@ public class ApplicationModule {
         return redditService.getGson();
     }
 
-    @Provides @Nullable
-    MarkdownParser providesMarkdownParser(@Nullable Bypass bypass) {
-        return null; // Force logic to use HtmlParser
-//        if (bypass == null) {
-//            return null;
-//        } else {
-//            return new MarkdownParser(bypass);
-//        }
+    @Provides
+    MarkdownParser providesMarkdownParser(HtmlParser htmlParser) {
+        return new MarkdownParser(htmlParser);
     }
 
     @Provides

@@ -3,7 +3,6 @@ package com.ddiehl.android.htn.listings.links;
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
-import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.view.ContextMenu;
 import android.view.View;
@@ -16,7 +15,6 @@ import com.ddiehl.android.htn.listings.BaseListingsPresenter;
 import com.ddiehl.android.htn.listings.subreddit.ThumbnailMode;
 import com.ddiehl.android.htn.view.ColorSwapTextView;
 import com.ddiehl.android.htn.view.glide.GlideApp;
-import com.ddiehl.android.htn.view.markdown.HtmlParser;
 import com.ddiehl.android.htn.view.markdown.MarkdownParser;
 import com.ddiehl.timesincetextview.TimeSinceTextView;
 
@@ -41,8 +39,7 @@ public abstract class BaseLinkViewHolder extends RecyclerView.ViewHolder
     protected final BaseListingsPresenter mLinkPresenter;
     protected Link mLink;
 
-    @Inject @Nullable MarkdownParser mMarkdownParser;
-    @Inject HtmlParser mHtmlParser;
+    @Inject MarkdownParser mMarkdownParser;
 
     @BindView(R.id.link_view) protected View mView;
     @BindView(R.id.link_saved_view) protected View mSavedView;
@@ -111,23 +108,19 @@ public abstract class BaseLinkViewHolder extends RecyclerView.ViewHolder
 
     void setTextToView(@NotNull TextView view, @NotNull Link link) {
         view.setMovementMethod(LinkMovementMethod.getInstance());
-        if (mMarkdownParser != null) {
-            CharSequence formatted = mMarkdownParser.convert(link.getSelftext());
-            view.setText(formatted);
-        } else {
-            Spanned formatted = mHtmlParser.convert(link.getSelftextHtml());
-            view.setText(formatted);
-        }
+        CharSequence formatted = mMarkdownParser.convert(link.getSelftext());
+        view.setText(formatted);
     }
 
     protected void showScore(@NotNull Link link) {
         Integer score = link.getScore();
         if (score == null) {
-            mLinkScore.setText(
-                    mContext.getString(R.string.hidden_score_placeholder));
+            final String text = mContext.getString(R.string.hidden_score_placeholder);
+            mLinkScore.setText(text);
         } else {
-            mLinkScore.setText(
-                    mContext.getResources().getQuantityString(R.plurals.link_score, score, score));
+            final String text = mContext.getResources()
+                    .getQuantityString(R.plurals.link_score, score, score);
+            mLinkScore.setText(text);
         }
     }
 
