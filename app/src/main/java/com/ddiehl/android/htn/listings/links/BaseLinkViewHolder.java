@@ -15,7 +15,7 @@ import com.ddiehl.android.htn.listings.BaseListingsPresenter;
 import com.ddiehl.android.htn.listings.subreddit.ThumbnailMode;
 import com.ddiehl.android.htn.view.ColorSwapTextView;
 import com.ddiehl.android.htn.view.glide.GlideApp;
-import com.ddiehl.android.htn.view.markdown.MarkdownParser;
+import com.ddiehl.android.htn.view.markdown.HtmlParser;
 import com.ddiehl.timesincetextview.TimeSinceTextView;
 
 import org.jetbrains.annotations.NotNull;
@@ -39,7 +39,7 @@ public abstract class BaseLinkViewHolder extends RecyclerView.ViewHolder
     protected final BaseListingsPresenter mLinkPresenter;
     protected Link mLink;
 
-    @Inject MarkdownParser mMarkdownParser;
+    @Inject HtmlParser mHtmlParser;
 
     @BindView(R.id.link_view) protected View mView;
     @BindView(R.id.link_saved_view) protected View mSavedView;
@@ -108,7 +108,7 @@ public abstract class BaseLinkViewHolder extends RecyclerView.ViewHolder
 
     void setTextToView(@NotNull TextView view, @NotNull Link link) {
         view.setMovementMethod(LinkMovementMethod.getInstance());
-        CharSequence formatted = mMarkdownParser.convert(link.getSelftext());
+        CharSequence formatted = mHtmlParser.convert(link.getSelftextHtml());
         view.setText(formatted);
     }
 

@@ -9,7 +9,7 @@ import android.text.style.StyleSpan;
 import android.text.style.URLSpan;
 
 import com.ddiehl.android.htn.di.DaggerTestComponent;
-import com.ddiehl.android.htn.di.SharedModule;
+import com.ddiehl.android.htn.di.InstrumentationTestModule;
 import com.ddiehl.android.htn.di.TestComponent;
 import com.ddiehl.android.logging.ConsoleLogger;
 import com.ddiehl.android.logging.ConsoleLoggingTree;
@@ -49,7 +49,7 @@ public class MarkdownParserTest {
     @Before
     public void setUp() {
         TestComponent component = DaggerTestComponent.builder()
-                .sharedModule(new SharedModule(getTargetContext()))
+                .instrumentationTestModule(new InstrumentationTestModule(getTargetContext()))
                 .build();
         component.inject(this);
 
@@ -532,7 +532,6 @@ public class MarkdownParserTest {
         String expected = link1 + " " + link2;
 
         CharSequence formatted = parser.convert(text);
-        SpannableString result = SpannableString.valueOf(formatted);
 
         assertEquals(expected, formatted.toString());
     }

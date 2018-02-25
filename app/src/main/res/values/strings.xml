@@ -185,7 +185,6 @@
 
     <!-- Settings -->
     <string name="preferences_app">app</string>
-    <string name="pref_about_app">about app</string>
     <string name="settings_fragment_title">settings</string>
     <string name="pref_media">link thumbnail options</string>
     <string name="pref_media_on">always show thumbnails</string>

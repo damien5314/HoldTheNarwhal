@@ -26,7 +26,6 @@ import com.ddiehl.android.htn.subscriptions.SubscriptionManagerAdapter;
 import com.ddiehl.android.htn.subscriptions.SubscriptionManagerPresenter;
 import com.ddiehl.android.htn.view.BaseActivity;
 import com.ddiehl.android.htn.view.BaseFragment;
-import com.ddiehl.android.htn.view.MarkdownTextFragment;
 
 import javax.inject.Singleton;
 
@@ -55,7 +54,6 @@ public interface ApplicationComponent {
     void inject(WebViewFragment fragment);
     void inject(LinkCommentsFragment fragment);
     void inject(SubredditInfoFragment fragment);
-    void inject(MarkdownTextFragment fragment);
     void inject(SubmitPostFragment fragment);
 
     // ViewHolders

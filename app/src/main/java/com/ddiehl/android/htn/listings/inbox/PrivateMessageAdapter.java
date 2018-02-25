@@ -14,11 +14,9 @@ import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.identity.IdentityManager;
 import com.ddiehl.android.htn.utils.Utils;
 import com.ddiehl.android.htn.view.markdown.HtmlParser;
-import com.ddiehl.android.htn.view.markdown.MarkdownParser;
 import com.ddiehl.timesincetextview.TimeSince;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,7 +57,6 @@ public class PrivateMessageAdapter extends RecyclerView.Adapter<PrivateMessageAd
 
         @Inject protected Context mAppContext;
         @Inject protected IdentityManager mIdentityManager;
-        @Inject @Nullable MarkdownParser mMarkdownParser;
         @Inject HtmlParser mHtmlParser;
 
         @BindView(R.id.conversation_subject) protected TextView mConversationSubject;
@@ -121,13 +118,8 @@ public class PrivateMessageAdapter extends RecyclerView.Adapter<PrivateMessageAd
 
         void setTextToBody(@NotNull TextView view, @NotNull PrivateMessage message) {
             view.setMovementMethod(LinkMovementMethod.getInstance());
-            if (mMarkdownParser != null) {
-                CharSequence formatted = mMarkdownParser.convert(message.getBody());
-                view.setText(formatted);
-            } else {
-                Spanned formatted = mHtmlParser.convert(message.getBodyHtml());
-                view.setText(formatted);
-            }
+            Spanned formatted = mHtmlParser.convert(message.getBodyHtml());
+            view.setText(formatted);
         }
     }
 }

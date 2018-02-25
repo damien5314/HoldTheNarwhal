@@ -8,7 +8,6 @@ import com.ddiehl.android.htn.identity.IdentityManagerImpl;
 import com.ddiehl.android.htn.settings.SettingsManager;
 import com.ddiehl.android.htn.settings.SettingsManagerImpl;
 import com.ddiehl.android.htn.view.markdown.HtmlParser;
-import com.ddiehl.android.htn.view.markdown.MarkdownParser;
 import com.google.gson.Gson;
 
 import java.io.File;
@@ -62,12 +61,7 @@ public class ApplicationModule {
     }
 
     @Provides
-    MarkdownParser providesMarkdownParser(HtmlParser htmlParser) {
-        return new MarkdownParser(htmlParser);
-    }
-
-    @Provides
-    HtmlParser providesHtmlProcessor(Context context) {
+    HtmlParser providesHtmlParser(Context context) {
         return new HtmlParser(context);
     }
 }

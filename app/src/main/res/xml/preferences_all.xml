@@ -18,10 +18,6 @@
             android:entryValues="@array/pref_font_values"
             android:defaultValue="@string/font_system_value" />
 
-        <Preference
-            android:key="pref_about_app"
-            android:title="@string/pref_about_app" />
-
     </PreferenceCategory>
 
 </PreferenceScreen>

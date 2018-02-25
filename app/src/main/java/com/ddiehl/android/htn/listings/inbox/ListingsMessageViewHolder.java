@@ -14,11 +14,9 @@ import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.listings.BaseListingsPresenter;
 import com.ddiehl.android.htn.utils.Utils;
 import com.ddiehl.android.htn.view.markdown.HtmlParser;
-import com.ddiehl.android.htn.view.markdown.MarkdownParser;
 import com.ddiehl.timesincetextview.TimeSince;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -34,7 +32,6 @@ public class ListingsMessageViewHolder extends RecyclerView.ViewHolder
         implements View.OnCreateContextMenuListener {
 
     @Inject protected Context mAppContext;
-    @Inject @Nullable MarkdownParser mMarkdownParser;
     @Inject HtmlParser mHtmlParser;
 
     private final PrivateMessageView mPrivateMessageView;
@@ -109,13 +106,8 @@ public class ListingsMessageViewHolder extends RecyclerView.ViewHolder
 
     void setTextToBody(@NotNull TextView view, @NotNull PrivateMessage message) {
         view.setMovementMethod(LinkMovementMethod.getInstance());
-        if (mMarkdownParser != null) {
-            CharSequence formatted = mMarkdownParser.convert(message.getBody());
-            view.setText(formatted);
-        } else {
-            Spanned formatted = mHtmlParser.convert(message.getBodyHtml());
-            view.setText(formatted);
-        }
+        Spanned formatted = mHtmlParser.convert(message.getBodyHtml());
+        view.setText(formatted);
     }
 
     @Override
