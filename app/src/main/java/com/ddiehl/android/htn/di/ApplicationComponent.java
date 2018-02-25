@@ -34,7 +34,6 @@ import dagger.Component;
 @Singleton
 @Component(modules = {
         ApplicationModule.class,
-        SharedModule.class,
 })
 public interface ApplicationComponent {
 
@@ -71,7 +70,4 @@ public interface ApplicationComponent {
     void inject(SettingsPresenter presenter);
     void inject(SubscriptionManagerPresenter presenter);
     void inject(SubmitPostPresenter presenter);
-
-    // Misc
-//    void inject(HtmlParser htmlParser);
 }
