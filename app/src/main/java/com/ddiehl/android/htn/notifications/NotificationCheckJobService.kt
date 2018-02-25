@@ -1,5 +1,7 @@
 package com.ddiehl.android.htn.notifications
 
+import android.app.Notification
+import android.app.NotificationManager
 import android.app.job.JobInfo
 import android.app.job.JobParameters
 import android.app.job.JobService
@@ -7,7 +9,6 @@ import android.content.ComponentName
 import android.content.Context
 import android.os.Build
 import android.support.annotation.RequiresApi
-import android.widget.Toast
 import com.ddiehl.android.htn.HoldTheNarwhal
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
@@ -18,8 +19,10 @@ import rxreddit.model.Listing
 import rxreddit.model.ListingResponse
 import javax.inject.Inject
 
-private const val JOB_ID = 0
-private const val LATENCY_MIN_MILLIS = 15 * 60 * 1000L // 15 minutes
+private const val JOB_ID = 1
+private const val LATENCY_MIN_MILLIS = 1 * 60 * 1000L // 15 minutes
+private const val NOTIFICATION_CHANNEL_ID = "inbox_notifications"
+private const val NOTIFICATION_ID = 1
 
 @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
 fun getJobInfo(context: Context): JobInfo {
@@ -88,7 +91,22 @@ class NotificationCheckJobService : JobService() {
     }
 
     private fun showNotificationWithUnreads(messages: List<Listing>) {
-        Toast.makeText(applicationContext, "Number of unreads: ${messages.size}", Toast.LENGTH_LONG)
-                .show()
+        val numUnreads = messages.size
+        val notification = getNotification(numUnreads)
+        val notificationService = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationService.notify(NOTIFICATION_ID, notification)
+    }
+
+    private fun getNotification(unreads: Int): Notification {
+        return if (Build.VERSION.SDK_INT >= 26) {
+            Notification.Builder(applicationContext, NOTIFICATION_CHANNEL_ID)
+                    .setContentTitle("$unreads unread notifications")
+                    .build()
+        } else {
+            @Suppress("DEPRECATION")
+            Notification.Builder(applicationContext)
+                    .setContentTitle("$unreads unread notifications")
+                    .build()
+        }
     }
 }
