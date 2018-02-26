@@ -1,9 +1,12 @@
 package com.ddiehl.android.htn.notifications
 
 import android.app.Notification
+import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
+import android.support.annotation.RequiresApi
+import com.ddiehl.android.htn.R
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
@@ -18,13 +21,14 @@ private const val NOTIFICATION_ID = 1
  * TODO documentation
  */
 class UnreadInboxChecker(
-        val applicationContext: Context,
-        val redditService: RedditService
+        private val applicationContext: Context,
+        private val redditService: RedditService
 ) {
 
     fun check(): Completable {
         return redditService.getInbox("unread", null, null)
                 .flatMap(this::checkNullResponse)
+                //TODO: Fix these side effect things, we should handle this in another object
                 .doOnNext { onInboxFetched(it) }
                 .doOnError { onInboxFetchError(it) }
                 .ignoreElements()
@@ -59,15 +63,27 @@ class UnreadInboxChecker(
     }
 
     private fun getNotification(unreads: Int): Notification {
-        return if (Build.VERSION.SDK_INT >= 26) {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             Notification.Builder(applicationContext, NOTIFICATION_CHANNEL_ID)
                     .setContentTitle("$unreads unread notifications")
+                    .setSmallIcon(R.drawable.sports_icon)
                     .build()
         } else {
             @Suppress("DEPRECATION")
             Notification.Builder(applicationContext)
                     .setContentTitle("$unreads unread notifications")
+                    .setSmallIcon(R.drawable.sports_icon)
                     .build()
         }
     }
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+fun getNotificationChannel(context: Context): NotificationChannel {
+    val channelName = context.getString(R.string.unread_inbox_notification_channel_name)
+    return NotificationChannel(
+            NOTIFICATION_CHANNEL_ID,
+            channelName,
+            NotificationManager.IMPORTANCE_DEFAULT
+    )
 }

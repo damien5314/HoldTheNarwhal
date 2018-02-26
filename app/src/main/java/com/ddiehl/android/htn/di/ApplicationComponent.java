@@ -1,5 +1,6 @@
 package com.ddiehl.android.htn.di;
 
+import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.listings.BaseListingsFragment;
 import com.ddiehl.android.htn.listings.BaseListingsPresenter;
 import com.ddiehl.android.htn.listings.comments.LinkCommentsFragment;
@@ -27,8 +28,6 @@ import com.ddiehl.android.htn.subscriptions.SubscriptionManagerAdapter;
 import com.ddiehl.android.htn.subscriptions.SubscriptionManagerPresenter;
 import com.ddiehl.android.htn.view.BaseActivity;
 import com.ddiehl.android.htn.view.BaseFragment;
-
-import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Singleton;
 
@@ -75,5 +74,8 @@ public interface ApplicationComponent {
     void inject(SubmitPostPresenter presenter);
 
     // Services
-    void inject(@NotNull NotificationCheckJobService service);
+    void inject(NotificationCheckJobService service);
+
+    //TODO: Delete
+    void inject(HoldTheNarwhal application);
 }

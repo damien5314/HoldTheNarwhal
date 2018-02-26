@@ -300,5 +300,6 @@
     <string name="user_friend_note_label">note</string>
     <string name="user_friend_empty_note">friend note cannot be empty</string>
     <string name="user_friend_note_save_button">save</string>
+    <string name="unread_inbox_notification_channel_name">Unread inbox messages</string>
 
 </resources>

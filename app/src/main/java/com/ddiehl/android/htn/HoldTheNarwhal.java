@@ -1,6 +1,8 @@
 package com.ddiehl.android.htn;
 
 import android.app.Application;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.job.JobInfo;
 import android.app.job.JobScheduler;
 import android.content.Context;
@@ -12,6 +14,8 @@ import com.ddiehl.android.htn.di.ApplicationComponent;
 import com.ddiehl.android.htn.di.ApplicationModule;
 import com.ddiehl.android.htn.di.DaggerApplicationComponent;
 import com.ddiehl.android.htn.notifications.NotificationCheckJobServiceKt;
+import com.ddiehl.android.htn.notifications.UnreadInboxChecker;
+import com.ddiehl.android.htn.notifications.UnreadInboxCheckerKt;
 import com.ddiehl.android.logging.CrashlyticsLogger;
 import com.ddiehl.android.logging.CrashlyticsLoggingTree;
 import com.ddiehl.android.logging.LogcatLogger;
@@ -19,7 +23,12 @@ import com.ddiehl.android.logging.LogcatLoggingTree;
 
 import java.util.Arrays;
 
+import javax.inject.Inject;
+
 import io.fabric.sdk.android.Fabric;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
+import rxreddit.api.RedditService;
 import timber.log.Timber;
 
 public class HoldTheNarwhal extends Application {
@@ -48,6 +57,7 @@ public class HoldTheNarwhal extends Application {
         }
 
         scheduleInboxNotifications();
+        checkInboxNotifications_debug();
 
         // Add logging for CPU ABI support
         logSupportedCpuAbis();
@@ -63,6 +73,16 @@ public class HoldTheNarwhal extends Application {
     }
 
     void scheduleInboxNotifications() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationManager notificationManager =
+                    (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+            if (notificationManager == null) return;
+
+            final NotificationChannel notificationChannel =
+                    UnreadInboxCheckerKt.getNotificationChannel(this);
+            notificationManager.createNotificationChannel(notificationChannel);
+        }
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             JobScheduler jobScheduler =
                     (JobScheduler) getSystemService(Context.JOB_SCHEDULER_SERVICE);
@@ -73,6 +93,17 @@ public class HoldTheNarwhal extends Application {
             final JobInfo jobInfo = NotificationCheckJobServiceKt.getJobInfo(this);
             jobScheduler.schedule(jobInfo);
         }
+    }
+
+    @Inject RedditService redditService;
+
+    void checkInboxNotifications_debug() {
+        getApplicationComponent().inject(this);
+        new UnreadInboxChecker(this, redditService)
+                .check()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe();
     }
 
     void logSupportedCpuAbis() {

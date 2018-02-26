@@ -8,8 +8,10 @@ import android.content.Context
 import android.os.Build
 import android.support.annotation.RequiresApi
 import com.ddiehl.android.htn.HoldTheNarwhal
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.disposables.Disposables
+import io.reactivex.schedulers.Schedulers
 import rxreddit.api.RedditService
 import javax.inject.Inject
 
@@ -54,6 +56,8 @@ class NotificationCheckJobService : JobService() {
     private fun checkUnreads(params: JobParameters?) {
         val unreadInboxChecker = UnreadInboxChecker(applicationContext, redditService)
         subscription = unreadInboxChecker.check()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         { jobFinished(params, false) },
                         { jobFinished(params, true) }
