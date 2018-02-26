@@ -13,6 +13,8 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.disposables.Disposables
 import io.reactivex.schedulers.Schedulers
 import rxreddit.api.RedditService
+import rxreddit.model.ListingResponse
+import timber.log.Timber
 import javax.inject.Inject
 
 private const val JOB_ID = 1
@@ -35,8 +37,8 @@ fun getJobInfo(context: Context): JobInfo {
 @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
 class UnreadInboxCheckJobService : JobService() {
 
-    @Inject
-    lateinit var redditService: RedditService
+    @Inject lateinit var redditService: RedditService
+    private val inboxNotificationManager = InboxNotificationManager(applicationContext)
     private var subscription: Disposable = Disposables.empty()
 
     init {
@@ -49,18 +51,35 @@ class UnreadInboxCheckJobService : JobService() {
     }
 
     override fun onStopJob(params: JobParameters?): Boolean {
-        subscription.dispose()
+        if (!subscription.isDisposed) {
+            subscription.dispose()
+        }
         return false
     }
 
     private fun checkUnreads(params: JobParameters?) {
-        val unreadInboxChecker = UnreadInboxChecker(applicationContext, redditService)
+        val unreadInboxChecker = UnreadInboxChecker(redditService)
         subscription = unreadInboxChecker.check()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        { jobFinished(params, false) },
-                        { jobFinished(params, true) }
-                )
+                .subscribe({
+                    onInboxFetched(it)
+                    jobFinished(params, false)
+                }, {
+                    onInboxFetchError(it)
+                    jobFinished(params, true)
+                })
+    }
+
+    private fun onInboxFetched(response: ListingResponse) {
+        val children = response.data.children
+        val numUnreads = children.size
+        if (numUnreads > 0) {
+            inboxNotificationManager.showNotificationWithUnreads(numUnreads)
+        }
+    }
+
+    private fun onInboxFetchError(throwable: Throwable) {
+        Timber.w(throwable)
     }
 }

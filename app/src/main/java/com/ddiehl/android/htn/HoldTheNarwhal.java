@@ -13,9 +13,9 @@ import com.crashlytics.android.Crashlytics;
 import com.ddiehl.android.htn.di.ApplicationComponent;
 import com.ddiehl.android.htn.di.ApplicationModule;
 import com.ddiehl.android.htn.di.DaggerApplicationComponent;
+import com.ddiehl.android.htn.notifications.InboxNotificationManagerKt;
 import com.ddiehl.android.htn.notifications.UnreadInboxCheckJobServiceKt;
 import com.ddiehl.android.htn.notifications.UnreadInboxChecker;
-import com.ddiehl.android.htn.notifications.UnreadInboxCheckerKt;
 import com.ddiehl.android.logging.CrashlyticsLogger;
 import com.ddiehl.android.logging.CrashlyticsLoggingTree;
 import com.ddiehl.android.logging.LogcatLogger;
@@ -79,7 +79,7 @@ public class HoldTheNarwhal extends Application {
             if (notificationManager == null) return;
 
             final NotificationChannel notificationChannel =
-                    UnreadInboxCheckerKt.getNotificationChannel(this);
+                    InboxNotificationManagerKt.getNotificationChannel(this);
             notificationManager.createNotificationChannel(notificationChannel);
         }
 
@@ -99,7 +99,7 @@ public class HoldTheNarwhal extends Application {
 
     void checkInboxNotifications_debug() {
         getApplicationComponent().inject(this);
-        new UnreadInboxChecker(this, redditService)
+        new UnreadInboxChecker(redditService)
                 .check()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
