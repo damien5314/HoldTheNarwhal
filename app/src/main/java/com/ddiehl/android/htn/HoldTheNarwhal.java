@@ -15,7 +15,6 @@ import com.ddiehl.android.htn.di.ApplicationModule;
 import com.ddiehl.android.htn.di.DaggerApplicationComponent;
 import com.ddiehl.android.htn.notifications.InboxNotificationManagerKt;
 import com.ddiehl.android.htn.notifications.UnreadInboxCheckJobServiceKt;
-import com.ddiehl.android.htn.notifications.UnreadInboxChecker;
 import com.ddiehl.android.logging.CrashlyticsLogger;
 import com.ddiehl.android.logging.CrashlyticsLoggingTree;
 import com.ddiehl.android.logging.LogcatLogger;
@@ -23,12 +22,7 @@ import com.ddiehl.android.logging.LogcatLoggingTree;
 
 import java.util.Arrays;
 
-import javax.inject.Inject;
-
 import io.fabric.sdk.android.Fabric;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
-import rxreddit.api.RedditService;
 import timber.log.Timber;
 
 public class HoldTheNarwhal extends Application {
@@ -57,7 +51,6 @@ public class HoldTheNarwhal extends Application {
         }
 
         scheduleInboxNotifications();
-        checkInboxNotifications_debug();
 
         // Add logging for CPU ABI support
         logSupportedCpuAbis();
@@ -93,17 +86,6 @@ public class HoldTheNarwhal extends Application {
             final JobInfo jobInfo = UnreadInboxCheckJobServiceKt.getJobInfo(this);
             jobScheduler.schedule(jobInfo);
         }
-    }
-
-    @Inject RedditService redditService;
-
-    void checkInboxNotifications_debug() {
-        getApplicationComponent().inject(this);
-        new UnreadInboxChecker(redditService)
-                .check()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe();
     }
 
     void logSupportedCpuAbis() {

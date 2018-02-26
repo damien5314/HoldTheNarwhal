@@ -1,6 +1,5 @@
 package com.ddiehl.android.htn.di;
 
-import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.listings.BaseListingsFragment;
 import com.ddiehl.android.htn.listings.BaseListingsPresenter;
 import com.ddiehl.android.htn.listings.comments.LinkCommentsFragment;
@@ -75,7 +74,4 @@ public interface ApplicationComponent {
 
     // Services
     void inject(UnreadInboxCheckJobService service);
-
-    //TODO: Delete
-    void inject(HoldTheNarwhal application);
 }
