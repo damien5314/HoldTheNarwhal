@@ -17,7 +17,7 @@ import rxreddit.model.ListingResponse
 import timber.log.Timber
 import javax.inject.Inject
 
-private const val JOB_ID = 1
+const val JOB_ID = 1
 private const val LATENCY_1_MIN_MILLIS = 1 * 60 * 1000L // 15 minutes
 private const val LATENCY_15_MIN_MILLIS = 1 * 60 * 1000L // 15 minutes
 
@@ -46,6 +46,7 @@ class UnreadInboxCheckJobService : JobService() {
     }
 
     override fun onStartJob(params: JobParameters?): Boolean {
+        Timber.d("[dcd] starting job")
         checkUnreads(params)
         return true
     }

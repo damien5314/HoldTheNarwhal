@@ -50,6 +50,7 @@ public class HoldTheNarwhal extends Application {
             Timber.plant(tree);
         }
 
+        createNotificationChannels();
         scheduleInboxNotifications();
 
         // Add logging for CPU ABI support
@@ -65,7 +66,7 @@ public class HoldTheNarwhal extends Application {
         mComponent = testComponent;
     }
 
-    void scheduleInboxNotifications() {
+    private void createNotificationChannels() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationManager notificationManager =
                     (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
@@ -75,7 +76,9 @@ public class HoldTheNarwhal extends Application {
                     InboxNotificationManagerKt.getNotificationChannel(this);
             notificationManager.createNotificationChannel(notificationChannel);
         }
+    }
 
+    void scheduleInboxNotifications() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             JobScheduler jobScheduler =
                     (JobScheduler) getSystemService(Context.JOB_SCHEDULER_SERVICE);
@@ -83,6 +86,9 @@ public class HoldTheNarwhal extends Application {
                 return;
             }
 
+            jobScheduler.cancel(UnreadInboxCheckJobServiceKt.JOB_ID);
+
+            Timber.d("[dcd] scheduling job");
             final JobInfo jobInfo = UnreadInboxCheckJobServiceKt.getJobInfo(this);
             jobScheduler.schedule(jobInfo);
         }
