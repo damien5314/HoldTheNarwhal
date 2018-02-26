@@ -6,6 +6,8 @@ import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
 import android.support.annotation.RequiresApi
+import android.support.v4.app.NotificationCompat
+import android.support.v4.app.NotificationManagerCompat
 import com.ddiehl.android.htn.R
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -62,20 +64,19 @@ class UnreadInboxChecker(
     private fun showNotificationWithUnreads(messages: List<Listing>) {
         val numUnreads = messages.size
         val notification = getNotification(numUnreads)
-        val notificationService = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE)
-                as NotificationManager
-        notificationService.notify(NOTIFICATION_ID, notification)
+        val notificationManager = NotificationManagerCompat.from(applicationContext)
+        notificationManager.notify(NOTIFICATION_ID, notification)
     }
 
     private fun getNotification(unreads: Int): Notification {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            Notification.Builder(applicationContext, NOTIFICATION_CHANNEL_ID)
+            NotificationCompat.Builder(applicationContext, NOTIFICATION_CHANNEL_ID)
                     .setContentTitle("$unreads unread notifications")
                     .setSmallIcon(R.drawable.sports_icon)
                     .build()
         } else {
             @Suppress("DEPRECATION")
-            Notification.Builder(applicationContext)
+            NotificationCompat.Builder(applicationContext)
                     .setContentTitle("$unreads unread notifications")
                     .setSmallIcon(R.drawable.ic_email_black_24dp)
                     .build()
