@@ -69,18 +69,17 @@ class UnreadInboxChecker(
     }
 
     private fun getNotification(unreads: Int): Notification {
+        val title = applicationContext.resources
+                .getQuantityString(R.plurals.unread_inbox_notification_title, unreads, unreads)
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationCompat.Builder(applicationContext, NOTIFICATION_CHANNEL_ID)
-                    .setContentTitle("$unreads unread notifications")
-                    .setSmallIcon(R.drawable.sports_icon)
-                    .build()
         } else {
             @Suppress("DEPRECATION")
             NotificationCompat.Builder(applicationContext)
-                    .setContentTitle("$unreads unread notifications")
-                    .setSmallIcon(R.drawable.ic_email_black_24dp)
-                    .build()
         }
+                .setContentTitle(title)
+                .setSmallIcon(R.drawable.ic_email_white_24dp)
+                .build()
     }
 }
 
