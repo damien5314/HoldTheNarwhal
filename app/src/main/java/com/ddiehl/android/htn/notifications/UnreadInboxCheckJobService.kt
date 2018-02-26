@@ -38,7 +38,7 @@ fun getJobInfo(context: Context): JobInfo {
 class UnreadInboxCheckJobService : JobService() {
 
     @Inject lateinit var redditService: RedditService
-    private val inboxNotificationManager = InboxNotificationManager(applicationContext)
+    private lateinit var inboxNotificationManager: InboxNotificationManager
     private var subscription: Disposable = Disposables.empty()
 
     init {
@@ -46,6 +46,7 @@ class UnreadInboxCheckJobService : JobService() {
     }
 
     override fun onStartJob(params: JobParameters?): Boolean {
+        inboxNotificationManager = InboxNotificationManager(applicationContext)
         Timber.d("[dcd] starting job")
         checkUnreads(params)
         return true

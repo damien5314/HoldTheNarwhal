@@ -86,6 +86,7 @@ public class HoldTheNarwhal extends Application {
                 return;
             }
 
+            jobScheduler.cancelAll();
             jobScheduler.cancel(UnreadInboxCheckJobServiceKt.JOB_ID);
 
             Timber.d("[dcd] scheduling job");
