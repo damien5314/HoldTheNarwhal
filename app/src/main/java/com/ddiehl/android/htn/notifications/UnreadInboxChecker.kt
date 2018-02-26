@@ -26,12 +26,17 @@ class UnreadInboxChecker(
 ) {
 
     fun check(): Completable {
-        return redditService.getInbox("unread", null, null)
-                .flatMap(this::checkNullResponse)
-                //TODO: Fix these side effect things, we should handle this in another object
-                .doOnNext { onInboxFetched(it) }
-                .doOnError { onInboxFetchError(it) }
-                .ignoreElements()
+        val isLoggedIn = redditService.isUserAuthorized
+        return if (isLoggedIn) {
+            redditService.getInbox("unread", null, null)
+                    .flatMap(this::checkNullResponse)
+                    //TODO: Fix these side effect things, we should handle this in another object
+                    .doOnNext { onInboxFetched(it) }
+                    .doOnError { onInboxFetchError(it) }
+                    .ignoreElements()
+        } else {
+            Completable.complete()
+        }
     }
 
     private fun checkNullResponse(listingResponse: ListingResponse): ObservableSource<ListingResponse> {
@@ -72,7 +77,7 @@ class UnreadInboxChecker(
             @Suppress("DEPRECATION")
             Notification.Builder(applicationContext)
                     .setContentTitle("$unreads unread notifications")
-                    .setSmallIcon(R.drawable.sports_icon)
+                    .setSmallIcon(R.drawable.ic_email_black_24dp)
                     .build()
         }
     }
