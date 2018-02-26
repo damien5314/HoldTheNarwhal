@@ -19,7 +19,7 @@ import com.ddiehl.android.htn.listings.subreddit.SubredditFragment;
 import com.ddiehl.android.htn.listings.subreddit.submission.SubmitPostFragment;
 import com.ddiehl.android.htn.listings.subreddit.submission.SubmitPostPresenter;
 import com.ddiehl.android.htn.navigation.WebViewFragment;
-import com.ddiehl.android.htn.notifications.NotificationCheckJobService;
+import com.ddiehl.android.htn.notifications.UnreadInboxCheckJobService;
 import com.ddiehl.android.htn.settings.SettingsActivity;
 import com.ddiehl.android.htn.settings.SettingsFragment;
 import com.ddiehl.android.htn.settings.SettingsPresenter;
@@ -74,7 +74,7 @@ public interface ApplicationComponent {
     void inject(SubmitPostPresenter presenter);
 
     // Services
-    void inject(NotificationCheckJobService service);
+    void inject(UnreadInboxCheckJobService service);
 
     //TODO: Delete
     void inject(HoldTheNarwhal application);

@@ -13,7 +13,7 @@ import com.crashlytics.android.Crashlytics;
 import com.ddiehl.android.htn.di.ApplicationComponent;
 import com.ddiehl.android.htn.di.ApplicationModule;
 import com.ddiehl.android.htn.di.DaggerApplicationComponent;
-import com.ddiehl.android.htn.notifications.NotificationCheckJobServiceKt;
+import com.ddiehl.android.htn.notifications.UnreadInboxCheckJobServiceKt;
 import com.ddiehl.android.htn.notifications.UnreadInboxChecker;
 import com.ddiehl.android.htn.notifications.UnreadInboxCheckerKt;
 import com.ddiehl.android.logging.CrashlyticsLogger;
@@ -90,7 +90,7 @@ public class HoldTheNarwhal extends Application {
                 return;
             }
 
-            final JobInfo jobInfo = NotificationCheckJobServiceKt.getJobInfo(this);
+            final JobInfo jobInfo = UnreadInboxCheckJobServiceKt.getJobInfo(this);
             jobScheduler.schedule(jobInfo);
         }
     }

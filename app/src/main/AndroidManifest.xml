@@ -97,7 +97,7 @@
                 android:theme="@style/ActivityThemeLightBg" />
 
         <service
-            android:name=".notifications.NotificationCheckJobService"
+            android:name=".notifications.UnreadInboxCheckJobService"
             android:label="Notification check service"
             android:permission="android.permission.BIND_JOB_SERVICE" />
 
