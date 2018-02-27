@@ -31,9 +31,8 @@ fun getJobInfo(context: Context): JobInfo {
 }
 
 /**
- * Service which starts [UnreadInboxChecker] to check if a user
- * has unread inbox messages, then displays a notification with
- * [InboxNotificationManager].
+ * Service which starts [UnreadInboxChecker] to check if a user has unread
+ * inbox messages, then displays a notification with [InboxNotificationManager].
  */
 @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
 class UnreadInboxCheckJobService : JobService() {

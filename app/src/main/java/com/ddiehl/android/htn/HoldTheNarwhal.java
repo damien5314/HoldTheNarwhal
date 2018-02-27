@@ -86,7 +86,6 @@ public class HoldTheNarwhal extends Application {
                 return;
             }
 
-            jobScheduler.cancelAll();
             jobScheduler.cancel(UnreadInboxCheckJobServiceKt.JOB_ID);
 
             final JobInfo jobInfo = UnreadInboxCheckJobServiceKt.getJobInfo(this);
