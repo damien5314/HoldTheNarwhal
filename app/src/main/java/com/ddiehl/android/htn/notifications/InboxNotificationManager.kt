@@ -27,7 +27,7 @@ fun getNotificationChannel(context: Context): NotificationChannel {
     )
 }
 /**
- * Class that displays a notification linking to the user's inbox
+ * Class that displays a notification linking to the user's inbox.
  */
 class InboxNotificationManager(private val applicationContext: Context) {
 

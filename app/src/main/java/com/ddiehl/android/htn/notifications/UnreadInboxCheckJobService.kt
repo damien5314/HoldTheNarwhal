@@ -32,7 +32,9 @@ fun getJobInfo(context: Context): JobInfo {
 }
 
 /**
- * TODO documentation
+ * Service which starts [UnreadInboxChecker] to check if a user
+ * has unread inbox messages, then displays a notification with
+ * [InboxNotificationManager].
  */
 @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
 class UnreadInboxCheckJobService : JobService() {

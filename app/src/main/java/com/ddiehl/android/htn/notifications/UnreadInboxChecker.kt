@@ -7,7 +7,8 @@ import rxreddit.api.RedditService
 import rxreddit.model.ListingResponse
 
 /**
- * TODO documentation
+ * Class which uses [RedditService] to check whether a user has unread
+ * inbox messages.
  */
 class UnreadInboxChecker(
         private val redditService: RedditService
