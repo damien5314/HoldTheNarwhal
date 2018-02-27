@@ -1,6 +1,11 @@
 package com.ddiehl.android.htn;
 
 import android.app.Application;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.job.JobInfo;
+import android.app.job.JobScheduler;
+import android.content.Context;
 import android.os.Build;
 import android.support.annotation.VisibleForTesting;
 
@@ -8,6 +13,8 @@ import com.crashlytics.android.Crashlytics;
 import com.ddiehl.android.htn.di.ApplicationComponent;
 import com.ddiehl.android.htn.di.ApplicationModule;
 import com.ddiehl.android.htn.di.DaggerApplicationComponent;
+import com.ddiehl.android.htn.notifications.InboxNotificationManagerKt;
+import com.ddiehl.android.htn.notifications.UnreadInboxCheckJobServiceKt;
 import com.ddiehl.android.logging.CrashlyticsLogger;
 import com.ddiehl.android.logging.CrashlyticsLoggingTree;
 import com.ddiehl.android.logging.LogcatLogger;
@@ -43,6 +50,9 @@ public class HoldTheNarwhal extends Application {
             Timber.plant(tree);
         }
 
+        createNotificationChannels();
+        scheduleInboxNotifications();
+
         // Add logging for CPU ABI support
         logSupportedCpuAbis();
     }
@@ -54,6 +64,33 @@ public class HoldTheNarwhal extends Application {
     @VisibleForTesting
     public static void setTestComponent(ApplicationComponent testComponent) {
         mComponent = testComponent;
+    }
+
+    private void createNotificationChannels() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationManager notificationManager =
+                    (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+            if (notificationManager == null) return;
+
+            final NotificationChannel notificationChannel =
+                    InboxNotificationManagerKt.getNotificationChannel(this);
+            notificationManager.createNotificationChannel(notificationChannel);
+        }
+    }
+
+    void scheduleInboxNotifications() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            JobScheduler jobScheduler =
+                    (JobScheduler) getSystemService(Context.JOB_SCHEDULER_SERVICE);
+            if (jobScheduler == null) {
+                return;
+            }
+
+            jobScheduler.cancel(UnreadInboxCheckJobServiceKt.JOB_ID);
+
+            final JobInfo jobInfo = UnreadInboxCheckJobServiceKt.getJobInfo(this);
+            jobScheduler.schedule(jobInfo);
+        }
     }
 
     void logSupportedCpuAbis() {

@@ -246,7 +246,6 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
             if (media != null) {
                 final Media.RedditVideo redditVideo = media.getRedditVideo();
                 if (redditVideo != null) {
-                    Timber.d("[dcd] RedditVideo present: %s", redditVideo.getFallbackUrl());
                     mLinkCommentsView.openUrlInWebView(redditVideo.getFallbackUrl());
                     return;
                 }

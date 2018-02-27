@@ -155,7 +155,6 @@ public class UserProfilePresenter extends BaseListingsPresenter {
     }
 
     void onGetUserInfoError(Throwable error) {
-        Timber.d("[DCD] If this is called...");
         if (error instanceof IOException) {
             String message = mContext.getString(R.string.error_network_unavailable);
             mMainView.showError(message);
