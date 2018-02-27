@@ -40,6 +40,7 @@ class UnreadInboxCheckJobService : JobService() {
 
     @Inject lateinit var redditService: RedditService
     private lateinit var inboxNotificationManager: InboxNotificationManager
+    private lateinit var inboxNotificationTracker: InboxNotificationTracker
     private var subscription: Disposable = Disposables.empty()
 
     init {
@@ -48,6 +49,7 @@ class UnreadInboxCheckJobService : JobService() {
 
     override fun onStartJob(params: JobParameters?): Boolean {
         inboxNotificationManager = InboxNotificationManager(applicationContext)
+        inboxNotificationTracker = InboxNotificationTracker(applicationContext)
         checkUnreads(params)
         return true
     }
@@ -76,7 +78,10 @@ class UnreadInboxCheckJobService : JobService() {
     private fun onInboxFetched(response: ListingResponse) {
         val children = response.data.children
         val numUnreads = children.size
-        if (numUnreads > 0) {
+        val latestMessage = children[0]
+        val latestMessageIsNew = inboxNotificationTracker.lastMessageId != latestMessage.id
+        if (numUnreads > 0 && latestMessageIsNew) {
+            inboxNotificationTracker.lastMessageId = latestMessage.id
             inboxNotificationManager.showNotificationWithUnreads(numUnreads)
         }
     }
