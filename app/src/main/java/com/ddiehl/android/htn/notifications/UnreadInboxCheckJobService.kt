@@ -49,7 +49,6 @@ class UnreadInboxCheckJobService : JobService() {
 
     override fun onStartJob(params: JobParameters?): Boolean {
         inboxNotificationManager = InboxNotificationManager(applicationContext)
-        Timber.d("[dcd] starting job")
         checkUnreads(params)
         return true
     }
