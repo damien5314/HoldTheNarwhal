@@ -18,14 +18,13 @@ import timber.log.Timber
 import javax.inject.Inject
 
 const val JOB_ID = 1
-private const val LATENCY_1_MIN_MILLIS = 1 * 60 * 1000L // 15 minutes
-private const val LATENCY_15_MIN_MILLIS = 1 * 60 * 1000L // 15 minutes
+private const val LATENCY_15_MIN_MILLIS = 15 * 60 * 1000L
 
 @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
 fun getJobInfo(context: Context): JobInfo {
     val serviceComponent = ComponentName(context, UnreadInboxCheckJobService::class.java)
     return JobInfo.Builder(JOB_ID, serviceComponent)
-            .setPeriodic(LATENCY_1_MIN_MILLIS)
+            .setPeriodic(LATENCY_15_MIN_MILLIS)
             .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
             .setPersisted(true)
             .build()
