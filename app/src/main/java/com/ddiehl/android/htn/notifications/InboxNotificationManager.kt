@@ -3,12 +3,16 @@ package com.ddiehl.android.htn.notifications
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
 import android.os.Build
 import android.support.annotation.RequiresApi
 import android.support.v4.app.NotificationCompat
 import android.support.v4.app.NotificationManagerCompat
+import android.support.v4.app.TaskStackBuilder
 import com.ddiehl.android.htn.R
+import com.ddiehl.android.htn.listings.inbox.InboxActivity
+
 
 private const val NOTIFICATION_CHANNEL_ID = "inbox_notifications"
 private const val NOTIFICATION_ID = 1
@@ -22,9 +26,8 @@ fun getNotificationChannel(context: Context): NotificationChannel {
             NotificationManager.IMPORTANCE_DEFAULT
     )
 }
-
 /**
- * TODO documentation
+ * Class that displays a notification linking to the user's inbox
  */
 class InboxNotificationManager(private val applicationContext: Context) {
 
@@ -45,6 +48,14 @@ class InboxNotificationManager(private val applicationContext: Context) {
         }
                 .setContentTitle(title)
                 .setSmallIcon(R.drawable.ic_email_white_24dp)
+                .setContentIntent(getInboxPendingIntent())
                 .build()
+    }
+
+    private fun getInboxPendingIntent(): PendingIntent? {
+        val taskStack = TaskStackBuilder.create(applicationContext)
+        val inboxIntent = InboxActivity.getIntent(applicationContext, "unread")
+        taskStack.addNextIntentWithParentStack(inboxIntent)
+        return taskStack.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT)
     }
 }
