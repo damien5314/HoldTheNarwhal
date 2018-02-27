@@ -49,6 +49,7 @@ class InboxNotificationManager(private val applicationContext: Context) {
                 .setContentTitle(title)
                 .setSmallIcon(R.drawable.ic_email_white_24dp)
                 .setContentIntent(getInboxPendingIntent())
+                .setAutoCancel(true)
                 .build()
     }
 
