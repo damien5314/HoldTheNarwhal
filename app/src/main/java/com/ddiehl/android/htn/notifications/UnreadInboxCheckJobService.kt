@@ -77,11 +77,13 @@ class UnreadInboxCheckJobService : JobService() {
     private fun onInboxFetched(response: ListingResponse) {
         val children = response.data.children
         val numUnreads = children.size
-        val latestMessage = children[0]
-        val latestMessageIsNew = inboxNotificationTracker.lastMessageId != latestMessage.id
-        if (numUnreads > 0 && latestMessageIsNew) {
-            inboxNotificationTracker.lastMessageId = latestMessage.id
-            inboxNotificationManager.showNotificationWithUnreads(numUnreads)
+        if (numUnreads > 0) {
+            val latestMessage = children[0]
+            val latestMessageIsNew = inboxNotificationTracker.lastMessageId != latestMessage.id
+            if (latestMessageIsNew) {
+                inboxNotificationTracker.lastMessageId = latestMessage.id
+                inboxNotificationManager.showNotificationWithUnreads(numUnreads)
+            }
         }
     }
 
