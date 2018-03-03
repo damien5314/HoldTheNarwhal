@@ -9,7 +9,7 @@ buildscript {
         HUGO_VERSION = '1.2.1'
         DEXCOUNT_VERSION = '0.7.3'
         GRADLE_VERSIONS_VERSION = '0.14.0'
-        FABRIC_VERSION = '1.22.2'
+        FABRIC_VERSION = '1.25.1'
 
         // Libraries
         BUILD_TOOLS_VERSION = '27.0.3'
