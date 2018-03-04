@@ -19,6 +19,9 @@ repositories {
     maven { url "https://jitpack.io" }
 }
 
+Properties localProperties = new Properties()
+localProperties.load(project.rootProject.file("local.properties").newDataInputStream())
+
 android {
     compileSdkVersion COMPILE_SDK_VERSION
     buildToolsVersion BUILD_TOOLS_VERSION
@@ -33,8 +36,10 @@ android {
         versionName "0.12"
         resConfigs "en"
         buildConfigField "long", "BUILD_TIME_UTC", "" + getTime()
-        buildConfigField "String", "REDDIT_APP_ID", "\"" + REDDIT_APP_ID + "\""
-        buildConfigField "String", "REDDIT_REDIRECT_URI", "\"" + REDDIT_REDIRECT_URI + "\""
+        def appId = localProperties.getProperty("app_id")
+        buildConfigField "String", "REDDIT_APP_ID", "\"" + appId + "\""
+        def redirectUri = localProperties.getProperty("app_redirect_uri")
+        buildConfigField "String", "REDDIT_REDIRECT_URI", "\"" + redirectUri + "\""
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
@@ -62,14 +67,12 @@ android {
             minifyEnabled false
             applicationIdSuffix ".debug"
             versionNameSuffix "-dev"
-            buildConfigField "String", "FLURRY_API_KEY", "\"" + FLURRY_API_KEY_DEBUG + "\""
         }
         release {
             debuggable false
             minifyEnabled true
             proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
             signingConfig signingConfigs.release
-            buildConfigField "String", "FLURRY_API_KEY", "\"" + FLURRY_API_KEY_PROD + "\""
         }
     }
 
@@ -84,10 +87,6 @@ android {
             outputFileName = "${variant.buildType.name}-${variant.versionName}_${variant.versionCode}-RC0.apk"
         }
     }
-}
-
-static def getTime() {
-    return (Calendar.getInstance().timeInMillis / 1000).longValue()
 }
 
 dependencies {
@@ -151,4 +150,8 @@ Properties getProperties(def filePath) {
     def properties = new Properties()
     properties.load(new FileInputStream(propertiesFile))
     return properties
+}
+
+static def getTime() {
+    return (Calendar.getInstance().timeInMillis / 1000).longValue()
 }
