@@ -19,6 +19,9 @@ repositories {
     maven { url "https://jitpack.io" }
 }
 
+Properties localProperties = new Properties()
+localProperties.load(project.rootProject.file("local.properties").newDataInputStream())
+
 android {
     compileSdkVersion COMPILE_SDK_VERSION
     buildToolsVersion BUILD_TOOLS_VERSION
@@ -33,18 +36,29 @@ android {
         versionName "0.12"
         resConfigs "en"
         buildConfigField "long", "BUILD_TIME_UTC", "" + getTime()
-        buildConfigField "String", "REDDIT_APP_ID", "\"" + REDDIT_APP_ID + "\""
-        buildConfigField "String", "REDDIT_REDIRECT_URI", "\"" + REDDIT_REDIRECT_URI + "\""
+        def appId = localProperties.getProperty("app_id")
+        buildConfigField "String", "REDDIT_APP_ID", "\"" + appId + "\""
+        def redirectUri = localProperties.getProperty("app_redirect_uri")
+        buildConfigField "String", "REDDIT_REDIRECT_URI", "\"" + redirectUri + "\""
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
     signingConfigs {
-        release {
-            storeFile file(KEYSTORE_PATH)
-            storePassword KEYSTORE_PWD
-            keyAlias KEY_ALIAS
-            keyPassword KEY_PWD
+        debug {
+            storeFile file('keys/debug.keystore')
+            storePassword 'android'
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
         }
+        release
+    }
+
+    Properties releaseKeystoreProperties = getProperties("app/keys/release/keystore.properties")
+    if (releaseKeystoreProperties != null) {
+        signingConfigs.release.storeFile = file(releaseKeystoreProperties['storeFile'])
+        signingConfigs.release.storePassword = releaseKeystoreProperties['storePassword']
+        signingConfigs.release.keyAlias = releaseKeystoreProperties['keyAlias']
+        signingConfigs.release.keyPassword = releaseKeystoreProperties['keyPassword']
     }
 
     buildTypes {
@@ -53,14 +67,12 @@ android {
             minifyEnabled false
             applicationIdSuffix ".debug"
             versionNameSuffix "-dev"
-            buildConfigField "String", "FLURRY_API_KEY", "\"" + FLURRY_API_KEY_DEBUG + "\""
         }
         release {
             debuggable false
             minifyEnabled true
             proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
             signingConfig signingConfigs.release
-            buildConfigField "String", "FLURRY_API_KEY", "\"" + FLURRY_API_KEY_PROD + "\""
         }
     }
 
@@ -75,16 +87,6 @@ android {
             outputFileName = "${variant.buildType.name}-${variant.versionName}_${variant.versionCode}-RC0.apk"
         }
     }
-}
-
-static def getTime() {
-    return (Calendar.getInstance().timeInMillis / 1000).longValue()
-}
-
-def getLocalProperty(String s) {
-    Properties properties = new Properties()
-    properties.load(project.rootProject.file("local.properties").newDataInputStream())
-    return properties.getProperty(s)
 }
 
 dependencies {
@@ -139,4 +141,17 @@ dependencies {
     androidTestImplementation "com.android.support:support-annotations:$SUPPORT_LIBRARY_VERSION"
     androidTestImplementation 'com.android.support.test:runner:0.5'
     androidTestImplementation 'com.android.support.test:rules:0.5'
+}
+
+Properties getProperties(def filePath) {
+    def propertiesFile = rootProject.file(filePath)
+    if (!propertiesFile.exists()) return null
+
+    def properties = new Properties()
+    properties.load(new FileInputStream(propertiesFile))
+    return properties
+}
+
+static def getTime() {
+    return (Calendar.getInstance().timeInMillis / 1000).longValue()
 }
