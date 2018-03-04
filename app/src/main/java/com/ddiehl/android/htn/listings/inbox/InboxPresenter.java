@@ -6,10 +6,13 @@ import com.ddiehl.android.htn.navigation.RedditNavigationView;
 import com.ddiehl.android.htn.view.MainView;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import rxreddit.model.Listing;
+import rxreddit.model.ListingResponse;
 import rxreddit.model.PrivateMessage;
 import timber.log.Timber;
 
@@ -52,7 +55,10 @@ public class InboxPresenter extends BaseListingsPresenter {
                     mNextRequested = false;
                 })
                 .subscribe(
-                        listings -> onListingsLoaded(listings, append),
+                        listings -> {
+                            onListingsLoaded(listings, append);
+                            markMessagesRead(listings);
+                        },
                         error -> {
                             if (error instanceof IOException) {
                                 String message = mContext.getString(R.string.error_network_unavailable);
@@ -98,5 +104,28 @@ public class InboxPresenter extends BaseListingsPresenter {
 
     public void onViewSelected(String show) {
         refreshData();
+    }
+
+    private void markMessagesRead(ListingResponse listings) {
+        final List<String> messageFullnames = new ArrayList<>();
+        for (Listing listing : listings.getData().getChildren()) {
+            if (listing instanceof PrivateMessage) {
+                messageFullnames.add(listing.getFullName());
+            }
+        }
+        final String commaSeparated = getCommaSeparatedString(messageFullnames);
+        mRedditService.markMessagesRead(commaSeparated)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(() -> { }, Timber::e);
+    }
+
+    private String getCommaSeparatedString(List<String> strings) {
+        final StringBuilder result = new StringBuilder();
+        for (String string : strings) {
+            result.append(string).append(",");
+        }
+        result.deleteCharAt(result.length() - 1);
+        return result.toString();
     }
 }
