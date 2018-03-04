@@ -4,3 +4,8 @@
 /local.properties
 *.iml
 /captures/
+
+# Keystore files
+*.jks
+app/keys/release
+app/keys/upload

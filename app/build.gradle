@@ -39,12 +39,15 @@ android {
     }
 
     signingConfigs {
-        release {
-            storeFile file(KEYSTORE_PATH)
-            storePassword KEYSTORE_PWD
-            keyAlias KEY_ALIAS
-            keyPassword KEY_PWD
-        }
+        release.initWith(debug)
+    }
+
+    Properties releaseKeystoreProperties = getProperties("app/keys/release/keystore.properties")
+    if (releaseKeystoreProperties != null) {
+        signingConfigs.release.storeFile = file(releaseKeystoreProperties['storeFile'])
+        signingConfigs.release.storePassword = releaseKeystoreProperties['storePassword']
+        signingConfigs.release.keyAlias = releaseKeystoreProperties['keyAlias']
+        signingConfigs.release.keyPassword = releaseKeystoreProperties['keyPassword']
     }
 
     buildTypes {
@@ -79,12 +82,6 @@ android {
 
 static def getTime() {
     return (Calendar.getInstance().timeInMillis / 1000).longValue()
-}
-
-def getLocalProperty(String s) {
-    Properties properties = new Properties()
-    properties.load(project.rootProject.file("local.properties").newDataInputStream())
-    return properties.getProperty(s)
 }
 
 dependencies {
@@ -139,4 +136,13 @@ dependencies {
     androidTestImplementation "com.android.support:support-annotations:$SUPPORT_LIBRARY_VERSION"
     androidTestImplementation 'com.android.support.test:runner:0.5'
     androidTestImplementation 'com.android.support.test:rules:0.5'
+}
+
+Properties getProperties(def filePath) {
+    def propertiesFile = rootProject.file(filePath)
+    if (!propertiesFile.exists()) return null
+
+    def properties = new Properties()
+    properties.load(new FileInputStream(propertiesFile))
+    return properties
 }
