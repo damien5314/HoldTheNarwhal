@@ -39,7 +39,7 @@ android {
     }
 
     signingConfigs {
-        release.initWith(debug)
+        release
     }
 
     Properties releaseKeystoreProperties = getProperties("app/keys/release/keystore.properties")
