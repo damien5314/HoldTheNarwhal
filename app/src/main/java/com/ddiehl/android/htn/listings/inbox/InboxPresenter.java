@@ -109,15 +109,18 @@ public class InboxPresenter extends BaseListingsPresenter {
     private void markMessagesRead(ListingResponse listings) {
         final List<String> messageFullnames = new ArrayList<>();
         for (Listing listing : listings.getData().getChildren()) {
-            if (listing instanceof PrivateMessage) {
+            if (listing instanceof PrivateMessage
+                    && ((PrivateMessage) listing).isUnread()) {
                 messageFullnames.add(listing.getFullName());
             }
         }
-        final String commaSeparated = getCommaSeparatedString(messageFullnames);
-        mRedditService.markMessagesRead(commaSeparated)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(() -> { }, Timber::e);
+        if (!messageFullnames.isEmpty()) {
+            final String commaSeparated = getCommaSeparatedString(messageFullnames);
+            mRedditService.markMessagesRead(commaSeparated)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(() -> { }, Timber::e);
+        }
     }
 
     private String getCommaSeparatedString(List<String> strings) {
