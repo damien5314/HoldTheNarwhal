@@ -237,9 +237,13 @@ public class RedditServiceMock extends RedditService {
     }
 
     @Override
-    public Observable<ListingResponse> getInbox(String show, String after, String before) {
-        ListingResponse response = mGson.fromJson(
-                getReaderForFile("inbox_" + show + ".json"), ListingResponse.class);
+    public Observable<ListingResponse> getInbox(
+            String show,
+            boolean markRead,
+            String after,
+            String before) {
+        final Reader readerForFile = getReaderForFile("inbox_" + show + ".json");
+        ListingResponse response = mGson.fromJson(readerForFile, ListingResponse.class);
         return Observable.just(response);
     }
 
