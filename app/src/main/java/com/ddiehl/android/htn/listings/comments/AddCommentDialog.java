@@ -24,9 +24,9 @@ public class AddCommentDialog extends DialogFragment {
     public static final String EXTRA_COMMENT_TEXT = "EXTRA_COMMENT_TEXT";
 
     @BindView(R.id.comment_edit_text) protected EditText mCommentEditText;
-    @BindView(R.id.comment_submit) protected Button mCommentSubmit;
+    @BindView(R.id.comment_submit) protected Button commentSubmit;
 
-    private String mParentFullName;
+    private String parentFullName;
 
     public static AddCommentDialog newInstance(@NotNull String parentFullname) {
         AddCommentDialog dialog = new AddCommentDialog();
@@ -39,7 +39,7 @@ public class AddCommentDialog extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mParentFullName = getArguments().getString(EXTRA_PARENT_ID);
+        parentFullName = getArguments().getString(EXTRA_PARENT_ID);
     }
 
     @NotNull
@@ -54,10 +54,10 @@ public class AddCommentDialog extends DialogFragment {
     }
 
     private void init() {
-        mCommentSubmit.setOnClickListener(view -> {
+        commentSubmit.setOnClickListener(view -> {
             String commentText = mCommentEditText.getText().toString();
             Intent data = new Intent();
-            data.putExtra(EXTRA_PARENT_ID, mParentFullName);
+            data.putExtra(EXTRA_PARENT_ID, parentFullName);
             data.putExtra(EXTRA_COMMENT_TEXT, commentText);
             dismiss();
             getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, data);

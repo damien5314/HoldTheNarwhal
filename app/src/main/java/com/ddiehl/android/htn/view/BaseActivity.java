@@ -90,20 +90,20 @@ public abstract class BaseActivity extends AppCompatActivity implements
     private static final String EXTRA_AUTHENTICATION_STATE_CHANGE =
             "com.ddiehl.android.htn.EXTRA_AUTHENTICATION_STATE_CHANGE";
 
-    @BindView(R.id.drawer_layout) DrawerLayout mDrawerLayout;
-    @BindView(R.id.navigation_view) NavigationView mNavigationView;
-    @BindView(R.id.tab_layout) TabLayout mTabLayout;
-    /* @BindView(R.id.user_account_icon) */ ImageView mGoldIndicator;
-    /* @BindView(R.id.account_name) */ TextView mAccountNameView;
-    /* @BindView(R.id.sign_out_button) */ View mSignOutView;
-    /* @BindView(R.id.navigation_drawer_header_image) */ ImageView mHeaderImage;
+    @BindView(R.id.drawer_layout) DrawerLayout drawerLayout;
+    @BindView(R.id.navigation_view) NavigationView navigationView;
+    @BindView(R.id.tab_layout) TabLayout tabLayout;
+    /* @BindView(R.id.user_account_icon) */ ImageView goldIndicator;
+    /* @BindView(R.id.account_name) */ TextView accountNameView;
+    /* @BindView(R.id.sign_out_button) */ View signOutView;
+    /* @BindView(R.id.navigation_drawer_header_image) */ ImageView headerImage;
 
-    @Inject protected RedditService mRedditService;
-    @Inject protected IdentityManager mIdentityManager;
+    @Inject protected RedditService redditService;
+    @Inject protected IdentityManager identityManager;
     @Inject protected SettingsManager mSettingsManager;
     @Inject protected Gson mGson;
 
-    ActionBarDrawerToggle mDrawerToggle;
+    ActionBarDrawerToggle drawerToggle;
 
     protected abstract boolean hasNavigationDrawer();
 
@@ -128,16 +128,16 @@ public abstract class BaseActivity extends AppCompatActivity implements
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             if (hasNavigationDrawer()) {
-                mDrawerToggle = new ActionBarDrawerToggle(
+                drawerToggle = new ActionBarDrawerToggle(
                         this,                   /* host Activity */
-                        mDrawerLayout,          /* DrawerLayout object */
+                        drawerLayout,          /* DrawerLayout object */
                         toolbar,                /* nav drawer icon to replace 'Up' caret */
                         R.string.drawer_open,   /* "open drawer" description */
                         R.string.drawer_close   /* "close drawer" description */
                 );
 
                 // Set the drawer toggle as the DrawerListener
-                mDrawerLayout.addDrawerListener(mDrawerToggle);
+                drawerLayout.addDrawerListener(drawerToggle);
 
                 Drawable homeIndicator = AndroidUtils.getTintedDrawable(
                         this, R.drawable.ic_menu_black_24dp, R.color.icons
@@ -157,8 +157,8 @@ public abstract class BaseActivity extends AppCompatActivity implements
          * This is a hack because sometimes the user gets stuck in a state where
          * they don't have a valid access token, but still have their user identity.
          */
-        if (!mRedditService.isUserAuthorized()) {
-            mIdentityManager.clearSavedUserIdentity();
+        if (!redditService.isUserAuthorized()) {
+            identityManager.clearSavedUserIdentity();
         }
 
         // Check to see if the activity was restarted due to authentication change
@@ -188,7 +188,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
         if (!isAuthenticated) {
             showToast(getString(R.string.user_signed_out));
         } else {
-            String name = mIdentityManager.getUserIdentity().getName();
+            String name = identityManager.getUserIdentity().getName();
             String formatter = getString(R.string.welcome_user);
             String toast = String.format(formatter, name);
             showToast(toast);
@@ -198,31 +198,31 @@ public abstract class BaseActivity extends AppCompatActivity implements
     // Workaround for bug in support lib 23.1.0 - 23.2.0
     // https://code.google.com/p/android/issues/detail?id=190226
     private void initNavigationView() {
-        mNavigationView = ButterKnife.findById(this, R.id.navigation_view);
-        View header = mNavigationView.inflateHeaderView(R.layout.navigation_drawer_header);
-        mGoldIndicator = (ImageView) header.findViewById(R.id.user_account_icon);
-        mAccountNameView = (TextView) header.findViewById(R.id.account_name);
-        mSignOutView = header.findViewById(R.id.sign_out_button);
-        mHeaderImage = (ImageView) header.findViewById(R.id.navigation_drawer_header_image);
+        navigationView = ButterKnife.findById(this, R.id.navigation_view);
+        View header = navigationView.inflateHeaderView(R.layout.navigation_drawer_header);
+        goldIndicator = (ImageView) header.findViewById(R.id.user_account_icon);
+        accountNameView = (TextView) header.findViewById(R.id.account_name);
+        signOutView = header.findViewById(R.id.sign_out_button);
+        headerImage = (ImageView) header.findViewById(R.id.navigation_drawer_header_image);
 
-        mSignOutView.setOnClickListener(view -> onSignOut());
-        mNavigationView.setNavigationItemSelectedListener(this);
+        signOutView.setOnClickListener(view -> onSignOut());
+        navigationView.setNavigationItemSelectedListener(this);
     }
 
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         // Sync the toggle state after onRestoreInstanceState has occurred.
-        if (mDrawerToggle != null) {
-            mDrawerToggle.syncState();
+        if (drawerToggle != null) {
+            drawerToggle.syncState();
         }
     }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        if (mDrawerToggle != null) {
-            mDrawerToggle.onConfigurationChanged(newConfig);
+        if (drawerToggle != null) {
+            drawerToggle.onConfigurationChanged(newConfig);
         }
     }
 
@@ -230,8 +230,8 @@ public abstract class BaseActivity extends AppCompatActivity implements
     protected void onResume() {
         super.onResume();
 
-        mIdentityManager.registerUserIdentityChangeListener(this);
-        UserIdentity user = mIdentityManager.getUserIdentity();
+        identityManager.registerUserIdentityChangeListener(this);
+        UserIdentity user = identityManager.getUserIdentity();
         updateUserIdentity(user);
 
         boolean isLoggedIn = user != null && user.getName() != null;
@@ -240,7 +240,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
 
     @Override
     protected void onPause() {
-        mIdentityManager.unregisterUserIdentityChangeListener(this);
+        identityManager.unregisterUserIdentityChangeListener(this);
         super.onPause();
     }
 
@@ -261,19 +261,19 @@ public abstract class BaseActivity extends AppCompatActivity implements
     }
 
     protected void updateUserIdentity(@Nullable UserIdentity identity) {
-        mAccountNameView.setText(identity == null ?
+        accountNameView.setText(identity == null ?
                 getString(R.string.account_name_unauthorized) : identity.getName());
-        mSignOutView.setVisibility(identity == null ? GONE : VISIBLE);
-        mGoldIndicator.setVisibility(identity != null && identity.isGold() ? VISIBLE : GONE);
+        signOutView.setVisibility(identity == null ? GONE : VISIBLE);
+        goldIndicator.setVisibility(identity != null && identity.isGold() ? VISIBLE : GONE);
         updateNavigationItems(identity != null);
     }
 
     protected void showTabs(boolean show) {
-        mTabLayout.setVisibility(show ? VISIBLE : GONE);
+        tabLayout.setVisibility(show ? VISIBLE : GONE);
     }
 
     protected void updateNavigationItems(boolean isLoggedIn) {
-        Menu menu = mNavigationView.getMenu();
+        Menu menu = navigationView.getMenu();
         menu.findItem(R.id.drawer_log_in).setVisible(!isLoggedIn);
         menu.findItem(R.id.drawer_inbox).setVisible(isLoggedIn);
         menu.findItem(R.id.drawer_user_profile).setVisible(isLoggedIn);
@@ -313,7 +313,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
     }
 
     private void closeNavigationDrawer() {
-        mDrawerLayout.closeDrawer(GravityCompat.START);
+        drawerLayout.closeDrawer(GravityCompat.START);
     }
 
     protected void onNavigateToSubreddit() {
@@ -333,7 +333,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
     }
 
     protected void onShowUserProfile() {
-        String name = mIdentityManager.getUserIdentity().getName();
+        String name = identityManager.getUserIdentity().getName();
         showUserProfile(name, "summary", "new");
     }
 
@@ -355,7 +355,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
 
     public void showLoginView() {
         Intent intent = new Intent(this, SignInActivity.class);
-        intent.putExtra(SignInActivity.EXTRA_AUTH_URL, mRedditService.getAuthorizationUrl());
+        intent.putExtra(SignInActivity.EXTRA_AUTH_URL, redditService.getAuthorizationUrl());
         startActivityForResult(intent, REQUEST_SIGN_IN);
     }
 
@@ -420,15 +420,15 @@ public abstract class BaseActivity extends AppCompatActivity implements
 
     public void signOutUser() {
         closeNavigationDrawer();
-        mRedditService.revokeAuthentication();
-        mIdentityManager.clearSavedUserIdentity();
+        redditService.revokeAuthentication();
+        identityManager.clearSavedUserIdentity();
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Pass the event to ActionBarDrawerToggle, if it returns
         // true, then it has handled the app icon touch event
-        if (mDrawerToggle != null && mDrawerToggle.onOptionsItemSelected(item)) {
+        if (drawerToggle != null && drawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
 
@@ -456,7 +456,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
     public void showSubredditImage(String url) {
         GlideApp.with(this)
                 .load(url)
-                .into(mHeaderImage);
+                .into(headerImage);
     }
 
     @Override
@@ -467,7 +467,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
 
     @Override
     public void onBackPressed() {
-        if (mDrawerLayout.isDrawerVisible(mNavigationView)) {
+        if (drawerLayout.isDrawerVisible(navigationView)) {
             closeNavigationDrawer();
             return;
         }
@@ -528,7 +528,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
     }
 
     private void onSignInCallback(String url) {
-        mRedditService.processAuthenticationCallback(url)
+        redditService.processAuthenticationCallback(url)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .flatMap(getUserIdentity())
@@ -547,14 +547,14 @@ public abstract class BaseActivity extends AppCompatActivity implements
     }
 
     private void showError(String message) {
-        Snackbar.make(mDrawerLayout, message, Snackbar.LENGTH_LONG).show();
+        Snackbar.make(drawerLayout, message, Snackbar.LENGTH_LONG).show();
     }
 
     private Function<UserAccessToken, Observable<UserIdentity>> getUserIdentity() {
-        return token -> mRedditService.getUserIdentity()
+        return token -> redditService.getUserIdentity()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext(mIdentityManager::saveUserIdentity);
+                .doOnNext(identityManager::saveUserIdentity);
     }
 
     @Override
@@ -564,6 +564,6 @@ public abstract class BaseActivity extends AppCompatActivity implements
     }
 
     protected void showToast(@NotNull String message) {
-        Snackbar.make(mDrawerLayout, message, Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(drawerLayout, message, Snackbar.LENGTH_SHORT).show();
     }
 }

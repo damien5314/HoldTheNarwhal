@@ -20,26 +20,26 @@ import rxreddit.model.CommentStub;
 
 public class ThreadStubViewHolder extends RecyclerView.ViewHolder {
 
-    @Inject protected Context mAppContext;
-    private final BaseListingsPresenter mCommentPresenter;
-    private CommentStub mCommentStub;
-    private String mSubreddit;
-    private String mLinkId;
+    @Inject protected Context appContext;
+    private final BaseListingsPresenter commentPresenter;
+    private CommentStub commentStub;
+    private String subreddit;
+    private String linkId;
 
     @BindView(R.id.comment_more)
-    TextView mMoreCommentsView;
+    TextView moreCommentsView;
 
     public ThreadStubViewHolder(View v, BaseListingsPresenter presenter) {
         super(v);
         HoldTheNarwhal.getApplicationComponent().inject(this);
-        mCommentPresenter = presenter;
+        commentPresenter = presenter;
         ButterKnife.bind(this, v);
     }
 
     public void bind(CommentStub comment, String subreddit, String linkId) {
-        mCommentStub = comment;
-        mSubreddit = subreddit;
-        mLinkId = linkId;
+        commentStub = comment;
+        this.subreddit = subreddit;
+        this.linkId = linkId;
         addPaddingViews(comment);
         setMoreCommentsText(comment);
     }
@@ -47,9 +47,9 @@ public class ThreadStubViewHolder extends RecyclerView.ViewHolder {
     // Add padding views to indentation_wrapper based on depth of comment
     private void addPaddingViews(CommentStub comment) {
         int viewMargin = (comment.getDepth() - 2)
-                * (int) mAppContext.getResources().getDimension(R.dimen.comment_indentation_margin);
+                * (int) appContext.getResources().getDimension(R.dimen.comment_indentation_margin);
         RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) itemView.getLayoutParams();
-        Configuration config = mAppContext.getResources().getConfiguration();
+        Configuration config = appContext.getResources().getConfiguration();
         if (Build.VERSION.SDK_INT >= 17
                 && config.getLayoutDirection() == View.LAYOUT_DIRECTION_RTL) {
             params.setMargins(0, 0, viewMargin, 0);
@@ -62,22 +62,22 @@ public class ThreadStubViewHolder extends RecyclerView.ViewHolder {
         int count = comment.getCount();
         switch (count) {
             case 0:
-                mMoreCommentsView.setText(
-                        mAppContext.getString(R.string.continue_thread));
+                moreCommentsView.setText(
+                        appContext.getString(R.string.continue_thread));
                 break;
             default:
-                mMoreCommentsView.setText(
-                        mAppContext.getResources().getQuantityString(R.plurals.more_comments, count, count));
+                moreCommentsView.setText(
+                        appContext.getResources().getQuantityString(R.plurals.more_comments, count, count));
         }
     }
 
     @OnClick(R.id.comment_more)
     void onClick() {
-        if (mCommentStub.getCount() == 0) {
-            String commentId = mCommentStub.getParentId();
-            mCommentPresenter.showCommentThread(mSubreddit, mLinkId, commentId);
+        if (commentStub.getCount() == 0) {
+            String commentId = commentStub.getParentId();
+            commentPresenter.showCommentThread(subreddit, linkId, commentId);
         } else {
-            mCommentPresenter.getMoreComments(mCommentStub);
+            commentPresenter.getMoreComments(commentStub);
         }
     }
 }

@@ -11,15 +11,15 @@ import timber.log.Timber;
  */
 public class LogcatLoggingTree extends Timber.DebugTree {
 
-    private LogcatLogger mLogcatLogger;
+    private LogcatLogger logcatLogger;
 
     public LogcatLoggingTree(LogcatLogger logger) {
-        mLogcatLogger = logger;
+        logcatLogger = logger;
     }
 
     @Override
     protected void log(int priority, String tag, String message, Throwable t) {
-        mLogcatLogger.println(priority, tag, message);
+        logcatLogger.println(priority, tag, message);
 
         // Crash above Log.WARN priority
         if (t != null && priority > Log.WARN) {

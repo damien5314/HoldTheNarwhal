@@ -28,41 +28,41 @@ public class LinkOptionsBar extends LinearLayout {
     }
 
     @BindView(R.id.action_link_reply)
-    View mLinkReply;
+    View linkReply;
     @BindView(R.id.action_link_reply_icon)
-    ImageView mLinkReplyIcon;
+    ImageView linkReplyIcon;
 
     @BindView(R.id.action_link_upvote)
-    View mLinkUpvote;
+    View linkUpvote;
     @BindView(R.id.action_link_upvote_icon)
-    ImageView mLinkUpvoteIcon;
+    ImageView linkUpvoteIcon;
 
     @BindView(R.id.action_link_downvote)
-    View mLinkDownvote;
+    View linkDownvote;
     @BindView(R.id.action_link_downvote_icon)
-    ImageView mLinkDownvoteIcon;
+    ImageView linkDownvoteIcon;
 
     @BindView(R.id.action_link_save)
-    View mLinkSave;
+    View linkSave;
     @BindView(R.id.action_link_save_icon)
-    ImageView mLinkSaveIcon;
+    ImageView linkSaveIcon;
 
     @BindView(R.id.action_link_share)
-    View mLinkShare;
+    View linkShare;
     @BindView(R.id.action_link_share_icon)
-    ImageView mLinkShareIcon;
+    ImageView linkShareIcon;
 
     @BindView(R.id.action_link_hide)
-    View mLinkHide;
+    View linkHide;
     @BindView(R.id.action_link_hide_icon)
-    ImageView mLinkHideIcon;
+    ImageView linkHideIcon;
 
     @BindView(R.id.action_link_report)
-    View mLinkReport;
+    View linkReport;
     @BindView(R.id.action_link_report_icon)
-    ImageView mLinkReportIcon;
+    ImageView linkReportIcon;
 
-    @Nullable Integer mVoted;
+    @Nullable Integer voted;
 
     public LinkOptionsBar(Context context) {
         this(context, null);
@@ -101,25 +101,25 @@ public class LinkOptionsBar extends LinearLayout {
     void showIconHelper(boolean show, Icons icon) {
         switch (icon) {
             case REPLY:
-                mLinkReply.setVisibility(show ? VISIBLE : GONE);
+                linkReply.setVisibility(show ? VISIBLE : GONE);
                 break;
             case UPVOTE:
-                mLinkUpvote.setVisibility(show ? VISIBLE : GONE);
+                linkUpvote.setVisibility(show ? VISIBLE : GONE);
                 break;
             case DOWNVOTE:
-                mLinkDownvote.setVisibility(show ? VISIBLE : GONE);
+                linkDownvote.setVisibility(show ? VISIBLE : GONE);
                 break;
             case SAVE:
-                mLinkSave.setVisibility(show ? VISIBLE : GONE);
+                linkSave.setVisibility(show ? VISIBLE : GONE);
                 break;
             case SHARE:
-                mLinkShare.setVisibility(show ? VISIBLE : GONE);
+                linkShare.setVisibility(show ? VISIBLE : GONE);
                 break;
             case HIDE:
-                mLinkHide.setVisibility(show ? VISIBLE : GONE);
+                linkHide.setVisibility(show ? VISIBLE : GONE);
                 break;
             case REPORT:
-                mLinkReport.setVisibility(show ? VISIBLE : GONE);
+                linkReport.setVisibility(show ? VISIBLE : GONE);
                 break;
         }
     }
@@ -127,42 +127,42 @@ public class LinkOptionsBar extends LinearLayout {
     public void setOnIconClickListener(Icons icon, Runnable callback) {
         switch (icon) {
             case REPLY:
-                mLinkReply.setOnClickListener((view) -> callback.run());
+                linkReply.setOnClickListener((view) -> callback.run());
                 break;
             case UPVOTE:
-                mLinkUpvote.setOnClickListener((view) -> callback.run());
+                linkUpvote.setOnClickListener((view) -> callback.run());
                 break;
             case DOWNVOTE:
-                mLinkDownvote.setOnClickListener((view) -> callback.run());
+                linkDownvote.setOnClickListener((view) -> callback.run());
                 break;
             case SAVE:
-                mLinkSave.setOnClickListener((view) -> callback.run());
+                linkSave.setOnClickListener((view) -> callback.run());
                 break;
             case SHARE:
-                mLinkShare.setOnClickListener((view) -> callback.run());
+                linkShare.setOnClickListener((view) -> callback.run());
                 break;
             case HIDE:
-                mLinkHide.setOnClickListener((view) -> callback.run());
+                linkHide.setOnClickListener((view) -> callback.run());
                 break;
             case REPORT:
-                mLinkReport.setOnClickListener((view) -> callback.run());
+                linkReport.setOnClickListener((view) -> callback.run());
                 break;
         }
     }
 
     public void setVoted(@NotNull Integer voted) {
-        mVoted = voted;
+        this.voted = voted;
 
         // Determine tint color based on liked status and tint the buttons appropriately
-        mLinkUpvoteIcon.setColorFilter(null);
-        mLinkDownvoteIcon.setColorFilter(null);
+        linkUpvoteIcon.setColorFilter(null);
+        linkDownvoteIcon.setColorFilter(null);
 
         if (voted == 1) {
-            mLinkUpvoteIcon.setColorFilter(
+            linkUpvoteIcon.setColorFilter(
                     ContextCompat.getColor(getContext(), R.color.reddit_orange_full)
             );
         } else if (voted == -1) {
-            mLinkDownvoteIcon.setColorFilter(
+            linkDownvoteIcon.setColorFilter(
                     ContextCompat.getColor(getContext(), R.color.reddit_blue_full)
             );
         }
@@ -170,11 +170,11 @@ public class LinkOptionsBar extends LinearLayout {
 
     public void setSaved(boolean saved) {
         if (saved) {
-            mLinkSaveIcon.setColorFilter(
+            linkSaveIcon.setColorFilter(
                     ContextCompat.getColor(getContext(), R.color.link_saved_color)
             );
         } else {
-            mLinkSaveIcon.setColorFilter(null);
+            linkSaveIcon.setColorFilter(null);
         }
     }
 }

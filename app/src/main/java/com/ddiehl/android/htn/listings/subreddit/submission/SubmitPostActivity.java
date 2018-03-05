@@ -23,16 +23,16 @@ public class SubmitPostActivity extends FragmentActivityCompat {
         return intent;
     }
 
-    String mSubreddit;
+    String subreddit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         Bundle extras = getIntent().getExtras();
-        mSubreddit = extras.getString(EXTRA_SUBREDDIT);
+        subreddit = extras.getString(EXTRA_SUBREDDIT);
 
-        String title = getString(R.string.submission_activity_title, mSubreddit);
+        String title = getString(R.string.submission_activity_title, subreddit);
         setTitle(title);
     }
 
@@ -44,7 +44,7 @@ public class SubmitPostActivity extends FragmentActivityCompat {
     @NotNull
     @Override
     protected Fragment getFragment() {
-        return new SubmitPostFragmentBuilder(mSubreddit)
+        return new SubmitPostFragmentBuilder(subreddit)
                 .build();
     }
 

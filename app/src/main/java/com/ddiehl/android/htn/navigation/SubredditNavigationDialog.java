@@ -27,18 +27,18 @@ public class SubredditNavigationDialog extends DialogFragment {
     }
 
     @BindView(R.id.drawer_navigate_to_subreddit_text)
-    SubredditEditText mEditText;
+    SubredditEditText editText;
 
     @BindView(R.id.drawer_navigate_to_subreddit_go)
-    View mSubmitButton;
+    View submitButton;
 
-    private Callbacks mListener;
+    private Callbacks listener;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
-            mListener = (Callbacks) context;
+            listener = (Callbacks) context;
         } catch (ClassCastException e) {
             throw new ClassCastException(context.getClass().getSimpleName()
                     + " must implement AnalyticsDialog.Callbacks");
@@ -47,7 +47,7 @@ public class SubredditNavigationDialog extends DialogFragment {
 
     @Override
     public void onDetach() {
-        mListener = null;
+        listener = null;
         super.onDetach();
     }
 
@@ -64,30 +64,30 @@ public class SubredditNavigationDialog extends DialogFragment {
         ButterKnife.bind(this, dialog);
 
         // Detect taps on the submit button
-        mSubmitButton.setOnClickListener((v) -> {
-            String input = mEditText.getInput();
+        submitButton.setOnClickListener((v) -> {
+            String input = editText.getInput();
 
             if (!input.equals("")) {
                 input = input.trim();
-                mEditText.setText("");
+                editText.setText("");
 
                 dialog.dismiss();
-                mListener.onSubredditNavigationConfirmed(input);
+                listener.onSubredditNavigationConfirmed(input);
             }
         });
 
         // Detect software keyboard "done" event
-        mEditText.setOnEditorActionListener((v, actionId, event) -> {
+        editText.setOnEditorActionListener((v, actionId, event) -> {
             if (enterKeyPressed(actionId, event)) {
-                mSubmitButton.callOnClick();
+                submitButton.callOnClick();
             }
             return false;
         });
 
         // Detect hardware keyboard "enter" key press
-        mEditText.setOnKeyListener((v, keyCode, event) -> {
+        editText.setOnKeyListener((v, keyCode, event) -> {
             if (enterKeyPressed(keyCode, event)) {
-                mSubmitButton.callOnClick();
+                submitButton.callOnClick();
             }
             return false;
         });

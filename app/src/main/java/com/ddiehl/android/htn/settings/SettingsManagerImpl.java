@@ -82,17 +82,17 @@ public class SettingsManagerImpl implements SettingsManager {
             "mark_messages_read, hide_ads, min_link_score, newwindow, numsites, num_comments, " +
             "highlight_new_comments, default_comment_sort, hide_locationbar";
 
-    private final Context mContext;
-    private final RedditService mRedditService; // FIXME: Bad dependency
-    private final SharedPreferences mSharedPreferences;
+    private final Context context;
+    private final RedditService redditService; // FIXME: Bad dependency
+    private final SharedPreferences sharedPreferences;
 
-    private boolean mIsChanging = false;
+    private boolean isChanging = false;
 
     public SettingsManagerImpl(Context context, RedditService service) {
-        mContext = context;
-        mRedditService = service;
-        mSharedPreferences = mContext.getSharedPreferences(PREFS_USER, Context.MODE_PRIVATE);
-        mSharedPreferences.registerOnSharedPreferenceChangeListener(this);
+        this.context = context;
+        this.redditService = service;
+        this.sharedPreferences = this.context.getSharedPreferences(PREFS_USER, Context.MODE_PRIVATE);
+        this.sharedPreferences.registerOnSharedPreferenceChangeListener(this);
     }
 
     private Object getValueFromKey(SharedPreferences sp, String key) {
@@ -101,13 +101,13 @@ public class SettingsManagerImpl implements SettingsManager {
 
     @Override
     public boolean hasFromRemote() {
-        return mSharedPreferences.getBoolean(PREF_HAS_FROM_REMOTE, false);
+        return sharedPreferences.getBoolean(PREF_HAS_FROM_REMOTE, false);
     }
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sp, String key) {
-        if (mIsChanging) return;
-        mIsChanging = true;
+        if (isChanging) return;
+        isChanging = true;
 
         Map<String, String> changedSettings = new HashMap<>(); // Track changed keys and values
 
@@ -141,9 +141,9 @@ public class SettingsManagerImpl implements SettingsManager {
             }
         }
 
-        if (changedSettings.size() > 0 && mRedditService.isUserAuthorized()) {
+        if (changedSettings.size() > 0 && redditService.isUserAuthorized()) {
             // Post SettingsUpdate event with changed keys and values
-            mRedditService.updateUserSettings(changedSettings)
+            redditService.updateUserSettings(changedSettings)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(
@@ -154,13 +154,13 @@ public class SettingsManagerImpl implements SettingsManager {
 
         Map prefs = sp.getAll();
 
-        mIsChanging = false;
+        isChanging = false;
     }
 
     @Override
     public void saveUserSettings(UserSettings settings) {
-        mSharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
-        mSharedPreferences.edit()
+        sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
+        sharedPreferences.edit()
                 .putBoolean(PREF_HAS_FROM_REMOTE, true)
                 .putBoolean(PREF_BETA, settings.getBeta())
                 .putBoolean(PREF_CLICKGAGDET, settings.getClickgadget())
@@ -208,15 +208,15 @@ public class SettingsManagerImpl implements SettingsManager {
                 .putBoolean(PREF_THREADED_MESSAGES, settings.getThreadedMessages())
                 .putBoolean(PREF_USE_GLOBAL_DEFAULTS, settings.getUseGlobalDefaults())
                 .apply();
-        mSharedPreferences.registerOnSharedPreferenceChangeListener(this);
+        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
     }
 
     @Override
     public void clearUserSettings() {
-        mSharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
+        sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
         // Only removing reddit preferences, app preferences can stay the same
         // Need to do this because PreferenceFragment can only show preferences from one SP instance
-        mSharedPreferences.edit()
+        sharedPreferences.edit()
                 .remove(PREF_HAS_FROM_REMOTE)
                 .remove(PREF_BETA)
                 .remove(PREF_CLICKGAGDET)
@@ -262,7 +262,7 @@ public class SettingsManagerImpl implements SettingsManager {
                 .remove(PREF_THREADED_MESSAGES)
                 .remove(PREF_USE_GLOBAL_DEFAULTS)
                 .apply();
-        mSharedPreferences.registerOnSharedPreferenceChangeListener(this);
+        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
     }
 
     //////////////////
@@ -271,7 +271,7 @@ public class SettingsManagerImpl implements SettingsManager {
 
     @Override
     public String getDeviceId() {
-        SharedPreferences sp = mContext.getSharedPreferences(PREFS_DEVICE_ID, Context.MODE_PRIVATE);
+        SharedPreferences sp = context.getSharedPreferences(PREFS_DEVICE_ID, Context.MODE_PRIVATE);
         String deviceId = sp.getString(PREF_DEVICE_ID, null);
         if (deviceId == null) {
             deviceId = UUID.randomUUID().toString();
@@ -282,33 +282,33 @@ public class SettingsManagerImpl implements SettingsManager {
 
     @Override
     public boolean areAnalyticsEnabled() {
-        return mContext.getSharedPreferences(PREFS_USER, Context.MODE_PRIVATE)
+        return context.getSharedPreferences(PREFS_USER, Context.MODE_PRIVATE)
                 .getBoolean(PREF_ALLOW_ANALYTICS, false);
     }
 
     @Override
     public void setAnalyticsEnabled(boolean b) {
-        mContext.getSharedPreferences(PREFS_USER, Context.MODE_PRIVATE).edit()
+        context.getSharedPreferences(PREFS_USER, Context.MODE_PRIVATE).edit()
                 .putBoolean(PREF_ALLOW_ANALYTICS, b)
                 .apply();
     }
 
     @Override
     public boolean askedForAnalytics() {
-        return mContext.getSharedPreferences(PREFS_USER, Context.MODE_PRIVATE)
+        return context.getSharedPreferences(PREFS_USER, Context.MODE_PRIVATE)
                 .getBoolean(PREF_ALLOW_ANALYTICS_ASKED, false);
     }
 
     @Override
     public void setAskedForAnalytics(boolean b) {
-        mContext.getSharedPreferences(PREFS_USER, Context.MODE_PRIVATE).edit()
+        context.getSharedPreferences(PREFS_USER, Context.MODE_PRIVATE).edit()
                 .putBoolean(PREF_ALLOW_ANALYTICS_ASKED, b)
                 .apply();
     }
 
     @Override
     public String getFont() {
-        return mSharedPreferences.getString(PREF_FONT, "");
+        return sharedPreferences.getString(PREF_FONT, "");
     }
 
     /////////////////////
@@ -317,20 +317,20 @@ public class SettingsManagerImpl implements SettingsManager {
 
     @Override
     public String getCommentSort() {
-        return mSharedPreferences.getString(PREF_DEFAULT_COMMENT_SORT,
-                mContext.getString(R.string.default_comment_sort));
+        return sharedPreferences.getString(PREF_DEFAULT_COMMENT_SORT,
+                context.getString(R.string.default_comment_sort));
     }
 
     @Override
     public void saveCommentSort(String pref) {
-        mSharedPreferences.edit()
+        sharedPreferences.edit()
                 .putString(PREF_DEFAULT_COMMENT_SORT, pref)
                 .apply();
     }
 
     @Override
     public Integer getMinCommentScore() {
-        String str = mSharedPreferences.getString(PREF_MIN_COMMENT_SCORE, null);
+        String str = sharedPreferences.getString(PREF_MIN_COMMENT_SCORE, null);
         if (str == null) {
             return null;
         } else {
@@ -345,28 +345,28 @@ public class SettingsManagerImpl implements SettingsManager {
 
     @Override
     public boolean getShowControversiality() {
-        return mSharedPreferences.getBoolean(PREF_HIGHLIGHT_CONTROVERSIAL, false);
+        return sharedPreferences.getBoolean(PREF_HIGHLIGHT_CONTROVERSIAL, false);
     }
 
     @Override
     public boolean getOver18() {
-        return mSharedPreferences.getBoolean(PREF_OVER_18, false);
+        return sharedPreferences.getBoolean(PREF_OVER_18, false);
     }
 
     @Override
     public void setOver18(boolean b) {
-        mSharedPreferences.edit()
+        sharedPreferences.edit()
                 .putBoolean(PREF_OVER_18, b)
                 .apply();
     }
 
     @Override
     public boolean getNoProfanity() {
-        return mSharedPreferences.getBoolean(PREF_NO_PROFANITY, true);
+        return sharedPreferences.getBoolean(PREF_NO_PROFANITY, true);
     }
 
     @Override
     public boolean getLabelNsfw() {
-        return mSharedPreferences.getBoolean(PREF_LABEL_NSFW, true);
+        return sharedPreferences.getBoolean(PREF_LABEL_NSFW, true);
     }
 }

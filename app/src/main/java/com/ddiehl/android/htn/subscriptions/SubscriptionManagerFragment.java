@@ -47,17 +47,17 @@ public class SubscriptionManagerFragment extends BaseFragment implements Subscri
         return new SubscriptionManagerFragment();
     }
 
-    @BindView(R.id.coordinator_layout) CoordinatorLayout mCoordinatorLayout;
-    @BindView(R.id.swipe_refresh_layout) SwipeRefreshLayout mSwipeRefreshLayout;
-    @BindView(R.id.recycler_view) RecyclerView mRecyclerView;
-    @BindView(R.id.search_button) FloatingActionButton mSearchButton;
+    @BindView(R.id.coordinator_layout) CoordinatorLayout coordinatorLayout;
+    @BindView(R.id.swipe_refresh_layout) SwipeRefreshLayout swipeRefreshLayout;
+    @BindView(R.id.recycler_view) RecyclerView recyclerView;
+    @BindView(R.id.search_button) FloatingActionButton searchButton;
 
-    SubscriptionManagerAdapter mAdapter;
-    SubscriptionManagerPresenter mPresenter;
-    String mNextPageId;
+    SubscriptionManagerAdapter adapter;
+    SubscriptionManagerPresenter presenter;
+    String nextPageId;
 
-    Observable<ListingResponse> mGetSubscriptionsObservable;
-    Snackbar mSnackbar;
+    Observable<ListingResponse> getSubscriptionsObservable;
+    Snackbar snackbar;
 
     @Override
     protected int getLayoutResId() {
@@ -70,7 +70,7 @@ public class SubscriptionManagerFragment extends BaseFragment implements Subscri
         Timber.i("Showing subscriptions");
         HoldTheNarwhal.getApplicationComponent().inject(this);
 
-        mPresenter = new SubscriptionManagerPresenter();
+        presenter = new SubscriptionManagerPresenter();
 
         getActivity().getWindow().getDecorView()
                 .setBackgroundColor(ContextCompat.getColor(getContext(), R.color.white));
@@ -82,11 +82,11 @@ public class SubscriptionManagerFragment extends BaseFragment implements Subscri
 
         setTitle(R.string.subscription_manager_title);
 
-        mSwipeRefreshLayout.setOnRefreshListener(onSwipeRefresh());
+        swipeRefreshLayout.setOnRefreshListener(onSwipeRefresh());
 
-        initListView(mRecyclerView);
+        initListView(recyclerView);
 
-        mSearchButton.setOnClickListener(button -> {
+        searchButton.setOnClickListener(button -> {
             SubredditSearchDialog dialog = new SubredditSearchDialog();
             dialog.setTargetFragment(this, REQUEST_SEARCH);
             dialog.show(getFragmentManager(), SubredditSearchDialog.TAG);
@@ -96,14 +96,14 @@ public class SubscriptionManagerFragment extends BaseFragment implements Subscri
     SwipeRefreshLayout.OnRefreshListener onSwipeRefresh() {
         return () -> {
             // Cancel refreshing state and refresh data
-            mSwipeRefreshLayout.setRefreshing(false);
+            swipeRefreshLayout.setRefreshing(false);
             refreshData();
         };
     }
 
     @NotNull @Override
     protected View getChromeView() {
-        return mCoordinatorLayout;
+        return coordinatorLayout;
     }
 
     void initListView(RecyclerView recyclerView) {
@@ -112,8 +112,8 @@ public class SubscriptionManagerFragment extends BaseFragment implements Subscri
         recyclerView.setLayoutManager(layoutManager);
 
         // Initialize adapter
-        if (mAdapter == null) {
-            SubscriptionManagerAdapter adapter = new SubscriptionManagerAdapter(this, mPresenter);
+        if (adapter == null) {
+            SubscriptionManagerAdapter adapter = new SubscriptionManagerAdapter(this, presenter);
 
             // Add scroll listener for fetching more items
             recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -122,8 +122,8 @@ public class SubscriptionManagerFragment extends BaseFragment implements Subscri
                     final int first = layoutManager.findFirstVisibleItemPosition();
                     final int last = layoutManager.findLastVisibleItemPosition();
 
-                    if (first != 0 && last == mAdapter.getItemCount() - 1
-                            && mNextPageId != null) {
+                    if (first != 0 && last == SubscriptionManagerFragment.this.adapter.getItemCount() - 1
+                            && nextPageId != null) {
                         requestNextPage();
                     }
                 }
@@ -135,42 +135,42 @@ public class SubscriptionManagerFragment extends BaseFragment implements Subscri
             helper.attachToRecyclerView(recyclerView);
 
             // Cache adapter
-            mAdapter = adapter;
+            this.adapter = adapter;
         }
 
         // Set to RecyclerView
-        recyclerView.setAdapter(mAdapter);
+        recyclerView.setAdapter(adapter);
     }
 
     @Override
     public void onStart() {
         super.onStart();
 
-        if (!mAdapter.hasData()) {
+        if (!adapter.hasData()) {
             requestNextPage();
         }
     }
 
     void refreshData() {
-        mNextPageId = null;
-        mAdapter.clearData();
+        nextPageId = null;
+        adapter.clearData();
         requestNextPage();
     }
 
     void requestNextPage() {
-        if (mGetSubscriptionsObservable == null) {
-            loadSubscriptions("subscriber", null, mNextPageId);
+        if (getSubscriptionsObservable == null) {
+            loadSubscriptions("subscriber", null, nextPageId);
         }
     }
 
     void loadSubscriptions(@NotNull String where, @Nullable String before, @Nullable String after) {
-        mGetSubscriptionsObservable = mPresenter.getSubscriptions(where, before, after)
+        getSubscriptionsObservable = presenter.getSubscriptions(where, before, after)
                 .doOnSubscribe(disposable -> showSpinner())
                 .doFinally(() -> {
                     dismissSpinner();
-                    mGetSubscriptionsObservable = null;
+                    getSubscriptionsObservable = null;
                 });
-        mGetSubscriptionsObservable
+        getSubscriptionsObservable
                 .subscribe(this::onSubscriptionsLoaded, this::onSubscriptionsLoadError);
     }
 
@@ -185,7 +185,7 @@ public class SubscriptionManagerFragment extends BaseFragment implements Subscri
     }
 
     void onSubscriptionsLoaded(ListingResponse response) {
-        mNextPageId = response.getData().getAfter();
+        nextPageId = response.getData().getAfter();
 
         // Translate list of Listings into list of Subreddits
         List<Listing> listings = response.getData().getChildren();
@@ -195,7 +195,7 @@ public class SubscriptionManagerFragment extends BaseFragment implements Subscri
         }
         Timber.i("Subscriptions loaded: %d", subreddits.size());
 
-        mAdapter.addAll(subreddits);
+        adapter.addAll(subreddits);
     }
 
     @Override
@@ -212,9 +212,9 @@ public class SubscriptionManagerFragment extends BaseFragment implements Subscri
     //region Unsubscribe
 
     void unsubscribe(final @NotNull Subreddit subreddit, final int position) {
-        mAdapter.remove(subreddit);
+        adapter.remove(subreddit);
 
-        mPresenter.unsubscribe(subreddit)
+        presenter.unsubscribe(subreddit)
                 .doOnSubscribe(disposable -> showUnsubscribingView(subreddit))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -226,25 +226,25 @@ public class SubscriptionManagerFragment extends BaseFragment implements Subscri
 
     void showUnsubscribingView(final @NotNull Subreddit subreddit) {
         String message = getString(R.string.unsubscribing_subreddit, subreddit.getDisplayName());
-        mSnackbar = Snackbar.make(mCoordinatorLayout, message, Snackbar.LENGTH_INDEFINITE);
-        mSnackbar.setCallback(new Snackbar.Callback() {
+        snackbar = Snackbar.make(coordinatorLayout, message, Snackbar.LENGTH_INDEFINITE);
+        snackbar.setCallback(new Snackbar.Callback() {
             @Override
             public void onDismissed(Snackbar snackbar, int event) {
-                mSnackbar = null;
+                SubscriptionManagerFragment.this.snackbar = null;
             }
         });
-        mSnackbar.show();
+        snackbar.show();
     }
 
     void onSubredditUnsubscribed(final @NotNull Subreddit subreddit, int position) {
         // Dismiss unsubscribing Snackbar, if it exists
-        if (mSnackbar != null) {
-            mSnackbar.dismiss();
+        if (snackbar != null) {
+            snackbar.dismiss();
         }
 
         // Show Snackbar confirming unsubscribe, with an Undo button to resubscribe
         String message = getString(R.string.unsubscribed_subreddit, subreddit.getDisplayName());
-        Snackbar snackbar = Snackbar.make(mCoordinatorLayout, message, Snackbar.LENGTH_LONG);
+        Snackbar snackbar = Snackbar.make(coordinatorLayout, message, Snackbar.LENGTH_LONG);
         snackbar.setAction(R.string.unsubscribe_undo, view -> resubscribe(subreddit, position));
         snackbar.show();
     }
@@ -252,7 +252,7 @@ public class SubscriptionManagerFragment extends BaseFragment implements Subscri
     void onUnsubscribeError(Throwable error, final @NotNull Subreddit subreddit, int position) {
         getActivity().runOnUiThread(() -> {
             // Add subreddit back into the adapter
-            mAdapter.add(position, subreddit);
+            adapter.add(position, subreddit);
 
             // Show error
             if (error instanceof IOException) {
@@ -272,7 +272,7 @@ public class SubscriptionManagerFragment extends BaseFragment implements Subscri
     //region Resubscribe
 
     void resubscribe(final @NotNull Subreddit subreddit, int position) {
-        mPresenter.subscribe(subreddit)
+        presenter.subscribe(subreddit)
                 .doOnSubscribe(diposable -> showResubscribingView(subreddit))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -284,28 +284,28 @@ public class SubscriptionManagerFragment extends BaseFragment implements Subscri
 
     void showResubscribingView(final @NotNull Subreddit subreddit) {
         String message = getString(R.string.resubscribing_subreddit, subreddit.getDisplayName());
-        mSnackbar = Snackbar.make(mCoordinatorLayout, message, Snackbar.LENGTH_INDEFINITE);
-        mSnackbar.setCallback(new Snackbar.Callback() {
+        snackbar = Snackbar.make(coordinatorLayout, message, Snackbar.LENGTH_INDEFINITE);
+        snackbar.setCallback(new Snackbar.Callback() {
             @Override
             public void onDismissed(Snackbar snackbar, int event) {
-                mSnackbar = null;
+                SubscriptionManagerFragment.this.snackbar = null;
             }
         });
-        mSnackbar.show();
+        snackbar.show();
     }
 
     void onSubredditResubscribed(final @NotNull Subreddit subreddit, final int position) {
         // Dismiss Snackbar, if it exists
-        if (mSnackbar != null) {
-            mSnackbar.dismiss();
+        if (snackbar != null) {
+            snackbar.dismiss();
         }
 
         // Add subreddit back into the adapter
-        mAdapter.add(position, subreddit);
+        adapter.add(position, subreddit);
 
         // Show Snackbar confirming resubscribe, with an Undo button to unsubscribe
         String message = getString(R.string.resubscribed_subreddit, subreddit.getDisplayName());
-        Snackbar snackbar = Snackbar.make(mCoordinatorLayout, message, Snackbar.LENGTH_LONG);
+        Snackbar snackbar = Snackbar.make(coordinatorLayout, message, Snackbar.LENGTH_LONG);
         snackbar.setAction(R.string.resubscribe_undo, view -> unsubscribe(subreddit, position));
         snackbar.show();
     }

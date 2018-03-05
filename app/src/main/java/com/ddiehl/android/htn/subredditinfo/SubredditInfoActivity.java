@@ -13,7 +13,7 @@ public class SubredditInfoActivity extends BaseActivity {
 
     public static final String EXTRA_SUBREDDIT = "EXTRA_SUBREDDIT";
 
-    String mSubreddit;
+    String subreddit;
 
     @Override
     protected boolean hasNavigationDrawer() {
@@ -34,7 +34,7 @@ public class SubredditInfoActivity extends BaseActivity {
         int bgColor = ContextCompat.getColor(this, R.color.white);
         getWindow().getDecorView().setBackgroundColor(bgColor);
 
-        mSubreddit = getIntent().getExtras().getString(EXTRA_SUBREDDIT);
+        subreddit = getIntent().getExtras().getString(EXTRA_SUBREDDIT);
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -51,7 +51,7 @@ public class SubredditInfoActivity extends BaseActivity {
 
     void showInfoFragment() {
         if (getSupportFragmentManager().findFragmentByTag(SubredditInfoFragment.TAG) == null) {
-            Fragment fragment = new SubredditInfoFragmentBuilder(mSubreddit)
+            Fragment fragment = new SubredditInfoFragmentBuilder(subreddit)
                     .build();
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, fragment, SubredditInfoFragment.TAG)

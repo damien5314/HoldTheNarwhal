@@ -19,7 +19,7 @@ public class SubredditEditText extends AppCompatEditText {
 
     private static final String SUBREDDIT_PREFIX = "r/";
 
-    TextWatcher mTextChangedListener;
+    TextWatcher textChangedListener;
 
     public SubredditEditText(Context context) {
         this(context, null);
@@ -33,8 +33,8 @@ public class SubredditEditText extends AppCompatEditText {
     }
 
     void init() {
-        mTextChangedListener = getTextChangedListener();
-        addTextChangedListener(mTextChangedListener);
+        textChangedListener = getTextChangedListener();
+        addTextChangedListener(textChangedListener);
     }
 
     TextWatcher getTextChangedListener() {
@@ -59,34 +59,34 @@ public class SubredditEditText extends AppCompatEditText {
 
                 // Trim single spaces
                 if (input.toString().equals(" ")) {
-                    removeTextChangedListener(mTextChangedListener);
+                    removeTextChangedListener(textChangedListener);
                     input.clear();
-                    addTextChangedListener(mTextChangedListener);
+                    addTextChangedListener(textChangedListener);
                     return;
                 }
 
                 // If input doesn't start with the subreddit link prefix, add it
                 if (!input.toString().startsWith(SUBREDDIT_PREFIX)) {
-                    removeTextChangedListener(mTextChangedListener);
+                    removeTextChangedListener(textChangedListener);
                     input.insert(0, SUBREDDIT_PREFIX);
-                    addTextChangedListener(mTextChangedListener);
+                    addTextChangedListener(textChangedListener);
                     return;
                 }
 
                 // If input is length 3 ("/r/"), just clear the field
                 if (input.length() == SUBREDDIT_PREFIX.length()) {
-                    removeTextChangedListener(mTextChangedListener);
+                    removeTextChangedListener(textChangedListener);
                     input.clear();
-                    addTextChangedListener(mTextChangedListener);
+                    addTextChangedListener(textChangedListener);
                     return;
                 }
 
                 // Extra check if user typed a space
                 if (!input.toString().subSequence(0, SUBREDDIT_PREFIX.length()).equals(SUBREDDIT_PREFIX)
                         || input.toString().contains(" ")) {
-                    removeTextChangedListener(mTextChangedListener);
+                    removeTextChangedListener(textChangedListener);
                     input.replace(0, input.length(), before);
-                    addTextChangedListener(mTextChangedListener);
+                    addTextChangedListener(textChangedListener);
                 }
             }
         };

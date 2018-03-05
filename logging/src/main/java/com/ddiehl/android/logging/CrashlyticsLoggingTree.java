@@ -14,20 +14,20 @@ import timber.log.Timber;
  */
 public class CrashlyticsLoggingTree extends Timber.Tree {
 
-    private com.ddiehl.android.logging.CrashlyticsLogger mCrashlyticsLogger;
+    private com.ddiehl.android.logging.CrashlyticsLogger crashlyticsLogger;
 
     public CrashlyticsLoggingTree(com.ddiehl.android.logging.CrashlyticsLogger crashlyticsLogger) {
-        mCrashlyticsLogger = crashlyticsLogger;
+        this.crashlyticsLogger = crashlyticsLogger;
     }
 
     @Override
     protected void log(int priority, String tag, String message, Throwable t) {
         /** Don't use {@link Crashlytics#log(int, String, String)} - This also prints to logcat */
-        mCrashlyticsLogger.log(message);
+        crashlyticsLogger.log(message);
 
         // Also log the exception if one is passed
         if (t != null) {
-            mCrashlyticsLogger.logException(t);
+            crashlyticsLogger.logException(t);
         }
     }
 

@@ -33,47 +33,47 @@ import static com.ddiehl.android.htn.listings.links.LinkOptionsBar.Icons.UPVOTE;
 public class CommentsLinkViewHolder extends BaseLinkViewHolder {
 
     @BindView(R.id.link_options_bar)
-    LinkOptionsBar mLinkOptionsBar;
+    LinkOptionsBar linkOptionsBar;
     @BindView(R.id.link_parent_view)
-    View mParentLinkView;
+    View parentLinkView;
 
     public CommentsLinkViewHolder(View view, LinkView linkView, BaseListingsPresenter presenter) {
         super(view, linkView, presenter);
-        mLinkOptionsBar.showIcons(false, HIDE, SHARE);
-        mLinkOptionsBar.setOnIconClickListener(REPLY, this::onReplyClicked);
-        mLinkOptionsBar.setOnIconClickListener(UPVOTE, this::onUpvoteClicked);
-        mLinkOptionsBar.setOnIconClickListener(DOWNVOTE, this::onDownvoteClicked);
-        mLinkOptionsBar.setOnIconClickListener(SAVE, this::onSaveClicked);
-        mLinkOptionsBar.setOnIconClickListener(HIDE, this::onHideClicked);
-        mLinkOptionsBar.setOnIconClickListener(REPORT, this::onReportClicked);
+        linkOptionsBar.showIcons(false, HIDE, SHARE);
+        linkOptionsBar.setOnIconClickListener(REPLY, this::onReplyClicked);
+        linkOptionsBar.setOnIconClickListener(UPVOTE, this::onUpvoteClicked);
+        linkOptionsBar.setOnIconClickListener(DOWNVOTE, this::onDownvoteClicked);
+        linkOptionsBar.setOnIconClickListener(SAVE, this::onSaveClicked);
+        linkOptionsBar.setOnIconClickListener(HIDE, this::onHideClicked);
+        linkOptionsBar.setOnIconClickListener(REPORT, this::onReportClicked);
     }
 
     void onReplyClicked() {
-        mLinkPresenter.replyToLink(mLink);
+        linkPresenter.replyToLink(link);
     }
 
     void onUpvoteClicked() {
-        mLinkPresenter.upvoteLink(mLink);
+        linkPresenter.upvoteLink(link);
     }
 
     void onDownvoteClicked() {
-        mLinkPresenter.downvoteLink(mLink);
+        linkPresenter.downvoteLink(link);
     }
 
     void onSaveClicked() {
-        if (mLink.isSaved()) {
-            mLinkPresenter.unsaveLink(mLink);
+        if (link.isSaved()) {
+            linkPresenter.unsaveLink(link);
         } else {
-            mLinkPresenter.saveLink(mLink);
+            linkPresenter.saveLink(link);
         }
     }
 
     void onHideClicked() {
-        mLinkPresenter.hideLink(mLink);
+        linkPresenter.hideLink(link);
     }
 
     void onReportClicked() {
-        mLinkPresenter.reportLink(mLink);
+        linkPresenter.reportLink(link);
     }
 
     @OnClick(R.id.link_comment_count)
@@ -86,29 +86,29 @@ public class CommentsLinkViewHolder extends BaseLinkViewHolder {
         // Determine tint color based on liked status and tint the buttons appropriately
         @ColorInt int color;
         if (link.isLiked() == null) {
-            color = ContextCompat.getColor(mContext, R.color.secondary_text);
-            mLinkOptionsBar.setVoted(0);
+            color = ContextCompat.getColor(context, R.color.secondary_text);
+            linkOptionsBar.setVoted(0);
         } else if (link.isLiked()) {
-            color = ContextCompat.getColor(mContext, R.color.reddit_orange_full);
-            mLinkOptionsBar.setVoted(1);
+            color = ContextCompat.getColor(context, R.color.reddit_orange_full);
+            linkOptionsBar.setVoted(1);
         } else {
-            color = ContextCompat.getColor(mContext, R.color.reddit_blue_full);
-            mLinkOptionsBar.setVoted(-1);
+            color = ContextCompat.getColor(context, R.color.reddit_blue_full);
+            linkOptionsBar.setVoted(-1);
         }
 
         // Determine if we should show the score, or a placeholder if the score is hidden
         Integer score = link.getScore();
         String scoreStr = score == null ?
-                mContext.getString(R.string.hidden_score_placeholder) : score.toString();
+                context.getString(R.string.hidden_score_placeholder) : score.toString();
 
         // Format the number section of the score with a color span
         int length = scoreStr.length();
-        int index = mLinkScore.getText().toString().indexOf(scoreStr);
-        Spannable s = new SpannableString(mLinkScore.getText());
+        int index = linkScore.getText().toString().indexOf(scoreStr);
+        Spannable s = new SpannableString(linkScore.getText());
         s.setSpan(new ForegroundColorSpan(color), index, length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         // Set the final stylized text
-        mLinkScore.setText(s);
+        linkScore.setText(s);
     }
 
     @Override
@@ -120,10 +120,10 @@ public class CommentsLinkViewHolder extends BaseLinkViewHolder {
             Image.Res image = images.get(0).getSource();
             url = image.getUrl();
             int height = image.getHeight();
-            DisplayMetrics display = mContext.getResources().getDisplayMetrics();
+            DisplayMetrics display = context.getResources().getDisplayMetrics();
             float scale = display.scaledDensity;
-            float maxHeight = mContext.getResources().getDimension(R.dimen.link_image_full_size);
-            mLinkThumbnail.getLayoutParams().height = (int) Math.min(maxHeight, height * scale);
+            float maxHeight = context.getResources().getDimension(R.dimen.link_image_full_size);
+            linkThumbnail.getLayoutParams().height = (int) Math.min(maxHeight, height * scale);
             // FIXME Find a preview best for screen size
         }
 
@@ -131,28 +131,28 @@ public class CommentsLinkViewHolder extends BaseLinkViewHolder {
 
         switch (url) {
             case "nsfw":
-                mLinkThumbnail.setVisibility(View.GONE);
+                linkThumbnail.setVisibility(View.GONE);
                 break;
             case "":
             case "default":
             case "self":
-                mLinkThumbnail.setVisibility(View.GONE);
+                linkThumbnail.setVisibility(View.GONE);
                 break;
             default:
-                mLinkThumbnail.setVisibility(View.VISIBLE);
+                linkThumbnail.setVisibility(View.VISIBLE);
                 loadThumbnail(url);
         }
     }
 
     @Override
     protected void showSaved(@NotNull Link link) {
-        mLinkOptionsBar.setSaved(link.isSaved());
+        linkOptionsBar.setSaved(link.isSaved());
     }
 
     @Override
     protected void showParentLink(boolean visible) {
-        mParentLinkView.setVisibility(visible ? View.VISIBLE : View.GONE);
-        mParentLinkView.setOnClickListener(
-                view -> mLinkPresenter.showCommentsForLink(mLink));
+        parentLinkView.setVisibility(visible ? View.VISIBLE : View.GONE);
+        parentLinkView.setOnClickListener(
+                view -> linkPresenter.showCommentsForLink(link));
     }
 }

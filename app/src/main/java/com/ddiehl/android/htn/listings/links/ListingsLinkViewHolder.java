@@ -20,22 +20,22 @@ public class ListingsLinkViewHolder extends BaseLinkViewHolder {
 
     @OnClick(R.id.link_comment_count)
     void showCommentsForLink() {
-        mLinkPresenter.showCommentsForLink(mLink);
+        linkPresenter.showCommentsForLink(link);
     }
 
     @Override
     protected void showLiked(@NotNull Link link) {
         if (link.isLiked() == null) {
-            mView.setBackgroundColor(
-                    ContextCompat.getColor(mContext, R.color.transparent)
+            view.setBackgroundColor(
+                    ContextCompat.getColor(context, R.color.transparent)
             );
         } else if (link.isLiked()) {
-            mView.setBackgroundColor(
-                    ContextCompat.getColor(mContext, R.color.reddit_orange_lighter)
+            view.setBackgroundColor(
+                    ContextCompat.getColor(context, R.color.reddit_orange_lighter)
             );
         } else {
-            mView.setBackgroundColor(
-                    ContextCompat.getColor(mContext, R.color.reddit_blue_lighter)
+            view.setBackgroundColor(
+                    ContextCompat.getColor(context, R.color.reddit_blue_lighter)
             );
         }
     }
@@ -45,9 +45,9 @@ public class ListingsLinkViewHolder extends BaseLinkViewHolder {
         String url = null;
         if (link.getOver18()) {
             if (mode == ThumbnailMode.NO_THUMBNAIL) {
-                mLinkThumbnail.setVisibility(View.GONE);
+                linkThumbnail.setVisibility(View.GONE);
             } else {
-                mLinkThumbnail.setVisibility(View.VISIBLE);
+                linkThumbnail.setVisibility(View.VISIBLE);
                 if (mode == ThumbnailMode.VARIANT) {
                     url = getPreviewUrl(link);
                 } else { // ThumbnailMode.FULL
@@ -55,7 +55,7 @@ public class ListingsLinkViewHolder extends BaseLinkViewHolder {
                 }
             }
         } else {
-            mLinkThumbnail.setVisibility(View.VISIBLE);
+            linkThumbnail.setVisibility(View.VISIBLE);
             url = link.getThumbnail();
         }
 
@@ -63,20 +63,20 @@ public class ListingsLinkViewHolder extends BaseLinkViewHolder {
 
         switch (url) {
             case "nsfw":
-                mLinkThumbnail.setVisibility(View.GONE);
+                linkThumbnail.setVisibility(View.GONE);
                 // This doesn't look correct, probably just get rid of it
-//        mLinkThumbnail.setVisibility(View.VISIBLE);
-//        Picasso.with(mContext)
+//        linkThumbnail.setVisibility(View.VISIBLE);
+//        Picasso.with(context)
 //            .load(R.drawable.ic_nsfw2)
-//            .into(mLinkThumbnail);
+//            .into(linkThumbnail);
                 break;
             case "":
             case "default":
             case "self":
-                mLinkThumbnail.setVisibility(View.GONE);
+                linkThumbnail.setVisibility(View.GONE);
                 break;
             default:
-                mLinkThumbnail.setVisibility(View.VISIBLE);
+                linkThumbnail.setVisibility(View.VISIBLE);
                 loadThumbnail(url);
         }
     }

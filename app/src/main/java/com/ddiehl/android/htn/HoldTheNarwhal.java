@@ -27,7 +27,7 @@ import timber.log.Timber;
 
 public class HoldTheNarwhal extends Application {
 
-    private static ApplicationComponent mComponent;
+    private static ApplicationComponent component;
 
     @Override
     public void onCreate() {
@@ -35,7 +35,7 @@ public class HoldTheNarwhal extends Application {
 
         Fabric.with(this, new Crashlytics());
 
-        mComponent = DaggerApplicationComponent.builder()
+        component = DaggerApplicationComponent.builder()
                 .applicationModule(new ApplicationModule(this))
                 .build();
 
@@ -58,12 +58,12 @@ public class HoldTheNarwhal extends Application {
     }
 
     public static ApplicationComponent getApplicationComponent() {
-        return mComponent;
+        return component;
     }
 
     @VisibleForTesting
     public static void setTestComponent(ApplicationComponent testComponent) {
-        mComponent = testComponent;
+        component = testComponent;
     }
 
     private void createNotificationChannels() {

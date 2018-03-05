@@ -18,59 +18,59 @@ import timber.log.Timber;
 
 public class SettingsPresenter {
 
-    @Inject Context mContext;
-    @Inject RedditService mRedditService;
-    @Inject IdentityManager mIdentityManager;
-    @Inject SettingsManager mSettingsManager;
+    @Inject Context context;
+    @Inject RedditService redditService;
+    @Inject IdentityManager identityManager;
+    @Inject SettingsManager settingsManager;
 
-    private final SettingsView mSettingsView;
+    private final SettingsView settingsView;
 
     public SettingsPresenter(SettingsView settingsView) {
-        mSettingsView = settingsView;
+        this.settingsView = settingsView;
         HoldTheNarwhal.getApplicationComponent().inject(this);
     }
 
     public void refresh(boolean pullFromServer) {
-        boolean showUser = mSettingsManager.hasFromRemote();
-        mSettingsView.showPreferences(showUser);
+        boolean showUser = settingsManager.hasFromRemote();
+        settingsView.showPreferences(showUser);
 
         if (pullFromServer) {
-            if (AndroidUtils.isConnectedToNetwork(mContext)) {
+            if (AndroidUtils.isConnectedToNetwork(context)) {
                 loadServerData();
             } else {
-                String message = mContext.getString(R.string.error_network_unavailable);
-                mSettingsView.showToast(message);
+                String message = context.getString(R.string.error_network_unavailable);
+                settingsView.showToast(message);
             }
         }
     }
 
     void loadServerData() {
-        mRedditService.getUserSettings()
+        redditService.getUserSettings()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe(disposable -> mSettingsView.showSpinner())
-                .doFinally(mSettingsView::dismissSpinner)
-                .doOnNext(mSettingsManager::saveUserSettings)
+                .doOnSubscribe(disposable -> settingsView.showSpinner())
+                .doFinally(settingsView::dismissSpinner)
+                .doOnNext(settingsManager::saveUserSettings)
                 .subscribe(
                         settings -> refresh(false),
                         error -> {
                             if (error instanceof IOException) {
-                                String message = mContext.getString(R.string.error_network_unavailable);
-                                mSettingsView.showToast(message);
+                                String message = context.getString(R.string.error_network_unavailable);
+                                settingsView.showToast(message);
                             } else {
                                 Timber.w(error, "Error getting user settings");
-                                String message = mContext.getString(R.string.error_get_user_settings);
-                                mSettingsView.showToast(message);
+                                String message = context.getString(R.string.error_get_user_settings);
+                                settingsView.showToast(message);
                             }
                         }
                 );
     }
 
     public boolean isRefreshable() {
-        return !mSettingsManager.hasFromRemote();
+        return !settingsManager.hasFromRemote();
     }
 
     public boolean isUserAuthorized() {
-        return mRedditService.isUserAuthorized();
+        return redditService.isUserAuthorized();
     }
 }

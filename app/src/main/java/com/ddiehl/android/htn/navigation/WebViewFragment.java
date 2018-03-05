@@ -19,7 +19,6 @@ import android.widget.ProgressBar;
 import com.ddiehl.android.htn.BuildConfig;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
-import com.ddiehl.android.htn.identity.IdentityManager;
 import com.ddiehl.android.htn.view.BaseFragment;
 import com.ddiehl.android.htn.view.MainView;
 import com.hannesdorfmann.fragmentargs.FragmentArgs;
@@ -29,10 +28,7 @@ import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.inject.Inject;
-
 import butterknife.BindView;
-import rxreddit.api.RedditService;
 import timber.log.Timber;
 
 @FragmentWithArgs
@@ -43,11 +39,8 @@ public class WebViewFragment extends BaseFragment {
 
     @Arg String mUrl;
 
-    @Inject IdentityManager mIdentityManager;
-    @Inject RedditService mRedditService;
-
-    @BindView(R.id.web_view) WebView mWebView;
-    @BindView(R.id.progress_bar) ProgressBar mProgressBar;
+    @BindView(R.id.web_view) WebView webView;
+    @BindView(R.id.progress_bar) ProgressBar progressBar;
 
     static {
         if (BuildConfig.DEBUG && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
@@ -75,20 +68,20 @@ public class WebViewFragment extends BaseFragment {
         View view = super.onCreateView(inflater, container, state);
 
         // Configure settings
-        WebSettings settings = mWebView.getSettings();
+        WebSettings settings = webView.getSettings();
         configure(settings);
 
-        mWebView.setWebViewClient(new Client(this));
+        webView.setWebViewClient(new Client(this));
 
         // Configure progress bar
-        mProgressBar.setMax(100);
-        mWebView.setWebChromeClient(getProgressBarChromeClient(mProgressBar));
+        progressBar.setMax(100);
+        webView.setWebChromeClient(getProgressBarChromeClient(progressBar));
 
         // Handle back key taps
-        mWebView.setOnKeyListener(getBackKeyListener());
+        webView.setOnKeyListener(getBackKeyListener());
 
         // Load url
-        mWebView.loadUrl(mUrl);
+        webView.loadUrl(mUrl);
         Timber.i("Showing WebView for URL: %s", mUrl);
 
         return view;
@@ -107,10 +100,10 @@ public class WebViewFragment extends BaseFragment {
 
     protected static class Client extends WebViewClient {
 
-        private final MainView mMainView;
+        private final MainView mainView;
 
         public Client(@NotNull MainView mainView) {
-            mMainView = mainView;
+            this.mainView = mainView;
         }
 
         @Override
@@ -119,7 +112,7 @@ public class WebViewFragment extends BaseFragment {
 
             if (url.startsWith("mailto:")) {
                 MailTo mt = MailTo.parse(url);
-                mMainView.doSendEmail(mt);
+                mainView.doSendEmail(mt);
                 return true;
             }
 
@@ -145,8 +138,8 @@ public class WebViewFragment extends BaseFragment {
         return (v1, keyCode, event) -> {
             // Check if the key event was the Back button and if there's history
             if (event.getAction() == KeyEvent.ACTION_UP
-                    && (keyCode == KeyEvent.KEYCODE_BACK) && mWebView.canGoBack()) {
-                mWebView.goBack();
+                    && (keyCode == KeyEvent.KEYCODE_BACK) && webView.canGoBack()) {
+                webView.goBack();
                 return true;
             }
             return false;
@@ -155,10 +148,10 @@ public class WebViewFragment extends BaseFragment {
 
     @Override
     public void onDestroyView() {
-        if (mWebView != null) {
-            ((ViewGroup) mWebView.getParent()).removeView(mWebView);
-            mWebView.removeAllViews();
-            mWebView.destroy();
+        if (webView != null) {
+            ((ViewGroup) webView.getParent()).removeView(webView);
+            webView.removeAllViews();
+            webView.destroy();
         }
         super.onDestroyView();
     }
@@ -173,7 +166,7 @@ public class WebViewFragment extends BaseFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_refresh:
-                mWebView.reload();
+                webView.reload();
                 return true;
         }
 
@@ -182,6 +175,6 @@ public class WebViewFragment extends BaseFragment {
 
     @NotNull @Override
     protected View getChromeView() {
-        return mWebView;
+        return webView;
     }
 }

@@ -34,7 +34,7 @@ public class RedditServiceMock extends RedditService {
     private Gson mGson = getGson();
 
     // Mock the authentication state
-    private boolean mAuthorized = false;
+    private boolean authorized = false;
 
     public RedditServiceMock() {
         super(
@@ -49,12 +49,12 @@ public class RedditServiceMock extends RedditService {
 
     @Override
     public boolean isUserAuthorized() {
-        return mAuthorized;
+        return authorized;
     }
 
     @Override
     public Observable<UserAccessToken> processAuthenticationCallback(String callbackUrl) {
-        mAuthorized = true;
+        authorized = true;
         UserAccessToken response = new UserAccessToken();
         response.setToken("1234567-ADmpkqak1aTo71ABCDECvAXiXGk");
         response.setTokenType("bearer");

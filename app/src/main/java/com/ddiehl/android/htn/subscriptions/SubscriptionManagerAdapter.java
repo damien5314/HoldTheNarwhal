@@ -30,37 +30,37 @@ import rxreddit.model.Subreddit;
 public class SubscriptionManagerAdapter extends RecyclerView.Adapter<SubscriptionManagerAdapter.VH>
         implements ItemTouchHelperAdapter {
 
-    final SubscriptionManagerView mSubscriptionManagerView;
-    final SubscriptionManagerPresenter mPresenter;
-    final List<Subreddit> mData = new ArrayList<>();
+    final SubscriptionManagerView subscriptionManagerView;
+    final SubscriptionManagerPresenter presenter;
+    final List<Subreddit> data = new ArrayList<>();
 
     public SubscriptionManagerAdapter(
             @NotNull SubscriptionManagerView view, @NotNull SubscriptionManagerPresenter presenter) {
-        mSubscriptionManagerView = view;
-        mPresenter = presenter;
+        this.subscriptionManagerView = view;
+        this.presenter = presenter;
     }
 
     public void add(Subreddit subscription, Subreddit... others) {
-        int previousSize = mData.size();
-        mData.add(subscription);
-        mData.addAll(Arrays.asList(others));
-        notifyItemRangeInserted(previousSize, mData.size() - previousSize);
+        int previousSize = data.size();
+        data.add(subscription);
+        data.addAll(Arrays.asList(others));
+        notifyItemRangeInserted(previousSize, data.size() - previousSize);
     }
 
     public void add(final int position, final Subreddit subreddit) {
-        mData.add(position, subreddit);
+        data.add(position, subreddit);
         notifyItemInserted(position);
     }
 
     public void addAll(List<Subreddit> subreddits) {
-        int previousSize = mData.size();
-        mData.addAll(subreddits);
-        notifyItemRangeInserted(previousSize, mData.size() - previousSize);
+        int previousSize = data.size();
+        data.addAll(subreddits);
+        notifyItemRangeInserted(previousSize, data.size() - previousSize);
     }
 
     public void remove(Subreddit subreddit) {
-        int previousIndex = mData.indexOf(subreddit);
-        mData.remove(subreddit);
+        int previousIndex = data.indexOf(subreddit);
+        data.remove(subreddit);
         notifyItemRemoved(previousIndex);
     }
 
@@ -68,27 +68,27 @@ public class SubscriptionManagerAdapter extends RecyclerView.Adapter<Subscriptio
     public VH onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.subscription_manager_item, parent, false);
-        return new VH(itemView, mSubscriptionManagerView);
+        return new VH(itemView, subscriptionManagerView);
     }
 
     @Override
     public void onBindViewHolder(VH holder, int position) {
-        Subreddit subreddit = mData.get(position);
+        Subreddit subreddit = data.get(position);
         holder.bind(subreddit);
     }
 
     @Override
     public int getItemCount() {
-        return mData.size();
+        return data.size();
     }
 
     public boolean hasData() {
-        return mData.size() > 0;
+        return data.size() > 0;
     }
 
     public void clearData() {
-        int itemCount = mData.size();
-        mData.clear();
+        int itemCount = data.size();
+        data.clear();
         notifyItemRangeRemoved(0, itemCount);
     }
 
@@ -99,19 +99,19 @@ public class SubscriptionManagerAdapter extends RecyclerView.Adapter<Subscriptio
 
     @Override
     public void onItemDismiss(int position) {
-        Subreddit subreddit = mData.get(position);
-        mSubscriptionManagerView.onSubredditDismissed(subreddit, position);
+        Subreddit subreddit = data.get(position);
+        subscriptionManagerView.onSubredditDismissed(subreddit, position);
     }
 
     public static class VH extends RecyclerView.ViewHolder {
 
-        @Inject HtmlParser mHtmlParser;
+        @Inject HtmlParser htmlParser;
 
-        @BindView(R.id.name) TextView mName;
-        @BindView(R.id.public_description) TextView mPublicDescription;
-        @BindView(R.id.subscription_icon) ImageView mSubscriptionIcon;
+        @BindView(R.id.name) TextView name;
+        @BindView(R.id.public_description) TextView publicDescription;
+        @BindView(R.id.subscription_icon) ImageView subscriptionIcon;
 
-        SubscriptionManagerView mSubscriptionManagerView;
+        SubscriptionManagerView subscriptionManagerView;
 
         public VH(View itemView, SubscriptionManagerView subscriptionManagerView) {
             super(itemView);
@@ -119,37 +119,37 @@ public class SubscriptionManagerAdapter extends RecyclerView.Adapter<Subscriptio
             HoldTheNarwhal.getApplicationComponent().inject(this);
             ButterKnife.bind(this, itemView);
 
-            mSubscriptionManagerView = subscriptionManagerView;
+            this.subscriptionManagerView = subscriptionManagerView;
         }
 
         public void bind(Subreddit subreddit) {
             // Set name
-            mName.setText(subreddit.getDisplayName());
+            name.setText(subreddit.getDisplayName());
 
             // Set public description
             String publicDescription = subreddit.getPublicDescriptionHtml();
             if (publicDescription != null) {
-                final Spanned parsedDescription = mHtmlParser.convert(publicDescription);
-                mPublicDescription.setText(parsedDescription);
+                final Spanned parsedDescription = htmlParser.convert(publicDescription);
+                this.publicDescription.setText(parsedDescription);
             } else {
-                mPublicDescription.setText(null);
+                this.publicDescription.setText(null);
             }
 
             // Set subreddit icon
             String iconUrl = subreddit.getIconImg();
             if (!TextUtils.isEmpty(iconUrl)) {
-                Context context = mSubscriptionIcon.getContext();
+                Context context = subscriptionIcon.getContext();
                 GlideApp.with(context)
                         .load(iconUrl)
                         .fitCenter()
-                        .into(mSubscriptionIcon);
+                        .into(subscriptionIcon);
             } else {
-                mSubscriptionIcon.setImageDrawable(null);
+                subscriptionIcon.setImageDrawable(null);
             }
 
             // Set onClick listener
             itemView.setOnClickListener(
-                    view -> mSubscriptionManagerView.onSubredditClicked(subreddit, getAdapterPosition())
+                    view -> subscriptionManagerView.onSubredditClicked(subreddit, getAdapterPosition())
             );
         }
     }

@@ -42,14 +42,14 @@ public class PrivateMessageFragment extends BaseFragment implements PrivateMessa
 
     private static final int REQUEST_REPORT_MESSAGE = 1000;
 
-    @Arg String mJson;
+    @Arg String json;
 
-    @Inject Gson mGson;
+    @Inject Gson gson;
 
-    @BindView(R.id.coordinator_layout) CoordinatorLayout mCoordinatorLayout;
-    @BindView(R.id.recycler_view) RecyclerView mRecyclerView;
+    @BindView(R.id.coordinator_layout) CoordinatorLayout coordinatorLayout;
+    @BindView(R.id.recycler_view) RecyclerView recyclerView;
 
-    PrivateMessageAdapter mAdapter;
+    PrivateMessageAdapter adapter;
 
     @Override
     protected int getLayoutResId() {
@@ -61,7 +61,7 @@ public class PrivateMessageFragment extends BaseFragment implements PrivateMessa
         super.onCreate(savedInstanceState);
         HoldTheNarwhal.getApplicationComponent().inject(this);
         FragmentArgs.inject(this);
-        mAdapter = new PrivateMessageAdapter();
+        adapter = new PrivateMessageAdapter();
     }
 
     @NotNull @Override
@@ -70,18 +70,18 @@ public class PrivateMessageFragment extends BaseFragment implements PrivateMessa
         View view = super.onCreateView(inflater, container, state);
 
         // Configure RecyclerView
-        mRecyclerView.setAdapter(mAdapter);
+        recyclerView.setAdapter(adapter);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(
                 getContext(), LinearLayoutManager.VERTICAL, false
         );
-        mRecyclerView.setLayoutManager(layoutManager);
+        recyclerView.setLayoutManager(layoutManager);
 
         // Add passed messages to adapter
         List<PrivateMessage> messages = Arrays.asList(
-                mGson.fromJson(mJson, PrivateMessage[].class)
+                gson.fromJson(json, PrivateMessage[].class)
         );
-        mAdapter.getMessages().addAll(messages);
-        mAdapter.notifyDataSetChanged();
+        adapter.getMessages().addAll(messages);
+        adapter.notifyDataSetChanged();
 
         // Set text for subject view
         String subject = messages.get(0).getSubject();
@@ -110,13 +110,13 @@ public class PrivateMessageFragment extends BaseFragment implements PrivateMessa
 
     private void scrollToBottom() {
         new Handler().post(() ->
-                mRecyclerView.smoothScrollToPosition(mAdapter.getItemCount() - 1)
+                recyclerView.smoothScrollToPosition(adapter.getItemCount() - 1)
         );
     }
 
     @NotNull @Override
     protected View getChromeView() {
-        return mCoordinatorLayout;
+        return coordinatorLayout;
     }
 
     @Override

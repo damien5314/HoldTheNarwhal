@@ -18,11 +18,11 @@ import timber.log.Timber;
 
 public class InboxPresenter extends BaseListingsPresenter {
 
-    private final InboxView mInboxView;
+    private final InboxView inboxView;
 
     public InboxPresenter(MainView main, RedditNavigationView navigationView, InboxView inbox) {
         super(main, navigationView, inbox, inbox, inbox, inbox);
-        mInboxView = inbox;
+        inboxView = inbox;
     }
 
     @Override
@@ -36,23 +36,23 @@ public class InboxPresenter extends BaseListingsPresenter {
     }
 
     private void requestData(boolean append) {
-        String show = mInboxView.getShow();
+        String show = inboxView.getShow();
         Timber.i("Getting inbox (%s)", show);
 
-        String prevId = append ? null : mPrevPageListingId;
-        String nextId = append ? mNextPageListingId : null;
+        String prevId = append ? null : prevPageListingId;
+        String nextId = append ? nextPageListingId : null;
 
-        mRedditService.getInbox(show, true, prevId, nextId)
+        redditService.getInbox(show, true, prevId, nextId)
                 .flatMap(this::checkNullResponse)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(disposable -> {
-                    mMainView.showSpinner();
-                    mNextRequested = true;
+                    mainView.showSpinner();
+                    nextRequested = true;
                 })
                 .doFinally(() -> {
-                    mMainView.dismissSpinner();
-                    mNextRequested = false;
+                    mainView.dismissSpinner();
+                    nextRequested = false;
                 })
                 .subscribe(
                         listings -> {
@@ -61,12 +61,12 @@ public class InboxPresenter extends BaseListingsPresenter {
                         },
                         error -> {
                             if (error instanceof IOException) {
-                                String message = mContext.getString(R.string.error_network_unavailable);
-                                mMainView.showError(message);
+                                String message = context.getString(R.string.error_network_unavailable);
+                                mainView.showError(message);
                             } else {
                                 Timber.w(error, "Error retrieving inbox listings");
-                                String message = mContext.getString(R.string.error_get_inbox);
-                                mMainView.showError(message);
+                                String message = context.getString(R.string.error_get_inbox);
+                                mainView.showError(message);
                             }
                         }
                 );
@@ -77,7 +77,7 @@ public class InboxPresenter extends BaseListingsPresenter {
     }
 
     public void onMarkMessagesRead() {
-        mRedditService.markAllMessagesRead()
+        redditService.markAllMessagesRead()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
@@ -87,16 +87,16 @@ public class InboxPresenter extends BaseListingsPresenter {
                                     ((PrivateMessage) listing).markUnread(false);
                                 }
                             }
-                            mInboxView.notifyDataSetChanged();
+                            inboxView.notifyDataSetChanged();
                         },
                         error -> {
                             if (error instanceof IOException) {
-                                String message = mContext.getString(R.string.error_network_unavailable);
-                                mMainView.showError(message);
+                                String message = context.getString(R.string.error_network_unavailable);
+                                mainView.showError(message);
                             } else {
                                 Timber.w(error, "Error marking messages read");
-                                String message = mContext.getString(R.string.error_xxx);
-                                mMainView.showError(message);
+                                String message = context.getString(R.string.error_xxx);
+                                mainView.showError(message);
                             }
                         }
                 );
@@ -116,7 +116,7 @@ public class InboxPresenter extends BaseListingsPresenter {
         }
         if (!messageFullnames.isEmpty()) {
             final String commaSeparated = getCommaSeparatedString(messageFullnames);
-            mRedditService.markMessagesRead(commaSeparated)
+            redditService.markMessagesRead(commaSeparated)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(() -> { }, Timber::e);

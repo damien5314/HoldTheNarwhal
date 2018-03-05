@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 public class ConfirmSignOutDialog extends DialogFragment {
 
     public static final String TAG = ConfirmSignOutDialog.class.getSimpleName();
-    private Callbacks mListener;
+    private Callbacks listener;
 
     public interface Callbacks {
 
@@ -26,7 +26,7 @@ public class ConfirmSignOutDialog extends DialogFragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
-            mListener = (Callbacks) context;
+            listener = (Callbacks) context;
         } catch (ClassCastException e) {
             throw new ClassCastException(context.getClass().getSimpleName()
                     + " must implement AnalyticsDialog.Callbacks");
@@ -35,7 +35,7 @@ public class ConfirmSignOutDialog extends DialogFragment {
 
     @Override
     public void onDetach() {
-        mListener = null;
+        listener = null;
         super.onDetach();
     }
 
@@ -46,13 +46,13 @@ public class ConfirmSignOutDialog extends DialogFragment {
                 .setTitle(R.string.dialog_sign_out_title)
                 .setMessage(R.string.dialog_sign_out_message)
                 .setPositiveButton(R.string.dialog_sign_out_ok, (dialog, which) -> {
-                    if (mListener != null) {
-                        mListener.onSignOutConfirm();
+                    if (listener != null) {
+                        listener.onSignOutConfirm();
                     }
                 })
                 .setNegativeButton(R.string.dialog_sign_out_cancel, (dialog, which) -> {
-                    if (mListener != null) {
-                        mListener.onSignOutCancel();
+                    if (listener != null) {
+                        listener.onSignOutCancel();
                     }
                 })
                 .setCancelable(true)

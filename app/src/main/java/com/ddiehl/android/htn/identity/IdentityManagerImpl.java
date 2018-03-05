@@ -35,20 +35,20 @@ public class IdentityManagerImpl implements IdentityManager {
     private static final String PREF_ID = "pref_id";
     private static final String PREF_INBOX_COUNT = "pref_inbox_count";
 
-    private final Context mContext;
-    private final SettingsManager mSettingsManager;
-    private UserIdentity mUserIdentity;
-    private final Set<Callbacks> mListeners = new HashSet<>();
+    private final Context context;
+    private final SettingsManager settingsManager;
+    private UserIdentity userIdentity;
+    private final Set<Callbacks> listeners = new HashSet<>();
 
     public IdentityManagerImpl(Context context, SettingsManager settingsManager) {
-        mContext = context.getApplicationContext();
-        mSettingsManager = settingsManager;
-        mUserIdentity = getSavedUserIdentity();
+        this.context = context.getApplicationContext();
+        this.settingsManager = settingsManager;
+        userIdentity = getSavedUserIdentity();
     }
 
     @Override
     public UserIdentity getUserIdentity() {
-        if (mUserIdentity == null) {
+        if (userIdentity == null) {
             UserIdentity identity = getSavedUserIdentity();
 
             // Pass user identity to Crashlytics
@@ -57,13 +57,13 @@ public class IdentityManagerImpl implements IdentityManager {
                 Crashlytics.setUserIdentifier(hashedUsername);
             }
 
-            mUserIdentity = identity;
+            userIdentity = identity;
         }
-        return mUserIdentity;
+        return userIdentity;
     }
 
     private UserIdentity getSavedUserIdentity() {
-        SharedPreferences prefs = mContext.getSharedPreferences(PREFS_USER_IDENTITY, Context.MODE_PRIVATE);
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_USER_IDENTITY, Context.MODE_PRIVATE);
         if (!prefs.contains(PREF_ID)) return null;
         UserIdentity id = new UserIdentity();
         id.hasMail(prefs.getBoolean(PREF_HAS_MAIL, false));
@@ -87,7 +87,7 @@ public class IdentityManagerImpl implements IdentityManager {
 
     @Override
     public void saveUserIdentity(@NotNull UserIdentity identity) {
-        mUserIdentity = identity;
+        userIdentity = identity;
         Boolean hasMail = identity.hasMail();
         String name = identity.getName();
         Long created = identity.getCreated();
@@ -105,7 +105,7 @@ public class IdentityManagerImpl implements IdentityManager {
         String id = identity.getId();
         Integer inboxCount = identity.getInboxCount();
         SharedPreferences prefs =
-                mContext.getSharedPreferences(PREFS_USER_IDENTITY, Context.MODE_PRIVATE);
+                context.getSharedPreferences(PREFS_USER_IDENTITY, Context.MODE_PRIVATE);
         prefs.edit()
                 .putBoolean(PREF_HAS_MAIL, hasMail)
                 .putString(PREF_NAME, name)
@@ -132,26 +132,26 @@ public class IdentityManagerImpl implements IdentityManager {
         // Clear identity from Crashlytics
         Crashlytics.setUserIdentifier(null);
 
-        mUserIdentity = null;
-        mContext.getSharedPreferences(PREFS_USER_IDENTITY, Context.MODE_PRIVATE)
+        userIdentity = null;
+        context.getSharedPreferences(PREFS_USER_IDENTITY, Context.MODE_PRIVATE)
                 .edit().clear().apply();
-        mSettingsManager.clearUserSettings();
+        settingsManager.clearUserSettings();
         notifyListeners();
     }
 
     @Override
     public void registerUserIdentityChangeListener(Callbacks listener) {
-        mListeners.add(listener);
+        listeners.add(listener);
     }
 
     @Override
     public void unregisterUserIdentityChangeListener(Callbacks listener) {
-        mListeners.remove(listener);
+        listeners.remove(listener);
     }
 
     private void notifyListeners() {
-        for (Callbacks listener : mListeners) {
-            listener.onUserIdentityChanged(mUserIdentity);
+        for (Callbacks listener : listeners) {
+            listener.onUserIdentityChanged(userIdentity);
         }
     }
 }

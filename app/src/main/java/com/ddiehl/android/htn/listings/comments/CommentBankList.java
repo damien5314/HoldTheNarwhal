@@ -12,77 +12,77 @@ import rxreddit.model.Listing;
 
 public class CommentBankList implements CommentBank {
 
-    private final List<Listing> mData;
-    private final List<Listing> mVisibleData;
+    private final List<Listing> data;
+    private final List<Listing> visibleData;
 
     public CommentBankList() {
-        mData = new ArrayList<>();
-        mVisibleData = new ArrayList<>();
+        data = new ArrayList<>();
+        visibleData = new ArrayList<>();
     }
 
     @Override
     public void add(AbsComment comment) {
-        mData.add(comment);
+        data.add(comment);
         syncVisibleData();
     }
 
     @Override
     public void add(int index, AbsComment comment) {
-        mData.add(index, comment);
+        data.add(index, comment);
         syncVisibleData();
     }
 
     @Override
     public boolean addAll(Collection<Listing> collection) {
-        boolean result = mData.addAll(collection);
+        boolean result = data.addAll(collection);
         syncVisibleData();
         return result;
     }
 
     @Override
     public boolean addAll(int index, Collection<Listing> collection) {
-        boolean result = mData.addAll(index, collection);
+        boolean result = data.addAll(index, collection);
         syncVisibleData();
         return result;
     }
 
     @Override
     public int indexOf(AbsComment o) {
-        return mData.indexOf(o);
+        return data.indexOf(o);
     }
 
     @Override
     public int visibleIndexOf(AbsComment obj) {
-        return mVisibleData.indexOf(obj);
+        return visibleData.indexOf(obj);
     }
 
     @Override
     public AbsComment get(int position) {
-        return (AbsComment) mData.get(position);
+        return (AbsComment) data.get(position);
     }
 
     @Override
     public int size() {
-        return mData.size();
+        return data.size();
     }
 
     @Override
     public AbsComment remove(int position) {
-        AbsComment result = (AbsComment) mData.remove(position);
+        AbsComment result = (AbsComment) data.remove(position);
         syncVisibleData();
         return result;
     }
 
     @Override
     public boolean remove(AbsComment comment) {
-        boolean removed = mData.remove(comment);
+        boolean removed = data.remove(comment);
         syncVisibleData();
         return removed;
     }
 
     @Override
     public void clear() {
-        mData.clear();
+        data.clear();
         syncVisibleData();
     }
 
@@ -95,24 +95,24 @@ public class CommentBankList implements CommentBank {
 
     @Override
     public boolean isVisible(int position) {
-        return ((AbsComment) mData.get(position)).isVisible();
+        return ((AbsComment) data.get(position)).isVisible();
     }
 
     @Override
     public int getNumVisible() {
-        return mVisibleData.size();
+        return visibleData.size();
     }
 
     @Override
     public AbsComment getVisibleComment(int position) {
-        return (AbsComment) mVisibleData.get(position);
+        return (AbsComment) visibleData.get(position);
     }
 
     private void syncVisibleData() {
-        mVisibleData.clear();
-        for (Listing comment : mData) {
+        visibleData.clear();
+        for (Listing comment : data) {
             if (((AbsComment) comment).isVisible()) {
-                mVisibleData.add(comment);
+                visibleData.add(comment);
             }
         }
     }
@@ -125,8 +125,8 @@ public class CommentBankList implements CommentBank {
     }
 
     private void setThreadVisible(int position, boolean visible) {
-        int totalItemCount = mData.size();
-        Comment parentComment = (Comment) mData.get(position);
+        int totalItemCount = data.size();
+        Comment parentComment = (Comment) data.get(position);
         int parentCommentDepth = parentComment.getDepth();
         parentComment.setCollapsed(!visible);
         ArrayList<Integer> collapsedCommentLevels = new ArrayList<>();
@@ -138,7 +138,7 @@ public class CommentBankList implements CommentBank {
         if (position + 1 < totalItemCount) {
             // Retrieve first child comment
             int currentChildCommentPosition = position + 1;
-            AbsComment currentChildComment = (AbsComment) mData.get(currentChildCommentPosition);
+            AbsComment currentChildComment = (AbsComment) data.get(currentChildCommentPosition);
             int currentChildCommentDepth = currentChildComment.getDepth();
             // Loop through remaining comments until we reach another comment at same or lesser
             // depth as the parent, or we reach the end of the comment list
@@ -172,7 +172,7 @@ public class CommentBankList implements CommentBank {
                 currentChildCommentPosition++;
                 // Retrieve comment at current position
                 if (currentChildCommentPosition < totalItemCount) {
-                    currentChildComment = (AbsComment) mData.get(currentChildCommentPosition);
+                    currentChildComment = (AbsComment) data.get(currentChildCommentPosition);
                     currentChildCommentDepth = currentChildComment.getDepth();
                 }
             }
@@ -185,8 +185,8 @@ public class CommentBankList implements CommentBank {
     public void collapseAllThreadsUnder(@Nullable Integer score) {
         if (score == null) return;
 
-        for (int i = 0; i < mData.size(); i++) {
-            Listing current = mData.get(i);
+        for (int i = 0; i < data.size(); i++) {
+            Listing current = data.get(i);
 
             // Check if we're actually looking at a comment and not a stub
             if (!(current instanceof Comment)) {

@@ -51,24 +51,24 @@ public class SubredditInfoFragment extends BaseFragment {
     public static final String TAG = SubredditInfoFragment.class.getSimpleName();
     public static final int RESULT_GET_INFO_ERROR = -1000;
 
-    @Inject HtmlParser mHtmlParser;
+    @Inject HtmlParser htmlParser;
 
-    @BindView(R.id.coordinator_layout) CoordinatorLayout mCoordinatorLayout;
-    @BindView(R.id.subreddit_info_parent) View mParentViewGroup;
-    @BindView(R.id.subreddit_name) TextView mSubredditName;
-    @BindView(R.id.subscribe_button) ViewGroup mSubscribeButtonLayout;
-    @BindView(R.id.subscribe_button_text) TextView mSubscribeButtonText;
-    @BindView(R.id.subscribe_button_icon) ImageView mSubscribeButtonIcon;
-    @BindView(R.id.subscribe_button_progress) ProgressBar mSubscribeButtonProgressBar;
-    @BindView(R.id.create_date) TextView mCreateDate;
-    @BindView(R.id.subscriber_count) TextView mSubscriberCount;
-    @BindView(R.id.public_description) TextView mPublicDescription;
-    @BindView(R.id.rules_layout) LinearLayout mRulesLayout;
+    @BindView(R.id.coordinator_layout) CoordinatorLayout coordinatorLayout;
+    @BindView(R.id.subreddit_info_parent) View parentViewGroup;
+    @BindView(R.id.subreddit_name) TextView subredditName;
+    @BindView(R.id.subscribe_button) ViewGroup subscribeButtonLayout;
+    @BindView(R.id.subscribe_button_text) TextView subscribeButtonText;
+    @BindView(R.id.subscribe_button_icon) ImageView subscribeButtonIcon;
+    @BindView(R.id.subscribe_button_progress) ProgressBar subscribeButtonProgressBar;
+    @BindView(R.id.create_date) TextView createDate;
+    @BindView(R.id.subscriber_count) TextView subscriberCount;
+    @BindView(R.id.public_description) TextView publicDescription;
+    @BindView(R.id.rules_layout) LinearLayout rulesLayout;
 
-    @Arg String mSubreddit;
+    @Arg String subreddit;
 
-    SubscriptionManagerPresenter mSubscriptionManagerPresenter;
-    InfoTuple mSubredditInfo;
+    SubscriptionManagerPresenter subscriptionManagerPresenter;
+    InfoTuple subredditInfo;
 
     @Override
     protected int getLayoutResId() {
@@ -77,18 +77,18 @@ public class SubredditInfoFragment extends BaseFragment {
 
     @NotNull @Override
     protected View getChromeView() {
-        return mCoordinatorLayout;
+        return coordinatorLayout;
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Timber.i("Showing subreddit info: %s", mSubreddit);
+        Timber.i("Showing subreddit info: %s", subreddit);
 
         HoldTheNarwhal.getApplicationComponent().inject(this);
         FragmentArgs.inject(this);
 
-        mSubscriptionManagerPresenter = new SubscriptionManagerPresenter();
+        subscriptionManagerPresenter = new SubscriptionManagerPresenter();
 
         setTitle("");
     }
@@ -98,24 +98,24 @@ public class SubredditInfoFragment extends BaseFragment {
         super.onStart();
 
         // Set name field
-        String name = String.format("/r/%s", mSubreddit);
-        mSubredditName.setText(name);
+        String name = String.format("/r/%s", subreddit);
+        subredditName.setText(name);
 
         // Load info
-        mParentViewGroup.setVisibility(View.GONE);
+        parentViewGroup.setVisibility(View.GONE);
         loadSubredditInfo();
     }
 
     void loadSubredditInfo() {
-        if (mSubredditInfo == null) {
-            mSubscriptionManagerPresenter.getSubredditInfo(mSubreddit)
+        if (subredditInfo == null) {
+            subscriptionManagerPresenter.getSubredditInfo(subreddit)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .doOnSubscribe(disposable -> showSpinner())
                     .doFinally(this::dismissSpinner)
                     .subscribe(this::onSubredditInfoLoaded, this::onSubredditInfoLoadError);
         } else {
-            onSubredditInfoLoaded(mSubredditInfo);
+            onSubredditInfoLoaded(subredditInfo);
         }
     }
 
@@ -137,8 +137,8 @@ public class SubredditInfoFragment extends BaseFragment {
     }
 
     void onSubredditInfoLoaded(InfoTuple tuple) {
-        mSubredditInfo = tuple;
-        mParentViewGroup.setVisibility(View.VISIBLE);
+        subredditInfo = tuple;
+        parentViewGroup.setVisibility(View.VISIBLE);
 
         showSubscribeButton(tuple.subreddit);
         showSubredditInfo(tuple.subreddit);
@@ -148,29 +148,29 @@ public class SubredditInfoFragment extends BaseFragment {
     void showSubscribeButton(final @NotNull Subreddit subreddit) {
         Boolean subscribed = subreddit.getUserIsSubscriber();
 
-        mSubscribeButtonProgressBar.setVisibility(View.GONE);
-        mSubscribeButtonLayout.setEnabled(true);
+        subscribeButtonProgressBar.setVisibility(View.GONE);
+        subscribeButtonLayout.setEnabled(true);
 
         // Show subscribe
         if (subscribed == null || !subscribed) {
-            mSubscribeButtonText.setText(R.string.subscribe);
+            subscribeButtonText.setText(R.string.subscribe);
 
             // Removed check icon
-            mSubscribeButtonIcon.setVisibility(View.GONE);
+            subscribeButtonIcon.setVisibility(View.GONE);
 
             // Set onClick behavior
-            mSubscribeButtonLayout.setOnClickListener((view) -> {
+            subscribeButtonLayout.setOnClickListener((view) -> {
                 // Remove onClick behavior
-                mSubscribeButtonLayout.setOnClickListener(null);
+                subscribeButtonLayout.setOnClickListener(null);
 
                 // Hide icon, show progress bar, and set layout to disabled state
-                mSubscribeButtonIcon.setVisibility(View.GONE);
-                mSubscribeButtonProgressBar.setVisibility(View.VISIBLE);
-                mSubscribeButtonLayout.setEnabled(false);
+                subscribeButtonIcon.setVisibility(View.GONE);
+                subscribeButtonProgressBar.setVisibility(View.VISIBLE);
+                subscribeButtonLayout.setEnabled(false);
 
                 // Subscribe to subreddit
-                mSubscriptionManagerPresenter.subscribe(subreddit)
-                        .doOnDispose(() -> showSubscribeButton(mSubredditInfo.subreddit))
+                subscriptionManagerPresenter.subscribe(subreddit)
+                        .doOnDispose(() -> showSubscribeButton(subredditInfo.subreddit))
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(
@@ -182,24 +182,24 @@ public class SubredditInfoFragment extends BaseFragment {
 
         // Show unsubscribe
         else {
-            mSubscribeButtonText.setText(R.string.subscribed);
+            subscribeButtonText.setText(R.string.subscribed);
 
             // Add check icon
-            mSubscribeButtonIcon.setVisibility(View.VISIBLE);
+            subscribeButtonIcon.setVisibility(View.VISIBLE);
 
             // Set onClick behavior
-            mSubscribeButtonLayout.setOnClickListener((view) -> {
+            subscribeButtonLayout.setOnClickListener((view) -> {
                 // Remove onClick behavior
-                mSubscribeButtonLayout.setOnClickListener(null);
+                subscribeButtonLayout.setOnClickListener(null);
 
                 // Hide icon, show progress bar, and set layout to disabled state
-                mSubscribeButtonIcon.setVisibility(View.GONE);
-                mSubscribeButtonProgressBar.setVisibility(View.VISIBLE);
-                mSubscribeButtonLayout.setEnabled(false);
+                subscribeButtonIcon.setVisibility(View.GONE);
+                subscribeButtonProgressBar.setVisibility(View.VISIBLE);
+                subscribeButtonLayout.setEnabled(false);
 
                 // Unsubscribe from subreddit
-                mSubscriptionManagerPresenter.unsubscribe(subreddit)
-                        .doOnDispose(() -> showSubscribeButton(mSubredditInfo.subreddit))
+                subscriptionManagerPresenter.unsubscribe(subreddit)
+                        .doOnDispose(() -> showSubscribeButton(subredditInfo.subreddit))
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(
@@ -215,8 +215,8 @@ public class SubredditInfoFragment extends BaseFragment {
             String message = getString(R.string.error_network_unavailable);
             showError(message);
         } else {
-            Timber.w(error, "Error subscribing to /r/%s", mSubreddit);
-            String message = getString(R.string.subscribe_error, mSubreddit);
+            Timber.w(error, "Error subscribing to /r/%s", subreddit);
+            String message = getString(R.string.subscribe_error, subreddit);
             showError(message);
         }
     }
@@ -226,8 +226,8 @@ public class SubredditInfoFragment extends BaseFragment {
             String message = getString(R.string.error_network_unavailable);
             showError(message);
         } else {
-            Timber.w(error, "Error unsubscribing from /r/%s", mSubreddit);
-            String message = getString(R.string.unsubscribe_error, mSubreddit);
+            Timber.w(error, "Error unsubscribing from /r/%s", subreddit);
+            String message = getString(R.string.unsubscribe_error, subreddit);
             showError(message);
         }
     }
@@ -236,19 +236,19 @@ public class SubredditInfoFragment extends BaseFragment {
         // Format and show date created
         Long created = subreddit.getCreatedUtc();
         String createdText = formatDate(created);
-        mCreateDate.setText(createdText);
+        createDate.setText(createdText);
 
         // Format and show subscriber count
         Integer subscribers = subreddit.getSubscribers();
         String subscriberText = NumberFormat.getInstance().format(subscribers);
-        mSubscriberCount.setText(subscriberText);
+        subscriberCount.setText(subscriberText);
 
         // Show/Hide NSFW text
         if (subreddit.isOver18()) {
             SpannableStringBuilder ssb = new SpannableStringBuilder();
 
             // Cache subreddit name text
-            CharSequence nameText = mSubredditName.getText();
+            CharSequence nameText = subredditName.getText();
             ssb.append(nameText);
 
             // Append nsfw label
@@ -273,14 +273,14 @@ public class SubredditInfoFragment extends BaseFragment {
                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
             );
 
-            mSubredditName.setText(ssb);
+            subredditName.setText(ssb);
         }
 
 
         // Show public description text
         final String publicDescription = subreddit.getPublicDescriptionHtml();
-        final Spanned parsedDescription = mHtmlParser.convert(publicDescription);
-        mPublicDescription.setText(parsedDescription);
+        final Spanned parsedDescription = htmlParser.convert(publicDescription);
+        this.publicDescription.setText(parsedDescription);
     }
 
     String formatDate(final long createdUtc) {
@@ -298,7 +298,7 @@ public class SubredditInfoFragment extends BaseFragment {
     void addToRules(SubredditRule rule) {
         // Inflate layout and bind views
         View view = LayoutInflater.from(getContext())
-                .inflate(R.layout.subreddit_rule, mRulesLayout, false);
+                .inflate(R.layout.subreddit_rule, rulesLayout, false);
         TextView shortNameView = ButterKnife.findById(view, R.id.short_name);
         TextView categoryView = ButterKnife.findById(view, R.id.category);
         TextView descriptionView = ButterKnife.findById(view, R.id.description);
@@ -311,10 +311,10 @@ public class SubredditInfoFragment extends BaseFragment {
         categoryView.setText(getTextForCategory(category));
 
         String description = rule.getDescriptionHtml().trim();
-        final Spanned parsedDescription = mHtmlParser.convert(description);
+        final Spanned parsedDescription = htmlParser.convert(description);
         descriptionView.setText(parsedDescription);
 
-        mRulesLayout.addView(view);
+        rulesLayout.addView(view);
     }
 
     String getTextForCategory(String category) {

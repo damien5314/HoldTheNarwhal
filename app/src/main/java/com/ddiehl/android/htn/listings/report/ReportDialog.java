@@ -42,11 +42,11 @@ public class ReportDialog extends DialogFragment {
         void onCancelled();
     }
 
-    @Arg String[] mRules;
-    @Arg String[] mSiteRules;
+    @Arg String[] rules;
+    @Arg String[] siteRules;
 
-    int mSelectedIndex = -1;
-    Listener mListener;
+    int selectedIndex = -1;
+    Listener listener;
 
     @Override
     public void onAttach(Context context) {
@@ -54,12 +54,12 @@ public class ReportDialog extends DialogFragment {
         if (!(context instanceof Listener)) {
             throw new RuntimeException("Context must implement ReportDialog.Listener");
         }
-        mListener = (Listener) context;
+        listener = (Listener) context;
     }
 
     @Override
     public void onDetach() {
-        mListener = null;
+        listener = null;
         super.onDetach();
     }
 
@@ -68,12 +68,12 @@ public class ReportDialog extends DialogFragment {
         super.onCreate(savedInstanceState);
         FragmentArgs.inject(this);
 
-        if (mRules == null) {
-            mRules = new String[0];
+        if (rules == null) {
+            rules = new String[0];
         }
 
-        if (mSiteRules == null) {
-            mSiteRules = new String[0];
+        if (siteRules == null) {
+            siteRules = new String[0];
         }
     }
 
@@ -81,7 +81,7 @@ public class ReportDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Get report options
-        String[] reportOptions = getReportOptions(mRules, mSiteRules);
+        String[] reportOptions = getReportOptions(rules, siteRules);
         final int numOptions = reportOptions.length;
 
         // Create dialog with options
@@ -111,7 +111,7 @@ public class ReportDialog extends DialogFragment {
                 parent.clearCheck();
                 otherSelector.setChecked(false);
                 if (isChecked) {
-                    mSelectedIndex = index;
+                    selectedIndex = index;
                 }
             });
 
@@ -127,7 +127,7 @@ public class ReportDialog extends DialogFragment {
         otherSelector.setOnCheckedChangeListener((buttonView, isChecked) -> {
             parent.clearCheck();
             if (isChecked) {
-                mSelectedIndex = numOptions;
+                selectedIndex = numOptions;
                 otherSelector.setChecked(true);
             }
         });
@@ -155,12 +155,12 @@ public class ReportDialog extends DialogFragment {
     DialogInterface.OnClickListener onSubmit() {
         return (dialogInterface, which) -> {
             // If index is in rules array, submit the rule
-            if (mSelectedIndex < mRules.length) {
-                submit(mRules[mSelectedIndex], null, null);
+            if (selectedIndex < rules.length) {
+                submit(rules[selectedIndex], null, null);
             }
             // If index is in site rules array, submit the site rule
-            else if (mSelectedIndex < mRules.length + mSiteRules.length) {
-                submit(null, mSiteRules[mSelectedIndex - mRules.length], null);
+            else if (selectedIndex < rules.length + siteRules.length) {
+                submit(null, siteRules[selectedIndex - rules.length], null);
             }
             // Otherwise, submit the other reason
             else {
@@ -180,18 +180,18 @@ public class ReportDialog extends DialogFragment {
     @Override
     public void onCancel(DialogInterface dialog) {
         super.onCancel(dialog);
-        mListener.onCancelled();
+        listener.onCancelled();
     }
 
     private void submit(@Nullable String rule, @Nullable String siteRule, @Nullable String other) {
         if (other != null) {
-            mListener.onOtherSubmitted(other);
+            listener.onOtherSubmitted(other);
             dismiss();
         } else if (rule != null) {
-            mListener.onRuleSubmitted(rule);
+            listener.onRuleSubmitted(rule);
             dismiss();
         } else if (siteRule != null) {
-            mListener.onSiteRuleSubmitted(siteRule);
+            listener.onSiteRuleSubmitted(siteRule);
             dismiss();
         }
     }
