@@ -31,88 +31,88 @@ import rxreddit.model.PrivateMessage;
 public class ListingsMessageViewHolder extends RecyclerView.ViewHolder
         implements View.OnCreateContextMenuListener {
 
-    @Inject protected Context mAppContext;
-    @Inject HtmlParser mHtmlParser;
+    @Inject protected Context appContext;
+    @Inject HtmlParser htmlParser;
 
-    private final PrivateMessageView mPrivateMessageView;
-    private final BaseListingsPresenter mMessagePresenter;
-    private PrivateMessage mMessage;
+    private final PrivateMessageView privateMessageView;
+    private final BaseListingsPresenter messagePresenter;
+    private PrivateMessage message;
 
-    @BindView(R.id.conversation_subject) TextView mConversationSubject;
-    @BindView(R.id.conversation_body_layout) ViewGroup mConversationBodyLayout;
-    @BindView(R.id.collapsed_messages_layout) ViewGroup mCollapsedMessagesLayout;
-    @BindView(R.id.collapsed_messages_text) TextView mCollapsedMessagesText;
-    @BindView(R.id.last_message_layout) ViewGroup mLastMessageLayout;
-    @BindView(R.id.message_indentation) View mMessageIndentation;
-    @BindView(R.id.last_message_metadata) TextView mLastMessageMetadata;
-    @BindView(R.id.unread_message_indicator) View mUnreadMessageIndicator;
-    @BindView(R.id.last_message_body) TextView mLastMessageBody;
+    @BindView(R.id.conversation_subject) TextView conversationSubject;
+    @BindView(R.id.conversation_body_layout) ViewGroup conversationBodyLayout;
+    @BindView(R.id.collapsed_messages_layout) ViewGroup collapsedMessagesLayout;
+    @BindView(R.id.collapsed_messages_text) TextView collapsedMessagesText;
+    @BindView(R.id.last_message_layout) ViewGroup lastMessageLayout;
+    @BindView(R.id.message_indentation) View messageIndentation;
+    @BindView(R.id.last_message_metadata) TextView lastMessageMetadata;
+    @BindView(R.id.unread_message_indicator) View unreadMessageIndicator;
+    @BindView(R.id.last_message_body) TextView lastMessageBody;
 
     public ListingsMessageViewHolder(View view, PrivateMessageView pmView, BaseListingsPresenter presenter) {
         super(view);
         HoldTheNarwhal.getApplicationComponent().inject(this);
-        mPrivateMessageView = pmView;
-        mMessagePresenter = presenter;
+        privateMessageView = pmView;
+        messagePresenter = presenter;
         ButterKnife.bind(this, view);
         itemView.setOnCreateContextMenuListener(this);
     }
 
     public void bind(PrivateMessage message, boolean showReplies) {
-        mMessage = message;
+        this.message = message;
         List<Listing> replies = null;
         if (message.getReplies() != null) {
             replies = message.getReplies().getData().getChildren();
         }
         PrivateMessage messageToShow;
         if (!showReplies) {
-            ((View) mConversationSubject.getParent()).setVisibility(View.GONE);
+            ((View) conversationSubject.getParent()).setVisibility(View.GONE);
         }
         if (!showReplies || replies == null || replies.size() == 0) {
-            messageToShow = mMessage;
+            messageToShow = this.message;
             // Collapse the "view more messages" view
-            mCollapsedMessagesLayout.setVisibility(View.GONE);
+            collapsedMessagesLayout.setVisibility(View.GONE);
             // Hide the indentation and remove background
-            mMessageIndentation.setVisibility(View.GONE);
+            messageIndentation.setVisibility(View.GONE);
         } else {
             messageToShow = (PrivateMessage) replies.get(replies.size() - 1);
             // Expand the "view more messages" view
-            mCollapsedMessagesLayout.setVisibility(View.VISIBLE);
+            collapsedMessagesLayout.setVisibility(View.VISIBLE);
             // Show the indentation and set background
-            mMessageIndentation.setVisibility(View.VISIBLE);
+            messageIndentation.setVisibility(View.VISIBLE);
         }
         // Show message metadata and text
-        mConversationSubject.setText(messageToShow.getSubject());
+        conversationSubject.setText(messageToShow.getSubject());
         if (replies != null) {
             int n = replies.size();
-            mCollapsedMessagesText.setText(
-                    mAppContext.getResources().getQuantityString(R.plurals.view_more_messages, n, n));
+            collapsedMessagesText.setText(
+                    appContext.getResources().getQuantityString(R.plurals.view_more_messages, n, n));
         }
         boolean isToMe = Utils.equals(
-                mMessagePresenter.getUserIdentity().getName(), messageToShow.getDestination());
-        String from = mAppContext.getString(
+                messagePresenter.getUserIdentity().getName(), messageToShow.getDestination());
+        String from = appContext.getString(
                 isToMe ? R.string.message_metadata_from : R.string.message_metadata_to);
         from = String.format(from,
                 isToMe ? messageToShow.getAuthor() : messageToShow.getDestination());
-        String sent = mAppContext.getString(R.string.message_metadata_sent);
+        String sent = appContext.getString(R.string.message_metadata_sent);
         sent = String.format(sent, TimeSince.getFormattedDateString(
-                messageToShow.getCreatedUtc(), false, mAppContext));
+                messageToShow.getCreatedUtc(), false, appContext));
         String text = from + " " + sent;
-        mLastMessageMetadata.setText(text);
-        setTextToBody(mLastMessageBody, messageToShow);
-        mLastMessageBody.setText(messageToShow.getBody());
-        mUnreadMessageIndicator.setVisibility(
+        lastMessageMetadata.setText(text);
+        setTextToBody(lastMessageBody, messageToShow);
+        lastMessageBody.setText(messageToShow.getBody());
+        unreadMessageIndicator.setVisibility(
                 message.isUnread() ? View.VISIBLE : View.GONE);
     }
 
     void setTextToBody(@NotNull TextView view, @NotNull PrivateMessage message) {
         view.setMovementMethod(LinkMovementMethod.getInstance());
-        Spanned formatted = mHtmlParser.convert(message.getBodyHtml());
+        Spanned formatted = htmlParser.convert(message.getBodyHtml());
         view.setText(formatted);
     }
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        mPrivateMessageView.showMessageContextMenu(menu, v, mMessage);
+        privateMessageView.showMessageContextMenu(menu, v, message);
     }
 
     @OnClick({ R.id.last_message_layout })
@@ -122,6 +122,6 @@ public class ListingsMessageViewHolder extends RecyclerView.ViewHolder
 
     @OnClick({ R.id.conversation_subject, R.id.collapsed_messages_layout })
     void showMessageView() {
-        mMessagePresenter.showMessagePermalink(mMessage);
+        messagePresenter.showMessagePermalink(message);
     }
 }

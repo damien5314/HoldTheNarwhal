@@ -10,10 +10,10 @@ import android.widget.TextView;
 
 public class ColorSwapTextView extends TextView {
 
-    private ColorStateList mOriginalTextColor;
-    private ColorStateList mOriginalHintTextColor;
-    private ColorStateList mOriginalLinkTextColor;
-    private Drawable mOriginalBackground;
+    private ColorStateList originalTextColor;
+    private ColorStateList originalHintTextColor;
+    private ColorStateList originalLinkTextColor;
+    private Drawable originalBackground;
 
     public ColorSwapTextView(Context context) {
         super(context);
@@ -37,25 +37,25 @@ public class ColorSwapTextView extends TextView {
     }
 
     private void init() {
-        mOriginalTextColor = getTextColors();
-        mOriginalHintTextColor = getHintTextColors();
-        mOriginalLinkTextColor = getLinkTextColors();
-        mOriginalBackground = getBackground();
+        originalTextColor = getTextColors();
+        originalHintTextColor = getHintTextColors();
+        originalLinkTextColor = getLinkTextColors();
+        originalBackground = getBackground();
     }
 
     public ColorStateList getOriginalTextColor() {
-        return mOriginalTextColor;
+        return originalTextColor;
     }
 
     public ColorStateList getOriginalHintTextColor() {
-        return mOriginalHintTextColor;
+        return originalHintTextColor;
     }
 
     public ColorStateList getOriginalLinkTextColor() {
-        return mOriginalLinkTextColor;
+        return originalLinkTextColor;
     }
 
     public Drawable getOriginalBackground() {
-        return mOriginalBackground;
+        return originalBackground;
     }
 }

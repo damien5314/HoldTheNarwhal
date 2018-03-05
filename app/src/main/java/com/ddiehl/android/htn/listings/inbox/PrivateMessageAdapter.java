@@ -55,19 +55,19 @@ public class PrivateMessageAdapter extends RecyclerView.Adapter<PrivateMessageAd
 
     public static class VH extends RecyclerView.ViewHolder {
 
-        @Inject protected Context mAppContext;
-        @Inject protected IdentityManager mIdentityManager;
-        @Inject HtmlParser mHtmlParser;
+        @Inject protected Context appContext;
+        @Inject protected IdentityManager identityManager;
+        @Inject HtmlParser htmlParser;
 
-        @BindView(R.id.conversation_subject) protected TextView mConversationSubject;
-        @BindView(R.id.conversation_body_layout) protected ViewGroup mConversationBodyLayout;
-        @BindView(R.id.collapsed_messages_layout) protected ViewGroup mCollapsedMessagesLayout;
-        @BindView(R.id.collapsed_messages_text) protected TextView mCollapsedMessagesText;
-        @BindView(R.id.last_message_layout) protected ViewGroup mLastMessageLayout;
-        @BindView(R.id.message_indentation) protected View mMessageIndentation;
-        @BindView(R.id.last_message_metadata) protected TextView mLastMessageMetadata;
-        @BindView(R.id.unread_message_indicator) protected View mUnreadMessageIndicator;
-        @BindView(R.id.last_message_body) protected TextView mLastMessageBody;
+        @BindView(R.id.conversation_subject) protected TextView conversationSubject;
+        @BindView(R.id.conversation_body_layout) protected ViewGroup conversationBodyLayout;
+        @BindView(R.id.collapsed_messages_layout) protected ViewGroup collapsedMessagesLayout;
+        @BindView(R.id.collapsed_messages_text) protected TextView collapsedMessagesText;
+        @BindView(R.id.last_message_layout) protected ViewGroup lastMessageLayout;
+        @BindView(R.id.message_indentation) protected View messageIndentation;
+        @BindView(R.id.last_message_metadata) protected TextView lastMessageMetadata;
+        @BindView(R.id.unread_message_indicator) protected View unreadMessageIndicator;
+        @BindView(R.id.last_message_body) protected TextView lastMessageBody;
 
         public VH(View view) {
             super(view);
@@ -77,48 +77,48 @@ public class PrivateMessageAdapter extends RecyclerView.Adapter<PrivateMessageAd
 
         public void bind(PrivateMessage message) {
             // Hide conversation subject
-            ((View) mConversationSubject.getParent())
+            ((View) conversationSubject.getParent())
                     .setVisibility(View.GONE);
 
             // Collapse the "view more messages" view
-            mCollapsedMessagesLayout.setVisibility(View.GONE);
+            collapsedMessagesLayout.setVisibility(View.GONE);
 
             // Hide the indentation and remove background
-            mMessageIndentation.setVisibility(View.GONE);
+            messageIndentation.setVisibility(View.GONE);
 
             // Show message metadata and text
-            mConversationSubject.setText(message.getSubject());
+            conversationSubject.setText(message.getSubject());
             boolean isToMe = Utils.equals(
-                    mIdentityManager.getUserIdentity().getName(), message.getDestination());
+                    identityManager.getUserIdentity().getName(), message.getDestination());
 
             // Build 'from' text
-            String from = mAppContext.getString(
+            String from = appContext.getString(
                     isToMe ? R.string.message_metadata_from : R.string.message_metadata_to
             );
             from = String.format(from,
                     isToMe ? message.getAuthor() : message.getDestination());
 
             // Build 'sent' text
-            String sent = mAppContext.getString(R.string.message_metadata_sent);
+            String sent = appContext.getString(R.string.message_metadata_sent);
             sent = String.format(sent, TimeSince.getFormattedDateString(
-                    message.getCreatedUtc(), false, mAppContext));
+                    message.getCreatedUtc(), false, appContext));
 
             // Set message metadata
             String text = from + " " + sent;
-            mLastMessageMetadata.setText(text);
+            lastMessageMetadata.setText(text);
 
             // Set text for message body
-            setTextToBody(mLastMessageBody, message);
+            setTextToBody(lastMessageBody, message);
 
             // Show/hide unread message indicator
-            mUnreadMessageIndicator.setVisibility(
+            unreadMessageIndicator.setVisibility(
                     message.isUnread() ? View.VISIBLE : View.GONE
             );
         }
 
         void setTextToBody(@NotNull TextView view, @NotNull PrivateMessage message) {
             view.setMovementMethod(LinkMovementMethod.getInstance());
-            Spanned formatted = mHtmlParser.convert(message.getBodyHtml());
+            Spanned formatted = htmlParser.convert(message.getBodyHtml());
             view.setText(formatted);
         }
     }

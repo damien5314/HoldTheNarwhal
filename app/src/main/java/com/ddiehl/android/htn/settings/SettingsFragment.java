@@ -37,9 +37,9 @@ public class SettingsFragment extends PreferenceFragment
     public static final String TAG = SettingsFragment.class.getSimpleName();
 
     @Inject IdentityManager mIdentityManager;
-    SettingsPresenter mSettingsPresenter;
+    SettingsPresenter settingsPresenter;
 
-    ProgressDialog mLoadingOverlay;
+    ProgressDialog loadingOverlay;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -50,7 +50,7 @@ public class SettingsFragment extends PreferenceFragment
         setRetainInstance(true);
         setHasOptionsMenu(true);
 
-        mSettingsPresenter = new SettingsPresenter(this);
+        settingsPresenter = new SettingsPresenter(this);
 
         getPreferenceManager().setSharedPreferencesName(SettingsManagerImpl.PREFS_USER);
         addDefaultPreferences();
@@ -72,9 +72,9 @@ public class SettingsFragment extends PreferenceFragment
         getActivity().getSharedPreferences(SettingsManagerImpl.PREFS_USER, Context.MODE_PRIVATE)
                 .registerOnSharedPreferenceChangeListener(this);
 
-        if (mSettingsPresenter.isUserAuthorized()) {
-            boolean pullFromServer = mSettingsPresenter.isRefreshable();
-            mSettingsPresenter.refresh(pullFromServer);
+        if (settingsPresenter.isUserAuthorized()) {
+            boolean pullFromServer = settingsPresenter.isRefreshable();
+            settingsPresenter.refresh(pullFromServer);
         }
     }
 
@@ -147,14 +147,14 @@ public class SettingsFragment extends PreferenceFragment
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
         MenuTintUtils.tintAllIcons(menu, ContextCompat.getColor(getActivity(), R.color.icons));
-        menu.findItem(R.id.action_refresh).setVisible(mSettingsPresenter.isRefreshable());
+        menu.findItem(R.id.action_refresh).setVisible(settingsPresenter.isRefreshable());
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_refresh:
-                mSettingsPresenter.refresh(true);
+                settingsPresenter.refresh(true);
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -162,19 +162,19 @@ public class SettingsFragment extends PreferenceFragment
 
     @Override
     public void showSpinner() {
-        if (mLoadingOverlay == null) {
-            mLoadingOverlay = new ProgressDialog(getView().getContext(), R.style.ProgressDialog);
-            mLoadingOverlay.setCancelable(false);
-            mLoadingOverlay.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        if (loadingOverlay == null) {
+            loadingOverlay = new ProgressDialog(getView().getContext(), R.style.ProgressDialog);
+            loadingOverlay.setCancelable(false);
+            loadingOverlay.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         }
-//        mLoadingOverlay.setMessage(message);
-        mLoadingOverlay.show();
+//        loadingOverlay.setMessage(message);
+        loadingOverlay.show();
     }
 
     @Override
     public void dismissSpinner() {
-        if (mLoadingOverlay != null && mLoadingOverlay.isShowing()) {
-            mLoadingOverlay.dismiss();
+        if (loadingOverlay != null && loadingOverlay.isShowing()) {
+            loadingOverlay.dismiss();
         }
     }
 

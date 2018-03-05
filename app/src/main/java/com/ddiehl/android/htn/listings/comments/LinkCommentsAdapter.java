@@ -22,19 +22,19 @@ public class LinkCommentsAdapter extends ListingsAdapter {
     private static final int TYPE_COMMENT = 1;
     private static final int TYPE_COMMENT_STUB = 2;
 
-    private final LinkCommentsView mLinkCommentsView;
-    private final LinkCommentsPresenter mLinkCommentsPresenter;
+    private final LinkCommentsView linkCommentsView;
+    private final LinkCommentsPresenter linkCommentsPresenter;
 
     public LinkCommentsAdapter(LinkCommentsView linkCommentsView, LinkCommentsPresenter presenter) {
         super(presenter, linkCommentsView, linkCommentsView, null);
-        mLinkCommentsView = linkCommentsView;
-        mLinkCommentsPresenter = presenter;
+        this.linkCommentsView = linkCommentsView;
+        this.linkCommentsPresenter = presenter;
     }
 
     @Override
     public int getItemViewType(int position) {
         if (position == 0) return TYPE_LINK;
-        Listing comment = mListingsPresenter.getListingAt(position - 1);
+        Listing comment = listingsPresenter.getListingAt(position - 1);
         if (comment instanceof Comment) return TYPE_COMMENT;
         else return TYPE_COMMENT_STUB;
     }
@@ -45,15 +45,15 @@ public class LinkCommentsAdapter extends ListingsAdapter {
             case TYPE_LINK:
                 View view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.link_comments_link, parent, false);
-                return new CommentsLinkViewHolder(view, mLinkCommentsView, mLinkCommentsPresenter);
+                return new CommentsLinkViewHolder(view, linkCommentsView, linkCommentsPresenter);
             case TYPE_COMMENT:
                 view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.link_comments_comment, parent, false);
-                return new ThreadCommentViewHolder(view, mLinkCommentsView, mLinkCommentsPresenter);
+                return new ThreadCommentViewHolder(view, linkCommentsView, linkCommentsPresenter);
             case TYPE_COMMENT_STUB:
                 view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.link_comments_stub, parent, false);
-                return new ThreadStubViewHolder(view, mLinkCommentsPresenter);
+                return new ThreadStubViewHolder(view, linkCommentsPresenter);
             default:
                 throw new RuntimeException("Unexpected ViewHolder type: " + viewType);
         }
@@ -62,19 +62,19 @@ public class LinkCommentsAdapter extends ListingsAdapter {
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof BaseLinkViewHolder) {
-            Link link = mLinkCommentsPresenter.getLinkContext();
-            ThumbnailMode mode = mLinkCommentsPresenter.getThumbnailMode();
-            boolean showNsfw = mLinkCommentsPresenter.shouldShowNsfwTag();
-            boolean showParentLink = mLinkCommentsPresenter.shouldShowParentLink();
+            Link link = linkCommentsPresenter.getLinkContext();
+            ThumbnailMode mode = linkCommentsPresenter.getThumbnailMode();
+            boolean showNsfw = linkCommentsPresenter.shouldShowNsfwTag();
+            boolean showParentLink = linkCommentsPresenter.shouldShowParentLink();
             ((BaseLinkViewHolder) holder).bind(link, true, mode, showNsfw, showParentLink);
         } else if (holder instanceof ThreadCommentViewHolder) {
-            Link link = mLinkCommentsPresenter.getLinkContext();
-            Comment comment = (Comment) mLinkCommentsPresenter.getListingAt(position - 1);
-            boolean showControversiality = mLinkCommentsPresenter.getShowControversiality();
+            Link link = linkCommentsPresenter.getLinkContext();
+            Comment comment = (Comment) linkCommentsPresenter.getListingAt(position - 1);
+            boolean showControversiality = linkCommentsPresenter.getShowControversiality();
             ((ThreadCommentViewHolder) holder).bind(link, comment, showControversiality);
         } else if (holder instanceof ThreadStubViewHolder) {
-            CommentStub comment = (CommentStub) mLinkCommentsPresenter.getListingAt(position - 1);
-            Link linkContext = mLinkCommentsPresenter.getLinkContext();
+            CommentStub comment = (CommentStub) linkCommentsPresenter.getListingAt(position - 1);
+            Link linkContext = linkCommentsPresenter.getLinkContext();
             String subreddit = linkContext.getSubreddit();
             String linkId = linkContext.getId();
             ((ThreadStubViewHolder) holder).bind(comment, subreddit, linkId);
@@ -83,7 +83,7 @@ public class LinkCommentsAdapter extends ListingsAdapter {
 
     @Override
     public int getItemCount() {
-        return mLinkCommentsPresenter.getNumListings()
-                + (mLinkCommentsPresenter.getLinkContext() == null ? 0 : 1);
+        return linkCommentsPresenter.getNumListings()
+                + (linkCommentsPresenter.getLinkContext() == null ? 0 : 1);
     }
 }

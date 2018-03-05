@@ -13,14 +13,14 @@ import rxreddit.api.RedditService;
 
 public class SubmitPostPresenter {
 
-    @Inject RedditService mRedditService;
+    @Inject RedditService redditService;
 
-    SubmitPostView mSubmitPostView;
-    Disposable mSubmitSubscription;
+    SubmitPostView submitPostView;
+    Disposable submitSubscription;
 
     public SubmitPostPresenter(SubmitPostView view) {
         HoldTheNarwhal.getApplicationComponent().inject(this);
-        mSubmitPostView = view;
+        submitPostView = view;
     }
 
     public void saveSubmissionData() {
@@ -36,37 +36,37 @@ public class SubmitPostPresenter {
     }
 
     void submitLink() {
-        mRedditService.submit(
-                mSubmitPostView.getSubreddit(),
+        redditService.submit(
+                submitPostView.getSubreddit(),
                 "link",
-                mSubmitPostView.getTitle(),
-                mSubmitPostView.getUrl(),
+                submitPostView.getTitle(),
+                submitPostView.getUrl(),
                 null, // Text is null for link submissions
-                mSubmitPostView.getSendReplies(),
+                submitPostView.getSendReplies(),
                 false
         )
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(mSubmitPostView::onPostSubmitted, mSubmitPostView::onSubmitError);
+                .subscribe(submitPostView::onPostSubmitted, submitPostView::onSubmitError);
     }
 
     void submitText() {
-        mRedditService.submit(
-                mSubmitPostView.getSubreddit(),
+        redditService.submit(
+                submitPostView.getSubreddit(),
                 "self",
-                mSubmitPostView.getTitle(),
+                submitPostView.getTitle(),
                 null, // URL is null for text submissions
-                mSubmitPostView.getText(),
-                mSubmitPostView.getSendReplies(),
+                submitPostView.getText(),
+                submitPostView.getSendReplies(),
                 false
         )
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(mSubmitPostView::onPostSubmitted, mSubmitPostView::onSubmitError);
+                .subscribe(submitPostView::onPostSubmitted, submitPostView::onSubmitError);
     }
 
     public void cancelSubmit() {
-        mSubmitSubscription.dispose();
-        mSubmitPostView.dismissAfterCancel();
+        submitSubscription.dispose();
+        submitPostView.dismissAfterCancel();
     }
 }

@@ -54,7 +54,7 @@ public class ReportActivity extends TransparentBaseActivity
         return intent;
     }
 
-    @Inject RedditService mRedditService;
+    @Inject RedditService redditService;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -97,7 +97,7 @@ public class ReportActivity extends TransparentBaseActivity
     }
 
     Observable<SubredditRules> getSubredditRules() {
-        return mRedditService.getSubredditRules(getSubredditName())
+        return redditService.getSubredditRules(getSubredditName())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
@@ -131,7 +131,7 @@ public class ReportActivity extends TransparentBaseActivity
     }
 
     void report(String rule, String siteRule, String other) {
-        mRedditService.report(getListingId(), rule, siteRule, other)
+        redditService.report(getListingId(), rule, siteRule, other)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(disposable -> showSpinner())

@@ -11,15 +11,15 @@ import timber.log.Timber;
  */
 public class ConsoleLoggingTree extends Timber.DebugTree {
 
-    com.ddiehl.android.logging.ConsoleLogger mConsoleLogger;
+    com.ddiehl.android.logging.ConsoleLogger consoleLogger;
 
     public ConsoleLoggingTree(com.ddiehl.android.logging.ConsoleLogger logger) {
-        mConsoleLogger = logger;
+        consoleLogger = logger;
     }
 
     @Override
     protected void log(int priority, String tag, String message, Throwable t) {
-        mConsoleLogger.log(tag + ": " + message);
+        consoleLogger.log(tag + ": " + message);
 
         if (t != null) {
             t.printStackTrace();

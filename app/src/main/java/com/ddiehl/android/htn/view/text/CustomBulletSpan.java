@@ -13,37 +13,37 @@ public class CustomBulletSpan extends BulletSpan {
 
     private static final int BULLET_RADIUS = 3; // Copied from super class
 
-    private final int mGapWidth;
+    private final int gapWidth;
 
     public CustomBulletSpan() {
         super();
-        mGapWidth = STANDARD_GAP_WIDTH;
+        gapWidth = STANDARD_GAP_WIDTH;
     }
 
     public CustomBulletSpan(int gapWidth) {
         super(gapWidth);
-        mGapWidth = gapWidth;
+        this.gapWidth = gapWidth;
     }
 
     public CustomBulletSpan(int gapWidth, int color) {
         super(gapWidth, color);
-        mGapWidth = gapWidth;
+        this.gapWidth = gapWidth;
     }
 
     public CustomBulletSpan(Parcel src) {
         super(src);
-        mGapWidth = src.readInt();
+        gapWidth = src.readInt();
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         super.writeToParcel(dest, flags);
-        dest.writeInt(mGapWidth);
+        dest.writeInt(gapWidth);
     }
 
     @Override
     public int getLeadingMargin(boolean first) {
-        return 2 * BULLET_RADIUS + mGapWidth;
+        return 2 * BULLET_RADIUS + gapWidth;
     }
 
     @Override
@@ -53,7 +53,7 @@ public class CustomBulletSpan extends BulletSpan {
                                   boolean first, Layout l) {
         super.drawLeadingMargin(
                 c, p,
-                x + mGapWidth / 2, // To add a larger leading margin
+                x + gapWidth / 2, // To add a larger leading margin
                 dir, top, baseline, bottom, text, start, end, first, l
         );
     }

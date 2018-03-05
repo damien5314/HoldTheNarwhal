@@ -87,7 +87,7 @@ abstract class BaseListingsFragment : BaseFragment(), ListingsView, SwipeRefresh
     override fun onStart() {
         super.onStart()
 
-        // FIXME Do we need to check mNextRequested here?
+        // FIXME Do we need to check nextRequested here?
         if (!listingsPresenter.hasData()) {
             listingsPresenter.refreshData()
         }

@@ -25,10 +25,10 @@ import static android.text.Html.FROM_HTML_MODE_LEGACY;
 
 public class HtmlParser {
 
-    Context mContext;
+    Context context;
 
     public HtmlParser(Context context) {
-        mContext = context;
+        this.context = context;
     }
 
     public Spanned convert(String text) {
@@ -54,7 +54,7 @@ public class HtmlParser {
         // Convert URLSpans to no underline form
         AndroidUtils.convertUrlSpansToNoUnderlineForm(formatted);
 
-        @ColorInt int quoteColor = ContextCompat.getColor(mContext, R.color.markdown_quote_block);
+        @ColorInt int quoteColor = ContextCompat.getColor(context, R.color.markdown_quote_block);
         AndroidUtils.convertQuoteSpansToCustom(formatted, quoteColor);
 
         AndroidUtils.convertBulletSpansToCustom(formatted);

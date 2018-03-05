@@ -8,20 +8,20 @@ import com.ddiehl.android.htn.R;
 
 public abstract class TransparentBaseActivity extends AppCompatActivity {
 
-    ProgressDialog mLoadingOverlay;
+    ProgressDialog loadingOverlay;
 
     public void showSpinner() {
-        if (mLoadingOverlay == null) {
-            mLoadingOverlay = new ProgressDialog(this, R.style.ProgressDialog);
-            mLoadingOverlay.setCancelable(false);
-            mLoadingOverlay.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        if (loadingOverlay == null) {
+            loadingOverlay = new ProgressDialog(this, R.style.ProgressDialog);
+            loadingOverlay.setCancelable(false);
+            loadingOverlay.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         }
-        mLoadingOverlay.show();
+        loadingOverlay.show();
     }
 
     public void dismissSpinner() {
-        if (mLoadingOverlay != null && mLoadingOverlay.isShowing()) {
-            mLoadingOverlay.dismiss();
+        if (loadingOverlay != null && loadingOverlay.isShowing()) {
+            loadingOverlay.dismiss();
         }
     }
 }

@@ -28,34 +28,34 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
 
     private static final int MAX_CHILDREN_PER_REQUEST = 20;
 
-    private final LinkCommentsView mLinkCommentsView;
-    private final CommentBank mCommentBank;
-    private Link mLinkContext;
-    private Listing mReplyTarget = null;
-    private boolean mDataRequested = false;
+    private final LinkCommentsView linkCommentsView;
+    private final CommentBank commentBank;
+    private Link linkContext;
+    private Listing replyTarget = null;
+    private boolean dataRequested = false;
 
     public LinkCommentsPresenter(MainView main, RedditNavigationView navigationView, LinkCommentsView view) {
         super(main, navigationView, view, view, view, null);
-        mLinkCommentsView = view;
-        mCommentBank = new CommentBankList();
+        linkCommentsView = view;
+        commentBank = new CommentBankList();
     }
 
     @Override
     public boolean hasData() {
-        return mCommentBank.size() != 0;
+        return commentBank.size() != 0;
     }
 
     @Override
     public void clearData() {
-        mLinkContext = null;
-        mCommentBank.clear();
+        linkContext = null;
+        commentBank.clear();
     }
 
     @Override
     public void refreshData() {
         int numItems = getListings().size();
-        mCommentBank.clear();
-        mLinkCommentsView.notifyItemRangeRemoved(0, numItems);
+        commentBank.clear();
+        linkCommentsView.notifyItemRangeRemoved(0, numItems);
         getNextData();
     }
 
@@ -66,29 +66,29 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
 
     @Override
     protected void requestNextData() {
-        if (!mDataRequested) {
-            mDataRequested = true;
-            mRedditService.loadLinkComments(
-                    mLinkCommentsView.getSubreddit(), mLinkCommentsView.getArticleId(),
-                    mLinkCommentsView.getSort(), mLinkCommentsView.getCommentId()
+        if (!dataRequested) {
+            dataRequested = true;
+            redditService.loadLinkComments(
+                    linkCommentsView.getSubreddit(), linkCommentsView.getArticleId(),
+                    linkCommentsView.getSort(), linkCommentsView.getCommentId()
             )
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .doOnSubscribe(disposable -> mMainView.showSpinner())
+                    .doOnSubscribe(disposable -> mainView.showSpinner())
                     .doFinally(() -> {
-                        mDataRequested = false;
-                        mMainView.dismissSpinner();
+                        dataRequested = false;
+                        mainView.dismissSpinner();
                     })
                     .subscribe(
                             this::onLoadLinkComments,
                             error -> {
                                 if (error instanceof IOException) {
-                                    String message = mContext.getString(R.string.error_network_unavailable);
-                                    mMainView.showError(message);
+                                    String message = context.getString(R.string.error_network_unavailable);
+                                    mainView.showError(message);
                                 } else {
                                     Timber.w(error, "Error retrieving comment listings");
-                                    String message = mContext.getString(R.string.error_get_link_comments);
-                                    mMainView.showError(message);
+                                    String message = context.getString(R.string.error_get_link_comments);
+                                    mainView.showError(message);
                                 }
                             }
                     );
@@ -98,12 +98,12 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
     private void onLoadLinkComments(List<ListingResponse> listingResponseList) {
         if (listingResponseList == null) return;
 
-        mLinkCommentsView.refreshOptionsMenu();
+        linkCommentsView.refreshOptionsMenu();
 
         // Get link
         ListingResponse linkResponse = listingResponseList.get(0);
-        mLinkContext = (Link) linkResponse.getData().getChildren().get(0);
-        Timber.i("Link: %s", mLinkContext.getFullName());
+        linkContext = (Link) linkResponse.getData().getChildren().get(0);
+        Timber.i("Link: %s", linkContext.getFullName());
 
         // Get comments and flatten the comment tree
         ListingResponse commentsResponse = listingResponseList.get(1);
@@ -112,16 +112,16 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
         Timber.i("Comments: %d", comments.size());
 
         // Add comments to CommentBank
-        mCommentBank.clear();
-        mCommentBank.addAll(comments);
+        commentBank.clear();
+        commentBank.addAll(comments);
 
         // Collapse all threads under the user's minimum score
-        Integer minScore = mSettingsManager.getMinCommentScore();
-        mCommentBank.collapseAllThreadsUnder(minScore);
+        Integer minScore = settingsManager.getMinCommentScore();
+        commentBank.collapseAllThreadsUnder(minScore);
 
         // Notify adapter
         // TODO Specify commentsAdded
-        mLinkCommentsView.notifyDataSetChanged();
+        linkCommentsView.notifyDataSetChanged();
     }
 
     @Override
@@ -129,28 +129,28 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
         List<String> children = parentStub.getChildren();
         // Truncate list of children to 20
         children = children.subList(0, Math.min(MAX_CHILDREN_PER_REQUEST, children.size()));
-        mRedditService.loadMoreChildren(mLinkContext.getId(), children, mLinkCommentsView.getSort())
+        redditService.loadMoreChildren(linkContext.getId(), children, linkCommentsView.getSort())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe(disposable -> mMainView.showSpinner())
-                .doFinally(mMainView::dismissSpinner)
+                .doOnSubscribe(disposable -> mainView.showSpinner())
+                .doFinally(mainView::dismissSpinner)
                 .subscribe(
                         response -> onLoadMoreChildren(response, parentStub),
                         error -> {
                             if (error instanceof IOException) {
-                                String message = mContext.getString(R.string.error_network_unavailable);
-                                mMainView.showError(message);
+                                String message = context.getString(R.string.error_network_unavailable);
+                                mainView.showError(message);
                             } else {
                                 Timber.w(error, "Error retrieving more comments");
-                                String message = mContext.getString(R.string.error_get_more_comments);
-                                mMainView.showError(message);
+                                String message = context.getString(R.string.error_get_more_comments);
+                                mainView.showError(message);
                             }
                         }
                 );
     }
 
     private void onLoadMoreChildren(MoreChildrenResponse response, @NotNull CommentStub parentStub) {
-        final int stubIndex = mCommentBank.indexOf(parentStub);
+        final int stubIndex = commentBank.indexOf(parentStub);
         if (stubIndex == -1) {
             // Parent comment stub is no longer in the list, we've probably already processed this response
             return;
@@ -159,7 +159,7 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
         List<Listing> comments = response.getChildComments();
 
         if (comments == null || comments.size() == 0) {
-            mCommentBank.remove(parentStub);
+            commentBank.remove(parentStub);
         } else {
             Timber.i("More comments: %d", comments.size());
 
@@ -169,17 +169,17 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
             parentStub.setCount(parentStub.getChildren().size());
 
             if (parentStub.getCount() == 0) {
-                mCommentBank.remove(stubIndex);
+                commentBank.remove(stubIndex);
             }
 
-            mCommentBank.addAll(stubIndex, comments);
+            commentBank.addAll(stubIndex, comments);
         }
 
-        Integer minScore = mSettingsManager.getMinCommentScore();
-        mCommentBank.collapseAllThreadsUnder(minScore);
+        Integer minScore = settingsManager.getMinCommentScore();
+        commentBank.collapseAllThreadsUnder(minScore);
 
         // TODO Specify commentRemoved and commentsAdded
-        mLinkCommentsView.notifyDataSetChanged();
+        linkCommentsView.notifyDataSetChanged();
     }
 
     /**
@@ -205,36 +205,36 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
     }
 
     public Link getLinkContext() {
-        return mLinkContext;
+        return linkContext;
     }
 
     @Override
     public AbsComment getListingAt(int position) {
-        return mCommentBank.getVisibleComment(position);
+        return commentBank.getVisibleComment(position);
     }
 
     public void toggleThreadVisible(Comment comment) {
-        int before = mCommentBank.getNumVisible();
-        int position = mCommentBank.visibleIndexOf(comment);
-        mCommentBank.toggleThreadVisible(comment);
-        int diff = mCommentBank.getNumVisible() - before;
-        mLinkCommentsView.notifyItemChanged(position);
+        int before = commentBank.getNumVisible();
+        int position = commentBank.visibleIndexOf(comment);
+        commentBank.toggleThreadVisible(comment);
+        int diff = commentBank.getNumVisible() - before;
+        linkCommentsView.notifyItemChanged(position);
         if (diff > 0) {
-            mLinkCommentsView.notifyItemRangeInserted(position + 1, diff);
+            linkCommentsView.notifyItemRangeInserted(position + 1, diff);
         } else { // diff < 0
-            mLinkCommentsView.notifyItemRangeRemoved(position + 1, diff * -1);
+            linkCommentsView.notifyItemRangeRemoved(position + 1, diff * -1);
         }
     }
 
     @Override
     public int getNumListings() {
-        return mCommentBank.getNumVisible();
+        return commentBank.getNumVisible();
     }
 
     @Override
     protected int getIndexOf(Listing listing) {
         if (listing instanceof AbsComment)
-            return mCommentBank.visibleIndexOf((AbsComment) listing);
+            return commentBank.visibleIndexOf((AbsComment) listing);
         else return -1;
     }
 
@@ -246,70 +246,70 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
             if (media != null) {
                 final Media.RedditVideo redditVideo = media.getRedditVideo();
                 if (redditVideo != null) {
-                    mLinkCommentsView.openUrlInWebView(redditVideo.getFallbackUrl());
+                    linkCommentsView.openUrlInWebView(redditVideo.getFallbackUrl());
                     return;
                 }
             }
-            mLinkCommentsView.openUrlInWebView(link.getUrl());
+            linkCommentsView.openUrlInWebView(link.getUrl());
         }
     }
 
     @Override
     public void replyToLink(Link link) {
         if (link.isArchived()) {
-            mMainView.showToast(mContext.getString(R.string.listing_archived));
-        } else if (!mRedditService.isUserAuthorized()) {
-            mMainView.showToast(mContext.getString(R.string.user_required));
+            mainView.showToast(context.getString(R.string.listing_archived));
+        } else if (!redditService.isUserAuthorized()) {
+            mainView.showToast(context.getString(R.string.user_required));
         } else {
-            mReplyTarget = link;
-            mLinkCommentsView.openReplyView(link);
+            replyTarget = link;
+            linkCommentsView.openReplyView(link);
         }
     }
 
     @Override
     public void replyToComment(@NotNull Comment comment) {
         if (comment.isArchived()) {
-            mMainView.showToast(mContext.getString(R.string.listing_archived));
-        } else if (!mRedditService.isUserAuthorized()) {
-            mMainView.showToast(mContext.getString(R.string.user_required));
+            mainView.showToast(context.getString(R.string.listing_archived));
+        } else if (!redditService.isUserAuthorized()) {
+            mainView.showToast(context.getString(R.string.user_required));
         } else {
-            mReplyTarget = comment;
-            mLinkCommentsView.openReplyView(comment);
+            replyTarget = comment;
+            linkCommentsView.openReplyView(comment);
         }
     }
 
     public void onCommentSubmitted(@NotNull String commentText) {
-        String parentId = mReplyTarget.getFullName();
-        mRedditService.addComment(parentId, commentText)
+        String parentId = replyTarget.getFullName();
+        redditService.addComment(parentId, commentText)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         comment -> {
-                            String message = mContext.getString(R.string.comment_added);
-                            mMainView.showToast(message);
+                            String message = context.getString(R.string.comment_added);
+                            mainView.showToast(message);
 
                             // TODO Optimize this logic, it probably takes a long time in large threads
                             int position;
                             if (parentId.startsWith("t1_")) { // Comment
-                                comment.setDepth(((Comment) mReplyTarget).getDepth() + 1);
-                                position = mCommentBank.indexOf((Comment) mReplyTarget) + 1;
+                                comment.setDepth(((Comment) replyTarget).getDepth() + 1);
+                                position = commentBank.indexOf((Comment) replyTarget) + 1;
                             } else {
                                 comment.setDepth(1);
                                 position = 0;
                             }
-                            mCommentBank.add(position, comment);
-                            mLinkCommentsView.notifyItemInserted(
-                                    mCommentBank.visibleIndexOf(comment)
+                            commentBank.add(position, comment);
+                            linkCommentsView.notifyItemInserted(
+                                    commentBank.visibleIndexOf(comment)
                             );
                         },
                         error -> {
                             if (error instanceof IOException) {
-                                String message = mContext.getString(R.string.error_network_unavailable);
-                                mMainView.showError(message);
+                                String message = context.getString(R.string.error_network_unavailable);
+                                mainView.showError(message);
                             } else {
                                 Timber.w(error, "Error adding comment");
-                                String message = mContext.getString(R.string.error_add_comment);
-                                mMainView.showError(message);
+                                String message = context.getString(R.string.error_add_comment);
+                                mainView.showError(message);
                             }
                         }
                 );
@@ -321,6 +321,6 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
     }
 
     public boolean shouldShowParentLink() {
-        return mLinkCommentsView.getCommentId() != null;
+        return linkCommentsView.getCommentId() != null;
     }
 }

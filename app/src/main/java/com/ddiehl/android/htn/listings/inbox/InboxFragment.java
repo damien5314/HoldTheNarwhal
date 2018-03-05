@@ -32,11 +32,11 @@ public class InboxFragment extends BaseListingsFragment
 
     public static final String TAG = InboxFragment.class.getSimpleName();
 
-    @Arg(key = "ARG_SHOW") String mShow;
+    @Arg(key = "ARG_SHOW") String show;
 
-    @BindView(R.id.coordinator_layout) CoordinatorLayout mCoordinatorLayout;
+    @BindView(R.id.coordinator_layout) CoordinatorLayout coordinatorLayout;
 
-    private InboxPresenter mInboxPresenter;
+    private InboxPresenter inboxPresenter;
 
     @Override
     protected int getLayoutResId() {
@@ -48,11 +48,11 @@ public class InboxFragment extends BaseListingsFragment
         super.onCreate(savedInstanceState);
         FragmentArgs.inject(this);
 
-        if (TextUtils.isEmpty(mShow)) mShow = "inbox";
+        if (TextUtils.isEmpty(show)) show = "inbox";
 
-        mInboxPresenter = new InboxPresenter(this, redditNavigationView, this);
-        setListingsPresenter(mInboxPresenter);
-        setCallbacks(mInboxPresenter);
+        inboxPresenter = new InboxPresenter(this, redditNavigationView, this);
+        setListingsPresenter(inboxPresenter);
+        setCallbacks(inboxPresenter);
     }
 
     @NotNull @Override
@@ -86,7 +86,7 @@ public class InboxFragment extends BaseListingsFragment
             tabLayout.addTab(tab);
         }
 
-        selectTab(mShow);
+        selectTab(show);
 
         tabLayout.addOnTabSelectedListener(this);
     }
@@ -143,8 +143,8 @@ public class InboxFragment extends BaseListingsFragment
 
     @Override
     public void onTabSelected(TabLayout.Tab tab) {
-        mShow = (String) tab.getTag();
-        mInboxPresenter.onViewSelected(mShow);
+        show = (String) tab.getTag();
+        inboxPresenter.onViewSelected(show);
     }
 
     @Override
@@ -164,7 +164,7 @@ public class InboxFragment extends BaseListingsFragment
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_mark_messages_read:
-                mInboxPresenter.onMarkMessagesRead();
+                inboxPresenter.onMarkMessagesRead();
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -172,11 +172,11 @@ public class InboxFragment extends BaseListingsFragment
 
     @Override
     public String getShow() {
-        return mShow;
+        return show;
     }
 
     @NotNull @Override
     protected View getChromeView() {
-        return mCoordinatorLayout;
+        return coordinatorLayout;
     }
 }

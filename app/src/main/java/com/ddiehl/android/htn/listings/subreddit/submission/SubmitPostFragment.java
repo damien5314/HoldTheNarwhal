@@ -45,24 +45,24 @@ public class SubmitPostFragment extends BaseFragment
     public static final int RESULT_SUBMIT_SUCCESS = Activity.RESULT_OK;
     public static final int RESULT_SUBMIT_ERROR = -10;
 
-    @Arg String mSubreddit;
+    @Arg String subreddit;
 
     @BindView(R.id.coordinator_layout)
-    CoordinatorLayout mCoordinatorLayout;
+    CoordinatorLayout coordinatorLayout;
     @BindView(R.id.submission_type_tabs)
-    TabLayout mSubmissionTypeTabs;
+    TabLayout submissionTypeTabs;
     @BindView(R.id.submission_url)
-    TextInputEditText mUrlEditText;
+    TextInputEditText urlEditText;
     @BindView(R.id.submission_title)
-    TextInputEditText mTitleEditText;
+    TextInputEditText titleEditText;
     @BindView(R.id.submission_text)
-    TextInputEditText mTextEditText;
+    TextInputEditText textEditText;
     @BindView(R.id.send_replies_to_inbox)
-    CheckBox mSendRepliesToInboxCheckbox;
+    CheckBox sendRepliesToInboxCheckbox;
     @BindView(R.id.submission_submit)
-    Button mSubmitButton;
+    Button submitButton;
 
-    SubmitPostPresenter mPresenter;
+    SubmitPostPresenter presenter;
 
     @Override
     protected int getLayoutResId() {
@@ -71,7 +71,7 @@ public class SubmitPostFragment extends BaseFragment
 
     @NotNull @Override
     protected View getChromeView() {
-        return mCoordinatorLayout;
+        return coordinatorLayout;
     }
 
     @Override
@@ -79,7 +79,7 @@ public class SubmitPostFragment extends BaseFragment
         super.onCreate(savedInstanceState);
         HoldTheNarwhal.getApplicationComponent().inject(this);
         FragmentArgs.inject(this);
-        mPresenter = new SubmitPostPresenter(this);
+        presenter = new SubmitPostPresenter(this);
     }
 
     @NotNull
@@ -88,9 +88,9 @@ public class SubmitPostFragment extends BaseFragment
         View view = super.onCreateView(inflater, container, state);
         ButterKnife.bind(this, view);
 
-        mSubmissionTypeTabs.addOnTabSelectedListener(getOnTabSelectedListener());
-        TabLayout.Tab linkTab = addNewTab(mSubmissionTypeTabs, R.string.submission_type_link, "link");
-        TabLayout.Tab textTab = addNewTab(mSubmissionTypeTabs, R.string.submission_type_text, "self");
+        submissionTypeTabs.addOnTabSelectedListener(getOnTabSelectedListener());
+        TabLayout.Tab linkTab = addNewTab(submissionTypeTabs, R.string.submission_type_link, "link");
+        TabLayout.Tab textTab = addNewTab(submissionTypeTabs, R.string.submission_type_text, "self");
 
         return view;
     }
@@ -124,53 +124,53 @@ public class SubmitPostFragment extends BaseFragment
     }
 
     private void onLinkTabSelected() {
-        getTextInputLayout(mUrlEditText).setVisibility(View.VISIBLE);
-        getTextInputLayout(mTextEditText).setVisibility(View.GONE);
+        getTextInputLayout(urlEditText).setVisibility(View.VISIBLE);
+        getTextInputLayout(textEditText).setVisibility(View.GONE);
     }
 
     private void onTextTabSelected() {
-        getTextInputLayout(mUrlEditText).setVisibility(View.GONE);
-        getTextInputLayout(mTextEditText).setVisibility(View.VISIBLE);
+        getTextInputLayout(urlEditText).setVisibility(View.GONE);
+        getTextInputLayout(textEditText).setVisibility(View.VISIBLE);
     }
 
     @OnClick(R.id.submission_submit)
     void onSubmitClicked() {
-        int position = mSubmissionTypeTabs.getSelectedTabPosition();
-        TabLayout.Tab selected = mSubmissionTypeTabs.getTabAt(position);
+        int position = submissionTypeTabs.getSelectedTabPosition();
+        TabLayout.Tab selected = submissionTypeTabs.getTabAt(position);
 
         if (selected == null) {
             throw new RuntimeException("Invalid selected tab position");
         }
         if ("link".equals(selected.getTag())) {
-            mPresenter.submit("link");
+            presenter.submit("link");
         } else {
-            mPresenter.submit("self");
+            presenter.submit("self");
         }
     }
 
     @Override
     public String getSubreddit() {
-        return mSubreddit;
+        return subreddit;
     }
 
     @Override
     public String getTitle() {
-        return mTitleEditText.getText().toString();
+        return titleEditText.getText().toString();
     }
 
     @Override
     public String getUrl() {
-        return mUrlEditText.getText().toString();
+        return urlEditText.getText().toString();
     }
 
     @Override
     public String getText() {
-        return mTextEditText.getText().toString();
+        return textEditText.getText().toString();
     }
 
     @Override
     public boolean getSendReplies() {
-        return mSendRepliesToInboxCheckbox.isChecked();
+        return sendRepliesToInboxCheckbox.isChecked();
     }
 
     @Override
@@ -178,7 +178,7 @@ public class SubmitPostFragment extends BaseFragment
         Intent intent = new Intent();
         // Success
         if (result.getErrors().size() == 0) {
-            intent.putExtra(EXTRA_SUBMIT_SUBREDDIT, mSubreddit);
+            intent.putExtra(EXTRA_SUBMIT_SUBREDDIT, subreddit);
             intent.putExtra(EXTRA_SUBMIT_ID, result.getId());
             finish(RESULT_SUBMIT_SUCCESS, intent);
         }

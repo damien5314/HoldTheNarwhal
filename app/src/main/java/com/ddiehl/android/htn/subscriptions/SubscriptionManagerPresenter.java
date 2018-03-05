@@ -18,7 +18,7 @@ import rxreddit.model.Subreddit;
 
 public class SubscriptionManagerPresenter {
 
-    @Inject RedditService mRedditService;
+    @Inject RedditService redditService;
 
     public SubscriptionManagerPresenter() {
         HoldTheNarwhal.getApplicationComponent().inject(this);
@@ -30,25 +30,25 @@ public class SubscriptionManagerPresenter {
      */
     public Observable<ListingResponse> getSubscriptions(
             @NotNull String where, @Nullable String beforePageId, @Nullable String nextPageId) {
-        return mRedditService.getSubreddits(where, beforePageId, nextPageId)
+        return redditService.getSubreddits(where, beforePageId, nextPageId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
     public Completable subscribe(Subreddit subreddit) {
         String name = subreddit.getDisplayName();
-        return mRedditService.subscribe(name);
+        return redditService.subscribe(name);
     }
 
     public Completable unsubscribe(Subreddit subreddit) {
         String name = subreddit.getDisplayName();
-        return mRedditService.unsubscribe(name);
+        return redditService.unsubscribe(name);
     }
 
     public Observable<InfoTuple> getSubredditInfo(final @NotNull String subreddit) {
         return Observable.combineLatest(
-                mRedditService.getSubredditInfo(subreddit),
-                mRedditService.getSubredditRules(subreddit),
+                redditService.getSubredditInfo(subreddit),
+                redditService.getSubredditRules(subreddit),
 //                redditService.getSubredditSidebar(subreddit),
                 (subreddit2, rules) -> {
                     InfoTuple tuple = new InfoTuple();

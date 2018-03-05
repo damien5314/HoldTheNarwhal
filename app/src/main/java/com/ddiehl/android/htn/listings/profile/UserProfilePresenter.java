@@ -31,23 +31,23 @@ public class UserProfilePresenter extends BaseListingsPresenter {
         public List<Listing> trophies;
     }
 
-    private final UserProfileView mSummaryView;
+    private final UserProfileView summaryView;
 
     public UserProfilePresenter(MainView main, RedditNavigationView navigationView, UserProfileView view) {
         super(main, navigationView, view, view, view, null);
         HoldTheNarwhal.getApplicationComponent().inject(this);
-        mSummaryView = view;
+        summaryView = view;
     }
 
     public boolean isAuthenticatedUser() {
-        UserIdentity authenticatedUser = mIdentityManager.getUserIdentity();
+        UserIdentity authenticatedUser = identityManager.getUserIdentity();
         return authenticatedUser != null
-                && Utils.equals(mSummaryView.getUsernameContext(), authenticatedUser.getName());
+                && Utils.equals(summaryView.getUsernameContext(), authenticatedUser.getName());
     }
 
     @Override
     protected void requestPreviousData() {
-        if ("summary".equals(mSummaryView.getShow())) {
+        if ("summary".equals(summaryView.getShow())) {
             getSummaryData();
         } else {
             getListingData(false);
@@ -56,7 +56,7 @@ public class UserProfilePresenter extends BaseListingsPresenter {
 
     @Override
     public void requestNextData() {
-        if ("summary".equals(mSummaryView.getShow())) {
+        if ("summary".equals(summaryView.getShow())) {
             getSummaryData();
         } else {
             getListingData(true);
@@ -64,36 +64,36 @@ public class UserProfilePresenter extends BaseListingsPresenter {
     }
 
     private void getListingData(boolean append) {
-        String before = append ? null : mPrevPageListingId;
-        String after = append ? mNextPageListingId : null;
-        mRedditService.loadUserProfile(
-                mSummaryView.getShow(), mSummaryView.getUsernameContext(),
-                mSummaryView.getSort(), mSummaryView.getTimespan(),
+        String before = append ? null : prevPageListingId;
+        String after = append ? nextPageListingId : null;
+        redditService.loadUserProfile(
+                summaryView.getShow(), summaryView.getUsernameContext(),
+                summaryView.getSort(), summaryView.getTimespan(),
                 before, after
         )
                 .flatMap(this::checkNullResponse)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(disposable -> {
-                    mMainView.showSpinner();
-                    if (append) mNextRequested = true;
-                    else mBeforeRequested = true;
+                    mainView.showSpinner();
+                    if (append) nextRequested = true;
+                    else beforeRequested = true;
                 })
                 .doFinally(() -> {
-                    mMainView.dismissSpinner();
-                    if (append) mNextRequested = false;
-                    else mBeforeRequested = false;
+                    mainView.dismissSpinner();
+                    if (append) nextRequested = false;
+                    else beforeRequested = false;
                 })
                 .subscribe(
                         listings -> onListingsLoaded(listings, append),
                         error -> {
                             if (error instanceof IOException) {
-                                String message = mContext.getString(R.string.error_network_unavailable);
-                                mMainView.showError(message);
+                                String message = context.getString(R.string.error_network_unavailable);
+                                mainView.showError(message);
                             } else {
                                 Timber.w(error, "Error loading profile listings");
-                                String message = mContext.getString(R.string.error_get_user_profile_listings);
-                                mMainView.showError(message);
+                                String message = context.getString(R.string.error_get_user_profile_listings);
+                                mainView.showError(message);
                             }
                         }
                 );
@@ -104,7 +104,7 @@ public class UserProfilePresenter extends BaseListingsPresenter {
     }
 
     Observable<UserInfoTuple> getUserInfo() {
-        return mRedditService.getUserInfo(mSummaryView.getUsernameContext())
+        return redditService.getUserInfo(summaryView.getUsernameContext())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .map(identity -> {
@@ -116,7 +116,7 @@ public class UserProfilePresenter extends BaseListingsPresenter {
     }
 
     Observable<List<Listing>> getTrophies() {
-        return mRedditService.getUserTrophies(mSummaryView.getUsernameContext())
+        return redditService.getUserTrophies(summaryView.getUsernameContext())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
@@ -131,12 +131,12 @@ public class UserProfilePresenter extends BaseListingsPresenter {
                 }
         )
                 .doOnSubscribe(disposable -> {
-                    mMainView.showSpinner();
-                    mNextRequested = true;
+                    mainView.showSpinner();
+                    nextRequested = true;
                 })
                 .doFinally(() -> {
-                    mMainView.dismissSpinner();
-                    mNextRequested = false;
+                    mainView.dismissSpinner();
+                    nextRequested = false;
                 })
                 .subscribe(this::onGetUserInfo, this::onGetUserInfoError);
     }
@@ -145,30 +145,30 @@ public class UserProfilePresenter extends BaseListingsPresenter {
         Timber.i("Showing user profile summary: %s", info.user.getId());
 
         // Show user info and trophies
-        mSummaryView.showUserInfo(info.user);
-        mSummaryView.showTrophies(info.trophies);
+        summaryView.showUserInfo(info.user);
+        summaryView.showTrophies(info.trophies);
 
         // Show friend note if we received it, and user is gold
         if (info.user != null && info.user.isGold() && info.friend != null) {
-            mSummaryView.showFriendNote(info.friend.getNote());
+            summaryView.showFriendNote(info.friend.getNote());
         }
     }
 
     void onGetUserInfoError(Throwable error) {
         if (error instanceof IOException) {
-            String message = mContext.getString(R.string.error_network_unavailable);
-            mMainView.showError(message);
+            String message = context.getString(R.string.error_network_unavailable);
+            mainView.showError(message);
         } else {
             Timber.w(error, "Error loading friend info");
-            String message = mContext.getString(R.string.error_get_user_info);
-            mMainView.showError(message);
+            String message = context.getString(R.string.error_get_user_info);
+            mainView.showError(message);
         }
     }
 
     private Function<UserInfoTuple, Observable<UserInfoTuple>> getFriendInfo() {
         return (tuple) -> {
             if (tuple.user.isFriend()) {
-                return mRedditService.getFriendInfo(tuple.user.getName())
+                return redditService.getFriendInfo(tuple.user.getName())
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .map(friendInfo -> {
@@ -182,53 +182,53 @@ public class UserProfilePresenter extends BaseListingsPresenter {
     }
 
     public void addFriend() {
-        mRedditService.addFriend(mSummaryView.getUsernameContext())
+        redditService.addFriend(summaryView.getUsernameContext())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe(disposable -> mMainView.showSpinner())
-                .doOnTerminate(mMainView::dismissSpinner)
+                .doOnSubscribe(disposable -> mainView.showSpinner())
+                .doOnTerminate(mainView::dismissSpinner)
                 .subscribe(
                         () -> {
-                            mSummaryView.setFriendButtonState(true);
-                            UserIdentity self = mIdentityManager.getUserIdentity();
+                            summaryView.setFriendButtonState(true);
+                            UserIdentity self = identityManager.getUserIdentity();
                             if (self != null && self.isGold()) {
-                                mSummaryView.showFriendNote("");
+                                summaryView.showFriendNote("");
                             }
-                            mMainView.showToast(mContext.getString(R.string.user_friend_add_confirm));
+                            mainView.showToast(context.getString(R.string.user_friend_add_confirm));
                         },
                         error -> {
                             if (error instanceof IOException) {
-                                String message = mContext.getString(R.string.error_network_unavailable);
-                                mMainView.showError(message);
+                                String message = context.getString(R.string.error_network_unavailable);
+                                mainView.showError(message);
                             } else {
                                 Timber.w(error, "Error adding friend");
-                                String message = mContext.getString(R.string.user_friend_add_error);
-                                mMainView.showError(message);
+                                String message = context.getString(R.string.user_friend_add_error);
+                                mainView.showError(message);
                             }
                         }
                 );
     }
 
     public void deleteFriend() {
-        mRedditService.deleteFriend(mSummaryView.getUsernameContext())
+        redditService.deleteFriend(summaryView.getUsernameContext())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe(disposable -> mMainView.showSpinner())
-                .doOnTerminate(mMainView::dismissSpinner)
+                .doOnSubscribe(disposable -> mainView.showSpinner())
+                .doOnTerminate(mainView::dismissSpinner)
                 .subscribe(
                         () -> {
-                            mSummaryView.setFriendButtonState(false);
-                            mSummaryView.hideFriendNote();
-                            mMainView.showToast(mContext.getString(R.string.user_friend_delete_confirm));
+                            summaryView.setFriendButtonState(false);
+                            summaryView.hideFriendNote();
+                            mainView.showToast(context.getString(R.string.user_friend_delete_confirm));
                         },
                         error -> {
                             if (error instanceof IOException) {
-                                String message = mContext.getString(R.string.error_network_unavailable);
-                                mMainView.showError(message);
+                                String message = context.getString(R.string.error_network_unavailable);
+                                mainView.showError(message);
                             } else {
                                 Timber.w(error, "Error deleting friend");
-                                String message = mContext.getString(R.string.user_friend_delete_error);
-                                mMainView.showError(message);
+                                String message = context.getString(R.string.user_friend_delete_error);
+                                mainView.showError(message);
                             }
                         }
                 );
@@ -237,26 +237,26 @@ public class UserProfilePresenter extends BaseListingsPresenter {
     public void saveFriendNote(@NotNull String note) {
         // Note must be non-empty for a positive response
         if (TextUtils.isEmpty(note))
-            mMainView.showToast(mContext.getString(R.string.user_friend_empty_note));
+            mainView.showToast(context.getString(R.string.user_friend_empty_note));
         else {
-            mMainView.showSpinner();
-            mRedditService.saveFriendNote(mSummaryView.getUsernameContext(), note)
+            mainView.showSpinner();
+            redditService.saveFriendNote(summaryView.getUsernameContext(), note)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .doOnTerminate(mMainView::dismissSpinner)
+                    .doOnTerminate(mainView::dismissSpinner)
                     .subscribe(
                             () -> {
-                                String message = mContext.getString(R.string.user_friend_note_save_confirm);
-                                mMainView.showToast(message);
+                                String message = context.getString(R.string.user_friend_note_save_confirm);
+                                mainView.showToast(message);
                             },
                             error -> {
                                 if (error instanceof IOException) {
-                                    String message = mContext.getString(R.string.error_network_unavailable);
-                                    mMainView.showError(message);
+                                    String message = context.getString(R.string.error_network_unavailable);
+                                    mainView.showError(message);
                                 } else {
                                     Timber.w(error, "Error saving friend note");
-                                    String message = mContext.getString(R.string.user_friend_note_save_error);
-                                    mMainView.showError(message);
+                                    String message = context.getString(R.string.user_friend_note_save_error);
+                                    mainView.showError(message);
                                 }
                             }
                     );
