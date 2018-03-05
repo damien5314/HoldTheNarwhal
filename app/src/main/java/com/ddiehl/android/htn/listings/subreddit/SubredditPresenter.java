@@ -146,6 +146,7 @@ public class SubredditPresenter extends BaseListingsPresenter {
         } else {
             if (mSubreddit != null) {
                 requestNextData();
+                mSubredditView.showSubredditSubscribeOptions();
             } else {
                 String message = mContext.getString(R.string.error_private_subreddit);
                 mMainView.showToast(message);

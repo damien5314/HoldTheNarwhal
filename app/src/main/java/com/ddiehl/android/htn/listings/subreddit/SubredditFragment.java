@@ -1,5 +1,6 @@
 package com.ddiehl.android.htn.listings.subreddit;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -213,9 +214,21 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.listings_subreddit, menu);
+    }
 
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
         hideTimespanOptionIfUnsupported(menu, mSort);
         showSubscribeOptions(menu);
+    }
+
+    @Override
+    public void showSubredditSubscribeOptions() {
+        final Activity activity = getActivity();
+        if (activity != null) {
+            activity.invalidateOptionsMenu();
+        }
     }
 
     private void showSubscribeOptions(@NonNull Menu menu) {
@@ -226,10 +239,16 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
             subscribeMenuItem.setVisible(false);
             unsubscribeMenuItem.setVisible(false);
         } else {
-            final Boolean userIsSubscriber =
-                    mSubredditPresenter.getSubreddit().getUserIsSubscriber();
-            subscribeMenuItem.setVisible(!userIsSubscriber);
-            unsubscribeMenuItem.setVisible(userIsSubscriber);
+            final Subreddit subreddit = mSubredditPresenter.getSubreddit();
+            if (subreddit != null) {
+                final Boolean userIsSubscriber =
+                        subreddit.getUserIsSubscriber();
+                subscribeMenuItem.setVisible(userIsSubscriber != null && !userIsSubscriber);
+                unsubscribeMenuItem.setVisible(userIsSubscriber != null && userIsSubscriber);
+            } else {
+                subscribeMenuItem.setVisible(false);
+                unsubscribeMenuItem.setVisible(false);
+            }
         }
     }
 
