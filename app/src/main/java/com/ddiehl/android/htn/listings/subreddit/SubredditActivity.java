@@ -35,7 +35,7 @@ public class SubredditActivity extends FragmentActivityCompat {
     @NotNull @Override
     protected Fragment getFragment() {
         return new SubredditFragmentBuilder()
-                .subreddit(getSubreddit())
+                .subredditName(getSubredditName())
                 .sort(getSort())
                 .timespan(getTimespan())
                 .build();
@@ -46,7 +46,7 @@ public class SubredditActivity extends FragmentActivityCompat {
         return SubredditFragment.TAG;
     }
 
-    private String getSubreddit() {
+    private String getSubredditName() {
         return getIntent().getStringExtra(EXTRA_SUBREDDIT);
     }
 
@@ -61,7 +61,7 @@ public class SubredditActivity extends FragmentActivityCompat {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Timber.i("Showing subreddit: %s", getSubreddit());
+        Timber.i("Showing subreddit: %s", getSubredditName());
         showTabs(false);
     }
 }

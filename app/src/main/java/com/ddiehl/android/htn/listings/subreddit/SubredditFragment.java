@@ -47,7 +47,7 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
 
     @Inject protected SettingsManager mSettingsManager;
 
-    @Arg(required = false) String mSubreddit;
+    @Arg(required = false) String mSubredditName;
     @Arg(required = false) String mSort;
     @Arg(required = false) String mTimespan;
 
@@ -87,7 +87,7 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
         ButterKnife.bind(this, view);
 
         // Show submit button if we're on a valid subreddit
-        boolean showSubmitButton = mSubreddit != null && !"all".equals(mSubreddit);
+        boolean showSubmitButton = mSubredditName != null && !"all".equals(mSubredditName);
         mSubmitNewPostButton.setVisibility(showSubmitButton ? View.VISIBLE : View.GONE);
 
         return view;
@@ -104,7 +104,7 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
         super.onStart();
 
         // Load subreddit image into drawer header
-        Subreddit subredditInfo = mSubredditPresenter.getSubredditInfo();
+        Subreddit subredditInfo = mSubredditPresenter.getSubreddit();
         if (subredditInfo != null) {
             String url = subredditInfo.getHeaderImageUrl();
             loadImageIntoDrawerHeader(url);
@@ -140,7 +140,7 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
 
     @OnClick(R.id.submit_new_post)
     void onSubmitNewPostClicked() {
-        Intent intent = SubmitPostActivity.getIntent(getContext(), mSubreddit);
+        Intent intent = SubmitPostActivity.getIntent(getContext(), mSubredditName);
         startActivityForResult(intent, REQUEST_SUBMIT_NEW_POST);
     }
 
@@ -158,7 +158,7 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
     public void notifyItemInserted(int position) {
         super.notifyItemInserted(position);
         if ("random".equals(getSubreddit())) {
-            mSubreddit = ((Link) getListingsPresenter().getListingAt(0)).getSubreddit();
+            mSubredditName = ((Link) getListingsPresenter().getListingAt(0)).getSubreddit();
             updateTitle();
         }
     }
@@ -185,7 +185,7 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
 
     @Override
     public String getSubreddit() {
-        return mSubreddit;
+        return mSubredditName;
     }
 
     @Override
@@ -222,12 +222,12 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
         final MenuItem subscribeMenuItem = menu.findItem(R.id.action_subreddit_subscribe);
         final MenuItem unsubscribeMenuItem = menu.findItem(R.id.action_subreddit_unsubscribe);
 
-        if (mSubreddit == null) {
+        if (mSubredditName == null) {
             subscribeMenuItem.setVisible(false);
             unsubscribeMenuItem.setVisible(false);
         } else {
             final Boolean userIsSubscriber =
-                    mSubredditPresenter.getSubredditInfo().getUserIsSubscriber();
+                    mSubredditPresenter.getSubreddit().getUserIsSubscriber();
             subscribeMenuItem.setVisible(!userIsSubscriber);
             unsubscribeMenuItem.setVisible(userIsSubscriber);
         }
@@ -269,7 +269,7 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
 
     @Override
     public void onRandomSubredditLoaded(String randomSubreddit) {
-        mSubreddit = randomSubreddit;
+        mSubredditName = randomSubreddit;
 
         String formatter = getString(R.string.link_subreddit);
         setTitle(String.format(formatter, getSubreddit()));

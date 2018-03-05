@@ -45,78 +45,78 @@ import timber.log.Timber;
 public abstract class BaseListingsPresenter
         implements ListingsView.Callbacks {
 
-    @Inject protected Context context;
-    @Inject protected IdentityManager identityManager;
-    @Inject protected SettingsManager settingsManager;
-    @Inject protected RedditService redditService;
+    @Inject protected Context mContext;
+    @Inject protected IdentityManager mIdentityManager;
+    @Inject protected SettingsManager mSettingsManager;
+    @Inject protected RedditService mRedditService;
 
-    final List<Listing> listings = new ArrayList<>();
+    final List<Listing> mListings = new ArrayList<>();
 
-    private final ListingsView listingsView;
-    protected final MainView mainView;
-    protected final RedditNavigationView redditNavigationView;
-    private final LinkView linkView;
-    private final CommentView commentView;
-    private final PrivateMessageView privateMessageView;
+    private final ListingsView mListingsView;
+    protected final MainView mMainView;
+    protected final RedditNavigationView mRedditNavigationView;
+    private final LinkView mLinkView;
+    private final CommentView mCommentView;
+    private final PrivateMessageView mPrivateMessageView;
 
-    protected boolean beforeRequested, nextRequested = false;
-    protected String prevPageListingId, nextPageListingId;
+    protected boolean mBeforeRequested, mNextRequested = false;
+    protected String mPrevPageListingId, mNextPageListingId;
 
-    protected Subreddit subredditInfo;
+    protected Subreddit mSubreddit;
 
     public BaseListingsPresenter(
             MainView main, RedditNavigationView redditNavigationView,
             ListingsView view, LinkView linkView, CommentView commentView,
             PrivateMessageView messageView) {
         HoldTheNarwhal.getApplicationComponent().inject(this);
-        this.mainView = main;
-        this.redditNavigationView = redditNavigationView;
-        this.listingsView = view;
-        this.linkView = linkView;
-        this.commentView = commentView;
-        this.privateMessageView = messageView;
+        mMainView = main;
+        mRedditNavigationView = redditNavigationView;
+        mListingsView = view;
+        mLinkView = linkView;
+        mCommentView = commentView;
+        mPrivateMessageView = messageView;
     }
 
     public List<Listing> getListings() {
-        return listings;
+        return mListings;
     }
 
     public boolean hasData() {
-        return listings.size() != 0;
+        return mListings.size() != 0;
     }
 
     public void clearData() {
-        listings.clear();
-        listingsView.notifyDataSetChanged();
+        mListings.clear();
+        mListingsView.notifyDataSetChanged();
     }
 
     public void refreshData() {
-        prevPageListingId = null;
-        nextPageListingId = null;
-        int numItems = listings.size();
-        listings.clear();
-        listingsView.notifyItemRangeRemoved(0, numItems);
+        mPrevPageListingId = null;
+        mNextPageListingId = null;
+        int numItems = mListings.size();
+        mListings.clear();
+        mListingsView.notifyItemRangeRemoved(0, numItems);
         getNextData();
     }
 
     public void getPreviousData() {
-        if (!beforeRequested) {
-            if (AndroidUtils.isConnectedToNetwork(context)) {
+        if (!mBeforeRequested) {
+            if (AndroidUtils.isConnectedToNetwork(mContext)) {
                 requestPreviousData();
             } else {
-                String message = context.getString(R.string.error_network_unavailable);
-                mainView.showToast(message);
+                String message = mContext.getString(R.string.error_network_unavailable);
+                mMainView.showToast(message);
             }
         }
     }
 
     public void getNextData() {
-        if (!nextRequested) {
-            if (AndroidUtils.isConnectedToNetwork(context)) {
+        if (!mNextRequested) {
+            if (AndroidUtils.isConnectedToNetwork(mContext)) {
                 requestNextData();
             } else {
-                String message = context.getString(R.string.error_network_unavailable);
-                mainView.showToast(message);
+                String message = mContext.getString(R.string.error_network_unavailable);
+                mMainView.showToast(message);
             }
         }
     }
@@ -127,7 +127,7 @@ public abstract class BaseListingsPresenter
 
     @Override
     public void onFirstItemShown() {
-        if (!beforeRequested && hasPreviousListings()) {
+        if (!mBeforeRequested && hasPreviousListings()) {
             Timber.d("Get PREVIOUS data");
             getPreviousData();
         }
@@ -135,45 +135,45 @@ public abstract class BaseListingsPresenter
 
     @Override
     public void onLastItemShown() {
-        if (!nextRequested && hasNextListings()) {
+        if (!mNextRequested && hasNextListings()) {
             Timber.d("Get NEXT data");
             getNextData();
         }
     }
 
     public void setData(@NotNull List<Listing> data) {
-        listings.clear();
-        listings.addAll(data);
+        mListings.clear();
+        mListings.addAll(data);
     }
 
     public int getNumListings() {
-        return listings.size();
+        return mListings.size();
     }
 
     public Listing getListingAt(int position) {
-        return listings.get(position);
+        return mListings.get(position);
     }
 
     public boolean hasPreviousListings() {
-        return prevPageListingId != null;
+        return mPrevPageListingId != null;
     }
 
     public boolean hasNextListings() {
-        return nextPageListingId != null;
+        return mNextPageListingId != null;
     }
 
     public boolean getShowControversiality() {
-        return settingsManager.getShowControversiality();
+        return mSettingsManager.getShowControversiality();
     }
 
     protected void onListingsLoaded(ListingResponse response, boolean append) {
-        mainView.dismissSpinner();
+        mMainView.dismissSpinner();
 
-        if (append) nextRequested = false;
-        else beforeRequested = false;
+        if (append) mNextRequested = false;
+        else mBeforeRequested = false;
 
         if (response == null) {
-            mainView.showToast(context.getString(R.string.error_xxx));
+            mMainView.showToast(mContext.getString(R.string.error_xxx));
             return;
         }
 
@@ -183,21 +183,21 @@ public abstract class BaseListingsPresenter
         Timber.i("Loaded %d listings", listings.size());
 
         if (append) {
-            int lastIndex = this.listings.size() - 1;
-            this.listings.addAll(listings);
-            nextPageListingId = data.getAfter();
-            listingsView.notifyItemRangeInserted(lastIndex + 1, listings.size());
+            int lastIndex = mListings.size() - 1;
+            mListings.addAll(listings);
+            mNextPageListingId = data.getAfter();
+            mListingsView.notifyItemRangeInserted(lastIndex + 1, listings.size());
         } else {
-            this.listings.addAll(0, listings);
-            prevPageListingId = listings.size() == 0 ? null : listings.get(0).getFullName();
-            listingsView.notifyItemRangeInserted(0, listings.size());
+            mListings.addAll(0, listings);
+            mPrevPageListingId = listings.size() == 0 ? null : listings.get(0).getFullName();
+            mListingsView.notifyItemRangeInserted(0, listings.size());
         }
     }
 
     protected ObservableSource<ListingResponse> checkNullResponse(ListingResponse listingResponse) {
         if (listingResponse.getData().getChildren() == null) {
-            prevPageListingId = null;
-            nextPageListingId = null;
+            mPrevPageListingId = null;
+            mNextPageListingId = null;
             return Observable.error(new NullPointerException("no links"));
         } else {
             return Observable.just(listingResponse);
@@ -206,26 +206,26 @@ public abstract class BaseListingsPresenter
 
     public void openLink(@NotNull Link link) {
         if (link.isSelf()) {
-            linkView.showCommentsForLink(link.getSubreddit(), link.getId(), null);
+            mLinkView.showCommentsForLink(link.getSubreddit(), link.getId(), null);
         } else {
             final Media media = link.getMedia();
             if (media != null) {
                 final Media.RedditVideo redditVideo = media.getRedditVideo();
                 if (redditVideo != null) {
-                    linkView.openUrlInWebView(redditVideo.getFallbackUrl());
+                    mLinkView.openUrlInWebView(redditVideo.getFallbackUrl());
                     return;
                 }
             }
-            linkView.openUrlInWebView(link.getUrl());
+            mLinkView.openUrlInWebView(link.getUrl());
         }
     }
 
     public void showCommentsForLink(@NotNull Link link) {
-        linkView.showCommentsForLink(link.getSubreddit(), link.getId(), null);
+        mLinkView.showCommentsForLink(link.getSubreddit(), link.getId(), null);
     }
 
     public void replyToLink(Link link) {
-        commentView.openReplyView(link);
+        mCommentView.openReplyView(link);
     }
 
     public void upvoteLink(@NotNull Link link) {
@@ -239,45 +239,45 @@ public abstract class BaseListingsPresenter
     }
 
     public void saveLink(@NotNull Link link) {
-        if (!redditService.isUserAuthorized()) {
-            mainView.showToast(context.getString(R.string.user_required));
+        if (!mRedditService.isUserAuthorized()) {
+            mMainView.showToast(mContext.getString(R.string.user_required));
             return;
         }
         save(link, true);
     }
 
     public void unsaveLink(@NotNull Link link) {
-        if (!redditService.isUserAuthorized()) {
-            mainView.showToast(context.getString(R.string.user_required));
+        if (!mRedditService.isUserAuthorized()) {
+            mMainView.showToast(mContext.getString(R.string.user_required));
             return;
         }
         save(link, false);
     }
 
     public void shareLink(@NotNull Link link) {
-        linkView.openShareView(link);
+        mLinkView.openShareView(link);
     }
 
     public void openLinkSubreddit(@NotNull Link link) {
         String subreddit = link.getSubreddit();
-        linkView.openSubredditView(subreddit);
+        mLinkView.openSubredditView(subreddit);
     }
 
     public void openLinkUserProfile(@NotNull Link link) {
-        linkView.openUserProfileView(link);
+        mLinkView.openUserProfileView(link);
     }
 
     public void openLinkInBrowser(@NotNull Link link) {
-        linkView.openLinkInBrowser(link);
+        mLinkView.openLinkInBrowser(link);
     }
 
     public void openCommentsInBrowser(@NotNull Link link) {
-        linkView.openCommentsInBrowser(link);
+        mLinkView.openCommentsInBrowser(link);
     }
 
     public void hideLink(@NotNull Link link) {
-        if (!redditService.isUserAuthorized()) {
-            mainView.showToast(context.getString(R.string.user_required));
+        if (!mRedditService.isUserAuthorized()) {
+            mMainView.showToast(mContext.getString(R.string.user_required));
             return;
         }
 
@@ -285,8 +285,8 @@ public abstract class BaseListingsPresenter
     }
 
     public void unhideLink(@NotNull Link link) {
-        if (!redditService.isUserAuthorized()) {
-            mainView.showToast(context.getString(R.string.user_required));
+        if (!mRedditService.isUserAuthorized()) {
+            mMainView.showToast(mContext.getString(R.string.user_required));
             return;
         }
 
@@ -294,16 +294,16 @@ public abstract class BaseListingsPresenter
     }
 
     public void reportLink(@NotNull Link link) {
-        if (!redditService.isUserAuthorized()) {
-            mainView.showToast(context.getString(R.string.user_required));
+        if (!mRedditService.isUserAuthorized()) {
+            mMainView.showToast(mContext.getString(R.string.user_required));
         } else {
-            linkView.openReportView(link);
+            mLinkView.openReportView(link);
         }
     }
 
     public void showCommentThread(
             @NotNull String subreddit, @NotNull String linkId, @NotNull String commentId) {
-        redditNavigationView.showCommentsForLink(subreddit, linkId, commentId);
+        mRedditNavigationView.showCommentsForLink(subreddit, linkId, commentId);
     }
 
     public void getMoreComments(@NotNull CommentStub comment) {
@@ -320,9 +320,9 @@ public abstract class BaseListingsPresenter
 
     public void replyToComment(@NotNull Comment comment) {
         if (comment.isArchived()) {
-            mainView.showToast(context.getString(R.string.listing_archived));
+            mMainView.showToast(mContext.getString(R.string.listing_archived));
         } else {
-            commentView.openReplyView(comment);
+            mCommentView.openReplyView(comment);
         }
     }
 
@@ -337,49 +337,49 @@ public abstract class BaseListingsPresenter
     }
 
     public void saveComment(@NotNull Comment comment) {
-        if (!redditService.isUserAuthorized()) {
-            mainView.showToast(context.getString(R.string.user_required));
+        if (!mRedditService.isUserAuthorized()) {
+            mMainView.showToast(mContext.getString(R.string.user_required));
             return;
         }
         save(comment, true);
     }
 
     public void unsaveComment(@NotNull Comment comment) {
-        if (!redditService.isUserAuthorized()) {
-            mainView.showToast(context.getString(R.string.user_required));
+        if (!mRedditService.isUserAuthorized()) {
+            mMainView.showToast(mContext.getString(R.string.user_required));
             return;
         }
         save(comment, false);
     }
 
     public void shareComment(@NotNull Comment comment) {
-        commentView.openShareView(comment);
+        mCommentView.openShareView(comment);
     }
 
     public void openCommentUserProfile(@NotNull Comment comment) {
-        commentView.openUserProfileView(comment);
+        mCommentView.openUserProfileView(comment);
     }
 
     public void openCommentInBrowser(@NotNull Comment comment) {
-        commentView.openCommentInBrowser(comment);
+        mCommentView.openCommentInBrowser(comment);
     }
 
     public void reportComment(@NotNull Comment comment) {
         if (comment.isArchived()) {
-            mainView.showToast(context.getString(R.string.listing_archived));
-        } else if (!redditService.isUserAuthorized()) {
-            mainView.showToast(context.getString(R.string.user_required));
+            mMainView.showToast(mContext.getString(R.string.listing_archived));
+        } else if (!mRedditService.isUserAuthorized()) {
+            mMainView.showToast(mContext.getString(R.string.user_required));
         } else {
-            commentView.openReportView(comment);
+            mCommentView.openReportView(comment);
         }
     }
 
     public void openCommentLink(@NotNull Comment comment) {
-        redditNavigationView.showCommentsForLink(comment.getSubreddit(), comment.getLinkId(), null);
+        mRedditNavigationView.showCommentsForLink(comment.getSubreddit(), comment.getLinkId(), null);
     }
 
     public UserIdentity getAuthorizedUser() {
-        return identityManager.getUserIdentity();
+        return mIdentityManager.getUserIdentity();
     }
 
     public void onSortChanged() {
@@ -388,26 +388,26 @@ public abstract class BaseListingsPresenter
 
     private void vote(Votable votable, int direction) {
         if (votable.isArchived()) {
-            mainView.showToast(context.getString(R.string.listing_archived));
-        } else if (!redditService.isUserAuthorized()) {
-            mainView.showToast(context.getString(R.string.user_required));
+            mMainView.showToast(mContext.getString(R.string.listing_archived));
+        } else if (!mRedditService.isUserAuthorized()) {
+            mMainView.showToast(mContext.getString(R.string.user_required));
         } else {
-            redditService.vote(votable.getKind() + "_" + votable.getId(), direction)
+            mRedditService.vote(votable.getKind() + "_" + votable.getId(), direction)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(
                             () -> {
                                 votable.applyVote(direction);
-                                listingsView.notifyItemChanged(getIndexOf((Listing) votable));
+                                mListingsView.notifyItemChanged(getIndexOf((Listing) votable));
                             },
                             error -> {
                                 if (error instanceof IOException) {
-                                    String message = context.getString(R.string.error_network_unavailable);
-                                    mainView.showError(message);
+                                    String message = mContext.getString(R.string.error_network_unavailable);
+                                    mMainView.showError(message);
                                 } else {
                                     Timber.w(error, "Error voting on listing");
-                                    String message = context.getString(R.string.vote_failed);
-                                    mainView.showError(message);
+                                    String message = mContext.getString(R.string.vote_failed);
+                                    mMainView.showError(message);
                                 }
                             }
                     );
@@ -418,67 +418,70 @@ public abstract class BaseListingsPresenter
      * This is overridden in link comments view which has headers
      */
     protected int getIndexOf(Listing listing) {
-        return listings.indexOf(listing);
+        return mListings.indexOf(listing);
     }
 
     private void save(Savable savable, boolean toSave) {
-        redditService.save(savable.getFullName(), null, toSave)
+        mRedditService.save(savable.getFullName(), null, toSave)
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         () -> {
                             savable.isSaved(toSave);
-                            listingsView.notifyItemChanged(getIndexOf((Listing) savable));
+                            mListingsView.notifyItemChanged(getIndexOf((Listing) savable));
                         },
                         error -> {
                             if (error instanceof IOException) {
-                                String message = context.getString(R.string.error_network_unavailable);
-                                mainView.showError(message);
+                                String message = mContext.getString(R.string.error_network_unavailable);
+                                mMainView.showError(message);
                             } else {
                                 Timber.w(error, "Error saving listing");
-                                String message = context.getString(R.string.save_failed);
-                                mainView.showError(message);
+                                String message = mContext.getString(R.string.save_failed);
+                                mMainView.showError(message);
                             }
                         }
                 );
     }
 
     private void hide(Hideable hideable, boolean toHide) {
-        redditService.hide(hideable.getFullName(), toHide)
+        mRedditService.hide(hideable.getFullName(), toHide)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         () -> {
                             int pos = getIndexOf((Listing) hideable);
-                            listings.remove(pos);
-                            listingsView.notifyItemRemoved(pos);
+                            mListings.remove(pos);
+                            mListingsView.notifyItemRemoved(pos);
                         },
                         error -> {
                             if (error instanceof IOException) {
-                                String message = context.getString(R.string.error_network_unavailable);
-                                mainView.showError(message);
+                                String message = mContext.getString(R.string.error_network_unavailable);
+                                mMainView.showError(message);
                             } else {
                                 Timber.w(error, "Error hiding listing");
-                                String message = context.getString(R.string.hide_failed);
-                                mainView.showError(message);
+                                String message = mContext.getString(R.string.hide_failed);
+                                mMainView.showError(message);
                             }
                         }
                 );
     }
 
     public boolean shouldShowNsfwTag() {
-        return !settingsManager.getOver18() || !(subredditInfo != null && subredditInfo.isOver18())
-                && (settingsManager.getNoProfanity() || settingsManager.getLabelNsfw());
+        final boolean isNsfwSubreddit = mSubreddit != null && mSubreddit.isOver18();
+        final boolean hideNsfwInSettings =
+                mSettingsManager.getNoProfanity() || mSettingsManager.getLabelNsfw();
+        final boolean userOver18 = mSettingsManager.getOver18();
+        return !userOver18 || !isNsfwSubreddit && hideNsfwInSettings;
     }
 
     public ThumbnailMode getThumbnailMode() {
-        if (settingsManager.getOver18()) {
-            if (subredditInfo != null && subredditInfo.isOver18()) {
+        if (mSettingsManager.getOver18()) {
+            if (mSubreddit != null && mSubreddit.isOver18()) {
                 return ThumbnailMode.FULL;
             } else {
-                if (settingsManager.getNoProfanity()) {
+                if (mSettingsManager.getNoProfanity()) {
                     return ThumbnailMode.VARIANT;
                 } else {
-                    if (settingsManager.getLabelNsfw()) {
+                    if (mSettingsManager.getLabelNsfw()) {
                         return ThumbnailMode.VARIANT;
                     } else {
                         return ThumbnailMode.FULL;
@@ -491,30 +494,30 @@ public abstract class BaseListingsPresenter
     }
 
     public UserIdentity getUserIdentity() {
-        return identityManager.getUserIdentity();
+        return mIdentityManager.getUserIdentity();
     }
 
     public void replyToMessage(@NotNull PrivateMessage message) {
-        mainView.showToast(context.getString(R.string.implementation_pending));
+        mMainView.showToast(mContext.getString(R.string.implementation_pending));
     }
 
     public void markMessageRead(@NotNull PrivateMessage pm) {
         String fullname = pm.getFullName();
-        redditService.markMessagesRead(fullname)
+        mRedditService.markMessagesRead(fullname)
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         () -> {
                             pm.markUnread(false);
-                            listingsView.notifyItemChanged(getIndexOf(pm));
+                            mListingsView.notifyItemChanged(getIndexOf(pm));
                         },
                         error -> {
                             if (error instanceof IOException) {
-                                String message = context.getString(R.string.error_network_unavailable);
-                                mainView.showError(message);
+                                String message = mContext.getString(R.string.error_network_unavailable);
+                                mMainView.showError(message);
                             } else {
                                 Timber.w(error, "Error marking message read");
-                                String errorMessage = context.getString(R.string.error_xxx);
-                                mainView.showError(errorMessage);
+                                String errorMessage = mContext.getString(R.string.error_xxx);
+                                mMainView.showError(errorMessage);
                             }
                         }
                 );
@@ -522,21 +525,21 @@ public abstract class BaseListingsPresenter
 
     public void markMessageUnread(@NotNull PrivateMessage pm) {
         String fullname = pm.getFullName();
-        redditService.markMessagesUnread(fullname)
+        mRedditService.markMessagesUnread(fullname)
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         () -> {
                             pm.markUnread(true);
-                            listingsView.notifyItemChanged(getIndexOf(pm));
+                            mListingsView.notifyItemChanged(getIndexOf(pm));
                         },
                         error -> {
                             if (error instanceof IOException) {
-                                String message = context.getString(R.string.error_network_unavailable);
-                                mainView.showError(message);
+                                String message = mContext.getString(R.string.error_network_unavailable);
+                                mMainView.showError(message);
                             } else {
                                 Timber.w(error, "Error marking message unread");
-                                String errorMessage = context.getString(R.string.error_xxx);
-                                mainView.showError(errorMessage);
+                                String errorMessage = mContext.getString(R.string.error_xxx);
+                                mMainView.showError(errorMessage);
                             }
                         }
                 );
@@ -551,14 +554,14 @@ public abstract class BaseListingsPresenter
             }
         }
         messages.add(0, message);
-        redditNavigationView.showInboxMessages(messages);
+        mRedditNavigationView.showInboxMessages(messages);
     }
 
     public void reportMessage(@NotNull PrivateMessage message) {
-        privateMessageView.openReportView(message);
+        mPrivateMessageView.openReportView(message);
     }
 
     public void blockUser(@NotNull PrivateMessage message) {
-        mainView.showToast(context.getString(R.string.implementation_pending));
+        mMainView.showToast(mContext.getString(R.string.implementation_pending));
     }
 }

@@ -1,5 +1,7 @@
 package com.ddiehl.android.htn.listings.subreddit;
 
+import android.support.annotation.NonNull;
+
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.listings.BaseListingsPresenter;
 import com.ddiehl.android.htn.navigation.RedditNavigationView;
@@ -10,7 +12,6 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import rxreddit.model.Link;
 import rxreddit.model.ListingResponse;
@@ -19,21 +20,21 @@ import timber.log.Timber;
 
 public class SubredditPresenter extends BaseListingsPresenter {
 
-    private SubredditView subredditView;
+    private SubredditView mSubredditView;
 
     public SubredditPresenter(MainView main, RedditNavigationView navigationView, SubredditView view) {
         super(main, navigationView, view, view, null, null);
-        subredditView = view;
+        mSubredditView = view;
     }
 
     @Override
     protected void requestPreviousData() {
-        String subreddit = subredditView.getSubreddit();
+        String subreddit = mSubredditView.getSubreddit();
         if (subreddit != null
                 && !subreddit.equals("all")
                 && !subreddit.equals("random")
-                && subredditInfo == null) {
-            loadSubredditInfo(subredditView.getSubreddit());
+                && mSubreddit == null) {
+            loadSubredditInfo(mSubredditView.getSubreddit());
         } else {
             getSubredditLinks(false);
         }
@@ -41,63 +42,63 @@ public class SubredditPresenter extends BaseListingsPresenter {
 
     @Override
     public void requestNextData() {
-        String subreddit = subredditView.getSubreddit();
+        String subreddit = mSubredditView.getSubreddit();
         if (subreddit != null
                 && !subreddit.equals("all")
                 && !subreddit.equals("random")
-                && subredditInfo == null) {
-            loadSubredditInfo(subredditView.getSubreddit());
+                && mSubreddit == null) {
+            loadSubredditInfo(mSubredditView.getSubreddit());
         } else {
             getSubredditLinks(true);
         }
     }
 
-    public Subreddit getSubredditInfo() {
-        return subredditInfo;
+    public Subreddit getSubreddit() {
+        return mSubreddit;
     }
 
     private void loadSubredditInfo(@NotNull String subreddit) {
-        redditService.getSubredditInfo(subreddit)
+        mRedditService.getSubredditInfo(subreddit)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe(disposable -> mainView.showSpinner())
+                .doOnSubscribe(disposable -> mMainView.showSpinner())
                 .doFinally(() -> {
-                    mainView.dismissSpinner();
-                    nextRequested = false;
+                    mMainView.dismissSpinner();
+                    mNextRequested = false;
                 })
                 .subscribe(
-                        onSubredditInfoLoaded(),
+                        this::onSubredditLoaded,
                         error -> {
                             if (error instanceof IOException) {
-                                String message = context.getString(R.string.error_network_unavailable);
-                                mainView.showError(message);
+                                String message = mContext.getString(R.string.error_network_unavailable);
+                                mMainView.showError(message);
                             } else {
                                 Timber.w(error, "Error loading subreddit info");
-                                String message = context.getString(R.string.error_get_subreddit_info);
-                                mainView.showError(message);
+                                String message = mContext.getString(R.string.error_get_subreddit_info);
+                                mMainView.showError(message);
                             }
                         }
                 );
     }
 
     private void getSubredditLinks(boolean append) {
-        final String before = append ? null : prevPageListingId;
-        final String after = append ? nextPageListingId : null;
-        final String subreddit = subredditView.getSubreddit();
+        final String before = append ? null : mPrevPageListingId;
+        final String after = append ? mNextPageListingId : null;
+        final String subreddit = mSubredditView.getSubreddit();
 
-        redditService.loadLinks(subreddit, subredditView.getSort(), subredditView.getTimespan(), before, after)
+        mRedditService.loadLinks(subreddit, mSubredditView.getSort(), mSubredditView.getTimespan(), before, after)
                 .flatMap(this::checkNullResponse)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(disposable -> {
-                    mainView.showSpinner();
-                    if (append) nextRequested = true;
-                    else beforeRequested = true;
+                    mMainView.showSpinner();
+                    if (append) mNextRequested = true;
+                    else mBeforeRequested = true;
                 })
                 .doFinally(() -> {
-                    mainView.dismissSpinner();
-                    if (append) nextRequested = false;
-                    else beforeRequested = false;
+                    mMainView.dismissSpinner();
+                    if (append) mNextRequested = false;
+                    else mBeforeRequested = false;
                 })
                 .subscribe(
                         response -> {
@@ -106,17 +107,17 @@ public class SubredditPresenter extends BaseListingsPresenter {
                             if ("random".equals(subreddit)) {
                                 Link link = getLinkFromListingResponse(response);
                                 String randomSubreddit = link == null ? null : link.getSubreddit();
-                                subredditView.onRandomSubredditLoaded(randomSubreddit);
+                                mSubredditView.onRandomSubredditLoaded(randomSubreddit);
                             }
                         },
                         error -> {
                             if (error instanceof IOException) {
-                                String message = context.getString(R.string.error_network_unavailable);
-                                mainView.showError(message);
+                                String message = mContext.getString(R.string.error_network_unavailable);
+                                mMainView.showError(message);
                             } else {
                                 Timber.w(error, "Error loading links");
-                                String message = context.getString(R.string.error_get_links);
-                                mainView.showError(message);
+                                String message = mContext.getString(R.string.error_get_links);
+                                mMainView.showError(message);
                             }
                         }
                 );
@@ -136,24 +137,22 @@ public class SubredditPresenter extends BaseListingsPresenter {
         return (Link) response.getData().getChildren().get(0);
     }
 
-    private Consumer<Subreddit> onSubredditInfoLoaded() {
-        return info -> {
-            subredditInfo = info;
+    private void onSubredditLoaded(@NonNull Subreddit subreddit) {
+        mSubreddit = subreddit;
 
-            boolean over18 = settingsManager.getOver18();
-            if (shouldShowNsfwDialog(subredditInfo, over18)) {
-                subredditView.showNsfwWarningDialog();
+        boolean over18 = mSettingsManager.getOver18();
+        if (shouldShowNsfwDialog(mSubreddit, over18)) {
+            mSubredditView.showNsfwWarningDialog();
+        } else {
+            if (mSubreddit != null) {
+                requestNextData();
             } else {
-                if (subredditInfo != null) {
-                    requestNextData();
-                } else {
-                    String message = context.getString(R.string.error_private_subreddit);
-                    mainView.showToast(message);
-                }
+                String message = mContext.getString(R.string.error_private_subreddit);
+                mMainView.showToast(message);
             }
+        }
 
-            subredditView.loadHeaderImage();
-        };
+        mSubredditView.loadHeaderImage();
     }
 
     private boolean shouldShowNsfwDialog(Subreddit subreddit, boolean userOver18) {
