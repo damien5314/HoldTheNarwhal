@@ -215,6 +215,22 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
         inflater.inflate(R.menu.listings_subreddit, menu);
 
         hideTimespanOptionIfUnsupported(menu, mSort);
+        showSubscribeOptions(menu);
+    }
+
+    private void showSubscribeOptions(@NonNull Menu menu) {
+        final MenuItem subscribeMenuItem = menu.findItem(R.id.action_subreddit_subscribe);
+        final MenuItem unsubscribeMenuItem = menu.findItem(R.id.action_subreddit_unsubscribe);
+
+        if (mSubreddit == null) {
+            subscribeMenuItem.setVisible(false);
+            unsubscribeMenuItem.setVisible(false);
+        } else {
+            final Boolean userIsSubscriber =
+                    mSubredditPresenter.getSubredditInfo().getUserIsSubscriber();
+            subscribeMenuItem.setVisible(!userIsSubscriber);
+            unsubscribeMenuItem.setVisible(userIsSubscriber);
+        }
     }
 
     @Override
