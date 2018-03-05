@@ -96,7 +96,7 @@ public class PrivateMessageFragment extends BaseFragment implements PrivateMessa
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-
+        inflater.inflate(R.menu.listings_private_message, menu);
         menu.findItem(R.id.action_change_timespan)
                 .setVisible(false);
         menu.findItem(R.id.action_refresh)

@@ -102,9 +102,6 @@ abstract class BaseListingsFragment : BaseFragment(), ListingsView, SwipeRefresh
         super.onDestroy()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater)
-            = inflater.inflate(R.menu.listings, menu)
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_refresh -> {
@@ -117,6 +114,15 @@ abstract class BaseListingsFragment : BaseFragment(), ListingsView, SwipeRefresh
             }
         }
         return false
+    }
+
+    protected fun hideTimespanOptionIfUnsupported(menu: Menu, sort: String) {
+        menu.findItem(R.id.action_change_sort).isVisible = true
+        when (sort) {
+            "controversial", "top" -> menu.findItem(R.id.action_change_timespan).isVisible = true
+            "hot", "new", "rising" -> menu.findItem(R.id.action_change_timespan).isVisible = false
+            else -> menu.findItem(R.id.action_change_timespan).isVisible = false
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

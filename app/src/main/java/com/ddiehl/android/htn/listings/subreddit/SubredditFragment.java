@@ -2,6 +2,7 @@ package com.ddiehl.android.htn.listings.subreddit;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.text.TextUtils;
@@ -44,21 +45,21 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
 
     public static final String TAG = SubredditFragment.class.getSimpleName();
 
-    @Inject protected SettingsManager settingsManager;
+    @Inject protected SettingsManager mSettingsManager;
 
-    @Arg(required = false) String subreddit;
-    @Arg(required = false) String sort;
-    @Arg(required = false) String timespan;
+    @Arg(required = false) String mSubreddit;
+    @Arg(required = false) String mSort;
+    @Arg(required = false) String mTimespan;
 
     @BindView(R.id.coordinator_layout)
-    CoordinatorLayout coordinatorLayout;
+    CoordinatorLayout mCoordinatorLayout;
     @BindView(R.id.submit_new_post)
-    FloatingActionButton submitNewPostButton;
+    FloatingActionButton mSubmitNewPostButton;
 
-    SubredditPresenter subredditPresenter;
+    SubredditPresenter mSubredditPresenter;
 
     // Cache for sort selected before showing timespan dialog
-    private String selectedSort;
+    private String mSelectedSort;
 
     @Override
     protected int getLayoutResId() {
@@ -71,11 +72,11 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
         HoldTheNarwhal.getApplicationComponent().inject(this);
         FragmentArgs.inject(this);
 
-        if (TextUtils.isEmpty(sort)) sort = "hot";
-        if (TextUtils.isEmpty(timespan)) timespan = "all";
+        if (TextUtils.isEmpty(mSort)) mSort = "hot";
+        if (TextUtils.isEmpty(mTimespan)) mTimespan = "all";
 
         SubredditPresenter presenter = new SubredditPresenter(this, redditNavigationView, this);
-        subredditPresenter = presenter;
+        mSubredditPresenter = presenter;
         setListingsPresenter(presenter);
         setCallbacks(presenter);
     }
@@ -86,8 +87,8 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
         ButterKnife.bind(this, view);
 
         // Show submit button if we're on a valid subreddit
-        boolean showSubmitButton = subreddit != null && !"all".equals(subreddit);
-        submitNewPostButton.setVisibility(showSubmitButton ? View.VISIBLE : View.GONE);
+        boolean showSubmitButton = mSubreddit != null && !"all".equals(mSubreddit);
+        mSubmitNewPostButton.setVisibility(showSubmitButton ? View.VISIBLE : View.GONE);
 
         return view;
     }
@@ -103,7 +104,7 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
         super.onStart();
 
         // Load subreddit image into drawer header
-        Subreddit subredditInfo = subredditPresenter.getSubredditInfo();
+        Subreddit subredditInfo = mSubredditPresenter.getSubredditInfo();
         if (subredditInfo != null) {
             String url = subredditInfo.getHeaderImageUrl();
             loadImageIntoDrawerHeader(url);
@@ -139,7 +140,7 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
 
     @OnClick(R.id.submit_new_post)
     void onSubmitNewPostClicked() {
-        Intent intent = SubmitPostActivity.getIntent(getContext(), subreddit);
+        Intent intent = SubmitPostActivity.getIntent(getContext(), mSubreddit);
         startActivityForResult(intent, REQUEST_SUBMIT_NEW_POST);
     }
 
@@ -157,7 +158,7 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
     public void notifyItemInserted(int position) {
         super.notifyItemInserted(position);
         if ("random".equals(getSubreddit())) {
-            subreddit = ((Link) getListingsPresenter().getListingAt(0)).getSubreddit();
+            mSubreddit = ((Link) getListingsPresenter().getListingAt(0)).getSubreddit();
             updateTitle();
         }
     }
@@ -184,22 +185,22 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
 
     @Override
     public String getSubreddit() {
-        return subreddit;
+        return mSubreddit;
     }
 
     @Override
     public String getSort() {
-        return sort;
+        return mSort;
     }
 
     @Override
     public String getTimespan() {
-        return timespan;
+        return mTimespan;
     }
 
     @NotNull @Override
     protected View getChromeView() {
-        return coordinatorLayout;
+        return mCoordinatorLayout;
     }
 
     //region Options menu
@@ -209,28 +210,15 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
      */
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.listings_subreddit, menu);
 
-        // Disable timespan option if current sort does not support it
-        switch (sort) {
-            case "controversial":
-            case "top":
-                menu.findItem(R.id.action_change_timespan)
-                        .setVisible(true);
-                break;
-            case "hot":
-            case "new":
-            case "rising":
-            default:
-                menu.findItem(R.id.action_change_timespan)
-                        .setVisible(false);
-                break;
-        }
+        hideTimespanOptionIfUnsupported(menu, mSort);
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_change_sort:
                 showSortOptionsMenu();
@@ -244,14 +232,14 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
 
     private void showSortOptionsMenu() {
         ChooseLinkSortDialog chooseLinkSortDialog =
-                ChooseLinkSortDialog.newInstance(sort);
+                ChooseLinkSortDialog.newInstance(mSort);
         chooseLinkSortDialog.setTargetFragment(this, REQUEST_CHOOSE_SORT);
         chooseLinkSortDialog.show(getFragmentManager(), ChooseLinkSortDialog.TAG);
     }
 
     private void showTimespanOptionsMenu() {
         ChooseTimespanDialog chooseTimespanDialog =
-                ChooseTimespanDialog.newInstance(timespan);
+                ChooseTimespanDialog.newInstance(mTimespan);
         chooseTimespanDialog.setTargetFragment(this, REQUEST_CHOOSE_TIMESPAN);
         chooseTimespanDialog.show(getFragmentManager(), ChooseTimespanDialog.TAG);
     }
@@ -264,9 +252,8 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
     }
 
     @Override
-    /** Strange way to update the view, but works for now */
     public void onRandomSubredditLoaded(String randomSubreddit) {
-        subreddit = randomSubreddit;
+        mSubreddit = randomSubreddit;
 
         String formatter = getString(R.string.link_subreddit);
         setTitle(String.format(formatter, getSubreddit()));
@@ -309,7 +296,7 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
 
     private void onNsfwSelected(boolean allowed) {
         if (allowed) {
-            settingsManager.setOver18(true);
+            mSettingsManager.setOver18(true);
             getListingsPresenter().refreshData();
         } else {
             dismissSpinner();
@@ -318,21 +305,21 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
     }
 
     private void onSortSelected(@NotNull String sort) {
-        if (sort.equals(this.sort)) return;
+        if (sort.equals(mSort)) return;
 
         if (sort.equals("top") || sort.equals("controversial")) {
-            selectedSort = sort;
+            mSelectedSort = sort;
             showTimespanOptionsMenu();
         } else {
-            this.sort = sort;
+            mSort = sort;
             getActivity().invalidateOptionsMenu();
             getListingsPresenter().onSortChanged();
         }
     }
 
     private void onTimespanSelected(@NotNull String timespan) {
-        sort = selectedSort;
-        this.timespan = timespan;
+        mSort = mSelectedSort;
+        mTimespan = timespan;
         getActivity().invalidateOptionsMenu();
         getListingsPresenter().onSortChanged();
     }

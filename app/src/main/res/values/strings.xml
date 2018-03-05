@@ -48,8 +48,6 @@
     <string name="timespan_all">all</string>
     <string name="menu_action_link">%1$s &#091;%2$s&#093;</string>
     <string name="menu_action_comment">&#091;%2$s&#093; u/%1$s</string>
-    <!--<string name="menu_action_link">%s</string>-->
-    <!--<string name="menu_action_comment">%s</string>-->
     <string name="action_settings">settings</string>
     <string name="action_refresh">refresh</string>
     <string name="action_sort">sort</string>
@@ -75,6 +73,8 @@
     <string name="action_mark_message_read">mark read</string>
     <string name="action_mark_message_unread">mark unread</string>
     <string name="action_message_reply">reply</string>
+    <string name="action_subreddit_subscribe">subscribe</string>
+    <string name="action_subreddit_unsubscribe">unsubscribe</string>
 
     <!-- Dialogs -->
 

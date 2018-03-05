@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
+import com.ddiehl.android.htn.identity.IdentityManager;
 import com.ddiehl.android.htn.listings.BaseListingsFragment;
 import com.ddiehl.android.htn.listings.ChooseTimespanDialog;
 import com.ddiehl.android.htn.listings.ListingsAdapter;
@@ -36,6 +37,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import rxreddit.model.Listing;
 import rxreddit.model.Trophy;
@@ -52,32 +55,34 @@ public class UserProfileFragment extends BaseListingsFragment
 
     private static final int NUM_DEFAULT_TABS = 5;
 
-    @BindView(R.id.coordinator_layout) protected CoordinatorLayout coordinatorLayout;
-    @BindView(R.id.user_profile_summary) protected View userProfileSummary;
-    @BindView(R.id.recycler_view) protected View listView;
-    @BindView(R.id.user_note_layout) protected View friendNoteLayout;
+    @Inject protected IdentityManager mIdentityManager;
+
+    @BindView(R.id.coordinator_layout) protected CoordinatorLayout mCoordinatorLayout;
+    @BindView(R.id.user_profile_summary) protected View mUserProfileSummary;
+    @BindView(R.id.recycler_view) protected View mListView;
+    @BindView(R.id.user_note_layout) protected View mFriendNoteLayout;
 
     // Views for user profile summary elements
-    @BindView(R.id.user_created) TextView createDate;
-    @BindView(R.id.user_karma_layout) View karmaLayout;
-    @BindView(R.id.user_link_karma) TextView linkKarma;
-    @BindView(R.id.user_comment_karma) TextView commentKarma;
-    @BindView(R.id.user_friend_button) Button friendButton;
-    @BindView(R.id.user_friend_note_edit) TextView friendNote;
-    @BindView(R.id.user_friend_note_confirm) Button friendNoteSave;
-    @BindView(R.id.user_trophies) TrophyCaseLayout trophies;
+    @BindView(R.id.user_created) TextView mCreateDate;
+    @BindView(R.id.user_karma_layout) View mKarmaLayout;
+    @BindView(R.id.user_link_karma) TextView mLinkKarma;
+    @BindView(R.id.user_comment_karma) TextView mCommentKarma;
+    @BindView(R.id.user_friend_button) Button mFriendButton;
+    @BindView(R.id.user_friend_note_edit) TextView mFriendNote;
+    @BindView(R.id.user_friend_note_confirm) Button mFriendNoteSave;
+    @BindView(R.id.user_trophies) TrophyCaseLayout mTrophies;
 
-    @Arg String username;
-    @Arg String show;
-    @Arg String sort;
-    @Arg String timespan;
+    @Arg String mUsername;
+    @Arg String mShow;
+    @Arg String mSort;
+    @Arg String mTimespan;
 
-    private TabLayout.Tab tabUpvoted;
-    private TabLayout.Tab tabDownvoted;
-    private TabLayout.Tab tabHidden;
-    private TabLayout.Tab tabSaved;
+    private TabLayout.Tab mTabUpvoted;
+    private TabLayout.Tab mTabDownvoted;
+    private TabLayout.Tab mTabHidden;
+    private TabLayout.Tab mTabSaved;
 
-    private UserProfilePresenter userProfilePresenter;
+    private UserProfilePresenter mUserProfilePresenter;
 
     @Override
     protected int getLayoutResId() {
@@ -90,13 +95,13 @@ public class UserProfileFragment extends BaseListingsFragment
         HoldTheNarwhal.getApplicationComponent().inject(this);
         FragmentArgs.inject(this);
 
-        if (TextUtils.isEmpty(show)) show = "summary";
-        if (TextUtils.isEmpty(sort)) sort = "new";
-        if (TextUtils.isEmpty(timespan)) timespan = "all";
+        if (TextUtils.isEmpty(mShow)) mShow = "summary";
+        if (TextUtils.isEmpty(mSort)) mSort = "new";
+        if (TextUtils.isEmpty(mTimespan)) mTimespan = "all";
 
-        userProfilePresenter = new UserProfilePresenter(this, redditNavigationView, this);
-        setListingsPresenter(userProfilePresenter);
-        setCallbacks(userProfilePresenter);
+        mUserProfilePresenter = new UserProfilePresenter(this, redditNavigationView, this);
+        setListingsPresenter(mUserProfilePresenter);
+        setCallbacks(mUserProfilePresenter);
     }
 
     @NotNull @Override
@@ -110,17 +115,17 @@ public class UserProfileFragment extends BaseListingsFragment
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        showHideView(show);
+        showHideView(mShow);
 
         initializeUserProfileTabs();
 
-        karmaLayout.setVisibility(View.GONE);
-        friendButton.setVisibility(View.GONE);
-        friendNoteLayout.setVisibility(View.GONE);
+        mKarmaLayout.setVisibility(View.GONE);
+        mFriendButton.setVisibility(View.GONE);
+        mFriendNoteLayout.setVisibility(View.GONE);
 
-        friendNoteSave.setOnClickListener(saveView -> {
-            String note = friendNote.getText().toString();
-            userProfilePresenter.saveFriendNote(note);
+        mFriendNoteSave.setOnClickListener(saveView -> {
+            String note = mFriendNote.getText().toString();
+            mUserProfilePresenter.saveFriendNote(note);
         });
 
         setTitle(String.format(
@@ -129,28 +134,28 @@ public class UserProfileFragment extends BaseListingsFragment
     }
 
     private void initializeUserProfileTabs() {
-        tabUpvoted = tabLayout.newTab()
+        mTabUpvoted = tabLayout.newTab()
                 .setText(R.string.navigation_tabs_upvoted)
                 .setTag("upvoted");
-        tabDownvoted = tabLayout.newTab()
+        mTabDownvoted = tabLayout.newTab()
                 .setText(R.string.navigation_tabs_downvoted)
                 .setTag("downvoted");
-        tabHidden = tabLayout.newTab()
+        mTabHidden = tabLayout.newTab()
                 .setText(R.string.navigation_tabs_hidden)
                 .setTag("hidden");
-        tabSaved = tabLayout.newTab()
+        mTabSaved = tabLayout.newTab()
                 .setText(R.string.navigation_tabs_saved)
                 .setTag("saved");
 
         tabLayout.removeAllTabs();
         for (TabLayout.Tab tab : buildDefaultTabs(tabLayout)) {
-            tabLayout.addTab(tab, tab.getTag().equals(show));
+            tabLayout.addTab(tab, tab.getTag().equals(mShow));
         }
 
-        boolean isAuthenticated = userProfilePresenter.isAuthenticatedUser();
+        boolean isAuthenticated = mUserProfilePresenter.isAuthenticatedUser();
         showAuthenticatedTabs(tabLayout, isAuthenticated);
 
-        selectTab(show);
+        selectTab(mShow);
 
         tabLayout.addOnTabSelectedListener(this);
     }
@@ -185,10 +190,10 @@ public class UserProfileFragment extends BaseListingsFragment
     private void showAuthenticatedTabs(TabLayout tabLayout, boolean authenticated) {
         if (authenticated) {
             if (tabLayout.getTabCount() == NUM_DEFAULT_TABS) {
-                tabLayout.addTab(tabUpvoted);
-                tabLayout.addTab(tabDownvoted);
-                tabLayout.addTab(tabHidden);
-                tabLayout.addTab(tabSaved);
+                tabLayout.addTab(mTabUpvoted);
+                tabLayout.addTab(mTabDownvoted);
+                tabLayout.addTab(mTabHidden);
+                tabLayout.addTab(mTabSaved);
             }
         } else {
             if (tabLayout.getTabCount() > NUM_DEFAULT_TABS)
@@ -217,31 +222,20 @@ public class UserProfileFragment extends BaseListingsFragment
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.listings_user_profile, menu);
 
-        if (show.equals("summary")) {
-            menu.findItem(R.id.action_change_sort)
-                    .setVisible(false);
-            menu.findItem(R.id.action_change_timespan)
-                    .setVisible(false);
+        if (mShow.equals("summary")) {
+            hideSortAndTimespanOptions(menu);
         } else {
-            menu.findItem(R.id.action_change_sort)
-                    .setVisible(true);
-            // Disable timespan option if current sort does not support it
-            switch (sort) {
-                case "controversial":
-                case "top":
-                    menu.findItem(R.id.action_change_timespan)
-                            .setVisible(true);
-                    break;
-                case "hot":
-                case "new":
-                case "rising":
-                default:
-                    menu.findItem(R.id.action_change_timespan)
-                            .setVisible(false);
-                    break;
-            }
+            hideTimespanOptionIfUnsupported(menu, mSort);
         }
+    }
+
+    private void hideSortAndTimespanOptions(Menu menu) {
+        menu.findItem(R.id.action_change_sort)
+                .setVisible(false);
+        menu.findItem(R.id.action_change_timespan)
+                .setVisible(false);
     }
 
     @Override
@@ -259,14 +253,14 @@ public class UserProfileFragment extends BaseListingsFragment
 
     private void showSortOptionsMenu() {
         ChooseLinkSortDialog chooseLinkSortDialog =
-                ChooseLinkSortDialog.newInstance(sort);
+                ChooseLinkSortDialog.newInstance(mSort);
         chooseLinkSortDialog.setTargetFragment(this, REQUEST_CHOOSE_SORT);
         chooseLinkSortDialog.show(getFragmentManager(), ChooseLinkSortDialog.TAG);
     }
 
     private void showTimespanOptionsMenu() {
         ChooseTimespanDialog chooseTimespanDialog =
-                ChooseTimespanDialog.newInstance(timespan);
+                ChooseTimespanDialog.newInstance(mTimespan);
         chooseTimespanDialog.setTargetFragment(this, REQUEST_CHOOSE_TIMESPAN);
         chooseTimespanDialog.show(getFragmentManager(), ChooseTimespanDialog.TAG);
     }
@@ -291,24 +285,24 @@ public class UserProfileFragment extends BaseListingsFragment
     }
 
     // Cache for sort selected before showing timespan dialog
-    private String selectedSort;
+    private String mSelectedSort;
 
     private void onSortSelected(@NotNull String sort) {
-        if (sort.equals(this.sort)) return;
+        if (sort.equals(mSort)) return;
 
         if (sort.equals("top") || sort.equals("controversial")) {
-            selectedSort = sort;
+            mSelectedSort = sort;
             showTimespanOptionsMenu();
         } else {
-            this.sort = sort;
+            mSort = sort;
             getActivity().invalidateOptionsMenu();
             getListingsPresenter().onSortChanged();
         }
     }
 
     private void onTimespanSelected(@NotNull String timespan) {
-        sort = selectedSort;
-        this.timespan = timespan;
+        mSort = mSelectedSort;
+        mTimespan = timespan;
         getActivity().invalidateOptionsMenu();
         getListingsPresenter().onSortChanged();
     }
@@ -321,15 +315,15 @@ public class UserProfileFragment extends BaseListingsFragment
         String created = String.format(
                 getContext().getString(R.string.user_profile_summary_created),
                 SimpleDateFormat.getDateInstance().format(createDate));
-        this.createDate.setText(created);
-        karmaLayout.setVisibility(View.VISIBLE);
-        linkKarma.setText(NumberFormat.getInstance().format(user.getLinkKarma()));
-        commentKarma.setText(NumberFormat.getInstance().format(user.getCommentKarma()));
+        mCreateDate.setText(created);
+        mKarmaLayout.setVisibility(View.VISIBLE);
+        mLinkKarma.setText(NumberFormat.getInstance().format(user.getLinkKarma()));
+        mCommentKarma.setText(NumberFormat.getInstance().format(user.getCommentKarma()));
         // If user is not self, show friend button
         // TODO This should come from presenter
-        UserIdentity self = identityManager.getUserIdentity();
+        UserIdentity self = mIdentityManager.getUserIdentity();
         if (self != null && !user.getName().equals(self.getName())) {
-            friendButton.setVisibility(View.VISIBLE);
+            mFriendButton.setVisibility(View.VISIBLE);
             if (user.isFriend()) {
                 setFriendButtonState(true);
             } else {
@@ -341,33 +335,33 @@ public class UserProfileFragment extends BaseListingsFragment
     @Override
     public void setFriendButtonState(boolean isFriend) {
         if (isFriend) {
-            friendButton.setText(R.string.user_friend_delete_button_text);
-            friendButton.setOnClickListener((v) -> {
-                userProfilePresenter.deleteFriend();
+            mFriendButton.setText(R.string.user_friend_delete_button_text);
+            mFriendButton.setOnClickListener((v) -> {
+                mUserProfilePresenter.deleteFriend();
             });
         } else {
-            friendButton.setText(R.string.user_friend_add_button_text);
-            friendButton.setOnClickListener((v) -> {
-                userProfilePresenter.addFriend();
+            mFriendButton.setText(R.string.user_friend_add_button_text);
+            mFriendButton.setOnClickListener((v) -> {
+                mUserProfilePresenter.addFriend();
             });
         }
     }
 
     @Override
     public void showFriendNote(@NotNull String note) {
-        friendNoteLayout.setVisibility(View.VISIBLE);
-        friendNote.setText(note);
+        mFriendNoteLayout.setVisibility(View.VISIBLE);
+        mFriendNote.setText(note);
     }
 
     @Override
     public void hideFriendNote() {
-        friendNoteLayout.setVisibility(View.GONE);
-        friendNote.setText(null);
+        mFriendNoteLayout.setVisibility(View.GONE);
+        mFriendNote.setText(null);
     }
 
     @Override
     public void showTrophies(List<Listing> trophies) {
-        this.trophies.removeAllViews();
+        mTrophies.removeAllViews();
 
         if (trophies == null || trophies.size() == 0) {
             return; // Nothing to show
@@ -377,7 +371,7 @@ public class UserProfileFragment extends BaseListingsFragment
         List<Trophy> trophyList = Utils.convert(trophies);
 
         // Bind to TrophyCase
-        this.trophies.bind(trophyList);
+        mTrophies.bind(trophyList);
     }
 
     private TabLayout.Tab getCurrentSelectedTab() {
@@ -387,7 +381,7 @@ public class UserProfileFragment extends BaseListingsFragment
 
     @Override
     public void selectTab(String show) {
-        this.show = show;
+        mShow = show;
 
         tabLayout.removeOnTabSelectedListener(this);
 
@@ -404,7 +398,7 @@ public class UserProfileFragment extends BaseListingsFragment
 
         tabLayout.addOnTabSelectedListener(this);
 
-        showHideView(this.show);
+        showHideView(mShow);
     }
 
     @Override
@@ -417,44 +411,44 @@ public class UserProfileFragment extends BaseListingsFragment
 
     @Override
     public void onTabSelected(TabLayout.Tab tab) {
-        show = (String) tab.getTag();
-        showHideView(show);
+        mShow = (String) tab.getTag();
+        showHideView(mShow);
         getActivity().invalidateOptionsMenu();
-        userProfilePresenter.requestData();
+        mUserProfilePresenter.requestData();
     }
 
     private void showHideView(String show) {
         if ("summary".equals(show)) {
-            listView.setVisibility(View.GONE);
-            userProfileSummary.setVisibility(View.VISIBLE);
+            mListView.setVisibility(View.GONE);
+            mUserProfileSummary.setVisibility(View.VISIBLE);
         } else {
-            userProfileSummary.setVisibility(View.GONE);
-            listView.setVisibility(View.VISIBLE);
+            mUserProfileSummary.setVisibility(View.GONE);
+            mListView.setVisibility(View.VISIBLE);
         }
     }
 
     @Override
     public String getShow() {
-        return show;
+        return mShow;
     }
 
     @Override
     public String getUsernameContext() {
-        return username;
+        return mUsername;
     }
 
     @Override
     public String getSort() {
-        return sort;
+        return mSort;
     }
 
     @Override
     public String getTimespan() {
-        return timespan;
+        return mTimespan;
     }
 
     @NotNull @Override
     protected View getChromeView() {
-        return coordinatorLayout;
+        return mCoordinatorLayout;
     }
 }
