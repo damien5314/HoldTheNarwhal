@@ -224,7 +224,7 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
     }
 
     @Override
-    public void showSubredditSubscribeOptions() {
+    public void refreshOptionsMenu() {
         final Activity activity = getActivity();
         if (activity != null) {
             activity.invalidateOptionsMenu();

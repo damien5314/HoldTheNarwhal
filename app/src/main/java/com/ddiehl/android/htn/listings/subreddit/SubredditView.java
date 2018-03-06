@@ -17,5 +17,5 @@ public interface SubredditView extends ListingsView, LinkView {
 
     void loadHeaderImage();
 
-    void showSubredditSubscribeOptions();
+    void refreshOptionsMenu();
 }
