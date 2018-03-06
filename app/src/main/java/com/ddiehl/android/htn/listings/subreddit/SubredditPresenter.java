@@ -177,5 +177,6 @@ public class SubredditPresenter extends BaseListingsPresenter {
     private void onSubredditSubscribed(boolean isSubscribed) {
         subreddit.setUserIsSubscriber(isSubscribed);
         subredditView.refreshOptionsMenu();
+        mainView.showToast(isSubscribed ? R.string.subscribed : R.string.unsubscribed);
     }
 }

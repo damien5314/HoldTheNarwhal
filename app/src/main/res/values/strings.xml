@@ -77,7 +77,6 @@
     <string name="action_subreddit_unsubscribe">unsubscribe</string>
 
     <!-- Dialogs -->
-
     <string name="dialog_sign_out_title">Sign out</string>
     <string name="dialog_sign_out_message">Sign out from user account?</string>
     <string name="dialog_sign_out_ok">OK</string>
@@ -264,6 +263,7 @@
     <string name="subscription_icon">subreddit icon</string>
     <string name="subscribe">subscribe</string>
     <string name="subscribed">subscribed</string>
+    <string name="unsubscribed">unsubscribed</string>
     <string name="subscribe_error">Error subscribing to /r/%s</string>
     <string name="unsubscribing_subreddit">unsubscribing from /r/%s</string>
     <string name="unsubscribed_subreddit">unsubscribed from /r/%s</string>
