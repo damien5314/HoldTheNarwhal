@@ -159,4 +159,23 @@ public class SubredditPresenter extends BaseListingsPresenter {
     private boolean shouldShowNsfwDialog(Subreddit subreddit, boolean userOver18) {
         return subreddit != null && subreddit.isOver18() && !userOver18;
     }
+
+    public void subscribeToSubreddit(String subredditName, boolean subscribe) {
+        if (subscribe) {
+            redditService.subscribe(subredditName)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(() -> onSubredditSubscribed(true), Timber::e);
+        } else {
+            redditService.unsubscribe(subredditName)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(() -> onSubredditSubscribed(false), Timber::e);
+        }
+    }
+
+    private void onSubredditSubscribed(boolean isSubscribed) {
+        subreddit.setUserIsSubscriber(isSubscribed);
+        subredditView.refreshOptionsMenu();
+    }
 }

@@ -261,6 +261,12 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
             case R.id.action_change_timespan:
                 showTimespanOptionsMenu();
                 return true;
+            case R.id.action_subreddit_subscribe:
+                subredditPresenter.subscribeToSubreddit(subredditName, true);
+                return true;
+            case R.id.action_subreddit_unsubscribe:
+                subredditPresenter.subscribeToSubreddit(subredditName, false);
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
