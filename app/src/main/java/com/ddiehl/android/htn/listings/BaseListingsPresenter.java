@@ -65,16 +65,19 @@ public abstract class BaseListingsPresenter
     protected Subreddit subreddit;
 
     public BaseListingsPresenter(
-            MainView main, RedditNavigationView redditNavigationView,
-            ListingsView view, LinkView linkView, CommentView commentView,
+            MainView main,
+            RedditNavigationView redditNavigationView,
+            ListingsView view,
+            LinkView linkView,
+            CommentView commentView,
             PrivateMessageView messageView) {
         HoldTheNarwhal.getApplicationComponent().inject(this);
-        mainView = main;
+        this.mainView = main;
         this.redditNavigationView = redditNavigationView;
-        listingsView = view;
+        this.listingsView = view;
         this.linkView = linkView;
         this.commentView = commentView;
-        privateMessageView = messageView;
+        this.privateMessageView = messageView;
     }
 
     public List<Listing> getListings() {
