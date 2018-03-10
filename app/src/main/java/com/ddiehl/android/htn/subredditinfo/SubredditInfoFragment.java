@@ -310,9 +310,12 @@ public class SubredditInfoFragment extends BaseFragment {
         String category = rule.getKind();
         categoryView.setText(getTextForCategory(category));
 
-        String description = rule.getDescriptionHtml().trim();
-        final Spanned parsedDescription = htmlParser.convert(description);
-        descriptionView.setText(parsedDescription);
+        final String descriptionHtml = rule.getDescriptionHtml();
+        if (descriptionHtml != null) {
+            String description = descriptionHtml.trim();
+            final Spanned parsedDescription = htmlParser.convert(description);
+            descriptionView.setText(parsedDescription);
+        }
 
         rulesLayout.addView(view);
     }
