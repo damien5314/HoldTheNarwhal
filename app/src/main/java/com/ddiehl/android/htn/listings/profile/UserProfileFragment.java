@@ -217,31 +217,20 @@ public class UserProfileFragment extends BaseListingsFragment
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.listings_user_profile, menu);
 
         if (show.equals("summary")) {
-            menu.findItem(R.id.action_change_sort)
-                    .setVisible(false);
-            menu.findItem(R.id.action_change_timespan)
-                    .setVisible(false);
+            hideSortAndTimespanOptions(menu);
         } else {
-            menu.findItem(R.id.action_change_sort)
-                    .setVisible(true);
-            // Disable timespan option if current sort does not support it
-            switch (sort) {
-                case "controversial":
-                case "top":
-                    menu.findItem(R.id.action_change_timespan)
-                            .setVisible(true);
-                    break;
-                case "hot":
-                case "new":
-                case "rising":
-                default:
-                    menu.findItem(R.id.action_change_timespan)
-                            .setVisible(false);
-                    break;
-            }
+            hideTimespanOptionIfUnsupported(menu, sort);
         }
+    }
+
+    private void hideSortAndTimespanOptions(Menu menu) {
+        menu.findItem(R.id.action_change_sort)
+                .setVisible(false);
+        menu.findItem(R.id.action_change_timespan)
+                .setVisible(false);
     }
 
     @Override

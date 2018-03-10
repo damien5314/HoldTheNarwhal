@@ -62,11 +62,14 @@ public abstract class BaseListingsPresenter
     protected boolean beforeRequested, nextRequested = false;
     protected String prevPageListingId, nextPageListingId;
 
-    protected Subreddit subredditInfo;
+    protected Subreddit subreddit;
 
     public BaseListingsPresenter(
-            MainView main, RedditNavigationView redditNavigationView,
-            ListingsView view, LinkView linkView, CommentView commentView,
+            MainView main,
+            RedditNavigationView redditNavigationView,
+            ListingsView view,
+            LinkView linkView,
+            CommentView commentView,
             PrivateMessageView messageView) {
         HoldTheNarwhal.getApplicationComponent().inject(this);
         this.mainView = main;
@@ -466,13 +469,16 @@ public abstract class BaseListingsPresenter
     }
 
     public boolean shouldShowNsfwTag() {
-        return !settingsManager.getOver18() || !(subredditInfo != null && subredditInfo.isOver18())
-                && (settingsManager.getNoProfanity() || settingsManager.getLabelNsfw());
+        final boolean isNsfwSubreddit = subreddit != null && subreddit.isOver18();
+        final boolean hideNsfwInSettings =
+                settingsManager.getNoProfanity() || settingsManager.getLabelNsfw();
+        final boolean userOver18 = settingsManager.getOver18();
+        return !userOver18 || !isNsfwSubreddit && hideNsfwInSettings;
     }
 
     public ThumbnailMode getThumbnailMode() {
         if (settingsManager.getOver18()) {
-            if (subredditInfo != null && subredditInfo.isOver18()) {
+            if (subreddit != null && subreddit.isOver18()) {
                 return ThumbnailMode.FULL;
             } else {
                 if (settingsManager.getNoProfanity()) {

@@ -1,5 +1,7 @@
 package com.ddiehl.android.htn.listings.subreddit;
 
+import android.support.annotation.NonNull;
+
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.listings.BaseListingsPresenter;
 import com.ddiehl.android.htn.navigation.RedditNavigationView;
@@ -10,7 +12,6 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import rxreddit.model.Link;
 import rxreddit.model.ListingResponse;
@@ -32,7 +33,7 @@ public class SubredditPresenter extends BaseListingsPresenter {
         if (subreddit != null
                 && !subreddit.equals("all")
                 && !subreddit.equals("random")
-                && subredditInfo == null) {
+                && this.subreddit == null) {
             loadSubredditInfo(subredditView.getSubreddit());
         } else {
             getSubredditLinks(false);
@@ -45,15 +46,15 @@ public class SubredditPresenter extends BaseListingsPresenter {
         if (subreddit != null
                 && !subreddit.equals("all")
                 && !subreddit.equals("random")
-                && subredditInfo == null) {
+                && this.subreddit == null) {
             loadSubredditInfo(subredditView.getSubreddit());
         } else {
             getSubredditLinks(true);
         }
     }
 
-    public Subreddit getSubredditInfo() {
-        return subredditInfo;
+    public Subreddit getSubreddit() {
+        return subreddit;
     }
 
     private void loadSubredditInfo(@NotNull String subreddit) {
@@ -66,7 +67,7 @@ public class SubredditPresenter extends BaseListingsPresenter {
                     nextRequested = false;
                 })
                 .subscribe(
-                        onSubredditInfoLoaded(),
+                        this::onSubredditLoaded,
                         error -> {
                             if (error instanceof IOException) {
                                 String message = context.getString(R.string.error_network_unavailable);
@@ -136,27 +137,46 @@ public class SubredditPresenter extends BaseListingsPresenter {
         return (Link) response.getData().getChildren().get(0);
     }
 
-    private Consumer<Subreddit> onSubredditInfoLoaded() {
-        return info -> {
-            subredditInfo = info;
+    private void onSubredditLoaded(@NonNull Subreddit subreddit) {
+        this.subreddit = subreddit;
 
-            boolean over18 = settingsManager.getOver18();
-            if (shouldShowNsfwDialog(subredditInfo, over18)) {
-                subredditView.showNsfwWarningDialog();
+        boolean over18 = settingsManager.getOver18();
+        if (shouldShowNsfwDialog(this.subreddit, over18)) {
+            subredditView.showNsfwWarningDialog();
+        } else {
+            if (this.subreddit != null) {
+                requestNextData();
+                subredditView.refreshOptionsMenu();
             } else {
-                if (subredditInfo != null) {
-                    requestNextData();
-                } else {
-                    String message = context.getString(R.string.error_private_subreddit);
-                    mainView.showToast(message);
-                }
+                String message = context.getString(R.string.error_private_subreddit);
+                mainView.showToast(message);
             }
+        }
 
-            subredditView.loadHeaderImage();
-        };
+        subredditView.loadHeaderImage();
     }
 
     private boolean shouldShowNsfwDialog(Subreddit subreddit, boolean userOver18) {
         return subreddit != null && subreddit.isOver18() && !userOver18;
+    }
+
+    public void subscribeToSubreddit(String subredditName, boolean subscribe) {
+        if (subscribe) {
+            redditService.subscribe(subredditName)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(() -> onSubredditSubscribed(true), Timber::e);
+        } else {
+            redditService.unsubscribe(subredditName)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(() -> onSubredditSubscribed(false), Timber::e);
+        }
+    }
+
+    private void onSubredditSubscribed(boolean isSubscribed) {
+        subreddit.setUserIsSubscriber(isSubscribed);
+        subredditView.refreshOptionsMenu();
+        mainView.showToast(isSubscribed ? R.string.subscribed : R.string.unsubscribed);
     }
 }

@@ -1,7 +1,9 @@
 package com.ddiehl.android.htn.listings.subreddit;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.text.TextUtils;
@@ -46,7 +48,7 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
 
     @Inject protected SettingsManager settingsManager;
 
-    @Arg(required = false) String subreddit;
+    @Arg(required = false) String subredditName;
     @Arg(required = false) String sort;
     @Arg(required = false) String timespan;
 
@@ -86,7 +88,7 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
         ButterKnife.bind(this, view);
 
         // Show submit button if we're on a valid subreddit
-        boolean showSubmitButton = subreddit != null && !"all".equals(subreddit);
+        boolean showSubmitButton = subredditName != null && !"all".equals(subredditName);
         submitNewPostButton.setVisibility(showSubmitButton ? View.VISIBLE : View.GONE);
 
         return view;
@@ -103,7 +105,7 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
         super.onStart();
 
         // Load subreddit image into drawer header
-        Subreddit subredditInfo = subredditPresenter.getSubredditInfo();
+        Subreddit subredditInfo = subredditPresenter.getSubreddit();
         if (subredditInfo != null) {
             String url = subredditInfo.getHeaderImageUrl();
             loadImageIntoDrawerHeader(url);
@@ -139,7 +141,7 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
 
     @OnClick(R.id.submit_new_post)
     void onSubmitNewPostClicked() {
-        Intent intent = SubmitPostActivity.getIntent(getContext(), subreddit);
+        Intent intent = SubmitPostActivity.getIntent(getContext(), subredditName);
         startActivityForResult(intent, REQUEST_SUBMIT_NEW_POST);
     }
 
@@ -157,7 +159,7 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
     public void notifyItemInserted(int position) {
         super.notifyItemInserted(position);
         if ("random".equals(getSubreddit())) {
-            subreddit = ((Link) getListingsPresenter().getListingAt(0)).getSubreddit();
+            subredditName = ((Link) getListingsPresenter().getListingAt(0)).getSubreddit();
             updateTitle();
         }
     }
@@ -184,7 +186,7 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
 
     @Override
     public String getSubreddit() {
-        return subreddit;
+        return subredditName;
     }
 
     @Override
@@ -209,34 +211,61 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
      */
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.listings_subreddit, menu);
+    }
 
-        // Disable timespan option if current sort does not support it
-        switch (sort) {
-            case "controversial":
-            case "top":
-                menu.findItem(R.id.action_change_timespan)
-                        .setVisible(true);
-                break;
-            case "hot":
-            case "new":
-            case "rising":
-            default:
-                menu.findItem(R.id.action_change_timespan)
-                        .setVisible(false);
-                break;
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        hideTimespanOptionIfUnsupported(menu, sort);
+        showSubscribeOptions(menu);
+    }
+
+    @Override
+    public void refreshOptionsMenu() {
+        final Activity activity = getActivity();
+        if (activity != null) {
+            activity.invalidateOptionsMenu();
+        }
+    }
+
+    private void showSubscribeOptions(@NonNull Menu menu) {
+        final MenuItem subscribeMenuItem = menu.findItem(R.id.action_subreddit_subscribe);
+        final MenuItem unsubscribeMenuItem = menu.findItem(R.id.action_subreddit_unsubscribe);
+
+        if (subredditName == null) {
+            subscribeMenuItem.setVisible(false);
+            unsubscribeMenuItem.setVisible(false);
+        } else {
+            final Subreddit subreddit = subredditPresenter.getSubreddit();
+            if (subreddit != null) {
+                final Boolean userIsSubscriber =
+                        subreddit.getUserIsSubscriber();
+                subscribeMenuItem.setVisible(userIsSubscriber != null && !userIsSubscriber);
+                unsubscribeMenuItem.setVisible(userIsSubscriber != null && userIsSubscriber);
+            } else {
+                subscribeMenuItem.setVisible(false);
+                unsubscribeMenuItem.setVisible(false);
+            }
         }
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_change_sort:
                 showSortOptionsMenu();
                 return true;
             case R.id.action_change_timespan:
                 showTimespanOptionsMenu();
+                return true;
+            case R.id.action_subreddit_subscribe:
+                subredditPresenter.subscribeToSubreddit(subredditName, true);
+                return true;
+            case R.id.action_subreddit_unsubscribe:
+                subredditPresenter.subscribeToSubreddit(subredditName, false);
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -264,9 +293,8 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
     }
 
     @Override
-    /** Strange way to update the view, but works for now */
     public void onRandomSubredditLoaded(String randomSubreddit) {
-        subreddit = randomSubreddit;
+        subredditName = randomSubreddit;
 
         String formatter = getString(R.string.link_subreddit);
         setTitle(String.format(formatter, getSubreddit()));

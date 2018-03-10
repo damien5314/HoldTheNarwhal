@@ -20,6 +20,8 @@ public interface MainView {
 
     void showToast(@NotNull CharSequence msg);
 
+    void showToast(@StringRes int messageResId);
+
     void showError(@NotNull CharSequence message);
 
     void doSendEmail(MailTo mailTo);

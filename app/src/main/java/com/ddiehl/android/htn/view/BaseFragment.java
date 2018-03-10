@@ -207,6 +207,11 @@ public abstract class BaseFragment extends Fragment implements MainView {
     }
 
     @Override
+    public void showToast(int messageResId) {
+        Snackbar.make(getChromeView(), messageResId, Snackbar.LENGTH_SHORT).show();
+    }
+
+    @Override
     public void showError(@NotNull CharSequence message) {
         Snackbar.make(getChromeView(), message, Snackbar.LENGTH_SHORT).show();
     }
