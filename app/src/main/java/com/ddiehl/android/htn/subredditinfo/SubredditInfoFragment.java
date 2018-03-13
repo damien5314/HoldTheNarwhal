@@ -39,6 +39,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 import rxreddit.model.Subreddit;
 import rxreddit.model.SubredditRule;
@@ -69,6 +70,7 @@ public class SubredditInfoFragment extends BaseFragment {
 
     SubscriptionManagerPresenter subscriptionManagerPresenter;
     InfoTuple subredditInfo;
+    final CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     @Override
     protected int getLayoutResId() {
@@ -104,6 +106,12 @@ public class SubredditInfoFragment extends BaseFragment {
         // Load info
         parentViewGroup.setVisibility(View.GONE);
         loadSubredditInfo();
+    }
+
+    @Override
+    public void onStop() {
+        compositeDisposable.clear();
+        super.onStop();
     }
 
     void loadSubredditInfo() {
@@ -178,6 +186,7 @@ public class SubredditInfoFragment extends BaseFragment {
             subscriptionManagerPresenter.subscribe(subreddit)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
+                    .doOnSubscribe(compositeDisposable::add)
                     .subscribe(
                             () -> onSubredditSubscribed(subreddit),
                             this::onSubredditSubscribeError
@@ -205,6 +214,7 @@ public class SubredditInfoFragment extends BaseFragment {
             subscriptionManagerPresenter.unsubscribe(subreddit)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
+                    .doOnSubscribe(compositeDisposable::add)
                     .subscribe(
                             () -> onSubredditUnsubscribed(subreddit),
                             this::onSubredditUnsubscribeError
