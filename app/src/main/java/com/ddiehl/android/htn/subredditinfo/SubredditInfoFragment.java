@@ -101,6 +101,7 @@ public class SubredditInfoFragment extends BaseFragment {
             LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle state) {
         final View view = super.onCreateView(inflater, container, state);
 
+        rulesLayout.setNestedScrollingEnabled(false);
         rulesAdapter = new SubredditRulesAdapter(htmlParser);
         rulesLayout.setAdapter(rulesAdapter);
         final LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
