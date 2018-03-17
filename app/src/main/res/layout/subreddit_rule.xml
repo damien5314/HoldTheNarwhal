@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical">
 
     <TextView
@@ -12,15 +12,13 @@
         android:layout_height="wrap_content"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:textColor="@color/primary_text"
-        android:background="@drawable/rule_name_bg"
-        android:includeFontPadding="false"
         tools:text="R3: no personal information / missing persons" />
 
     <TextView
         android:id="@+id/category"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        android:textSize="12sp"
         android:textColor="@color/secondary_text"
         tools:text="posts only" />
 

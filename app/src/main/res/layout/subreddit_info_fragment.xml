@@ -12,7 +12,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <ScrollView
+        <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -149,17 +149,15 @@
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     android:textColor="@color/secondary_text" />
 
-                <LinearLayout
+                <android.support.v7.widget.RecyclerView
                     android:id="@+id/rules_layout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:divider="@drawable/spacer_8dp_h"
-                    android:orientation="vertical"
-                    android:showDividers="middle" />
+                    android:orientation="vertical" />
 
             </LinearLayout>
 
-        </ScrollView>
+        </android.support.v4.widget.NestedScrollView>
 
     </LinearLayout>
 
