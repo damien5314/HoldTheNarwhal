@@ -52,7 +52,11 @@ class SubredditRulesAdapter(
 
         fun bind(rule: SubredditRule) {
             val shortName = rule.shortName
-            shortNameView.text = shortName
+            shortNameView.text = itemView.context.getString(
+                    R.string.subreddit_rule_short_name,
+                    (adapterPosition + 1).toString(),
+                    shortName
+            )
 
             val category = rule.kind
             categoryView.setText(getTextForCategory(category))

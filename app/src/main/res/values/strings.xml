@@ -306,5 +306,6 @@
         <item quantity="one">%s unread notification</item>
         <item quantity="other">%s unread notifications</item>
     </plurals>
+    <string name="subreddit_rule_short_name">(%1$s) %2$s</string>
 
 </resources>
