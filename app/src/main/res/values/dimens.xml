@@ -37,4 +37,7 @@
     <dimen name="button_text_size">20sp</dimen>
     <dimen name="button_icon_size">24dp</dimen>
     <dimen name="listings_link_icon_size">20dp</dimen>
+    <dimen name="subreddit_info_section_header_text_size">12sp</dimen>
+    <dimen name="subreddit_info_section_body_text_size">16sp</dimen>
+    <dimen name="subreddit_info_rule_body_text_size">12sp</dimen>
 </resources>

@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
-    android:id="@+id/coordinator_layout"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinator_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -89,15 +88,15 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/created"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:textColor="@color/secondary_text" />
+                    android:textColor="@color/secondary_text"
+                    android:textSize="@dimen/subreddit_info_section_header_text_size" />
 
                 <TextView
                     android:id="@+id/create_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     android:textColor="@color/primary_text"
+                    android:textSize="@dimen/subreddit_info_section_body_text_size"
                     tools:text="Dec 23, 2013" />
 
                 <android.support.v4.widget.Space
@@ -108,15 +107,15 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/subscribers"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:textColor="@color/secondary_text" />
+                    android:textColor="@color/secondary_text"
+                    android:textSize="@dimen/subreddit_info_section_header_text_size" />
 
                 <TextView
                     android:id="@+id/subscriber_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     android:textColor="@color/primary_text"
+                    android:textSize="@dimen/subreddit_info_section_body_text_size"
                     tools:text="130,055" />
 
                 <android.support.v4.widget.Space
@@ -127,15 +126,15 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/description"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:textColor="@color/secondary_text" />
+                    android:textColor="@color/secondary_text"
+                    android:textSize="@dimen/subreddit_info_section_header_text_size" />
 
                 <TextView
                     android:id="@+id/public_description"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     android:textColor="@color/primary_text"
+                    android:textSize="@dimen/subreddit_info_section_body_text_size"
                     tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum sodales sem sit amet augue consectetur blandit. Praesent molestie vulputate aliquet. Quisque posuere hendrerit risus ac feugiat." />
 
                 <android.support.v4.widget.Space
@@ -146,8 +145,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/rules"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:textColor="@color/secondary_text" />
+                    android:textColor="@color/secondary_text"
+                    android:textSize="@dimen/subreddit_info_section_header_text_size" />
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/rules_layout"
