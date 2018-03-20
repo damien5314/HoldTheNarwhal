@@ -1,11 +1,13 @@
 package com.ddiehl.android.htn.subredditinfo
 
+import android.support.annotation.LayoutRes
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.ddiehl.android.htn.R
+import com.ddiehl.android.htn.subredditinfo.SubredditRulesAdapter.VH.Companion.LAYOUT_RES_ID
 import com.ddiehl.android.htn.view.markdown.HtmlParser
 import rxreddit.model.SubredditRule
 
@@ -20,7 +22,7 @@ class SubredditRulesAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
         val inflater = LayoutInflater.from(parent.context)
-        val view = inflater.inflate(R.layout.subreddit_rule, parent, false)
+        val view = inflater.inflate(LAYOUT_RES_ID, parent, false)
         return VH(view, htmlParser)
     }
 
@@ -39,6 +41,10 @@ class SubredditRulesAdapter(
             itemView: View,
             private val htmlParser: HtmlParser
     ) : RecyclerView.ViewHolder(itemView) {
+
+        companion object {
+            @LayoutRes val LAYOUT_RES_ID = R.layout.subreddit_rule
+        }
 
         private val shortNameView = itemView.findViewById<TextView>(R.id.short_name)
         private val categoryView = itemView.findViewById<TextView>(R.id.category)
