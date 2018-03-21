@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.view.LayoutInflater;
@@ -286,6 +287,7 @@ public class SubredditInfoFragment extends BaseFragment {
         final String publicDescription = subreddit.getPublicDescriptionHtml();
         final Spanned parsedDescription = htmlParser.convert(publicDescription);
         this.publicDescription.setText(parsedDescription);
+        this.publicDescription.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
     void showNsfwText(Subreddit subreddit) {

@@ -2,6 +2,7 @@ package com.ddiehl.android.htn.subredditinfo
 
 import android.support.annotation.LayoutRes
 import android.support.v7.widget.RecyclerView
+import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -66,6 +67,7 @@ class SubredditRulesAdapter(
                 val description = descriptionHtml.trim { it <= ' ' }
                 val parsedDescription = htmlParser.convert(description)
                 descriptionView.setText(parsedDescription)
+                descriptionView.setMovementMethod(LinkMovementMethod.getInstance())
             }
         }
 
