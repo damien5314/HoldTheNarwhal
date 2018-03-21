@@ -280,7 +280,15 @@ public class SubredditInfoFragment extends BaseFragment {
         String subscriberText = NumberFormat.getInstance().format(subscribers);
         subscriberCount.setText(subscriberText);
 
-        // Show/Hide NSFW text
+        showNsfwText(subreddit);
+
+        // Show public description text
+        final String publicDescription = subreddit.getPublicDescriptionHtml();
+        final Spanned parsedDescription = htmlParser.convert(publicDescription);
+        this.publicDescription.setText(parsedDescription);
+    }
+
+    void showNsfwText(Subreddit subreddit) {
         if (subreddit.isOver18()) {
             SpannableStringBuilder ssb = new SpannableStringBuilder();
 
@@ -312,12 +320,6 @@ public class SubredditInfoFragment extends BaseFragment {
 
             subredditName.setText(ssb);
         }
-
-
-        // Show public description text
-        final String publicDescription = subreddit.getPublicDescriptionHtml();
-        final Spanned parsedDescription = htmlParser.convert(publicDescription);
-        this.publicDescription.setText(parsedDescription);
     }
 
     String formatDate(final long createdUtc) {
