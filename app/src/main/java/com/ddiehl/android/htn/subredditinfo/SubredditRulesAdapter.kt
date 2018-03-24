@@ -2,6 +2,9 @@ package com.ddiehl.android.htn.subredditinfo
 
 import android.support.annotation.LayoutRes
 import android.support.v7.widget.RecyclerView
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.SpannableStringBuilder
 import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +13,7 @@ import android.widget.TextView
 import com.ddiehl.android.htn.R
 import com.ddiehl.android.htn.subredditinfo.SubredditRulesAdapter.VH.Companion.LAYOUT_RES_ID
 import com.ddiehl.android.htn.view.markdown.HtmlParser
+import com.ddiehl.android.htn.view.text.PaddingSpan
 import rxreddit.model.SubredditRule
 
 /**
@@ -52,12 +56,17 @@ class SubredditRulesAdapter(
         private val descriptionView = itemView.findViewById<TextView>(R.id.description)
 
         fun bind(rule: SubredditRule) {
+            val positionString = (adapterPosition + 1).toString()
             val shortName = rule.shortName
-            shortNameView.text = itemView.context.getString(
-                    R.string.subreddit_rule_short_name,
-                    (adapterPosition + 1).toString(),
-                    shortName
-            )
+            val ruleString = SpannableStringBuilder().apply {
+                val positionSpannable = SpannableString(positionString).apply {
+//                    setSpan(RelativeSizeSpan(0.5f), 0, length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                    setSpan(PaddingSpan(64.0f), 0, length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                }
+                append(positionSpannable)
+                append(shortName)
+            }
+            shortNameView.text = ruleString
 
             val category = rule.kind
             categoryView.setText(getTextForCategory(category))
