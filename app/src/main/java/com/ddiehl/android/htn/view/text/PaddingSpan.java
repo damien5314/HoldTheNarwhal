@@ -31,14 +31,16 @@ public class PaddingSpan extends ReplacementSpan {
             int y,
             int bottom,
             @NotNull Paint paint) {
+        final int originalColor = paint.getColor();
+
         paint.setColor(Color.TRANSPARENT);
         final float textWidth = paint.measureText(text, start, end);
         rect.set(x, top, x + textWidth + padding, bottom);
         canvas.drawRect(rect, paint);
 
-        paint.setColor(Color.BLACK);
+        paint.setColor(originalColor);
         int xPos = Math.round(x + (padding / 2));
-        int yPos = (int) paint.getTextSize();
+        int yPos = (int) paint.getTextSize() / 2;
         canvas.drawText(text, start, end, xPos, yPos, paint);
     }
 

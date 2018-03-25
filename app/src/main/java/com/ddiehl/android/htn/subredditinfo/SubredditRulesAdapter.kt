@@ -13,7 +13,7 @@ import android.widget.TextView
 import com.ddiehl.android.htn.R
 import com.ddiehl.android.htn.subredditinfo.SubredditRulesAdapter.VH.Companion.LAYOUT_RES_ID
 import com.ddiehl.android.htn.view.markdown.HtmlParser
-import com.ddiehl.android.htn.view.text.PaddingSpan
+import com.ddiehl.android.htn.view.text.CenteredRelativeSizeSpan
 import rxreddit.model.SubredditRule
 
 /**
@@ -60,8 +60,8 @@ class SubredditRulesAdapter(
             val shortName = rule.shortName
             val ruleString = SpannableStringBuilder().apply {
                 val positionSpannable = SpannableString(positionString).apply {
-//                    setSpan(RelativeSizeSpan(0.5f), 0, length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-                    setSpan(PaddingSpan(64.0f), 0, length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                    setSpan(CenteredRelativeSizeSpan(0.5f), 0, length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+//                    setSpan(PaddingSpan(64.0f), 0, length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
                 }
                 append(positionSpannable)
                 append(shortName)
