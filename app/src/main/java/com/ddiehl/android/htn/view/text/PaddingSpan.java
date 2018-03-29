@@ -40,7 +40,7 @@ public class PaddingSpan extends ReplacementSpan {
 
         paint.setColor(originalColor);
         int xPos = Math.round(x + (padding / 2));
-        int yPos = (int) paint.getTextSize() / 2;
+        int yPos = ((bottom - top) / 2) + ((int) paint.getTextSize() / 2);
         canvas.drawText(text, start, end, xPos, yPos, paint);
     }
 
