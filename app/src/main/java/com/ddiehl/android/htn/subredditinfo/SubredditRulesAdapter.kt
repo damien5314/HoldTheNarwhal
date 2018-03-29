@@ -60,8 +60,9 @@ class SubredditRulesAdapter(
             val shortName = rule.shortName
             val ruleString = SpannableStringBuilder().apply {
                 val positionSpannable = SpannableString(positionString).apply {
-                    setSpan(CenteredRelativeSizeSpan(0.5f), 0, length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
 //                    setSpan(PaddingSpan(64.0f), 0, length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                    setSpan(CenteredRelativeSizeSpan(0.50f), 0, length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+//                    setSpan(CenteredRelativeSizePaddingSpan(0.5f, 64.0f), 0, length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
                 }
                 append(positionSpannable)
                 append(shortName)
