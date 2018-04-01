@@ -18,6 +18,8 @@ import com.ddiehl.android.htn.listings.report.ReportActivity.RESULT_REPORT_SUCCE
 import com.ddiehl.android.htn.listings.subreddit.SubredditActivity
 import com.ddiehl.android.htn.utils.AndroidUtils.safeStartActivity
 import com.ddiehl.android.htn.view.BaseFragment
+import com.ddiehl.android.htn.view.video.VideoPlayerDialog
+import com.ddiehl.android.htn.view.video.VideoPlayerDialogBuilder
 import rxreddit.model.Comment
 import rxreddit.model.Link
 import rxreddit.model.Listing
@@ -380,7 +382,9 @@ abstract class BaseListingsFragment : BaseFragment(), ListingsView, SwipeRefresh
     }
 
     open fun openVideoInDialog(url: String) {
-
+        VideoPlayerDialogBuilder(url)
+            .build()
+            .show(fragmentManager, VideoPlayerDialog.TAG)
     }
 
     open fun showCommentsForLink(
