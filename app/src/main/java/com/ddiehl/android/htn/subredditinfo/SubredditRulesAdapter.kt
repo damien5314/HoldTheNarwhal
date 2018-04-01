@@ -16,9 +16,6 @@ import com.ddiehl.android.htn.view.markdown.HtmlParser
 import com.ddiehl.android.htn.view.text.CenteredRelativeSizeSpan
 import rxreddit.model.SubredditRule
 
-/**
- * TODO documentation
- */
 class SubredditRulesAdapter(
         private val htmlParser: HtmlParser
 ) : RecyclerView.Adapter<SubredditRulesAdapter.VH>() {
