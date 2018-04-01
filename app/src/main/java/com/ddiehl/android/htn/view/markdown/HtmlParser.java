@@ -86,7 +86,8 @@ public class HtmlParser {
     }
 
     void trimTrailingNewLines(@NotNull SpannableStringBuilder text) {
-        while ("\n".equals(text.subSequence(text.length() - 1, text.length()).toString())) {
+        while (text.length() > 0
+                && "\n".equals(text.subSequence(text.length() - 1, text.length()).toString())) {
             text.delete(text.length() - 1, text.length());
         }
     }
