@@ -139,8 +139,8 @@ dependencies {
     kaptAndroidTest "com.google.dagger:dagger-compiler:$DAGGER_VERSION"
 
     androidTestImplementation "com.android.support:support-annotations:$SUPPORT_LIBRARY_VERSION"
-    androidTestImplementation 'com.android.support.test:runner:0.5'
-    androidTestImplementation 'com.android.support.test:rules:0.5'
+    androidTestImplementation "com.android.support.test:runner:$TESTING_SUPPORT_LIBRARY_VERSION"
+    androidTestImplementation "com.android.support.test:rules:$TESTING_SUPPORT_LIBRARY_VERSION"
 }
 
 Properties getProperties(def filePath) {
