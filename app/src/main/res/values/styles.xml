@@ -66,4 +66,11 @@
         <item name="android:backgroundDimEnabled">false</item>
     </style>
 
+
+    <style name="DialogOverlay" parent="android:style/Theme.Translucent.NoTitleBar">
+        <item name="android:windowBackground">@color/transparent</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:backgroundDimAmount">0.8</item>
+    </style>
+
 </resources>

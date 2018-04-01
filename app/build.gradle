@@ -126,6 +126,10 @@ dependencies {
 
     implementation "uk.co.chrisjenx:calligraphy:$CALLIGRAPHY_VERSION"
 
+    implementation "com.google.android.exoplayer:exoplayer-core:$EXOPLAYER_VERSION"
+    implementation "com.google.android.exoplayer:exoplayer-dash:$EXOPLAYER_VERSION"
+    implementation "com.google.android.exoplayer:exoplayer-ui:$EXOPLAYER_VERSION"
+
     implementation "com.hannesdorfmann.fragmentargs:annotation:$FRAGMENTARGS_VERSION"
     kapt "com.hannesdorfmann.fragmentargs:processor:$FRAGMENTARGS_VERSION"
 

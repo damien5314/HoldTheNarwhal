@@ -379,6 +379,10 @@ abstract class BaseListingsFragment : BaseFragment(), ListingsView, SwipeRefresh
         redditNavigationView.openURL(url)
     }
 
+    open fun openVideoInDialog(url: String) {
+
+    }
+
     open fun showCommentsForLink(
             subreddit: String, linkId: String, commentId: String?) {
         redditNavigationView.showCommentsForLink(subreddit, linkId, commentId)

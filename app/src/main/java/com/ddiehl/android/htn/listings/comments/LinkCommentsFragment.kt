@@ -14,6 +14,8 @@ import com.ddiehl.android.htn.listings.BaseListingsFragment
 import com.ddiehl.android.htn.settings.SettingsManager
 import com.ddiehl.android.htn.utils.AndroidUtils.safeStartActivity
 import com.ddiehl.android.htn.view.BaseFragment
+import com.ddiehl.android.htn.view.video.VideoPlayerDialog
+import com.ddiehl.android.htn.view.video.VideoPlayerDialogBuilder
 import com.hannesdorfmann.fragmentargs.FragmentArgs
 import com.hannesdorfmann.fragmentargs.annotation.Arg
 import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs
@@ -23,7 +25,8 @@ import rxreddit.model.Listing
 import javax.inject.Inject
 
 @FragmentWithArgs
-class LinkCommentsFragment : BaseListingsFragment(), LinkCommentsView, SwipeRefreshLayout.OnRefreshListener {
+class LinkCommentsFragment : BaseListingsFragment(), LinkCommentsView,
+    SwipeRefreshLayout.OnRefreshListener {
 
     companion object {
         @JvmField
@@ -215,6 +218,12 @@ class LinkCommentsFragment : BaseListingsFragment(), LinkCommentsView, SwipeRefr
 
     override fun openUrlInWebView(url: String) {
         redditNavigationView.openURL(url)
+    }
+
+    override fun openVideoInDialog(url: String) {
+        VideoPlayerDialogBuilder(url)
+            .build()
+            .show(fragmentManager, VideoPlayerDialog.TAG)
     }
 
     override fun showCommentsForLink(subreddit: String, linkId: String, commentId: String?) {
