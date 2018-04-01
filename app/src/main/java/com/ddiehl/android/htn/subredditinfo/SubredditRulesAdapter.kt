@@ -14,7 +14,6 @@ import com.ddiehl.android.htn.R
 import com.ddiehl.android.htn.subredditinfo.SubredditRulesAdapter.VH.Companion.LAYOUT_RES_ID
 import com.ddiehl.android.htn.view.markdown.HtmlParser
 import com.ddiehl.android.htn.view.text.CenteredRelativeSizeSpan
-import com.ddiehl.android.htn.view.text.PaddingSpan
 import rxreddit.model.SubredditRule
 
 /**
@@ -57,12 +56,13 @@ class SubredditRulesAdapter(
         private val descriptionView = itemView.findViewById<TextView>(R.id.description)
 
         fun bind(rule: SubredditRule) {
-            val positionString = (adapterPosition + 1).toString()
+            val positionString = "    ${adapterPosition + 1}    "
             val shortName = rule.shortName
             val ruleString = SpannableStringBuilder().apply {
                 val positionSpannable = SpannableString(positionString).apply {
-                    setSpan(CenteredRelativeSizeSpan(0.50f), 0, length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-                    setSpan(PaddingSpan(64.0f), 0, length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                    val proportion = 0.60f
+                    setSpan(CenteredRelativeSizeSpan(proportion), 0, length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+//                    setSpan(PaddingSpan(64.0f, proportion), 0, length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
 //                    setSpan(CenteredRelativeSizePaddingSpan(0.5f, 64.0f), 0, length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
                 }
                 append(positionSpannable)

@@ -14,10 +14,12 @@ import org.jetbrains.annotations.NotNull;
 public class PaddingSpan extends ReplacementSpan {
 
     private final float padding;
+    private final float proportion;
     private final RectF rect = new RectF();
 
-    public PaddingSpan(float padding) {
+    public PaddingSpan(float padding, float proportion) {
         this.padding = padding;
+        this.proportion = proportion;
     }
 
     @Override
@@ -40,7 +42,7 @@ public class PaddingSpan extends ReplacementSpan {
 
         paint.setColor(originalColor);
         int xPos = Math.round(x + (padding / 2));
-        int yPos = ((bottom - top) / 2) + ((int) paint.getTextSize() / 2);
+        int yPos = ((bottom - top) / 2) + (int) (paint.getTextSize() * proportion);
         canvas.drawText(text, start, end, xPos, yPos, paint);
     }
 
