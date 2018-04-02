@@ -23,7 +23,8 @@ import rxreddit.model.Listing
 import javax.inject.Inject
 
 @FragmentWithArgs
-class LinkCommentsFragment : BaseListingsFragment(), LinkCommentsView, SwipeRefreshLayout.OnRefreshListener {
+class LinkCommentsFragment : BaseListingsFragment(), LinkCommentsView,
+    SwipeRefreshLayout.OnRefreshListener {
 
     companion object {
         @JvmField
