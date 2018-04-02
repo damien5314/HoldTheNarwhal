@@ -215,7 +215,7 @@ public abstract class BaseListingsPresenter
             if (media != null) {
                 final Media.RedditVideo redditVideo = media.getRedditVideo();
                 if (redditVideo != null) {
-                    linkView.openVideoInDialog(redditVideo.getHlsUrl());
+                    linkView.openUrlInWebView(redditVideo.getHlsUrl());
                     return;
                 }
             }

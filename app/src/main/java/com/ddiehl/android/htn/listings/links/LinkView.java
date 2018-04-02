@@ -14,8 +14,6 @@ public interface LinkView {
 
     void openUrlInWebView(@NotNull String url);
 
-    void openVideoInDialog(@NotNull String url);
-
     void showCommentsForLink(
             @NotNull String subreddit, @NotNull String linkId, @Nullable String commentId);
 
