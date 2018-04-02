@@ -14,6 +14,9 @@ import com.hannesdorfmann.fragmentargs.FragmentArgs
 import com.hannesdorfmann.fragmentargs.annotation.Arg
 import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs
 
+/**
+ * Displays videos loaded from URL in a [VideoView].
+ */
 @FragmentWithArgs
 class VideoPlayerDialog : DialogFragment() {
 
