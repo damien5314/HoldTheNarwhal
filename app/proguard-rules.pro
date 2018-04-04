@@ -9,7 +9,7 @@
 
 # Add any project specific keep options here:
 
-# OkHttp3, Retrofit2
+# Retrofit2
 -dontwarn okio.**
 -dontwarn javax.annotation.**
 -dontnote retrofit2.Platform
@@ -19,6 +19,12 @@
 -keepclasseswithmembers class * { # Do we need this one?
   @retrofit2.http.* <methods>;
 }
+# OkHttp3
+-dontwarn okhttp3.**
+-dontwarn okio.**
+-dontwarn javax.annotation.**
+-dontwarn org.conscrypt.**
+-keepnames class okhttp3.internal.publicsuffix.PublicSuffixDatabase
 
 ### ??? ###
 -keepattributes Signature
