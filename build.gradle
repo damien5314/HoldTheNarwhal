@@ -30,7 +30,7 @@ buildscript {
         TIMBER_VERSION = '4.3.1'
         LEAK_CANARY_VERSION = '1.5.4'
         JUNIT_VERSION = '4.12'
-        MOCKITO_VERSION = '1.10.19'
+        MOCKITO_VERSION = '2.21.0'
         TESTING_SUPPORT_LIBRARY_VERSION = '1.0.2'
     }
     repositories {
