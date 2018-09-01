@@ -4,7 +4,7 @@ buildscript {
         TARGET_SDK_VERSION = 27
 
         // Gradle plugins
-        KOTLIN_VERSION = '1.2.20'
+        KOTLIN_VERSION = '1.2.61'
         ANDROID_GRADLE_PLUGIN = '3.1.4'
         HUGO_VERSION = '1.2.1'
         DEXCOUNT_VERSION = '0.8.3'
