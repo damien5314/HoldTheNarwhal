@@ -24,7 +24,7 @@ buildscript {
         RXJAVA_VERSION = '2.2.1'
         RXANDROID_VERSION = '2.1.0'
         TIMESINCETEXTVIEW_VERSION = '1.3'
-        DAGGER_VERSION = '2.8'
+        DAGGER_VERSION = '2.17'
         CALLIGRAPHY_VERSION = '2.2.0'
         FRAGMENTARGS_VERSION = '3.0.2'
         TIMBER_VERSION = '4.7.1'
