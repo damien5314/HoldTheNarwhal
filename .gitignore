@@ -4,6 +4,7 @@
 /local.properties
 *.iml
 /captures/
+app/fabric.properties
 
 # Keystore files
 *.jks
