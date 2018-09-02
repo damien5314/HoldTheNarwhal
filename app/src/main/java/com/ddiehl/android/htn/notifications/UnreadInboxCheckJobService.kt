@@ -61,6 +61,10 @@ class UnreadInboxCheckJobService : JobService() {
     }
 
     private fun checkUnreads(params: JobParameters?) {
+        if (!redditService.isUserAuthorized) {
+            jobFinished(params, false)
+            return
+        }
         val unreadInboxChecker = UnreadInboxChecker(redditService)
         subscription = unreadInboxChecker.check()
                 .subscribeOn(Schedulers.io())
@@ -88,6 +92,6 @@ class UnreadInboxCheckJobService : JobService() {
     }
 
     private fun onInboxFetchError(throwable: Throwable) {
-        Timber.w(throwable)
+        Timber.e(throwable)
     }
 }
