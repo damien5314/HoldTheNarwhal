@@ -50,7 +50,7 @@ public class ListingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         if (listing instanceof Link) return TYPE_LINK;
         if (listing instanceof Comment) return TYPE_COMMENT;
         if (listing instanceof PrivateMessage) return TYPE_PRIVATE_MESSAGE;
-        throw new RuntimeException("Item view type not recognized: " + listing.getClass());
+        throw new RuntimeException("Item view type not recognized: " + listing.getFullName());
     }
 
     @Override
