@@ -13,6 +13,7 @@ import java.io.IOException;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
+import rxreddit.api.NoSuchSubredditException;
 import rxreddit.model.Link;
 import rxreddit.model.ListingResponse;
 import rxreddit.model.Subreddit;
@@ -101,26 +102,33 @@ public class SubredditPresenter extends BaseListingsPresenter {
                     else beforeRequested = false;
                 })
                 .subscribe(
-                        response -> {
-                            onListingsLoaded(response, append);
-
-                            if ("random".equals(subreddit)) {
-                                Link link = getLinkFromListingResponse(response);
-                                String randomSubreddit = link == null ? null : link.getSubreddit();
-                                subredditView.onRandomSubredditLoaded(randomSubreddit);
-                            }
-                        },
-                        error -> {
-                            if (error instanceof IOException) {
-                                String message = context.getString(R.string.error_network_unavailable);
-                                mainView.showError(message);
-                            } else {
-                                Timber.w(error, "Error loading links");
-                                String message = context.getString(R.string.error_get_links);
-                                mainView.showError(message);
-                            }
-                        }
+                        response -> onSubredditLinksLoaded(response, subreddit, append),
+                        error -> onSubredditLinkLoadError(error)
                 );
+    }
+
+    private void onSubredditLinksLoaded(ListingResponse response, String subreddit, boolean append) {
+        onListingsLoaded(response, append);
+
+        if ("random".equals(subreddit)) {
+            Link link = getLinkFromListingResponse(response);
+            String randomSubreddit = link == null ? null : link.getSubreddit();
+            subredditView.onRandomSubredditLoaded(randomSubreddit);
+        }
+    }
+
+    private void onSubredditLinkLoadError(Throwable error) {
+        if (error instanceof IOException) {
+            String message = context.getString(R.string.error_network_unavailable);
+            mainView.showError(message);
+        } else if (error instanceof NoSuchSubredditException) {
+            String message = context.getString(R.string.error_no_such_subreddit);
+            mainView.showError(message);
+        } else {
+            Timber.w(error, "Error loading links");
+            String message = context.getString(R.string.error_get_links);
+            mainView.showError(message);
+        }
     }
 
     private Link getLinkFromListingResponse(@NotNull ListingResponse response) {
