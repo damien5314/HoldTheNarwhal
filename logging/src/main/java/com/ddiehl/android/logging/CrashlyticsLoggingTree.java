@@ -1,8 +1,7 @@
 package com.ddiehl.android.logging;
 
+import android.support.annotation.NonNull;
 import android.util.Log;
-
-import com.crashlytics.android.Crashlytics;
 
 import timber.log.Timber;
 
@@ -21,13 +20,12 @@ public class CrashlyticsLoggingTree extends Timber.Tree {
     }
 
     @Override
-    protected void log(int priority, String tag, String message, Throwable t) {
-        /** Don't use {@link Crashlytics#log(int, String, String)} - This also prints to logcat */
-        crashlyticsLogger.log(message);
-
-        // Also log the exception if one is passed
+    protected void log(int priority, String tag, @NonNull String message, Throwable t) {
         if (t != null) {
             crashlyticsLogger.logException(t);
+        } else {
+            // Don't use {@link Crashlytics#log(int, String, String)} - This also prints to logcat
+            crashlyticsLogger.log(message);
         }
     }
 
