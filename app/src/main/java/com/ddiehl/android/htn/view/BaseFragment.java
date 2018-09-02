@@ -90,6 +90,12 @@ public abstract class BaseFragment extends Fragment implements MainView {
     }
 
     @Override
+    public void onStop() {
+        super.onStop();
+        dismissSpinner();
+    }
+
+    @Override
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
         MenuTintUtils.tintAllIcons(menu, ContextCompat.getColor(getContext(), R.color.icons));
