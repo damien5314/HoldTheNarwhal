@@ -92,6 +92,6 @@ class UnreadInboxCheckJobService : JobService() {
     }
 
     private fun onInboxFetchError(throwable: Throwable) {
-        Timber.w(throwable)
+        Timber.e(throwable)
     }
 }
