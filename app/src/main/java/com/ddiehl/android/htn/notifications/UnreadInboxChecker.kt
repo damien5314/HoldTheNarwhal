@@ -15,14 +15,9 @@ class UnreadInboxChecker(
 ) {
 
     fun check(): Single<ListingResponse> {
-        val isLoggedIn = redditService.isUserAuthorized
-        return if (isLoggedIn) {
-            redditService.getInbox("unread", false, null, null)
-                    .flatMap(this::checkNullResponse)
-                    .singleOrError()
-        } else {
-            Single.error(IllegalStateException("User not logged in"))
-        }
+        return redditService.getInbox("unread", false, null, null)
+            .flatMap(this::checkNullResponse)
+            .singleOrError()
     }
 
     private fun checkNullResponse(listingResponse: ListingResponse): ObservableSource<ListingResponse> {
