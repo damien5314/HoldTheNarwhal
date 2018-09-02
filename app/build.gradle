@@ -12,6 +12,21 @@ if (!taskRequests.toString().toLowerCase().contains("debug")) {
     apply plugin: 'com.getkeepsafe.dexcount'
 }
 
+allprojects {
+    dependencyUpdates.resolutionStrategy {
+        componentSelection { rules ->
+            rules.all { ComponentSelection selection ->
+                boolean rejected = ['alpha', 'beta', 'rc', 'cr', 'm', 'snapshot', 'nightly'].any { qualifier ->
+                    selection.candidate.version ==~ /(?i).*[.-]${qualifier}[.\d-]*/
+                }
+                if (rejected) {
+                    selection.reject('Ignoring release candidates')
+                }
+            }
+        }
+    }
+}
+
 repositories {
     jcenter()
     maven { url "https://maven.google.com/" }
