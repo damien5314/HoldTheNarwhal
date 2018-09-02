@@ -42,6 +42,7 @@ import butterknife.BindView;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
+import rxreddit.api.NoSuchSubredditException;
 import rxreddit.model.Subreddit;
 import rxreddit.model.SubredditRules;
 import timber.log.Timber;
@@ -146,6 +147,9 @@ public class SubredditInfoFragment extends BaseFragment {
     void onSubredditInfoLoadError(Throwable error) {
         if (error instanceof IOException) {
             String message = getString(R.string.error_network_unavailable);
+            showError(message);
+        } else if (error instanceof NoSuchSubredditException) {
+            String message = getString(R.string.error_no_such_subreddit);
             showError(message);
         } else {
             Timber.e(error, "Error loading subreddit info");
