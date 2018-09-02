@@ -10,7 +10,9 @@ import javax.inject.Inject;
 
 import io.reactivex.Completable;
 import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import rxreddit.api.RedditService;
 import rxreddit.model.ListingResponse;
@@ -45,17 +47,11 @@ public class SubscriptionManagerPresenter {
         return redditService.unsubscribe(name);
     }
 
-    public Observable<InfoTuple> getSubredditInfo(final @NotNull String subreddit) {
-        return Observable.combineLatest(
-                redditService.getSubredditInfo(subreddit),
-                redditService.getSubredditRules(subreddit),
-//                redditService.getSubredditSidebar(subreddit),
-                (subreddit2, rules) -> {
-                    InfoTuple tuple = new InfoTuple();
-                    tuple.subreddit = subreddit2;
-                    tuple.rules = rules;
-                    return tuple;
-                }
-        );
+    public Observable<InfoTuple> getSubredditInfo(final @NotNull String subredditName) {
+        return redditService.getSubredditInfo(subredditName)
+                .concatMap((Function<Subreddit, ObservableSource<InfoTuple>>) subreddit ->
+                        redditService.getSubredditRules(subredditName)
+                                .map(rules -> new InfoTuple(subreddit, rules))
+                );
     }
 }
