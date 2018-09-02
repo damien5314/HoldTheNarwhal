@@ -1,5 +1,6 @@
 package com.ddiehl.android.htn.listings.comments;
 
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,6 +40,7 @@ public class LinkCommentsAdapter extends ListingsAdapter {
         else return TYPE_COMMENT_STUB;
     }
 
+    @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         switch (viewType) {

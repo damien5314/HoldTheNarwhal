@@ -1,5 +1,6 @@
 package com.ddiehl.android.htn.listings;
 
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,8 +54,8 @@ public class ListingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         throw new RuntimeException("Item view type not recognized: " + listing.getFullName());
     }
 
-    @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    @NonNull @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         switch (viewType) {
             case TYPE_LINK:
                 View view = LayoutInflater.from(parent.getContext())
@@ -74,7 +75,7 @@ public class ListingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (position % 25 == 0) getSettings();
         if (holder instanceof BaseLinkViewHolder) {
             Link link = (Link) listingsPresenter.getListingAt(position);
