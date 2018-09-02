@@ -119,6 +119,7 @@
     <string name="error_get_more_comments">error loading comments</string>
     <string name="error_add_comment">error adding comment</string>
     <string name="error_get_links">error loading links</string>
+    <string name="error_no_such_subreddit">subreddit not found</string>
     <string name="error_get_subreddit_info">error loading subreddit info</string>
     <string name="error_get_user_info">error loading user info</string>
     <string name="error_get_user_profile_listings">error loading profile listings</string>
