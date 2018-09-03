@@ -6,11 +6,6 @@
     <PreferenceCategory
         android:title="@string/preferences_app">
 
-        <CheckBoxPreference
-            android:key="pref_allow_analytics"
-            android:title="@string/pref_allow_analytics"
-            android:defaultValue="false" />
-
         <ListPreference
             android:key="pref_font"
             android:title="@string/pref_font"
