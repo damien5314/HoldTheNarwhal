@@ -57,7 +57,7 @@
             android:layout_marginRight="@dimen/navigation_drawer_icon_margin"
             android:contentDescription="@string/dialog_sign_out_title"
             android:src="@drawable/ic_exit_to_app_black_24dp"
-            android:tint="@color/icons" />
+            android:tint="?attr/iconColor" />
 
     </LinearLayout>
 

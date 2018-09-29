@@ -17,9 +17,9 @@
     </style>
 
     <style name="ToolbarThemeLightText" parent="AppTheme">
-        <item name="android:textColorPrimary">@color/icons</item>
-        <item name="actionMenuTextColor">@color/icons</item>
-        <item name="android:textColorSecondary">@color/icons</item>
+        <item name="android:textColorPrimary">?attr/iconColor</item>
+        <item name="actionMenuTextColor">?attr/iconColor</item>
+        <item name="android:textColorSecondary">?attr/iconColor</item>
     </style>
 
     <style name="LinkMetadataTextViewLight">
@@ -35,9 +35,10 @@
     <style name="ProgressDialog" parent="Theme.AppCompat.Dialog">
         <item name="android:alertDialogStyle">@style/CustomAlertDialogStyle</item>
         <item name="android:windowBackground">@color/transparent</item>
-        <item name="android:textColorPrimary">@color/icons</item>
+        <item name="android:textColorPrimary">?attr/iconColor</item>
         <item name="android:backgroundDimEnabled">true</item>
-        <item name="android:textColor">@color/icons</item>
+        <!-- FIXME This should use a text* attribute -->
+        <item name="android:textColor">?attr/iconColor</item>
         <item name="android:textStyle">normal</item>
         <item name="android:textAppearance">?android:textAppearanceSmall</item>
     </style>

@@ -139,8 +139,8 @@ public abstract class BaseActivity extends AppCompatActivity implements
                 // Set the drawer toggle as the DrawerListener
                 drawerLayout.addDrawerListener(drawerToggle);
 
-                Drawable homeIndicator = AndroidUtils.getTintedDrawable(
-                        this, R.drawable.ic_menu_black_24dp, R.color.icons
+                Drawable homeIndicator = AndroidUtils.getAttrTintedDrawable(
+                        this, R.drawable.ic_menu_black_24dp, R.attr.iconColor
                 );
                 actionBar.setHomeAsUpIndicator(homeIndicator);
             } else {

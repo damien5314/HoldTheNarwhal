@@ -8,6 +8,7 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.support.annotation.AttrRes;
 import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
@@ -134,6 +135,14 @@ public class AndroidUtils {
             Context context, @DrawableRes int drawableResId, @ColorRes int colorResId) {
         Drawable drawable = ContextCompat.getDrawable(context, drawableResId);
         int color = ContextCompat.getColor(context, colorResId);
+        drawable.setColorFilter(color, PorterDuff.Mode.SRC_IN);
+        return drawable;
+    }
+
+    public static Drawable getAttrTintedDrawable(
+            Context context, @DrawableRes int drawableResId, @AttrRes int colorAttrResId) {
+        Drawable drawable = ContextCompat.getDrawable(context, drawableResId);
+        int color = ThemeUtilsKt.getColorFromAttr(context, colorAttrResId);
         drawable.setColorFilter(color, PorterDuff.Mode.SRC_IN);
         return drawable;
     }
