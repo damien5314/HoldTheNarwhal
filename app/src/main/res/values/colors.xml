@@ -11,13 +11,14 @@
     <color name="icons">#ffffff</color>
     <color name="divider">#b6b6b6</color>
 
+    <!-- Standard colors -->
+    <color name="white">#ffffff</color>
+    <color name="black">#000000</color>
+    <color name="transparent">#00000000</color>
+
     <!-- States -->
     <color name="disabled">@color/gray70</color>
-
-    <color name="white">#fff</color>
-    <color name="black">#000</color>
     <color name="gray70">#c0cace</color>
-    <color name="transparent">#0000</color>
     <color name="indentation">@color/primary</color>
     <color name="reddit_orange_full">@color/reddit_orange</color>
     <color name="reddit_orange_lighter">#ffcbb8</color>
