@@ -15,7 +15,7 @@
         android:label="@string/app_name"
         android:resizeableActivity="true"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
+        android:theme="@style/NightThemeColors"
         tools:ignore="UnusedAttribute">
 
         <meta-data
