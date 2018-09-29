@@ -211,7 +211,6 @@
             android:id="@+id/link_self_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
             android:bufferType="spannable"
             android:gravity="start"
             android:padding="@dimen/link_self_text_padding"
