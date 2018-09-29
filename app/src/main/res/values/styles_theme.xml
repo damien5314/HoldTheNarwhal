@@ -34,7 +34,7 @@
         <item name="iconColor">@color/white</item>
         <item name="nsfwColor">@color/nsfw_tag_color</item>
         <item name="cardTopBackgroundColor">@color/gray900</item>
-        <item name="cardBackgroundAccentColor">@color/gray800</item>
+        <item name="cardBackgroundAccentColor">@color/gray900</item>
         <item name="cardTopTextColor">@color/white</item>
         <item name="cardTopTextSecondaryColor">@color/gray400</item>
     </style>
