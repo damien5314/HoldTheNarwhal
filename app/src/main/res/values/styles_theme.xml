@@ -10,6 +10,9 @@
         <item name="textColorPrimary">@color/gray900</item>
         <item name="textColorSecondary"></item>
         <item name="textColorLink">@color/link_color</item>
+        <item name="dividerColor">@color/divider</item>
+        <item name="iconColor">@color/white</item>
+        <item name="nsfwColor">@color/nsfw_tag_color</item>
         <item name="cardTopBackgroundColor">@color/white</item>
         <item name="cardBackgroundAccentColor">@color/primary_dark</item>
         <item name="cardTopTextColor">@color/gray900</item>
@@ -23,6 +26,9 @@
         <item name="textColorPrimary">@color/white</item>
         <item name="textColorSecondary"></item>
         <item name="textColorLink">@color/link_color</item>
+        <item name="dividerColor">@color/divider</item>
+        <item name="iconColor">@color/white</item>
+        <item name="nsfwColor">@color/nsfw_tag_color</item>
         <item name="cardTopBackgroundColor">@color/gray900</item>
         <item name="cardBackgroundAccentColor">@color/gray800</item>
         <item name="cardTopTextColor">@color/white</item>

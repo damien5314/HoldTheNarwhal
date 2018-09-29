@@ -9,6 +9,7 @@
     <color name="primary_text">#212121</color>
     <color name="secondary_text">#727272</color>
     <color name="icons">#ffffff</color>
+    <!-- FIXME is this a material color? -->
     <color name="divider">#b6b6b6</color>
 
     <!-- Standard colors -->
