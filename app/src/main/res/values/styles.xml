@@ -3,7 +3,7 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="AppTheme.Base" />
 
-    <style name="AppTheme.Base" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme.Base" parent="Theme.AppCompat.NoActionBar">
         <!-- to remove the default action -->
         <item name="android:windowNoTitle">true</item>
         <item name="windowActionBar">false</item> <!-- For 2.x version -->
@@ -14,12 +14,6 @@
 
     <style name="ActivityThemeLightBg" parent="AppTheme">
         <item name="android:windowBackground">@color/white</item>
-    </style>
-
-    <style name="ToolbarThemeLightText">
-        <item name="android:textColorPrimary">?attr/iconColor</item>
-        <item name="actionMenuTextColor">?attr/iconColor</item>
-        <item name="android:textColorSecondary">?attr/iconColor</item>
     </style>
 
     <style name="LinkMetadataTextViewLight">
