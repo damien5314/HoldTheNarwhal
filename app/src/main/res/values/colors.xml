@@ -2,7 +2,7 @@
 <resources>
     <!-- icon height in navigation drawer is 20dp w/ 6dp padding -->
     <!-- http://www.materialpalette.com/blue-grey/red -->
-    <color name="primary_light">#cfd8dc</color>
+    <color name="material_blue_light">#cfd8dc</color>
     <color name="primary">#607d8b</color>
     <color name="primary_dark">#455a64</color>
     <color name="accent">#ff5252</color>
@@ -32,7 +32,7 @@
     <color name="author_moderator_text">#ffffff</color>
     <color name="author_admin_background">#ff0011</color>
     <color name="author_admin_text">#ffffff</color>
-    <color name="markdown_quote_block">@color/primary_light</color>
+    <color name="markdown_quote_block">?attr/colorPrimaryLight</color>
     <color name="comment_controversiality_indicator">#ff5252</color>
     <color name="nsfw_tag_color">#d10023</color>
     <color name="link_color">#0000ee</color>

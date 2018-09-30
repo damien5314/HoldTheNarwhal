@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="@dimen/navigation_drawer_header_height"
-    android:background="@color/primary_dark">
+    android:background="?attr/colorPrimaryDark">
 
     <ImageView
         android:id="@+id/navigation_drawer_header_image"
