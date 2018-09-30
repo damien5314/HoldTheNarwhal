@@ -9,7 +9,7 @@
         <item name="windowActionBar">false</item> <!-- For 2.x version -->
         <item name="android:windowActionModeOverlay">true</item>
         <!-- app background color -->
-        <item name="android:windowBackground">?attr/windowBackgroundColor</item>
+        <item name="android:windowBackground">?attr/colorPrimaryLight</item>
     </style>
 
     <style name="ActivityThemeLightBg" parent="AppTheme">

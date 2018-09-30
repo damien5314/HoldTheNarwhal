@@ -8,7 +8,6 @@
         <item name="colorAccent">@color/accent</item>
         <!-- Custom attributes -->
         <item name="colorPrimaryLight">@color/material_blue_light</item>
-        <item name="windowBackgroundColor">@color/material_blue_light</item>
         <item name="textColorPrimary">@color/gray900</item>
         <item name="textColorSecondary"></item>
         <item name="textColorLink">@color/link_color</item>
@@ -28,7 +27,6 @@
         <item name="colorAccent">@color/accent</item>
         <!-- Custom attributes -->
         <item name="colorPrimaryLight">@color/gray700</item>
-        <item name="windowBackgroundColor">@color/gray700</item>
         <item name="textColorPrimary">@color/white</item>
         <item name="textColorSecondary"></item>
         <item name="textColorLink">@color/link_color</item>
