@@ -45,6 +45,7 @@ import com.ddiehl.android.htn.settings.SettingsManager;
 import com.ddiehl.android.htn.subscriptions.SubscriptionManagerActivity;
 import com.ddiehl.android.htn.utils.AndroidUtils;
 import com.ddiehl.android.htn.view.glide.GlideApp;
+import com.ddiehl.android.htn.view.theme.ColorScheme;
 import com.google.gson.Gson;
 
 import org.jetbrains.annotations.NotNull;
@@ -116,9 +117,11 @@ public abstract class BaseActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        HoldTheNarwhal.getApplicationComponent().inject(this);
+
+        applyColorScheme();
         setContentView(R.layout.activity_main);
 
-        HoldTheNarwhal.getApplicationComponent().inject(this);
         ButterKnife.bind(this);
 
         // Initialize toolbar
@@ -173,6 +176,11 @@ public abstract class BaseActivity extends AppCompatActivity implements
         );
 
         showTabs(false);
+    }
+
+    private void applyColorScheme() {
+        final ColorScheme colorScheme = mSettingsManager.getColorScheme();
+        setTheme(colorScheme.getStyleRes());
     }
 
     private String getFont() {
@@ -308,6 +316,9 @@ public abstract class BaseActivity extends AppCompatActivity implements
             case R.id.drawer_random_subreddit:
                 onShowRandomSubreddit();
                 return true;
+            case R.id.drawer_switch_themes:
+                onSwitchThemes();
+                return true;
         }
         return false;
     }
@@ -351,6 +362,19 @@ public abstract class BaseActivity extends AppCompatActivity implements
 
     protected void onShowRandomSubreddit() {
         showSubreddit("random", null, null);
+    }
+
+    protected void onSwitchThemes() {
+        ColorScheme scheme = mSettingsManager.getColorScheme();
+        switch (scheme) {
+            case STANDARD:
+                mSettingsManager.setColorScheme(ColorScheme.NIGHT);
+                break;
+            case NIGHT:
+                mSettingsManager.setColorScheme(ColorScheme.STANDARD);
+                break;
+        }
+        recreate();
     }
 
     public void showLoginView() {
