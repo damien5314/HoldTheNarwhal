@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="AppTheme.Base" />
+    <style name="AppThemeLight" parent="BaseThemeLight" />
+    <style name="AppThemeDark" parent="BaseThemeDark" />
 
-    <style name="AppTheme.Base" parent="Theme.AppCompat.NoActionBar">
+    <style name="ActivityThemeLightBg" parent="AppThemeLight">
+        <item name="android:windowBackground">@color/white</item>
+    </style>
+
+    <style name="BaseThemeLight" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- to remove the default action -->
         <item name="android:windowNoTitle">true</item>
         <item name="windowActionBar">false</item> <!-- For 2.x version -->
@@ -12,8 +16,13 @@
         <item name="android:windowBackground">?attr/colorPrimaryLight</item>
     </style>
 
-    <style name="ActivityThemeLightBg" parent="AppTheme">
-        <item name="android:windowBackground">@color/white</item>
+    <style name="BaseThemeDark" parent="Theme.AppCompat.NoActionBar">
+        <!-- to remove the default action -->
+        <item name="android:windowNoTitle">true</item>
+        <item name="windowActionBar">false</item> <!-- For 2.x version -->
+        <item name="android:windowActionModeOverlay">true</item>
+        <!-- app background color -->
+        <item name="android:windowBackground">?attr/colorPrimaryLight</item>
     </style>
 
     <style name="LinkMetadataTextViewLight">
@@ -50,7 +59,7 @@
         <item name="android:topDark">@color/transparent</item>
     </style>
 
-    <style name="TransparentTheme" parent="AppTheme">
+    <style name="TransparentTheme" parent="BaseThemeLight">
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowContentOverlay">@null</item>
@@ -58,7 +67,6 @@
         <item name="android:windowIsFloating">true</item>
         <item name="android:backgroundDimEnabled">false</item>
     </style>
-
 
     <style name="DialogOverlay" parent="android:style/Theme.Translucent.NoTitleBar">
         <item name="android:windowBackground">@color/transparent</item>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="StandardThemeColors" parent="AppTheme">
+    <style name="StandardThemeColors" parent="AppThemeLight">
         <!-- AppCompat theme attributes -->
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>
@@ -21,7 +21,7 @@
         <item name="cardTopTextSecondaryColor">@color/secondary_text</item>
     </style>
 
-    <style name="NightThemeColors" parent="AppTheme">
+    <style name="NightThemeColors" parent="AppThemeDark">
         <!-- AppCompat theme attributes -->
         <item name="colorPrimary">@color/gray800</item>
         <item name="colorPrimaryDark">@color/gray900</item>
