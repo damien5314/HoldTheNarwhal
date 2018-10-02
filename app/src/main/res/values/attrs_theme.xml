@@ -11,6 +11,8 @@
     <attr name="iconColor" format="color" />
 
     <attr name="nsfwColor" format="color" />
+    <attr name="toolbarStyle" format="reference" />
+    <attr name="toolbarPopupStyle" format="reference" />
 
     <!-- Link cards -->
     <attr name="cardTopBackgroundColor" format="color" />

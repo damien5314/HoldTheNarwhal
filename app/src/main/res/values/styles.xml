@@ -7,6 +7,18 @@
         <item name="android:windowBackground">@color/white</item>
     </style>
 
+    <style name="ToolbarLight" parent="BaseThemeLight">
+        <item name="android:textColorPrimary">@color/icons</item>
+        <item name="android:textColorSecondary">@color/icons</item>
+        <item name="actionMenuTextColor">@color/icons</item>
+    </style>
+
+    <style name="ToolbarDark" parent="BaseThemeDark">
+        <item name="android:textColorPrimary">@color/icons</item>
+        <item name="android:textColorSecondary">@color/icons</item>
+        <item name="actionMenuTextColor">@color/icons</item>
+    </style>
+
     <style name="BaseThemeLight" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- to remove the default action -->
         <item name="android:windowNoTitle">true</item>
