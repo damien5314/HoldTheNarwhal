@@ -25,7 +25,7 @@
         <item name="windowActionBar">false</item> <!-- For 2.x version -->
         <item name="android:windowActionModeOverlay">true</item>
         <!-- app background color -->
-        <item name="android:windowBackground">?attr/colorPrimaryLight</item>
+        <item name="android:windowBackground">?attr/windowBackgroundColor</item>
     </style>
 
     <style name="BaseThemeDark" parent="Theme.AppCompat.NoActionBar">
@@ -34,7 +34,7 @@
         <item name="windowActionBar">false</item> <!-- For 2.x version -->
         <item name="android:windowActionModeOverlay">true</item>
         <!-- app background color -->
-        <item name="android:windowBackground">?attr/colorPrimaryLight</item>
+        <item name="android:windowBackground">?attr/windowBackgroundColor</item>
     </style>
 
     <style name="LinkMetadataTextViewLight">
