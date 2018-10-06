@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.listings.BaseListingsPresenter;
+import com.ddiehl.android.htn.utils.ThemeUtilsKt;
 import com.ddiehl.android.htn.view.markdown.HtmlParser;
 import com.ddiehl.timesincetextview.TimeSinceTextView;
 
@@ -142,7 +143,7 @@ public class ListingsCommentViewHolder extends RecyclerView.ViewHolder
         } else {
             authorView.setBackgroundResource(0);
             authorView.setTextColor(
-                    ContextCompat.getColor(appContext, R.color.secondary_text));
+                    ThemeUtilsKt.getColorFromAttr(appContext, R.attr.textColorSecondary));
         }
         authorView.setText(comment.getAuthor());
     }
@@ -185,7 +186,7 @@ public class ListingsCommentViewHolder extends RecyclerView.ViewHolder
     // Set background tint based on isLiked
     private void showLiked(Comment comment) {
         if (comment.isLiked() == null) {
-            scoreView.setTextColor(ContextCompat.getColor(appContext, R.color.secondary_text));
+            scoreView.setTextColor(ThemeUtilsKt.getColorFromAttr(appContext, R.attr.textColorSecondary));
         } else if (comment.isLiked()) {
             scoreView.setTextColor(ContextCompat.getColor(appContext, R.color.reddit_orange_full));
         } else {

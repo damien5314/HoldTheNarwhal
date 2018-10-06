@@ -40,7 +40,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:maxLines="3"
-            android:textColor="@color/secondary_text"
+            android:textColor="?attr/textColorSecondary"
             tools:text="/r/AskReddit is the place to ask and answer thought-provoking questions." />
 
     </LinearLayout>

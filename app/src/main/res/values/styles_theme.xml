@@ -21,7 +21,7 @@
         <item name="cardTopBackgroundColor">@color/white</item>
         <item name="cardBackgroundAccentColor">@color/primary_dark</item>
         <item name="cardTopTextColor">@color/gray900</item>
-        <item name="cardTopTextSecondaryColor">@color/secondary_text</item>
+        <item name="cardTopTextSecondaryColor">?attr/textColorSecondary</item>
     </style>
 
     <style name="NightThemeColors" parent="AppThemeDark">

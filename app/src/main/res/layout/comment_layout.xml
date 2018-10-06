@@ -32,7 +32,7 @@
                     android:id="@+id/comment_author"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/secondary_text"
+                    android:textColor="?attr/textColorSecondary"
                     android:textStyle="bold"
                     android:textAppearance="?android:textAppearanceSmall"
                     android:ellipsize="end"
@@ -57,7 +57,7 @@
                         android:id="@+id/comment_score"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/secondary_text"
+                        android:textColor="?attr/textColorSecondary"
                         android:textAppearance="?android:textAppearanceSmall"
                         android:maxLines="1"
                         tools:text="573" />
@@ -91,7 +91,7 @@
                         android:id="@+id/comment_timestamp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/secondary_text"
+                        android:textColor="?attr/textColorSecondary"
                         android:textAppearance="?android:textAppearanceSmall"
                         android:maxLines="1"
                         app:tstv_abbreviated="true"
@@ -113,7 +113,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:src="@drawable/ic_save_black_16dp"
-                    android:tint="@color/secondary_text" />
+                    android:tint="?attr/textColorSecondary" />
 
                 <TextView
                     android:id="@+id/comment_gilded_text_view"

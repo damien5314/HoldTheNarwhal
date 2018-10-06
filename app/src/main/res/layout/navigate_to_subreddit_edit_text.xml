@@ -22,7 +22,7 @@
         android:maxLines="1"
         android:textAlignment="viewStart"
         android:textColor="?attr/textColorPrimary"
-        android:textColorHint="@color/secondary_text"
+        android:textColorHint="?attr/textColorSecondary"
         android:textSize="@dimen/navigation_drawer_item_text"
         tools:ignore="UnusedAttribute" />
 

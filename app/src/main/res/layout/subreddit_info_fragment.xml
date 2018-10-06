@@ -98,7 +98,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/created"
-                    android:textColor="@color/secondary_text"
+                    android:textColor="?attr/textColorSecondary"
                     android:textSize="@dimen/subreddit_info_section_header_text_size" />
 
                 <TextView
@@ -117,7 +117,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/subscribers"
-                    android:textColor="@color/secondary_text"
+                    android:textColor="?attr/textColorSecondary"
                     android:textSize="@dimen/subreddit_info_section_header_text_size" />
 
                 <TextView
@@ -136,7 +136,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/description"
-                    android:textColor="@color/secondary_text"
+                    android:textColor="?attr/textColorSecondary"
                     android:textSize="@dimen/subreddit_info_section_header_text_size" />
 
                 <TextView
@@ -155,7 +155,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/rules"
-                    android:textColor="@color/secondary_text"
+                    android:textColor="?attr/textColorSecondary"
                     android:textSize="@dimen/subreddit_info_section_header_text_size" />
 
                 <android.support.v7.widget.RecyclerView

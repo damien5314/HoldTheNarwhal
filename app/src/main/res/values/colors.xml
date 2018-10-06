@@ -6,7 +6,6 @@
     <color name="primary">#607d8b</color>
     <color name="primary_dark">#455a64</color>
     <color name="accent">#ff5252</color>
-    <color name="secondary_text">#727272</color>
     <color name="icons">#ffffff</color>
     <!-- FIXME is this a material color? -->
     <color name="divider">#b6b6b6</color>

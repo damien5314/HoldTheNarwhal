@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
+import com.ddiehl.android.htn.utils.ThemeUtilsKt;
 import com.ddiehl.android.htn.view.ColorSwapTextView;
 import com.ddiehl.android.htn.view.markdown.HtmlParser;
 import com.ddiehl.timesincetextview.TimeSinceTextView;
@@ -127,7 +128,7 @@ public class ThreadCommentViewHolder extends RecyclerView.ViewHolder
         } else {
             //noinspection deprecation
             authorView.setBackgroundDrawable(authorView.getOriginalBackground());
-            authorView.setTextColor(ContextCompat.getColor(context, R.color.secondary_text));
+            authorView.setTextColor(ThemeUtilsKt.getColorFromAttr(context, R.attr.textColorSecondary));
         }
     }
 
@@ -175,7 +176,7 @@ public class ThreadCommentViewHolder extends RecyclerView.ViewHolder
     // Set background tint based on isLiked
     private void showLiked(Comment comment) {
         if (comment.isLiked() == null) {
-            scoreView.setTextColor(ContextCompat.getColor(context, R.color.secondary_text));
+            scoreView.setTextColor(ThemeUtilsKt.getColorFromAttr(context, R.attr.textColorSecondary));
         } else if (comment.isLiked()) {
             scoreView.setTextColor(ContextCompat.getColor(context, R.color.reddit_orange_full));
         } else {

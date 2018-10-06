@@ -29,7 +29,7 @@
             android:layout_width="fill_parent"
             android:layout_height="@dimen/comment_data_height"
             android:gravity="center|center"
-            android:textColor="@color/secondary_text"
+            android:textColor="?attr/textColorSecondary"
             android:textSize="@dimen/comment_more_text_size"
             android:maxLines="1"
             tools:text="view 10 more comments" />

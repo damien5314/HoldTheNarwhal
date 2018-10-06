@@ -44,7 +44,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/baseline_spacing"
-                android:textColor="@color/secondary_text"
+                android:textColor="?attr/textColorSecondary"
                 android:textAppearance="?android:textAppearanceSmall"
                 tools:text="view 9 more messages" />
 
@@ -87,7 +87,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:textColor="@color/secondary_text"
+                        android:textColor="?attr/textColorSecondary"
                         android:textAppearance="?android:textAppearanceSmall"
                         tools:text="from simpleredditreader sent 8 days ago" />
 
