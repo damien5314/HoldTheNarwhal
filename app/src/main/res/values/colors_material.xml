@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?><!-- https://www.materialui.co/colors -->
 <resources>
+    <color name="red000">#f44336</color>
+    <color name="red050">#ffebee</color>
+    <color name="red100">#ffcdd2</color>
+    <color name="red200">#ef9a9a</color>
+    <color name="red300">#e57373</color>
+    <color name="red400">#ef5350</color>
+    <color name="red500">#f44336</color>
+    <color name="red600">#e53935</color>
+    <color name="red700">#d32f2f</color>
+    <color name="red800">#c62828</color>
+    <color name="red900">#b71c1c</color>
+    <color name="redA100">#ff8a80</color>
+    <color name="redA200">#ff5252</color>
+    <color name="redA400">#ff1744</color>
+    <color name="redA700">#d50000</color>
+    <color name="gray000">#9E9E9E</color>
     <color name="gray050">#FAFAFA</color>
     <color name="gray100">#F5F5F5</color>
     <color name="gray200">#EEEEEE</color>
