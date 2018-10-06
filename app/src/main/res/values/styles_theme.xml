@@ -11,7 +11,7 @@
         <item name="windowBackgroundColor">@color/material_blue_light</item>
         <item name="textColorPrimary">@color/gray900</item>
         <item name="textColorSecondary"></item>
-        <item name="textColorHighlight">@color/primary_text</item>
+        <item name="textColorHighlight">?attr/textColorPrimary</item>
         <item name="textColorLink">@color/link_color</item>
         <item name="dividerColor">@color/divider</item>
         <item name="iconColor">@color/white</item>

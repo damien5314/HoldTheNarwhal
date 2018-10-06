@@ -30,7 +30,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-                    android:textColor="@color/primary_text"
+                    android:textColor="?attr/textColorPrimary"
                     tools:text="/r/AskReddit" />
 
                 <android.support.v4.widget.Space
@@ -105,7 +105,7 @@
                     android:id="@+id/create_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/primary_text"
+                    android:textColor="?attr/textColorPrimary"
                     android:textSize="@dimen/subreddit_info_section_body_text_size"
                     tools:text="Dec 23, 2013" />
 
@@ -124,7 +124,7 @@
                     android:id="@+id/subscriber_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/primary_text"
+                    android:textColor="?attr/textColorPrimary"
                     android:textSize="@dimen/subreddit_info_section_body_text_size"
                     tools:text="130,055" />
 
@@ -143,7 +143,7 @@
                     android:id="@+id/public_description"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/primary_text"
+                    android:textColor="?attr/textColorPrimary"
                     android:textSize="@dimen/subreddit_info_section_body_text_size"
                     tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum sodales sem sit amet augue consectetur blandit. Praesent molestie vulputate aliquet. Quisque posuere hendrerit risus ac feugiat." />
 

@@ -108,7 +108,7 @@
                     android:layout_marginBottom="@dimen/baseline_spacing"
                     android:layout_marginLeft="@dimen/baseline_spacing"
                     android:layout_marginRight="@dimen/baseline_spacing"
-                    android:textColor="@color/primary_text"
+                    android:textColor="?attr/textColorPrimary"
                     android:textColorLink="@color/link_color"
                     android:textAppearance="?android:textAppearanceSmall"
                     tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod." />

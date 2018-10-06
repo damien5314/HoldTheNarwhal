@@ -13,7 +13,7 @@
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:textAppearance="?android:textAppearanceMedium"
-        android:textColor="@color/primary_text"
+        android:textColor="?attr/textColorPrimary"
         android:textColorLink="@color/link_color" />
 
 </ScrollView>

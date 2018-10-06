@@ -21,7 +21,7 @@
         android:inputType="text"
         android:maxLines="1"
         android:textAlignment="viewStart"
-        android:textColor="@color/primary_text"
+        android:textColor="?attr/textColorPrimary"
         android:textColorHint="@color/secondary_text"
         android:textSize="@dimen/navigation_drawer_item_text"
         tools:ignore="UnusedAttribute" />

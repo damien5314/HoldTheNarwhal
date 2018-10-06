@@ -11,7 +11,7 @@
         android:id="@+id/short_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/primary_text"
+        android:textColor="?attr/textColorPrimary"
         android:textSize="@dimen/subreddit_info_section_body_text_size"
         tools:text="R3: no personal information / missing persons" />
 
@@ -28,7 +28,7 @@
         android:id="@+id/description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/primary_text"
+        android:textColor="?attr/textColorPrimary"
         android:textSize="@dimen/subreddit_info_rule_body_text_size"
         tools:text="No personal information / No missing-persons requests. Do not witch hunt." />
 
