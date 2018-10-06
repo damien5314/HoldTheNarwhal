@@ -5,7 +5,7 @@
         <!-- AppCompat theme attributes -->
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>
-        <item name="colorAccent">@color/accent</item>
+        <item name="colorAccent">@color/redA200</item>
         <!-- Custom attributes -->
         <item name="colorPrimaryLight">@color/bluegrey_100</item>
         <item name="windowBackgroundColor">@color/bluegrey_100</item>
@@ -28,7 +28,7 @@
         <!-- AppCompat theme attributes -->
         <item name="colorPrimary">@color/gray800</item>
         <item name="colorPrimaryDark">@color/gray900</item>
-        <item name="colorAccent">@color/accent</item>
+        <item name="colorAccent">@color/redA200</item>
         <!-- Custom attributes -->
         <item name="colorPrimaryLight">@color/gray700</item>
         <item name="windowBackgroundColor">@color/gray700</item>

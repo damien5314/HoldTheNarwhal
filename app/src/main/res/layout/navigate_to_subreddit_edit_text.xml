@@ -34,7 +34,7 @@
         android:autoMirrored="true"
         android:contentDescription="@string/drawer_navigate_to_subreddit_go_cd"
         android:src="@drawable/ic_arrow_forward_black_24dp"
-        android:tint="@color/accent"
+        android:tint="?attr/colorAccent"
         tools:ignore="UnusedAttribute" />
 
 </LinearLayout>
