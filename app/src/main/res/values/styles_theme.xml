@@ -10,7 +10,7 @@
         <item name="colorPrimaryLight">@color/bluegrey_100</item>
         <item name="windowBackgroundColor">@color/bluegrey_100</item>
         <item name="textColorPrimary">@color/gray900</item>
-        <item name="textColorSecondary"></item>
+        <item name="textColorSecondary">@color/dim_gray</item>
         <item name="textColorHighlight">?attr/textColorPrimary</item>
         <item name="textColorLink">@color/link_color</item>
         <item name="dividerColor">@color/divider</item>
@@ -32,8 +32,9 @@
         <!-- Custom attributes -->
         <item name="colorPrimaryLight">@color/gray700</item>
         <item name="windowBackgroundColor">@color/gray700</item>
+        <!-- TODO double-check these text colors are actually to spec -->
         <item name="textColorPrimary">@color/white</item>
-        <item name="textColorSecondary"></item>
+        <item name="textColorSecondary">@color/gray300</item>
         <item name="textColorHighlight">@color/white</item>
         <item name="textColorLink">@color/link_color</item>
         <item name="dividerColor">@color/divider</item>
