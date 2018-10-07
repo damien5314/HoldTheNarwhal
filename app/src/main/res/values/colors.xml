@@ -4,31 +4,42 @@
     <color name="dim_gray">#727272</color>
     <color name="black">#000000</color>
     <color name="transparent">#00000000</color>
+    <color name="silver">#c6c6c6</color>
     <color name="torch_red">#ff0011</color>
-    <color name="forest_green">#228822</color>
-    <color name="navy_blue">#0055df</color>
+    <color name="venetian_red">#d10023</color>
+    <color name="golden_yellow">#f6e600</color>
     <color name="international_orange">#ff5700</color>
     <color name="orangered">#ff4500</color>
+    <color name="atomic_tangerine">#ff8b60</color>
+    <color name="your_pink">#ffcbb8</color>
+    <color name="blue">#0000ee</color>
+    <color name="navy_blue">#0055df</color>
+    <color name="light_slate_blue">#9494ff</color>
+    <color name="alice_blue">#eff7ff</color>
+    <color name="pattens_blue">#cee3f8</color>
+    <color name="lochmara">#336699</color>
+    <color name="lavender_blue">#c9c9ff</color>
+    <color name="forest_green">#228822</color>
 
     <!-- States -->
-    <color name="reddit_orange_lighter">#ffcbb8</color>
-    <color name="reddit_blue_lighter">#c9c9ff</color>
-    <color name="reddit_gold">#f6e600</color>
+    <color name="reddit_orange_lighter">@color/your_pink</color>
+    <color name="reddit_blue_lighter">@color/lavender_blue</color>
+    <color name="reddit_gold">@color/golden_yellow</color>
     <color name="markdown_quote_block">@color/bluegrey000</color>
     <color name="comment_controversiality_indicator">@color/redA200</color>
-    <color name="nsfw_tag_color">#d10023</color>
-    <color name="link_color">#0000ee</color>
-    <color name="link_saved_color">@color/reddit_downvote</color>
+    <color name="nsfw_tag_color">@color/venetian_red</color>
+    <color name="link_color">@color/blue</color>
+    <color name="link_saved_color">@color/light_slate_blue</color>
     <color name="ic_launcher_background">@color/bluegrey000</color>
 
     <!-- reddit color scheme -->
     <!-- https://www.reddit.com/about/alien/ -->
     <color name="reddit_orange">@color/international_orange</color>
-    <color name="reddit_upvote">#ff8b60</color>
-    <color name="reddit_neutral">#c6c6c6</color>
-    <color name="reddit_downvote">#9494ff</color>
-    <color name="reddit_light_bg">#eff7ff</color>
-    <color name="reddit_header">#cee3f8</color>
-    <color name="reddit_ui_text">#336699</color>
+    <color name="reddit_upvote">@color/atomic_tangerine</color>
+    <color name="reddit_neutral">@color/silver</color>
+    <color name="reddit_downvote">@color/light_slate_blue</color>
+    <color name="reddit_light_bg">@color/alice_blue</color>
+    <color name="reddit_header">@color/pattens_blue</color>
+    <color name="reddit_ui_text">@color/lochmara</color>
 
 </resources>
