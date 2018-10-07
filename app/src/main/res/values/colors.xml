@@ -8,6 +8,7 @@
     <color name="forest_green">#228822</color>
     <color name="navy_blue">#0055df</color>
     <color name="international_orange">#ff5700</color>
+    <color name="orangered">#ff4500</color>
 
     <!-- States -->
     <color name="reddit_orange_lighter">#ffcbb8</color>
@@ -23,7 +24,6 @@
     <!-- reddit color scheme -->
     <!-- https://www.reddit.com/about/alien/ -->
     <color name="reddit_orange">@color/international_orange</color>
-    <color name="reddit_orangered">#ff4500</color>
     <color name="reddit_upvote">#ff8b60</color>
     <color name="reddit_neutral">#c6c6c6</color>
     <color name="reddit_downvote">#9494ff</color>
