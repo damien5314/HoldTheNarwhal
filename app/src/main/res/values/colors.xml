@@ -5,8 +5,6 @@
     <color name="bluegrey_100">#cfd8dc</color>
     <color name="primary">#607d8b</color>
     <color name="primary_dark">#455a64</color>
-    <!-- FIXME is this a material color? -->
-    <color name="divider">#b6b6b6</color>
 
     <!-- Standard colors -->
     <color name="white">#ffffff</color>

@@ -13,7 +13,7 @@
         <item name="textColorSecondary">@color/dim_gray</item>
         <item name="textColorHighlight">?attr/textColorPrimary</item>
         <item name="textColorLink">@color/link_color</item>
-        <item name="dividerColor">@color/divider</item>
+        <item name="dividerColor">#1e000000</item> <!-- 12% black -->
         <item name="iconColor">@color/white</item>
         <item name="nsfwColor">@color/nsfw_tag_color</item>
         <item name="toolbarStyle">@style/ToolbarLight</item>
@@ -37,7 +37,7 @@
         <item name="textColorSecondary">@color/gray300</item>
         <item name="textColorHighlight">@color/white</item>
         <item name="textColorLink">@color/link_color</item>
-        <item name="dividerColor">@color/divider</item>
+        <item name="dividerColor">#33ffffff</item> <!-- 20% white -->
         <item name="iconColor">@color/white</item>
         <item name="nsfwColor">@color/nsfw_tag_color</item>
         <item name="toolbarStyle">@style/ToolbarDark</item>
