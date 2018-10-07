@@ -22,6 +22,8 @@
         <item name="contentBackgroundColorPrimary">?attr/colorPrimary</item>
         <item name="contentBackgroundColorSecondary">@color/white</item>
         <item name="authorDecoratedTextColor">@color/white</item>
+        <item name="contentLikedColor">@color/reddit_orange</item>
+        <item name="contentDislikedColor"></item>
         <item name="cardTopBackgroundColor">@color/white</item>
         <item name="cardBackgroundAccentColor">?attr/colorPrimaryDark</item>
         <item name="cardTopTextColor">@color/gray900</item>

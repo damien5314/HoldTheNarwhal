@@ -1,7 +1,6 @@
 package com.ddiehl.android.htn.listings.links;
 
 import android.support.annotation.ColorInt;
-import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -90,10 +89,10 @@ public class CommentsLinkViewHolder extends BaseLinkViewHolder {
             color = ThemeUtilsKt.getColorFromAttr(context, R.attr.textColorSecondary);
             linkOptionsBar.setVoted(0);
         } else if (link.isLiked()) {
-            color = ContextCompat.getColor(context, R.color.reddit_orange_full);
+            color = ThemeUtilsKt.getColorFromAttr(context, R.attr.contentLikedColor);
             linkOptionsBar.setVoted(1);
         } else {
-            color = ContextCompat.getColor(context, R.color.reddit_blue_full);
+            color = ThemeUtilsKt.getColorFromAttr(context, R.attr.contentDislikedColor);
             linkOptionsBar.setVoted(-1);
         }
 

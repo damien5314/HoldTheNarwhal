@@ -18,6 +18,8 @@
     <attr name="contentBackgroundColorPrimary" format="color" />
     <attr name="contentBackgroundColorSecondary" format="color" />
     <attr name="authorDecoratedTextColor" format="color" />
+    <attr name="contentLikedColor" format="color" />
+    <attr name="contentDislikedColor" format="color" />
 
     <!-- Link cards -->
     <attr name="cardTopBackgroundColor" format="color" />

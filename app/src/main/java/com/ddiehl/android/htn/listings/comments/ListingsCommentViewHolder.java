@@ -1,7 +1,6 @@
 package com.ddiehl.android.htn.listings.comments;
 
 import android.content.Context;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.Spanned;
 import android.view.ContextMenu;
@@ -189,9 +188,11 @@ public class ListingsCommentViewHolder extends RecyclerView.ViewHolder
         if (comment.isLiked() == null) {
             scoreView.setTextColor(ThemeUtilsKt.getColorFromAttr(context, R.attr.textColorSecondary));
         } else if (comment.isLiked()) {
-            scoreView.setTextColor(ContextCompat.getColor(context, R.color.reddit_orange_full));
+            final int upvoteColor = ThemeUtilsKt.getColorFromAttr(context, R.attr.contentLikedColor);
+            scoreView.setTextColor(upvoteColor);
         } else {
-            scoreView.setTextColor(ContextCompat.getColor(context, R.color.reddit_blue_full));
+            final int downvoteColor = ThemeUtilsKt.getColorFromAttr(context, R.attr.contentDislikedColor);
+            scoreView.setTextColor(downvoteColor);
         }
     }
 
