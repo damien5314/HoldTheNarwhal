@@ -59,7 +59,7 @@ public abstract class BaseLinkViewHolder extends RecyclerView.ViewHolder
     public BaseLinkViewHolder(View view, LinkView linkView, BaseListingsPresenter presenter) {
         super(view);
         HoldTheNarwhal.getApplicationComponent().inject(this);
-        this.context = view.getContext().getApplicationContext();
+        this.context = view.getContext();
         this.linkView = linkView;
         this.linkPresenter = presenter;
 

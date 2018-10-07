@@ -30,9 +30,9 @@ import rxreddit.model.Link;
 public class ThreadCommentViewHolder extends RecyclerView.ViewHolder
         implements View.OnCreateContextMenuListener {
 
-    @Inject Context context;
     @Inject HtmlParser htmlParser;
 
+    private final Context context;
     private final LinkCommentsView linkCommentsView;
     private final LinkCommentsPresenter linkCommentsPresenter;
     private Comment comment;
@@ -49,6 +49,7 @@ public class ThreadCommentViewHolder extends RecyclerView.ViewHolder
     public ThreadCommentViewHolder(View view, LinkCommentsView linkCommentsView, LinkCommentsPresenter presenter) {
         super(view);
         HoldTheNarwhal.getApplicationComponent().inject(this);
+        this.context = view.getContext();
         this.linkCommentsView = linkCommentsView;
         this.linkCommentsPresenter = presenter;
         ButterKnife.bind(this, view);
@@ -131,7 +132,8 @@ public class ThreadCommentViewHolder extends RecyclerView.ViewHolder
         } else {
             //noinspection deprecation
             authorView.setBackgroundDrawable(authorView.getOriginalBackground());
-            authorView.setTextColor(ThemeUtilsKt.getColorFromAttr(context, R.attr.textColorSecondary));
+            final int defaultTextColor = ThemeUtilsKt.getColorFromAttr(context, R.attr.textColorSecondary);
+            authorView.setTextColor(defaultTextColor);
         }
     }
 
