@@ -3,12 +3,12 @@
 
     <style name="StandardThemeColors" parent="AppThemeLight">
         <!-- AppCompat theme attributes -->
-        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimary">@color/bluegrey100</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>
         <item name="colorAccent">@color/redA200</item>
         <!-- Custom attributes -->
-        <item name="colorPrimaryLight">@color/bluegrey_100</item>
-        <item name="windowBackgroundColor">@color/bluegrey_100</item>
+        <item name="colorPrimaryLight">@color/bluegrey100</item>
+        <item name="windowBackgroundColor">@color/bluegrey100</item>
         <item name="textColorPrimary">@color/gray900</item>
         <item name="textColorSecondary">@color/dim_gray</item>
         <item name="textColorHighlight">?attr/textColorPrimary</item>

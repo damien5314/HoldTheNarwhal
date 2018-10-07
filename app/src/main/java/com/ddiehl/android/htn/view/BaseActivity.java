@@ -14,7 +14,6 @@ import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -44,6 +43,7 @@ import com.ddiehl.android.htn.settings.SettingsActivity;
 import com.ddiehl.android.htn.settings.SettingsManager;
 import com.ddiehl.android.htn.subscriptions.SubscriptionManagerActivity;
 import com.ddiehl.android.htn.utils.AndroidUtils;
+import com.ddiehl.android.htn.utils.ThemeUtilsKt;
 import com.ddiehl.android.htn.view.glide.GlideApp;
 import com.ddiehl.android.htn.view.theme.ColorScheme;
 import com.google.gson.Gson;
@@ -407,7 +407,8 @@ public abstract class BaseActivity extends AppCompatActivity implements
             Bundle extras = new Bundle();
             // Pass IBinder instead of null for a custom tabs session
             extras.putBinder(EXTRA_CUSTOM_TABS_SESSION, null);
-            extras.putInt(EXTRA_CUSTOM_TABS_TOOLBAR_COLOR, ContextCompat.getColor(this, R.color.primary));
+            final int toolbarColor = ThemeUtilsKt.getColorFromAttr(this, R.attr.colorPrimary);
+            extras.putInt(EXTRA_CUSTOM_TABS_TOOLBAR_COLOR, toolbarColor);
             intent.putExtras(extras);
 
             // Check if Activity exists to handle the Intent
