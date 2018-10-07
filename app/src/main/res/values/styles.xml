@@ -8,15 +8,15 @@
     </style>
 
     <style name="ToolbarLight" parent="BaseThemeLight">
-        <item name="android:textColorPrimary">@color/icons</item>
-        <item name="android:textColorSecondary">@color/icons</item>
-        <item name="actionMenuTextColor">@color/icons</item>
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColorSecondary">@color/white</item>
+        <item name="actionMenuTextColor">@color/white</item>
     </style>
 
     <style name="ToolbarDark" parent="BaseThemeDark">
-        <item name="android:textColorPrimary">@color/icons</item>
-        <item name="android:textColorSecondary">@color/icons</item>
-        <item name="actionMenuTextColor">@color/icons</item>
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColorSecondary">@color/white</item>
+        <item name="actionMenuTextColor">@color/white</item>
         <!--<item name="android:background">?attr/colorPrimaryDark</item>-->
     </style>
 
