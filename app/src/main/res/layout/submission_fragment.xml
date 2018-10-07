@@ -85,7 +85,7 @@
                 android:layout_height="48dp"
                 android:layout_margin="16dp"
                 android:elevation="8dp"
-                android:background="@color/primary_dark"
+                android:background="?attr/colorPrimaryDark"
                 android:text="@string/submission_submit"
                 android:textColor="@color/white"
                 tools:targetApi="lollipop" />

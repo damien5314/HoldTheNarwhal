@@ -4,7 +4,7 @@
     <style name="StandardThemeColors" parent="AppThemeLight">
         <!-- AppCompat theme attributes -->
         <item name="colorPrimary">@color/bluegrey100</item>
-        <item name="colorPrimaryDark">@color/primary_dark</item>
+        <item name="colorPrimaryDark">?attr/colorPrimaryDark</item>
         <item name="colorAccent">@color/redA200</item>
         <!-- Custom attributes -->
         <item name="colorPrimaryLight">@color/bluegrey100</item>
@@ -21,7 +21,7 @@
         <item name="contentBackgroundColorPrimary">?attr/colorPrimary</item>
         <item name="contentBackgroundColorSecondary">@color/white</item>
         <item name="cardTopBackgroundColor">@color/white</item>
-        <item name="cardBackgroundAccentColor">@color/primary_dark</item>
+        <item name="cardBackgroundAccentColor">?attr/colorPrimaryDark</item>
         <item name="cardTopTextColor">@color/gray900</item>
         <item name="cardTopTextSecondaryColor">?attr/textColorSecondary</item>
     </style>
