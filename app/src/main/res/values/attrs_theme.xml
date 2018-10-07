@@ -14,6 +14,9 @@
     <attr name="toolbarStyle" format="reference" />
     <attr name="toolbarPopupStyle" format="reference" />
 
+    <attr name="contentBackgroundColorPrimary" format="color" />
+    <attr name="contentBackgroundColorSecondary" format="color" />
+
     <!-- Link cards -->
     <attr name="cardTopBackgroundColor" format="color" />
     <attr name="cardBackgroundAccentColor" format="color" />

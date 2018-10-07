@@ -13,7 +13,6 @@
     <color name="transparent">#00000000</color>
 
     <!-- States -->
-    <color name="indentation">@color/primary</color>
     <color name="reddit_orange_full">@color/reddit_orange</color>
     <color name="reddit_orange_lighter">#ffcbb8</color>
     <color name="reddit_blue_full">@color/reddit_downvote</color>
