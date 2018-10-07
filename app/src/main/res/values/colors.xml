@@ -23,7 +23,7 @@
     <color name="author_admin_background">#ff0011</color>
     <color name="author_admin_text">@color/white</color>
     <color name="markdown_quote_block">@color/bluegrey000</color>
-    <color name="comment_controversiality_indicator">#ff5252</color>
+    <color name="comment_controversiality_indicator">@color/redA200</color>
     <color name="nsfw_tag_color">#d10023</color>
     <color name="link_color">#0000ee</color>
     <color name="link_saved_color">@color/reddit_blue_full</color>
