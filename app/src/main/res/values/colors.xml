@@ -5,6 +5,9 @@
     <color name="dim_gray">#727272</color>
     <color name="black">#000000</color>
     <color name="transparent">#00000000</color>
+    <color name="torch_red">#ff0011</color>
+    <color name="forest_green">#228822</color>
+    <color name="navy_blue">#0055df</color>
 
     <!-- States -->
     <color name="reddit_orange_full">@color/reddit_orange</color>
@@ -12,11 +15,8 @@
     <color name="reddit_blue_full">@color/reddit_downvote</color>
     <color name="reddit_blue_lighter">#c9c9ff</color>
     <color name="reddit_gold">#f6e600</color>
-    <color name="author_op_background">#0055df</color>
     <color name="author_op_text">@color/white</color>
-    <color name="author_moderator_background">#228822</color>
     <color name="author_moderator_text">@color/white</color>
-    <color name="author_admin_background">#ff0011</color>
     <color name="author_admin_text">@color/white</color>
     <color name="markdown_quote_block">@color/bluegrey000</color>
     <color name="comment_controversiality_indicator">@color/redA200</color>

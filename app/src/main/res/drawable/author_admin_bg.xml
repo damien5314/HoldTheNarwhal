@@ -2,7 +2,7 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
 
     <solid
-        android:color="@color/author_admin_background" />
+        android:color="@color/torch_red" />
 
     <corners
         android:radius="@dimen/distinguished_author_bg_corners" />
