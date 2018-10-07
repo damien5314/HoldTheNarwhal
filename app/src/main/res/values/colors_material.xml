@@ -28,4 +28,5 @@
     <color name="gray900">#212121</color>
     <color name="bluegrey000">#607D8B</color>
     <color name="bluegrey100">#CFD8DC</color>
+    <color name="bluegrey700">#455a64</color>
 </resources>

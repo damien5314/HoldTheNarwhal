@@ -1,7 +1,6 @@
 package com.ddiehl.android.htn.listings.links;
 
 import android.content.Context;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.method.LinkMovementMethod;
 import android.view.ContextMenu;
@@ -13,6 +12,7 @@ import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.listings.BaseListingsPresenter;
 import com.ddiehl.android.htn.listings.subreddit.ThumbnailMode;
+import com.ddiehl.android.htn.utils.ThemeUtilsKt;
 import com.ddiehl.android.htn.view.ColorSwapTextView;
 import com.ddiehl.android.htn.view.glide.GlideApp;
 import com.ddiehl.android.htn.view.markdown.HtmlParser;
@@ -141,13 +141,13 @@ public abstract class BaseLinkViewHolder extends RecyclerView.ViewHolder
             switch (distinguished) {
                 case "moderator":
                     linkAuthor.setBackgroundResource(R.drawable.author_moderator_bg);
-                    linkAuthor.setTextColor(
-                            ContextCompat.getColor(context, R.color.author_moderator_text));
+                    final int moderatorTextColor = ThemeUtilsKt.getColorFromAttr(context, R.attr.authorDecoratedTextColor);
+                    linkAuthor.setTextColor(moderatorTextColor);
                     break;
                 case "admin":
                     linkAuthor.setBackgroundResource(R.drawable.author_admin_bg);
-                    linkAuthor.setTextColor(
-                            ContextCompat.getColor(context, R.color.author_admin_text));
+                    final int adminTextColor = ThemeUtilsKt.getColorFromAttr(context, R.attr.authorDecoratedTextColor);
+                    linkAuthor.setTextColor(adminTextColor);
                     break;
                 default:
             }

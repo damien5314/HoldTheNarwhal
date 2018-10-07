@@ -125,18 +125,18 @@ public class ListingsCommentViewHolder extends RecyclerView.ViewHolder
             switch (authorType) {
                 case "op":
                     authorView.setBackgroundResource(R.drawable.author_op_bg);
-                    authorView.setTextColor(
-                            ContextCompat.getColor(appContext, R.color.author_op_text));
+                    final int opTextColor = ThemeUtilsKt.getColorFromAttr(appContext, R.attr.authorDecoratedTextColor);
+                    authorView.setTextColor(opTextColor);
                     break;
                 case "moderator":
                     authorView.setBackgroundResource(R.drawable.author_moderator_bg);
-                    authorView.setTextColor(
-                            ContextCompat.getColor(appContext, R.color.author_moderator_text));
+                    final int moderatorTextColor = ThemeUtilsKt.getColorFromAttr(appContext, R.attr.authorDecoratedTextColor);
+                    authorView.setTextColor(moderatorTextColor);
                     break;
                 case "admin":
                     authorView.setBackgroundResource(R.drawable.author_admin_bg);
-                    authorView.setTextColor(
-                            ContextCompat.getColor(appContext, R.color.author_admin_text));
+                    final int adminTextColor = ThemeUtilsKt.getColorFromAttr(appContext, R.attr.authorDecoratedTextColor);
+                    authorView.setTextColor(adminTextColor);
                     break;
                 default:
             }

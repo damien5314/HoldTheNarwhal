@@ -15,9 +15,6 @@
     <color name="reddit_blue_full">@color/reddit_downvote</color>
     <color name="reddit_blue_lighter">#c9c9ff</color>
     <color name="reddit_gold">#f6e600</color>
-    <color name="author_op_text">@color/white</color>
-    <color name="author_moderator_text">@color/white</color>
-    <color name="author_admin_text">@color/white</color>
     <color name="markdown_quote_block">@color/bluegrey000</color>
     <color name="comment_controversiality_indicator">@color/redA200</color>
     <color name="nsfw_tag_color">#d10023</color>
