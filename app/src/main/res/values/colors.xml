@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Find approximate color names @ https://www.htmlcsscolor.com/ -->
     <color name="white">#ffffff</color>
     <color name="dim_gray">#727272</color>
     <color name="black">#000000</color>
@@ -21,7 +22,6 @@
     <color name="lavender_blue">#c9c9ff</color>
     <color name="forest_green">#228822</color>
 
-    <!-- States -->
     <color name="reddit_orange_lighter">@color/your_pink</color>
     <color name="reddit_blue_lighter">@color/lavender_blue</color>
     <color name="reddit_gold">@color/golden_yellow</color>
