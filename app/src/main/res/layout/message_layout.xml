@@ -53,7 +53,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@attr/dividerColor" />
+            android:background="?attr/dividerColor" />
 
         <LinearLayout
             android:id="@+id/last_message_layout"
@@ -109,7 +109,7 @@
                     android:layout_marginLeft="@dimen/baseline_spacing"
                     android:layout_marginRight="@dimen/baseline_spacing"
                     android:textColor="?attr/textColorPrimary"
-                    android:textColorLink="@color/link_color"
+                    android:textColorLink="?attr/textColorLink"
                     android:textAppearance="?android:textAppearanceSmall"
                     tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod." />
 
