@@ -2,8 +2,10 @@
 <resources>
     <!-- Find approximate color names @ https://www.htmlcsscolor.com/ -->
     <color name="white">#ffffff</color>
+    <color name="white_20pct">#33ffffff</color>
     <color name="dim_gray">#727272</color>
     <color name="black">#000000</color>
+    <color name="black_12pct">#1e000000</color>
     <color name="transparent">#00000000</color>
     <color name="silver">#c6c6c6</color>
     <color name="torch_red">#ff0011</color>

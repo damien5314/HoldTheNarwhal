@@ -14,7 +14,7 @@
         <item name="textColorInverse">@color/white</item>
         <item name="textColorHighlight">?attr/textColorPrimary</item>
         <item name="textColorLink">@color/link_color</item>
-        <item name="dividerColor">#1e000000</item> <!-- 12% black -->
+        <item name="dividerColor">@color/black_12pct</item>
         <item name="iconColor">@color/white</item>
         <item name="nsfwColor">@color/nsfw_tag_color</item>
         <item name="toolbarStyle">@style/ToolbarLight</item>
@@ -45,7 +45,7 @@
         <item name="textColorInverse">@color/gray900</item>
         <item name="textColorHighlight">@color/white</item>
         <item name="textColorLink">@color/link_color</item>
-        <item name="dividerColor">#33ffffff</item> <!-- 20% white -->
+        <item name="dividerColor">@color/white_20pct</item> <!-- 20% white -->
         <item name="iconColor">@color/white</item>
         <item name="nsfwColor">@color/nsfw_tag_color</item>
         <item name="toolbarStyle">@style/ToolbarDark</item>
