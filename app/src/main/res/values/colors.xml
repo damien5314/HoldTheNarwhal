@@ -24,8 +24,6 @@
     <color name="lavender_blue">#c9c9ff</color>
     <color name="forest_green">#228822</color>
 
-    <color name="reddit_orange_lighter">@color/your_pink</color>
-    <color name="reddit_blue_lighter">@color/lavender_blue</color>
     <color name="reddit_gold">@color/golden_yellow</color>
     <color name="markdown_quote_block">@color/bluegrey000</color>
     <color name="comment_controversiality_indicator">@color/redA200</color>

@@ -24,6 +24,8 @@
 
     <!-- Link cards -->
     <attr name="cardTopBackgroundColor" format="color" />
+    <attr name="cardTopBackgroundColorLiked" format="color" />
+    <attr name="cardTopBackgroundColorDisliked" format="color" />
     <attr name="cardBackgroundAccentColor" format="color" />
     <attr name="cardTopTextColor" format="color" />
     <attr name="cardTopTextSecondaryColor" format="color" />

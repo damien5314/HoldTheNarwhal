@@ -1,11 +1,11 @@
 package com.ddiehl.android.htn.listings.links;
 
-import android.support.v4.content.ContextCompat;
 import android.view.View;
 
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.listings.BaseListingsPresenter;
 import com.ddiehl.android.htn.listings.subreddit.ThumbnailMode;
+import com.ddiehl.android.htn.utils.ThemeUtilsKt;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -26,17 +26,13 @@ public class ListingsLinkViewHolder extends BaseLinkViewHolder {
     @Override
     protected void showLiked(@NotNull Link link) {
         if (link.isLiked() == null) {
-            view.setBackgroundColor(
-                    ContextCompat.getColor(context, R.color.transparent)
-            );
+            view.setBackgroundColor(0);
         } else if (link.isLiked()) {
-            view.setBackgroundColor(
-                    ContextCompat.getColor(context, R.color.reddit_orange_lighter)
-            );
+            final int likedColor = ThemeUtilsKt.getColorFromAttr(context, R.attr.cardTopBackgroundColorLiked);
+            view.setBackgroundColor(likedColor);
         } else {
-            view.setBackgroundColor(
-                    ContextCompat.getColor(context, R.color.reddit_blue_lighter)
-            );
+            final int dislikedColor = ThemeUtilsKt.getColorFromAttr(context, R.attr.cardTopBackgroundColorDisliked);
+            view.setBackgroundColor(dislikedColor);
         }
     }
 
