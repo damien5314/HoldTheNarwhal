@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Build;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.RequiresApi;
-import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -169,9 +168,9 @@ public class LinkOptionsBar extends LinearLayout {
 
     public void setSaved(boolean saved) {
         if (saved) {
-            linkSaveIcon.setColorFilter(
-                    ContextCompat.getColor(getContext(), R.color.link_saved_color)
-            );
+            final int activatedOptionColor =
+                    ThemeUtilsKt.getColorFromAttr(getContext(), R.attr.optionsBarActivatedColor);
+            linkSaveIcon.setColorFilter(activatedOptionColor);
         } else {
             linkSaveIcon.setColorFilter(null);
         }

@@ -28,6 +28,7 @@
         <item name="contentLikedColor">@color/reddit_orange</item>
         <item name="contentDislikedColor">@color/reddit_downvote</item>
         <item name="unreadMessageIndicatorColor">@color/orangered</item>
+        <item name="optionsBarActivatedColor">@color/light_slate_blue</item>
         <item name="cardTopBackgroundColor">@color/white</item>
         <item name="cardTopBackgroundColorLiked">@color/your_pink</item>
         <item name="cardTopBackgroundColorDisliked">@color/lavender_blue</item>
@@ -64,6 +65,7 @@
         <item name="contentLikedColor">@color/reddit_orange</item>
         <item name="contentDislikedColor">@color/reddit_downvote</item>
         <item name="unreadMessageIndicatorColor">@color/orangered</item>
+        <item name="optionsBarActivatedColor">@color/light_slate_blue</item>
         <item name="cardTopBackgroundColor">@color/gray900</item>
         <item name="cardTopBackgroundColorLiked">@color/your_pink</item>
         <item name="cardTopBackgroundColorDisliked">@color/lavender_blue</item>

@@ -24,6 +24,7 @@
     <attr name="contentLikedColor" format="color" />
     <attr name="contentDislikedColor" format="color" />
     <attr name="unreadMessageIndicatorColor" format="color" />
+    <attr name="optionsBarActivatedColor" format="color" />
 
     <!-- Link cards -->
     <attr name="cardTopBackgroundColor" format="color" />
