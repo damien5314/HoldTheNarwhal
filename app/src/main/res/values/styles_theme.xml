@@ -17,7 +17,7 @@
         <item name="quoteBlockColor">@color/bluegrey000</item>
         <item name="dividerColor">@color/black_12pct</item>
         <item name="iconColor">@color/white</item>
-        <item name="nsfwColor">@color/nsfw_tag_color</item>
+        <item name="nsfwColor">@color/venetian_red</item>
         <item name="redditGoldColor">@color/golden_yellow</item>
         <item name="controversialityIndicatorColor">@color/redA200</item>
         <item name="toolbarStyle">@style/ToolbarLight</item>
@@ -53,7 +53,7 @@
         <item name="quoteBlockColor">@color/bluegrey000</item>
         <item name="dividerColor">@color/white_20pct</item>
         <item name="iconColor">@color/white</item>
-        <item name="nsfwColor">@color/nsfw_tag_color</item>
+        <item name="nsfwColor">@color/venetian_red</item>
         <item name="redditGoldColor">@color/golden_yellow</item>
         <item name="controversialityIndicatorColor">@color/redA200</item>
         <item name="toolbarStyle">@style/ToolbarDark</item>

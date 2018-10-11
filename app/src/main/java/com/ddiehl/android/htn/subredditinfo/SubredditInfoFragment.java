@@ -2,7 +2,6 @@ package com.ddiehl.android.htn.subredditinfo;
 
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
@@ -20,6 +19,7 @@ import android.widget.TextView;
 
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.subscriptions.SubscriptionManagerPresenter;
+import com.ddiehl.android.htn.utils.ThemeUtilsKt;
 import com.ddiehl.android.htn.view.BaseFragment;
 import com.ddiehl.android.htn.view.markdown.HtmlParser;
 import com.hannesdorfmann.fragmentargs.FragmentArgs;
@@ -312,7 +312,7 @@ public class SubredditInfoFragment extends BaseFragment {
             );
 
             // Apply color span
-            int nsfwTagColor = ContextCompat.getColor(getContext(), R.color.nsfw_tag_color);
+            int nsfwTagColor = ThemeUtilsKt.getColorFromAttr(getContext(), R.attr.nsfwColor);
             ForegroundColorSpan colorSpan = new ForegroundColorSpan(nsfwTagColor);
             ssb.setSpan(
                     colorSpan,
