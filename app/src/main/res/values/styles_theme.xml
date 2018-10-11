@@ -14,6 +14,7 @@
         <item name="textColorInverse">@color/white</item>
         <item name="textColorHighlight">?attr/textColorPrimary</item>
         <item name="textColorLink">@color/link_color</item>
+        <item name="quoteBlockColor">@color/bluegrey000</item>
         <item name="dividerColor">@color/black_12pct</item>
         <item name="iconColor">@color/white</item>
         <item name="nsfwColor">@color/nsfw_tag_color</item>
@@ -48,7 +49,8 @@
         <item name="textColorInverse">@color/gray900</item>
         <item name="textColorHighlight">@color/white</item>
         <item name="textColorLink">@color/link_color</item>
-        <item name="dividerColor">@color/white_20pct</item> <!-- 20% white -->
+        <item name="quoteBlockColor">@color/bluegrey000</item>
+        <item name="dividerColor">@color/white_20pct</item>
         <item name="iconColor">@color/white</item>
         <item name="nsfwColor">@color/nsfw_tag_color</item>
         <item name="redditGoldColor">@color/golden_yellow</item>

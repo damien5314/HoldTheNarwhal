@@ -3,7 +3,6 @@ package com.ddiehl.android.htn.view.markdown;
 import android.content.Context;
 import android.os.Build;
 import android.support.annotation.ColorInt;
-import android.support.v4.content.ContextCompat;
 import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -12,6 +11,7 @@ import android.text.style.URLSpan;
 
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.utils.AndroidUtils;
+import com.ddiehl.android.htn.utils.ThemeUtilsKt;
 import com.ddiehl.android.htn.view.text.CustomBulletSpan;
 import com.ddiehl.android.htn.view.text.NoUnderlineURLSpan;
 
@@ -54,7 +54,7 @@ public class HtmlParser {
         // Convert URLSpans to no underline form
         AndroidUtils.convertUrlSpansToNoUnderlineForm(formatted);
 
-        @ColorInt int quoteColor = ContextCompat.getColor(context, R.color.markdown_quote_block);
+        @ColorInt int quoteColor = ThemeUtilsKt.getColorFromAttr(context, R.attr.quoteBlockColor);
         AndroidUtils.convertQuoteSpansToCustom(formatted, quoteColor);
 
         AndroidUtils.convertBulletSpansToCustom(formatted);

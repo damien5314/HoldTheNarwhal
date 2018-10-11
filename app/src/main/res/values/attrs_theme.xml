@@ -8,6 +8,7 @@
     <attr name="textColorInverse" format="color" />
     <attr name="textColorHighlight" format="color" />
     <attr name="textColorLink" format="color" />
+    <attr name="quoteBlockColor" format="color" />
     <attr name="dividerColor" format="color" />
     <attr name="iconColor" format="color" />
 
