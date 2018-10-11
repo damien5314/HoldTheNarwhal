@@ -26,14 +26,4 @@
 
     <color name="ic_launcher_background">@color/bluegrey000</color>
 
-    <!-- reddit color scheme -->
-    <!-- https://www.reddit.com/about/alien/ -->
-    <color name="reddit_orange">@color/international_orange</color>
-    <color name="reddit_upvote">@color/atomic_tangerine</color>
-    <color name="reddit_neutral">@color/silver</color>
-    <color name="reddit_downvote">@color/light_slate_blue</color>
-    <color name="reddit_light_bg">@color/alice_blue</color>
-    <color name="reddit_header">@color/pattens_blue</color>
-    <color name="reddit_ui_text">@color/lochmara</color>
-
 </resources>

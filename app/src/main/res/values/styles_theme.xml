@@ -25,8 +25,8 @@
         <item name="contentBackgroundColorPrimary">?attr/colorPrimary</item>
         <item name="contentBackgroundColorSecondary">@color/white</item>
         <item name="authorDecoratedTextColor">@color/white</item>
-        <item name="contentLikedColor">@color/reddit_orange</item>
-        <item name="contentDislikedColor">@color/reddit_downvote</item>
+        <item name="contentLikedColor">@color/international_orange</item>
+        <item name="contentDislikedColor">@color/light_slate_blue</item>
         <item name="unreadMessageIndicatorColor">@color/orangered</item>
         <item name="optionsBarActivatedColor">@color/light_slate_blue</item>
         <item name="cardTopBackgroundColor">@color/white</item>
@@ -62,8 +62,8 @@
         <item name="contentBackgroundColorPrimary">?attr/colorPrimary</item>
         <item name="contentBackgroundColorSecondary">@color/gray900</item>
         <item name="authorDecoratedTextColor">@color/white</item>
-        <item name="contentLikedColor">@color/reddit_orange</item>
-        <item name="contentDislikedColor">@color/reddit_downvote</item>
+        <item name="contentLikedColor">@color/international_orange</item>
+        <item name="contentDislikedColor">@color/light_slate_blue</item>
         <item name="unreadMessageIndicatorColor">@color/orangered</item>
         <item name="optionsBarActivatedColor">@color/light_slate_blue</item>
         <item name="cardTopBackgroundColor">@color/gray900</item>
