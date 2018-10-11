@@ -69,7 +69,7 @@
                         android:layout_gravity="center_vertical"
                         android:text="@string/comment_controversiality_indicator"
                         android:textAppearance="?android:textAppearanceSmall"
-                        android:textColor="@color/comment_controversiality_indicator" />
+                        android:textColor="?attr/controversialityIndicatorColor" />
 
                 </LinearLayout>
 

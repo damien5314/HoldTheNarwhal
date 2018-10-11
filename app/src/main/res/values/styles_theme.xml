@@ -19,6 +19,7 @@
         <item name="iconColor">@color/white</item>
         <item name="nsfwColor">@color/nsfw_tag_color</item>
         <item name="redditGoldColor">@color/golden_yellow</item>
+        <item name="controversialityIndicatorColor">@color/redA200</item>
         <item name="toolbarStyle">@style/ToolbarLight</item>
         <item name="toolbarPopupStyle">@style/Theme.AppCompat.Light</item>
         <item name="contentBackgroundColorPrimary">?attr/colorPrimary</item>
@@ -54,6 +55,7 @@
         <item name="iconColor">@color/white</item>
         <item name="nsfwColor">@color/nsfw_tag_color</item>
         <item name="redditGoldColor">@color/golden_yellow</item>
+        <item name="controversialityIndicatorColor">@color/redA200</item>
         <item name="toolbarStyle">@style/ToolbarDark</item>
         <item name="toolbarPopupStyle">@style/Theme.AppCompat</item>
         <item name="contentBackgroundColorPrimary">?attr/colorPrimary</item>

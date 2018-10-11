@@ -14,6 +14,7 @@
 
     <attr name="nsfwColor" format="color" />
     <attr name="redditGoldColor" format="color" />
+    <attr name="controversialityIndicatorColor" format="color" />
     <attr name="toolbarStyle" format="reference" />
     <attr name="toolbarPopupStyle" format="reference" />
 
