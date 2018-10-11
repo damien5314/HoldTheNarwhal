@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.listings.BaseListingsPresenter;
 import com.ddiehl.android.htn.utils.Utils;
@@ -20,8 +19,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-import javax.inject.Inject;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -31,11 +28,10 @@ import rxreddit.model.PrivateMessage;
 public class ListingsMessageViewHolder extends RecyclerView.ViewHolder
         implements View.OnCreateContextMenuListener {
 
-    @Inject protected Context appContext;
-    @Inject HtmlParser htmlParser;
-
+    private final Context context;
     private final PrivateMessageView privateMessageView;
     private final BaseListingsPresenter messagePresenter;
+    private final HtmlParser htmlParser;
     private PrivateMessage message;
 
     @BindView(R.id.conversation_subject) TextView conversationSubject;
@@ -50,9 +46,12 @@ public class ListingsMessageViewHolder extends RecyclerView.ViewHolder
 
     public ListingsMessageViewHolder(View view, PrivateMessageView pmView, BaseListingsPresenter presenter) {
         super(view);
-        HoldTheNarwhal.getApplicationComponent().inject(this);
+
+        context = view.getContext();
         privateMessageView = pmView;
         messagePresenter = presenter;
+        htmlParser = new HtmlParser(context);
+
         ButterKnife.bind(this, view);
         itemView.setOnCreateContextMenuListener(this);
     }
@@ -85,17 +84,17 @@ public class ListingsMessageViewHolder extends RecyclerView.ViewHolder
         if (replies != null) {
             int n = replies.size();
             collapsedMessagesText.setText(
-                    appContext.getResources().getQuantityString(R.plurals.view_more_messages, n, n));
+                    context.getResources().getQuantityString(R.plurals.view_more_messages, n, n));
         }
         boolean isToMe = Utils.equals(
                 messagePresenter.getUserIdentity().getName(), messageToShow.getDestination());
-        String from = appContext.getString(
+        String from = context.getString(
                 isToMe ? R.string.message_metadata_from : R.string.message_metadata_to);
         from = String.format(from,
                 isToMe ? messageToShow.getAuthor() : messageToShow.getDestination());
-        String sent = appContext.getString(R.string.message_metadata_sent);
+        String sent = context.getString(R.string.message_metadata_sent);
         sent = String.format(sent, TimeSince.getFormattedDateString(
-                messageToShow.getCreatedUtc(), false, appContext));
+                messageToShow.getCreatedUtc(), false, context));
         String text = from + " " + sent;
         lastMessageMetadata.setText(text);
         setTextToBody(lastMessageBody, messageToShow);

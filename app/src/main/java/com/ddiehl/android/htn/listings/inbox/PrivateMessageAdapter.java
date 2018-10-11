@@ -53,11 +53,12 @@ public class PrivateMessageAdapter extends RecyclerView.Adapter<PrivateMessageAd
         holder.bind(message);
     }
 
-    public static class VH extends RecyclerView.ViewHolder {
+    public static final class VH extends RecyclerView.ViewHolder {
 
-        @Inject protected Context appContext;
-        @Inject protected IdentityManager identityManager;
-        @Inject HtmlParser htmlParser;
+        @Inject IdentityManager identityManager;
+
+        private final Context context;
+        private final HtmlParser htmlParser;
 
         @BindView(R.id.conversation_subject) protected TextView conversationSubject;
         @BindView(R.id.conversation_body_layout) protected ViewGroup conversationBodyLayout;
@@ -72,6 +73,10 @@ public class PrivateMessageAdapter extends RecyclerView.Adapter<PrivateMessageAd
         public VH(View view) {
             super(view);
             HoldTheNarwhal.getApplicationComponent().inject(this);
+
+            context = view.getContext();
+            htmlParser = new HtmlParser(context);
+
             ButterKnife.bind(this, view);
         }
 
@@ -92,16 +97,16 @@ public class PrivateMessageAdapter extends RecyclerView.Adapter<PrivateMessageAd
                     identityManager.getUserIdentity().getName(), message.getDestination());
 
             // Build 'from' text
-            String from = appContext.getString(
+            String from = context.getString(
                     isToMe ? R.string.message_metadata_from : R.string.message_metadata_to
             );
             from = String.format(from,
                     isToMe ? message.getAuthor() : message.getDestination());
 
             // Build 'sent' text
-            String sent = appContext.getString(R.string.message_metadata_sent);
+            String sent = context.getString(R.string.message_metadata_sent);
             sent = String.format(sent, TimeSince.getFormattedDateString(
-                    message.getCreatedUtc(), false, appContext));
+                    message.getCreatedUtc(), false, context));
 
             // Set message metadata
             String text = from + " " + sent;

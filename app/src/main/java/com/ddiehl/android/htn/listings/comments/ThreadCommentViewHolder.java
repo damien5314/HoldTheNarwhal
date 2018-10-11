@@ -11,14 +11,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.utils.ThemeUtilsKt;
 import com.ddiehl.android.htn.view.ColorSwapTextView;
 import com.ddiehl.android.htn.view.markdown.HtmlParser;
 import com.ddiehl.timesincetextview.TimeSinceTextView;
-
-import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -29,11 +26,10 @@ import rxreddit.model.Link;
 public class ThreadCommentViewHolder extends RecyclerView.ViewHolder
         implements View.OnCreateContextMenuListener {
 
-    @Inject HtmlParser htmlParser;
-
     private final Context context;
     private final LinkCommentsView linkCommentsView;
     private final LinkCommentsPresenter linkCommentsPresenter;
+    private final HtmlParser htmlParser;
     private Comment comment;
 
     @BindView(R.id.comment_author) ColorSwapTextView authorView;
@@ -47,10 +43,12 @@ public class ThreadCommentViewHolder extends RecyclerView.ViewHolder
 
     public ThreadCommentViewHolder(View view, LinkCommentsView linkCommentsView, LinkCommentsPresenter presenter) {
         super(view);
-        HoldTheNarwhal.getApplicationComponent().inject(this);
+
         this.context = view.getContext();
         this.linkCommentsView = linkCommentsView;
         this.linkCommentsPresenter = presenter;
+        this.htmlParser = new HtmlParser(context);
+
         ButterKnife.bind(this, view);
         this.itemView.setOnCreateContextMenuListener(this);
     }

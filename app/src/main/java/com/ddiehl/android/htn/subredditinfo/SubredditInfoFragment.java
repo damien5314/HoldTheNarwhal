@@ -18,7 +18,6 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.subscriptions.SubscriptionManagerPresenter;
 import com.ddiehl.android.htn.view.BaseFragment;
@@ -36,8 +35,6 @@ import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import javax.inject.Inject;
-
 import butterknife.BindView;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -53,8 +50,6 @@ public class SubredditInfoFragment extends BaseFragment {
     public static final String TAG = SubredditInfoFragment.class.getSimpleName();
     public static final int RESULT_GET_INFO_ERROR = -1000;
 
-    @Inject HtmlParser htmlParser;
-
     @BindView(R.id.coordinator_layout) CoordinatorLayout coordinatorLayout;
     @BindView(R.id.subreddit_info_parent) View parentViewGroup;
     @BindView(R.id.subreddit_name) TextView subredditName;
@@ -69,8 +64,10 @@ public class SubredditInfoFragment extends BaseFragment {
 
     @Arg String subreddit;
 
-    SubscriptionManagerPresenter subscriptionManagerPresenter;
-    InfoTuple subredditInfo;
+    private SubscriptionManagerPresenter subscriptionManagerPresenter;
+    private HtmlParser htmlParser;
+
+    private InfoTuple subredditInfo;
     private SubredditRulesAdapter rulesAdapter;
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
 
@@ -89,10 +86,10 @@ public class SubredditInfoFragment extends BaseFragment {
         super.onCreate(savedInstanceState);
         Timber.i("Showing subreddit info: %s", subreddit);
 
-        HoldTheNarwhal.getApplicationComponent().inject(this);
         FragmentArgs.inject(this);
 
         subscriptionManagerPresenter = new SubscriptionManagerPresenter();
+        htmlParser = new HtmlParser(requireContext());
 
         setTitle("");
     }

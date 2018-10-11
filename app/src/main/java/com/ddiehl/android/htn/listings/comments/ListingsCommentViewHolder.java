@@ -8,14 +8,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.listings.BaseListingsPresenter;
 import com.ddiehl.android.htn.utils.ThemeUtilsKt;
 import com.ddiehl.android.htn.view.markdown.HtmlParser;
 import com.ddiehl.timesincetextview.TimeSinceTextView;
-
-import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -25,10 +22,10 @@ import rxreddit.model.Comment;
 public class ListingsCommentViewHolder extends RecyclerView.ViewHolder
         implements View.OnCreateContextMenuListener {
 
-    @Inject HtmlParser htmlParser;
     private final Context context;
-    private CommentView commentView;
-    private BaseListingsPresenter commentPresenter;
+    private final CommentView commentView;
+    private final BaseListingsPresenter commentPresenter;
+    private final HtmlParser htmlParser;
     private Comment comment;
 
     @BindView(R.id.comment_link_title) TextView commentLinkTitleView;
@@ -44,10 +41,12 @@ public class ListingsCommentViewHolder extends RecyclerView.ViewHolder
 
     public ListingsCommentViewHolder(View view, CommentView commentView, BaseListingsPresenter presenter) {
         super(view);
-        HoldTheNarwhal.getApplicationComponent().inject(this);
-        context = view.getContext();
+
+        this.context = view.getContext();
         this.commentView = commentView;
-        commentPresenter = presenter;
+        this.commentPresenter = presenter;
+        this.htmlParser = new HtmlParser(context);
+
         ButterKnife.bind(this, view);
         itemView.setOnCreateContextMenuListener(this);
     }

@@ -8,7 +8,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.listings.BaseListingsPresenter;
 import com.ddiehl.android.htn.listings.subreddit.ThumbnailMode;
@@ -23,8 +22,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-import javax.inject.Inject;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -37,9 +34,8 @@ public abstract class BaseLinkViewHolder extends RecyclerView.ViewHolder
     protected final Context context;
     protected final LinkView linkView;
     protected final BaseListingsPresenter linkPresenter;
+    protected final HtmlParser htmlParser;
     protected Link link;
-
-    @Inject HtmlParser htmlParser;
 
     @BindView(R.id.link_view) protected View view;
     @BindView(R.id.link_saved_view) protected View savedView;
@@ -58,10 +54,10 @@ public abstract class BaseLinkViewHolder extends RecyclerView.ViewHolder
 
     public BaseLinkViewHolder(View view, LinkView linkView, BaseListingsPresenter presenter) {
         super(view);
-        HoldTheNarwhal.getApplicationComponent().inject(this);
         this.context = view.getContext();
         this.linkView = linkView;
         this.linkPresenter = presenter;
+        this.htmlParser = new HtmlParser(context);
 
         ButterKnife.bind(this, view);
         this.itemView.setOnCreateContextMenuListener(this);
