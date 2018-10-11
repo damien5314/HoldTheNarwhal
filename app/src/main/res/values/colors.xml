@@ -24,7 +24,6 @@
     <color name="lavender_blue">#c9c9ff</color>
     <color name="forest_green">#228822</color>
 
-    <color name="link_color">@color/blue</color>
     <color name="link_saved_color">@color/light_slate_blue</color>
     <color name="ic_launcher_background">@color/bluegrey000</color>
 

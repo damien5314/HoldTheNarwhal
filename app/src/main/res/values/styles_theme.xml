@@ -13,7 +13,7 @@
         <item name="textColorSecondary">@color/dim_gray</item>
         <item name="textColorInverse">@color/white</item>
         <item name="textColorHighlight">?attr/textColorPrimary</item>
-        <item name="textColorLink">@color/link_color</item>
+        <item name="textColorLink">@color/blue</item>
         <item name="quoteBlockColor">@color/bluegrey000</item>
         <item name="dividerColor">@color/black_12pct</item>
         <item name="iconColor">@color/white</item>
@@ -49,7 +49,7 @@
         <item name="textColorSecondary">@color/gray300</item>
         <item name="textColorInverse">@color/gray900</item>
         <item name="textColorHighlight">@color/white</item>
-        <item name="textColorLink">@color/link_color</item>
+        <item name="textColorLink">@color/blue</item>
         <item name="quoteBlockColor">@color/bluegrey000</item>
         <item name="dividerColor">@color/white_20pct</item>
         <item name="iconColor">@color/white</item>
