@@ -11,7 +11,6 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
 import android.support.design.widget.Snackbar;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -61,7 +60,8 @@ public class SettingsFragment extends PreferenceFragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
         if (view != null) {
-            view.setBackgroundColor(ContextCompat.getColor(getActivity(), android.R.color.white));
+            final int bgColor = ThemeUtilsKt.getColorFromAttr(getActivity(), R.attr.windowBackgroundColor);
+            view.setBackgroundColor(bgColor);
         }
         return view;
     }
