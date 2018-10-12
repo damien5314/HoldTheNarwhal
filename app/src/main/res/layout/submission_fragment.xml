@@ -87,7 +87,7 @@
                 android:elevation="8dp"
                 android:background="?attr/colorPrimaryDark"
                 android:text="@string/submission_submit"
-                android:textColor="@color/white"
+                android:textColor="?attr/textColorInverse"
                 tools:targetApi="lollipop" />
 
         </LinearLayout>

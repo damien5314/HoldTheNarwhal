@@ -15,8 +15,7 @@
         android:id="@+id/comment_item_row"
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white">
+        android:layout_height="wrap_content">
 
         <View
             android:id="@+id/indentation"

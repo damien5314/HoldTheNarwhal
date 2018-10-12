@@ -60,7 +60,7 @@
                             android:layout_marginStart="8dp"
                             android:contentDescription="@null"
                             android:src="@drawable/ic_done_black_24dp"
-                            android:tint="@color/white" />
+                            android:tint="?attr/iconColor" />
 
                         <ProgressBar
                             android:id="@+id/subscribe_button_progress"
@@ -70,7 +70,7 @@
                             android:layout_marginLeft="8dp"
                             android:layout_marginStart="8dp"
                             android:indeterminate="true"
-                            android:indeterminateTint="@color/white"
+                            android:indeterminateTint="?attr/iconColor"
                             android:visibility="gone"
                             tools:visibility="visible"/>
 
@@ -84,7 +84,7 @@
                         android:includeFontPadding="false"
                         android:padding="8dp"
                         android:textAllCaps="true"
-                        android:textColor="@color/white"
+                        android:textColor="?attr/textColorInverse"
                         android:textSize="@dimen/button_text_size"
                         tools:text="@string/subscribed" />
 
