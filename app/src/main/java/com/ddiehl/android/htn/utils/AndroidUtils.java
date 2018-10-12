@@ -10,7 +10,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.annotation.AttrRes;
 import android.support.annotation.ColorInt;
-import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.TextInputEditText;
@@ -132,14 +131,6 @@ public class AndroidUtils {
     }
 
     public static Drawable getTintedDrawable(
-            Context context, @DrawableRes int drawableResId, @ColorRes int colorResId) {
-        Drawable drawable = ContextCompat.getDrawable(context, drawableResId);
-        int color = ContextCompat.getColor(context, colorResId);
-        drawable.setColorFilter(color, PorterDuff.Mode.SRC_IN);
-        return drawable;
-    }
-
-    public static Drawable getAttrTintedDrawable(
             Context context, @DrawableRes int drawableResId, @AttrRes int colorAttrResId) {
         Drawable drawable = ContextCompat.getDrawable(context, drawableResId);
         int color = ThemeUtilsKt.getColorFromAttr(context, colorAttrResId);
