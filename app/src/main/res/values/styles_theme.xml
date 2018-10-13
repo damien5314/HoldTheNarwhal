@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="StandardThemeColors" parent="AppThemeLight">
+    <style name="StandardThemeColors" parent="AppTheme">
         <!-- AppCompat theme attributes -->
         <item name="colorPrimary">@color/bluegrey100</item>
         <item name="colorPrimaryDark">@color/bluegrey700</item>
@@ -20,7 +20,7 @@
         <item name="nsfwColor">@color/venetian_red</item>
         <item name="redditGoldColor">@color/golden_yellow</item>
         <item name="controversialityIndicatorColor">@color/redA200</item>
-        <item name="toolbarStyle">@style/ToolbarLight</item>
+        <item name="toolbarStyle">@style/ToolbarStyle</item>
         <item name="toolbarPopupStyle">@style/Theme.AppCompat.Light</item>
         <item name="contentBackgroundColorPrimary">?attr/colorPrimary</item>
         <item name="contentBackgroundColorSecondary">@color/white</item>
@@ -37,7 +37,7 @@
         <item name="cardTopTextSecondaryColor">?attr/textColorSecondary</item>
     </style>
 
-    <style name="NightThemeColors" parent="AppThemeDark">
+    <style name="NightThemeColors" parent="AppTheme">
         <!-- AppCompat theme attributes -->
         <item name="colorPrimary">@color/gray800</item>
         <item name="colorPrimaryDark">@color/gray900</item>
@@ -57,7 +57,7 @@
         <item name="nsfwColor">@color/venetian_red</item>
         <item name="redditGoldColor">@color/golden_yellow</item>
         <item name="controversialityIndicatorColor">@color/redA200</item>
-        <item name="toolbarStyle">@style/ToolbarDark</item>
+        <item name="toolbarStyle">@style/ToolbarStyle</item>
         <item name="toolbarPopupStyle">@style/Theme.AppCompat</item>
         <item name="contentBackgroundColorPrimary">?attr/colorPrimary</item>
         <item name="contentBackgroundColorSecondary">@color/gray900</item>
