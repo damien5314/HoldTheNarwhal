@@ -8,6 +8,7 @@
         <item name="colorAccent">@color/redA200</item>
         <!-- Custom attributes -->
         <item name="colorPrimaryLight">@color/bluegrey100</item>
+        <item name="colorPrimaryTextColor">@color/white</item>
         <item name="windowBackgroundColor">@color/bluegrey100</item>
         <item name="textColorPrimary">@color/gray900</item>
         <item name="textColorSecondary">@color/dim_gray</item>
@@ -44,6 +45,7 @@
         <item name="colorAccent">@color/redA200</item>
         <!-- Custom attributes -->
         <item name="colorPrimaryLight">@color/gray800</item>
+        <item name="colorPrimaryTextColor">@color/white</item>
         <item name="windowBackgroundColor">@color/black</item>
         <!-- TODO double-check these text colors are actually to spec -->
         <item name="textColorPrimary">@color/white</item>

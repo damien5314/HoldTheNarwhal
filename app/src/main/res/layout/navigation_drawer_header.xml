@@ -42,7 +42,7 @@
             android:layout_weight="1"
             android:gravity="start"
             android:textAlignment="viewStart"
-            android:textColor="?attr/textColorInverse"
+            android:textColor="?attr/colorPrimaryTextColor"
             android:textSize="@dimen/navigation_drawer_account_name_text"
             android:textStyle="bold"
             tools:ignore="UnusedAttribute"
