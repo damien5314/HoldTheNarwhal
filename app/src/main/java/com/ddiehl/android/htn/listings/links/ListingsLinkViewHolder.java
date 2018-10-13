@@ -26,7 +26,8 @@ public class ListingsLinkViewHolder extends BaseLinkViewHolder {
     @Override
     protected void showLiked(@NotNull Link link) {
         if (link.isLiked() == null) {
-            view.setBackgroundColor(0);
+            final int likedColor = ThemeUtilsKt.getColorFromAttr(context, R.attr.cardTopBackgroundColor);
+            view.setBackgroundColor(likedColor);
         } else if (link.isLiked()) {
             final int likedColor = ThemeUtilsKt.getColorFromAttr(context, R.attr.cardTopBackgroundColorLiked);
             view.setBackgroundColor(likedColor);
