@@ -12,6 +12,7 @@
     <color name="venetian_red">#d10023</color>
     <color name="golden_yellow">#f6e600</color>
     <color name="international_orange">#ff5700</color>
+    <color name="rust">#A33800</color>
     <color name="orangered">#ff4500</color>
     <color name="atomic_tangerine">#ff8b60</color>
     <color name="your_pink">#ffcbb8</color>
@@ -22,6 +23,7 @@
     <color name="pattens_blue">#cee3f8</color>
     <color name="lochmara">#336699</color>
     <color name="lavender_blue">#c9c9ff</color>
+    <color name="manatee">#8181A3</color>
     <color name="forest_green">#228822</color>
 
     <color name="ic_launcher_background">@color/bluegrey000</color>

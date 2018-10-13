@@ -67,8 +67,8 @@
         <item name="unreadMessageIndicatorColor">@color/orangered</item>
         <item name="optionsBarActivatedColor">@color/light_slate_blue</item>
         <item name="cardTopBackgroundColor">@color/gray900</item>
-        <item name="cardTopBackgroundColorLiked">@color/your_pink</item>
-        <item name="cardTopBackgroundColorDisliked">@color/lavender_blue</item>
+        <item name="cardTopBackgroundColorLiked">@color/rust</item>
+        <item name="cardTopBackgroundColorDisliked">@color/manatee</item>
         <item name="cardBackgroundAccentColor">@color/gray900</item>
         <item name="cardTopTextColor">@color/white</item>
         <item name="cardTopTextSecondaryColor">@color/gray400</item>
