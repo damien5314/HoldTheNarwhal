@@ -8,20 +8,20 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="?attr/contentBackgroundColorPrimary" />
+        android:background="?attr/contentBackgroundColorSecondary" />
 
     <LinearLayout
         android:id="@+id/comment_item_row"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/contentBackgroundColorSecondary"
+        android:background="?attr/contentBackgroundColorPrimary"
         android:orientation="horizontal">
 
         <View
             android:id="@+id/indentation"
             android:layout_width="@dimen/comment_indentation_margin"
             android:layout_height="match_parent"
-            android:background="?attr/contentBackgroundColorPrimary" />
+            android:background="?attr/contentBackgroundColorSecondary" />
 
         <include layout="@layout/comment_layout" />
 

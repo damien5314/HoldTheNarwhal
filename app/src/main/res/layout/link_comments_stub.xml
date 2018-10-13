@@ -9,7 +9,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="?attr/contentBackgroundColorPrimary" />
+        android:background="?attr/contentBackgroundColorSecondary" />
 
     <LinearLayout
         android:id="@+id/comment_item_row"
@@ -19,7 +19,7 @@
 
         <View
             android:id="@+id/indentation"
-            android:background="?attr/contentBackgroundColorPrimary"
+            android:background="?attr/contentBackgroundColorSecondary"
             android:layout_width="@dimen/comment_indentation_margin"
             android:layout_height="match_parent" />
 
@@ -30,7 +30,7 @@
             android:gravity="center|center"
             android:textColor="?attr/textColorSecondary"
             android:textSize="@dimen/comment_more_text_size"
-            android:background="?attr/contentBackgroundColorSecondary"
+            android:background="?attr/contentBackgroundColorPrimary"
             android:maxLines="1"
             tools:text="view 10 more comments" />
 

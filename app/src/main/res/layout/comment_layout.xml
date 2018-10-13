@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
-    android:layout_width="fill_parent"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingLeft="@dimen/comment_data_margin_horizontal"
     android:paddingRight="@dimen/comment_data_margin_horizontal">
@@ -120,6 +120,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
+                    android:textColor="?attr/textColorSecondary"
                     android:gravity="center"
                     android:drawableStart="@drawable/ic_reddit_gold_24dp"
                     android:drawableLeft="@drawable/ic_reddit_gold_24dp"

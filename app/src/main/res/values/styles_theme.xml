@@ -59,7 +59,7 @@
         <item name="controversialityIndicatorColor">@color/redA200</item>
         <item name="toolbarStyle">@style/ToolbarStyle</item>
         <item name="toolbarPopupStyle">@style/Theme.AppCompat</item>
-        <item name="contentBackgroundColorPrimary">?attr/colorPrimary</item>
+        <item name="contentBackgroundColorPrimary">@color/black</item>
         <item name="contentBackgroundColorSecondary">@color/gray900</item>
         <item name="authorDecoratedTextColor">@color/white</item>
         <item name="contentLikedColor">@color/international_orange</item>
