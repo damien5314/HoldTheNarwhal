@@ -39,12 +39,12 @@
 
     <style name="NightThemeColors" parent="AppTheme">
         <!-- AppCompat theme attributes -->
-        <item name="colorPrimary">@color/gray800</item>
-        <item name="colorPrimaryDark">@color/gray900</item>
+        <item name="colorPrimary">@color/gray900</item>
+        <item name="colorPrimaryDark">@color/black</item>
         <item name="colorAccent">@color/redA200</item>
         <!-- Custom attributes -->
-        <item name="colorPrimaryLight">@color/gray700</item>
-        <item name="windowBackgroundColor">@color/gray700</item>
+        <item name="colorPrimaryLight">@color/gray800</item>
+        <item name="windowBackgroundColor">@color/gray800</item>
         <!-- TODO double-check these text colors are actually to spec -->
         <item name="textColorPrimary">@color/white</item>
         <item name="textColorSecondary">@color/gray300</item>
