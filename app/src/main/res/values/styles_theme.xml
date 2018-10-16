@@ -52,7 +52,7 @@
         <item name="textColorSecondary">@color/gray300</item>
         <item name="textColorInverse">@color/gray900</item>
         <item name="textColorHighlight">@color/white</item>
-        <item name="textColorLink">@color/blue</item>
+        <item name="textColorLink">@color/lavender_blue</item>
         <item name="quoteBlockColor">@color/bluegrey000</item>
         <item name="dividerColor">@color/white_20pct</item>
         <item name="iconColor">@color/white</item>
