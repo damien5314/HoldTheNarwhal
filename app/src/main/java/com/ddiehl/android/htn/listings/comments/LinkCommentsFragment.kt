@@ -4,9 +4,9 @@ import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.support.design.widget.CoordinatorLayout
-import android.support.v4.widget.SwipeRefreshLayout
 import android.view.*
+import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import butterknife.BindView
 import com.ddiehl.android.htn.HoldTheNarwhal
 import com.ddiehl.android.htn.R

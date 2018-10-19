@@ -2,9 +2,6 @@ package com.ddiehl.android.htn.listings.links;
 
 import android.content.Context;
 import android.os.Build;
-import android.support.annotation.LayoutRes;
-import android.support.annotation.RequiresApi;
-import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +13,9 @@ import com.ddiehl.android.htn.R;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import androidx.annotation.LayoutRes;
+import androidx.annotation.RequiresApi;
+import androidx.core.content.ContextCompat;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 

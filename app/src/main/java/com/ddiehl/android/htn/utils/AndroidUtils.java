@@ -8,13 +8,6 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.support.annotation.ColorInt;
-import android.support.annotation.ColorRes;
-import android.support.annotation.DrawableRes;
-import android.support.design.widget.TabLayout;
-import android.support.design.widget.TextInputEditText;
-import android.support.design.widget.TextInputLayout;
-import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.BulletSpan;
@@ -28,6 +21,9 @@ import com.ddiehl.android.htn.BuildConfig;
 import com.ddiehl.android.htn.view.text.CustomBulletSpan;
 import com.ddiehl.android.htn.view.text.CustomQuoteSpan;
 import com.ddiehl.android.htn.view.text.NoUnderlineURLSpan;
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -35,6 +31,10 @@ import org.jetbrains.annotations.Nullable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import androidx.annotation.ColorInt;
+import androidx.annotation.ColorRes;
+import androidx.annotation.DrawableRes;
+import androidx.core.content.ContextCompat;
 import okhttp3.Response;
 import timber.log.Timber;
 

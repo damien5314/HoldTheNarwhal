@@ -5,11 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.MailTo;
 import android.os.Bundle;
-import android.support.annotation.StringRes;
-import android.support.design.widget.Snackbar;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -23,6 +18,8 @@ import com.ddiehl.android.htn.navigation.RedditNavigationView;
 import com.ddiehl.android.htn.navigation.WebViewFragment;
 import com.ddiehl.android.htn.utils.AndroidUtils;
 import com.ddiehl.android.htn.utils.MenuTintUtils;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.tabs.TabLayout;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -31,6 +28,9 @@ import java.io.IOException;
 
 import javax.inject.Inject;
 
+import androidx.annotation.StringRes;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
 import butterknife.ButterKnife;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
@@ -71,7 +71,7 @@ public abstract class BaseFragment extends Fragment implements MainView {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle state) {
         View view = inflater.inflate(getLayoutResId(), container, false);
         ButterKnife.bind(this, view);
-        tabLayout = ButterKnife.findById(getActivity(), R.id.tab_layout);
+        tabLayout = getActivity().findViewById(R.id.tab_layout);
         return view;
     }
 

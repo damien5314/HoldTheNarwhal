@@ -3,9 +3,6 @@ package com.ddiehl.android.htn.listings.subreddit;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -25,6 +22,7 @@ import com.ddiehl.android.htn.listings.profile.UserProfileFragment;
 import com.ddiehl.android.htn.listings.subreddit.submission.SubmitPostActivity;
 import com.ddiehl.android.htn.listings.subreddit.submission.SubmitPostFragment;
 import com.ddiehl.android.htn.settings.SettingsManager;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.hannesdorfmann.fragmentargs.FragmentArgs;
 import com.hannesdorfmann.fragmentargs.annotation.Arg;
 import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs;
@@ -33,6 +31,8 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
 
+import androidx.annotation.NonNull;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;

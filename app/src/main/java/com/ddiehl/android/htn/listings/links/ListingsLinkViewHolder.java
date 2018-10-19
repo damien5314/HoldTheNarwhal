@@ -1,6 +1,5 @@
 package com.ddiehl.android.htn.listings.links;
 
-import android.support.v4.content.ContextCompat;
 import android.view.View;
 
 import com.ddiehl.android.htn.R;
@@ -9,6 +8,7 @@ import com.ddiehl.android.htn.listings.subreddit.ThumbnailMode;
 
 import org.jetbrains.annotations.NotNull;
 
+import androidx.core.content.ContextCompat;
 import butterknife.OnClick;
 import rxreddit.model.Link;
 

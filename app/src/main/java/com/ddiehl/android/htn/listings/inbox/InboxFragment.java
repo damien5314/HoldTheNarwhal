@@ -1,8 +1,6 @@
 package com.ddiehl.android.htn.listings.inbox;
 
 import android.os.Bundle;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.TabLayout;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -15,6 +13,7 @@ import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.listings.BaseListingsFragment;
 import com.ddiehl.android.htn.listings.ListingsAdapter;
 import com.ddiehl.android.htn.utils.AndroidUtils;
+import com.google.android.material.tabs.TabLayout;
 import com.hannesdorfmann.fragmentargs.FragmentArgs;
 import com.hannesdorfmann.fragmentargs.annotation.Arg;
 import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs;
@@ -24,6 +23,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Arrays;
 import java.util.List;
 
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import butterknife.BindView;
 
 @FragmentWithArgs

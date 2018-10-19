@@ -3,13 +3,11 @@ package com.ddiehl.android.htn.listings
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.support.design.widget.Snackbar
-import android.support.v4.widget.SwipeRefreshLayout
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.*
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import butterknife.BindView
-import butterknife.ButterKnife
 import com.ddiehl.android.htn.HoldTheNarwhal
 import com.ddiehl.android.htn.R
 import com.ddiehl.android.htn.listings.report.ReportActivity
@@ -20,6 +18,7 @@ import com.ddiehl.android.htn.utils.AndroidUtils.safeStartActivity
 import com.ddiehl.android.htn.view.BaseFragment
 import com.ddiehl.android.htn.view.video.VideoPlayerDialog
 import com.ddiehl.android.htn.view.video.VideoPlayerDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import rxreddit.model.Comment
 import rxreddit.model.Link
 import rxreddit.model.Listing
@@ -73,7 +72,7 @@ abstract class BaseListingsFragment : BaseFragment(), ListingsView, SwipeRefresh
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        swipeRefreshLayout = ButterKnife.findById(view, R.id.swipe_refresh_layout)
+        swipeRefreshLayout = view.findViewById(R.id.swipe_refresh_layout)
         swipeRefreshLayout.setOnRefreshListener(this)
     }
 

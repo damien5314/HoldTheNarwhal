@@ -8,7 +8,6 @@ repositories {
 
 android {
     compileSdkVersion COMPILE_SDK_VERSION
-    buildToolsVersion BUILD_TOOLS_VERSION
 
     defaultConfig {
         minSdkVersion 15
@@ -25,10 +24,10 @@ android {
 }
 
 dependencies {
-    implementation "com.android.support:appcompat-v7:$SUPPORT_LIBRARY_VERSION"
+    implementation "androidx.appcompat:appcompat:$ANDROIDX_APPCOMPAT"
 
     implementation "com.jakewharton.timber:timber:$TIMBER_VERSION"
-    implementation("com.crashlytics.sdk.android:crashlytics:2.6.8@aar") {
+    implementation("com.crashlytics.sdk.android:crashlytics:$CRASHLYTICS_VERSION@aar") {
         transitive = true
     }
 

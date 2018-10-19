@@ -1,7 +1,5 @@
 package com.ddiehl.android.htn.subredditinfo
 
-import android.support.annotation.LayoutRes
-import android.support.v7.widget.RecyclerView
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.SpannableStringBuilder
@@ -10,6 +8,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.annotation.LayoutRes
+import androidx.recyclerview.widget.RecyclerView
 import com.ddiehl.android.htn.R
 import com.ddiehl.android.htn.subredditinfo.SubredditRulesAdapter.VH.Companion.LAYOUT_RES_ID
 import com.ddiehl.android.htn.view.markdown.HtmlParser

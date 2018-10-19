@@ -1,12 +1,13 @@
 package com.ddiehl.android.htn.subredditinfo;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.ActionBar;
 
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.view.BaseActivity;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
 
 
 public class SubredditInfoActivity extends BaseActivity {

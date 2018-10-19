@@ -1,7 +1,5 @@
 package com.ddiehl.android.htn.listings;
 
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +15,8 @@ import com.ddiehl.android.htn.listings.links.LinkView;
 import com.ddiehl.android.htn.listings.links.ListingsLinkViewHolder;
 import com.ddiehl.android.htn.listings.subreddit.ThumbnailMode;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import rxreddit.model.Comment;
 import rxreddit.model.Link;
 import rxreddit.model.Listing;

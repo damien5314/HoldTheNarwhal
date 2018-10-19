@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,6 +12,7 @@ import com.ddiehl.android.htn.R;
 
 import org.jetbrains.annotations.NotNull;
 
+import androidx.fragment.app.DialogFragment;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 

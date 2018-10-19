@@ -6,7 +6,7 @@ import android.app.job.JobService
 import android.content.ComponentName
 import android.content.Context
 import android.os.Build
-import android.support.annotation.RequiresApi
+import androidx.annotation.RequiresApi
 import com.ddiehl.android.htn.HoldTheNarwhal
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
