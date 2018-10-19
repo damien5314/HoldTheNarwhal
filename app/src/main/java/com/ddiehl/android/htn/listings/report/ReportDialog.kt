@@ -5,15 +5,14 @@ import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
-import android.support.v7.app.AlertDialog
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.TextView
-import butterknife.ButterKnife.findById
+import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.DialogFragment
 import com.ddiehl.android.htn.R
 
 class ReportDialog : DialogFragment() {
@@ -76,11 +75,11 @@ class ReportDialog : DialogFragment() {
         // Inflate parent RadioGroup
         @SuppressLint("InflateParams") val view =
             inflater.inflate(R.layout.report_dialog_view, null, false) as ViewGroup
-        val parent = findById<RadioGroup>(view, R.id.dialog_view_group)
+        val parent = view.findViewById<RadioGroup>(R.id.dialog_view_group)
 
         // Inflate 'other' dialog item
         val otherOptionView = inflater.inflate(R.layout.report_dialog_view_edit_item, parent, false)
-        val otherSelector = findById<RadioButton>(otherOptionView, R.id.report_choice_item_selector)
+        val otherSelector = otherOptionView.findViewById<RadioButton>(R.id.report_choice_item_selector)
 
         // Add rest of option views
         for (i in 0 until numOptions) {
@@ -88,7 +87,7 @@ class ReportDialog : DialogFragment() {
             val optionView = inflater.inflate(R.layout.report_dialog_view_choice_item, parent, false)
 
             // Get RadioButton and set ID so the RadioGroup can properly manage checked state
-            val selector = findById<RadioButton>(optionView, R.id.report_choice_item_selector)
+            val selector = optionView.findViewById<RadioButton>(R.id.report_choice_item_selector)
             selector.id = i
 
             // Set checked state change listener that caches selected index
@@ -101,7 +100,7 @@ class ReportDialog : DialogFragment() {
             }
 
             // Set text for option
-            val selectorText = findById<TextView>(optionView, R.id.report_choice_text)
+            val selectorText = optionView.findViewById<TextView>(R.id.report_choice_text)
             selectorText.text = reportOptions[i]
 
             // Add view to parent
@@ -121,9 +120,12 @@ class ReportDialog : DialogFragment() {
         parent.addView(otherOptionView)
 
         // Build AlertDialog from custom view
-        return AlertDialog.Builder(context!!).setTitle(R.string.report_menu_title)
+        return AlertDialog.Builder(context!!)
+            .setTitle(R.string.report_menu_title)
             .setPositiveButton(R.string.report_submit, onSubmit())
-            .setNegativeButton(R.string.report_cancel, onCancelButton()).setView(view).create()
+            .setNegativeButton(R.string.report_cancel, onCancelButton())
+            .setView(view)
+            .create()
     }
 
     private fun getReportOptions(rules: Array<String>, siteRules: Array<String>): Array<String?> {
@@ -145,7 +147,7 @@ class ReportDialog : DialogFragment() {
             // Otherwise, submit the other reason
             // If index is in site rules array, submit the site rule
             else {
-                val otherText = findById<EditText>(dialog, R.id.report_choice_edit_text)
+                val otherText = dialog.findViewById<EditText>(R.id.report_choice_edit_text)
                 val input = otherText.text.toString().trim { it <= ' ' }
                 submit(null, null, input)
             }

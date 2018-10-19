@@ -18,6 +18,7 @@ import com.ddiehl.android.htn.navigation.RedditNavigationView;
 import com.ddiehl.android.htn.navigation.WebViewFragment;
 import com.ddiehl.android.htn.utils.AndroidUtils;
 import com.ddiehl.android.htn.utils.MenuTintUtils;
+import com.ddiehl.android.htn.utils.ThemeUtilsKt;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 
@@ -29,7 +30,6 @@ import java.io.IOException;
 import javax.inject.Inject;
 
 import androidx.annotation.StringRes;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import butterknife.ButterKnife;
 import io.reactivex.android.schedulers.AndroidSchedulers;

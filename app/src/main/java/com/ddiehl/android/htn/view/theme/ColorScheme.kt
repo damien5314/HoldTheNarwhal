@@ -1,6 +1,6 @@
 package com.ddiehl.android.htn.view.theme
 
-import android.support.annotation.StyleRes
+import androidx.annotation.StyleRes
 import com.ddiehl.android.htn.R
 
 /**

@@ -8,6 +8,7 @@ import android.widget.ImageView;
 
 import com.ddiehl.android.htn.R;
 
+import androidx.annotation.ColorInt;
 import androidx.core.graphics.drawable.DrawableCompat;
 
 /**

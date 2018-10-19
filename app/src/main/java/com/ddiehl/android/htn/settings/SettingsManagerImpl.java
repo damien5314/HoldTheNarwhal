@@ -2,7 +2,6 @@ package com.ddiehl.android.htn.settings;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.support.annotation.NonNull;
 
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.view.theme.ColorScheme;
@@ -11,6 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import androidx.annotation.NonNull;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import rxreddit.api.RedditService;

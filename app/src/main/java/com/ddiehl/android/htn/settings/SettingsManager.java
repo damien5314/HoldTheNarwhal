@@ -1,10 +1,10 @@
 package com.ddiehl.android.htn.settings;
 
 import android.content.SharedPreferences;
-import android.support.annotation.NonNull;
 
 import com.ddiehl.android.htn.view.theme.ColorScheme;
 
+import androidx.annotation.NonNull;
 import rxreddit.model.UserSettings;
 
 public interface SettingsManager
