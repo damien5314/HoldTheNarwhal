@@ -1,8 +1,6 @@
 package com.ddiehl.android.htn.listings.comments;
 
 import android.content.Context;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.RecyclerView;
 import android.text.Spanned;
 import android.view.ContextMenu;
 import android.view.View;
@@ -17,6 +15,8 @@ import com.ddiehl.timesincetextview.TimeSinceTextView;
 
 import javax.inject.Inject;
 
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;

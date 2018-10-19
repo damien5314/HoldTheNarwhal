@@ -5,8 +5,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +21,8 @@ import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import static butterknife.ButterKnife.findById;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.DialogFragment;
 
 
 @FragmentWithArgs
@@ -90,11 +89,11 @@ public class ReportDialog extends DialogFragment {
         // Inflate parent RadioGroup
         @SuppressLint("InflateParams")
         ViewGroup view = (ViewGroup) inflater.inflate(R.layout.report_dialog_view, null, false);
-        final RadioGroup parent = findById(view, R.id.dialog_view_group);
+        final RadioGroup parent = view.findViewById(R.id.dialog_view_group);
 
         // Inflate 'other' dialog item
         View otherOptionView = inflater.inflate(R.layout.report_dialog_view_edit_item, parent, false);
-        RadioButton otherSelector = findById(otherOptionView, R.id.report_choice_item_selector);
+        RadioButton otherSelector = otherOptionView.findViewById(R.id.report_choice_item_selector);
 
         // Add rest of option views
         for (int i = 0; i < numOptions; i++) {
@@ -102,7 +101,7 @@ public class ReportDialog extends DialogFragment {
             View optionView = inflater.inflate(R.layout.report_dialog_view_choice_item, parent, false);
 
             // Get RadioButton and set ID so the RadioGroup can properly manage checked state
-            RadioButton selector = findById(optionView, R.id.report_choice_item_selector);
+            RadioButton selector = optionView.findViewById(R.id.report_choice_item_selector);
             selector.setId(i);
 
             // Set checked state change listener that caches selected index
@@ -116,7 +115,7 @@ public class ReportDialog extends DialogFragment {
             });
 
             // Set text for option
-            TextView selectorText = findById(optionView, R.id.report_choice_text);
+            TextView selectorText = optionView.findViewById(R.id.report_choice_text);
             selectorText.setText(reportOptions[i]);
 
             // Add view to parent
@@ -164,7 +163,7 @@ public class ReportDialog extends DialogFragment {
             }
             // Otherwise, submit the other reason
             else {
-                EditText otherText = findById(getDialog(), R.id.report_choice_edit_text);
+                EditText otherText = getDialog().findViewById(R.id.report_choice_edit_text);
                 String input = otherText.getText()
                         .toString()
                         .trim();

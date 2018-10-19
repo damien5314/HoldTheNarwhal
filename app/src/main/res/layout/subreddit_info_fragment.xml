@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/coordinator_layout"
     android:layout_width="match_parent"
@@ -11,7 +11,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <android.support.v4.widget.NestedScrollView
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -33,7 +33,7 @@
                     android:textColor="@color/primary_text"
                     tools:text="/r/AskReddit" />
 
-                <android.support.v4.widget.Space
+                <androidx.legacy.widget.Space
                     android:layout_width="match_parent"
                     android:layout_height="16dp" />
 
@@ -90,7 +90,7 @@
 
                 </LinearLayout>
 
-                <android.support.v4.widget.Space
+                <androidx.legacy.widget.Space
                     android:layout_width="match_parent"
                     android:layout_height="16dp" />
 
@@ -109,7 +109,7 @@
                     android:textSize="@dimen/subreddit_info_section_body_text_size"
                     tools:text="Dec 23, 2013" />
 
-                <android.support.v4.widget.Space
+                <androidx.legacy.widget.Space
                     android:layout_width="match_parent"
                     android:layout_height="16dp" />
 
@@ -128,7 +128,7 @@
                     android:textSize="@dimen/subreddit_info_section_body_text_size"
                     tools:text="130,055" />
 
-                <android.support.v4.widget.Space
+                <androidx.legacy.widget.Space
                     android:layout_width="match_parent"
                     android:layout_height="16dp" />
 
@@ -147,7 +147,7 @@
                     android:textSize="@dimen/subreddit_info_section_body_text_size"
                     tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum sodales sem sit amet augue consectetur blandit. Praesent molestie vulputate aliquet. Quisque posuere hendrerit risus ac feugiat." />
 
-                <android.support.v4.widget.Space
+                <androidx.legacy.widget.Space
                     android:layout_width="match_parent"
                     android:layout_height="16dp" />
 
@@ -158,7 +158,7 @@
                     android:textColor="@color/secondary_text"
                     android:textSize="@dimen/subreddit_info_section_header_text_size" />
 
-                <android.support.v7.widget.RecyclerView
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rules_layout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -166,8 +166,8 @@
 
             </LinearLayout>
 
-        </android.support.v4.widget.NestedScrollView>
+        </androidx.core.widget.NestedScrollView>
 
     </LinearLayout>
 
-</android.support.design.widget.CoordinatorLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

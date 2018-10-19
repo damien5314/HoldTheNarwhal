@@ -2,8 +2,6 @@ package com.ddiehl.android.htn.listings.profile;
 
 import android.content.Context;
 import android.os.Build;
-import android.support.annotation.LayoutRes;
-import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.GridLayout;
@@ -15,6 +13,8 @@ import com.ddiehl.android.htn.view.glide.GlideApp;
 
 import java.util.List;
 
+import androidx.annotation.LayoutRes;
+import androidx.annotation.RequiresApi;
 import rxreddit.model.Listing;
 import rxreddit.model.Trophy;
 

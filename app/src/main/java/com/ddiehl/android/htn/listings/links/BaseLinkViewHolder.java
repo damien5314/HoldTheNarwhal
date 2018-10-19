@@ -1,8 +1,6 @@
 package com.ddiehl.android.htn.listings.links;
 
 import android.content.Context;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.RecyclerView;
 import android.text.method.LinkMovementMethod;
 import android.view.ContextMenu;
 import android.view.View;
@@ -25,6 +23,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;

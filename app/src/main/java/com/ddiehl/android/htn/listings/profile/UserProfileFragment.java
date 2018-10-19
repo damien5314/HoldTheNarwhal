@@ -2,8 +2,6 @@ package com.ddiehl.android.htn.listings.profile;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.TabLayout;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -23,6 +21,7 @@ import com.ddiehl.android.htn.listings.links.ChooseLinkSortDialog;
 import com.ddiehl.android.htn.listings.subreddit.SubredditFragment;
 import com.ddiehl.android.htn.utils.AndroidUtils;
 import com.ddiehl.android.htn.utils.Utils;
+import com.google.android.material.tabs.TabLayout;
 import com.hannesdorfmann.fragmentargs.FragmentArgs;
 import com.hannesdorfmann.fragmentargs.annotation.Arg;
 import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs;
@@ -36,13 +35,13 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import butterknife.BindView;
 import rxreddit.model.Listing;
 import rxreddit.model.Trophy;
 import rxreddit.model.UserIdentity;
 
 import static android.app.Activity.RESULT_OK;
-import static butterknife.ButterKnife.findById;
 
 @FragmentWithArgs
 public class UserProfileFragment extends BaseListingsFragment
@@ -102,7 +101,7 @@ public class UserProfileFragment extends BaseListingsFragment
     @NotNull @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle state) {
         View view = super.onCreateView(inflater, container, state);
-        tabLayout = findById(getActivity(), R.id.tab_layout);
+        tabLayout = getActivity().findViewById(R.id.tab_layout);
         return view;
     }
 

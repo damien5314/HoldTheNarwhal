@@ -1,7 +1,6 @@
 package com.ddiehl.android.htn.navigation;
 
 import android.content.Context;
-import android.support.v7.widget.AppCompatEditText;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
@@ -11,6 +10,7 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
+import androidx.appcompat.widget.AppCompatEditText;
 import butterknife.ButterKnife;
 import butterknife.OnEditorAction;
 import butterknife.OnFocusChange;

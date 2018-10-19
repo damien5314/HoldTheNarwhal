@@ -1,7 +1,5 @@
 package com.ddiehl.android.htn.listings.subreddit;
 
-import android.support.annotation.NonNull;
-
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.listings.BaseListingsPresenter;
 import com.ddiehl.android.htn.navigation.RedditNavigationView;
@@ -11,6 +9,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 
+import androidx.annotation.NonNull;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import rxreddit.api.NoSuchSubredditException;

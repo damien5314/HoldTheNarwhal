@@ -3,8 +3,6 @@ package com.ddiehl.android.htn.subscriptions;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 
 import com.ddiehl.android.htn.R;
@@ -12,7 +10,8 @@ import com.ddiehl.android.htn.navigation.SubredditEditText;
 
 import org.jetbrains.annotations.NotNull;
 
-import butterknife.ButterKnife;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.DialogFragment;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
@@ -34,7 +33,7 @@ public class SubredditSearchDialog extends DialogFragment {
     }
 
     void onConfirm() {
-        SubredditEditText editText = ButterKnife.findById(getDialog(), R.id.search_input_field);
+        SubredditEditText editText = getDialog().findViewById(R.id.search_input_field);
         String input = editText.getInput();
 
         if (TextUtils.isEmpty(input)) {

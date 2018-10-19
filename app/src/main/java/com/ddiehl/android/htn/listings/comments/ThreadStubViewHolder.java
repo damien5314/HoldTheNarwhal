@@ -3,7 +3,6 @@ package com.ddiehl.android.htn.listings.comments;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Build;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
@@ -13,6 +12,7 @@ import com.ddiehl.android.htn.listings.BaseListingsPresenter;
 
 import javax.inject.Inject;
 
+import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;

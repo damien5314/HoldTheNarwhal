@@ -1,7 +1,7 @@
 package com.ddiehl.android.htn.view.markdown
 
-import android.support.test.InstrumentationRegistry
 import android.text.SpannableStringBuilder
+import androidx.test.InstrumentationRegistry
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
