@@ -2,9 +2,10 @@ package com.ddiehl.android.htn.view.text;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.support.annotation.ColorInt;
 import android.text.Layout;
 import android.text.style.QuoteSpan;
+
+import androidx.annotation.ColorInt;
 
 /**
  * A {@link QuoteSpan} implementation that overrides {@link QuoteSpan#STRIPE_WIDTH}

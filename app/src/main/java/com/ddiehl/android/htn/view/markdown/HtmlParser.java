@@ -2,7 +2,6 @@ package com.ddiehl.android.htn.view.markdown;
 
 import android.content.Context;
 import android.os.Build;
-import android.support.annotation.ColorInt;
 import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -20,6 +19,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import androidx.annotation.ColorInt;
+import androidx.core.content.ContextCompat;
 
 import static android.text.Html.FROM_HTML_MODE_LEGACY;
 

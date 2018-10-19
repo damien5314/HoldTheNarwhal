@@ -1,6 +1,5 @@
 package com.ddiehl.android.htn.listings.links;
 
-import android.support.annotation.ColorInt;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -16,6 +15,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+import androidx.annotation.ColorInt;
+import androidx.core.content.ContextCompat;
 import butterknife.BindView;
 import butterknife.OnClick;
 import rxreddit.model.Image;

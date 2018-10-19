@@ -5,13 +5,13 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AlertDialog;
 
 import com.ddiehl.android.htn.R;
 
 import org.jetbrains.annotations.NotNull;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.DialogFragment;
 import timber.log.Timber;
 
 public class ChooseCommentSortDialog extends DialogFragment {

@@ -3,10 +3,6 @@ package com.ddiehl.android.htn.listings.inbox;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.Snackbar;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -18,6 +14,7 @@ import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.listings.report.ReportActivity;
 import com.ddiehl.android.htn.view.BaseFragment;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 import com.hannesdorfmann.fragmentargs.FragmentArgs;
 import com.hannesdorfmann.fragmentargs.annotation.Arg;
@@ -31,6 +28,9 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import rxreddit.model.Listing;
 import rxreddit.model.PrivateMessage;

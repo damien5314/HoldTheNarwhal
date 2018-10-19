@@ -1,7 +1,6 @@
 package com.ddiehl.android.htn.listings.inbox;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.view.ContextMenu;
@@ -19,6 +18,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
+import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;

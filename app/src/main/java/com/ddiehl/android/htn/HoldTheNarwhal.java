@@ -7,7 +7,6 @@ import android.app.job.JobInfo;
 import android.app.job.JobScheduler;
 import android.content.Context;
 import android.os.Build;
-import android.support.annotation.VisibleForTesting;
 
 import com.crashlytics.android.Crashlytics;
 import com.ddiehl.android.htn.di.ApplicationComponent;
@@ -22,6 +21,7 @@ import com.ddiehl.android.logging.LogcatLoggingTree;
 
 import java.util.Arrays;
 
+import androidx.annotation.VisibleForTesting;
 import io.fabric.sdk.android.Fabric;
 import timber.log.Timber;
 

@@ -10,16 +10,6 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -45,7 +35,9 @@ import com.ddiehl.android.htn.subscriptions.SubscriptionManagerActivity;
 import com.ddiehl.android.htn.utils.AndroidUtils;
 import com.ddiehl.android.htn.utils.ThemeUtilsKt;
 import com.ddiehl.android.htn.view.glide.GlideApp;
-import com.ddiehl.android.htn.view.theme.ColorScheme;
+import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
 
 import org.jetbrains.annotations.NotNull;
@@ -56,6 +48,14 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.FragmentManager;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.Observable;
@@ -125,7 +125,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
         ButterKnife.bind(this);
 
         // Initialize toolbar
-        Toolbar toolbar = ButterKnife.findById(this, R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         ActionBar actionBar = getSupportActionBar();
@@ -206,12 +206,12 @@ public abstract class BaseActivity extends AppCompatActivity implements
     // Workaround for bug in support lib 23.1.0 - 23.2.0
     // https://code.google.com/p/android/issues/detail?id=190226
     private void initNavigationView() {
-        navigationView = ButterKnife.findById(this, R.id.navigation_view);
+        navigationView = findViewById(R.id.navigation_view);
         View header = navigationView.inflateHeaderView(R.layout.navigation_drawer_header);
-        goldIndicator = (ImageView) header.findViewById(R.id.user_account_icon);
-        accountNameView = (TextView) header.findViewById(R.id.account_name);
+        goldIndicator = header.findViewById(R.id.user_account_icon);
+        accountNameView = header.findViewById(R.id.account_name);
         signOutView = header.findViewById(R.id.sign_out_button);
-        headerImage = (ImageView) header.findViewById(R.id.navigation_drawer_header_image);
+        headerImage = header.findViewById(R.id.navigation_drawer_header_image);
 
         signOutView.setOnClickListener(view -> onSignOut());
         navigationView.setNavigationItemSelectedListener(this);

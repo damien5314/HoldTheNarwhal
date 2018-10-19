@@ -1,14 +1,14 @@
 package com.ddiehl.android.htn.utils;
 
 import android.graphics.drawable.Drawable;
-import android.support.annotation.ColorInt;
-import android.support.v4.graphics.drawable.DrawableCompat;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.ddiehl.android.htn.R;
+
+import androidx.core.graphics.drawable.DrawableCompat;
 
 /**
  * Tints menu icons similar to the AppCompat style

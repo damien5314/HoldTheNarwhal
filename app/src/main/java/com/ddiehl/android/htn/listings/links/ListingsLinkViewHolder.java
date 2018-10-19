@@ -9,6 +9,7 @@ import com.ddiehl.android.htn.utils.ThemeUtilsKt;
 
 import org.jetbrains.annotations.NotNull;
 
+import androidx.core.content.ContextCompat;
 import butterknife.OnClick;
 import rxreddit.model.Link;
 

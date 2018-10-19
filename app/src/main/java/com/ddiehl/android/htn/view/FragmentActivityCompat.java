@@ -1,10 +1,10 @@
 package com.ddiehl.android.htn.view;
 
-import android.support.v4.app.Fragment;
-
 import com.ddiehl.android.htn.R;
 
 import org.jetbrains.annotations.NotNull;
+
+import androidx.fragment.app.Fragment;
 
 public abstract class FragmentActivityCompat extends BaseActivity {
 

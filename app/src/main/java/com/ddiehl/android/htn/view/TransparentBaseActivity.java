@@ -1,9 +1,10 @@
 package com.ddiehl.android.htn.view;
 
 import android.app.ProgressDialog;
-import android.support.v7.app.AppCompatActivity;
 
 import com.ddiehl.android.htn.R;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 
 public abstract class TransparentBaseActivity extends AppCompatActivity {

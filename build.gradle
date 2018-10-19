@@ -5,21 +5,26 @@ buildscript {
 
         // Gradle plugins
         KOTLIN_VERSION = '1.2.61'
-        ANDROID_GRADLE_PLUGIN = '3.1.4'
+        ANDROID_GRADLE_PLUGIN = '3.2.0'
         HUGO_VERSION = '1.2.1'
         DEXCOUNT_VERSION = '0.8.3'
         GRADLE_VERSIONS_VERSION = '0.20.0'
-        FABRIC_VERSION = '1.25.1'
+        FABRIC_VERSION = '1.25.4'
 
         // Libraries
-        BUILD_TOOLS_VERSION = '27.0.3'
-        SUPPORT_LIBRARY_VERSION = '27.1.1'
+        SUPPORT_LIBRARY_VERSION = '28.0.0'
+        ANDROIDX_APPCOMPAT = '1.0.0'
+        ANDROIDX_RECYCLERVIEW = '1.0.0'
+        ANDROIDX_CARDVIEW = '1.0.0'
+        ANDROIDX_CONSTRAINTLAYOUT = '2.0.0-alpha2'
+        ANDROIDX_MATERIAL = '1.0.0'
+
         CONSTRAINT_LAYOUT_VERSION = '1.1.3'
         PLAY_SERVICES_VERSION = '10.2.6'
         CRASHLYTICS_VERSION = '2.9.5'
         GLIDE_VERSION = '4.8.0'
         GLIDE_OKHTTP_VERSION = '4.8.0'
-        BUTTERKNIFE_VERSION = '8.8.1'
+        BUTTERKNIFE_VERSION = '9.0.0-rc1'
         RXREDDIT_VERSION = '0.11'
         RXJAVA_VERSION = '2.2.1'
         RXANDROID_VERSION = '2.1.0'
@@ -32,7 +37,7 @@ buildscript {
         LEAK_CANARY_VERSION = '1.6.1'
         JUNIT_VERSION = '4.12'
         MOCKITO_VERSION = '2.21.0'
-        TESTING_SUPPORT_LIBRARY_VERSION = '1.0.2'
+        ANDROIDX_TEST_SUPPORT = '1.1.0-beta02'
     }
     repositories {
         jcenter()

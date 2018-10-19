@@ -1,7 +1,6 @@
 package com.ddiehl.android.htn.subscriptions;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -20,6 +19,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.inject.Inject;
+
+import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import rxreddit.model.Subreddit;

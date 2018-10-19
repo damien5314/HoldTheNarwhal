@@ -10,7 +10,6 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
-import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -22,12 +21,14 @@ import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.identity.IdentityManager;
 import com.ddiehl.android.htn.utils.MenuTintUtils;
+import com.google.android.material.snackbar.Snackbar;
 import com.ddiehl.android.htn.utils.ThemeUtilsKt;
 
 import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
 
+import androidx.core.content.ContextCompat;
 import rxreddit.model.UserIdentity;
 import timber.log.Timber;
 

@@ -22,6 +22,10 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
