@@ -124,10 +124,8 @@ public class ReportActivity extends TransparentBaseActivity
     }
 
     void showReportDialogWithRules(String[] subredditRules, String[] siteRules) {
-        ReportDialog dialog = new ReportDialogBuilder(subredditRules, siteRules)
-                .build();
-
-        dialog.show(getSupportFragmentManager(), ReportDialog.TAG);
+        ReportDialog.newInstance(subredditRules, siteRules)
+                .show(getSupportFragmentManager(), ReportDialog.TAG);
     }
 
     void report(String rule, String siteRule, String other) {
