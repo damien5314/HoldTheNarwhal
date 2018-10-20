@@ -44,7 +44,7 @@ android {
 
     defaultConfig {
         applicationId "com.ddiehl.android.htn"
-        minSdkVersion 16
+        minSdkVersion MIN_SDK_VERSION
         targetSdkVersion TARGET_SDK_VERSION
         versionCode 19
         versionName "0.14"
@@ -139,7 +139,6 @@ dependencies {
     kapt "com.google.dagger:dagger-compiler:$DAGGER_VERSION"
 
     implementation "uk.co.chrisjenx:calligraphy:$CALLIGRAPHY_VERSION"
-    implementation "com.afollestad.material-dialogs:core:$MATERIAL_DIALOGS_VERSION"
 
     implementation "com.hannesdorfmann.fragmentargs:annotation:$FRAGMENTARGS_VERSION"
     kapt "com.hannesdorfmann.fragmentargs:processor:$FRAGMENTARGS_VERSION"
