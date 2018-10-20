@@ -35,12 +35,7 @@
     <style name="ProgressDialog" parent="Theme.AppCompat.Dialog">
         <item name="android:alertDialogStyle">@style/CustomAlertDialogStyle</item>
         <item name="android:windowBackground">@color/transparent</item>
-        <item name="android:textColorPrimary">?attr/iconColor</item>
         <item name="android:backgroundDimEnabled">true</item>
-        <!-- FIXME This should use a text* attribute -->
-        <item name="android:textColor">?attr/iconColor</item>
-        <item name="android:textStyle">normal</item>
-        <item name="android:textAppearance">?android:textAppearanceSmall</item>
     </style>
 
     <style name="CustomAlertDialogStyle">
