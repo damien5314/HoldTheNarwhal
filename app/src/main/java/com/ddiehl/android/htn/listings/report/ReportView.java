@@ -27,8 +27,10 @@ import timber.log.Timber;
 
 
 /**
- * Invisible Activity for requesting data from API for reporting a listing,
+ * Host fragment for requesting data from API for reporting a listing,
  * then displaying a dialog with options.
+ *
+ * TODO It's working, just test this shiz
  */
 public class ReportView extends DialogFragment
         implements ReportDialog.Listener {
