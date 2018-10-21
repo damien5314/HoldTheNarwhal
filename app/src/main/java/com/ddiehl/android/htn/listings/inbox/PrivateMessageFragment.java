@@ -1,5 +1,6 @@
 package com.ddiehl.android.htn.listings.inbox;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.ContextMenu;
@@ -31,8 +32,6 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.disposables.Disposables;
 import rxreddit.model.Listing;
 import rxreddit.model.PrivateMessage;
 
@@ -93,12 +92,6 @@ public class PrivateMessageFragment extends BaseFragment implements PrivateMessa
     }
 
     @Override
-    public void onDestroyView() {
-        reportDisposable.dispose();
-        super.onDestroyView();
-    }
-
-    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.listings_private_message, menu);
@@ -124,23 +117,26 @@ public class PrivateMessageFragment extends BaseFragment implements PrivateMessa
         return coordinatorLayout;
     }
 
-    private Disposable reportDisposable = Disposables.empty();
-
     @Override
     public void openReportView(@NotNull PrivateMessage message) {
-        final ReportView reportView = new ReportView(
-                requireContext(),
-                requireFragmentManager(),
-                message.getFullname(),
-                null,
-                redditService
-        );
-        reportDisposable = reportView.show()
-                .subscribe(result -> {
+        ReportView intent = ReportView.newInstance(message.getFullName(), null);
+        intent.setTargetFragment(this, REQUEST_REPORT_MESSAGE);
+        intent.show(requireFragmentManager(), ReportView.TAG);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case REQUEST_REPORT_MESSAGE:
+                if (resultCode == ReportView.RESULT_REPORT_SUCCESS) {
                     // Passing null because we don't have access to the selected listing in this view
                     // But actually we're not showing context menus here yet, so it's ok
                     showReportSuccessToast(null);
-                });
+                }
+                break;
+            default:
+                super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 
     void showReportSuccessToast(@NotNull Listing listing) {
