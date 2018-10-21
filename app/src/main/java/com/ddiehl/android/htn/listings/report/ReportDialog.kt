@@ -14,6 +14,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import com.ddiehl.android.htn.R
+import com.ddiehl.android.htn.view.getDelegate
 
 class ReportDialog : DialogFragment() {
 
@@ -53,10 +54,7 @@ class ReportDialog : DialogFragment() {
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-        if (context !is Listener) {
-            throw RuntimeException("Context must implement ReportDialog.Listener")
-        }
-        listener = context
+        listener = getDelegate()
     }
 
     override fun onDetach() {

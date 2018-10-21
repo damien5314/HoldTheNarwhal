@@ -9,7 +9,7 @@ import com.ddiehl.android.htn.listings.inbox.PrivateMessageAdapter;
 import com.ddiehl.android.htn.listings.inbox.PrivateMessageFragment;
 import com.ddiehl.android.htn.listings.profile.UserProfileFragment;
 import com.ddiehl.android.htn.listings.profile.UserProfilePresenter;
-import com.ddiehl.android.htn.listings.report.ReportActivity;
+import com.ddiehl.android.htn.listings.report.ReportView;
 import com.ddiehl.android.htn.listings.subreddit.SubredditFragment;
 import com.ddiehl.android.htn.listings.subreddit.submission.SubmitPostFragment;
 import com.ddiehl.android.htn.listings.subreddit.submission.SubmitPostPresenter;
@@ -36,7 +36,7 @@ public interface ApplicationComponent {
     void inject(BaseActivity activity);
     void inject(PrivateMessageActivity activity);
     void inject(SettingsActivity activity);
-    void inject(ReportActivity activity);
+    void inject(ReportView activity);
 
     // Fragments
     void inject(BaseFragment fragment);

@@ -10,15 +10,14 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import butterknife.BindView
 import com.ddiehl.android.htn.HoldTheNarwhal
 import com.ddiehl.android.htn.R
-import com.ddiehl.android.htn.listings.report.ReportActivity
-import com.ddiehl.android.htn.listings.report.ReportActivity.RESULT_REPORT_ERROR
-import com.ddiehl.android.htn.listings.report.ReportActivity.RESULT_REPORT_SUCCESS
+import com.ddiehl.android.htn.listings.report.ReportView
 import com.ddiehl.android.htn.listings.subreddit.SubredditActivity
 import com.ddiehl.android.htn.utils.AndroidUtils.safeStartActivity
 import com.ddiehl.android.htn.view.BaseFragment
 import com.ddiehl.android.htn.view.video.VideoPlayerDialog
 import com.ddiehl.android.htn.view.video.VideoPlayerDialogBuilder
 import com.google.android.material.snackbar.Snackbar
+import io.reactivex.disposables.Disposables
 import rxreddit.model.Comment
 import rxreddit.model.Link
 import rxreddit.model.Listing
@@ -76,6 +75,11 @@ abstract class BaseListingsFragment : BaseFragment(), ListingsView, SwipeRefresh
         swipeRefreshLayout.setOnRefreshListener(this)
     }
 
+    override fun onDestroyView() {
+        reportDisposable.dispose()
+        super.onDestroyView()
+    }
+
     private fun instantiateListView() {
         with(recyclerView) {
             layoutManager = LinearLayoutManager(activity)
@@ -123,16 +127,6 @@ abstract class BaseListingsFragment : BaseFragment(), ListingsView, SwipeRefresh
             "controversial", "top" -> menu.findItem(R.id.action_change_timespan).isVisible = true
             "hot", "new", "rising" -> menu.findItem(R.id.action_change_timespan).isVisible = false
             else -> menu.findItem(R.id.action_change_timespan).isVisible = false
-        }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        when (requestCode) {
-            REQUEST_REPORT_LISTING -> when (resultCode) {
-                RESULT_REPORT_SUCCESS -> showReportSuccessToast(listingSelected!!)
-                RESULT_REPORT_ERROR -> showReportErrorToast(listingSelected!!)
-            }
-            else -> super.onActivityResult(requestCode, resultCode, data)
         }
     }
 
@@ -424,19 +418,51 @@ abstract class BaseListingsFragment : BaseFragment(), ListingsView, SwipeRefresh
         safeStartActivity(context, intent)
     }
 
+    private var reportDisposable = Disposables.empty()
+
     fun openReportView(link: Link) {
-        val intent = ReportActivity.getIntent(context, link.fullName, link.subreddit)
-        startActivityForResult(intent, REQUEST_REPORT_LISTING)
+        val reportView = ReportView(
+            requireContext(),
+            requireFragmentManager(),
+            link.fullName,
+            link.subreddit,
+            redditService
+        )
+        reportDisposable = reportView.show()
+            .subscribe(
+                { showReportSuccessToast(listingSelected!!) },
+                { showReportErrorToast(listingSelected!!) }
+            )
     }
 
     fun openReportView(comment: Comment) {
-        val intent = ReportActivity.getIntent(context, comment.fullName, comment.subreddit)
-        startActivityForResult(intent, REQUEST_REPORT_LISTING)
+        val reportView = ReportView(
+            requireContext(),
+            requireFragmentManager(),
+            comment.fullName,
+            comment.subreddit,
+            redditService
+        )
+        reportDisposable = reportView.show()
+            .subscribe(
+                { showReportSuccessToast(listingSelected!!) },
+                { showReportErrorToast(listingSelected!!) }
+            )
     }
 
     fun openReportView(message: PrivateMessage) {
-        val intent = ReportActivity.getIntent(context, message.fullname, null)
-        startActivityForResult(intent, REQUEST_REPORT_LISTING)
+        val reportView = ReportView(
+            requireContext(),
+            requireFragmentManager(),
+            message.fullName,
+            null,
+            redditService
+        )
+        reportDisposable = reportView.show()
+            .subscribe(
+                { showReportSuccessToast(listingSelected!!) },
+                { showReportErrorToast(listingSelected!!) }
+            )
     }
 
     override fun notifyDataSetChanged() = listingsAdapter.notifyDataSetChanged()
