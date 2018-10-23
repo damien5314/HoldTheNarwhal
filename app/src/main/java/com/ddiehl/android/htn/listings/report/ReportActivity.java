@@ -169,9 +169,7 @@ public class ReportActivity extends TransparentBaseActivity
     @Override
     public void onOtherSubmitted(String reason) {
         Timber.i("Report submitted for other reason");
-        // API does not properly save reasons passed in the 'other_reason' field,
-        // so just pass it in the 'reason' field
-        report(reason, null, null);
+        report("other", null, reason);
     }
 
     @Override
