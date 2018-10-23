@@ -27,10 +27,8 @@ import timber.log.Timber;
 
 
 /**
- * Host fragment for requesting data from API for reporting a listing,
- * then displaying a dialog with options.
- *
- * TODO It's working, just test this shiz
+ * Host fragment for requesting data from API for reporting a listing, displaying a dialog with options, then
+ * submitting the report to subreddit moderators.
  */
 public class ReportView extends DialogFragment
         implements ReportDialog.Listener {
@@ -134,7 +132,7 @@ public class ReportView extends DialogFragment
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(disposable -> showSpinner())
-                .doOnDispose(this::dismissSpinner)
+                .doFinally(this::dismissSpinner)
                 .subscribe(this::onReported, this::onReportError);
     }
 
