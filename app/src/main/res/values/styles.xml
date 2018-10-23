@@ -8,9 +8,14 @@
         <item name="android:windowActionModeOverlay">true</item>
         <!-- app background color -->
         <item name="android:windowBackground">?attr/windowBackgroundColor</item>
+        <item name="dialogTheme">@style/BaseDialogTheme</item>
     </style>
 
     <style name="AppTheme" parent="BaseAppTheme" />
+
+    <style name="BaseDialogTheme" parent="Theme.AppCompat.Dialog">
+        <item name="colorAccent">@color/redA200</item>
+    </style>
 
     <style name="ActivityThemeLightBg" parent="AppTheme">
         <item name="android:windowBackground">@color/white</item>
@@ -32,7 +37,7 @@
         <item name="android:textColor">?attr/textColorPrimary</item>
     </style>
 
-    <style name="ProgressDialog" parent="Theme.AppCompat.Dialog">
+    <style name="ProgressDialog" parent="BaseDialogTheme">
         <item name="android:alertDialogStyle">@style/CustomAlertDialogStyle</item>
         <item name="android:windowBackground">@color/transparent</item>
         <item name="android:backgroundDimEnabled">true</item>
