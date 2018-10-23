@@ -174,8 +174,7 @@ public class ReportView extends DialogFragment
     @Override
     public void onOtherSubmitted(String reason) {
         Timber.i("Report submitted for other reason");
-        // API does not properly save reasons passed in the 'other_reason' field,
-        // so just pass it in the 'reason' field
+        // We must pass "other" as the `reason` field for the API to properly use `other_reason`
         report("other", null, reason);
     }
 
