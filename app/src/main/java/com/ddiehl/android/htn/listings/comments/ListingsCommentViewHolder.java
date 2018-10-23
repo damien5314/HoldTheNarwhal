@@ -13,9 +13,6 @@ import com.ddiehl.android.htn.utils.ThemeUtilsKt;
 import com.ddiehl.android.htn.view.markdown.HtmlParser;
 import com.ddiehl.timesincetextview.TimeSinceTextView;
 
-import javax.inject.Inject;
-
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -144,8 +141,8 @@ public class ListingsCommentViewHolder extends RecyclerView.ViewHolder
             }
         } else {
             authorView.setBackgroundResource(0);
-            authorView.setTextColor(
-                    ThemeUtilsKt.getColorFromAttr(context, R.attr.textColorSecondary));
+            final int defaultTextColor = ThemeUtilsKt.getColorFromAttr(context, R.attr.textColorSecondary);
+            authorView.setTextColor(defaultTextColor);
         }
         authorView.setText(comment.getAuthor());
     }

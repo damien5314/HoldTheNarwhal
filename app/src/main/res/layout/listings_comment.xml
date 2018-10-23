@@ -46,7 +46,7 @@
                 android:gravity="start"
                 android:fontFamily="sans-serif-light"
                 android:textAppearance="?android:textAppearanceSmall"
-                android:textColor="?attr/textColorInverse"
+                android:textColor="?attr/textColorSecondary"
                 tools:text="comment reply on /r/gamedev"
                 tools:ignore="UnusedAttribute" />
 
