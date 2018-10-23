@@ -34,7 +34,7 @@
                 android:gravity="start"
                 android:fontFamily="sans-serif-light"
                 android:textAppearance="?android:textAppearanceMedium"
-                android:textColor="@android:color/white"
+                android:textColor="?attr/textColorPrimary"
                 tools:text="The brown fox jumped over the white fence"
                 tools:ignore="UnusedAttribute" />
 
