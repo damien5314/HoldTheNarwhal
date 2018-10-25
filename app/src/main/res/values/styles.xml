@@ -23,14 +23,14 @@
         <item name="actionMenuTextColor">@color/white</item>
     </style>
 
-    <style name="LinkMetadataTextViewLight">
+    <style name="LinkMetadataTextViewTop">
         <item name="android:textAppearance">?android:textAppearanceSmall</item>
-        <item name="android:textColor">?attr/textColorSecondary</item>
+        <item name="android:textColor">?attr/contentPrimaryTextColorPrimary</item>
     </style>
 
-    <style name="LinkMetadataTextViewDark">
+    <style name="LinkMetadataTextViewBottom">
         <item name="android:textAppearance">?android:textAppearanceSmall</item>
-        <item name="android:textColor">?attr/textColorPrimary</item>
+        <item name="android:textColor">?attr/contentSecondaryTextColor</item>
     </style>
 
     <style name="ProgressDialog" parent="BaseDialogTheme">

@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="@dimen/baseline_spacing"
-            tools:background="?attr/cardTopBackgroundColor">
+            tools:background="?attr/contentPrimaryBackgroundColor">
 
             <TextView
                 android:id="@+id/link_title"
@@ -29,7 +29,7 @@
                 android:fontFamily="sans-serif-light"
                 android:textAlignment="viewStart"
                 android:textAppearance="?android:textAppearanceMedium"
-                android:textColor="?attr/cardTopTextColor"
+                android:textColor="?attr/contentPrimaryTextColorPrimary"
                 tools:ignore="UnusedAttribute"
                 tools:text="The quick brown fox jumped over the white fence" />
 
@@ -59,7 +59,7 @@
                     android:fontFamily="sans-serif-light"
                     android:gravity="center"
                     android:textAppearance="?android:textAppearanceSmall"
-                    android:textColor="?attr/cardTopTextSecondaryColor"
+                    android:textColor="?attr/contentPrimaryTextColorSecondary"
                     tools:ignore="UnusedAttribute"
                     tools:text="× 2" />
 
@@ -71,7 +71,7 @@
                     android:fontFamily="sans-serif-light"
                     android:gravity="end"
                     android:textAppearance="?android:textAppearanceSmall"
-                    android:textColor="?attr/cardTopTextSecondaryColor"
+                    android:textColor="?attr/contentPrimaryTextColorSecondary"
                     tools:targetApi="16"
                     tools:text="imgur.com" />
 
@@ -89,7 +89,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="?attr/contentBackgroundColorSecondary"
+                android:background="?attr/contentSecondaryBackgroundColor"
                 android:orientation="vertical"
                 android:padding="@dimen/baseline_spacing">
 
@@ -99,7 +99,7 @@
 
                     <com.ddiehl.timesincetextview.TimeSinceTextView
                         android:id="@+id/link_timestamp"
-                        style="@style/LinkMetadataTextViewDark"
+                        style="@style/LinkMetadataTextViewBottom"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
@@ -108,7 +108,7 @@
 
                     <TextView
                         android:id="@+id/link_score"
-                        style="@style/LinkMetadataTextViewDark"
+                        style="@style/LinkMetadataTextViewBottom"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
@@ -129,7 +129,7 @@
 
                     <TextView
                         android:id="@+id/link_subreddit"
-                        style="@style/LinkMetadataTextViewDark"
+                        style="@style/LinkMetadataTextViewBottom"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
@@ -148,7 +148,7 @@
 
                         <com.ddiehl.android.htn.view.ColorSwapTextView
                             android:id="@+id/link_author"
-                            style="@style/LinkMetadataTextViewDark"
+                            style="@style/LinkMetadataTextViewBottom"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:ellipsize="end"
@@ -175,7 +175,7 @@
 
                     <TextView
                         android:id="@+id/link_comment_count"
-                        style="@style/LinkMetadataTextViewDark"
+                        style="@style/LinkMetadataTextViewBottom"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -217,7 +217,7 @@
             android:padding="@dimen/link_self_text_padding"
             android:textAlignment="viewStart"
             android:textAppearance="?android:textAppearanceSmall"
-            android:textColor="?attr/cardTopTextColor"
+            android:textColor="?attr/contentPrimaryTextColorPrimary"
             android:textColorLink="?attr/textColorLink"
             tools:ignore="UnusedAttribute"
             tools:text="Lorem ipsum dolor sit amet" />

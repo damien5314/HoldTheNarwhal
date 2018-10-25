@@ -19,20 +19,18 @@
     <attr name="toolbarStyle" format="reference" />
     <attr name="toolbarPopupStyle" format="reference" />
 
-    <attr name="contentBackgroundColorPrimary" format="color" />
-    <attr name="contentBackgroundColorSecondary" format="color" />
+    <attr name="contentPrimaryBackgroundColor" format="color" />
+    <attr name="contentPrimaryBackgroundColorLiked" format="color" />
+    <attr name="contentPrimaryBackgroundColorDisliked" format="color" />
+    <attr name="contentPrimaryTextColorPrimary" format="color" />
+    <attr name="contentPrimaryTextColorSecondary" format="color" />
+    <attr name="contentSecondaryBackgroundColor" format="color" />
+    <attr name="contentSecondaryTextColor" format="color" />
+
     <attr name="authorDecoratedTextColor" format="color" />
     <attr name="contentLikedColor" format="color" />
     <attr name="contentDislikedColor" format="color" />
     <attr name="unreadMessageIndicatorColor" format="color" />
     <attr name="optionsBarActivatedColor" format="color" />
-
-    <!-- Link cards -->
-    <attr name="cardTopBackgroundColor" format="color" />
-    <attr name="cardTopBackgroundColorLiked" format="color" />
-    <attr name="cardTopBackgroundColorDisliked" format="color" />
-    <attr name="cardBackgroundAccentColor" format="color" />
-    <attr name="cardTopTextColor" format="color" />
-    <attr name="cardTopTextSecondaryColor" format="color" />
 
 </resources>

@@ -24,7 +24,7 @@
             android:paddingRight="@dimen/link_list_item_margin_horizontal"
             android:gravity="center_vertical"
             android:orientation="vertical"
-            android:background="?attr/cardTopBackgroundColor">
+            android:background="?attr/contentSecondaryBackgroundColor">
 
             <TextView
                 android:id="@+id/comment_link_title"
@@ -34,7 +34,7 @@
                 android:gravity="start"
                 android:fontFamily="sans-serif-light"
                 android:textAppearance="?android:textAppearanceMedium"
-                android:textColor="?attr/textColorPrimary"
+                android:textColor="?attr/contentSecondaryTextColor"
                 tools:text="The brown fox jumped over the white fence"
                 tools:ignore="UnusedAttribute" />
 
@@ -46,7 +46,7 @@
                 android:gravity="start"
                 android:fontFamily="sans-serif-light"
                 android:textAppearance="?android:textAppearanceSmall"
-                android:textColor="?attr/textColorSecondary"
+                android:textColor="?attr/contentSecondaryTextColor"
                 tools:text="comment reply on /r/gamedev"
                 tools:ignore="UnusedAttribute" />
 
@@ -55,7 +55,7 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?attr/contentBackgroundColorSecondary">
+            android:background="?attr/contentPrimaryBackgroundColor">
 
             <include layout="@layout/comment_layout" />
 

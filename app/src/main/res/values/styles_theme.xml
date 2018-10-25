@@ -23,19 +23,21 @@
         <item name="controversialityIndicatorColor">@color/redA200</item>
         <item name="toolbarStyle">@style/ToolbarStyle</item>
         <item name="toolbarPopupStyle">@style/Theme.AppCompat.Light</item>
-        <item name="contentBackgroundColorPrimary">?attr/colorPrimary</item>
-        <item name="contentBackgroundColorSecondary">@color/white</item>
+        <item name="contentPrimaryBackgroundColor">@color/white</item>
+        <item name="contentPrimaryTextColorPrimary">@color/gray900</item>
+        <item name="contentPrimaryTextColorSecondary">?attr/textColorSecondary</item>
+        <item name="contentSecondaryBackgroundColor">?attr/colorPrimaryDark</item>
+        <item name="contentSecondaryTextColor">@color/white</item>
         <item name="authorDecoratedTextColor">@color/white</item>
         <item name="contentLikedColor">@color/international_orange</item>
         <item name="contentDislikedColor">@color/light_slate_blue</item>
         <item name="unreadMessageIndicatorColor">@color/orangered</item>
         <item name="optionsBarActivatedColor">@color/light_slate_blue</item>
-        <item name="cardTopBackgroundColor">@color/white</item>
-        <item name="cardTopBackgroundColorLiked">@color/your_pink</item>
-        <item name="cardTopBackgroundColorDisliked">@color/lavender_blue</item>
-        <item name="cardBackgroundAccentColor">?attr/colorPrimaryDark</item>
-        <item name="cardTopTextColor">@color/gray900</item>
-        <item name="cardTopTextSecondaryColor">?attr/textColorSecondary</item>
+        <!--<item name="cardTopBackgroundColor">@color/white</item>-->
+        <item name="contentPrimaryBackgroundColorLiked">@color/your_pink</item>
+        <item name="contentPrimaryBackgroundColorDisliked">@color/lavender_blue</item>
+        <!--<item name="cardTopTextColor">@color/gray900</item>-->
+        <!--<item name="cardTopTextSecondaryColor">?attr/textColorSecondary</item>-->
     </style>
 
     <style name="NightThemeColors" parent="AppTheme">
@@ -61,19 +63,21 @@
         <item name="controversialityIndicatorColor">@color/redA200</item>
         <item name="toolbarStyle">@style/ToolbarStyle</item>
         <item name="toolbarPopupStyle">@style/Theme.AppCompat</item>
-        <item name="contentBackgroundColorPrimary">@color/gray900</item>
-        <item name="contentBackgroundColorSecondary">@color/gray800</item>
+        <item name="contentPrimaryBackgroundColor">@color/gray900</item>
+        <item name="contentPrimaryTextColorPrimary">@color/white</item>
+        <item name="contentPrimaryTextColorSecondary">@color/gray400</item>
+        <item name="contentSecondaryBackgroundColor">@color/gray800</item>
+        <item name="contentSecondaryTextColor">@color/white</item>
         <item name="authorDecoratedTextColor">@color/white</item>
         <item name="contentLikedColor">@color/international_orange</item>
         <item name="contentDislikedColor">@color/light_slate_blue</item>
         <item name="unreadMessageIndicatorColor">@color/orangered</item>
         <item name="optionsBarActivatedColor">@color/light_slate_blue</item>
-        <item name="cardTopBackgroundColor">@color/gray900</item>
-        <item name="cardTopBackgroundColorLiked">@color/rust</item>
-        <item name="cardTopBackgroundColorDisliked">@color/manatee</item>
-        <item name="cardBackgroundAccentColor">@color/gray900</item>
-        <item name="cardTopTextColor">@color/white</item>
-        <item name="cardTopTextSecondaryColor">@color/gray400</item>
+        <!--<item name="cardTopBackgroundColor">@color/gray900</item>-->
+        <item name="contentPrimaryBackgroundColorLiked">@color/rust</item>
+        <item name="contentPrimaryBackgroundColorDisliked">@color/manatee</item>
+        <!--<item name="cardTopTextColor">@color/white</item>-->
+        <!--<item name="cardTopTextSecondaryColor">@color/gray400</item>-->
     </style>
 
 </resources>

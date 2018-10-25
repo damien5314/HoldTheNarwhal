@@ -9,7 +9,6 @@ import com.ddiehl.android.htn.utils.ThemeUtilsKt;
 
 import org.jetbrains.annotations.NotNull;
 
-import androidx.core.content.ContextCompat;
 import butterknife.OnClick;
 import rxreddit.model.Link;
 
@@ -27,13 +26,13 @@ public class ListingsLinkViewHolder extends BaseLinkViewHolder {
     @Override
     protected void showLiked(@NotNull Link link) {
         if (link.isLiked() == null) {
-            final int likedColor = ThemeUtilsKt.getColorFromAttr(context, R.attr.cardTopBackgroundColor);
+            final int likedColor = ThemeUtilsKt.getColorFromAttr(context, R.attr.contentPrimaryBackgroundColor);
             view.setBackgroundColor(likedColor);
         } else if (link.isLiked()) {
-            final int likedColor = ThemeUtilsKt.getColorFromAttr(context, R.attr.cardTopBackgroundColorLiked);
+            final int likedColor = ThemeUtilsKt.getColorFromAttr(context, R.attr.contentPrimaryBackgroundColorLiked);
             view.setBackgroundColor(likedColor);
         } else {
-            final int dislikedColor = ThemeUtilsKt.getColorFromAttr(context, R.attr.cardTopBackgroundColorDisliked);
+            final int dislikedColor = ThemeUtilsKt.getColorFromAttr(context, R.attr.contentPrimaryBackgroundColorDisliked);
             view.setBackgroundColor(dislikedColor);
         }
     }
