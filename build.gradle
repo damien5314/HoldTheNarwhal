@@ -6,7 +6,7 @@ buildscript {
 
         // Gradle plugins
         KOTLIN_VERSION = '1.2.61'
-        ANDROID_GRADLE_PLUGIN = '3.2.0'
+        ANDROID_GRADLE_PLUGIN = '3.2.1'
         HUGO_VERSION = '1.2.1'
         DEXCOUNT_VERSION = '0.8.3'
         GRADLE_VERSIONS_VERSION = '0.20.0'
