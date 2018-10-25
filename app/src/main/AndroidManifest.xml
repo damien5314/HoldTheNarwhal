@@ -75,9 +75,7 @@
 
         <activity android:name=".subredditinfo.SubredditInfoActivity" />
 
-        <activity
-            android:name=".listings.subreddit.submission.SubmitPostActivity"
-            android:theme="@style/ActivityThemeLightBg" />
+        <activity android:name=".listings.subreddit.submission.SubmitPostActivity" />
 
         <service
             android:name=".notifications.UnreadInboxCheckJobService"

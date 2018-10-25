@@ -17,10 +17,6 @@
         <item name="colorAccent">@color/redA200</item>
     </style>
 
-    <style name="ActivityThemeLightBg" parent="AppTheme">
-        <item name="android:windowBackground">@color/white</item>
-    </style>
-
     <style name="ToolbarStyle" parent="BaseAppTheme">
         <item name="android:textColorPrimary">@color/white</item>
         <item name="android:textColorSecondary">@color/white</item>
