@@ -179,7 +179,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
     }
 
     private void applyColorScheme() {
-        final ColorScheme colorScheme = mSettingsManager.getColorScheme();
+        final ColorScheme colorScheme = settingsManager.getColorScheme();
         setTheme(colorScheme.getStyleRes());
     }
 
@@ -365,13 +365,13 @@ public abstract class BaseActivity extends AppCompatActivity implements
     }
 
     protected void onSwitchThemes() {
-        ColorScheme scheme = mSettingsManager.getColorScheme();
+        ColorScheme scheme = settingsManager.getColorScheme();
         switch (scheme) {
             case STANDARD:
-                mSettingsManager.setColorScheme(ColorScheme.NIGHT);
+                settingsManager.setColorScheme(ColorScheme.NIGHT);
                 break;
             case NIGHT:
-                mSettingsManager.setColorScheme(ColorScheme.STANDARD);
+                settingsManager.setColorScheme(ColorScheme.STANDARD);
                 break;
         }
         recreate();
