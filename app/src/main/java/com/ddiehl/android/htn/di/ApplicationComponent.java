@@ -5,7 +5,6 @@ import com.ddiehl.android.htn.listings.BaseListingsPresenter;
 import com.ddiehl.android.htn.listings.comments.LinkCommentsFragment;
 import com.ddiehl.android.htn.listings.comments.ThreadStubViewHolder;
 import com.ddiehl.android.htn.listings.inbox.InboxFragment;
-import com.ddiehl.android.htn.listings.inbox.ListingsMessageViewHolder;
 import com.ddiehl.android.htn.listings.inbox.PrivateMessageActivity;
 import com.ddiehl.android.htn.listings.inbox.PrivateMessageAdapter;
 import com.ddiehl.android.htn.listings.inbox.PrivateMessageFragment;
