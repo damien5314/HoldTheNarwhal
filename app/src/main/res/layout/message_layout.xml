@@ -55,7 +55,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="?attr/dividerColor" />
+            android:background="?attr/threadIdentationColor" />
 
         <LinearLayout
             android:id="@+id/last_message_layout"
@@ -67,7 +67,7 @@
                 android:id="@+id/message_indentation"
                 android:layout_width="@dimen/comment_indentation_margin"
                 android:layout_height="match_parent"
-                android:background="?attr/colorPrimaryDark" />
+                android:background="?attr/threadIdentationColor" />
 
             <LinearLayout
                 android:orientation="vertical"
