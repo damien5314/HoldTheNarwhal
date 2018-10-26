@@ -6,6 +6,7 @@ import com.ddiehl.android.htn.listings.comments.LinkCommentsFragment;
 import com.ddiehl.android.htn.listings.comments.ListingsCommentViewHolder;
 import com.ddiehl.android.htn.listings.comments.ThreadCommentViewHolder;
 import com.ddiehl.android.htn.listings.comments.ThreadStubViewHolder;
+import com.ddiehl.android.htn.listings.inbox.InboxFragment;
 import com.ddiehl.android.htn.listings.inbox.ListingsMessageViewHolder;
 import com.ddiehl.android.htn.listings.inbox.PrivateMessageActivity;
 import com.ddiehl.android.htn.listings.inbox.PrivateMessageAdapter;
@@ -55,6 +56,7 @@ public interface ApplicationComponent {
     void inject(LinkCommentsFragment fragment);
     void inject(SubredditInfoFragment fragment);
     void inject(SubmitPostFragment fragment);
+    void inject(InboxFragment fragment);
 
     // ViewHolders
     void inject(ThreadCommentViewHolder vh);

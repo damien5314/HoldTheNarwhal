@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
+import com.ddiehl.android.htn.identity.IdentityManager;
 import com.ddiehl.android.htn.listings.BaseListingsFragment;
 import com.ddiehl.android.htn.listings.ChooseTimespanDialog;
 import com.ddiehl.android.htn.listings.ListingsAdapter;
@@ -35,6 +36,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import butterknife.BindView;
 import rxreddit.model.Listing;
@@ -50,6 +53,8 @@ public class UserProfileFragment extends BaseListingsFragment
     public static final String TAG = UserProfileFragment.class.getSimpleName();
 
     private static final int NUM_DEFAULT_TABS = 5;
+
+    @Inject IdentityManager identityManager;
 
     @BindView(R.id.coordinator_layout) protected CoordinatorLayout coordinatorLayout;
     @BindView(R.id.user_profile_summary) protected View userProfileSummary;
