@@ -49,8 +49,8 @@ public abstract class BaseFragment extends Fragment implements MainView {
     protected static final int REQUEST_SIGN_IN = 5;
     protected static final int REQUEST_SUBMIT_NEW_POST = 6;
 
-    @Inject protected RedditService redditService;
-    @Inject protected IdentityManager identityManager;
+    @Inject RedditService redditService;
+    @Inject IdentityManager identityManager;
 
     protected RedditNavigationView redditNavigationView;
     ProgressDialog loadingOverlay;

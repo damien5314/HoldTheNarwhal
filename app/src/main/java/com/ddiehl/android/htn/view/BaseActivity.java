@@ -99,10 +99,10 @@ public abstract class BaseActivity extends AppCompatActivity implements
     /* @BindView(R.id.sign_out_button) */ View signOutView;
     /* @BindView(R.id.navigation_drawer_header_image) */ ImageView headerImage;
 
-    @Inject protected RedditService redditService;
-    @Inject protected IdentityManager identityManager;
-    @Inject protected SettingsManager mSettingsManager;
-    @Inject protected Gson mGson;
+    @Inject RedditService redditService;
+    @Inject IdentityManager identityManager;
+    @Inject SettingsManager settingsManager;
+    @Inject Gson gson;
 
     ActionBarDrawerToggle drawerToggle;
 
@@ -184,7 +184,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
     }
 
     private String getFont() {
-        return mSettingsManager.getFont();
+        return settingsManager.getFont();
     }
 
     private void checkAndShowAuthenticationStateChange() {
@@ -584,7 +584,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
 
     @Override
     public void showInboxMessages(@NotNull List<PrivateMessage> messages) {
-        Intent intent = PrivateMessageActivity.getIntent(this, mGson, messages);
+        Intent intent = PrivateMessageActivity.getIntent(this, gson, messages);
         startActivity(intent);
     }
 

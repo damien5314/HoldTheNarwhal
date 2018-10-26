@@ -9,7 +9,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
+import com.ddiehl.android.htn.identity.IdentityManager;
 import com.ddiehl.android.htn.listings.BaseListingsFragment;
 import com.ddiehl.android.htn.listings.ListingsAdapter;
 import com.ddiehl.android.htn.utils.AndroidUtils;
@@ -23,6 +25,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import butterknife.BindView;
 
@@ -31,6 +35,8 @@ public class InboxFragment extends BaseListingsFragment
         implements InboxView, TabLayout.OnTabSelectedListener {
 
     public static final String TAG = InboxFragment.class.getSimpleName();
+
+    @Inject IdentityManager identityManager;
 
     @Arg(key = "ARG_SHOW") String show;
 
@@ -46,6 +52,7 @@ public class InboxFragment extends BaseListingsFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        HoldTheNarwhal.getApplicationComponent().inject(this);
         FragmentArgs.inject(this);
 
         if (TextUtils.isEmpty(show)) show = "inbox";

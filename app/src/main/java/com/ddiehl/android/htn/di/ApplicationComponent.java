@@ -4,6 +4,8 @@ import com.ddiehl.android.htn.listings.BaseListingsFragment;
 import com.ddiehl.android.htn.listings.BaseListingsPresenter;
 import com.ddiehl.android.htn.listings.comments.LinkCommentsFragment;
 import com.ddiehl.android.htn.listings.comments.ThreadStubViewHolder;
+import com.ddiehl.android.htn.listings.inbox.InboxFragment;
+import com.ddiehl.android.htn.listings.inbox.ListingsMessageViewHolder;
 import com.ddiehl.android.htn.listings.inbox.PrivateMessageActivity;
 import com.ddiehl.android.htn.listings.inbox.PrivateMessageAdapter;
 import com.ddiehl.android.htn.listings.inbox.PrivateMessageFragment;
@@ -48,6 +50,7 @@ public interface ApplicationComponent {
     void inject(WebViewFragment fragment);
     void inject(LinkCommentsFragment fragment);
     void inject(SubmitPostFragment fragment);
+    void inject(InboxFragment fragment);
 
     // ViewHolders
     void inject(ThreadStubViewHolder vh);
