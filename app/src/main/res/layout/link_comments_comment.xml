@@ -8,7 +8,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="?attr/contentSecondaryBackgroundColor" />
+        android:background="?attr/threadIdentationColor" />
 
     <LinearLayout
         android:id="@+id/comment_item_row"
@@ -21,7 +21,7 @@
             android:id="@+id/indentation"
             android:layout_width="@dimen/comment_indentation_margin"
             android:layout_height="match_parent"
-            android:background="?attr/contentSecondaryBackgroundColor" />
+            android:background="?attr/threadIdentationColor" />
 
         <include layout="@layout/comment_layout" />
 

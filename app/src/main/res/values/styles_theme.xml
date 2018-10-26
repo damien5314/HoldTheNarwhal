@@ -15,7 +15,7 @@
         <item name="textColorInverse">@color/white</item>
         <item name="textColorHighlight">?attr/textColorPrimary</item>
         <item name="textColorLink">@color/blue</item>
-        <item name="quoteBlockColor">@color/bluegrey000</item>
+        <item name="quoteBlockColor">@color/bluegrey500</item>
         <item name="dividerColor">@color/black_12pct</item>
         <item name="iconColor">@color/white</item>
         <item name="nsfwColor">@color/venetian_red</item>
@@ -28,6 +28,7 @@
         <item name="contentPrimaryTextColorSecondary">?attr/textColorSecondary</item>
         <item name="contentSecondaryBackgroundColor">?attr/colorPrimaryDark</item>
         <item name="contentSecondaryTextColor">@color/white</item>
+        <item name="threadIdentationColor">@color/bluegrey500</item>
         <item name="authorDecoratedTextColor">@color/white</item>
         <item name="contentLikedColor">@color/international_orange</item>
         <item name="contentDislikedColor">@color/light_slate_blue</item>
@@ -55,7 +56,7 @@
         <item name="textColorInverse">@color/gray900</item>
         <item name="textColorHighlight">@color/white</item>
         <item name="textColorLink">@color/lavender_blue</item>
-        <item name="quoteBlockColor">@color/bluegrey000</item>
+        <item name="quoteBlockColor">@color/bluegrey500</item>
         <item name="dividerColor">@color/white_20pct</item>
         <item name="iconColor">@color/white</item>
         <item name="nsfwColor">@color/venetian_red</item>
@@ -68,6 +69,7 @@
         <item name="contentPrimaryTextColorSecondary">@color/gray400</item>
         <item name="contentSecondaryBackgroundColor">@color/gray800</item>
         <item name="contentSecondaryTextColor">@color/white</item>
+        <item name="threadIdentationColor">@color/gray800</item>
         <item name="authorDecoratedTextColor">@color/white</item>
         <item name="contentLikedColor">@color/international_orange</item>
         <item name="contentDislikedColor">@color/light_slate_blue</item>

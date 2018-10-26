@@ -26,6 +26,7 @@
     <attr name="contentPrimaryTextColorSecondary" format="color" />
     <attr name="contentSecondaryBackgroundColor" format="color" />
     <attr name="contentSecondaryTextColor" format="color" />
+    <attr name="threadIdentationColor" format="color" />
 
     <attr name="authorDecoratedTextColor" format="color" />
     <attr name="contentLikedColor" format="color" />
