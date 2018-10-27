@@ -41,7 +41,7 @@
             android:layout_width="@dimen/navigation_drawer_width"
             android:layout_height="match_parent"
             android:layout_gravity="start"
-            android:background="?attr/colorPrimary"
+            android:background="?attr/navigationDrawerBackgroundColor"
             android:elevation="@dimen/navigation_drawer_elevation"
             app:itemTextColor="@drawable/navigation_text_color"
             app:menu="@menu/navigation"

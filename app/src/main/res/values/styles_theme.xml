@@ -36,6 +36,7 @@
         <item name="contentDislikedColor">@color/light_slate_blue</item>
         <item name="unreadMessageIndicatorColor">@color/orangered</item>
         <item name="optionsBarActivatedColor">@color/light_slate_blue</item>
+        <item name="navigationDrawerBackgroundColor">?attr/colorPrimaryLight</item>
     </style>
 
     <style name="NightThemeColors" parent="AppTheme">
@@ -74,6 +75,7 @@
         <item name="contentDislikedColor">@color/light_slate_blue</item>
         <item name="unreadMessageIndicatorColor">@color/orangered</item>
         <item name="optionsBarActivatedColor">@color/light_slate_blue</item>
+        <item name="navigationDrawerBackgroundColor">?attr/colorPrimary</item>
     </style>
 
 </resources>
