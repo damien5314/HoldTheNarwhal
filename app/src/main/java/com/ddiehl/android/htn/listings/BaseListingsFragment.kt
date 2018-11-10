@@ -27,8 +27,8 @@ import rxreddit.model.PrivateMessage
 abstract class BaseListingsFragment : BaseFragment(), ListingsView, SwipeRefreshLayout.OnRefreshListener {
 
     companion object {
-        private val REQUEST_REPORT_LISTING = 1000
-        private val LINK_BASE_URL = "http://www.reddit.com"
+        private const val REQUEST_REPORT_LISTING = 1000
+        private const val LINK_BASE_URL = "http://www.reddit.com"
     }
 
     @BindView(R.id.recycler_view)
