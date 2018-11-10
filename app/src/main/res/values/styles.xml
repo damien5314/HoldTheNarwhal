@@ -8,7 +8,6 @@
         <item name="android:windowActionModeOverlay">true</item>
         <!-- app background color -->
         <item name="android:windowBackground">?attr/windowBackgroundColor</item>
-        <item name="dialogTheme">@style/BaseDialogTheme</item>
     </style>
 
     <style name="AppTheme" parent="BaseAppTheme" />
