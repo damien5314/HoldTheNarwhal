@@ -28,7 +28,7 @@ abstract class BaseListingsFragment : BaseFragment(), ListingsView, SwipeRefresh
 
     companion object {
         private const val REQUEST_REPORT_LISTING = 1000
-        private const val LINK_BASE_URL = "http://www.reddit.com"
+        private const val LINK_BASE_URL = "https://www.reddit.com"
     }
 
     @BindView(R.id.recycler_view)
