@@ -94,7 +94,7 @@ class LinkCommentsFragment : BaseListingsFragment(), LinkCommentsView,
         val intent = Intent(Intent.ACTION_SEND).apply {
             action = Intent.ACTION_SEND
             type = "text/plain"
-            putExtra(Intent.EXTRA_TEXT, "http://www.reddit.com" + link.permalink)
+            putExtra(Intent.EXTRA_TEXT, "https://www.reddit.com" + link.permalink)
             flags = Intent.FLAG_ACTIVITY_NEW_TASK
         }
         startActivity(intent)
@@ -116,7 +116,7 @@ class LinkCommentsFragment : BaseListingsFragment(), LinkCommentsView,
     }
 
     override fun openCommentsInBrowser(link: Link) {
-        val uri = Uri.parse("http://www.reddit.com" + link.permalink)
+        val uri = Uri.parse("https://www.reddit.com" + link.permalink)
         val intent = Intent(Intent.ACTION_VIEW, uri)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
         safeStartActivity(context, intent)
