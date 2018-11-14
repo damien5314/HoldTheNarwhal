@@ -1,7 +1,7 @@
 <LinearLayout
-    android:id="@+id/link_view"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/link_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -9,7 +9,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="?attr/windowBackgroundColor"
+        android:background="?attr/contentPrimaryBackgroundColor"
         android:divider="@drawable/spacer_8dp_h"
         android:orientation="vertical"
         android:paddingTop="@dimen/baseline_spacing"
@@ -102,10 +102,10 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:layout_alignParentStart="true"
-                        android:layout_toLeftOf="@id/link_timestamp"
-                        android:layout_toStartOf="@id/link_timestamp"
                         android:layout_marginEnd="4dp"
                         android:layout_marginRight="4dp"
+                        android:layout_toLeftOf="@id/link_timestamp"
+                        android:layout_toStartOf="@id/link_timestamp"
                         android:ellipsize="end"
                         android:maxLines="1"
                         tools:text="573 points" />
@@ -130,10 +130,10 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:layout_alignParentStart="true"
-                        android:layout_toLeftOf="@id/link_subreddit"
-                        android:layout_toStartOf="@id/link_subreddit"
                         android:layout_marginEnd="4dp"
-                        android:layout_marginRight="4dp">
+                        android:layout_marginRight="4dp"
+                        android:layout_toLeftOf="@id/link_subreddit"
+                        android:layout_toStartOf="@id/link_subreddit">
 
                         <com.ddiehl.android.htn.view.ColorSwapTextView
                             android:id="@+id/link_author"
@@ -237,7 +237,8 @@
                 android:paddingLeft="@dimen/baseline_spacing"
                 android:paddingRight="@dimen/baseline_spacing"
                 android:text="@string/link_parent_text"
-                android:textAppearance="@android:style/TextAppearance.Small" />
+                android:textAppearance="@android:style/TextAppearance.Small"
+                android:textColor="?attr/textColorSecondary" />
 
         </LinearLayout>
 
