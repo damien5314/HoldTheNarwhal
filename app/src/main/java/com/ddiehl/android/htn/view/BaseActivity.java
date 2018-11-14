@@ -116,12 +116,13 @@ public abstract class BaseActivity extends AppCompatActivity implements
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        // Color scheme needs to be applied before the call to super.onCreate, otherwise we can get in
+        // weird states where the background is in default theme but the foreground is in another
         HoldTheNarwhal.getApplicationComponent().inject(this);
-
         applyColorScheme();
-        setContentView(R.layout.activity_main);
 
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
         // Initialize toolbar
