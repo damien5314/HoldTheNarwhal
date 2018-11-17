@@ -2,6 +2,7 @@
 <resources>
 
     <style name="StandardThemeColors" parent="StandardAppTheme">
+        <item name="android:colorBackground">@color/bluegrey100</item>
         <!-- AppCompat theme attributes -->
         <item name="colorPrimary">@color/bluegrey500</item>
         <item name="colorPrimaryDark">@color/bluegrey700</item>
@@ -11,7 +12,6 @@
         <!-- Custom attributes -->
         <item name="colorPrimaryLight">@color/bluegrey100</item>
         <item name="colorPrimaryTextColor">@color/white</item>
-        <item name="windowBackgroundColor">@color/bluegrey100</item>
         <item name="textColorPrimary">@color/gray900</item>
         <item name="textColorSecondary">@color/dim_gray</item>
         <item name="textColorInverse">@color/white</item>
@@ -42,6 +42,7 @@
     </style>
 
     <style name="NightThemeColors" parent="NightAppTheme">
+        <item name="android:colorBackground">@color/black</item>
         <!-- AppCompat theme attributes -->
         <item name="colorPrimary">@color/gray900</item>
         <item name="colorPrimaryDark">@color/black</item>
@@ -51,7 +52,6 @@
         <!-- Custom attributes -->
         <item name="colorPrimaryLight">@color/gray800</item>
         <item name="colorPrimaryTextColor">@color/white</item>
-        <item name="windowBackgroundColor">@color/black</item>
         <!-- TODO double-check these text colors are actually to spec -->
         <item name="textColorPrimary">@color/white</item>
         <item name="textColorSecondary">@color/gray300</item>

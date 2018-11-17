@@ -21,14 +21,13 @@ import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.identity.IdentityManager;
 import com.ddiehl.android.htn.utils.MenuTintUtils;
-import com.google.android.material.snackbar.Snackbar;
 import com.ddiehl.android.htn.utils.ThemeUtilsKt;
+import com.google.android.material.snackbar.Snackbar;
 
 import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
 
-import androidx.core.content.ContextCompat;
 import rxreddit.model.UserIdentity;
 import timber.log.Timber;
 
@@ -61,7 +60,7 @@ public class SettingsFragment extends PreferenceFragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
         if (view != null) {
-            final int bgColor = ThemeUtilsKt.getColorFromAttr(getActivity(), R.attr.windowBackgroundColor);
+            final int bgColor = ThemeUtilsKt.getColorFromAttr(getActivity(), android.R.attr.colorBackground);
             view.setBackgroundColor(bgColor);
         }
         return view;
