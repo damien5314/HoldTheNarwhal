@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="StandardThemeColors" parent="AppTheme">
+    <style name="StandardThemeColors" parent="StandardAppTheme">
         <!-- AppCompat theme attributes -->
         <item name="colorPrimary">@color/bluegrey500</item>
         <item name="colorPrimaryDark">@color/bluegrey700</item>
@@ -41,7 +41,7 @@
         <item name="navigationDrawerBackgroundColor">?attr/colorPrimaryLight</item>
     </style>
 
-    <style name="NightThemeColors" parent="AppTheme">
+    <style name="NightThemeColors" parent="NightAppTheme">
         <!-- AppCompat theme attributes -->
         <item name="colorPrimary">@color/gray900</item>
         <item name="colorPrimaryDark">@color/black</item>

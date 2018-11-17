@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="BaseAppTheme" parent="Theme.AppCompat.NoActionBar">
+    <style name="BaseStandardAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- to remove the default action -->
         <item name="android:windowNoTitle">true</item>
         <item name="windowActionBar">false</item> <!-- For 2.x version -->
@@ -10,13 +10,24 @@
         <item name="android:windowBackground">?attr/windowBackgroundColor</item>
     </style>
 
-    <style name="AppTheme" parent="BaseAppTheme" />
+    <style name="BaseNightAppTheme" parent="Theme.AppCompat.NoActionBar">
+        <!-- to remove the default action -->
+        <item name="android:windowNoTitle">true</item>
+        <item name="windowActionBar">false</item> <!-- For 2.x version -->
+        <item name="android:windowActionModeOverlay">true</item>
+        <!-- app background color -->
+        <item name="android:windowBackground">?attr/windowBackgroundColor</item>
+    </style>
+
+    <style name="StandardAppTheme" parent="BaseStandardAppTheme" />
+
+    <style name="NightAppTheme" parent="BaseNightAppTheme" />
 
     <style name="BaseDialogTheme" parent="Theme.AppCompat.Dialog">
         <item name="colorAccent">@color/redA200</item>
     </style>
 
-    <style name="ToolbarStyle" parent="BaseAppTheme">
+    <style name="ToolbarStyle" parent="BaseNightAppTheme">
         <item name="android:textColorPrimary">@color/white</item>
         <item name="android:textColorSecondary">@color/white</item>
         <item name="actionMenuTextColor">@color/white</item>
@@ -51,7 +62,7 @@
         <item name="android:topDark">@color/transparent</item>
     </style>
 
-    <style name="TransparentTheme" parent="BaseAppTheme">
+    <style name="TransparentTheme" parent="BaseStandardAppTheme">
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@color/transparent</item>
         <item name="android:windowContentOverlay">@null</item>
