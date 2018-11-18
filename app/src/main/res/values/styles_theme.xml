@@ -68,10 +68,10 @@
         <item name="quoteBlockColor">@color/bluegrey500</item>
         <item name="dividerColor">@color/white_20pct</item>
         <item name="iconColor">@color/white</item>
-        <item name="buttonColor">@color/black</item>
-        <item name="buttonColorFocused">@color/gray800</item>
-        <item name="buttonColorPressed">@color/gray900</item>
-        <item name="buttonColorDisabled">@color/gray900</item>
+        <item name="buttonColor">@color/gray900</item>
+        <item name="buttonColorFocused">@color/gray700</item>
+        <item name="buttonColorPressed">@color/gray800</item>
+        <item name="buttonColorDisabled">@color/gray800</item>
         <item name="buttonTextColor">@color/white</item>
         <item name="nsfwColor">@color/venetian_red</item>
         <item name="redditGoldColor">@color/golden_yellow</item>
