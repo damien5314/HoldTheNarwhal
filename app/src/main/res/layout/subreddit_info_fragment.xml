@@ -85,7 +85,7 @@
                         android:includeFontPadding="false"
                         android:padding="8dp"
                         android:textAllCaps="true"
-                        android:textColor="?attr/textColorInverse"
+                        android:textColor="?attr/buttonTextColor"
                         android:textSize="@dimen/button_text_size"
                         tools:text="@string/subscribed" />
 

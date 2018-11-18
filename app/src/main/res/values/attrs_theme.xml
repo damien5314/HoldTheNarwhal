@@ -14,6 +14,12 @@
     <attr name="dividerColor" format="color" />
     <attr name="iconColor" format="color" />
 
+    <attr name="buttonColor" format="color" />
+    <attr name="buttonColorFocused" format="color" />
+    <attr name="buttonColorPressed" format="color" />
+    <attr name="buttonColorDisabled" format="color" />
+    <attr name="buttonTextColor" format="color" />
+
     <attr name="nsfwColor" format="color" />
     <attr name="redditGoldColor" format="color" />
     <attr name="controversialityIndicatorColor" format="color" />
