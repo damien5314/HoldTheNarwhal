@@ -60,7 +60,7 @@ public class SettingsFragment extends PreferenceFragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
         if (view != null) {
-            final int bgColor = ThemeUtilsKt.getColorFromAttr(getActivity(), android.R.attr.colorBackground);
+            final int bgColor = ThemeUtilsKt.getColorFromAttr(getActivity(), R.attr.windowBackgroundColorNeutral);
             view.setBackgroundColor(bgColor);
         }
         return view;
