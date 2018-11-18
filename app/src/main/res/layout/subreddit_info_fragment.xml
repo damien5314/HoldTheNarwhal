@@ -60,7 +60,8 @@
                             android:layout_marginStart="8dp"
                             android:contentDescription="@null"
                             android:src="@drawable/ic_done_black_24dp"
-                            android:tint="?attr/iconColor" />
+                            android:tint="?attr/iconColor"
+                            tools:visibility="visible"/>
 
                         <ProgressBar
                             android:id="@+id/subscribe_button_progress"
@@ -72,7 +73,7 @@
                             android:indeterminate="true"
                             android:indeterminateTint="?attr/iconColor"
                             android:visibility="gone"
-                            tools:visibility="visible"/>
+                            tools:visibility="invisible"/>
 
                     </FrameLayout>
 
