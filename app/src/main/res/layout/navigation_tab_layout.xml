@@ -6,6 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?attr/colorPrimary"
-    app:tabTextColor="?attr/textColorSecondary"
-    app:tabSelectedTextColor="?attr/textColorPrimary"
+    app:tabTextColor="?attr/tabLayoutTextColor"
+    app:tabSelectedTextColor="?attr/tabLayoutSelectedTextColor"
     app:tabMode="scrollable" />

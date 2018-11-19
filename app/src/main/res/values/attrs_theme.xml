@@ -14,6 +14,11 @@
     <attr name="dividerColor" format="color" />
     <attr name="iconColor" format="color" />
 
+    <attr name="toolbarStyle" format="reference" />
+    <attr name="toolbarPopupStyle" format="reference" />
+    <attr name="tabLayoutTextColor" format="color" />
+    <attr name="tabLayoutSelectedTextColor" format="color" />
+
     <attr name="buttonColor" format="color" />
     <attr name="buttonColorFocused" format="color" />
     <attr name="buttonColorPressed" format="color" />
@@ -23,8 +28,6 @@
     <attr name="nsfwColor" format="color" />
     <attr name="redditGoldColor" format="color" />
     <attr name="controversialityIndicatorColor" format="color" />
-    <attr name="toolbarStyle" format="reference" />
-    <attr name="toolbarPopupStyle" format="reference" />
 
     <attr name="contentPrimaryBackgroundColor" format="color" />
     <attr name="contentPrimaryBackgroundColorLiked" format="color" />

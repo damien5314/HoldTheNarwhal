@@ -21,6 +21,10 @@
         <item name="quoteBlockColor">@color/bluegrey500</item>
         <item name="dividerColor">@color/white_20pct</item>
         <item name="iconColor">@color/white</item>
+        <item name="toolbarStyle">@style/ToolbarStyle</item>
+        <item name="toolbarPopupStyle">@style/Theme.AppCompat.Light</item>
+        <item name="tabLayoutTextColor">@color/gray300</item>
+        <item name="tabLayoutSelectedTextColor">@color/white</item>
         <item name="buttonColor">@color/bluegrey700</item>
         <item name="buttonColorFocused">@color/bluegrey100</item>
         <item name="buttonColorPressed">@color/bluegrey500</item>
@@ -29,8 +33,6 @@
         <item name="nsfwColor">@color/venetian_red</item>
         <item name="redditGoldColor">@color/golden_yellow</item>
         <item name="controversialityIndicatorColor">@color/redA200</item>
-        <item name="toolbarStyle">@style/ToolbarStyle</item>
-        <item name="toolbarPopupStyle">@style/Theme.AppCompat.Light</item>
         <item name="contentPrimaryBackgroundColor">@color/white</item>
         <item name="contentPrimaryBackgroundColorLiked">@color/your_pink</item>
         <item name="contentPrimaryBackgroundColorDisliked">@color/lavender_blue</item>
@@ -68,6 +70,10 @@
         <item name="quoteBlockColor">@color/bluegrey500</item>
         <item name="dividerColor">@color/white_20pct</item>
         <item name="iconColor">@color/white</item>
+        <item name="toolbarStyle">@style/ToolbarStyle</item>
+        <item name="toolbarPopupStyle">@style/Theme.AppCompat</item>
+        <item name="tabLayoutTextColor">@color/gray300</item>
+        <item name="tabLayoutSelectedTextColor">@color/white</item>
         <item name="buttonColor">@color/gray900</item>
         <item name="buttonColorFocused">@color/gray700</item>
         <item name="buttonColorPressed">@color/gray800</item>
@@ -76,8 +82,6 @@
         <item name="nsfwColor">@color/venetian_red</item>
         <item name="redditGoldColor">@color/golden_yellow</item>
         <item name="controversialityIndicatorColor">@color/redA200</item>
-        <item name="toolbarStyle">@style/ToolbarStyle</item>
-        <item name="toolbarPopupStyle">@style/Theme.AppCompat</item>
         <item name="contentPrimaryBackgroundColor">@color/gray900</item>
         <item name="contentPrimaryBackgroundColorLiked">@color/rust</item>
         <item name="contentPrimaryBackgroundColorDisliked">@color/manatee</item>
