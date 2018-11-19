@@ -45,13 +45,4 @@
 
     </group>
 
-    <group android:visible="@bool/isDebug">
-
-        <item
-            android:id="@+id/drawer_switch_themes"
-            android:title="@string/drawer_switch_themes"
-            android:icon="@null" />
-
-    </group>
-
 </menu>

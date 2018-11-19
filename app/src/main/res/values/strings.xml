@@ -302,7 +302,6 @@
     <string name="user_friend_note_save_button">save</string>
     <string name="unread_inbox_notification_service_label">Notification check service</string>
     <string name="unread_inbox_notification_channel_name">Unread inbox messages</string>
-    <string name="drawer_switch_themes">switch themes</string>
     <plurals name="unread_inbox_notification_title">
         <item quantity="one">%s unread notification</item>
         <item quantity="other">%s unread notifications</item>

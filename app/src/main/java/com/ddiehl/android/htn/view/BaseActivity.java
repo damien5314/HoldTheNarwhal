@@ -317,9 +317,6 @@ public abstract class BaseActivity extends AppCompatActivity implements
             case R.id.drawer_random_subreddit:
                 onShowRandomSubreddit();
                 return true;
-            case R.id.drawer_switch_themes:
-                onSwitchThemes();
-                return true;
         }
         return false;
     }
@@ -363,19 +360,6 @@ public abstract class BaseActivity extends AppCompatActivity implements
 
     protected void onShowRandomSubreddit() {
         showSubreddit("random", null, null);
-    }
-
-    protected void onSwitchThemes() {
-        ColorScheme scheme = settingsManager.getColorScheme();
-        switch (scheme) {
-            case STANDARD:
-                settingsManager.setColorScheme(ColorScheme.NIGHT);
-                break;
-            case NIGHT:
-                settingsManager.setColorScheme(ColorScheme.STANDARD);
-                break;
-        }
-        recreate();
     }
 
     public void showLoginView() {
