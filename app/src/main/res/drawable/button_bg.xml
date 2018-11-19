@@ -3,28 +3,28 @@
 
     <item android:state_focused="true">
         <shape android:shape="rectangle">
-            <solid android:color="@color/primary_light" />
+            <solid android:color="?attr/buttonColorFocused" />
             <corners android:radius="2dp" />
         </shape>
     </item>
 
     <item android:state_enabled="false">
         <shape android:shape="rectangle">
-            <solid android:color="@color/primary" />
+            <solid android:color="?attr/buttonColorDisabled" />
             <corners android:radius="2dp" />
         </shape>
     </item>
 
     <item android:state_pressed="true">
         <shape android:shape="rectangle">
-            <solid android:color="@color/primary" />
+            <solid android:color="?attr/buttonColorPressed" />
             <corners android:radius="2dp" />
         </shape>
     </item>
 
     <item>
         <shape android:shape="rectangle">
-            <solid android:color="@color/primary_dark" />
+            <solid android:color="?attr/buttonColor" />
             <corners android:radius="2dp" />
         </shape>
     </item>

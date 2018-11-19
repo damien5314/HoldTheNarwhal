@@ -30,7 +30,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-                    android:textColor="@color/primary_text"
+                    android:textColor="?attr/textColorPrimary"
                     tools:text="/r/AskReddit" />
 
                 <androidx.legacy.widget.Space
@@ -60,7 +60,8 @@
                             android:layout_marginStart="8dp"
                             android:contentDescription="@null"
                             android:src="@drawable/ic_done_black_24dp"
-                            android:tint="@color/white" />
+                            android:tint="?attr/iconColor"
+                            tools:visibility="visible"/>
 
                         <ProgressBar
                             android:id="@+id/subscribe_button_progress"
@@ -70,9 +71,9 @@
                             android:layout_marginLeft="8dp"
                             android:layout_marginStart="8dp"
                             android:indeterminate="true"
-                            android:indeterminateTint="@color/white"
+                            android:indeterminateTint="?attr/iconColor"
                             android:visibility="gone"
-                            tools:visibility="visible"/>
+                            tools:visibility="invisible"/>
 
                     </FrameLayout>
 
@@ -84,7 +85,7 @@
                         android:includeFontPadding="false"
                         android:padding="8dp"
                         android:textAllCaps="true"
-                        android:textColor="@color/white"
+                        android:textColor="?attr/buttonTextColor"
                         android:textSize="@dimen/button_text_size"
                         tools:text="@string/subscribed" />
 
@@ -98,14 +99,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/created"
-                    android:textColor="@color/secondary_text"
+                    android:textColor="?attr/textColorSecondary"
                     android:textSize="@dimen/subreddit_info_section_header_text_size" />
 
                 <TextView
                     android:id="@+id/create_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/primary_text"
+                    android:textColor="?attr/textColorPrimary"
                     android:textSize="@dimen/subreddit_info_section_body_text_size"
                     tools:text="Dec 23, 2013" />
 
@@ -117,14 +118,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/subscribers"
-                    android:textColor="@color/secondary_text"
+                    android:textColor="?attr/textColorSecondary"
                     android:textSize="@dimen/subreddit_info_section_header_text_size" />
 
                 <TextView
                     android:id="@+id/subscriber_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/primary_text"
+                    android:textColor="?attr/textColorPrimary"
                     android:textSize="@dimen/subreddit_info_section_body_text_size"
                     tools:text="130,055" />
 
@@ -136,14 +137,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/description"
-                    android:textColor="@color/secondary_text"
+                    android:textColor="?attr/textColorSecondary"
                     android:textSize="@dimen/subreddit_info_section_header_text_size" />
 
                 <TextView
                     android:id="@+id/public_description"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/primary_text"
+                    android:textColor="?attr/textColorPrimary"
                     android:textSize="@dimen/subreddit_info_section_body_text_size"
                     tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum sodales sem sit amet augue consectetur blandit. Praesent molestie vulputate aliquet. Quisque posuere hendrerit risus ac feugiat." />
 
@@ -155,7 +156,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/rules"
-                    android:textColor="@color/secondary_text"
+                    android:textColor="?attr/textColorSecondary"
                     android:textSize="@dimen/subreddit_info_section_header_text_size" />
 
                 <androidx.recyclerview.widget.RecyclerView

@@ -5,10 +5,10 @@ import android.view.View;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.listings.BaseListingsPresenter;
 import com.ddiehl.android.htn.listings.subreddit.ThumbnailMode;
+import com.ddiehl.android.htn.utils.ThemeUtilsKt;
 
 import org.jetbrains.annotations.NotNull;
 
-import androidx.core.content.ContextCompat;
 import butterknife.OnClick;
 import rxreddit.model.Link;
 
@@ -26,17 +26,14 @@ public class ListingsLinkViewHolder extends BaseLinkViewHolder {
     @Override
     protected void showLiked(@NotNull Link link) {
         if (link.isLiked() == null) {
-            view.setBackgroundColor(
-                    ContextCompat.getColor(context, R.color.transparent)
-            );
+            final int likedColor = ThemeUtilsKt.getColorFromAttr(context, R.attr.contentPrimaryBackgroundColor);
+            view.setBackgroundColor(likedColor);
         } else if (link.isLiked()) {
-            view.setBackgroundColor(
-                    ContextCompat.getColor(context, R.color.reddit_orange_lighter)
-            );
+            final int likedColor = ThemeUtilsKt.getColorFromAttr(context, R.attr.contentPrimaryBackgroundColorLiked);
+            view.setBackgroundColor(likedColor);
         } else {
-            view.setBackgroundColor(
-                    ContextCompat.getColor(context, R.color.reddit_blue_lighter)
-            );
+            final int dislikedColor = ThemeUtilsKt.getColorFromAttr(context, R.attr.contentPrimaryBackgroundColorDisliked);
+            view.setBackgroundColor(dislikedColor);
         }
     }
 

@@ -1,13 +1,11 @@
 package com.ddiehl.android.htn.listings.report;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
-import com.ddiehl.android.htn.view.TransparentBaseActivity;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -17,6 +15,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -28,54 +27,54 @@ import timber.log.Timber;
 
 
 /**
- * Invisible Activity for requesting data from API for reporting a listing,
- * then displaying a dialog with options.
+ * Host fragment for requesting data from API for reporting a listing, displaying a dialog with options, then
+ * submitting the report to subreddit moderators.
  */
-public class ReportActivity extends TransparentBaseActivity
+public class ReportView extends DialogFragment
         implements ReportDialog.Listener {
 
+    public static final String TAG = "ReportView";
     public static final String EXTRA_LISTING_ID = "EXTRA_LISTING_ID";
     public static final String EXTRA_SUBREDDIT = "EXTRA_SUBREDDIT";
 
     public static final int RESULT_GET_SUBREDDIT_RULES_ERROR = 10;
     public static final int RESULT_REPORT_ERROR = 11;
     public static final int RESULT_REPORT_SUCCESS = Activity.RESULT_OK;
+    public static final int RESULT_REPORT_CANCELED = Activity.RESULT_CANCELED;
 
-    public static Intent getIntent(
-            Context context, @NotNull String listingId, @Nullable String subreddit) {
-        Intent intent = new Intent(context, ReportActivity.class);
-
-        intent.putExtra(EXTRA_LISTING_ID, listingId);
-
+    public static ReportView newInstance(
+            @NotNull String listingId,
+            @Nullable String subreddit) {
+        Bundle arguments = new Bundle();
+        arguments.putString(EXTRA_LISTING_ID, listingId);
         if (subreddit != null) {
-            intent.putExtra(EXTRA_SUBREDDIT, subreddit);
+            arguments.putString(EXTRA_SUBREDDIT, subreddit);
         }
-
-        return intent;
+        ReportView fragment = new ReportView();
+        fragment.setArguments(arguments);
+        return fragment;
     }
 
     @Inject RedditService redditService;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(@androidx.annotation.Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         HoldTheNarwhal.getApplicationComponent().inject(this);
-        setTitle(null);
     }
 
     @NotNull String getListingId() {
-        return getIntent().getStringExtra(EXTRA_LISTING_ID);
+        return getArguments().getString(EXTRA_LISTING_ID);
     }
 
     @Nullable String getSubredditName() {
-        return getIntent().getStringExtra(EXTRA_SUBREDDIT);
+        return getArguments().getString(EXTRA_SUBREDDIT);
     }
 
     @Override
-    protected void onStart() {
+    public void onStart() {
         super.onStart();
-
-        Fragment fragment = getSupportFragmentManager().findFragmentByTag(ReportDialog.TAG);
+        Fragment fragment = getChildFragmentManager().findFragmentByTag(ReportDialog.TAG);
         if (fragment == null) {
             loadReportDialog();
         }
@@ -106,8 +105,8 @@ public class ReportActivity extends TransparentBaseActivity
         if (!(error instanceof IOException)) {
             Timber.e(error, "Error getting subreddit rules");
         }
-        setResult(RESULT_GET_SUBREDDIT_RULES_ERROR);
-        finish();
+        deliverResult(RESULT_GET_SUBREDDIT_RULES_ERROR);
+        dismiss();
     }
 
     void onSubredditRulesRetrieved(SubredditRules result) {
@@ -124,10 +123,8 @@ public class ReportActivity extends TransparentBaseActivity
     }
 
     void showReportDialogWithRules(String[] subredditRules, String[] siteRules) {
-        ReportDialog dialog = new ReportDialogBuilder(subredditRules, siteRules)
-                .build();
-
-        dialog.show(getSupportFragmentManager(), ReportDialog.TAG);
+        ReportDialog.newInstance(subredditRules, siteRules)
+                .show(getChildFragmentManager(), ReportDialog.TAG);
     }
 
     void report(String rule, String siteRule, String other) {
@@ -135,7 +132,7 @@ public class ReportActivity extends TransparentBaseActivity
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(disposable -> showSpinner())
-                .doOnDispose(this::dismissSpinner)
+                .doFinally(this::dismissSpinner)
                 .subscribe(this::onReported, this::onReportError);
     }
 
@@ -143,13 +140,21 @@ public class ReportActivity extends TransparentBaseActivity
         if (!(error instanceof IOException)) {
             Timber.e(error, "Error submitting report");
         }
-        setResult(RESULT_REPORT_ERROR);
-        finish();
+        deliverResult(RESULT_REPORT_ERROR);
+        dismiss();
     }
 
     private void onReported() {
-        setResult(RESULT_REPORT_SUCCESS);
-        finish();
+        deliverResult(RESULT_REPORT_SUCCESS);
+        dismiss();
+    }
+
+    private void deliverResult(int resultCode) {
+        final Fragment targetFragment = getTargetFragment();
+        if (targetFragment == null) {
+            throw new IllegalStateException("No target fragment set for ReportView");
+        }
+        targetFragment.onActivityResult(getTargetRequestCode(), resultCode, null);
     }
 
     //region ReportDialog.Listener
@@ -175,8 +180,26 @@ public class ReportActivity extends TransparentBaseActivity
 
     @Override
     public void onCancelled() {
-        finish();
+        deliverResult(RESULT_REPORT_CANCELED);
+        dismiss();
     }
 
     //endregion
+
+    private ProgressDialog loadingOverlay;
+
+    public void showSpinner() {
+        if (loadingOverlay == null) {
+            loadingOverlay = new ProgressDialog(requireContext(), R.style.ProgressDialog);
+            loadingOverlay.setCancelable(false);
+            loadingOverlay.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        }
+        loadingOverlay.show();
+    }
+
+    public void dismissSpinner() {
+        if (loadingOverlay != null && loadingOverlay.isShowing()) {
+            loadingOverlay.dismiss();
+        }
+    }
 }

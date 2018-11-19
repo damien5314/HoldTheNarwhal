@@ -10,8 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
+import com.ddiehl.android.htn.utils.ThemeUtilsKt;
 import com.ddiehl.android.htn.view.ColorSwapTextView;
 import com.ddiehl.android.htn.view.markdown.HtmlParser;
 import com.ddiehl.timesincetextview.TimeSinceTextView;
@@ -29,11 +29,10 @@ import rxreddit.model.Link;
 public class ThreadCommentViewHolder extends RecyclerView.ViewHolder
         implements View.OnCreateContextMenuListener {
 
-    @Inject Context context;
-    @Inject HtmlParser htmlParser;
-
+    private final Context context;
     private final LinkCommentsView linkCommentsView;
     private final LinkCommentsPresenter linkCommentsPresenter;
+    private final HtmlParser htmlParser;
     private Comment comment;
 
     @BindView(R.id.comment_author) ColorSwapTextView authorView;
@@ -47,9 +46,12 @@ public class ThreadCommentViewHolder extends RecyclerView.ViewHolder
 
     public ThreadCommentViewHolder(View view, LinkCommentsView linkCommentsView, LinkCommentsPresenter presenter) {
         super(view);
-        HoldTheNarwhal.getApplicationComponent().inject(this);
+
+        this.context = view.getContext();
         this.linkCommentsView = linkCommentsView;
         this.linkCommentsPresenter = presenter;
+        this.htmlParser = new HtmlParser(context);
+
         ButterKnife.bind(this, view);
         this.itemView.setOnCreateContextMenuListener(this);
     }
@@ -112,22 +114,26 @@ public class ThreadCommentViewHolder extends RecyclerView.ViewHolder
             switch (authorType) {
                 case "op":
                     authorView.setBackgroundResource(R.drawable.author_op_bg);
-                    authorView.setTextColor(ContextCompat.getColor(context, R.color.author_op_text));
+                    final int opTextColor = ThemeUtilsKt.getColorFromAttr(context, R.attr.authorDecoratedTextColor);
+                    authorView.setTextColor(opTextColor);
                     break;
                 case "moderator":
                     authorView.setBackgroundResource(R.drawable.author_moderator_bg);
-                    authorView.setTextColor(ContextCompat.getColor(context, R.color.author_moderator_text));
+                    final int moderatorTextColor = ThemeUtilsKt.getColorFromAttr(context, R.attr.authorDecoratedTextColor);
+                    authorView.setTextColor(moderatorTextColor);
                     break;
                 case "admin":
                     authorView.setBackgroundResource(R.drawable.author_admin_bg);
-                    authorView.setTextColor(ContextCompat.getColor(context, R.color.author_admin_text));
+                    final int adminTextColor = ThemeUtilsKt.getColorFromAttr(context, R.attr.authorDecoratedTextColor);
+                    authorView.setTextColor(adminTextColor);
                     break;
                 default:
             }
         } else {
             //noinspection deprecation
             authorView.setBackgroundDrawable(authorView.getOriginalBackground());
-            authorView.setTextColor(ContextCompat.getColor(context, R.color.secondary_text));
+            final int defaultTextColor = ThemeUtilsKt.getColorFromAttr(context, R.attr.textColorSecondary);
+            authorView.setTextColor(defaultTextColor);
         }
     }
 
@@ -175,11 +181,14 @@ public class ThreadCommentViewHolder extends RecyclerView.ViewHolder
     // Set background tint based on isLiked
     private void showLiked(Comment comment) {
         if (comment.isLiked() == null) {
-            scoreView.setTextColor(ContextCompat.getColor(context, R.color.secondary_text));
+            final int neutralTextColor = ThemeUtilsKt.getColorFromAttr(context, R.attr.textColorSecondary);
+            scoreView.setTextColor(neutralTextColor);
         } else if (comment.isLiked()) {
-            scoreView.setTextColor(ContextCompat.getColor(context, R.color.reddit_orange_full));
+            final int upvoteColor = ThemeUtilsKt.getColorFromAttr(context, R.attr.contentLikedColor);
+            scoreView.setTextColor(upvoteColor);
         } else {
-            scoreView.setTextColor(ContextCompat.getColor(context, R.color.reddit_blue_full));
+            final int downvoteColor = ThemeUtilsKt.getColorFromAttr(context, R.attr.contentDislikedColor);
+            scoreView.setTextColor(downvoteColor);
         }
     }
 

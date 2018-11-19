@@ -33,7 +33,9 @@ import com.ddiehl.android.htn.settings.SettingsActivity;
 import com.ddiehl.android.htn.settings.SettingsManager;
 import com.ddiehl.android.htn.subscriptions.SubscriptionManagerActivity;
 import com.ddiehl.android.htn.utils.AndroidUtils;
+import com.ddiehl.android.htn.utils.ThemeUtilsKt;
 import com.ddiehl.android.htn.view.glide.GlideApp;
+import com.ddiehl.android.htn.view.theme.ColorScheme;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
@@ -51,7 +53,6 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
@@ -115,10 +116,13 @@ public abstract class BaseActivity extends AppCompatActivity implements
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // Color scheme needs to be applied before the call to super.onCreate, otherwise we can get in
+        // weird states where the background is in default theme but the foreground is in another
+        HoldTheNarwhal.getApplicationComponent().inject(this);
+        applyColorScheme();
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        HoldTheNarwhal.getApplicationComponent().inject(this);
         ButterKnife.bind(this);
 
         // Initialize toolbar
@@ -140,7 +144,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
                 drawerLayout.addDrawerListener(drawerToggle);
 
                 Drawable homeIndicator = AndroidUtils.getTintedDrawable(
-                        this, R.drawable.ic_menu_black_24dp, R.color.icons
+                        this, R.drawable.ic_menu_black_24dp, R.attr.iconColor
                 );
                 actionBar.setHomeAsUpIndicator(homeIndicator);
             } else {
@@ -173,6 +177,11 @@ public abstract class BaseActivity extends AppCompatActivity implements
         );
 
         showTabs(false);
+    }
+
+    private void applyColorScheme() {
+        final ColorScheme colorScheme = settingsManager.getColorScheme();
+        setTheme(colorScheme.getStyleRes());
     }
 
     private String getFont() {
@@ -383,7 +392,8 @@ public abstract class BaseActivity extends AppCompatActivity implements
             Bundle extras = new Bundle();
             // Pass IBinder instead of null for a custom tabs session
             extras.putBinder(EXTRA_CUSTOM_TABS_SESSION, null);
-            extras.putInt(EXTRA_CUSTOM_TABS_TOOLBAR_COLOR, ContextCompat.getColor(this, R.color.primary));
+            final int toolbarColor = ThemeUtilsKt.getColorFromAttr(this, R.attr.colorPrimary);
+            extras.putInt(EXTRA_CUSTOM_TABS_TOOLBAR_COLOR, toolbarColor);
             intent.putExtras(extras);
 
             // Check if Activity exists to handle the Intent

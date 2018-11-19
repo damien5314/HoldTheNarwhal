@@ -3,10 +3,10 @@ package com.ddiehl.android.htn.subredditinfo;
 import android.os.Bundle;
 
 import com.ddiehl.android.htn.R;
+import com.ddiehl.android.htn.utils.ThemeUtilsKt;
 import com.ddiehl.android.htn.view.BaseActivity;
 
 import androidx.appcompat.app.ActionBar;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 
@@ -32,7 +32,7 @@ public class SubredditInfoActivity extends BaseActivity {
         showTabs(false);
 
         // Set window background color
-        int bgColor = ContextCompat.getColor(this, R.color.white);
+        int bgColor = ThemeUtilsKt.getColorFromAttr(this, R.attr.windowBackgroundColorNeutral);
         getWindow().getDecorView().setBackgroundColor(bgColor);
 
         subreddit = getIntent().getExtras().getString(EXTRA_SUBREDDIT);

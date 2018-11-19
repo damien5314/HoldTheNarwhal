@@ -9,6 +9,7 @@ import android.view.View;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.listings.BaseListingsPresenter;
 import com.ddiehl.android.htn.listings.subreddit.ThumbnailMode;
+import com.ddiehl.android.htn.utils.ThemeUtilsKt;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -86,13 +87,13 @@ public class CommentsLinkViewHolder extends BaseLinkViewHolder {
         // Determine tint color based on liked status and tint the buttons appropriately
         @ColorInt int color;
         if (link.isLiked() == null) {
-            color = ContextCompat.getColor(context, R.color.secondary_text);
+            color = ThemeUtilsKt.getColorFromAttr(context, R.attr.textColorSecondary);
             linkOptionsBar.setVoted(0);
         } else if (link.isLiked()) {
-            color = ContextCompat.getColor(context, R.color.reddit_orange_full);
+            color = ThemeUtilsKt.getColorFromAttr(context, R.attr.contentLikedColor);
             linkOptionsBar.setVoted(1);
         } else {
-            color = ContextCompat.getColor(context, R.color.reddit_blue_full);
+            color = ThemeUtilsKt.getColorFromAttr(context, R.attr.contentDislikedColor);
             linkOptionsBar.setVoted(-1);
         }
 

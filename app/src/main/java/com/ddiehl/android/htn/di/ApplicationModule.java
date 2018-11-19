@@ -7,7 +7,6 @@ import com.ddiehl.android.htn.identity.IdentityManager;
 import com.ddiehl.android.htn.identity.IdentityManagerImpl;
 import com.ddiehl.android.htn.settings.SettingsManager;
 import com.ddiehl.android.htn.settings.SettingsManagerImpl;
-import com.ddiehl.android.htn.view.markdown.HtmlParser;
 import com.google.gson.Gson;
 
 import java.io.File;
@@ -69,10 +68,5 @@ public class ApplicationModule {
     @Provides
     Gson providesGson(RedditService redditService) {
         return redditService.getGson();
-    }
-
-    @Provides
-    HtmlParser providesHtmlParser(Context context) {
-        return new HtmlParser(context);
     }
 }

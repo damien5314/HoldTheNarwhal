@@ -21,13 +21,13 @@ import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.identity.IdentityManager;
 import com.ddiehl.android.htn.utils.MenuTintUtils;
+import com.ddiehl.android.htn.utils.ThemeUtilsKt;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
 
-import androidx.core.content.ContextCompat;
 import rxreddit.model.UserIdentity;
 import timber.log.Timber;
 
@@ -60,7 +60,8 @@ public class SettingsFragment extends PreferenceFragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
         if (view != null) {
-            view.setBackgroundColor(ContextCompat.getColor(getActivity(), android.R.color.white));
+            final int bgColor = ThemeUtilsKt.getColorFromAttr(getActivity(), R.attr.windowBackgroundColorNeutral);
+            view.setBackgroundColor(bgColor);
         }
         return view;
     }
@@ -146,7 +147,7 @@ public class SettingsFragment extends PreferenceFragment
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
-        MenuTintUtils.tintAllIcons(menu, ContextCompat.getColor(getActivity(), R.color.icons));
+        MenuTintUtils.tintAllIcons(menu, ThemeUtilsKt.getColorFromAttr(getActivity(), R.attr.iconColor));
         menu.findItem(R.id.action_refresh).setVisible(settingsPresenter.isRefreshable());
     }
 

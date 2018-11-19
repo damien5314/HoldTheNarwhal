@@ -7,15 +7,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.listings.BaseListingsPresenter;
+import com.ddiehl.android.htn.utils.ThemeUtilsKt;
 import com.ddiehl.android.htn.view.markdown.HtmlParser;
 import com.ddiehl.timesincetextview.TimeSinceTextView;
 
-import javax.inject.Inject;
-
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -25,10 +22,10 @@ import rxreddit.model.Comment;
 public class ListingsCommentViewHolder extends RecyclerView.ViewHolder
         implements View.OnCreateContextMenuListener {
 
-    @Inject Context appContext;
-    @Inject HtmlParser htmlParser;
-    private CommentView commentView;
-    private BaseListingsPresenter commentPresenter;
+    private final Context context;
+    private final CommentView commentView;
+    private final BaseListingsPresenter commentPresenter;
+    private final HtmlParser htmlParser;
     private Comment comment;
 
     @BindView(R.id.comment_link_title) TextView commentLinkTitleView;
@@ -44,9 +41,12 @@ public class ListingsCommentViewHolder extends RecyclerView.ViewHolder
 
     public ListingsCommentViewHolder(View view, CommentView commentView, BaseListingsPresenter presenter) {
         super(view);
-        HoldTheNarwhal.getApplicationComponent().inject(this);
+
+        this.context = view.getContext();
         this.commentView = commentView;
-        commentPresenter = presenter;
+        this.commentPresenter = presenter;
+        this.htmlParser = new HtmlParser(context);
+
         ButterKnife.bind(this, view);
         itemView.setOnCreateContextMenuListener(this);
     }
@@ -89,11 +89,11 @@ public class ListingsCommentViewHolder extends RecyclerView.ViewHolder
         String subreddit = comment.getSubreddit();
         String subject = getSubjectAbbreviationForComment(comment);
         if (subject == null) {
-            String titleFormatter = appContext.getString(R.string.listing_comment_subtitle_format);
+            String titleFormatter = context.getString(R.string.listing_comment_subtitle_format);
             commentLinkSubtitleView.setText(
                     String.format(titleFormatter, subreddit, linkAuthor));
         } else {
-            String titleFormatter = appContext.getString(R.string.listing_comment_inbox_subtitle_format);
+            String titleFormatter = context.getString(R.string.listing_comment_inbox_subtitle_format);
             commentLinkSubtitleView.setText(
                     String.format(titleFormatter, subreddit, subject));
         }
@@ -110,7 +110,7 @@ public class ListingsCommentViewHolder extends RecyclerView.ViewHolder
         } else { // if ("username mention".equals(subject)) {
             resId = R.string.listing_comment_subject_usernamemention;
         }
-        return appContext.getString(resId);
+        return context.getString(resId);
     }
 
     private void showAuthor(Comment comment) {
@@ -124,25 +124,25 @@ public class ListingsCommentViewHolder extends RecyclerView.ViewHolder
             switch (authorType) {
                 case "op":
                     authorView.setBackgroundResource(R.drawable.author_op_bg);
-                    authorView.setTextColor(
-                            ContextCompat.getColor(appContext, R.color.author_op_text));
+                    final int opTextColor = ThemeUtilsKt.getColorFromAttr(context, R.attr.authorDecoratedTextColor);
+                    authorView.setTextColor(opTextColor);
                     break;
                 case "moderator":
                     authorView.setBackgroundResource(R.drawable.author_moderator_bg);
-                    authorView.setTextColor(
-                            ContextCompat.getColor(appContext, R.color.author_moderator_text));
+                    final int moderatorTextColor = ThemeUtilsKt.getColorFromAttr(context, R.attr.authorDecoratedTextColor);
+                    authorView.setTextColor(moderatorTextColor);
                     break;
                 case "admin":
                     authorView.setBackgroundResource(R.drawable.author_admin_bg);
-                    authorView.setTextColor(
-                            ContextCompat.getColor(appContext, R.color.author_admin_text));
+                    final int adminTextColor = ThemeUtilsKt.getColorFromAttr(context, R.attr.authorDecoratedTextColor);
+                    authorView.setTextColor(adminTextColor);
                     break;
                 default:
             }
         } else {
             authorView.setBackgroundResource(0);
-            authorView.setTextColor(
-                    ContextCompat.getColor(appContext, R.color.secondary_text));
+            final int defaultTextColor = ThemeUtilsKt.getColorFromAttr(context, R.attr.textColorSecondary);
+            authorView.setTextColor(defaultTextColor);
         }
         authorView.setText(comment.getAuthor());
     }
@@ -158,7 +158,7 @@ public class ListingsCommentViewHolder extends RecyclerView.ViewHolder
         } else {
             scoreViewLayout.setVisibility(View.VISIBLE);
             scoreView.setText(
-                    String.format(appContext.getString(R.string.comment_score), comment.getScore()));
+                    String.format(context.getString(R.string.comment_score), comment.getScore()));
         }
     }
 
@@ -185,11 +185,13 @@ public class ListingsCommentViewHolder extends RecyclerView.ViewHolder
     // Set background tint based on isLiked
     private void showLiked(Comment comment) {
         if (comment.isLiked() == null) {
-            scoreView.setTextColor(ContextCompat.getColor(appContext, R.color.secondary_text));
+            scoreView.setTextColor(ThemeUtilsKt.getColorFromAttr(context, R.attr.textColorSecondary));
         } else if (comment.isLiked()) {
-            scoreView.setTextColor(ContextCompat.getColor(appContext, R.color.reddit_orange_full));
+            final int upvoteColor = ThemeUtilsKt.getColorFromAttr(context, R.attr.contentLikedColor);
+            scoreView.setTextColor(upvoteColor);
         } else {
-            scoreView.setTextColor(ContextCompat.getColor(appContext, R.color.reddit_blue_full));
+            final int downvoteColor = ThemeUtilsKt.getColorFromAttr(context, R.attr.contentDislikedColor);
+            scoreView.setTextColor(downvoteColor);
         }
     }
 
@@ -200,7 +202,7 @@ public class ListingsCommentViewHolder extends RecyclerView.ViewHolder
     private void showGilded(Comment comment) {
         Integer gilded = comment.getGilded();
         if (gilded != null && gilded > 0) {
-            gildedText.setText(String.format(appContext.getString(R.string.link_gilded_text), gilded));
+            gildedText.setText(String.format(context.getString(R.string.link_gilded_text), gilded));
             gildedText.setVisibility(View.VISIBLE);
         } else {
             gildedText.setVisibility(View.GONE);

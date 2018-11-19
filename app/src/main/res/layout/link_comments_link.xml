@@ -1,7 +1,7 @@
 <LinearLayout
-    android:id="@+id/link_view"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/link_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -9,7 +9,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
+        android:background="?attr/contentPrimaryBackgroundColor"
         android:divider="@drawable/spacer_8dp_h"
         android:orientation="vertical"
         android:paddingTop="@dimen/baseline_spacing"
@@ -30,7 +30,7 @@
                 android:fontFamily="sans-serif-light"
                 android:textAlignment="viewStart"
                 android:textAppearance="?android:textAppearanceMedium"
-                android:textColor="@color/primary_text"
+                android:textColor="?attr/textColorPrimary"
                 tools:ignore="UnusedAttribute"
                 tools:text="The quick brown fox jumped over the white fence" />
 
@@ -55,7 +55,7 @@
                         android:background="@drawable/nsfw_tag_bg"
                         android:includeFontPadding="false"
                         android:text="@string/nsfw"
-                        android:textColor="@color/nsfw_tag_color"
+                        android:textColor="?attr/nsfwColor"
                         android:textSize="@dimen/link_metadata_text_size" />
 
                     <TextView
@@ -65,7 +65,7 @@
                         android:drawableLeft="@drawable/ic_reddit_gold_24dp"
                         android:drawableStart="@drawable/ic_reddit_gold_24dp"
                         android:gravity="center"
-                        android:textColor="@color/secondary_text"
+                        android:textColor="?attr/textColorSecondary"
                         android:textSize="@dimen/link_metadata_text_size"
                         tools:targetApi="16"
                         tools:text="× 2" />
@@ -76,7 +76,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="end"
-                        android:textColor="@color/secondary_text"
+                        android:textColor="?attr/textColorSecondary"
                         android:textSize="@dimen/link_metadata_text_size"
                         tools:text="imgur.com" />
 
@@ -88,7 +88,7 @@
 
                     <com.ddiehl.timesincetextview.TimeSinceTextView
                         android:id="@+id/link_timestamp"
-                        style="@style/LinkMetadataTextViewLight"
+                        style="@style/LinkMetadataTextViewTop"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
@@ -97,15 +97,15 @@
 
                     <TextView
                         android:id="@+id/link_score"
-                        style="@style/LinkMetadataTextViewLight"
+                        style="@style/LinkMetadataTextViewTop"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:layout_alignParentStart="true"
-                        android:layout_toLeftOf="@id/link_timestamp"
-                        android:layout_toStartOf="@id/link_timestamp"
                         android:layout_marginEnd="4dp"
                         android:layout_marginRight="4dp"
+                        android:layout_toLeftOf="@id/link_timestamp"
+                        android:layout_toStartOf="@id/link_timestamp"
                         android:ellipsize="end"
                         android:maxLines="1"
                         tools:text="573 points" />
@@ -118,7 +118,7 @@
 
                     <TextView
                         android:id="@+id/link_subreddit"
-                        style="@style/LinkMetadataTextViewLight"
+                        style="@style/LinkMetadataTextViewTop"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
@@ -130,14 +130,14 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:layout_alignParentStart="true"
-                        android:layout_toLeftOf="@id/link_subreddit"
-                        android:layout_toStartOf="@id/link_subreddit"
                         android:layout_marginEnd="4dp"
-                        android:layout_marginRight="4dp">
+                        android:layout_marginRight="4dp"
+                        android:layout_toLeftOf="@id/link_subreddit"
+                        android:layout_toStartOf="@id/link_subreddit">
 
                         <com.ddiehl.android.htn.view.ColorSwapTextView
                             android:id="@+id/link_author"
-                            style="@style/LinkMetadataTextViewLight"
+                            style="@style/LinkMetadataTextViewTop"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:ellipsize="end"
@@ -175,8 +175,8 @@
             android:paddingRight="@dimen/baseline_spacing"
             android:textAlignment="viewStart"
             android:textAppearance="?android:textAppearanceSmall"
-            android:textColor="@color/primary_text"
-            android:textColorLink="@color/link_color"
+            android:textColor="?attr/textColorPrimary"
+            android:textColorLink="?attr/textColorLink"
             tools:ignore="UnusedAttribute"
             tools:text="Lorem ipsum dolor sit amet" />
 
@@ -192,7 +192,7 @@
 
             <TextView
                 android:id="@+id/link_comment_count"
-                style="@style/LinkMetadataTextViewLight"
+                style="@style/LinkMetadataTextViewTop"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start|center_vertical"
@@ -207,7 +207,7 @@
                 android:layout_height="16dp"
                 android:layout_gravity="center_vertical"
                 android:src="@drawable/ic_save_black_24dp"
-                android:tint="@color/secondary_text"
+                android:tint="?attr/textColorSecondary"
                 android:visibility="gone" />
 
             <ImageView
@@ -215,7 +215,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="16dp"
                 android:src="@drawable/ic_class_black_24dp"
-                android:tint="@color/secondary_text" />
+                android:tint="?attr/textColorSecondary" />
 
         </LinearLayout>
 
@@ -231,13 +231,14 @@
                 android:drawableLeft="@drawable/ic_info_outline_black_24dp"
                 android:drawablePadding="@dimen/baseline_spacing"
                 android:drawableStart="@drawable/ic_info_outline_black_24dp"
-                android:drawableTint="@color/secondary_text"
+                android:drawableTint="?attr/textColorSecondary"
                 android:gravity="center_vertical"
                 android:minHeight="48dp"
                 android:paddingLeft="@dimen/baseline_spacing"
                 android:paddingRight="@dimen/baseline_spacing"
                 android:text="@string/link_parent_text"
-                android:textAppearance="@android:style/TextAppearance.Small" />
+                android:textAppearance="@android:style/TextAppearance.Small"
+                android:textColor="?attr/textColorSecondary" />
 
         </LinearLayout>
 

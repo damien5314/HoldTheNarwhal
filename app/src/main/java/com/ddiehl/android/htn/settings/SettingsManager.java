@@ -2,6 +2,9 @@ package com.ddiehl.android.htn.settings;
 
 import android.content.SharedPreferences;
 
+import com.ddiehl.android.htn.view.theme.ColorScheme;
+
+import androidx.annotation.NonNull;
 import rxreddit.model.UserSettings;
 
 public interface SettingsManager
@@ -41,4 +44,7 @@ public interface SettingsManager
 
     boolean getLabelNsfw();
 
+    ColorScheme getColorScheme();
+
+    void setColorScheme(@NonNull ColorScheme night);
 }

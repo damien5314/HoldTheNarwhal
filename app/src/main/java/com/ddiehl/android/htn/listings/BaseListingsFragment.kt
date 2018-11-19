@@ -10,9 +10,9 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import butterknife.BindView
 import com.ddiehl.android.htn.HoldTheNarwhal
 import com.ddiehl.android.htn.R
-import com.ddiehl.android.htn.listings.report.ReportActivity
-import com.ddiehl.android.htn.listings.report.ReportActivity.RESULT_REPORT_ERROR
-import com.ddiehl.android.htn.listings.report.ReportActivity.RESULT_REPORT_SUCCESS
+import com.ddiehl.android.htn.listings.report.ReportView
+import com.ddiehl.android.htn.listings.report.ReportView.RESULT_REPORT_ERROR
+import com.ddiehl.android.htn.listings.report.ReportView.RESULT_REPORT_SUCCESS
 import com.ddiehl.android.htn.listings.subreddit.SubredditActivity
 import com.ddiehl.android.htn.utils.AndroidUtils.safeStartActivity
 import com.ddiehl.android.htn.view.BaseFragment
@@ -425,18 +425,21 @@ abstract class BaseListingsFragment : BaseFragment(), ListingsView, SwipeRefresh
     }
 
     fun openReportView(link: Link) {
-        val intent = ReportActivity.getIntent(context, link.fullName, link.subreddit)
-        startActivityForResult(intent, REQUEST_REPORT_LISTING)
+        val fragment = ReportView.newInstance(link.fullName, link.subreddit)
+        fragment.setTargetFragment(this, REQUEST_REPORT_LISTING)
+        fragment.show(requireFragmentManager(), ReportView.TAG)
     }
 
     fun openReportView(comment: Comment) {
-        val intent = ReportActivity.getIntent(context, comment.fullName, comment.subreddit)
-        startActivityForResult(intent, REQUEST_REPORT_LISTING)
+        val fragment = ReportView.newInstance(comment.fullName, comment.subreddit)
+        fragment.setTargetFragment(this, REQUEST_REPORT_LISTING)
+        fragment.show(requireFragmentManager(), ReportView.TAG)
     }
 
     fun openReportView(message: PrivateMessage) {
-        val intent = ReportActivity.getIntent(context, message.fullname, null)
-        startActivityForResult(intent, REQUEST_REPORT_LISTING)
+        val fragment = ReportView.newInstance(message.fullName, null)
+        fragment.setTargetFragment(this, REQUEST_REPORT_LISTING)
+        fragment.show(requireFragmentManager(), ReportView.TAG)
     }
 
     override fun notifyDataSetChanged() = listingsAdapter.notifyDataSetChanged()

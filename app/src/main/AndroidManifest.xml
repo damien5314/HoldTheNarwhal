@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest
-        package="com.ddiehl.android.htn"
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools">
+<manifest package="com.ddiehl.android.htn"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -10,22 +9,22 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
-            android:name="com.ddiehl.android.htn.HoldTheNarwhal"
-            android:allowBackup="true"
-            android:icon="@mipmap/ic_launcher"
-            android:label="@string/app_name"
-            android:resizeableActivity="true"
-            android:supportsRtl="true"
-            android:theme="@style/AppTheme"
-            tools:ignore="UnusedAttribute">
+        android:name="com.ddiehl.android.htn.HoldTheNarwhal"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:resizeableActivity="true"
+        android:supportsRtl="true"
+        android:theme="@style/StandardThemeColors"
+        tools:ignore="UnusedAttribute">
 
         <meta-data
-                android:name="io.fabric.ApiKey"
-                android:value="eaccaaf37ee22836fe15fff1daa0c745f6e061e2" />
+            android:name="io.fabric.ApiKey"
+            android:value="eaccaaf37ee22836fe15fff1daa0c745f6e061e2" />
 
         <activity
-                android:name=".navigation.DeepLinkDispatcher"
-                android:launchMode="singleTask">
+            android:name=".navigation.DeepLinkDispatcher"
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -36,8 +35,9 @@
                 <data android:scheme="https" />
                 <data android:host="reddit.com" />
                 <data android:host="*.reddit.com" />
-                <data android:pathPattern=""
-                      tools:ignore="GoogleAppIndexingUrlError" />
+                <data
+                    android:pathPattern=""
+                    tools:ignore="GoogleAppIndexingUrlError" />
                 <data android:pathPattern="/" />
                 <data android:pathPattern="/hot" />
                 <data android:pathPattern="/new" />
@@ -50,51 +50,32 @@
             </intent-filter>
         </activity>
 
-        <activity
-                android:name=".listings.subreddit.SubredditActivity">
+        <activity android:name=".listings.subreddit.SubredditActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <activity
-                android:name=".listings.comments.LinkCommentsActivity" />
+        <activity android:name=".listings.comments.LinkCommentsActivity" />
 
-        <activity
-                android:name=".listings.inbox.InboxActivity" />
+        <activity android:name=".listings.inbox.InboxActivity" />
 
-        <activity
-                android:name=".listings.profile.UserProfileActivity" />
+        <activity android:name=".listings.profile.UserProfileActivity" />
 
-        <activity
-                android:name=".listings.inbox.PrivateMessageActivity" />
+        <activity android:name=".listings.inbox.PrivateMessageActivity" />
 
-        <activity
-                android:name=".settings.SettingsActivity" />
+        <activity android:name=".settings.SettingsActivity" />
 
-        <activity
-                android:name=".about.AboutAppActivity" />
+        <activity android:name=".navigation.WebViewActivity" />
 
-        <activity
-                android:name=".navigation.WebViewActivity" />
+        <activity android:name="rxreddit.android.SignInActivity" />
 
-        <activity
-                android:name="rxreddit.android.SignInActivity" />
+        <activity android:name=".subscriptions.SubscriptionManagerActivity" />
 
-        <activity
-                android:name=".subscriptions.SubscriptionManagerActivity" />
+        <activity android:name=".subredditinfo.SubredditInfoActivity" />
 
-        <activity
-                android:name=".subredditinfo.SubredditInfoActivity" />
-
-        <activity
-                android:name=".listings.report.ReportActivity"
-                android:theme="@style/TransparentTheme" />
-
-        <activity
-                android:name=".listings.subreddit.submission.SubmitPostActivity"
-                android:theme="@style/ActivityThemeLightBg" />
+        <activity android:name=".listings.subreddit.submission.SubmitPostActivity" />
 
         <service
             android:name=".notifications.UnreadInboxCheckJobService"

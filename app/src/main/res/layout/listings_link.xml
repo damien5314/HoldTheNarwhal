@@ -18,7 +18,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="@dimen/baseline_spacing">
+            android:padding="@dimen/baseline_spacing"
+            tools:background="?attr/contentPrimaryBackgroundColor">
 
             <TextView
                 android:id="@+id/link_title"
@@ -28,12 +29,12 @@
                 android:fontFamily="sans-serif-light"
                 android:textAlignment="viewStart"
                 android:textAppearance="?android:textAppearanceMedium"
-                android:textColor="@color/primary_text"
+                android:textColor="?attr/contentPrimaryTextColorPrimary"
                 tools:ignore="UnusedAttribute"
                 tools:text="The quick brown fox jumped over the white fence" />
 
             <LinearLayout
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center">
 
@@ -47,7 +48,7 @@
                     android:includeFontPadding="false"
                     android:text="@string/nsfw"
                     android:textAppearance="?android:textAppearanceSmall"
-                    android:textColor="@color/nsfw_tag_color" />
+                    android:textColor="?attr/nsfwColor" />
 
                 <TextView
                     android:id="@+id/link_gilded_text_view"
@@ -58,7 +59,7 @@
                     android:fontFamily="sans-serif-light"
                     android:gravity="center"
                     android:textAppearance="?android:textAppearanceSmall"
-                    android:textColor="@color/secondary_text"
+                    android:textColor="?attr/contentPrimaryTextColorSecondary"
                     tools:ignore="UnusedAttribute"
                     tools:text="× 2" />
 
@@ -70,7 +71,7 @@
                     android:fontFamily="sans-serif-light"
                     android:gravity="end"
                     android:textAppearance="?android:textAppearanceSmall"
-                    android:textColor="@color/secondary_text"
+                    android:textColor="?attr/contentPrimaryTextColorSecondary"
                     tools:targetApi="16"
                     tools:text="imgur.com" />
 
@@ -88,7 +89,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="@color/primary_dark"
+                android:background="?attr/contentSecondaryBackgroundColor"
                 android:orientation="vertical"
                 android:padding="@dimen/baseline_spacing">
 
@@ -98,7 +99,7 @@
 
                     <com.ddiehl.timesincetextview.TimeSinceTextView
                         android:id="@+id/link_timestamp"
-                        style="@style/LinkMetadataTextViewDark"
+                        style="@style/LinkMetadataTextViewBottom"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
@@ -107,15 +108,15 @@
 
                     <TextView
                         android:id="@+id/link_score"
-                        style="@style/LinkMetadataTextViewDark"
+                        style="@style/LinkMetadataTextViewBottom"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:layout_alignParentStart="true"
-                        android:layout_toLeftOf="@id/link_timestamp"
-                        android:layout_toStartOf="@id/link_timestamp"
                         android:layout_marginEnd="4dp"
                         android:layout_marginRight="4dp"
+                        android:layout_toLeftOf="@id/link_timestamp"
+                        android:layout_toStartOf="@id/link_timestamp"
                         android:ellipsize="end"
                         android:maxLines="1"
                         tools:text="573 points" />
@@ -128,7 +129,7 @@
 
                     <TextView
                         android:id="@+id/link_subreddit"
-                        style="@style/LinkMetadataTextViewDark"
+                        style="@style/LinkMetadataTextViewBottom"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
@@ -140,14 +141,14 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:layout_alignParentStart="true"
-                        android:layout_toLeftOf="@id/link_subreddit"
-                        android:layout_toStartOf="@id/link_subreddit"
                         android:layout_marginEnd="4dp"
-                        android:layout_marginRight="4dp">
+                        android:layout_marginRight="4dp"
+                        android:layout_toLeftOf="@id/link_subreddit"
+                        android:layout_toStartOf="@id/link_subreddit">
 
                         <com.ddiehl.android.htn.view.ColorSwapTextView
                             android:id="@+id/link_author"
-                            style="@style/LinkMetadataTextViewDark"
+                            style="@style/LinkMetadataTextViewBottom"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:ellipsize="end"
@@ -159,11 +160,11 @@
                 </RelativeLayout>
 
                 <View
-                    android:layout_width="fill_parent"
+                    android:layout_width="match_parent"
                     android:layout_height="@dimen/comment_data_divider_width"
                     android:layout_marginBottom="@dimen/comment_data_divider_margin"
                     android:layout_marginTop="@dimen/comment_data_divider_margin"
-                    android:background="@color/divider" />
+                    android:background="?attr/dividerColor" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -174,7 +175,7 @@
 
                     <TextView
                         android:id="@+id/link_comment_count"
-                        style="@style/LinkMetadataTextViewDark"
+                        style="@style/LinkMetadataTextViewBottom"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -186,7 +187,7 @@
                         android:layout_height="@dimen/listings_link_icon_size"
                         android:contentDescription="@string/listings_link_saved_description"
                         android:src="@drawable/ic_save_black_24dp"
-                        android:tint="@color/icons" />
+                        android:tint="?attr/iconColor" />
 
                     <ImageView
                         android:id="@+id/link_stickied_view"
@@ -194,7 +195,7 @@
                         android:layout_height="@dimen/listings_link_icon_size"
                         android:contentDescription="@string/listings_link_stickied_description"
                         android:src="@drawable/ic_class_black_24dp"
-                        android:tint="@color/icons" />
+                        android:tint="?attr/iconColor" />
 
                 </LinearLayout>
 
@@ -211,14 +212,13 @@
             android:id="@+id/link_self_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
             android:bufferType="spannable"
             android:gravity="start"
             android:padding="@dimen/link_self_text_padding"
             android:textAlignment="viewStart"
             android:textAppearance="?android:textAppearanceSmall"
-            android:textColor="@color/primary_text"
-            android:textColorLink="@color/link_color"
+            android:textColor="?attr/contentPrimaryTextColorPrimary"
+            android:textColorLink="?attr/textColorLink"
             tools:ignore="UnusedAttribute"
             tools:text="Lorem ipsum dolor sit amet" />
 

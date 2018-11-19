@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <attr name="colorPrimaryLight" format="color" />
+    <attr name="colorPrimaryTextColor" format="color" />
+    <attr name="windowBackgroundColor" format="color" />
+    <attr name="windowBackgroundColorNeutral" format="color" />
+    <attr name="textColorPrimary" format="color" />
+    <attr name="textColorSecondary" format="color" />
+    <attr name="textColorInverse" format="color" />
+    <attr name="textColorHighlight" format="color" />
+    <attr name="textColorLink" format="color" />
+    <attr name="quoteBlockColor" format="color" />
+    <attr name="dividerColor" format="color" />
+    <attr name="iconColor" format="color" />
+
+    <attr name="toolbarStyle" format="reference" />
+    <attr name="toolbarPopupStyle" format="reference" />
+    <attr name="tabLayoutTextColor" format="color" />
+    <attr name="tabLayoutSelectedTextColor" format="color" />
+
+    <attr name="buttonColor" format="color" />
+    <attr name="buttonColorFocused" format="color" />
+    <attr name="buttonColorPressed" format="color" />
+    <attr name="buttonColorDisabled" format="color" />
+    <attr name="buttonTextColor" format="color" />
+
+    <attr name="nsfwColor" format="color" />
+    <attr name="redditGoldColor" format="color" />
+    <attr name="controversialityIndicatorColor" format="color" />
+
+    <attr name="contentPrimaryBackgroundColor" format="color" />
+    <attr name="contentPrimaryBackgroundColorLiked" format="color" />
+    <attr name="contentPrimaryBackgroundColorDisliked" format="color" />
+    <attr name="contentPrimaryTextColorPrimary" format="color" />
+    <attr name="contentPrimaryTextColorSecondary" format="color" />
+    <attr name="contentSecondaryBackgroundColor" format="color" />
+    <attr name="contentSecondaryTextColor" format="color" />
+    <attr name="threadIdentationColor" format="color" />
+
+    <attr name="authorDecoratedTextColor" format="color" />
+    <attr name="contentLikedColor" format="color" />
+    <attr name="contentDislikedColor" format="color" />
+    <attr name="unreadMessageIndicatorColor" format="color" />
+    <attr name="optionsBarActivatedColor" format="color" />
+    <attr name="navigationDrawerBackgroundColor" format="color" />
+
+</resources>

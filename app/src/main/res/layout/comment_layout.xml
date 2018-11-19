@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
-    android:layout_width="fill_parent"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingLeft="@dimen/comment_data_margin_horizontal"
     android:paddingRight="@dimen/comment_data_margin_horizontal">
@@ -32,7 +32,7 @@
                     android:id="@+id/comment_author"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/secondary_text"
+                    android:textColor="?attr/textColorSecondary"
                     android:textStyle="bold"
                     android:textAppearance="?android:textAppearanceSmall"
                     android:ellipsize="end"
@@ -57,7 +57,7 @@
                         android:id="@+id/comment_score"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/secondary_text"
+                        android:textColor="?attr/textColorSecondary"
                         android:textAppearance="?android:textAppearanceSmall"
                         android:maxLines="1"
                         tools:text="573" />
@@ -69,7 +69,7 @@
                         android:layout_gravity="center_vertical"
                         android:text="@string/comment_controversiality_indicator"
                         android:textAppearance="?android:textAppearanceSmall"
-                        android:textColor="@color/comment_controversiality_indicator" />
+                        android:textColor="?attr/controversialityIndicatorColor" />
 
                 </LinearLayout>
 
@@ -91,7 +91,7 @@
                         android:id="@+id/comment_timestamp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/secondary_text"
+                        android:textColor="?attr/textColorSecondary"
                         android:textAppearance="?android:textAppearanceSmall"
                         android:maxLines="1"
                         app:tstv_abbreviated="true"
@@ -113,13 +113,14 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:src="@drawable/ic_save_black_16dp"
-                    android:tint="@color/secondary_text" />
+                    android:tint="?attr/textColorSecondary" />
 
                 <TextView
                     android:id="@+id/comment_gilded_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
+                    android:textColor="?attr/textColorSecondary"
                     android:gravity="center"
                     android:drawableStart="@drawable/ic_reddit_gold_24dp"
                     android:drawableLeft="@drawable/ic_reddit_gold_24dp"
@@ -139,8 +140,8 @@
         android:textAlignment="viewStart"
         android:gravity="start"
         android:textAppearance="?android:textAppearanceSmall"
-        android:textColor="@color/primary_text"
-        android:textColorLink="@color/link_color"
+        android:textColor="?attr/textColorPrimary"
+        android:textColorLink="?attr/textColorLink"
         android:bufferType="spannable"
         tools:text="Lorem ipsum dolor sit amet"
         tools:ignore="UnusedAttribute" />

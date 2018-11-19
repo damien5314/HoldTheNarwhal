@@ -31,8 +31,8 @@ import org.jetbrains.annotations.Nullable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import androidx.annotation.AttrRes;
 import androidx.annotation.ColorInt;
-import androidx.annotation.ColorRes;
 import androidx.annotation.DrawableRes;
 import androidx.core.content.ContextCompat;
 import okhttp3.Response;
@@ -131,9 +131,9 @@ public class AndroidUtils {
     }
 
     public static Drawable getTintedDrawable(
-            Context context, @DrawableRes int drawableResId, @ColorRes int colorResId) {
+            Context context, @DrawableRes int drawableResId, @AttrRes int colorAttrResId) {
         Drawable drawable = ContextCompat.getDrawable(context, drawableResId);
-        int color = ContextCompat.getColor(context, colorResId);
+        int color = ThemeUtilsKt.getColorFromAttr(context, colorAttrResId);
         drawable.setColorFilter(color, PorterDuff.Mode.SRC_IN);
         return drawable;
     }

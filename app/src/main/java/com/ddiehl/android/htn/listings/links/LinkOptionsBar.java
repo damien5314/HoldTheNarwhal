@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.ddiehl.android.htn.R;
+import com.ddiehl.android.htn.utils.ThemeUtilsKt;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -158,21 +159,19 @@ public class LinkOptionsBar extends LinearLayout {
         linkDownvoteIcon.setColorFilter(null);
 
         if (voted == 1) {
-            linkUpvoteIcon.setColorFilter(
-                    ContextCompat.getColor(getContext(), R.color.reddit_orange_full)
-            );
+            final int upvoteColor = ThemeUtilsKt.getColorFromAttr(getContext(), R.attr.contentLikedColor);
+            linkUpvoteIcon.setColorFilter(upvoteColor);
         } else if (voted == -1) {
-            linkDownvoteIcon.setColorFilter(
-                    ContextCompat.getColor(getContext(), R.color.reddit_blue_full)
-            );
+            final int downvoteColor = ThemeUtilsKt.getColorFromAttr(getContext(), R.attr.contentDislikedColor);
+            linkDownvoteIcon.setColorFilter(downvoteColor);
         }
     }
 
     public void setSaved(boolean saved) {
         if (saved) {
-            linkSaveIcon.setColorFilter(
-                    ContextCompat.getColor(getContext(), R.color.link_saved_color)
-            );
+            final int activatedOptionColor =
+                    ThemeUtilsKt.getColorFromAttr(getContext(), R.attr.optionsBarActivatedColor);
+            linkSaveIcon.setColorFilter(activatedOptionColor);
         } else {
             linkSaveIcon.setColorFilter(null);
         }

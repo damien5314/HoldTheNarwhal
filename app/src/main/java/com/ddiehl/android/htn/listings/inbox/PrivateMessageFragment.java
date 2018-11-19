@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
-import com.ddiehl.android.htn.listings.report.ReportActivity;
+import com.ddiehl.android.htn.listings.report.ReportView;
 import com.ddiehl.android.htn.view.BaseFragment;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
@@ -71,9 +71,7 @@ public class PrivateMessageFragment extends BaseFragment implements PrivateMessa
 
         // Configure RecyclerView
         recyclerView.setAdapter(adapter);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(
-                getContext(), LinearLayoutManager.VERTICAL, false
-        );
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
 
         // Add passed messages to adapter
@@ -121,15 +119,16 @@ public class PrivateMessageFragment extends BaseFragment implements PrivateMessa
 
     @Override
     public void openReportView(@NotNull PrivateMessage message) {
-        Intent intent = ReportActivity.getIntent(getContext(), message.getFullName(), null);
-        startActivityForResult(intent, REQUEST_REPORT_MESSAGE);
+        ReportView intent = ReportView.newInstance(message.getFullName(), null);
+        intent.setTargetFragment(this, REQUEST_REPORT_MESSAGE);
+        intent.show(requireFragmentManager(), ReportView.TAG);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case REQUEST_REPORT_MESSAGE:
-                if (resultCode == ReportActivity.RESULT_REPORT_SUCCESS) {
+                if (resultCode == ReportView.RESULT_REPORT_SUCCESS) {
                     // Passing null because we don't have access to the selected listing in this view
                     // But actually we're not showing context menus here yet, so it's ok
                     showReportSuccessToast(null);

@@ -5,7 +5,7 @@
     android:id="@+id/tab_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/primary"
-    app:tabTextColor="@color/primary_light"
-    app:tabSelectedTextColor="@android:color/white"
+    android:background="?attr/colorPrimary"
+    app:tabTextColor="?attr/tabLayoutTextColor"
+    app:tabSelectedTextColor="?attr/tabLayoutSelectedTextColor"
     app:tabMode="scrollable" />

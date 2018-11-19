@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.view.glide.GlideApp;
 import com.ddiehl.android.htn.view.markdown.HtmlParser;
@@ -103,9 +102,9 @@ public class SubscriptionManagerAdapter extends RecyclerView.Adapter<Subscriptio
         subscriptionManagerView.onSubredditDismissed(subreddit, position);
     }
 
-    public static class VH extends RecyclerView.ViewHolder {
+    public static final class VH extends RecyclerView.ViewHolder {
 
-        @Inject HtmlParser htmlParser;
+        private final HtmlParser htmlParser;
 
         @BindView(R.id.name) TextView name;
         @BindView(R.id.public_description) TextView publicDescription;
@@ -115,11 +114,11 @@ public class SubscriptionManagerAdapter extends RecyclerView.Adapter<Subscriptio
 
         public VH(View itemView, SubscriptionManagerView subscriptionManagerView) {
             super(itemView);
-
-            HoldTheNarwhal.getApplicationComponent().inject(this);
             ButterKnife.bind(this, itemView);
 
             this.subscriptionManagerView = subscriptionManagerView;
+            final Context context = itemView.getContext();
+            this.htmlParser = new HtmlParser(context);
         }
 
         public void bind(Subreddit subreddit) {

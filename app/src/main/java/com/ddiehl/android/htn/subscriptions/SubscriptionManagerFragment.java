@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -71,9 +70,6 @@ public class SubscriptionManagerFragment extends BaseFragment implements Subscri
         HoldTheNarwhal.getApplicationComponent().inject(this);
 
         presenter = new SubscriptionManagerPresenter();
-
-        getActivity().getWindow().getDecorView()
-                .setBackgroundColor(ContextCompat.getColor(getContext(), R.color.white));
     }
 
     @Override

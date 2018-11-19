@@ -41,7 +41,7 @@ public class SubredditNavigationDialog extends DialogFragment {
             listener = (Callbacks) context;
         } catch (ClassCastException e) {
             throw new ClassCastException(context.getClass().getSimpleName()
-                    + " must implement AnalyticsDialog.Callbacks");
+                    + " must implement SubredditNavigationDialog.Callbacks");
         }
     }
 

@@ -4,11 +4,13 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.ddiehl.android.htn.R;
+import com.ddiehl.android.htn.view.theme.ColorScheme;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import androidx.annotation.NonNull;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import rxreddit.api.RedditService;
@@ -71,6 +73,7 @@ public class SettingsManagerImpl implements SettingsManager {
     public static final String PREF_THEME_SELECTOR = "theme_selector";
     public static final String PREF_THREADED_MESSAGES = "threaded_messages";
     public static final String PREF_USE_GLOBAL_DEFAULTS = "use_global_defaults";
+    public static final String PREF_COLOR_SCHEME_ID = "color_scheme";
 
     public static final String PREFS_REDDIT = "threaded_messages, hide_downs, email_messages, " +
             "show_link_flair, creddit_autorenew, show_trending, private_feeds, monitor_mentions, " +
@@ -368,5 +371,18 @@ public class SettingsManagerImpl implements SettingsManager {
     @Override
     public boolean getLabelNsfw() {
         return sharedPreferences.getBoolean(PREF_LABEL_NSFW, true);
+    }
+
+    @Override
+    public ColorScheme getColorScheme() {
+        final String id = sharedPreferences.getString(PREF_COLOR_SCHEME_ID, ColorScheme.STANDARD.getId());
+        return ColorScheme.fromId(id);
+    }
+
+    @Override
+    public void setColorScheme(@NonNull ColorScheme colorScheme) {
+        sharedPreferences.edit()
+                .putString(PREF_COLOR_SCHEME_ID, colorScheme.getId())
+                .apply();
     }
 }

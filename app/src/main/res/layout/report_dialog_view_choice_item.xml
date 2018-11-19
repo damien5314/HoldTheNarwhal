@@ -20,7 +20,6 @@
         android:layout_height="wrap_content"
         android:hint="@string/report_other_hint"
         android:includeFontPadding="false"
-        android:textColor="@color/primary_text"
         android:textSize="18sp"
         tools:text="Lorem ipsum" />
 
