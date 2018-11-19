@@ -3,9 +3,6 @@ package com.ddiehl.android.htn.view.theme
 import androidx.annotation.StyleRes
 import com.ddiehl.android.htn.R
 
-/**
- * TODO documentation
- */
 enum class ColorScheme(val id: String, @StyleRes val styleRes: Int) {
     STANDARD("standard", R.style.StandardThemeColors),
     NIGHT("night", R.style.NightThemeColors),
