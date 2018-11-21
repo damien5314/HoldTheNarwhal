@@ -83,14 +83,6 @@ public class SettingsFragment extends PreferenceFragment
         settingsPresenter.detachView(this);
     }
 
-    //    @Override
-//    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-//        Preference p = findPreference(key);
-//        if (p instanceof CheckBoxPreference) {
-//            ((CheckBoxPreference) p).setChecked(sharedPreferences.getBoolean(key, false));
-//        }
-//    }
-
     @Override
     public void showPreferences(boolean showUser) {
         getActivity().invalidateOptionsMenu();
