@@ -10,7 +10,6 @@ import java.util.UUID;
 
 import androidx.annotation.NonNull;
 import rxreddit.model.UserSettings;
-import timber.log.Timber;
 
 public class SettingsManagerImpl implements SettingsManager {
 
@@ -292,7 +291,6 @@ public class SettingsManagerImpl implements SettingsManager {
     public ColorScheme getColorScheme() {
         final String defaultColorSchemeId = ColorScheme.STANDARD.getId();
         final String id = sharedPreferences.getString(PREF_COLOR_SCHEME_ID, defaultColorSchemeId);
-        Timber.d("[dcd] getColorScheme: %s", id);
         return ColorScheme.fromId(id);
     }
 

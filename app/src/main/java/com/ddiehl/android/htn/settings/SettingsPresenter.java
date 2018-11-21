@@ -144,6 +144,10 @@ public class SettingsPresenter implements SharedPreferences.OnSharedPreferenceCh
                     );
         }
 
+        if (key.equals(SettingsManagerImpl.PREF_COLOR_SCHEME_ID)) {
+            settingsView.notifyThemeUpdated();
+        }
+
         isChanging = false;
     }
 

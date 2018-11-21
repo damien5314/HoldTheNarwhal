@@ -19,6 +19,7 @@ import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.identity.IdentityManager;
 import com.ddiehl.android.htn.utils.MenuTintUtils;
 import com.ddiehl.android.htn.utils.ThemeUtilsKt;
+import com.ddiehl.android.htn.view.BaseActivity;
 import com.google.android.material.snackbar.Snackbar;
 
 import javax.inject.Inject;
@@ -155,6 +156,11 @@ public class SettingsFragment extends PreferenceFragment
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void notifyThemeUpdated() {
+        ((BaseActivity) getActivity()).reload();
     }
 
     @Override

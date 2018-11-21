@@ -6,6 +6,8 @@ public interface SettingsView {
 
     void showPreferences(boolean showUser);
 
+    void notifyThemeUpdated();
+
     void showToast(@StringRes int messageResId);
 
     void showError(@StringRes int messageResId);
