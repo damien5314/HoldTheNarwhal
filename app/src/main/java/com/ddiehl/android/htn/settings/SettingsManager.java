@@ -18,10 +18,6 @@ public interface SettingsManager
 
     String getDeviceId();
 
-    boolean areAnalyticsEnabled();
-
-    void setAnalyticsEnabled(boolean b);
-
     String getFont();
 
     boolean askedForAnalytics();

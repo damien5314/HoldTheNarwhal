@@ -24,7 +24,6 @@ public class SettingsManagerImpl implements SettingsManager {
     // app settings
     public static final String PREFS_DEVICE_ID = "prefs_device_id";
     public static final String PREF_DEVICE_ID = "pref_device_id";
-    public static final String PREF_ALLOW_ANALYTICS = "pref_allow_analytics";
     public static final String PREF_ALLOW_ANALYTICS_ASKED = "pref_allow_analytics_asked";
     public static final String PREF_COLOR_SCHEME_ID = "pref_color_scheme";
     public static final String PREF_FONT = "pref_font";
@@ -114,15 +113,8 @@ public class SettingsManagerImpl implements SettingsManager {
 
         Map<String, String> changedSettings = new HashMap<>(); // Track changed keys and values
 
-        switch (key) {
-            case SettingsManagerImpl.PREF_ALLOW_ANALYTICS:
-                boolean allowed = sp.getBoolean(PREF_ALLOW_ANALYTICS, false);
-                break;
-            default:
-                Object p = getValueFromKey(sp, key);
-                changedSettings.put(key, String.valueOf(p));
-                break;
-        }
+        Object p = getValueFromKey(sp, key);
+        changedSettings.put(key, String.valueOf(p));
 
         // Force "make safe(r) for work" to be true if "over 18" is false
         boolean over18 = sp.getBoolean(SettingsManagerImpl.PREF_OVER_18, false);
@@ -154,8 +146,6 @@ public class SettingsManagerImpl implements SettingsManager {
                             error -> Timber.w(error, "Error updating settings")
                     );
         }
-
-        Map prefs = sp.getAll();
 
         isChanging = false;
     }
@@ -281,19 +271,6 @@ public class SettingsManagerImpl implements SettingsManager {
             sp.edit().putString(PREF_DEVICE_ID, deviceId).apply();
         }
         return deviceId;
-    }
-
-    @Override
-    public boolean areAnalyticsEnabled() {
-        return context.getSharedPreferences(PREFS_USER, Context.MODE_PRIVATE)
-                .getBoolean(PREF_ALLOW_ANALYTICS, false);
-    }
-
-    @Override
-    public void setAnalyticsEnabled(boolean b) {
-        context.getSharedPreferences(PREFS_USER, Context.MODE_PRIVATE).edit()
-                .putBoolean(PREF_ALLOW_ANALYTICS, b)
-                .apply();
     }
 
     @Override
