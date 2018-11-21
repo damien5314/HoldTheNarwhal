@@ -102,10 +102,8 @@ public class SettingsPresenter implements SharedPreferences.OnSharedPreferenceCh
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sp, String key) {
         if (isChanging) {
-            Timber.d("[dcd] Settings update already in progress, ignoring callback");
             return;
         }
-        Timber.d("[dcd] Processing settings callback!");
         isChanging = true;
 
         Map<String, String> changedSettings = new HashMap<>(); // Track changed keys and values
@@ -144,7 +142,7 @@ public class SettingsPresenter implements SharedPreferences.OnSharedPreferenceCh
                     );
         }
 
-        if (key.equals(SettingsManagerImpl.PREF_COLOR_SCHEME_ID)) {
+        if (key.equals(SettingsManagerImpl.PREF_COLOR_SCHEME)) {
             settingsView.notifyThemeUpdated();
         }
 

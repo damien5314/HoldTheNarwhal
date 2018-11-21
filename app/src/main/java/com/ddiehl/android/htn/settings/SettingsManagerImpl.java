@@ -19,7 +19,7 @@ public class SettingsManagerImpl implements SettingsManager {
     public static final String PREFS_DEVICE_ID = "prefs_device_id";
     public static final String PREF_DEVICE_ID = "pref_device_id";
     public static final String PREF_ALLOW_ANALYTICS_ASKED = "pref_allow_analytics_asked";
-    public static final String PREF_COLOR_SCHEME_ID = "pref_color_scheme";
+    public static final String PREF_COLOR_SCHEME = "pref_color_scheme";
     public static final String PREF_FONT = "pref_font";
 
     // reddit settings
@@ -290,7 +290,7 @@ public class SettingsManagerImpl implements SettingsManager {
     @Override
     public ColorScheme getColorScheme() {
         final String defaultColorSchemeId = ColorScheme.STANDARD.getId();
-        final String id = sharedPreferences.getString(PREF_COLOR_SCHEME_ID, defaultColorSchemeId);
+        final String id = sharedPreferences.getString(PREF_COLOR_SCHEME, defaultColorSchemeId);
         return ColorScheme.fromId(id);
     }
 
@@ -298,7 +298,7 @@ public class SettingsManagerImpl implements SettingsManager {
     public void setColorScheme(@NonNull ColorScheme colorScheme) {
         final String colorSchemeId = colorScheme.getId();
         sharedPreferences.edit()
-                .putString(PREF_COLOR_SCHEME_ID, colorSchemeId)
+                .putString(PREF_COLOR_SCHEME, colorSchemeId)
                 .apply();
     }
 }
