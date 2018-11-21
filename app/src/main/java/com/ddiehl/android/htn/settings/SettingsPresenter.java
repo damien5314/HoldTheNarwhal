@@ -34,7 +34,7 @@ public class SettingsPresenter {
         boolean showUser = settingsManager.hasFromRemote();
         settingsView.showPreferences(showUser);
 
-        if (pullFromServer) {
+        if (pullFromServer && isUserAuthorized()) {
             if (AndroidUtils.isConnectedToNetwork(context)) {
                 loadServerData();
             } else {
