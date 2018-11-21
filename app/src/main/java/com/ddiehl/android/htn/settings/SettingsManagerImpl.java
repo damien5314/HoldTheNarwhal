@@ -26,6 +26,7 @@ public class SettingsManagerImpl implements SettingsManager {
     public static final String PREF_DEVICE_ID = "pref_device_id";
     public static final String PREF_ALLOW_ANALYTICS = "pref_allow_analytics";
     public static final String PREF_ALLOW_ANALYTICS_ASKED = "pref_allow_analytics_asked";
+    public static final String PREF_COLOR_SCHEME_ID = "pref_color_scheme";
     public static final String PREF_FONT = "pref_font";
 
     // reddit settings
@@ -73,7 +74,6 @@ public class SettingsManagerImpl implements SettingsManager {
     public static final String PREF_THEME_SELECTOR = "theme_selector";
     public static final String PREF_THREADED_MESSAGES = "threaded_messages";
     public static final String PREF_USE_GLOBAL_DEFAULTS = "use_global_defaults";
-    public static final String PREF_COLOR_SCHEME_ID = "color_scheme";
 
     public static final String PREFS_REDDIT = "threaded_messages, hide_downs, email_messages, " +
             "show_link_flair, creddit_autorenew, show_trending, private_feeds, monitor_mentions, " +
@@ -375,14 +375,17 @@ public class SettingsManagerImpl implements SettingsManager {
 
     @Override
     public ColorScheme getColorScheme() {
-        final String id = sharedPreferences.getString(PREF_COLOR_SCHEME_ID, ColorScheme.STANDARD.getId());
+        final String defaultColorSchemeId = ColorScheme.STANDARD.getId();
+        final String id = sharedPreferences.getString(PREF_COLOR_SCHEME_ID, defaultColorSchemeId);
+        Timber.d("[dcd] getColorScheme: %s", id);
         return ColorScheme.fromId(id);
     }
 
     @Override
     public void setColorScheme(@NonNull ColorScheme colorScheme) {
+        final String colorSchemeId = colorScheme.getId();
         sharedPreferences.edit()
-                .putString(PREF_COLOR_SCHEME_ID, colorScheme.getId())
+                .putString(PREF_COLOR_SCHEME_ID, colorSchemeId)
                 .apply();
     }
 }

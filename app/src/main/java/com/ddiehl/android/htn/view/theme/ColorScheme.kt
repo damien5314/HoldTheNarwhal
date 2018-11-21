@@ -4,8 +4,8 @@ import androidx.annotation.StyleRes
 import com.ddiehl.android.htn.R
 
 enum class ColorScheme(val id: String, @StyleRes val styleRes: Int) {
-    STANDARD("standard", R.style.StandardThemeColors),
-    NIGHT("night", R.style.NightThemeColors),
+    STANDARD("light", R.style.StandardThemeColors),
+    NIGHT("dark", R.style.NightThemeColors),
     ;
 
     companion object {
