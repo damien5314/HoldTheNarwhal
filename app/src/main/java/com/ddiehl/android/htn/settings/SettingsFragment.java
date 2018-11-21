@@ -77,6 +77,8 @@ public class SettingsFragment extends PreferenceFragment
             boolean pullFromServer = settingsPresenter.isRefreshable();
             settingsPresenter.refresh(pullFromServer);
         }
+
+        updateAllPrefSummaries();
     }
 
     @Override
