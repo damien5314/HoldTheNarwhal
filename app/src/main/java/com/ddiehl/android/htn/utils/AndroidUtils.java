@@ -6,8 +6,6 @@ import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.BulletSpan;
@@ -121,13 +119,6 @@ public class AndroidUtils {
         ViewGroup g = (ViewGroup) l.getChildAt(0);
         if (g == null) return 0;
         return g.getChildCount();
-    }
-
-    public static boolean isConnectedToNetwork(Context context) {
-        ConnectivityManager cm =
-                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo info = cm.getActiveNetworkInfo();
-        return info != null && info.isConnectedOrConnecting();
     }
 
     public static Drawable getTintedDrawable(

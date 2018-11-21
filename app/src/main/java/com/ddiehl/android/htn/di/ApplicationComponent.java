@@ -17,7 +17,8 @@ import com.ddiehl.android.htn.listings.subreddit.submission.SubmitPostPresenter;
 import com.ddiehl.android.htn.navigation.WebViewFragment;
 import com.ddiehl.android.htn.notifications.UnreadInboxCheckJobService;
 import com.ddiehl.android.htn.settings.SettingsActivity;
-import com.ddiehl.android.htn.settings.SettingsFragment;
+import com.ddiehl.android.htn.settings.SettingsFragmentComponent;
+import com.ddiehl.android.htn.settings.SettingsFragmentModule;
 import com.ddiehl.android.htn.settings.SettingsPresenter;
 import com.ddiehl.android.htn.subscriptions.SubscriptionManagerPresenter;
 import com.ddiehl.android.htn.view.BaseActivity;
@@ -45,7 +46,6 @@ public interface ApplicationComponent {
     void inject(SubredditFragment fragment);
     void inject(UserProfileFragment fragment);
     void inject(PrivateMessageFragment fragment);
-    void inject(SettingsFragment fragment);
     void inject(WebViewFragment fragment);
     void inject(LinkCommentsFragment fragment);
     void inject(SubmitPostFragment fragment);
@@ -64,4 +64,7 @@ public interface ApplicationComponent {
 
     // Services
     void inject(UnreadInboxCheckJobService service);
+
+    // Subcomponents
+    SettingsFragmentComponent plus(SettingsFragmentModule module);
 }

@@ -24,6 +24,7 @@ import com.ddiehl.android.htn.listings.inbox.InboxActivity;
 import com.ddiehl.android.htn.listings.inbox.PrivateMessageActivity;
 import com.ddiehl.android.htn.listings.profile.UserProfileActivity;
 import com.ddiehl.android.htn.listings.subreddit.SubredditActivity;
+import com.ddiehl.android.htn.managers.NetworkConnectivityManager;
 import com.ddiehl.android.htn.navigation.ConfirmExitDialog;
 import com.ddiehl.android.htn.navigation.ConfirmSignOutDialog;
 import com.ddiehl.android.htn.navigation.RedditNavigationView;
@@ -103,6 +104,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
     @Inject IdentityManager identityManager;
     @Inject SettingsManager settingsManager;
     @Inject Gson gson;
+    @Inject NetworkConnectivityManager networkConnectivityManager;
 
     ActionBarDrawerToggle drawerToggle;
     private ColorScheme currentColorScheme;
@@ -355,7 +357,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
     }
 
     protected void onLogIn() {
-        if (AndroidUtils.isConnectedToNetwork(this)) {
+        if (networkConnectivityManager.isConnectedToNetwork()) {
             showLoginView();
         } else {
             showToast(getString(R.string.error_network_unavailable));
