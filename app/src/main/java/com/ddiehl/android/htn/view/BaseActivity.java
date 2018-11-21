@@ -105,6 +105,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
     @Inject Gson gson;
 
     ActionBarDrawerToggle drawerToggle;
+    private ColorScheme currentColorScheme;
 
     protected abstract boolean hasNavigationDrawer();
 
@@ -182,6 +183,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
     private void applyColorScheme() {
         final ColorScheme colorScheme = settingsManager.getColorScheme();
         setTheme(colorScheme.getStyleRes());
+        currentColorScheme = colorScheme;
     }
 
     private String getFont() {
@@ -233,6 +235,29 @@ public abstract class BaseActivity extends AppCompatActivity implements
         if (drawerToggle != null) {
             drawerToggle.onConfigurationChanged(newConfig);
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        restartIfThemeChanged();
+    }
+
+    private void restartIfThemeChanged() {
+        final ColorScheme colorScheme = settingsManager.getColorScheme();
+        if (currentColorScheme != colorScheme) {
+            currentColorScheme = colorScheme;
+            reload();
+        }
+    }
+
+    protected void reload() {
+        Intent intent = getIntent();
+        overridePendingTransition(0, 0);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        finish();
+        overridePendingTransition(0, 0);
+        startActivity(intent);
     }
 
     @Override
