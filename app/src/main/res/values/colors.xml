@@ -26,6 +26,6 @@
     <color name="manatee">#8181A3</color>
     <color name="forest_green">#228822</color>
 
-    <color name="ic_launcher_background">@color/bluegrey000</color>
+    <color name="ic_launcher_background">@color/bluegrey100</color>
 
 </resources>
