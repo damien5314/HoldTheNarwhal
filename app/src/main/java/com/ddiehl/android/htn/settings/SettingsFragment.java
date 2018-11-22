@@ -1,6 +1,8 @@
 package com.ddiehl.android.htn.settings;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
@@ -19,7 +21,6 @@ import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.identity.IdentityManager;
 import com.ddiehl.android.htn.utils.MenuTintUtils;
 import com.ddiehl.android.htn.utils.ThemeUtilsKt;
-import com.ddiehl.android.htn.view.BaseActivity;
 import com.google.android.material.snackbar.Snackbar;
 
 import javax.inject.Inject;
@@ -152,7 +153,10 @@ public class SettingsFragment extends PreferenceFragment
 
     @Override
     public void notifyThemeUpdated() {
-        ((BaseActivity) getActivity()).reload();
+        final Activity activity = getActivity();
+        final Intent intent = activity.getIntent();
+        activity.finish();
+        startActivity(intent);
     }
 
     @Override
