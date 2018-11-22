@@ -152,7 +152,7 @@ public class SettingsFragment extends PreferenceFragment
     }
 
     @Override
-    public void notifyThemeUpdated() {
+    public void notifyColorSchemeUpdated() {
         final Activity activity = getActivity();
         final Intent intent = activity.getIntent();
         activity.finish();

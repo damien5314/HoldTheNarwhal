@@ -143,7 +143,7 @@ public class SettingsPresenter implements SharedPreferences.OnSharedPreferenceCh
         }
 
         if (key.equals(SettingsManagerImpl.PREF_COLOR_SCHEME)) {
-            settingsView.notifyThemeUpdated();
+            settingsView.notifyColorSchemeUpdated();
         }
 
         isChanging = false;

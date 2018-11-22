@@ -6,7 +6,7 @@ public interface SettingsView {
 
     void showPreferences(boolean showUser);
 
-    void notifyThemeUpdated();
+    void notifyColorSchemeUpdated();
 
     void showToast(@StringRes int messageResId);
 
