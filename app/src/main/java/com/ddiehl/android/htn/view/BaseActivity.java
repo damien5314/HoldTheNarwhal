@@ -24,6 +24,7 @@ import com.ddiehl.android.htn.listings.inbox.InboxActivity;
 import com.ddiehl.android.htn.listings.inbox.PrivateMessageActivity;
 import com.ddiehl.android.htn.listings.profile.UserProfileActivity;
 import com.ddiehl.android.htn.listings.subreddit.SubredditActivity;
+import com.ddiehl.android.htn.managers.NetworkConnectivityManager;
 import com.ddiehl.android.htn.navigation.ConfirmExitDialog;
 import com.ddiehl.android.htn.navigation.ConfirmSignOutDialog;
 import com.ddiehl.android.htn.navigation.RedditNavigationView;
@@ -103,8 +104,10 @@ public abstract class BaseActivity extends AppCompatActivity implements
     @Inject IdentityManager identityManager;
     @Inject SettingsManager settingsManager;
     @Inject Gson gson;
+    @Inject NetworkConnectivityManager networkConnectivityManager;
 
     ActionBarDrawerToggle drawerToggle;
+    private ColorScheme currentColorScheme;
 
     protected abstract boolean hasNavigationDrawer();
 
@@ -182,6 +185,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
     private void applyColorScheme() {
         final ColorScheme colorScheme = settingsManager.getColorScheme();
         setTheme(colorScheme.getStyleRes());
+        currentColorScheme = colorScheme;
     }
 
     private String getFont() {
@@ -232,6 +236,20 @@ public abstract class BaseActivity extends AppCompatActivity implements
         super.onConfigurationChanged(newConfig);
         if (drawerToggle != null) {
             drawerToggle.onConfigurationChanged(newConfig);
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        restartIfThemeChanged();
+    }
+
+    private void restartIfThemeChanged() {
+        final ColorScheme colorScheme = settingsManager.getColorScheme();
+        if (currentColorScheme != colorScheme) {
+            currentColorScheme = colorScheme;
+            recreate();
         }
     }
 
@@ -330,7 +348,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
     }
 
     protected void onLogIn() {
-        if (AndroidUtils.isConnectedToNetwork(this)) {
+        if (networkConnectivityManager.isConnectedToNetwork()) {
             showLoginView();
         } else {
             showToast(getString(R.string.error_network_unavailable));

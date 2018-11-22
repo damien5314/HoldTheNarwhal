@@ -1,14 +1,11 @@
 package com.ddiehl.android.htn.settings;
 
-import android.content.SharedPreferences;
-
 import com.ddiehl.android.htn.view.theme.ColorScheme;
 
 import androidx.annotation.NonNull;
 import rxreddit.model.UserSettings;
 
-public interface SettingsManager
-        extends SharedPreferences.OnSharedPreferenceChangeListener {
+public interface SettingsManager {
 
     boolean hasFromRemote();
 
@@ -17,10 +14,6 @@ public interface SettingsManager
     void clearUserSettings();
 
     String getDeviceId();
-
-    boolean areAnalyticsEnabled();
-
-    void setAnalyticsEnabled(boolean b);
 
     String getFont();
 

@@ -9,9 +9,9 @@ import com.ddiehl.android.htn.listings.comments.CommentView;
 import com.ddiehl.android.htn.listings.inbox.PrivateMessageView;
 import com.ddiehl.android.htn.listings.links.LinkView;
 import com.ddiehl.android.htn.listings.subreddit.ThumbnailMode;
+import com.ddiehl.android.htn.managers.NetworkConnectivityManager;
 import com.ddiehl.android.htn.navigation.RedditNavigationView;
 import com.ddiehl.android.htn.settings.SettingsManager;
-import com.ddiehl.android.htn.utils.AndroidUtils;
 import com.ddiehl.android.htn.view.MainView;
 
 import org.jetbrains.annotations.NotNull;
@@ -49,6 +49,7 @@ public abstract class BaseListingsPresenter
     @Inject protected IdentityManager identityManager;
     @Inject protected SettingsManager settingsManager;
     @Inject protected RedditService redditService;
+    @Inject protected NetworkConnectivityManager networkConnectivityManager;
 
     final List<Listing> listings = new ArrayList<>();
 
@@ -104,7 +105,7 @@ public abstract class BaseListingsPresenter
 
     public void getPreviousData() {
         if (!beforeRequested) {
-            if (AndroidUtils.isConnectedToNetwork(context)) {
+            if (networkConnectivityManager.isConnectedToNetwork()) {
                 requestPreviousData();
             } else {
                 String message = context.getString(R.string.error_network_unavailable);
@@ -115,7 +116,7 @@ public abstract class BaseListingsPresenter
 
     public void getNextData() {
         if (!nextRequested) {
-            if (AndroidUtils.isConnectedToNetwork(context)) {
+            if (networkConnectivityManager.isConnectedToNetwork()) {
                 requestNextData();
             } else {
                 String message = context.getString(R.string.error_network_unavailable);

@@ -1,10 +1,9 @@
 package com.ddiehl.android.htn.settings;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.SharedPreferences;
+import android.content.Intent;
 import android.os.Bundle;
-import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
@@ -24,20 +23,19 @@ import com.ddiehl.android.htn.utils.MenuTintUtils;
 import com.ddiehl.android.htn.utils.ThemeUtilsKt;
 import com.google.android.material.snackbar.Snackbar;
 
-import org.jetbrains.annotations.NotNull;
-
 import javax.inject.Inject;
 
+import androidx.annotation.StringRes;
 import rxreddit.model.UserIdentity;
 import timber.log.Timber;
 
 public class SettingsFragment extends PreferenceFragment
-        implements SettingsView, SharedPreferences.OnSharedPreferenceChangeListener {
+        implements SettingsView {
 
     public static final String TAG = SettingsFragment.class.getSimpleName();
 
     @Inject IdentityManager mIdentityManager;
-    SettingsPresenter settingsPresenter;
+    @Inject SettingsPresenter settingsPresenter;
 
     ProgressDialog loadingOverlay;
 
@@ -45,12 +43,12 @@ public class SettingsFragment extends PreferenceFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Timber.i("Showing settings");
-        HoldTheNarwhal.getApplicationComponent().inject(this);
+        HoldTheNarwhal.getApplicationComponent()
+                .plus(new SettingsFragmentModule(this))
+                .inject(this);
 
         setRetainInstance(true);
         setHasOptionsMenu(true);
-
-        settingsPresenter = new SettingsPresenter(this);
 
         getPreferenceManager().setSharedPreferencesName(SettingsManagerImpl.PREFS_USER);
         addDefaultPreferences();
@@ -70,28 +68,20 @@ public class SettingsFragment extends PreferenceFragment
     public void onStart() {
         super.onStart();
         getActivity().setTitle(R.string.settings_fragment_title);
-        getActivity().getSharedPreferences(SettingsManagerImpl.PREFS_USER, Context.MODE_PRIVATE)
-                .registerOnSharedPreferenceChangeListener(this);
+        settingsPresenter.attachView(this);
 
         if (settingsPresenter.isUserAuthorized()) {
             boolean pullFromServer = settingsPresenter.isRefreshable();
             settingsPresenter.refresh(pullFromServer);
         }
+
+        updateAllPrefSummaries();
     }
 
     @Override
     public void onStop() {
-        getActivity().getSharedPreferences(SettingsManagerImpl.PREFS_USER, Context.MODE_PRIVATE)
-                .unregisterOnSharedPreferenceChangeListener(this);
         super.onStop();
-    }
-
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        Preference p = findPreference(key);
-        if (p instanceof CheckBoxPreference) {
-            ((CheckBoxPreference) p).setChecked(sharedPreferences.getBoolean(key, false));
-        }
+        settingsPresenter.detachView(this);
     }
 
     @Override
@@ -162,6 +152,14 @@ public class SettingsFragment extends PreferenceFragment
     }
 
     @Override
+    public void notifyColorSchemeUpdated() {
+        final Activity activity = getActivity();
+        final Intent intent = activity.getIntent();
+        activity.finish();
+        startActivity(intent);
+    }
+
+    @Override
     public void showSpinner() {
         if (loadingOverlay == null) {
             loadingOverlay = new ProgressDialog(getView().getContext(), R.style.ProgressDialog);
@@ -180,11 +178,13 @@ public class SettingsFragment extends PreferenceFragment
     }
 
     @Override
-    public void showToast(@NotNull String msg) {
+    public void showToast(@StringRes int messageResId) {
+        final String msg = getString(messageResId);
         Snackbar.make(getView(), msg, Snackbar.LENGTH_SHORT).show();
     }
 
-    protected void showError(@NotNull String msg) {
+    @Override
+    public void showError(@StringRes int msg) {
         Snackbar.make(getView(), msg, Snackbar.LENGTH_SHORT).show();
     }
 }

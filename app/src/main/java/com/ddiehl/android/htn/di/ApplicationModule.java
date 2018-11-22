@@ -5,6 +5,7 @@ import android.content.Context;
 import com.ddiehl.android.htn.BuildConfig;
 import com.ddiehl.android.htn.identity.IdentityManager;
 import com.ddiehl.android.htn.identity.IdentityManagerImpl;
+import com.ddiehl.android.htn.managers.NetworkConnectivityManager;
 import com.ddiehl.android.htn.settings.SettingsManager;
 import com.ddiehl.android.htn.settings.SettingsManagerImpl;
 import com.google.gson.Gson;
@@ -42,8 +43,8 @@ public class ApplicationModule {
 
     @Singleton
     @Provides
-    SettingsManager providesSettingsManager(Context context, RedditService service) {
-        return new SettingsManagerImpl(context, service);
+    SettingsManager providesSettingsManager(Context context) {
+        return new SettingsManagerImpl(context);
     }
 
     @Singleton
@@ -68,5 +69,10 @@ public class ApplicationModule {
     @Provides
     Gson providesGson(RedditService redditService) {
         return redditService.getGson();
+    }
+
+    @Provides
+    NetworkConnectivityManager providesNetworkConnectivityManager(Context context) {
+        return new NetworkConnectivityManager(context);
     }
 }

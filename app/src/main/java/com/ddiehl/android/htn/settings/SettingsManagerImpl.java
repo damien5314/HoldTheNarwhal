@@ -6,16 +6,10 @@ import android.content.SharedPreferences;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.view.theme.ColorScheme;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
 import androidx.annotation.NonNull;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
-import rxreddit.api.RedditService;
 import rxreddit.model.UserSettings;
-import timber.log.Timber;
 
 public class SettingsManagerImpl implements SettingsManager {
 
@@ -24,8 +18,8 @@ public class SettingsManagerImpl implements SettingsManager {
     // app settings
     public static final String PREFS_DEVICE_ID = "prefs_device_id";
     public static final String PREF_DEVICE_ID = "pref_device_id";
-    public static final String PREF_ALLOW_ANALYTICS = "pref_allow_analytics";
     public static final String PREF_ALLOW_ANALYTICS_ASKED = "pref_allow_analytics_asked";
+    public static final String PREF_COLOR_SCHEME = "pref_color_scheme";
     public static final String PREF_FONT = "pref_font";
 
     // reddit settings
@@ -73,7 +67,6 @@ public class SettingsManagerImpl implements SettingsManager {
     public static final String PREF_THEME_SELECTOR = "theme_selector";
     public static final String PREF_THREADED_MESSAGES = "threaded_messages";
     public static final String PREF_USE_GLOBAL_DEFAULTS = "use_global_defaults";
-    public static final String PREF_COLOR_SCHEME_ID = "color_scheme";
 
     public static final String PREFS_REDDIT = "threaded_messages, hide_downs, email_messages, " +
             "show_link_flair, creddit_autorenew, show_trending, private_feeds, monitor_mentions, " +
@@ -85,21 +78,12 @@ public class SettingsManagerImpl implements SettingsManager {
             "mark_messages_read, hide_ads, min_link_score, newwindow, numsites, num_comments, " +
             "highlight_new_comments, default_comment_sort, hide_locationbar";
 
-    private final Context context;
-    private final RedditService redditService; // FIXME: Bad dependency
+    private final Context appContext;
     private final SharedPreferences sharedPreferences;
 
-    private boolean isChanging = false;
-
-    public SettingsManagerImpl(Context context, RedditService service) {
-        this.context = context;
-        this.redditService = service;
-        this.sharedPreferences = this.context.getSharedPreferences(PREFS_USER, Context.MODE_PRIVATE);
-        this.sharedPreferences.registerOnSharedPreferenceChangeListener(this);
-    }
-
-    private Object getValueFromKey(SharedPreferences sp, String key) {
-        return sp.getAll().get(key);
+    public SettingsManagerImpl(Context context) {
+        this.appContext = context.getApplicationContext();
+        this.sharedPreferences = context.getSharedPreferences(PREFS_USER, Context.MODE_PRIVATE);
     }
 
     @Override
@@ -108,61 +92,7 @@ public class SettingsManagerImpl implements SettingsManager {
     }
 
     @Override
-    public void onSharedPreferenceChanged(SharedPreferences sp, String key) {
-        if (isChanging) return;
-        isChanging = true;
-
-        Map<String, String> changedSettings = new HashMap<>(); // Track changed keys and values
-
-        switch (key) {
-            case SettingsManagerImpl.PREF_ALLOW_ANALYTICS:
-                boolean allowed = sp.getBoolean(PREF_ALLOW_ANALYTICS, false);
-                break;
-            default:
-                Object p = getValueFromKey(sp, key);
-                changedSettings.put(key, String.valueOf(p));
-                break;
-        }
-
-        // Force "make safe(r) for work" to be true if "over 18" is false
-        boolean over18 = sp.getBoolean(SettingsManagerImpl.PREF_OVER_18, false);
-        if (!over18) {
-            boolean noProfanity = sp.getBoolean(SettingsManagerImpl.PREF_NO_PROFANITY, true);
-            if (!noProfanity) {
-                sp.edit().putBoolean(SettingsManagerImpl.PREF_NO_PROFANITY, true).apply();
-                changedSettings.put(SettingsManagerImpl.PREF_NO_PROFANITY, String.valueOf(true));
-            }
-        }
-
-        // Force "label nsfw" to be true if "make safe(r) for work" is true
-        boolean noProfanity = sp.getBoolean(SettingsManagerImpl.PREF_NO_PROFANITY, true);
-        if (noProfanity) {
-            boolean labelNsfw = sp.getBoolean(SettingsManagerImpl.PREF_LABEL_NSFW, true);
-            if (!labelNsfw) {
-                sp.edit().putBoolean(SettingsManagerImpl.PREF_LABEL_NSFW, true).apply();
-                changedSettings.put(SettingsManagerImpl.PREF_LABEL_NSFW, String.valueOf(true));
-            }
-        }
-
-        if (changedSettings.size() > 0 && redditService.isUserAuthorized()) {
-            // Post SettingsUpdate event with changed keys and values
-            redditService.updateUserSettings(changedSettings)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(
-                            () -> Timber.d("Settings updated successfully"),
-                            error -> Timber.w(error, "Error updating settings")
-                    );
-        }
-
-        Map prefs = sp.getAll();
-
-        isChanging = false;
-    }
-
-    @Override
     public void saveUserSettings(UserSettings settings) {
-        sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
         sharedPreferences.edit()
                 .putBoolean(PREF_HAS_FROM_REMOTE, true)
                 .putBoolean(PREF_BETA, settings.getBeta())
@@ -211,12 +141,10 @@ public class SettingsManagerImpl implements SettingsManager {
                 .putBoolean(PREF_THREADED_MESSAGES, settings.getThreadedMessages())
                 .putBoolean(PREF_USE_GLOBAL_DEFAULTS, settings.getUseGlobalDefaults())
                 .apply();
-        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
     }
 
     @Override
     public void clearUserSettings() {
-        sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
         // Only removing reddit preferences, app preferences can stay the same
         // Need to do this because PreferenceFragment can only show preferences from one SP instance
         sharedPreferences.edit()
@@ -265,7 +193,6 @@ public class SettingsManagerImpl implements SettingsManager {
                 .remove(PREF_THREADED_MESSAGES)
                 .remove(PREF_USE_GLOBAL_DEFAULTS)
                 .apply();
-        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
     }
 
     //////////////////
@@ -274,7 +201,7 @@ public class SettingsManagerImpl implements SettingsManager {
 
     @Override
     public String getDeviceId() {
-        SharedPreferences sp = context.getSharedPreferences(PREFS_DEVICE_ID, Context.MODE_PRIVATE);
+        SharedPreferences sp = appContext.getSharedPreferences(PREFS_DEVICE_ID, Context.MODE_PRIVATE);
         String deviceId = sp.getString(PREF_DEVICE_ID, null);
         if (deviceId == null) {
             deviceId = UUID.randomUUID().toString();
@@ -284,27 +211,14 @@ public class SettingsManagerImpl implements SettingsManager {
     }
 
     @Override
-    public boolean areAnalyticsEnabled() {
-        return context.getSharedPreferences(PREFS_USER, Context.MODE_PRIVATE)
-                .getBoolean(PREF_ALLOW_ANALYTICS, false);
-    }
-
-    @Override
-    public void setAnalyticsEnabled(boolean b) {
-        context.getSharedPreferences(PREFS_USER, Context.MODE_PRIVATE).edit()
-                .putBoolean(PREF_ALLOW_ANALYTICS, b)
-                .apply();
-    }
-
-    @Override
     public boolean askedForAnalytics() {
-        return context.getSharedPreferences(PREFS_USER, Context.MODE_PRIVATE)
+        return appContext.getSharedPreferences(PREFS_USER, Context.MODE_PRIVATE)
                 .getBoolean(PREF_ALLOW_ANALYTICS_ASKED, false);
     }
 
     @Override
     public void setAskedForAnalytics(boolean b) {
-        context.getSharedPreferences(PREFS_USER, Context.MODE_PRIVATE).edit()
+        appContext.getSharedPreferences(PREFS_USER, Context.MODE_PRIVATE).edit()
                 .putBoolean(PREF_ALLOW_ANALYTICS_ASKED, b)
                 .apply();
     }
@@ -321,7 +235,7 @@ public class SettingsManagerImpl implements SettingsManager {
     @Override
     public String getCommentSort() {
         return sharedPreferences.getString(PREF_DEFAULT_COMMENT_SORT,
-                context.getString(R.string.default_comment_sort));
+                appContext.getString(R.string.default_comment_sort));
     }
 
     @Override
@@ -375,14 +289,16 @@ public class SettingsManagerImpl implements SettingsManager {
 
     @Override
     public ColorScheme getColorScheme() {
-        final String id = sharedPreferences.getString(PREF_COLOR_SCHEME_ID, ColorScheme.STANDARD.getId());
+        final String defaultColorSchemeId = ColorScheme.STANDARD.getId();
+        final String id = sharedPreferences.getString(PREF_COLOR_SCHEME, defaultColorSchemeId);
         return ColorScheme.fromId(id);
     }
 
     @Override
     public void setColorScheme(@NonNull ColorScheme colorScheme) {
+        final String colorSchemeId = colorScheme.getId();
         sharedPreferences.edit()
-                .putString(PREF_COLOR_SCHEME_ID, colorScheme.getId())
+                .putString(PREF_COLOR_SCHEME, colorSchemeId)
                 .apply();
     }
 }
