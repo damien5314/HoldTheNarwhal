@@ -16,7 +16,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import com.ddiehl.android.htn.R
 import com.ddiehl.android.htn.view.getDelegate
-import timber.log.Timber
 
 class ReportDialog : DialogFragment() {
 
@@ -93,7 +92,6 @@ class ReportDialog : DialogFragment() {
 
             // Set checked state change listener that caches selected index
             selector.setOnCheckedChangeListener { _, isChecked ->
-//                otherSelector.isChecked = false
                 if (isChecked) {
                     selectedIndex = i
                     selectedButton = selector
@@ -114,7 +112,6 @@ class ReportDialog : DialogFragment() {
             if (isChecked) {
                 selectedIndex = numOptions
                 selectedButton = otherSelector
-//                otherSelector.isChecked = true
             }
             clearAllChecks(parent)
         }
@@ -132,9 +129,7 @@ class ReportDialog : DialogFragment() {
     }
 
     private fun clearAllChecks(view: View) {
-        Timber.d("[dcd] clearing all checks for $view")
         if (view is RadioButton && view != selectedButton) {
-            Timber.d("[dcd] view is RadioButton")
             view.isChecked = false
         }
         if (view is ViewGroup) {
