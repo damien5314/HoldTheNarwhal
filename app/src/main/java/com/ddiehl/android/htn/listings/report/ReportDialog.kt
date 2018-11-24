@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.RadioButton
@@ -39,6 +40,7 @@ class ReportDialog : DialogFragment() {
     private val siteRules: Array<String> by lazy { arguments!!.getStringArray(ARG_SITE_RULES) }
 
     internal var selectedIndex = -1
+    internal var selectedButton: RadioButton? = null
     internal var listener: Listener? = null
 
     interface Listener {
@@ -89,12 +91,12 @@ class ReportDialog : DialogFragment() {
             selector.id = i
 
             // Set checked state change listener that caches selected index
-            selector.setOnCheckedChangeListener { buttonView, isChecked ->
-                parent.clearCheck()
-                otherSelector.isChecked = false
+            selector.setOnCheckedChangeListener { _, isChecked ->
                 if (isChecked) {
                     selectedIndex = i
+                    selectedButton = selector
                 }
+                clearAllChecks(parent)
             }
 
             // Set text for option
@@ -106,12 +108,12 @@ class ReportDialog : DialogFragment() {
         }
 
         // Set checked listener for 'other' field
-        otherSelector.setOnCheckedChangeListener { buttonView, isChecked ->
-            parent.clearCheck()
+        otherSelector.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 selectedIndex = numOptions
-                otherSelector.isChecked = true
+                selectedButton = otherSelector
             }
+            clearAllChecks(parent)
         }
 
         // Add other option view
@@ -124,6 +126,18 @@ class ReportDialog : DialogFragment() {
             .setNegativeButton(R.string.report_cancel, onCancelButton())
             .setView(view)
             .create()
+    }
+
+    private fun clearAllChecks(view: View) {
+        if (view is RadioButton && view != selectedButton) {
+            view.isChecked = false
+        }
+        if (view is ViewGroup) {
+            for (i in 0 until view.childCount) {
+                val child = view.getChildAt(i)
+                clearAllChecks(child)
+            }
+        }
     }
 
     private fun getReportOptions(rules: Array<String>, siteRules: Array<String>): Array<String?> {
