@@ -1,0 +1,28 @@
+Privacy Policy
+
+Hold the Narwhal app is an open source app. This service is provided at no cost and is intended for use as is. This page is used to inform visitors regarding my policies with the collection, use, and disclosure of personal information if anyone decides to use the service. If you choose to use this service, then you agree to the collection and use of information in relation to this policy. The personal information that I collect is used for providing and improving the service. I will not use or share your information with anyone except as described in this Privacy Policy.
+
+Information Collection and Use
+
+For a better experience, while using our service, I may require you to provide us with certain personally identifiable information, including but not limited to the Android advertising ID included with crash information. The information that I request is shared with the Crashlytics service to assist with debugging crashes experienced by end users.
+
+Crashlytics
+https://try.crashlytics.com/terms/privacy-policy.pdf
+
+I want to inform you that whenever you use this service, in the event of an error in the app I collect data and information (through third party products) on your phone called log data. This log data may include information such as your device Internet Protocol (“IP”) address, device name, operating system version, the configuration of the app when utilizing this service, the time and date of your use of the service, and other statistics.
+
+Cookies
+
+Cookies are files with a small amount of data that are commonly used as anonymous unique identifiers. These are sent to your browser from the websites that you visit and are stored on your device's internal memory. This service does not use these cookies explicitly, however, the app may use third party code and libraries that use cookies to collect information and improve their services. You have the option to either accept or refuse these cookies and know when a cookie is being sent to your device.
+
+Security
+
+I value your trust in providing us your Personal Information, thus we are striving to use commercially acceptable means of protecting it. But remember that no method of transmission over the internet, or method of electronic storage is 100% secure and reliable, and I cannot guarantee its absolute security.
+
+Changes to This Privacy Policy
+
+I may update our Privacy Policy from time to time. Thus, you are advised to review this page periodically for any changes. I will notify you of any changes by posting the new Privacy Policy on this page. These changes are effective immediately after they are posted on this page.
+
+Contact Us
+
+If you have any questions or suggestions about my Privacy Policy, do not hesitate to contact me via the email address listed on the Google Play Store.
