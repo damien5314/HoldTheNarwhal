@@ -25,10 +25,7 @@
         <item name="toolbarPopupStyle">@style/Theme.AppCompat.Light</item>
         <item name="tabLayoutTextColor">@color/gray300</item>
         <item name="tabLayoutSelectedTextColor">@color/white</item>
-        <item name="buttonColor">@color/bluegrey700</item>
-        <item name="buttonColorFocused">@color/bluegrey100</item>
-        <item name="buttonColorPressed">@color/bluegrey500</item>
-        <item name="buttonColorDisabled">@color/bluegrey500</item>
+        <item name="buttonBgDrawable">@drawable/button_bg_dark</item>
         <item name="buttonTextColor">@color/white</item>
         <item name="nsfwColor">@color/venetian_red</item>
         <item name="redditGoldColor">@color/golden_yellow</item>
@@ -74,10 +71,7 @@
         <item name="toolbarPopupStyle">@style/Theme.AppCompat</item>
         <item name="tabLayoutTextColor">@color/gray300</item>
         <item name="tabLayoutSelectedTextColor">@color/white</item>
-        <item name="buttonColor">@color/gray900</item>
-        <item name="buttonColorFocused">@color/gray700</item>
-        <item name="buttonColorPressed">@color/gray800</item>
-        <item name="buttonColorDisabled">@color/gray800</item>
+        <item name="buttonBgDrawable">@drawable/button_bg_dark</item>
         <item name="buttonTextColor">@color/white</item>
         <item name="nsfwColor">@color/venetian_red</item>
         <item name="redditGoldColor">@color/golden_yellow</item>
