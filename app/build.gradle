@@ -46,7 +46,7 @@ android {
         applicationId "com.ddiehl.android.htn"
         minSdkVersion MIN_SDK_VERSION
         targetSdkVersion TARGET_SDK_VERSION
-        versionCode 1600021
+        versionCode 1500021
         versionName "0.16"
         resConfigs "en"
         buildConfigField "long", "BUILD_TIME_UTC", "" + getTime()
