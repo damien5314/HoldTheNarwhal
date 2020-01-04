@@ -74,7 +74,7 @@ class ReportDialog : DialogFragment() {
 
         // Inflate parent RadioGroup
         @SuppressLint("InflateParams") val view =
-                inflater.inflate(R.layout.report_dialog_view, null, false) as ViewGroup
+            inflater.inflate(R.layout.report_dialog_view, null, false) as ViewGroup
         val parent = view.findViewById<RadioGroup>(R.id.dialog_view_group)
 
         // Inflate 'other' dialog item
@@ -121,11 +121,11 @@ class ReportDialog : DialogFragment() {
 
         // Build AlertDialog from custom view
         return AlertDialog.Builder(context!!)
-                .setTitle(R.string.report_menu_title)
-                .setPositiveButton(R.string.report_submit, onSubmit())
-                .setNegativeButton(R.string.report_cancel, onCancelButton())
-                .setView(view)
-                .create()
+            .setTitle(R.string.report_menu_title)
+            .setPositiveButton(R.string.report_submit, onSubmit())
+            .setNegativeButton(R.string.report_cancel, onCancelButton())
+            .setView(view)
+            .create()
     }
 
     private fun clearAllChecks(view: View) {

@@ -23,7 +23,7 @@ import javax.inject.Inject
 
 @FragmentWithArgs
 class LinkCommentsFragment : BaseListingsFragment(), LinkCommentsView,
-        SwipeRefreshLayout.OnRefreshListener {
+    SwipeRefreshLayout.OnRefreshListener {
 
     companion object {
         @JvmField
@@ -253,8 +253,12 @@ class LinkCommentsFragment : BaseListingsFragment(), LinkCommentsView,
     override fun notifyItemChanged(position: Int) = super.notifyItemChanged(position + 1)
 
     override fun notifyItemInserted(position: Int) = super.notifyItemInserted(position + 1)
+
     override fun notifyItemRemoved(position: Int) = super.notifyItemRemoved(position + 1)
+
     override fun notifyItemRangeChanged(position: Int, count: Int) = super.notifyItemRangeChanged(position + 1, count)
+
     override fun notifyItemRangeInserted(position: Int, count: Int) = super.notifyItemRangeInserted(position + 1, count)
+
     override fun notifyItemRangeRemoved(position: Int, count: Int) = super.notifyItemRangeRemoved(position + 1, count)
 }
