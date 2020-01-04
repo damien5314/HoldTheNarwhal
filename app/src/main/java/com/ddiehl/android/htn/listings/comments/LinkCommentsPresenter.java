@@ -246,7 +246,8 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
             if (media != null) {
                 final Media.RedditVideo redditVideo = media.getRedditVideo();
                 if (redditVideo != null) {
-                    linkCommentsView.openUrlInWebView(redditVideo.getHlsUrl());
+                    final String videoUrl = redditVideo.getFallbackUrl();
+                    linkCommentsView.openUrlInWebView(videoUrl);
                     return;
                 }
             }
