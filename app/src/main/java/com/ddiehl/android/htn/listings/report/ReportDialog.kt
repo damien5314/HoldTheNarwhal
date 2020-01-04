@@ -54,7 +54,7 @@ class ReportDialog : DialogFragment() {
         fun onCancelled()
     }
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         listener = getDelegate()
     }
@@ -159,7 +159,7 @@ class ReportDialog : DialogFragment() {
             // Otherwise, submit the other reason
             // If index is in site rules array, submit the site rule
             else {
-                val otherText = dialog.findViewById<EditText>(R.id.report_choice_edit_text)
+                val otherText = dialog!!.findViewById<EditText>(R.id.report_choice_edit_text)
                 val input = otherText.text.toString().trim { it <= ' ' }
                 submit(null, null, input)
             }
@@ -170,7 +170,7 @@ class ReportDialog : DialogFragment() {
         return DialogInterface.OnClickListener { dialogInterface, _ -> onCancel(dialogInterface) }
     }
 
-    override fun onCancel(dialog: DialogInterface?) {
+    override fun onCancel(dialog: DialogInterface) {
         super.onCancel(dialog)
         listener!!.onCancelled()
     }
