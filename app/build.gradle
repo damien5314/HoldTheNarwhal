@@ -143,6 +143,8 @@ dependencies {
     implementation "com.hannesdorfmann.fragmentargs:annotation:$FRAGMENTARGS_VERSION"
     kapt "com.hannesdorfmann.fragmentargs:processor:$FRAGMENTARGS_VERSION"
 
+    implementation "com.google.code.gson:gson:$GSON_VERSION"
+
     implementation "com.jakewharton.timber:timber:$TIMBER_VERSION"
     debugImplementation "com.squareup.leakcanary:leakcanary-android:$LEAK_CANARY_VERSION"
     releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$LEAK_CANARY_VERSION"
