@@ -383,7 +383,7 @@ abstract class BaseListingsFragment : BaseFragment(), ListingsView, SwipeRefresh
     open fun openVideoInDialog(url: String) {
         VideoPlayerDialogBuilder(url)
             .build()
-            .show(fragmentManager, VideoPlayerDialog.TAG)
+            .show(fragmentManager!!, VideoPlayerDialog.TAG)
     }
 
     open fun showCommentsForLink(

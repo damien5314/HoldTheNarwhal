@@ -54,7 +54,7 @@ class ReportDialog : DialogFragment() {
         fun onCancelled()
     }
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         listener = getDelegate()
     }
@@ -74,7 +74,7 @@ class ReportDialog : DialogFragment() {
 
         // Inflate parent RadioGroup
         @SuppressLint("InflateParams") val view =
-            inflater.inflate(R.layout.report_dialog_view, null, false) as ViewGroup
+                inflater.inflate(R.layout.report_dialog_view, null, false) as ViewGroup
         val parent = view.findViewById<RadioGroup>(R.id.dialog_view_group)
 
         // Inflate 'other' dialog item
@@ -121,11 +121,11 @@ class ReportDialog : DialogFragment() {
 
         // Build AlertDialog from custom view
         return AlertDialog.Builder(context!!)
-            .setTitle(R.string.report_menu_title)
-            .setPositiveButton(R.string.report_submit, onSubmit())
-            .setNegativeButton(R.string.report_cancel, onCancelButton())
-            .setView(view)
-            .create()
+                .setTitle(R.string.report_menu_title)
+                .setPositiveButton(R.string.report_submit, onSubmit())
+                .setNegativeButton(R.string.report_cancel, onCancelButton())
+                .setView(view)
+                .create()
     }
 
     private fun clearAllChecks(view: View) {
@@ -159,7 +159,7 @@ class ReportDialog : DialogFragment() {
             // Otherwise, submit the other reason
             // If index is in site rules array, submit the site rule
             else {
-                val otherText = dialog.findViewById<EditText>(R.id.report_choice_edit_text)
+                val otherText = dialog!!.findViewById<EditText>(R.id.report_choice_edit_text)
                 val input = otherText.text.toString().trim { it <= ' ' }
                 submit(null, null, input)
             }
@@ -170,7 +170,7 @@ class ReportDialog : DialogFragment() {
         return DialogInterface.OnClickListener { dialogInterface, _ -> onCancel(dialogInterface) }
     }
 
-    override fun onCancel(dialog: DialogInterface?) {
+    override fun onCancel(dialog: DialogInterface) {
         super.onCancel(dialog)
         listener!!.onCancelled()
     }

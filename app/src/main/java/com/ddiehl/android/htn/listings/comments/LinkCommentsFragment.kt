@@ -13,7 +13,6 @@ import com.ddiehl.android.htn.R
 import com.ddiehl.android.htn.listings.BaseListingsFragment
 import com.ddiehl.android.htn.settings.SettingsManager
 import com.ddiehl.android.htn.utils.AndroidUtils.safeStartActivity
-import com.ddiehl.android.htn.view.BaseFragment
 import com.hannesdorfmann.fragmentargs.FragmentArgs
 import com.hannesdorfmann.fragmentargs.annotation.Arg
 import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs
@@ -24,17 +23,21 @@ import javax.inject.Inject
 
 @FragmentWithArgs
 class LinkCommentsFragment : BaseListingsFragment(), LinkCommentsView,
-    SwipeRefreshLayout.OnRefreshListener {
+        SwipeRefreshLayout.OnRefreshListener {
 
     companion object {
         @JvmField
-        val TAG = LinkCommentsFragment::class.java.simpleName!!
+        val TAG: String = LinkCommentsFragment::class.java.simpleName
     }
 
-    @field:Inject lateinit var settingsManager: SettingsManager
-    @field:Arg override lateinit var subreddit: String
-    @field:Arg override lateinit var articleId: String
-    @field:Arg override var commentId: String? = null
+    @field:Inject
+    lateinit var settingsManager: SettingsManager
+    @field:Arg
+    override lateinit var subreddit: String
+    @field:Arg
+    override lateinit var articleId: String
+    @field:Arg
+    override var commentId: String? = null
 
     @BindView(R.id.coordinator_layout)
     lateinit var coordinatorLayout: CoordinatorLayout
@@ -124,11 +127,11 @@ class LinkCommentsFragment : BaseListingsFragment(), LinkCommentsView,
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
-            BaseFragment.REQUEST_CHOOSE_SORT -> if (resultCode == RESULT_OK) {
+            REQUEST_CHOOSE_SORT -> if (resultCode == RESULT_OK) {
                 val sort = data!!.getStringExtra(ChooseCommentSortDialog.EXTRA_SORT)
                 onSortSelected(sort)
             }
-            BaseFragment.REQUEST_ADD_COMMENT -> if (resultCode == RESULT_OK) {
+            REQUEST_ADD_COMMENT -> if (resultCode == RESULT_OK) {
                 val commentText = data!!.getStringExtra(AddCommentDialog.EXTRA_COMMENT_TEXT)
                 presenter.onCommentSubmitted(commentText)
             }
@@ -203,8 +206,8 @@ class LinkCommentsFragment : BaseListingsFragment(), LinkCommentsView,
 
     private fun showSortOptionsMenu() {
         val chooseLinkSortDialog = ChooseCommentSortDialog.newInstance(sort)
-        chooseLinkSortDialog.setTargetFragment(this, BaseFragment.REQUEST_CHOOSE_SORT)
-        chooseLinkSortDialog.show(fragmentManager, ChooseCommentSortDialog.TAG)
+        chooseLinkSortDialog.setTargetFragment(this, REQUEST_CHOOSE_SORT)
+        chooseLinkSortDialog.show(fragmentManager!!, ChooseCommentSortDialog.TAG)
     }
 
     private fun onSortSelected(sort: String) {
@@ -225,8 +228,8 @@ class LinkCommentsFragment : BaseListingsFragment(), LinkCommentsView,
     override fun openReplyView(listing: Listing) {
         val id = "${listing.kind}_${listing.id}"
         val dialog = AddCommentDialog.newInstance(id)
-        dialog.setTargetFragment(this, BaseFragment.REQUEST_ADD_COMMENT)
-        dialog.show(fragmentManager, AddCommentDialog.TAG)
+        dialog.setTargetFragment(this, REQUEST_ADD_COMMENT)
+        dialog.show(fragmentManager!!, AddCommentDialog.TAG)
     }
 
     override fun onRefresh() {
@@ -248,6 +251,7 @@ class LinkCommentsFragment : BaseListingsFragment(), LinkCommentsView,
      * of a link at the top of the adapter
      */
     override fun notifyItemChanged(position: Int) = super.notifyItemChanged(position + 1)
+
     override fun notifyItemInserted(position: Int) = super.notifyItemInserted(position + 1)
     override fun notifyItemRemoved(position: Int) = super.notifyItemRemoved(position + 1)
     override fun notifyItemRangeChanged(position: Int, count: Int) = super.notifyItemRangeChanged(position + 1, count)
