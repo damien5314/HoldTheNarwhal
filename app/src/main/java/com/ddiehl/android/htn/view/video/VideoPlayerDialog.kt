@@ -1,6 +1,7 @@
 package com.ddiehl.android.htn.view.video
 
 import android.app.Dialog
+import android.os.Build.VERSION.SDK_INT
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -32,6 +33,9 @@ class VideoPlayerDialog : DialogFragment() {
         SimpleExoPlayer.Builder(requireContext())
             .build()
     }
+    private val videoView by lazy {
+        requireView().findViewById<PlayerView>(R.id.video_view)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,22 +54,34 @@ class VideoPlayerDialog : DialogFragment() {
 
     override fun onStart() {
         super.onStart()
-        view!!.findViewById<PlayerView>(R.id.video_view)!!.onResume()
-        startVideo()
-    }
-
-    override fun onStop() {
-        stopVideo()
-        view!!.findViewById<PlayerView>(R.id.video_view)!!.onPause()
-        super.onStop()
+        if (SDK_INT >= 24) {
+            videoView.onResume()
+            startVideo()
+        }
     }
 
     override fun onResume() {
         super.onResume()
+        if (SDK_INT < 24) {
+            videoView.onResume()
+            startVideo()
+        }
     }
 
     override fun onPause() {
+        if (SDK_INT < 24) {
+            stopVideo()
+            videoView.onPause()
+        }
         super.onPause()
+    }
+
+    override fun onStop() {
+        if (SDK_INT >= 24) {
+            stopVideo()
+            videoView.onPause()
+        }
+        super.onStop()
     }
 
     private fun startVideo() {
