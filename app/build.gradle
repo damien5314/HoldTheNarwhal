@@ -1,36 +1,12 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'com.jakewharton.hugo'
-apply plugin: 'com.github.ben-manes.versions'
-apply plugin: 'io.fabric'
-
-// TODO: Remove conditional once below issue is resolved
-// https://github.com/KeepSafe/dexcount-gradle-plugin/issues/235
-def taskRequests = getGradle().getStartParameter().getTaskRequests()
-if (!taskRequests.toString().toLowerCase().contains("debug")) {
-    apply plugin: 'com.getkeepsafe.dexcount'
-}
-
-allprojects {
-    dependencyUpdates.resolutionStrategy {
-        componentSelection { rules ->
-            rules.all { ComponentSelection selection ->
-                boolean rejected = ['alpha', 'beta', 'rc', 'cr', 'm', 'snapshot', 'nightly'].any { qualifier ->
-                    selection.candidate.version ==~ /(?i).*[.-]${qualifier}[.\d-]*/
-                }
-                if (rejected) {
-                    selection.reject('Ignoring release candidates')
-                }
-            }
-        }
-    }
-}
+apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.firebase.crashlytics'
 
 repositories {
     jcenter()
-    maven { url "https://maven.google.com/" }
-    maven { url 'https://maven.fabric.io/public' }
+    google()
     maven { url "https://jitpack.io" }
 }
 
@@ -112,9 +88,9 @@ dependencies {
     implementation "androidx.cardview:cardview:$ANDROIDX_CARDVIEW"
     implementation "androidx.constraintlayout:constraintlayout:$ANDROIDX_CONSTRAINTLAYOUT"
     implementation "com.google.android.material:material:$ANDROIDX_MATERIAL"
-    implementation("com.crashlytics.sdk.android:crashlytics:$CRASHLYTICS_VERSION@aar") {
-        transitive = true
-    }
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:$SWIPE_REFRESH_LAYOUT_VERSION"
+    implementation "com.google.firebase:firebase-crashlytics:$FIREBASE_CRASHLYTICS_VERSION"
+    implementation "com.google.firebase:firebase-analytics:$FIREBASE_ANALYTICS_VERSION"
     implementation "com.github.bumptech.glide:glide:$GLIDE_VERSION"
     kapt "com.github.bumptech.glide:compiler:$GLIDE_VERSION"
     implementation "com.github.bumptech.glide:okhttp3-integration:$GLIDE_OKHTTP_VERSION"
@@ -139,7 +115,7 @@ dependencies {
     androidTestImplementation "junit:junit:$JUNIT_VERSION"
     androidTestImplementation "org.mockito:mockito-core:$MOCKITO_VERSION"
     kaptAndroidTest "com.google.dagger:dagger-compiler:$DAGGER_VERSION"
-    androidTestImplementation "androidx.annotation:annotation:$ANDROIDX_APPCOMPAT"
+    androidTestImplementation "androidx.annotation:annotation:$ANDROIDX_ANNOTATION"
     androidTestImplementation "androidx.test:runner:$ANDROIDX_TEST_SUPPORT"
     androidTestImplementation "androidx.test:rules:$ANDROIDX_TEST_SUPPORT"
 }

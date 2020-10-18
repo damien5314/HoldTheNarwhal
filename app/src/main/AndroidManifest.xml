@@ -18,10 +18,6 @@
         android:theme="@style/StandardThemeColors"
         tools:ignore="UnusedAttribute">
 
-        <meta-data
-            android:name="io.fabric.ApiKey"
-            android:value="eaccaaf37ee22836fe15fff1daa0c745f6e061e2" />
-
         <activity
             android:name=".navigation.DeepLinkDispatcher"
             android:launchMode="singleTask">

@@ -8,7 +8,8 @@ import android.app.job.JobScheduler;
 import android.content.Context;
 import android.os.Build;
 
-import com.crashlytics.android.Crashlytics;
+import androidx.annotation.VisibleForTesting;
+
 import com.ddiehl.android.htn.di.ApplicationComponent;
 import com.ddiehl.android.htn.di.ApplicationModule;
 import com.ddiehl.android.htn.di.DaggerApplicationComponent;
@@ -21,8 +22,6 @@ import com.ddiehl.android.logging.LogcatLoggingTree;
 
 import java.util.Arrays;
 
-import androidx.annotation.VisibleForTesting;
-import io.fabric.sdk.android.Fabric;
 import timber.log.Timber;
 
 public class HoldTheNarwhal extends Application {
@@ -32,8 +31,6 @@ public class HoldTheNarwhal extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-
-        Fabric.with(this, new Crashlytics());
 
         component = DaggerApplicationComponent.builder()
                 .applicationModule(new ApplicationModule(this))
