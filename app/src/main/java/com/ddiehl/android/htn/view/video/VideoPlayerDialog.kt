@@ -11,7 +11,7 @@ import androidx.fragment.app.DialogFragment
 import com.ddiehl.android.htn.R
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.SimpleExoPlayer
-import com.google.android.exoplayer2.ui.PlayerView
+import com.google.android.exoplayer2.ui.StyledPlayerView
 import com.hannesdorfmann.fragmentargs.FragmentArgs
 import com.hannesdorfmann.fragmentargs.annotation.Arg
 import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs
@@ -34,7 +34,9 @@ class VideoPlayerDialog : DialogFragment() {
             .build()
     }
     private val videoView by lazy {
-        requireView().findViewById<PlayerView>(R.id.video_view)
+        requireView().findViewById<StyledPlayerView>(R.id.video_view).also { videoView ->
+            videoView.controllerAutoShow = false
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,10 +46,7 @@ class VideoPlayerDialog : DialogFragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View = inflater.inflate(R.layout.video_dialog, container, false).also { view ->
-        val playerView = view.findViewById<PlayerView>(R.id.video_view)
-        playerView.player = exoPlayer
-    }
+    ): View = inflater.inflate(R.layout.video_dialog, container, false)
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
         Dialog(requireContext(), R.style.DialogOverlay)
@@ -89,6 +88,7 @@ class VideoPlayerDialog : DialogFragment() {
         exoPlayer.addListener(ExoPlayerErrorLogger())
         exoPlayer.setMediaItem(mediaItem)
         exoPlayer.playWhenReady = true
+        videoView.player = exoPlayer
         exoPlayer.prepare()
     }
 
