@@ -7,9 +7,6 @@ buildscript {
         // Gradle plugins
         KOTLIN_VERSION = '1.4.10'
         ANDROID_GRADLE_PLUGIN = '4.1.0'
-        HUGO_VERSION = '1.2.1'
-        DEXCOUNT_VERSION = '0.8.3'
-        GRADLE_VERSIONS_VERSION = '0.20.0'
 
         // Libraries
         SUPPORT_LIBRARY_VERSION = '28.0.0'
@@ -53,9 +50,6 @@ buildscript {
     dependencies {
         classpath "com.android.tools.build:gradle:$ANDROID_GRADLE_PLUGIN"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$KOTLIN_VERSION"
-        classpath "com.jakewharton.hugo:hugo-plugin:$HUGO_VERSION"
-        classpath "com.getkeepsafe.dexcount:dexcount-gradle-plugin:$DEXCOUNT_VERSION"
-        classpath "com.github.ben-manes:gradle-versions-plugin:$GRADLE_VERSIONS_VERSION"
         classpath "com.google.gms:google-services:$GOOGLE_SERVICES_PLUGIN_VERSION"
         classpath "com.google.firebase:firebase-crashlytics-gradle:$FIREBASE_CRASHLYTICS_PLUGIN_VERSION"
     }
