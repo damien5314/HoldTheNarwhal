@@ -5,7 +5,7 @@ import com.google.android.exoplayer2.Player
 import timber.log.Timber
 
 /**
- * TODO: Describe what this class is responsible for
+ * Logs eligible error types to the Timber logger
  */
 class ExoPlayerErrorLogger : Player.EventListener {
 

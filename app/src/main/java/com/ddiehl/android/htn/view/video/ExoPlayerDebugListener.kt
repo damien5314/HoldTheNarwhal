@@ -6,7 +6,7 @@ import com.google.android.exoplayer2.trackselection.TrackSelectionArray
 import timber.log.Timber
 
 /**
- * TODO: Describe what this class is responsible for
+ * Logs all events available via [Player.EventListener] to the Timber logger
  */
 class ExoPlayerDebugListener : Player.EventListener {
 
