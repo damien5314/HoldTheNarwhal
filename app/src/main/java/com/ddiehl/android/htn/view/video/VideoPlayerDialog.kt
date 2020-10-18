@@ -86,7 +86,7 @@ class VideoPlayerDialog : DialogFragment() {
 
     private fun startVideo() {
         val mediaItem = MediaItem.fromUri(url)
-        exoPlayer.addListener(ExoPlayerDebugListener())
+        exoPlayer.addListener(ExoPlayerErrorLogger())
         exoPlayer.setMediaItem(mediaItem)
         exoPlayer.playWhenReady = true
         exoPlayer.prepare()
