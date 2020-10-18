@@ -3,9 +3,9 @@ package com.ddiehl.android.htn.identity;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.crashlytics.android.Crashlytics;
 import com.ddiehl.android.htn.settings.SettingsManager;
 import com.ddiehl.android.htn.utils.Utils;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -54,7 +54,9 @@ public class IdentityManagerImpl implements IdentityManager {
             // Pass user identity to Crashlytics
             if (identity != null) {
                 String hashedUsername = Utils.getMd5HexString(identity.getName());
-                Crashlytics.setUserIdentifier(hashedUsername);
+                if (hashedUsername != null) {
+                    FirebaseCrashlytics.getInstance().setUserId(hashedUsername);
+                }
             }
 
             userIdentity = identity;
@@ -130,7 +132,7 @@ public class IdentityManagerImpl implements IdentityManager {
     @Override
     public void clearSavedUserIdentity() {
         // Clear identity from Crashlytics
-        Crashlytics.setUserIdentifier(null);
+        FirebaseCrashlytics.getInstance().setUserId("");
 
         userIdentity = null;
         context.getSharedPreferences(PREFS_USER_IDENTITY, Context.MODE_PRIVATE)
