@@ -8,11 +8,9 @@ import android.view.ViewGroup
 import android.widget.VideoView
 import androidx.fragment.app.DialogFragment
 import com.ddiehl.android.htn.R
-import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
-import com.google.android.exoplayer2.mediacodec.MediaCodecSelector
+import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.ui.PlayerView
-import com.google.android.exoplayer2.video.MediaCodecVideoRenderer
 import com.hannesdorfmann.fragmentargs.FragmentArgs
 import com.hannesdorfmann.fragmentargs.annotation.Arg
 import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs
@@ -27,14 +25,11 @@ class VideoPlayerDialog : DialogFragment() {
         const val TAG: String = "VideoPlayerDialog"
     }
 
-    private val videoView by lazy { requireView().findViewById<PlayerView>(R.id.video_view) }
-
     @Arg
     lateinit var url: String
 
     private val exoPlayer by lazy {
-        val renderer = MediaCodecVideoRenderer(requireContext(), MediaCodecSelector.DEFAULT)
-        ExoPlayer.Builder(requireContext(), renderer)
+        SimpleExoPlayer.Builder(requireContext())
             .build()
     }
 
@@ -45,23 +40,37 @@ class VideoPlayerDialog : DialogFragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View = inflater.inflate(R.layout.video_dialog, container, false)
+    ): View = inflater.inflate(R.layout.video_dialog, container, false).also { view ->
+        val playerView = view.findViewById<PlayerView>(R.id.video_view)
+        playerView.player = exoPlayer
+    }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
         Dialog(requireContext(), R.style.DialogOverlay)
 
-    override fun onResume() {
-        super.onResume()
+    override fun onStart() {
+        super.onStart()
+        view!!.findViewById<PlayerView>(R.id.video_view)!!.onResume()
         startVideo()
     }
 
-    override fun onPause() {
+    override fun onStop() {
         stopVideo()
+        view!!.findViewById<PlayerView>(R.id.video_view)!!.onPause()
+        super.onStop()
+    }
+
+    override fun onResume() {
+        super.onResume()
+    }
+
+    override fun onPause() {
         super.onPause()
     }
 
     private fun startVideo() {
         val mediaItem = MediaItem.fromUri(url)
+        exoPlayer.addListener(ExoPlayerDebugListener())
         exoPlayer.setMediaItem(mediaItem)
         exoPlayer.playWhenReady = true
         exoPlayer.prepare()
