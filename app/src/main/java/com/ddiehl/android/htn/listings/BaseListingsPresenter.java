@@ -45,11 +45,16 @@ import timber.log.Timber;
 public abstract class BaseListingsPresenter
         implements ListingsView.Callbacks {
 
-    @Inject protected Context context;
-    @Inject protected IdentityManager identityManager;
-    @Inject protected SettingsManager settingsManager;
-    @Inject protected RedditService redditService;
-    @Inject protected NetworkConnectivityManager networkConnectivityManager;
+    @Inject
+    protected Context context;
+    @Inject
+    protected IdentityManager identityManager;
+    @Inject
+    protected SettingsManager settingsManager;
+    @Inject
+    protected RedditService redditService;
+    @Inject
+    protected NetworkConnectivityManager networkConnectivityManager;
 
     final List<Listing> listings = new ArrayList<>();
 
@@ -216,8 +221,7 @@ public abstract class BaseListingsPresenter
             if (media != null) {
                 final Media.RedditVideo redditVideo = media.getRedditVideo();
                 if (redditVideo != null) {
-                    final String videoUrl = redditVideo.getFallbackUrl();
-                    linkView.openUrlInWebView(videoUrl);
+                    linkView.openRedditVideo(redditVideo);
                     return;
                 }
             }

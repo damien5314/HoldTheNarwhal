@@ -32,6 +32,7 @@ buildscript {
         FRAGMENTARGS_VERSION = '3.0.2'
         GSON_VERSION = '2.8.5'
         TIMBER_VERSION = '4.7.1'
+        EXOPLAYER_VERSION = '2.12.0'
         LEAK_CANARY_VERSION = '1.6.1'
         JUNIT_VERSION = '4.12'
         MOCKITO_VERSION = '2.21.0'

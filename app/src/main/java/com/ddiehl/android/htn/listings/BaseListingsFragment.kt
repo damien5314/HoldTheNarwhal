@@ -19,10 +19,7 @@ import com.ddiehl.android.htn.view.BaseFragment
 import com.ddiehl.android.htn.view.video.VideoPlayerDialog
 import com.ddiehl.android.htn.view.video.VideoPlayerDialogBuilder
 import com.google.android.material.snackbar.Snackbar
-import rxreddit.model.Comment
-import rxreddit.model.Link
-import rxreddit.model.Listing
-import rxreddit.model.PrivateMessage
+import rxreddit.model.*
 
 abstract class BaseListingsFragment : BaseFragment(), ListingsView, SwipeRefreshLayout.OnRefreshListener {
 
@@ -380,6 +377,10 @@ abstract class BaseListingsFragment : BaseFragment(), ListingsView, SwipeRefresh
         redditNavigationView.openURL(url)
     }
 
+    open fun openRedditVideo(redditVideo: Media.RedditVideo) {
+        redditNavigationView.openRedditVideo(redditVideo)
+    }
+
     open fun openVideoInDialog(url: String) {
         VideoPlayerDialogBuilder(url)
             .build()
@@ -387,7 +388,8 @@ abstract class BaseListingsFragment : BaseFragment(), ListingsView, SwipeRefresh
     }
 
     open fun showCommentsForLink(
-            subreddit: String, linkId: String, commentId: String?) {
+        subreddit: String, linkId: String, commentId: String?
+    ) {
         redditNavigationView.showCommentsForLink(subreddit, linkId, commentId)
     }
 
@@ -446,9 +448,14 @@ abstract class BaseListingsFragment : BaseFragment(), ListingsView, SwipeRefresh
     override fun notifyItemChanged(position: Int) = listingsAdapter.notifyItemChanged(position)
     override fun notifyItemInserted(position: Int) = listingsAdapter.notifyItemInserted(position)
     override fun notifyItemRemoved(position: Int) = listingsAdapter.notifyItemRemoved(position)
-    override fun notifyItemRangeChanged(position: Int, count: Int) = listingsAdapter.notifyItemRangeChanged(position, count)
-    override fun notifyItemRangeInserted(position: Int, count: Int) = listingsAdapter.notifyItemRangeInserted(position, count)
-    override fun notifyItemRangeRemoved(position: Int, count: Int) = listingsAdapter.notifyItemRangeRemoved(position, count)
+    override fun notifyItemRangeChanged(position: Int, count: Int) =
+        listingsAdapter.notifyItemRangeChanged(position, count)
+
+    override fun notifyItemRangeInserted(position: Int, count: Int) =
+        listingsAdapter.notifyItemRangeInserted(position, count)
+
+    override fun notifyItemRangeRemoved(position: Int, count: Int) =
+        listingsAdapter.notifyItemRangeRemoved(position, count)
 
     override fun onRefresh() {
         swipeRefreshLayout.isRefreshing = false

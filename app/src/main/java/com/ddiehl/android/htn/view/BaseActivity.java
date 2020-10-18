@@ -16,6 +16,14 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.FragmentManager;
+
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.identity.IdentityManager;
@@ -37,6 +45,8 @@ import com.ddiehl.android.htn.utils.AndroidUtils;
 import com.ddiehl.android.htn.utils.ThemeUtilsKt;
 import com.ddiehl.android.htn.view.glide.GlideApp;
 import com.ddiehl.android.htn.view.theme.ColorScheme;
+import com.ddiehl.android.htn.view.video.VideoPlayerDialog;
+import com.ddiehl.android.htn.view.video.VideoPlayerDialogBuilder;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
@@ -50,13 +60,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.FragmentManager;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.Observable;
@@ -65,6 +68,7 @@ import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import rxreddit.android.SignInActivity;
 import rxreddit.api.RedditService;
+import rxreddit.model.Media;
 import rxreddit.model.PrivateMessage;
 import rxreddit.model.UserAccessToken;
 import rxreddit.model.UserIdentity;
@@ -92,19 +96,27 @@ public abstract class BaseActivity extends AppCompatActivity implements
     private static final String EXTRA_AUTHENTICATION_STATE_CHANGE =
             "com.ddiehl.android.htn.EXTRA_AUTHENTICATION_STATE_CHANGE";
 
-    @BindView(R.id.drawer_layout) DrawerLayout drawerLayout;
-    @BindView(R.id.navigation_view) NavigationView navigationView;
-    @BindView(R.id.tab_layout) TabLayout tabLayout;
+    @BindView(R.id.drawer_layout)
+    DrawerLayout drawerLayout;
+    @BindView(R.id.navigation_view)
+    NavigationView navigationView;
+    @BindView(R.id.tab_layout)
+    TabLayout tabLayout;
     /* @BindView(R.id.user_account_icon) */ ImageView goldIndicator;
     /* @BindView(R.id.account_name) */ TextView accountNameView;
     /* @BindView(R.id.sign_out_button) */ View signOutView;
     /* @BindView(R.id.navigation_drawer_header_image) */ ImageView headerImage;
 
-    @Inject RedditService redditService;
-    @Inject IdentityManager identityManager;
-    @Inject SettingsManager settingsManager;
-    @Inject Gson gson;
-    @Inject NetworkConnectivityManager networkConnectivityManager;
+    @Inject
+    RedditService redditService;
+    @Inject
+    IdentityManager identityManager;
+    @Inject
+    SettingsManager settingsManager;
+    @Inject
+    Gson gson;
+    @Inject
+    NetworkConnectivityManager networkConnectivityManager;
 
     ActionBarDrawerToggle drawerToggle;
     private ColorScheme currentColorScheme;
@@ -427,6 +439,13 @@ public abstract class BaseActivity extends AppCompatActivity implements
         showWebViewForURL(url);
     }
 
+    @Override
+    public void openRedditVideo(Media.@NotNull RedditVideo redditVideo) {
+        final String url = redditVideo.getDashUrl();
+        final VideoPlayerDialog dialog = VideoPlayerDialogBuilder.newVideoPlayerDialog(url);
+        dialog.show(getSupportFragmentManager(), VideoPlayerDialog.TAG);
+    }
+
     private void showWebViewForURL(@NotNull String url) {
         Intent intent = WebViewActivity.getIntent(this, url);
         startActivity(intent);
@@ -561,7 +580,8 @@ public abstract class BaseActivity extends AppCompatActivity implements
                 .observeOn(AndroidSchedulers.mainThread())
                 .flatMap(getUserIdentity())
                 .subscribe(
-                        result -> { },
+                        result -> {
+                        },
                         error -> {
                             if (error instanceof IOException) {
                                 String message = getString(R.string.error_network_unavailable);

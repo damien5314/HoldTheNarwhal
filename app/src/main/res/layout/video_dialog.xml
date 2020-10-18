@@ -4,10 +4,11 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <VideoView
+    <com.google.android.exoplayer2.ui.StyledPlayerView
         android:id="@+id/video_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="center"/>
+        android:layout_margin="48dp"
+        android:layout_gravity="center" />
 
 </FrameLayout>

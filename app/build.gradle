@@ -82,53 +82,41 @@ android {
 dependencies {
     implementation fileTree(include: "*.jar", dir: "libs")
     implementation project(":logging")
-
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$KOTLIN_VERSION"
-
     implementation "androidx.appcompat:appcompat:$ANDROIDX_APPCOMPAT"
     implementation "androidx.recyclerview:recyclerview:$ANDROIDX_RECYCLERVIEW"
     implementation "androidx.cardview:cardview:$ANDROIDX_CARDVIEW"
     implementation "androidx.constraintlayout:constraintlayout:$ANDROIDX_CONSTRAINTLAYOUT"
     implementation "com.google.android.material:material:$ANDROIDX_MATERIAL"
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:$SWIPE_REFRESH_LAYOUT_VERSION"
-
     implementation "com.google.firebase:firebase-crashlytics:$FIREBASE_CRASHLYTICS_VERSION"
     implementation "com.google.firebase:firebase-analytics:$FIREBASE_ANALYTICS_VERSION"
-
     implementation "com.github.bumptech.glide:glide:$GLIDE_VERSION"
     kapt "com.github.bumptech.glide:compiler:$GLIDE_VERSION"
     implementation "com.github.bumptech.glide:okhttp3-integration:$GLIDE_OKHTTP_VERSION"
-
     implementation "com.jakewharton:butterknife:$BUTTERKNIFE_VERSION"
     kapt "com.jakewharton:butterknife-compiler:$BUTTERKNIFE_VERSION"
-
     implementation "com.github.damien5314.RxReddit:library:$RXREDDIT_VERSION"
     implementation "com.github.damien5314.RxReddit:android:$RXREDDIT_VERSION"
     debugImplementation project(':mock-api')
-
     implementation "io.reactivex.rxjava2:rxjava:$RXJAVA_VERSION"
     implementation "io.reactivex.rxjava2:rxandroid:$RXANDROID_VERSION"
-
     implementation "com.github.damien5314:TimeSinceTextView:$TIMESINCETEXTVIEW_VERSION"
-
     implementation "com.google.dagger:dagger:$DAGGER_VERSION"
     kapt "com.google.dagger:dagger-compiler:$DAGGER_VERSION"
-
     implementation "uk.co.chrisjenx:calligraphy:$CALLIGRAPHY_VERSION"
-
     implementation "com.hannesdorfmann.fragmentargs:annotation:$FRAGMENTARGS_VERSION"
     kapt "com.hannesdorfmann.fragmentargs:processor:$FRAGMENTARGS_VERSION"
-
     implementation "com.google.code.gson:gson:$GSON_VERSION"
-
     implementation "com.jakewharton.timber:timber:$TIMBER_VERSION"
+    implementation "com.google.android.exoplayer:exoplayer-core:$EXOPLAYER_VERSION"
+    implementation "com.google.android.exoplayer:exoplayer-dash:$EXOPLAYER_VERSION"
+    implementation "com.google.android.exoplayer:exoplayer-ui:$EXOPLAYER_VERSION"
     debugImplementation "com.squareup.leakcanary:leakcanary-android:$LEAK_CANARY_VERSION"
     releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$LEAK_CANARY_VERSION"
-
     androidTestImplementation "junit:junit:$JUNIT_VERSION"
     androidTestImplementation "org.mockito:mockito-core:$MOCKITO_VERSION"
     kaptAndroidTest "com.google.dagger:dagger-compiler:$DAGGER_VERSION"
-
     androidTestImplementation "androidx.annotation:annotation:$ANDROIDX_ANNOTATION"
     androidTestImplementation "androidx.test:runner:$ANDROIDX_TEST_SUPPORT"
     androidTestImplementation "androidx.test:rules:$ANDROIDX_TEST_SUPPORT"

@@ -1,15 +1,17 @@
 package com.ddiehl.android.htn.view.video
 
 import android.app.Dialog
+import android.os.Build.VERSION.SDK_INT
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.VideoView
 import androidx.fragment.app.DialogFragment
-import butterknife.BindView
-import butterknife.ButterKnife
 import com.ddiehl.android.htn.R
+import com.google.android.exoplayer2.MediaItem
+import com.google.android.exoplayer2.SimpleExoPlayer
+import com.google.android.exoplayer2.ui.StyledPlayerView
 import com.hannesdorfmann.fragmentargs.FragmentArgs
 import com.hannesdorfmann.fragmentargs.annotation.Arg
 import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs
@@ -21,13 +23,21 @@ import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs
 class VideoPlayerDialog : DialogFragment() {
 
     companion object {
-        val TAG: String = VideoPlayerDialog::class.java.simpleName
+        const val TAG: String = "VideoPlayerDialog"
     }
 
-    @BindView(R.id.video_view)
-    lateinit var videoView: VideoView
     @Arg
     lateinit var url: String
+
+    private val exoPlayer by lazy {
+        SimpleExoPlayer.Builder(requireContext())
+            .build()
+    }
+    private val videoView by lazy {
+        requireView().findViewById<StyledPlayerView>(R.id.video_view).also { videoView ->
+            videoView.controllerAutoShow = false
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,31 +46,58 @@ class VideoPlayerDialog : DialogFragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View {
-        val view = inflater.inflate(R.layout.video_dialog, container, false)
-        ButterKnife.bind(this, view)
-        videoView.setVideoPath(url)
-        return view
-    }
+    ): View = inflater.inflate(R.layout.video_dialog, container, false)
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
-        Dialog(activity, R.style.DialogOverlay)
+        Dialog(requireContext(), R.style.DialogOverlay)
+
+    override fun onStart() {
+        super.onStart()
+        if (SDK_INT >= 24) {
+            videoView.onResume()
+            startVideo()
+        }
+    }
 
     override fun onResume() {
         super.onResume()
-        startVideo()
+        if (SDK_INT < 24) {
+            videoView.onResume()
+            startVideo()
+        }
     }
 
     override fun onPause() {
-        stopVideo()
+        if (SDK_INT < 24) {
+            stopVideo()
+            videoView.onPause()
+        }
         super.onPause()
     }
 
+    override fun onStop() {
+        if (SDK_INT >= 24) {
+            stopVideo()
+            videoView.onPause()
+        }
+        super.onStop()
+    }
+
     private fun startVideo() {
-        videoView.start()
+        val mediaItem = MediaItem.fromUri(url)
+        exoPlayer.addListener(ExoPlayerErrorLogger())
+        exoPlayer.setMediaItem(mediaItem)
+        exoPlayer.playWhenReady = true
+        videoView.player = exoPlayer
+        exoPlayer.prepare()
     }
 
     private fun stopVideo() {
-        videoView.stopPlayback()
+        exoPlayer.stop()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        exoPlayer.release()
     }
 }
