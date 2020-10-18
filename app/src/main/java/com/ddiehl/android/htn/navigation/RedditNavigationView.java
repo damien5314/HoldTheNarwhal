@@ -5,6 +5,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
+import rxreddit.model.Media;
 import rxreddit.model.PrivateMessage;
 
 public interface RedditNavigationView {
@@ -13,6 +14,8 @@ public interface RedditNavigationView {
             @NotNull String subreddit, @NotNull String linkId, @Nullable String commentId);
 
     void openURL(@NotNull String url);
+
+    void openRedditVideo(@NotNull Media.RedditVideo redditVideo);
 
     void showSettings();
 

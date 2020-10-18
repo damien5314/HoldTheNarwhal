@@ -21,11 +21,12 @@ import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs
 class VideoPlayerDialog : DialogFragment() {
 
     companion object {
-        val TAG: String = VideoPlayerDialog::class.java.simpleName
+        const val TAG: String = "VideoPlayerDialog"
     }
 
     @BindView(R.id.video_view)
     lateinit var videoView: VideoView
+
     @Arg
     lateinit var url: String
 
