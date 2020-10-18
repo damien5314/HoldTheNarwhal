@@ -441,7 +441,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
 
     @Override
     public void openRedditVideo(Media.@NotNull RedditVideo redditVideo) {
-        final String url = redditVideo.getFallbackUrl();
+        final String url = redditVideo.getDashUrl();
         final VideoPlayerDialog dialog = VideoPlayerDialogBuilder.newVideoPlayerDialog(url);
         dialog.show(getSupportFragmentManager(), VideoPlayerDialog.TAG);
     }
