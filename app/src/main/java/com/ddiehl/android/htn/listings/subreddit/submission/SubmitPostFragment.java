@@ -10,13 +10,16 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.Toast;
 
-import com.crashlytics.android.Crashlytics;
+import androidx.annotation.StringRes;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.view.BaseFragment;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.hannesdorfmann.fragmentargs.FragmentArgs;
 import com.hannesdorfmann.fragmentargs.annotation.Arg;
 import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs;
@@ -24,8 +27,6 @@ import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import androidx.annotation.StringRes;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -45,7 +46,8 @@ public class SubmitPostFragment extends BaseFragment
     public static final int RESULT_SUBMIT_SUCCESS = Activity.RESULT_OK;
     public static final int RESULT_SUBMIT_ERROR = -10;
 
-    @Arg String subreddit;
+    @Arg
+    String subreddit;
 
     @BindView(R.id.coordinator_layout)
     CoordinatorLayout coordinatorLayout;
@@ -69,7 +71,8 @@ public class SubmitPostFragment extends BaseFragment
         return R.layout.submission_fragment;
     }
 
-    @NotNull @Override
+    @NotNull
+    @Override
     protected View getChromeView() {
         return coordinatorLayout;
     }
@@ -185,7 +188,7 @@ public class SubmitPostFragment extends BaseFragment
         // Errors present
         else {
             for (String error : result.getErrors()) {
-                Crashlytics.logException(new RuntimeException(error));
+                FirebaseCrashlytics.getInstance().recordException(new RuntimeException(error));
                 Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
             }
         }

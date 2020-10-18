@@ -1,14 +1,15 @@
 package com.ddiehl.android.logging;
 
-import com.crashlytics.android.Crashlytics;
+
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 public class CrashlyticsLogger {
 
     public void log(String message) {
-        Crashlytics.log(message);
+        FirebaseCrashlytics.getInstance().log(message);
     }
 
     public void logException(Throwable t) {
-        Crashlytics.logException(t);
+        FirebaseCrashlytics.getInstance().recordException(t);
     }
 }

@@ -4,6 +4,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.subredditinfo.SubredditInfoActivity;
@@ -19,11 +25,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import androidx.recyclerview.widget.ItemTouchHelper;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import butterknife.BindView;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -46,10 +47,14 @@ public class SubscriptionManagerFragment extends BaseFragment implements Subscri
         return new SubscriptionManagerFragment();
     }
 
-    @BindView(R.id.coordinator_layout) CoordinatorLayout coordinatorLayout;
-    @BindView(R.id.swipe_refresh_layout) SwipeRefreshLayout swipeRefreshLayout;
-    @BindView(R.id.recycler_view) RecyclerView recyclerView;
-    @BindView(R.id.search_button) FloatingActionButton searchButton;
+    @BindView(R.id.coordinator_layout)
+    CoordinatorLayout coordinatorLayout;
+    @BindView(R.id.swipe_refresh_layout)
+    SwipeRefreshLayout swipeRefreshLayout;
+    @BindView(R.id.recycler_view)
+    RecyclerView recyclerView;
+    @BindView(R.id.search_button)
+    FloatingActionButton searchButton;
 
     SubscriptionManagerAdapter adapter;
     SubscriptionManagerPresenter presenter;
@@ -97,7 +102,8 @@ public class SubscriptionManagerFragment extends BaseFragment implements Subscri
         };
     }
 
-    @NotNull @Override
+    @NotNull
+    @Override
     protected View getChromeView() {
         return coordinatorLayout;
     }
