@@ -7,8 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.VideoView
 import androidx.fragment.app.DialogFragment
-import butterknife.BindView
-import butterknife.ButterKnife
 import com.ddiehl.android.htn.R
 import com.hannesdorfmann.fragmentargs.FragmentArgs
 import com.hannesdorfmann.fragmentargs.annotation.Arg
@@ -24,8 +22,7 @@ class VideoPlayerDialog : DialogFragment() {
         const val TAG: String = "VideoPlayerDialog"
     }
 
-    @BindView(R.id.video_view)
-    lateinit var videoView: VideoView
+    private val videoView by lazy { requireView().findViewById<VideoView>(R.id.video_view) }
 
     @Arg
     lateinit var url: String
@@ -37,15 +34,15 @@ class VideoPlayerDialog : DialogFragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View {
-        val view = inflater.inflate(R.layout.video_dialog, container, false)
-        ButterKnife.bind(this, view)
+    ): View = inflater.inflate(R.layout.video_dialog, container, false)
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         videoView.setVideoPath(url)
-        return view
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
-        Dialog(activity, R.style.DialogOverlay)
+        Dialog(requireContext(), R.style.DialogOverlay)
 
     override fun onResume() {
         super.onResume()
