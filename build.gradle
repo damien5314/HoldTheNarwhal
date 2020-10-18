@@ -2,7 +2,7 @@ buildscript {
     ext {
         COMPILE_SDK_VERSION = 28
         TARGET_SDK_VERSION = 28
-        MIN_SDK_VERSION = 15
+        MIN_SDK_VERSION = 21
 
         // Gradle plugins
         KOTLIN_VERSION = '1.3.10'
