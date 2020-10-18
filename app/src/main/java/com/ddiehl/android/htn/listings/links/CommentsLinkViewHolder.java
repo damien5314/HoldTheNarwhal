@@ -6,6 +6,8 @@ import android.text.style.ForegroundColorSpan;
 import android.util.DisplayMetrics;
 import android.view.View;
 
+import androidx.annotation.ColorInt;
+
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.listings.BaseListingsPresenter;
 import com.ddiehl.android.htn.listings.subreddit.ThumbnailMode;
@@ -15,10 +17,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-import androidx.annotation.ColorInt;
-import androidx.core.content.ContextCompat;
-import butterknife.BindView;
-import butterknife.OnClick;
 import rxreddit.model.Image;
 import rxreddit.model.Link;
 
@@ -33,13 +31,13 @@ import static com.ddiehl.android.htn.listings.links.LinkOptionsBar.Icons.UPVOTE;
 
 public class CommentsLinkViewHolder extends BaseLinkViewHolder {
 
-    @BindView(R.id.link_options_bar)
-    LinkOptionsBar linkOptionsBar;
-    @BindView(R.id.link_parent_view)
-    View parentLinkView;
+    private final LinkOptionsBar linkOptionsBar;
+    private final View parentLinkView;
 
     public CommentsLinkViewHolder(View view, LinkView linkView, BaseListingsPresenter presenter) {
         super(view, linkView, presenter);
+        linkOptionsBar = view.findViewById(R.id.link_options_bar);
+        parentLinkView = view.findViewById(R.id.link_parent_view);
         linkOptionsBar.showIcons(false, HIDE, SHARE);
         linkOptionsBar.setOnIconClickListener(REPLY, this::onReplyClicked);
         linkOptionsBar.setOnIconClickListener(UPVOTE, this::onUpvoteClicked);
@@ -75,11 +73,6 @@ public class CommentsLinkViewHolder extends BaseLinkViewHolder {
 
     void onReportClicked() {
         linkPresenter.reportLink(link);
-    }
-
-    @OnClick(R.id.link_comment_count)
-    void showCommentsForLink() {
-        // Already viewing the comments, do nothing
     }
 
     @Override

@@ -8,60 +8,38 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import androidx.annotation.LayoutRes;
+import androidx.annotation.RequiresApi;
+
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.utils.ThemeUtilsKt;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import androidx.annotation.LayoutRes;
-import androidx.annotation.RequiresApi;
-import androidx.core.content.ContextCompat;
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 public class LinkOptionsBar extends LinearLayout {
 
-    static final @LayoutRes int LAYOUT_RES_ID = R.layout.link_options_bar;
+    static final @LayoutRes
+    int LAYOUT_RES_ID = R.layout.link_options_bar;
 
     public enum Icons {
         REPLY, UPVOTE, DOWNVOTE, SAVE, SHARE, HIDE, REPORT
     }
 
-    @BindView(R.id.action_link_reply)
-    View linkReply;
-    @BindView(R.id.action_link_reply_icon)
-    ImageView linkReplyIcon;
-
-    @BindView(R.id.action_link_upvote)
-    View linkUpvote;
-    @BindView(R.id.action_link_upvote_icon)
-    ImageView linkUpvoteIcon;
-
-    @BindView(R.id.action_link_downvote)
-    View linkDownvote;
-    @BindView(R.id.action_link_downvote_icon)
-    ImageView linkDownvoteIcon;
-
-    @BindView(R.id.action_link_save)
-    View linkSave;
-    @BindView(R.id.action_link_save_icon)
-    ImageView linkSaveIcon;
-
-    @BindView(R.id.action_link_share)
-    View linkShare;
-    @BindView(R.id.action_link_share_icon)
-    ImageView linkShareIcon;
-
-    @BindView(R.id.action_link_hide)
-    View linkHide;
-    @BindView(R.id.action_link_hide_icon)
-    ImageView linkHideIcon;
-
-    @BindView(R.id.action_link_report)
-    View linkReport;
-    @BindView(R.id.action_link_report_icon)
-    ImageView linkReportIcon;
+    private View linkReply;
+    private ImageView linkReplyIcon;
+    private View linkUpvote;
+    private ImageView linkUpvoteIcon;
+    private View linkDownvote;
+    private ImageView linkDownvoteIcon;
+    private View linkSave;
+    private ImageView linkSaveIcon;
+    private View linkShare;
+    private ImageView linkShareIcon;
+    private View linkHide;
+    private ImageView linkHideIcon;
+    private View linkReport;
+    private ImageView linkReportIcon;
 
     @Nullable Integer voted;
 
@@ -87,7 +65,20 @@ public class LinkOptionsBar extends LinearLayout {
     void init(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         LayoutInflater.from(context)
                 .inflate(LAYOUT_RES_ID, this);
-        ButterKnife.bind(this);
+        linkReply = findViewById(R.id.action_link_reply);
+        linkReplyIcon = findViewById(R.id.action_link_reply_icon);
+        linkUpvote = findViewById(R.id.action_link_upvote);
+        linkUpvoteIcon = findViewById(R.id.action_link_upvote_icon);
+        linkDownvote = findViewById(R.id.action_link_downvote);
+        linkDownvoteIcon = findViewById(R.id.action_link_downvote_icon);
+        linkSave = findViewById(R.id.action_link_save);
+        linkSaveIcon = findViewById(R.id.action_link_save_icon);
+        linkShare = findViewById(R.id.action_link_share);
+        linkShareIcon = findViewById(R.id.action_link_share_icon);
+        linkHide = findViewById(R.id.action_link_hide);
+        linkHideIcon = findViewById(R.id.action_link_hide_icon);
+        linkReport = findViewById(R.id.action_link_report);
+        linkReportIcon = findViewById(R.id.action_link_report_icon);
     }
 
     public void showIcons(boolean show, Icons icon, Icons... icons) {

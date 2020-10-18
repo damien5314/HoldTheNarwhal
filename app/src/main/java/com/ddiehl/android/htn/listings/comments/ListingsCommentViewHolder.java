@@ -7,16 +7,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.listings.BaseListingsPresenter;
 import com.ddiehl.android.htn.utils.ThemeUtilsKt;
 import com.ddiehl.android.htn.view.markdown.HtmlParser;
 import com.ddiehl.timesincetextview.TimeSinceTextView;
 
-import androidx.recyclerview.widget.RecyclerView;
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 import rxreddit.model.Comment;
 
 public class ListingsCommentViewHolder extends RecyclerView.ViewHolder
@@ -28,16 +26,17 @@ public class ListingsCommentViewHolder extends RecyclerView.ViewHolder
     private final HtmlParser htmlParser;
     private Comment comment;
 
-    @BindView(R.id.comment_link_title) TextView commentLinkTitleView;
-    @BindView(R.id.comment_link_subtitle) TextView commentLinkSubtitleView;
-    @BindView(R.id.comment_author) TextView authorView;
-    @BindView(R.id.comment_score_layout) ViewGroup scoreViewLayout;
-    @BindView(R.id.comment_score) TextView scoreView;
-    @BindView(R.id.comment_timestamp) TimeSinceTextView timestampView;
-    @BindView(R.id.comment_saved_icon) View savedView;
-    @BindView(R.id.comment_body) TextView bodyView;
-    @BindView(R.id.comment_gilded_text_view) TextView gildedText;
-    @BindView(R.id.comment_controversiality_indicator) View controversialityIndicator;
+    private final TextView commentLinkTitleView;
+    private final TextView commentLinkSubtitleView;
+    private final TextView authorView;
+    private final ViewGroup scoreViewLayout;
+    private final TextView scoreView;
+    private final TimeSinceTextView timestampView;
+    private final View savedView;
+    private final TextView bodyView;
+    private final TextView gildedText;
+    private final View controversialityIndicator;
+    private final View commentMetadata;
 
     public ListingsCommentViewHolder(View view, CommentView commentView, BaseListingsPresenter presenter) {
         super(view);
@@ -47,22 +46,34 @@ public class ListingsCommentViewHolder extends RecyclerView.ViewHolder
         this.commentPresenter = presenter;
         this.htmlParser = new HtmlParser(context);
 
-        ButterKnife.bind(this, view);
+        commentLinkTitleView = view.findViewById(R.id.comment_link_title);
+        commentLinkSubtitleView = view.findViewById(R.id.comment_link_subtitle);
+        authorView = view.findViewById(R.id.comment_author);
+        scoreViewLayout = view.findViewById(R.id.comment_score_layout);
+        scoreView = view.findViewById(R.id.comment_score);
+        timestampView = view.findViewById(R.id.comment_timestamp);
+        savedView = view.findViewById(R.id.comment_saved_icon);
+        bodyView = view.findViewById(R.id.comment_body);
+        gildedText = view.findViewById(R.id.comment_gilded_text_view);
+        controversialityIndicator = view.findViewById(R.id.comment_controversiality_indicator);
+        commentMetadata = view.findViewById(R.id.comment_metadata);
+
+        commentLinkTitleView.setOnClickListener(this::onClickTitle);
+        commentMetadata.setOnClickListener(this::onClickMetadata);
+        bodyView.setOnClickListener(this::onClickBody);
+
         itemView.setOnCreateContextMenuListener(this);
     }
 
-    @OnClick(R.id.comment_link_title)
-    void onClickTitle() {
+    private void onClickTitle(View view) {
         commentPresenter.openCommentLink(comment);
     }
 
-    @OnClick(R.id.comment_metadata)
-    void onClickMetadata(View v) {
+    private void onClickMetadata(View v) {
         v.showContextMenu();
     }
 
-    @OnClick(R.id.comment_body)
-    void onClickBody(View v) {
+    private void onClickBody(View v) {
         v.showContextMenu();
     }
 

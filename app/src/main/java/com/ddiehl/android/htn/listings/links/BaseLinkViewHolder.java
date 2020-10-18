@@ -7,6 +7,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.listings.BaseListingsPresenter;
 import com.ddiehl.android.htn.listings.subreddit.ThumbnailMode;
@@ -21,10 +23,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-import androidx.recyclerview.widget.RecyclerView;
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 import rxreddit.model.Image;
 import rxreddit.model.Link;
 
@@ -37,20 +35,20 @@ public abstract class BaseLinkViewHolder extends RecyclerView.ViewHolder
     protected final HtmlParser htmlParser;
     protected Link link;
 
-    @BindView(R.id.link_view) protected View view;
-    @BindView(R.id.link_saved_view) protected View savedView;
-    @BindView(R.id.link_title) protected TextView linkTitle;
-    @BindView(R.id.link_domain) protected TextView linkDomain;
-    @BindView(R.id.link_score) protected TextView linkScore;
-    @BindView(R.id.link_author) protected ColorSwapTextView linkAuthor;
-    @BindView(R.id.link_subreddit) protected TextView linkSubreddit;
-    @BindView(R.id.link_comment_count) protected TextView linkComments;
-    @BindView(R.id.link_self_text) protected TextView selfText;
-    @BindView(R.id.link_nsfw_indicator) protected TextView nsfwIndicator;
-    @BindView(R.id.link_thumbnail) protected ImageView linkThumbnail;
-    @BindView(R.id.link_timestamp) protected TimeSinceTextView linkTimestamp;
-    @BindView(R.id.link_gilded_text_view) protected TextView gildedText;
-    @BindView(R.id.link_stickied_view) protected View stickiedView;
+    protected final View view;
+    protected final View savedView;
+    protected final TextView linkTitle;
+    protected final TextView linkDomain;
+    protected final TextView linkScore;
+    protected final ColorSwapTextView linkAuthor;
+    protected final TextView linkSubreddit;
+    protected final TextView linkComments;
+    protected final TextView selfText;
+    protected final TextView nsfwIndicator;
+    protected final ImageView linkThumbnail;
+    protected final TimeSinceTextView linkTimestamp;
+    protected final TextView gildedText;
+    protected final View stickiedView;
 
     public BaseLinkViewHolder(View view, LinkView linkView, BaseListingsPresenter presenter) {
         super(view);
@@ -58,18 +56,31 @@ public abstract class BaseLinkViewHolder extends RecyclerView.ViewHolder
         this.linkView = linkView;
         this.linkPresenter = presenter;
         this.htmlParser = new HtmlParser(context);
-
-        ButterKnife.bind(this, view);
+        this.view = view.findViewById(R.id.link_view);
+        savedView = view.findViewById(R.id.link_saved_view);
+        linkTitle = view.findViewById(R.id.link_title);
+        linkDomain = view.findViewById(R.id.link_domain);
+        linkScore = view.findViewById(R.id.link_score);
+        linkAuthor = view.findViewById(R.id.link_author);
+        linkSubreddit = view.findViewById(R.id.link_subreddit);
+        linkComments = view.findViewById(R.id.link_comment_count);
+        selfText = view.findViewById(R.id.link_self_text);
+        nsfwIndicator = view.findViewById(R.id.link_nsfw_indicator);
+        linkThumbnail = view.findViewById(R.id.link_thumbnail);
+        linkTimestamp = view.findViewById(R.id.link_timestamp);
+        gildedText = view.findViewById(R.id.link_gilded_text_view);
+        stickiedView = view.findViewById(R.id.link_stickied_view);
+        this.view.setOnClickListener(view1 -> openLink());
+        this.linkThumbnail.setOnClickListener(view1 -> openLink());
+        view.findViewById(R.id.link_metadata).setOnClickListener(this::showContextMenu);
         this.itemView.setOnCreateContextMenuListener(this);
     }
 
-    @OnClick({ R.id.link_view, R.id.link_thumbnail })
-    void openLink() {
+    private void openLink() {
         linkPresenter.openLink(link);
     }
 
-    @OnClick(R.id.link_metadata)
-    void showContextMenu(View v) {
+    private void showContextMenu(View v) {
         v.showContextMenu();
     }
 

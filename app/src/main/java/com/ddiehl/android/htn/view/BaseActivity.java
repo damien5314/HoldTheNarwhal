@@ -60,8 +60,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Function;
@@ -96,16 +94,13 @@ public abstract class BaseActivity extends AppCompatActivity implements
     private static final String EXTRA_AUTHENTICATION_STATE_CHANGE =
             "com.ddiehl.android.htn.EXTRA_AUTHENTICATION_STATE_CHANGE";
 
-    @BindView(R.id.drawer_layout)
-    DrawerLayout drawerLayout;
-    @BindView(R.id.navigation_view)
-    NavigationView navigationView;
-    @BindView(R.id.tab_layout)
-    TabLayout tabLayout;
-    /* @BindView(R.id.user_account_icon) */ ImageView goldIndicator;
-    /* @BindView(R.id.account_name) */ TextView accountNameView;
-    /* @BindView(R.id.sign_out_button) */ View signOutView;
-    /* @BindView(R.id.navigation_drawer_header_image) */ ImageView headerImage;
+    private DrawerLayout drawerLayout;
+    private NavigationView navigationView;
+    private TabLayout tabLayout;
+    private ImageView goldIndicator;
+    private TextView accountNameView;
+    private View signOutView;
+    private ImageView headerImage;
 
     @Inject
     RedditService redditService;
@@ -138,7 +133,9 @@ public abstract class BaseActivity extends AppCompatActivity implements
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
+        drawerLayout = findViewById(R.id.drawer_layout);
+        navigationView = findViewById(R.id.navigation_view);
+        tabLayout = findViewById(R.id.tab_layout);
 
         // Initialize toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);

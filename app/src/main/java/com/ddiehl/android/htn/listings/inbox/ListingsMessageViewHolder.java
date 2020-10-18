@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.listings.BaseListingsPresenter;
 import com.ddiehl.android.htn.utils.Utils;
@@ -18,12 +20,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-import javax.inject.Inject;
-
-import androidx.recyclerview.widget.RecyclerView;
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 import rxreddit.model.Listing;
 import rxreddit.model.PrivateMessage;
 
@@ -36,15 +32,24 @@ public class ListingsMessageViewHolder extends RecyclerView.ViewHolder
     private final HtmlParser htmlParser;
     private PrivateMessage message;
 
-    @BindView(R.id.conversation_subject) TextView conversationSubject;
-    @BindView(R.id.conversation_body_layout) ViewGroup conversationBodyLayout;
-    @BindView(R.id.collapsed_messages_layout) ViewGroup collapsedMessagesLayout;
-    @BindView(R.id.collapsed_messages_text) TextView collapsedMessagesText;
-    @BindView(R.id.last_message_layout) ViewGroup lastMessageLayout;
-    @BindView(R.id.message_indentation) View messageIndentation;
-    @BindView(R.id.last_message_metadata) TextView lastMessageMetadata;
-    @BindView(R.id.unread_message_indicator) View unreadMessageIndicator;
-    @BindView(R.id.last_message_body) TextView lastMessageBody;
+    @BindView(R.id.conversation_subject)
+    TextView conversationSubject;
+    @BindView(R.id.conversation_body_layout)
+    ViewGroup conversationBodyLayout;
+    @BindView(R.id.collapsed_messages_layout)
+    ViewGroup collapsedMessagesLayout;
+    @BindView(R.id.collapsed_messages_text)
+    TextView collapsedMessagesText;
+    @BindView(R.id.last_message_layout)
+    ViewGroup lastMessageLayout;
+    @BindView(R.id.message_indentation)
+    View messageIndentation;
+    @BindView(R.id.last_message_metadata)
+    TextView lastMessageMetadata;
+    @BindView(R.id.unread_message_indicator)
+    View unreadMessageIndicator;
+    @BindView(R.id.last_message_body)
+    TextView lastMessageBody;
 
     public ListingsMessageViewHolder(View view, PrivateMessageView pmView, BaseListingsPresenter presenter) {
         super(view);
@@ -116,12 +121,12 @@ public class ListingsMessageViewHolder extends RecyclerView.ViewHolder
         privateMessageView.showMessageContextMenu(menu, v, message);
     }
 
-    @OnClick({ R.id.last_message_layout })
+    @OnClick({R.id.last_message_layout})
     void onClick(View view) {
         view.showContextMenu();
     }
 
-    @OnClick({ R.id.conversation_subject, R.id.collapsed_messages_layout })
+    @OnClick({R.id.conversation_subject, R.id.collapsed_messages_layout})
     void showMessageView() {
         messagePresenter.showMessagePermalink(message);
     }
