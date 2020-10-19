@@ -1,7 +1,7 @@
 buildscript {
     ext {
-        COMPILE_SDK_VERSION = 28
-        TARGET_SDK_VERSION = 28
+        COMPILE_SDK_VERSION = 29
+        TARGET_SDK_VERSION = 29
         MIN_SDK_VERSION = 21
 
         // Gradle plugins
