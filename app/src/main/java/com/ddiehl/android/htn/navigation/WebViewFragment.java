@@ -1,7 +1,6 @@
 package com.ddiehl.android.htn.navigation;
 
 import android.net.MailTo;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -16,7 +15,6 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
-import com.ddiehl.android.htn.BuildConfig;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.view.BaseFragment;
@@ -28,7 +26,6 @@ import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import butterknife.BindView;
 import timber.log.Timber;
 
 @FragmentWithArgs
@@ -37,16 +34,11 @@ public class WebViewFragment extends BaseFragment {
     public static final String TAG = WebViewFragment.class.getSimpleName();
     public static final String EXTRA_CALLBACK_URL = "EXTRA_CALLBACK_URL";
 
-    @Arg String mUrl;
+    @Arg
+    String mUrl;
 
-    @BindView(R.id.web_view) WebView webView;
-    @BindView(R.id.progress_bar) ProgressBar progressBar;
-
-    static {
-        if (BuildConfig.DEBUG && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-//      WebView.setWebContentsDebuggingEnabled(true);
-        }
-    }
+    private WebView webView;
+    private ProgressBar progressBar;
 
     @Override
     protected int getLayoutResId() {
@@ -62,10 +54,14 @@ public class WebViewFragment extends BaseFragment {
         setHasOptionsMenu(true);
     }
 
-    @NotNull @Override
+    @NotNull
+    @Override
     public View onCreateView(
             LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle state) {
         View view = super.onCreateView(inflater, container, state);
+
+        webView = view.findViewById(R.id.web_view);
+        progressBar = view.findViewById(R.id.progress_bar);
 
         // Configure settings
         WebSettings settings = webView.getSettings();
@@ -173,7 +169,8 @@ public class WebViewFragment extends BaseFragment {
         return super.onOptionsItemSelected(item);
     }
 
-    @NotNull @Override
+    @NotNull
+    @Override
     protected View getChromeView() {
         return webView;
     }

@@ -25,7 +25,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
@@ -47,14 +46,10 @@ public class SubscriptionManagerFragment extends BaseFragment implements Subscri
         return new SubscriptionManagerFragment();
     }
 
-    @BindView(R.id.coordinator_layout)
-    CoordinatorLayout coordinatorLayout;
-    @BindView(R.id.swipe_refresh_layout)
-    SwipeRefreshLayout swipeRefreshLayout;
-    @BindView(R.id.recycler_view)
-    RecyclerView recyclerView;
-    @BindView(R.id.search_button)
-    FloatingActionButton searchButton;
+    private CoordinatorLayout coordinatorLayout;
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private RecyclerView recyclerView;
+    private FloatingActionButton searchButton;
 
     SubscriptionManagerAdapter adapter;
     SubscriptionManagerPresenter presenter;
@@ -80,6 +75,11 @@ public class SubscriptionManagerFragment extends BaseFragment implements Subscri
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        coordinatorLayout = view.findViewById(R.id.coordinator_layout);
+        swipeRefreshLayout = view.findViewById(R.id.swipe_refresh_layout);
+        recyclerView = view.findViewById(R.id.recycler_view);
+        searchButton = view.findViewById(R.id.search_button);
 
         setTitle(R.string.subscription_manager_title);
 

@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.view.*
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import butterknife.BindView
 import com.ddiehl.android.htn.HoldTheNarwhal
 import com.ddiehl.android.htn.R
 import com.ddiehl.android.htn.listings.BaseListingsFragment
@@ -32,15 +31,17 @@ class LinkCommentsFragment : BaseListingsFragment(), LinkCommentsView,
 
     @field:Inject
     lateinit var settingsManager: SettingsManager
+
     @field:Arg
     override lateinit var subreddit: String
+
     @field:Arg
     override lateinit var articleId: String
+
     @field:Arg
     override var commentId: String? = null
 
-    @BindView(R.id.coordinator_layout)
-    lateinit var coordinatorLayout: CoordinatorLayout
+    private lateinit var coordinatorLayout: CoordinatorLayout
 
     override lateinit var sort: String
 
@@ -58,6 +59,7 @@ class LinkCommentsFragment : BaseListingsFragment(), LinkCommentsView,
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        coordinatorLayout = view.findViewById(R.id.coordinator_layout);
 
         val title = getString(R.string.link_subreddit).format(subreddit)
         setTitle(title)

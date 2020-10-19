@@ -9,17 +9,16 @@ import com.ddiehl.android.htn.utils.ThemeUtilsKt;
 
 import org.jetbrains.annotations.NotNull;
 
-import butterknife.OnClick;
 import rxreddit.model.Link;
 
 public class ListingsLinkViewHolder extends BaseLinkViewHolder {
 
     public ListingsLinkViewHolder(View view, LinkView linkView, BaseListingsPresenter presenter) {
         super(view, linkView, presenter);
+        linkComments.setOnClickListener(view1 -> showCommentsForLink());
     }
 
-    @OnClick(R.id.link_comment_count)
-    void showCommentsForLink() {
+    private void showCommentsForLink() {
         linkPresenter.showCommentsForLink(link);
     }
 
@@ -60,13 +59,6 @@ public class ListingsLinkViewHolder extends BaseLinkViewHolder {
 
         switch (url) {
             case "nsfw":
-                linkThumbnail.setVisibility(View.GONE);
-                // This doesn't look correct, probably just get rid of it
-//        linkThumbnail.setVisibility(View.VISIBLE);
-//        Picasso.with(context)
-//            .load(R.drawable.ic_nsfw2)
-//            .into(linkThumbnail);
-                break;
             case "":
             case "default":
             case "self":

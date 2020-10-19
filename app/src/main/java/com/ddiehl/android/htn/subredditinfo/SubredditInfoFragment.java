@@ -14,6 +14,10 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.subscriptions.SubscriptionManagerPresenter;
 import com.ddiehl.android.htn.utils.ThemeUtilsKt;
@@ -32,13 +36,6 @@ import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import javax.inject.Inject;
-
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import butterknife.BindView;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
@@ -53,19 +50,20 @@ public class SubredditInfoFragment extends BaseFragment {
     public static final String TAG = SubredditInfoFragment.class.getSimpleName();
     public static final int RESULT_GET_INFO_ERROR = -1000;
 
-    @BindView(R.id.coordinator_layout) CoordinatorLayout coordinatorLayout;
-    @BindView(R.id.subreddit_info_parent) View parentViewGroup;
-    @BindView(R.id.subreddit_name) TextView subredditName;
-    @BindView(R.id.subscribe_button) ViewGroup subscribeButtonLayout;
-    @BindView(R.id.subscribe_button_text) TextView subscribeButtonText;
-    @BindView(R.id.subscribe_button_icon) ImageView subscribeButtonIcon;
-    @BindView(R.id.subscribe_button_progress) ProgressBar subscribeButtonProgressBar;
-    @BindView(R.id.create_date) TextView createDate;
-    @BindView(R.id.subscriber_count) TextView subscriberCount;
-    @BindView(R.id.public_description) TextView publicDescription;
-    @BindView(R.id.rules_layout) RecyclerView rulesLayout;
+    private CoordinatorLayout coordinatorLayout;
+    private View parentViewGroup;
+    private TextView subredditName;
+    private ViewGroup subscribeButtonLayout;
+    private TextView subscribeButtonText;
+    private ImageView subscribeButtonIcon;
+    private ProgressBar subscribeButtonProgressBar;
+    private TextView createDate;
+    private TextView subscriberCount;
+    private TextView publicDescription;
+    private RecyclerView rulesLayout;
 
-    @Arg String subreddit;
+    @Arg
+    String subreddit;
 
     private SubscriptionManagerPresenter subscriptionManagerPresenter;
     private HtmlParser htmlParser;
@@ -79,7 +77,8 @@ public class SubredditInfoFragment extends BaseFragment {
         return R.layout.subreddit_info_fragment;
     }
 
-    @NotNull @Override
+    @NotNull
+    @Override
     protected View getChromeView() {
         return coordinatorLayout;
     }
@@ -102,6 +101,18 @@ public class SubredditInfoFragment extends BaseFragment {
     public View onCreateView(
             LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle state) {
         final View view = super.onCreateView(inflater, container, state);
+
+        coordinatorLayout = view.findViewById(R.id.coordinator_layout);
+        parentViewGroup = view.findViewById(R.id.subreddit_info_parent);
+        subredditName = view.findViewById(R.id.subreddit_name);
+        subscribeButtonLayout = view.findViewById(R.id.subscribe_button);
+        subscribeButtonText = view.findViewById(R.id.subscribe_button_text);
+        subscribeButtonIcon = view.findViewById(R.id.subscribe_button_icon);
+        subscribeButtonProgressBar = view.findViewById(R.id.subscribe_button_progress);
+        createDate = view.findViewById(R.id.create_date);
+        subscriberCount = view.findViewById(R.id.subscriber_count);
+        publicDescription = view.findViewById(R.id.public_description);
+        rulesLayout = view.findViewById(R.id.rules_layout);
 
         rulesLayout.setNestedScrollingEnabled(false);
         rulesAdapter = new SubredditRulesAdapter(htmlParser);

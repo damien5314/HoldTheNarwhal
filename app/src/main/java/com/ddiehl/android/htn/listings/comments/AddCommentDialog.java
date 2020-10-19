@@ -8,13 +8,11 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 
+import androidx.fragment.app.DialogFragment;
+
 import com.ddiehl.android.htn.R;
 
 import org.jetbrains.annotations.NotNull;
-
-import androidx.fragment.app.DialogFragment;
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public class AddCommentDialog extends DialogFragment {
 
@@ -23,8 +21,8 @@ public class AddCommentDialog extends DialogFragment {
     public static final String EXTRA_PARENT_ID = "EXTRA_PARENT_ID";
     public static final String EXTRA_COMMENT_TEXT = "EXTRA_COMMENT_TEXT";
 
-    @BindView(R.id.comment_edit_text) protected EditText mCommentEditText;
-    @BindView(R.id.comment_submit) protected Button commentSubmit;
+    private EditText mCommentEditText;
+    private Button commentSubmit;
 
     private String parentFullName;
 
@@ -48,7 +46,8 @@ public class AddCommentDialog extends DialogFragment {
         Dialog dialog = new Dialog(getActivity());
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.add_comment_dialog);
-        ButterKnife.bind(this, dialog);
+        mCommentEditText = dialog.findViewById(R.id.comment_edit_text);
+        commentSubmit = dialog.findViewById(R.id.comment_submit);
         init();
         return dialog;
     }

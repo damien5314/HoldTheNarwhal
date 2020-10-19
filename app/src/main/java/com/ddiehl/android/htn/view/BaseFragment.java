@@ -10,6 +10,9 @@ import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.StringRes;
+import androidx.fragment.app.Fragment;
+
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.identity.IdentityManager;
@@ -29,9 +32,6 @@ import java.io.IOException;
 
 import javax.inject.Inject;
 
-import androidx.annotation.StringRes;
-import androidx.fragment.app.Fragment;
-import butterknife.ButterKnife;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import rxreddit.api.RedditService;
@@ -49,8 +49,10 @@ public abstract class BaseFragment extends Fragment implements MainView {
     protected static final int REQUEST_SIGN_IN = 5;
     protected static final int REQUEST_SUBMIT_NEW_POST = 6;
 
-    @Inject RedditService redditService;
-    @Inject IdentityManager identityManager;
+    @Inject
+    RedditService redditService;
+    @Inject
+    IdentityManager identityManager;
 
     protected RedditNavigationView redditNavigationView;
     ProgressDialog loadingOverlay;
@@ -67,10 +69,10 @@ public abstract class BaseFragment extends Fragment implements MainView {
         HoldTheNarwhal.getApplicationComponent().inject(this);
     }
 
-    @NotNull @Override
+    @NotNull
+    @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle state) {
         View view = inflater.inflate(getLayoutResId(), container, false);
-        ButterKnife.bind(this, view);
         tabLayout = getActivity().findViewById(R.id.tab_layout);
         return view;
     }

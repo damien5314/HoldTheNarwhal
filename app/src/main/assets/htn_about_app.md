@@ -15,8 +15,6 @@ ReactiveX / [RxJava](https://github.com/ReactiveX/RxJava) library, subject to th
 
 ReactiveX / [RxAndroid](https://github.com/ReactiveX/RxAndroid) library, subject to the Apache 2.0 license. You can obtain a copy of the license [here](http://www.apache.org/licenses/LICENSE-2.0).
 
-JakeWharton / [Butter Knife](http://jakewharton.github.io/butterknife/) library, subject to the Apache 2.0 license. You can obtain a copy of the license [here](http://www.apache.org/licenses/LICENSE-2.0).
-
 Uncodin / [Bypass](https://github.com/Uncodin/bypass) library, subject to the Apache 2.0 license. You can obtain a copy of the license [here](http://www.apache.org/licenses/LICENSE-2.0).
 
 orfjackal / [Retrolambda](https://github.com/orfjackal/retrolambda) library, provided by a [gradle plugin](https://github.com/evant/gradle-retrolambda) by Evan Tatarka, each subject to the Apache 2.0 license. You can obtain a copy of the license [here](http://www.apache.org/licenses/LICENSE-2.0).

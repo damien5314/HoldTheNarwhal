@@ -9,6 +9,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.identity.IdentityManager;
@@ -27,20 +29,19 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import butterknife.BindView;
-
 @FragmentWithArgs
 public class InboxFragment extends BaseListingsFragment
         implements InboxView, TabLayout.OnTabSelectedListener {
 
     public static final String TAG = InboxFragment.class.getSimpleName();
 
-    @Inject IdentityManager identityManager;
+    @Inject
+    IdentityManager identityManager;
 
-    @Arg(key = "ARG_SHOW") String show;
+    @Arg(key = "ARG_SHOW")
+    String show;
 
-    @BindView(R.id.coordinator_layout) CoordinatorLayout coordinatorLayout;
+    private CoordinatorLayout coordinatorLayout;
 
     private InboxPresenter inboxPresenter;
 
@@ -62,9 +63,11 @@ public class InboxFragment extends BaseListingsFragment
         setCallbacks(inboxPresenter);
     }
 
-    @NotNull @Override
+    @NotNull
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
         View view = super.onCreateView(inflater, container, state);
+        coordinatorLayout = view.findViewById(R.id.coordinator_layout);
 
         initializeTabs();
 
@@ -124,7 +127,8 @@ public class InboxFragment extends BaseListingsFragment
 
     private ListingsAdapter listingsAdapter;
 
-    @NotNull @Override
+    @NotNull
+    @Override
     public ListingsAdapter getListingsAdapter() {
         if (listingsAdapter == null) {
             listingsAdapter = new ListingsAdapter(getListingsPresenter(), this, this, this);
@@ -182,7 +186,8 @@ public class InboxFragment extends BaseListingsFragment
         return show;
     }
 
-    @NotNull @Override
+    @NotNull
+    @Override
     protected View getChromeView() {
         return coordinatorLayout;
     }

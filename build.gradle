@@ -22,7 +22,6 @@ buildscript {
         CRASHLYTICS_VERSION = '2.9.5'
         GLIDE_VERSION = '4.9.0'
         GLIDE_OKHTTP_VERSION = '4.9.0'
-        BUTTERKNIFE_VERSION = '10.2.1'
         RXREDDIT_VERSION = '0.13'
         RXJAVA_VERSION = '2.2.8'
         RXANDROID_VERSION = '2.1.0'

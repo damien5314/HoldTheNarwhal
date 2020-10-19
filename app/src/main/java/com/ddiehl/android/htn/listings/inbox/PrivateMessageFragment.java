@@ -10,6 +10,10 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.listings.report.ReportView;
@@ -28,10 +32,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import butterknife.BindView;
 import rxreddit.model.Listing;
 import rxreddit.model.PrivateMessage;
 
@@ -42,12 +42,14 @@ public class PrivateMessageFragment extends BaseFragment implements PrivateMessa
 
     private static final int REQUEST_REPORT_MESSAGE = 1000;
 
-    @Arg String json;
+    @Arg
+    String json;
 
-    @Inject Gson gson;
+    @Inject
+    Gson gson;
 
-    @BindView(R.id.coordinator_layout) CoordinatorLayout coordinatorLayout;
-    @BindView(R.id.recycler_view) RecyclerView recyclerView;
+    private CoordinatorLayout coordinatorLayout;
+    private RecyclerView recyclerView;
 
     PrivateMessageAdapter adapter;
 
@@ -64,10 +66,14 @@ public class PrivateMessageFragment extends BaseFragment implements PrivateMessa
         adapter = new PrivateMessageAdapter();
     }
 
-    @NotNull @Override
+    @NotNull
+    @Override
     public View onCreateView(
             LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle state) {
         View view = super.onCreateView(inflater, container, state);
+
+        coordinatorLayout = view.findViewById(R.id.coordinator_layout);
+        recyclerView = view.findViewById(R.id.recycler_view);
 
         // Configure RecyclerView
         recyclerView.setAdapter(adapter);
@@ -112,7 +118,8 @@ public class PrivateMessageFragment extends BaseFragment implements PrivateMessa
         );
     }
 
-    @NotNull @Override
+    @NotNull
+    @Override
     protected View getChromeView() {
         return coordinatorLayout;
     }

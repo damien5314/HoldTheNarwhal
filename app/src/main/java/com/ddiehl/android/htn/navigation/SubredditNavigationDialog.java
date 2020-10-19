@@ -8,13 +8,12 @@ import android.view.View;
 import android.view.Window;
 import android.view.inputmethod.EditorInfo;
 
+import androidx.fragment.app.DialogFragment;
+
 import com.ddiehl.android.htn.R;
 
 import org.jetbrains.annotations.NotNull;
 
-import androidx.fragment.app.DialogFragment;
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import timber.log.Timber;
 
 public class SubredditNavigationDialog extends DialogFragment {
@@ -23,14 +22,12 @@ public class SubredditNavigationDialog extends DialogFragment {
 
     public interface Callbacks {
         void onSubredditNavigationConfirmed(String subreddit);
+
         void onSubredditNavigationCancelled();
     }
 
-    @BindView(R.id.drawer_navigate_to_subreddit_text)
-    SubredditEditText editText;
-
-    @BindView(R.id.drawer_navigate_to_subreddit_go)
-    View submitButton;
+    private SubredditEditText editText;
+    private View submitButton;
 
     private Callbacks listener;
 
@@ -61,7 +58,9 @@ public class SubredditNavigationDialog extends DialogFragment {
         // Inflate layout and bind views
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.navigate_to_subreddit_edit_text);
-        ButterKnife.bind(this, dialog);
+
+        editText = dialog.findViewById(R.id.drawer_navigate_to_subreddit_text);
+        submitButton = dialog.findViewById(R.id.drawer_navigate_to_subreddit_go);
 
         // Detect taps on the submit button
         submitButton.setOnClickListener((v) -> {
