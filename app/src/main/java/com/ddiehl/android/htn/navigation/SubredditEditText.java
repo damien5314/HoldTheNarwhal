@@ -11,9 +11,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
 import androidx.appcompat.widget.AppCompatEditText;
-import butterknife.ButterKnife;
-import butterknife.OnEditorAction;
-import butterknife.OnFocusChange;
 
 public class SubredditEditText extends AppCompatEditText {
 
@@ -28,16 +25,58 @@ public class SubredditEditText extends AppCompatEditText {
 
     public SubredditEditText(Context context, AttributeSet attrs) {
         super(context, attrs);
-        ButterKnife.bind(this);
         init();
     }
+
+    private final OnFocusChangeListener focusChangeListenerInternal = new OnFocusChangeListener() {
+        @Override
+        public void onFocusChange(View v, boolean hasFocus) {
+            if (!hasFocus) { // Hide keyboard
+                InputMethodManager imm = (InputMethodManager) v.getContext()
+                        .getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+            }
+        }
+    };
+
+    private final OnEditorActionListener editorActionListenerInternal = new OnEditorActionListener() {
+        @Override
+        public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+            // Causes submit button to be clicked on keyboard "done" button click
+            return actionId == EditorInfo.IME_ACTION_DONE;
+        }
+    };
 
     void init() {
         textChangedListener = getTextChangedListener();
         addTextChangedListener(textChangedListener);
+
+        this.setOnFocusChangeListener(null);
     }
 
-    TextWatcher getTextChangedListener() {
+    @Override
+    public void setOnFocusChangeListener(OnFocusChangeListener listener) {
+        final OnFocusChangeListener wrapped = (view, hasFocus) -> {
+            if (listener != null) {
+                listener.onFocusChange(view, hasFocus);
+            }
+            focusChangeListenerInternal.onFocusChange(view, hasFocus);
+        };
+        super.setOnFocusChangeListener(wrapped);
+    }
+
+    @Override
+    public void setOnEditorActionListener(OnEditorActionListener listener) {
+        final OnEditorActionListener wrapped = (view, actionId, keyEvent) -> {
+            if (listener != null) {
+                listener.onEditorAction(view, actionId, keyEvent);
+            }
+            return editorActionListenerInternal.onEditorAction(view, actionId, keyEvent);
+        };
+        super.setOnEditorActionListener(wrapped);
+    }
+
+    private TextWatcher getTextChangedListener() {
         return new TextWatcher() {
             private CharSequence before;
 
@@ -90,21 +129,6 @@ public class SubredditEditText extends AppCompatEditText {
                 }
             }
         };
-    }
-
-    @OnFocusChange
-    void onFocusChange(View v, boolean hasFocus) {
-        if (!hasFocus) { // Hide keyboard
-            InputMethodManager imm = (InputMethodManager) v.getContext()
-                    .getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-        }
-    }
-
-    // Causes submit button to be clicked on keyboard "done" button click
-    @OnEditorAction
-    boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-        return actionId == EditorInfo.IME_ACTION_DONE;
     }
 
     public String getInput() {

@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.identity.IdentityManager;
@@ -22,9 +24,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import androidx.recyclerview.widget.RecyclerView;
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import rxreddit.model.PrivateMessage;
 
 public class PrivateMessageAdapter extends RecyclerView.Adapter<PrivateMessageAdapter.VH> {
@@ -55,20 +54,21 @@ public class PrivateMessageAdapter extends RecyclerView.Adapter<PrivateMessageAd
 
     public static final class VH extends RecyclerView.ViewHolder {
 
-        @Inject IdentityManager identityManager;
+        @Inject
+        IdentityManager identityManager;
 
         private final Context context;
         private final HtmlParser htmlParser;
 
-        @BindView(R.id.conversation_subject) protected TextView conversationSubject;
-        @BindView(R.id.conversation_body_layout) protected ViewGroup conversationBodyLayout;
-        @BindView(R.id.collapsed_messages_layout) protected ViewGroup collapsedMessagesLayout;
-        @BindView(R.id.collapsed_messages_text) protected TextView collapsedMessagesText;
-        @BindView(R.id.last_message_layout) protected ViewGroup lastMessageLayout;
-        @BindView(R.id.message_indentation) protected View messageIndentation;
-        @BindView(R.id.last_message_metadata) protected TextView lastMessageMetadata;
-        @BindView(R.id.unread_message_indicator) protected View unreadMessageIndicator;
-        @BindView(R.id.last_message_body) protected TextView lastMessageBody;
+        private final TextView conversationSubject;
+        private final ViewGroup conversationBodyLayout;
+        private final ViewGroup collapsedMessagesLayout;
+        private final TextView collapsedMessagesText;
+        private final ViewGroup lastMessageLayout;
+        private final View messageIndentation;
+        private final TextView lastMessageMetadata;
+        private final View unreadMessageIndicator;
+        private final TextView lastMessageBody;
 
         public VH(View view) {
             super(view);
@@ -77,7 +77,15 @@ public class PrivateMessageAdapter extends RecyclerView.Adapter<PrivateMessageAd
             context = view.getContext();
             htmlParser = new HtmlParser(context);
 
-            ButterKnife.bind(this, view);
+            conversationSubject = view.findViewById(R.id.conversation_subject);
+            conversationBodyLayout = view.findViewById(R.id.conversation_body_layout);
+            collapsedMessagesLayout = view.findViewById(R.id.collapsed_messages_layout);
+            collapsedMessagesText = view.findViewById(R.id.collapsed_messages_text);
+            lastMessageLayout = view.findViewById(R.id.last_message_layout);
+            messageIndentation = view.findViewById(R.id.message_indentation);
+            lastMessageMetadata = view.findViewById(R.id.last_message_metadata);
+            unreadMessageIndicator = view.findViewById(R.id.unread_message_indicator);
+            lastMessageBody = view.findViewById(R.id.last_message_body);
         }
 
         public void bind(PrivateMessage message) {

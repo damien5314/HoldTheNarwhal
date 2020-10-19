@@ -27,9 +27,6 @@ import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 import rxreddit.model.SubmitPostResponse;
 
 import static com.ddiehl.android.htn.utils.AndroidUtils.getTextInputLayout;
@@ -49,20 +46,13 @@ public class SubmitPostFragment extends BaseFragment
     @Arg
     String subreddit;
 
-    @BindView(R.id.coordinator_layout)
-    CoordinatorLayout coordinatorLayout;
-    @BindView(R.id.submission_type_tabs)
-    TabLayout submissionTypeTabs;
-    @BindView(R.id.submission_url)
-    TextInputEditText urlEditText;
-    @BindView(R.id.submission_title)
-    TextInputEditText titleEditText;
-    @BindView(R.id.submission_text)
-    TextInputEditText textEditText;
-    @BindView(R.id.send_replies_to_inbox)
-    CheckBox sendRepliesToInboxCheckbox;
-    @BindView(R.id.submission_submit)
-    Button submitButton;
+    private CoordinatorLayout coordinatorLayout;
+    private TabLayout submissionTypeTabs;
+    private TextInputEditText urlEditText;
+    private TextInputEditText titleEditText;
+    private TextInputEditText textEditText;
+    private CheckBox sendRepliesToInboxCheckbox;
+    private Button submitButton;
 
     SubmitPostPresenter presenter;
 
@@ -89,7 +79,16 @@ public class SubmitPostFragment extends BaseFragment
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle state) {
         View view = super.onCreateView(inflater, container, state);
-        ButterKnife.bind(this, view);
+
+        coordinatorLayout = view.findViewById(R.id.coordinator_layout);
+        submissionTypeTabs = view.findViewById(R.id.submission_type_tabs);
+        urlEditText = view.findViewById(R.id.submission_url);
+        titleEditText = view.findViewById(R.id.submission_title);
+        textEditText = view.findViewById(R.id.submission_text);
+        sendRepliesToInboxCheckbox = view.findViewById(R.id.send_replies_to_inbox);
+        submitButton = view.findViewById(R.id.submission_submit);
+
+        submitButton.setOnClickListener(this::onSubmitClicked);
 
         submissionTypeTabs.addOnTabSelectedListener(getOnTabSelectedListener());
         TabLayout.Tab linkTab = addNewTab(submissionTypeTabs, R.string.submission_type_link, "link");
@@ -136,8 +135,7 @@ public class SubmitPostFragment extends BaseFragment
         getTextInputLayout(textEditText).setVisibility(View.VISIBLE);
     }
 
-    @OnClick(R.id.submission_submit)
-    void onSubmitClicked() {
+    private void onSubmitClicked(View view) {
         int position = submissionTypeTabs.getSelectedTabPosition();
         TabLayout.Tab selected = submissionTypeTabs.getTabAt(position);
 

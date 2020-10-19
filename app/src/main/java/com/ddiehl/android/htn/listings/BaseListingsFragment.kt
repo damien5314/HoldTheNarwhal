@@ -7,7 +7,6 @@ import android.view.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import butterknife.BindView
 import com.ddiehl.android.htn.HoldTheNarwhal
 import com.ddiehl.android.htn.R
 import com.ddiehl.android.htn.listings.report.ReportView
@@ -28,7 +27,6 @@ abstract class BaseListingsFragment : BaseFragment(), ListingsView, SwipeRefresh
         private const val LINK_BASE_URL = "https://www.reddit.com"
     }
 
-    @BindView(R.id.recycler_view)
     lateinit var recyclerView: RecyclerView
     protected lateinit var swipeRefreshLayout: SwipeRefreshLayout
 
@@ -63,6 +61,7 @@ abstract class BaseListingsFragment : BaseFragment(), ListingsView, SwipeRefresh
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, state: Bundle?): View {
         return super.onCreateView(inflater, container, state).also {
+            recyclerView = it.findViewById(R.id.recycler_view);
             instantiateListView()
         }
     }

@@ -12,6 +12,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.identity.IdentityManager;
@@ -38,8 +40,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import butterknife.BindView;
 import rxreddit.model.Listing;
 import rxreddit.model.Trophy;
 import rxreddit.model.UserIdentity;
@@ -54,27 +54,32 @@ public class UserProfileFragment extends BaseListingsFragment
 
     private static final int NUM_DEFAULT_TABS = 5;
 
-    @Inject IdentityManager identityManager;
+    @Inject
+    IdentityManager identityManager;
 
-    @BindView(R.id.coordinator_layout) protected CoordinatorLayout coordinatorLayout;
-    @BindView(R.id.user_profile_summary) protected View userProfileSummary;
-    @BindView(R.id.recycler_view) protected View listView;
-    @BindView(R.id.user_note_layout) protected View friendNoteLayout;
+    protected CoordinatorLayout coordinatorLayout;
+    protected View userProfileSummary;
+    protected View listView;
+    protected View friendNoteLayout;
 
     // Views for user profile summary elements
-    @BindView(R.id.user_created) TextView createDate;
-    @BindView(R.id.user_karma_layout) View karmaLayout;
-    @BindView(R.id.user_link_karma) TextView linkKarma;
-    @BindView(R.id.user_comment_karma) TextView commentKarma;
-    @BindView(R.id.user_friend_button) Button friendButton;
-    @BindView(R.id.user_friend_note_edit) TextView friendNote;
-    @BindView(R.id.user_friend_note_confirm) Button friendNoteSave;
-    @BindView(R.id.user_trophies) TrophyCaseLayout trophies;
+    private TextView createDate;
+    private View karmaLayout;
+    private TextView linkKarma;
+    private TextView commentKarma;
+    private Button friendButton;
+    private TextView friendNote;
+    private Button friendNoteSave;
+    private TrophyCaseLayout trophies;
 
-    @Arg String username;
-    @Arg String show;
-    @Arg String sort;
-    @Arg String timespan;
+    @Arg
+    String username;
+    @Arg
+    String show;
+    @Arg
+    String sort;
+    @Arg
+    String timespan;
 
     private TabLayout.Tab tabUpvoted;
     private TabLayout.Tab tabDownvoted;
@@ -103,10 +108,27 @@ public class UserProfileFragment extends BaseListingsFragment
         setCallbacks(userProfilePresenter);
     }
 
-    @NotNull @Override
+    @NotNull
+    @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle state) {
         View view = super.onCreateView(inflater, container, state);
         tabLayout = getActivity().findViewById(R.id.tab_layout);
+
+        coordinatorLayout = view.findViewById(R.id.coordinator_layout);
+        userProfileSummary = view.findViewById(R.id.user_profile_summary);
+        listView = view.findViewById(R.id.recycler_view);
+        friendNoteLayout = view.findViewById(R.id.user_note_layout);
+
+        // Views for user profile summary elements
+        createDate = view.findViewById(R.id.user_created);
+        karmaLayout = view.findViewById(R.id.user_karma_layout);
+        linkKarma = view.findViewById(R.id.user_link_karma);
+        commentKarma = view.findViewById(R.id.user_comment_karma);
+        friendButton = view.findViewById(R.id.user_friend_button);
+        friendNote = view.findViewById(R.id.user_friend_note_edit);
+        friendNoteSave = view.findViewById(R.id.user_friend_note_confirm);
+        trophies = view.findViewById(R.id.user_trophies);
+
         return view;
     }
 
@@ -204,7 +226,8 @@ public class UserProfileFragment extends BaseListingsFragment
 
     private ListingsAdapter listingsAdapter;
 
-    @NotNull @Override
+    @NotNull
+    @Override
     public ListingsAdapter getListingsAdapter() {
         if (listingsAdapter == null) {
             listingsAdapter = new ListingsAdapter(getListingsPresenter(), this, this, null);
@@ -446,7 +469,8 @@ public class UserProfileFragment extends BaseListingsFragment
         return timespan;
     }
 
-    @NotNull @Override
+    @NotNull
+    @Override
     protected View getChromeView() {
         return coordinatorLayout;
     }

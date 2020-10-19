@@ -6,34 +6,33 @@ import android.os.Build;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.listings.BaseListingsPresenter;
 
 import javax.inject.Inject;
 
-import androidx.recyclerview.widget.RecyclerView;
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 import rxreddit.model.CommentStub;
 
 public class ThreadStubViewHolder extends RecyclerView.ViewHolder {
 
-    @Inject protected Context appContext;
+    @Inject
+    protected Context appContext;
     private final BaseListingsPresenter commentPresenter;
     private CommentStub commentStub;
     private String subreddit;
     private String linkId;
 
-    @BindView(R.id.comment_more)
-    TextView moreCommentsView;
+    private final TextView moreCommentsView;
 
     public ThreadStubViewHolder(View v, BaseListingsPresenter presenter) {
         super(v);
         HoldTheNarwhal.getApplicationComponent().inject(this);
         commentPresenter = presenter;
-        ButterKnife.bind(this, v);
+        moreCommentsView = v.findViewById(R.id.comment_more);
+        moreCommentsView.setOnClickListener(this::onClick);
     }
 
     public void bind(CommentStub comment, String subreddit, String linkId) {
@@ -71,8 +70,7 @@ public class ThreadStubViewHolder extends RecyclerView.ViewHolder {
         }
     }
 
-    @OnClick(R.id.comment_more)
-    void onClick() {
+    private void onClick(View view) {
         if (commentStub.getCount() == 0) {
             String commentId = commentStub.getParentId();
             commentPresenter.showCommentThread(subreddit, linkId, commentId);

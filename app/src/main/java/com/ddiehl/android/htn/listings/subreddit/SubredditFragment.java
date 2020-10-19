@@ -11,6 +11,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.listings.BaseListingsFragment;
@@ -31,11 +34,6 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
 
-import androidx.annotation.NonNull;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 import rxreddit.model.Link;
 import rxreddit.model.Subreddit;
 
@@ -46,16 +44,18 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
 
     public static final String TAG = SubredditFragment.class.getSimpleName();
 
-    @Inject protected SettingsManager settingsManager;
+    @Inject
+    protected SettingsManager settingsManager;
 
-    @Arg(required = false) String subredditName;
-    @Arg(required = false) String sort;
-    @Arg(required = false) String timespan;
+    @Arg(required = false)
+    String subredditName;
+    @Arg(required = false)
+    String sort;
+    @Arg(required = false)
+    String timespan;
 
-    @BindView(R.id.coordinator_layout)
-    CoordinatorLayout coordinatorLayout;
-    @BindView(R.id.submit_new_post)
-    FloatingActionButton submitNewPostButton;
+    private CoordinatorLayout coordinatorLayout;
+    private FloatingActionButton submitNewPostButton;
 
     SubredditPresenter subredditPresenter;
 
@@ -82,10 +82,14 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
         setCallbacks(presenter);
     }
 
-    @NotNull @Override
+    @NotNull
+    @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container, Bundle state) {
         View view = super.onCreateView(inflater, container, state);
-        ButterKnife.bind(this, view);
+
+        coordinatorLayout = view.findViewById(R.id.coordinator_layout);
+        submitNewPostButton = view.findViewById(R.id.submit_new_post);
+        submitNewPostButton.setOnClickListener(this::onSubmitNewPostClicked);
 
         // Show submit button if we're on a valid subreddit
         boolean showSubmitButton = subredditName != null && !"all".equals(subredditName);
@@ -122,7 +126,8 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
 
     private ListingsAdapter listingsAdapter;
 
-    @NotNull @Override
+    @NotNull
+    @Override
     public ListingsAdapter getListingsAdapter() {
         if (listingsAdapter == null) {
             listingsAdapter = new ListingsAdapter(listingsPresenter, this, null, null);
@@ -139,8 +144,7 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
         }
     }
 
-    @OnClick(R.id.submit_new_post)
-    void onSubmitNewPostClicked() {
+    private void onSubmitNewPostClicked(View view) {
         Intent intent = SubmitPostActivity.getIntent(getContext(), subredditName);
         startActivityForResult(intent, REQUEST_SUBMIT_NEW_POST);
     }
@@ -199,7 +203,8 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
         return timespan;
     }
 
-    @NotNull @Override
+    @NotNull
+    @Override
     protected View getChromeView() {
         return coordinatorLayout;
     }

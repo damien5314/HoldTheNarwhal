@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.view.glide.GlideApp;
 import com.ddiehl.android.htn.view.markdown.HtmlParser;
@@ -19,11 +21,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.inject.Inject;
-
-import androidx.recyclerview.widget.RecyclerView;
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import rxreddit.model.Subreddit;
 
 public class SubscriptionManagerAdapter extends RecyclerView.Adapter<SubscriptionManagerAdapter.VH>
@@ -106,15 +103,18 @@ public class SubscriptionManagerAdapter extends RecyclerView.Adapter<Subscriptio
 
         private final HtmlParser htmlParser;
 
-        @BindView(R.id.name) TextView name;
-        @BindView(R.id.public_description) TextView publicDescription;
-        @BindView(R.id.subscription_icon) ImageView subscriptionIcon;
+        private final TextView name;
+        private final TextView publicDescription;
+        private final ImageView subscriptionIcon;
 
         SubscriptionManagerView subscriptionManagerView;
 
         public VH(View itemView, SubscriptionManagerView subscriptionManagerView) {
             super(itemView);
-            ButterKnife.bind(this, itemView);
+
+            name = itemView.findViewById(R.id.name);
+            publicDescription = itemView.findViewById(R.id.public_description);
+            subscriptionIcon = itemView.findViewById(R.id.subscription_icon);
 
             this.subscriptionManagerView = subscriptionManagerView;
             final Context context = itemView.getContext();

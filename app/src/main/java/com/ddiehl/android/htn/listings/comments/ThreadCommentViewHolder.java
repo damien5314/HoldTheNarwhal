@@ -10,19 +10,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.utils.ThemeUtilsKt;
 import com.ddiehl.android.htn.view.ColorSwapTextView;
 import com.ddiehl.android.htn.view.markdown.HtmlParser;
 import com.ddiehl.timesincetextview.TimeSinceTextView;
 
-import javax.inject.Inject;
-
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.RecyclerView;
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 import rxreddit.model.Comment;
 import rxreddit.model.Link;
 
@@ -35,14 +30,15 @@ public class ThreadCommentViewHolder extends RecyclerView.ViewHolder
     private final HtmlParser htmlParser;
     private Comment comment;
 
-    @BindView(R.id.comment_author) ColorSwapTextView authorView;
-    @BindView(R.id.comment_score_layout) ViewGroup scoreViewLayout;
-    @BindView(R.id.comment_score) TextView scoreView;
-    @BindView(R.id.comment_timestamp) TimeSinceTextView timestampView;
-    @BindView(R.id.comment_saved_icon) View savedView;
-    @BindView(R.id.comment_body) TextView bodyView;
-    @BindView(R.id.comment_gilded_text_view) TextView gildedText;
-    @BindView(R.id.comment_controversiality_indicator) View controversialityIndicator;
+    private ColorSwapTextView authorView;
+    private ViewGroup scoreViewLayout;
+    private TextView scoreView;
+    private TimeSinceTextView timestampView;
+    private View savedView;
+    private TextView bodyView;
+    private TextView gildedText;
+    private View controversialityIndicator;
+    private View commentMetadata;
 
     public ThreadCommentViewHolder(View view, LinkCommentsView linkCommentsView, LinkCommentsPresenter presenter) {
         super(view);
@@ -52,17 +48,27 @@ public class ThreadCommentViewHolder extends RecyclerView.ViewHolder
         this.linkCommentsPresenter = presenter;
         this.htmlParser = new HtmlParser(context);
 
-        ButterKnife.bind(this, view);
+        authorView = view.findViewById(R.id.comment_author);
+        scoreViewLayout = view.findViewById(R.id.comment_score_layout);
+        scoreView = view.findViewById(R.id.comment_score);
+        timestampView = view.findViewById(R.id.comment_timestamp);
+        savedView = view.findViewById(R.id.comment_saved_icon);
+        bodyView = view.findViewById(R.id.comment_body);
+        gildedText = view.findViewById(R.id.comment_gilded_text_view);
+        controversialityIndicator = view.findViewById(R.id.comment_controversiality_indicator);
+        commentMetadata = view.findViewById(R.id.comment_metadata);
+
+        commentMetadata.setOnClickListener(this::onClickMetadata);
+        bodyView.setOnClickListener(this::onClickBody);
+
         this.itemView.setOnCreateContextMenuListener(this);
     }
 
-    @OnClick(R.id.comment_metadata)
-    void onClickMetadata(View v) {
+    private void onClickMetadata(View v) {
         linkCommentsPresenter.toggleThreadVisible(comment);
     }
 
-    @OnClick(R.id.comment_body)
-    void onClickBody(View v) {
+    private void onClickBody(View v) {
         v.showContextMenu();
     }
 
