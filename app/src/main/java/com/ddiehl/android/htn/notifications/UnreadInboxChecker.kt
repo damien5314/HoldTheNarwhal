@@ -1,8 +1,8 @@
 package com.ddiehl.android.htn.notifications
 
-import io.reactivex.Observable
-import io.reactivex.ObservableSource
-import io.reactivex.Single
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.ObservableSource
+import io.reactivex.rxjava3.core.Single
 import rxreddit.api.RedditService
 import rxreddit.model.ListingResponse
 
@@ -11,7 +11,7 @@ import rxreddit.model.ListingResponse
  * inbox messages.
  */
 class UnreadInboxChecker(
-        private val redditService: RedditService
+    private val redditService: RedditService
 ) {
 
     fun check(): Single<ListingResponse> {
