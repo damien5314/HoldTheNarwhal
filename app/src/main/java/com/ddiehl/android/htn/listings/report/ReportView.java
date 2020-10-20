@@ -4,6 +4,9 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 
@@ -15,11 +18,9 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
-import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 import rxreddit.api.RedditService;
 import rxreddit.model.SubredditRule;
 import rxreddit.model.SubredditRules;
@@ -55,7 +56,8 @@ public class ReportView extends DialogFragment
         return fragment;
     }
 
-    @Inject RedditService redditService;
+    @Inject
+    RedditService redditService;
 
     @Override
     public void onCreate(@androidx.annotation.Nullable Bundle savedInstanceState) {

@@ -8,19 +8,20 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.inject.Inject;
 
-import io.reactivex.Completable;
-import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Function;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.ObservableSource;
+import io.reactivex.rxjava3.functions.Function;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 import rxreddit.api.RedditService;
 import rxreddit.model.ListingResponse;
 import rxreddit.model.Subreddit;
 
 public class SubscriptionManagerPresenter {
 
-    @Inject RedditService redditService;
+    @Inject
+    RedditService redditService;
 
     public SubscriptionManagerPresenter() {
         HoldTheNarwhal.getApplicationComponent().inject(this);
@@ -28,6 +29,7 @@ public class SubscriptionManagerPresenter {
 
     /**
      * Get list of {@link rxreddit.model.Subreddit} to which user is subscribed.
+     *
      * @param where Valid: "subscriber", "contributor", "moderator"
      */
     public Observable<ListingResponse> getSubscriptions(

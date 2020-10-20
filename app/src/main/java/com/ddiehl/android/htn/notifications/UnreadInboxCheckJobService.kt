@@ -8,10 +8,9 @@ import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
 import com.ddiehl.android.htn.HoldTheNarwhal
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
-import io.reactivex.disposables.Disposables
-import io.reactivex.schedulers.Schedulers
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.disposables.Disposable
+import io.reactivex.rxjava3.schedulers.Schedulers
 import rxreddit.api.RedditService
 import rxreddit.model.ListingResponse
 import timber.log.Timber
@@ -24,10 +23,10 @@ private const val LATENCY_15_MIN_MILLIS = 15 * 60 * 1000L
 fun getJobInfo(context: Context): JobInfo {
     val serviceComponent = ComponentName(context, UnreadInboxCheckJobService::class.java)
     return JobInfo.Builder(JOB_ID, serviceComponent)
-            .setPeriodic(LATENCY_15_MIN_MILLIS)
-            .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
-            .setPersisted(true)
-            .build()
+        .setPeriodic(LATENCY_15_MIN_MILLIS)
+        .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
+        .setPersisted(true)
+        .build()
 }
 
 /**
@@ -37,10 +36,11 @@ fun getJobInfo(context: Context): JobInfo {
 @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
 class UnreadInboxCheckJobService : JobService() {
 
-    @Inject lateinit var redditService: RedditService
+    @Inject
+    lateinit var redditService: RedditService
     private lateinit var inboxNotificationManager: InboxNotificationManager
     private lateinit var inboxNotificationTracker: InboxNotificationTracker
-    private var subscription: Disposable = Disposables.empty()
+    private var subscription: Disposable = Disposable.empty()
 
     init {
         HoldTheNarwhal.getApplicationComponent().inject(this)
@@ -67,15 +67,15 @@ class UnreadInboxCheckJobService : JobService() {
         }
         val unreadInboxChecker = UnreadInboxChecker(redditService)
         subscription = unreadInboxChecker.check()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    onInboxFetched(it)
-                    jobFinished(params, false)
-                }, {
-                    onInboxFetchError(it)
-                    jobFinished(params, true)
-                })
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                onInboxFetched(it)
+                jobFinished(params, false)
+            }, {
+                onInboxFetchError(it)
+                jobFinished(params, true)
+            })
     }
 
     private fun onInboxFetched(response: ListingResponse) {
