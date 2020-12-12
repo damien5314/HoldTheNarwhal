@@ -9,8 +9,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 import rxreddit.model.Listing;
 import rxreddit.model.ListingResponse;
 import rxreddit.model.PrivateMessage;
@@ -119,7 +119,8 @@ public class InboxPresenter extends BaseListingsPresenter {
             redditService.markMessagesRead(commaSeparated)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(() -> { }, Timber::e);
+                    .subscribe(() -> {
+                    }, Timber::e);
         }
     }
 

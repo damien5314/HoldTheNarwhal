@@ -12,8 +12,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 import rxreddit.model.AbsComment;
 import rxreddit.model.Comment;
 import rxreddit.model.CommentStub;
@@ -246,8 +246,7 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
             if (media != null) {
                 final Media.RedditVideo redditVideo = media.getRedditVideo();
                 if (redditVideo != null) {
-                    final String videoUrl = redditVideo.getFallbackUrl();
-                    linkCommentsView.openUrlInWebView(videoUrl);
+                    linkCommentsView.openRedditVideo(redditVideo);
                     return;
                 }
             }

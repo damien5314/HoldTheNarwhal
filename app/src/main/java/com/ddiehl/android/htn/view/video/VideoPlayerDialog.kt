@@ -32,6 +32,9 @@ class VideoPlayerDialog : DialogFragment() {
     private val exoPlayer by lazy {
         SimpleExoPlayer.Builder(requireContext())
             .build()
+            .also { player ->
+                player.addListener(ExoPlayerErrorLogger())
+            }
     }
     private val videoView by lazy {
         requireView().findViewById<StyledPlayerView>(R.id.video_view).also { videoView ->
@@ -85,7 +88,6 @@ class VideoPlayerDialog : DialogFragment() {
 
     private fun startVideo() {
         val mediaItem = MediaItem.fromUri(url)
-        exoPlayer.addListener(ExoPlayerErrorLogger())
         exoPlayer.setMediaItem(mediaItem)
         exoPlayer.playWhenReady = true
         videoView.player = exoPlayer

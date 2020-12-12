@@ -22,8 +22,8 @@ android {
         applicationId "com.ddiehl.android.htn"
         minSdkVersion MIN_SDK_VERSION
         targetSdkVersion TARGET_SDK_VERSION
-        versionCode 2100023
-        versionName "0.18"
+        versionCode 2100024
+        versionName "0.19"
         resConfigs "en"
         buildConfigField "long", "BUILD_TIME_UTC", "" + getTime()
         def appId = localProperties.getProperty("app_id")
@@ -70,6 +70,9 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
 
     // Renames APK to our standard format `buildType-versionName_versionCode-RCx.apk
     applicationVariants.all { variant ->
@@ -97,8 +100,8 @@ dependencies {
     implementation "com.github.damien5314.RxReddit:library:$RXREDDIT_VERSION"
     implementation "com.github.damien5314.RxReddit:android:$RXREDDIT_VERSION"
     debugImplementation project(':mock-api')
-    implementation "io.reactivex.rxjava2:rxjava:$RXJAVA_VERSION"
-    implementation "io.reactivex.rxjava2:rxandroid:$RXANDROID_VERSION"
+    implementation "io.reactivex.rxjava3:rxjava:$RXJAVA_VERSION"
+    implementation "io.reactivex.rxjava3:rxandroid:$RXANDROID_VERSION"
     implementation "com.github.damien5314:TimeSinceTextView:$TIMESINCETEXTVIEW_VERSION"
     implementation "com.google.dagger:dagger:$DAGGER_VERSION"
     kapt "com.google.dagger:dagger-compiler:$DAGGER_VERSION"

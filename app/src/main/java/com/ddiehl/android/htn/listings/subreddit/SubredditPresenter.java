@@ -1,5 +1,7 @@
 package com.ddiehl.android.htn.listings.subreddit;
 
+import androidx.annotation.NonNull;
+
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.listings.BaseListingsPresenter;
 import com.ddiehl.android.htn.navigation.RedditNavigationView;
@@ -9,9 +11,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 
-import androidx.annotation.NonNull;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 import rxreddit.api.NoSuchSubredditException;
 import rxreddit.model.Link;
 import rxreddit.model.ListingResponse;
