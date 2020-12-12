@@ -8,6 +8,7 @@
         <item name="android:windowActionModeOverlay">true</item>
         <!-- app background color -->
         <item name="android:windowBackground">?attr/windowBackgroundColor</item>
+        <item name="android:fontFamily">@font/firasans</item>
     </style>
 
     <style name="BaseNightAppTheme" parent="Theme.AppCompat.NoActionBar">
