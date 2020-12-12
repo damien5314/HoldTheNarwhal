@@ -235,32 +235,6 @@
     <string name="color_scheme_light_value">light</string>
     <string name="color_scheme_dark_value">dark</string>
 
-    <string name="pref_font">font</string>
-    <string-array name="pref_font_entries">
-        <item>@string/font_system</item>
-        <item>@string/font_arimo</item>
-        <item>@string/font_maven_pro</item>
-        <item>@string/font_open_sans</item>
-        <item>@string/font_oxygen</item>
-    </string-array>
-    <string name="font_system">(system)</string>
-    <string name="font_arimo">Arimo</string>
-    <string name="font_maven_pro">Maven Pro</string>
-    <string name="font_open_sans">Open Sans</string>
-    <string name="font_oxygen">Oxygen</string>
-    <string-array name="pref_font_values">
-        <item>@string/font_system_value</item>
-        <item>@string/font_arimo_value</item>
-        <item>@string/font_maven_pro_value</item>
-        <item>@string/font_open_sans_value</item>
-        <item>@string/font_oxygen_value</item>
-    </string-array>
-    <string name="font_system_value" />
-    <string name="font_arimo_value">fonts/Arimo/Arimo-Regular.ttf</string>
-    <string name="font_maven_pro_value">fonts/Maven_Pro/MavenPro-Regular.ttf</string>
-    <string name="font_open_sans_value">fonts/Open_Sans/OpenSans-Regular.ttf</string>
-    <string name="font_oxygen_value">fonts/Oxygen/Oxygen-Regular.ttf</string>
-
     <!-- Submission -->
     <string name="submission_activity_title">submit to r/%s</string>
     <string name="submission_type_link">link</string>

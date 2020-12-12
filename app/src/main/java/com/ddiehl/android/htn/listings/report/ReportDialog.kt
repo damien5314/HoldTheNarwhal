@@ -36,8 +36,8 @@ class ReportDialog : DialogFragment() {
         }
     }
 
-    private val rules: Array<String> by lazy { arguments!!.getStringArray(ARG_RULES) }
-    private val siteRules: Array<String> by lazy { arguments!!.getStringArray(ARG_SITE_RULES) }
+    private val rules: Array<String> by lazy { arguments!!.getStringArray(ARG_RULES) as Array<String> }
+    private val siteRules: Array<String> by lazy { arguments!!.getStringArray(ARG_SITE_RULES) as Array<String> }
 
     internal var selectedIndex = -1
     internal var selectedButton: RadioButton? = null

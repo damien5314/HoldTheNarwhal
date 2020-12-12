@@ -2,8 +2,6 @@ package com.ddiehl.android.htn.view;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.Context;
-import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
@@ -71,8 +69,6 @@ import rxreddit.model.PrivateMessage;
 import rxreddit.model.UserAccessToken;
 import rxreddit.model.UserIdentity;
 import timber.log.Timber;
-import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
-import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
@@ -117,12 +113,6 @@ public abstract class BaseActivity extends AppCompatActivity implements
     private ColorScheme currentColorScheme;
 
     protected abstract boolean hasNavigationDrawer();
-
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        ContextWrapper wrapper = CalligraphyContextWrapper.wrap(newBase);
-        super.attachBaseContext(wrapper);
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -180,14 +170,6 @@ public abstract class BaseActivity extends AppCompatActivity implements
         // Check to see if the activity was restarted due to authentication change
         checkAndShowAuthenticationStateChange();
 
-        // Custom font
-        CalligraphyConfig.initDefault(
-                new CalligraphyConfig.Builder()
-                        .setDefaultFontPath(getFont())
-                        .setFontAttrId(R.attr.fontPath)
-                        .build()
-        );
-
         showTabs(false);
     }
 
@@ -195,10 +177,6 @@ public abstract class BaseActivity extends AppCompatActivity implements
         final ColorScheme colorScheme = settingsManager.getColorScheme();
         setTheme(colorScheme.getStyleRes());
         currentColorScheme = colorScheme;
-    }
-
-    private String getFont() {
-        return settingsManager.getFont();
     }
 
     private void checkAndShowAuthenticationStateChange() {
