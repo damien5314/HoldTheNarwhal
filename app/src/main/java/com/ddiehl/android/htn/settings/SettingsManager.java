@@ -1,8 +1,9 @@
 package com.ddiehl.android.htn.settings;
 
+import androidx.annotation.NonNull;
+
 import com.ddiehl.android.htn.view.theme.ColorScheme;
 
-import androidx.annotation.NonNull;
 import rxreddit.model.UserSettings;
 
 public interface SettingsManager {
@@ -14,8 +15,6 @@ public interface SettingsManager {
     void clearUserSettings();
 
     String getDeviceId();
-
-    String getFont();
 
     boolean askedForAnalytics();
 

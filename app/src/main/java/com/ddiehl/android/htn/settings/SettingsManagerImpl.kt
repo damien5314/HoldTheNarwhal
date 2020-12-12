@@ -144,10 +144,6 @@ class SettingsManagerImpl(context: Context) : SettingsManager {
             .apply()
     }
 
-    override fun getFont(): String? {
-        return sharedPreferences.getString(PREF_FONT, "")
-    }
-
     override fun getCommentSort(): String? {
         val default = appContext.getString(R.string.default_comment_sort)
         return sharedPreferences.getString(PREF_DEFAULT_COMMENT_SORT, default)
@@ -212,7 +208,6 @@ class SettingsManagerImpl(context: Context) : SettingsManager {
         const val PREF_DEVICE_ID = "pref_device_id"
         const val PREF_ALLOW_ANALYTICS_ASKED = "pref_allow_analytics_asked"
         const val PREF_COLOR_SCHEME = "pref_color_scheme"
-        const val PREF_FONT = "pref_font"
 
         // reddit settings
         const val PREF_HAS_FROM_REMOTE = "pref_flag_for_user"

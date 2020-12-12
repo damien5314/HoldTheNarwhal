@@ -20,7 +20,6 @@
             android:layout_height="wrap_content"
             android:textAlignment="viewStart"
             android:gravity="start"
-            android:fontFamily="sans-serif-light"
             android:textAppearance="?android:textAppearanceMedium"
             android:textColor="?attr/contentSecondaryTextColor"
             tools:text="The brown fox jumped over the white fence"
