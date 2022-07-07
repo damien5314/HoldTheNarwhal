@@ -18,7 +18,6 @@ import java.io.File
 import javax.inject.Named
 import javax.inject.Singleton
 
-//  "identity", "mysubreddits", "privatemessages", "read", "report", "save", "submit", "vote", "history", "account", "subscribe"
 @Module
 class ApplicationModule(context: Context) {
     private val appContext: Context
