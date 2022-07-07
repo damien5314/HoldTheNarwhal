@@ -250,13 +250,16 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
                     return;
                 }
             }
-            linkCommentsView.openUrlInWebView(link.getUrl());
+            final String linkUrl = link.getUrl();
+            if (linkUrl != null) {
+                linkCommentsView.openUrlInWebView(linkUrl);
+            }
         }
     }
 
     @Override
     public void replyToLink(Link link) {
-        if (link.isArchived()) {
+        if (link.getArchived()) {
             mainView.showToast(context.getString(R.string.listing_archived));
         } else if (!redditService.isUserAuthorized()) {
             mainView.showToast(context.getString(R.string.user_required));
@@ -268,7 +271,7 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
 
     @Override
     public void replyToComment(@NotNull Comment comment) {
-        if (comment.isArchived()) {
+        if (comment.getArchived()) {
             mainView.showToast(context.getString(R.string.listing_archived));
         } else if (!redditService.isUserAuthorized()) {
             mainView.showToast(context.getString(R.string.user_required));

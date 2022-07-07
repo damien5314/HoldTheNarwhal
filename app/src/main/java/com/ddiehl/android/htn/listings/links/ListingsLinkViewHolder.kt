@@ -1,77 +1,67 @@
-package com.ddiehl.android.htn.listings.links;
+package com.ddiehl.android.htn.listings.links
 
-import android.view.View;
+import android.view.View
+import com.ddiehl.android.htn.R
+import com.ddiehl.android.htn.listings.BaseListingsPresenter
+import com.ddiehl.android.htn.listings.subreddit.ThumbnailMode
+import com.ddiehl.android.htn.utils.getColorFromAttr
+import rxreddit.model.Link
 
-import com.ddiehl.android.htn.R;
-import com.ddiehl.android.htn.listings.BaseListingsPresenter;
-import com.ddiehl.android.htn.listings.subreddit.ThumbnailMode;
-import com.ddiehl.android.htn.utils.ThemeUtilsKt;
+class ListingsLinkViewHolder(
+    view: View?,
+    linkView: LinkView?,
+    presenter: BaseListingsPresenter?,
+) : BaseLinkViewHolder(view, linkView, presenter) {
 
-import org.jetbrains.annotations.NotNull;
-
-import rxreddit.model.Link;
-
-public class ListingsLinkViewHolder extends BaseLinkViewHolder {
-
-    public ListingsLinkViewHolder(View view, LinkView linkView, BaseListingsPresenter presenter) {
-        super(view, linkView, presenter);
-        linkComments.setOnClickListener(view1 -> showCommentsForLink());
+    private fun showCommentsForLink() {
+        linkPresenter.showCommentsForLink(link)
     }
 
-    private void showCommentsForLink() {
-        linkPresenter.showCommentsForLink(link);
-    }
-
-    @Override
-    protected void showLiked(@NotNull Link link) {
-        if (link.isLiked() == null) {
-            final int likedColor = ThemeUtilsKt.getColorFromAttr(context, R.attr.contentPrimaryBackgroundColor);
-            view.setBackgroundColor(likedColor);
-        } else if (link.isLiked()) {
-            final int likedColor = ThemeUtilsKt.getColorFromAttr(context, R.attr.contentPrimaryBackgroundColorLiked);
-            view.setBackgroundColor(likedColor);
-        } else {
-            final int dislikedColor = ThemeUtilsKt.getColorFromAttr(context, R.attr.contentPrimaryBackgroundColorDisliked);
-            view.setBackgroundColor(dislikedColor);
+    override fun showLiked(link: Link) {
+        val color = when (link.liked) {
+            true -> getColorFromAttr(context, R.attr.contentPrimaryBackgroundColorLiked)
+            false -> getColorFromAttr(context, R.attr.contentPrimaryBackgroundColorDisliked)
+            null -> getColorFromAttr(context, R.attr.contentPrimaryBackgroundColor)
         }
+        view.setBackgroundColor(color)
     }
 
-    @Override
-    protected void showThumbnail(@NotNull Link link, @NotNull ThumbnailMode mode) {
-        String url = null;
-        if (link.getOver18()) {
+    override fun showThumbnail(link: Link, mode: ThumbnailMode) {
+        var url: String? = null
+        if (link.over18) {
             if (mode == ThumbnailMode.NO_THUMBNAIL) {
-                linkThumbnail.setVisibility(View.GONE);
+                linkThumbnail.visibility = View.GONE
             } else {
-                linkThumbnail.setVisibility(View.VISIBLE);
-                if (mode == ThumbnailMode.VARIANT) {
-                    url = getPreviewUrl(link);
+                linkThumbnail.visibility = View.VISIBLE
+                url = if (mode == ThumbnailMode.VARIANT) {
+                    getPreviewUrl(link)
                 } else { // ThumbnailMode.FULL
-                    url = link.getThumbnail();
+                    link.thumbnail
                 }
             }
         } else {
-            linkThumbnail.setVisibility(View.VISIBLE);
-            url = link.getThumbnail();
+            linkThumbnail.visibility = View.VISIBLE
+            url = link.thumbnail
         }
-
-        if (url == null) url = "";
-
-        switch (url) {
-            case "nsfw":
-            case "":
-            case "default":
-            case "self":
-                linkThumbnail.setVisibility(View.GONE);
-                break;
-            default:
-                linkThumbnail.setVisibility(View.VISIBLE);
-                loadThumbnail(url);
+        if (url == null) url = ""
+        when (url) {
+            "nsfw",
+            "",
+            "default",
+            "self",
+            -> linkThumbnail.visibility = View.GONE
+            else -> {
+                linkThumbnail.visibility = View.VISIBLE
+                loadThumbnail(url)
+            }
         }
     }
 
-    @Override
-    protected void showParentLink(boolean link) {
+    override fun showParentLink(link: Boolean) {
         // No-op; parent link does not exist in this ViewHolder
+    }
+
+    init {
+        linkComments.setOnClickListener { view1: View? -> showCommentsForLink() }
     }
 }

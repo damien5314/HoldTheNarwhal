@@ -1,5 +1,13 @@
 package com.ddiehl.android.htn.listings.links;
 
+import static com.ddiehl.android.htn.listings.links.LinkOptionsBar.Icons.DOWNVOTE;
+import static com.ddiehl.android.htn.listings.links.LinkOptionsBar.Icons.HIDE;
+import static com.ddiehl.android.htn.listings.links.LinkOptionsBar.Icons.REPLY;
+import static com.ddiehl.android.htn.listings.links.LinkOptionsBar.Icons.REPORT;
+import static com.ddiehl.android.htn.listings.links.LinkOptionsBar.Icons.SAVE;
+import static com.ddiehl.android.htn.listings.links.LinkOptionsBar.Icons.SHARE;
+import static com.ddiehl.android.htn.listings.links.LinkOptionsBar.Icons.UPVOTE;
+
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -19,14 +27,6 @@ import java.util.List;
 
 import rxreddit.model.Image;
 import rxreddit.model.Link;
-
-import static com.ddiehl.android.htn.listings.links.LinkOptionsBar.Icons.DOWNVOTE;
-import static com.ddiehl.android.htn.listings.links.LinkOptionsBar.Icons.HIDE;
-import static com.ddiehl.android.htn.listings.links.LinkOptionsBar.Icons.REPLY;
-import static com.ddiehl.android.htn.listings.links.LinkOptionsBar.Icons.REPORT;
-import static com.ddiehl.android.htn.listings.links.LinkOptionsBar.Icons.SAVE;
-import static com.ddiehl.android.htn.listings.links.LinkOptionsBar.Icons.SHARE;
-import static com.ddiehl.android.htn.listings.links.LinkOptionsBar.Icons.UPVOTE;
 
 
 public class CommentsLinkViewHolder extends BaseLinkViewHolder {
@@ -79,10 +79,10 @@ public class CommentsLinkViewHolder extends BaseLinkViewHolder {
     protected void showLiked(@NotNull Link link) {
         // Determine tint color based on liked status and tint the buttons appropriately
         @ColorInt int color;
-        if (link.isLiked() == null) {
+        if (link.getLiked() == null) {
             color = ThemeUtilsKt.getColorFromAttr(context, R.attr.textColorSecondary);
             linkOptionsBar.setVoted(0);
-        } else if (link.isLiked()) {
+        } else if (link.getLiked()) {
             color = ThemeUtilsKt.getColorFromAttr(context, R.attr.contentLikedColor);
             linkOptionsBar.setVoted(1);
         } else {
