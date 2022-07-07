@@ -5,7 +5,7 @@ apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'
 
 repositories {
-    jcenter()
+    mavenCentral()
     google()
     maven { url "https://jitpack.io" }
 }
@@ -16,7 +16,7 @@ localProperties.load(project.rootProject.file("local.properties").newDataInputSt
 android {
     compileSdkVersion COMPILE_SDK_VERSION
 
-    useLibrary "org.apache.http.legacy"
+//    useLibrary "org.apache.http.legacy"
 
     defaultConfig {
         applicationId "com.ddiehl.android.htn"

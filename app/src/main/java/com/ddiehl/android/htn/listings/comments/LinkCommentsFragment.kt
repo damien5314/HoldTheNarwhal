@@ -130,12 +130,14 @@ class LinkCommentsFragment : BaseListingsFragment(), LinkCommentsView,
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
             REQUEST_CHOOSE_SORT -> if (resultCode == RESULT_OK) {
-                val sort = data!!.getStringExtra(ChooseCommentSortDialog.EXTRA_SORT)
-                onSortSelected(sort)
+                data?.getStringExtra(ChooseCommentSortDialog.EXTRA_SORT)?.let { sort ->
+                    onSortSelected(sort)
+                }
             }
             REQUEST_ADD_COMMENT -> if (resultCode == RESULT_OK) {
-                val commentText = data!!.getStringExtra(AddCommentDialog.EXTRA_COMMENT_TEXT)
-                presenter.onCommentSubmitted(commentText)
+                data?.getStringExtra(AddCommentDialog.EXTRA_COMMENT_TEXT)?.let { commentText ->
+                    presenter.onCommentSubmitted(commentText)
+                }
             }
         }
     }
