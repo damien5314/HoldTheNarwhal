@@ -1,12 +1,13 @@
 package com.ddiehl.android.htn.view;
 
-import android.annotation.SuppressLint;
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -69,9 +70,6 @@ import rxreddit.model.PrivateMessage;
 import rxreddit.model.UserAccessToken;
 import rxreddit.model.UserIdentity;
 import timber.log.Timber;
-
-import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
 
 public abstract class BaseActivity extends AppCompatActivity implements
         RedditNavigationView,
@@ -389,25 +387,22 @@ public abstract class BaseActivity extends AppCompatActivity implements
         startActivity(intent);
     }
 
-    @SuppressLint("NewApi")
     public void openURL(@NotNull String url) {
-        if (canUseCustomTabs()) {
-            // If so, present URL in custom tabs instead of WebView
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-            Bundle extras = new Bundle();
-            // Pass IBinder instead of null for a custom tabs session
-            extras.putBinder(EXTRA_CUSTOM_TABS_SESSION, null);
-            final int toolbarColor = ThemeUtilsKt.getColorFromAttr(this, R.attr.colorPrimary);
-            extras.putInt(EXTRA_CUSTOM_TABS_TOOLBAR_COLOR, toolbarColor);
-            intent.putExtras(extras);
+        // If so, present URL in custom tabs instead of WebView
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        Bundle extras = new Bundle();
+        // Pass IBinder instead of null for a custom tabs session
+        extras.putBinder(EXTRA_CUSTOM_TABS_SESSION, null);
+        final int toolbarColor = ThemeUtilsKt.getColorFromAttr(this, R.attr.colorPrimary);
+        extras.putInt(EXTRA_CUSTOM_TABS_TOOLBAR_COLOR, toolbarColor);
+        intent.putExtras(extras);
 
-            // Check if Activity exists to handle the Intent
-            // Should resolve https://fabric.io/projects11111111111476634619/android/apps/com.ddiehl.android.htn/issues/583bb8cd0aeb16625b5bed8c
-            if (intent.resolveActivity(getPackageManager()) != null) {
-                Timber.e("No Activity found that can handle custom tabs Intent");
-                startActivity(intent);
-                return;
-            }
+        // Check if Activity exists to handle the Intent
+        // Should resolve https://fabric.io/projects11111111111476634619/android/apps/com.ddiehl.android.htn/issues/583bb8cd0aeb16625b5bed8c
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            Timber.e("No Activity found that can handle custom tabs Intent");
+            startActivity(intent);
+            return;
         }
 
         // Show web view for URL if we didn't show it in custom tabs
@@ -424,10 +419,6 @@ public abstract class BaseActivity extends AppCompatActivity implements
     private void showWebViewForURL(@NotNull String url) {
         Intent intent = WebViewActivity.getIntent(this, url);
         startActivity(intent);
-    }
-
-    private boolean canUseCustomTabs() {
-        return Build.VERSION.SDK_INT >= 18;
     }
 
     public void showUserSubreddits() {
