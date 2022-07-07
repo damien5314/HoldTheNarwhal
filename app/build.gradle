@@ -16,8 +16,6 @@ localProperties.load(project.rootProject.file("local.properties").newDataInputSt
 android {
     compileSdkVersion COMPILE_SDK_VERSION
 
-//    useLibrary "org.apache.http.legacy"
-
     defaultConfig {
         applicationId "com.ddiehl.android.htn"
         minSdkVersion MIN_SDK_VERSION
