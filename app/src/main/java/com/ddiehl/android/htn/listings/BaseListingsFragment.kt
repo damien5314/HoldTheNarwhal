@@ -154,8 +154,8 @@ abstract class BaseListingsFragment : BaseFragment(), ListingsView, SwipeRefresh
         menu.setHeaderTitle(title)
 
         // Set state of hide/unhide
-        menu.findItem(R.id.action_link_hide).isVisible = !link.isHidden
-        menu.findItem(R.id.action_link_unhide).isVisible = link.isHidden
+        menu.findItem(R.id.action_link_hide).isVisible = !link.hidden
+        menu.findItem(R.id.action_link_unhide).isVisible = link.hidden
 
         // Set subreddit for link in the view subreddit menu item
         val subreddit = getString(R.string.action_view_subreddit).format(link.subreddit)
@@ -209,7 +209,7 @@ abstract class BaseListingsFragment : BaseFragment(), ListingsView, SwipeRefresh
 
     fun showMessageContextMenu(menu: ContextMenu, view: View, message: PrivateMessage) {
         listingSelected = message
-        activity!!.menuInflater.inflate(R.menu.message_context, menu)
+        requireActivity().menuInflater.inflate(R.menu.message_context, menu)
 
         // Hide ride/unread option based on state
         menu.findItem(R.id.action_message_mark_read).isVisible = message.isUnread!!
@@ -383,7 +383,7 @@ abstract class BaseListingsFragment : BaseFragment(), ListingsView, SwipeRefresh
     open fun openVideoInDialog(url: String) {
         VideoPlayerDialogBuilder(url)
             .build()
-            .show(fragmentManager!!, VideoPlayerDialog.TAG)
+            .show(parentFragmentManager, VideoPlayerDialog.TAG)
     }
 
     open fun showCommentsForLink(
@@ -410,7 +410,9 @@ abstract class BaseListingsFragment : BaseFragment(), ListingsView, SwipeRefresh
     }
 
     open fun openUserProfileView(link: Link) {
-        redditNavigationView.showUserProfile(link.author, null, null)
+        link.author?.let { author ->
+            redditNavigationView.showUserProfile(author, null, null)
+        }
     }
 
     open fun openUserProfileView(comment: Comment) {

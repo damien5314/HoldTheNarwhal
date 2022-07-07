@@ -106,7 +106,9 @@ class LinkCommentsFragment : BaseListingsFragment(), LinkCommentsView,
     }
 
     override fun openUserProfileView(link: Link) {
-        redditNavigationView.showUserProfile(link.author, null, null)
+        link.author?.let { author ->
+            redditNavigationView.showUserProfile(author, null, null)
+        }
     }
 
     override fun openUserProfileView(comment: Comment) {
@@ -211,7 +213,7 @@ class LinkCommentsFragment : BaseListingsFragment(), LinkCommentsView,
     private fun showSortOptionsMenu() {
         val chooseLinkSortDialog = ChooseCommentSortDialog.newInstance(sort)
         chooseLinkSortDialog.setTargetFragment(this, REQUEST_CHOOSE_SORT)
-        chooseLinkSortDialog.show(fragmentManager!!, ChooseCommentSortDialog.TAG)
+        chooseLinkSortDialog.show(parentFragmentManager, ChooseCommentSortDialog.TAG)
     }
 
     private fun onSortSelected(sort: String) {
@@ -233,7 +235,7 @@ class LinkCommentsFragment : BaseListingsFragment(), LinkCommentsView,
         val id = "${listing.kind}_${listing.id}"
         val dialog = AddCommentDialog.newInstance(id)
         dialog.setTargetFragment(this, REQUEST_ADD_COMMENT)
-        dialog.show(fragmentManager!!, AddCommentDialog.TAG)
+        dialog.show(parentFragmentManager, AddCommentDialog.TAG)
     }
 
     override fun onRefresh() {
