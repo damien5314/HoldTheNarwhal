@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.lang.reflect.Type;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -42,9 +43,14 @@ public class RedditServiceMock extends RedditService {
                 "http://127.0.0.1/",
                 "AmkOVyT8Zl5ZIg", // fake app id
                 "http://127.0.0.1/", // redirect uri
+                Collections.emptyList(), // scopes, these are not validated
                 "dd076025-1631-49a6-b52f-612ba75a4023", // random UUID for device ID
                 RxRedditUtil.getUserAgent("java", "rxreddit", "0.1", "damien5314"),
-                AccessTokenManager.NONE, 0, null, true);
+                AccessTokenManager.NONE,
+                0,
+                null,
+                true
+        );
     }
 
     @Override
