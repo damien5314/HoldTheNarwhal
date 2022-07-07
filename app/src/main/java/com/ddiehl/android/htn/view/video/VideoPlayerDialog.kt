@@ -9,8 +9,8 @@ import android.view.ViewGroup
 import android.widget.VideoView
 import androidx.fragment.app.DialogFragment
 import com.ddiehl.android.htn.R
+import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
-import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.ui.StyledPlayerView
 import com.hannesdorfmann.fragmentargs.FragmentArgs
 import com.hannesdorfmann.fragmentargs.annotation.Arg
@@ -30,7 +30,7 @@ class VideoPlayerDialog : DialogFragment() {
     lateinit var url: String
 
     private val exoPlayer by lazy {
-        SimpleExoPlayer.Builder(requireContext())
+        ExoPlayer.Builder(requireContext())
             .build()
             .also { player ->
                 player.addListener(ExoPlayerErrorLogger())

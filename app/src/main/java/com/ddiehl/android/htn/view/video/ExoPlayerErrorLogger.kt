@@ -1,16 +1,17 @@
 package com.ddiehl.android.htn.view.video
 
 import com.google.android.exoplayer2.ExoPlaybackException
+import com.google.android.exoplayer2.PlaybackException
 import com.google.android.exoplayer2.Player
 import timber.log.Timber
 
 /**
  * Logs eligible error types to the Timber logger
  */
-class ExoPlayerErrorLogger : Player.EventListener {
+class ExoPlayerErrorLogger : Player.Listener {
 
-    override fun onPlayerError(error: ExoPlaybackException) {
-        if (isLoggable(error.type)) {
+    override fun onPlayerError(error: PlaybackException) {
+        if (isLoggable(error.errorCode)) {
             Timber.e(error, "ExoPlayer encountered a PlaybackException")
         }
     }
@@ -21,8 +22,6 @@ class ExoPlayerErrorLogger : Player.EventListener {
             ExoPlaybackException.TYPE_RENDERER -> true
             ExoPlaybackException.TYPE_UNEXPECTED -> true
             ExoPlaybackException.TYPE_REMOTE -> false
-            ExoPlaybackException.TYPE_OUT_OF_MEMORY -> true
-            ExoPlaybackException.TYPE_TIMEOUT -> false
             else -> true
         }
     }
