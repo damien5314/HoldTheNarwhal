@@ -425,6 +425,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
     @Override
     public void openLinkGallery(@NotNull List<GalleryItem> galleryItems) {
         // TODO: Create link gallery UI and open it here
+
     }
 
     public void showUserSubreddits() {

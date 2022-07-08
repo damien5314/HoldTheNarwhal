@@ -1,5 +1,6 @@
 package com.ddiehl.android.htn.di;
 
+import com.ddiehl.android.htn.gallery.MediaGalleryFragment;
 import com.ddiehl.android.htn.listings.BaseListingsFragment;
 import com.ddiehl.android.htn.listings.BaseListingsPresenter;
 import com.ddiehl.android.htn.listings.comments.LinkCommentsFragment;
@@ -50,6 +51,7 @@ public interface ApplicationComponent {
     void inject(LinkCommentsFragment fragment);
     void inject(SubmitPostFragment fragment);
     void inject(InboxFragment fragment);
+    void inject(MediaGalleryFragment mediaGalleryFragment);
 
     // ViewHolders
     void inject(ThreadStubViewHolder vh);
