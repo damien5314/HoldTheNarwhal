@@ -25,6 +25,7 @@ import androidx.fragment.app.FragmentManager;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
+import com.ddiehl.android.htn.gallery.MediaGalleryFragment;
 import com.ddiehl.android.htn.identity.IdentityManager;
 import com.ddiehl.android.htn.listings.comments.LinkCommentsActivity;
 import com.ddiehl.android.htn.listings.inbox.InboxActivity;
@@ -424,8 +425,8 @@ public abstract class BaseActivity extends AppCompatActivity implements
 
     @Override
     public void openLinkGallery(@NotNull List<GalleryItem> galleryItems) {
-        // TODO: Create link gallery UI and open it here
-
+        MediaGalleryFragment.create(galleryItems)
+                .show(getSupportFragmentManager(), MediaGalleryFragment.TAG);
     }
 
     public void showUserSubreddits() {

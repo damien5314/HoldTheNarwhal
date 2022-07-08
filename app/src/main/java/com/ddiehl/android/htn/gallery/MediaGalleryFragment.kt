@@ -1,5 +1,6 @@
 package com.ddiehl.android.htn.gallery
 
+import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -26,6 +27,9 @@ class MediaGalleryFragment : DialogFragment() {
 
         private const val ARG_GALLERY_ITEMS = "MediaGalleryFragment_GalleryItems"
 
+        const val TAG = "MediaGalleryFragment"
+
+        @JvmStatic
         fun create(
             galleryItems: List<GalleryItem>
         ): MediaGalleryFragment = MediaGalleryFragment().apply {
@@ -47,10 +51,16 @@ class MediaGalleryFragment : DialogFragment() {
     private val galleryItems: List<MediaGalleryItem> by lazy {
         requireArguments().getParcelableArrayList<MediaGalleryItem>(ARG_GALLERY_ITEMS) as List<MediaGalleryItem>
     }
+    private val viewPager by lazy {
+        requireView().findViewById<ViewPager2>(R.id.media_gallery_view_pager)
+    }
 
     init {
         HoldTheNarwhal.getApplicationComponent().inject(this)
     }
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
+        Dialog(requireContext(), R.style.DialogOverlay)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return inflater.inflate(R.layout.media_gallery_fragment, container, false)
@@ -58,11 +68,11 @@ class MediaGalleryFragment : DialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        bindMediaToViewPager(view, galleryItems)
+        bindMediaToViewPager(galleryItems)
     }
 
-    private fun bindMediaToViewPager(root: View, galleryItems: List<MediaGalleryItem>) {
-        val viewPager = root.findViewById<ViewPager2>(R.id.media_gallery_view_pager)
+    private fun bindMediaToViewPager(galleryItems: List<MediaGalleryItem>) {
+        Timber.d("[dcd] bindMediaToViewPager: ${galleryItems.size}")
         viewPager.adapter = MediaGalleryViewPagerAdapter(galleryItems)
     }
 
@@ -88,10 +98,7 @@ class MediaGalleryFragment : DialogFragment() {
         override fun onBindViewHolder(holder: MediaGalleryItemViewHolder, position: Int) {
             galleryItems[position].let { galleryItem ->
                 Timber.d("[dcd] Loading gallery item into position $position: $galleryItem")
-                val context = holder.itemImageView.context
-                GlideApp.with(context)
-                    .load(galleryItem.url)
-                    .into(holder.itemImageView)
+                holder.bind(galleryItem)
             }
         }
 
@@ -101,5 +108,12 @@ class MediaGalleryFragment : DialogFragment() {
     private class MediaGalleryItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         val itemImageView: ImageView = itemView.findViewById(R.id.media_gallery_item_image)
+
+        fun bind(galleryItem: MediaGalleryItem) {
+            val context = itemView.context
+            GlideApp.with(context)
+                .load(galleryItem.url)
+                .into(itemImageView)
+        }
     }
 }
