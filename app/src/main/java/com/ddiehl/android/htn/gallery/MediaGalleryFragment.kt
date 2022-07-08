@@ -14,7 +14,6 @@ import com.ddiehl.android.htn.R
 import com.ddiehl.android.htn.view.glide.GlideApp
 import rxreddit.model.GalleryItem
 import rxreddit.model.Link
-import timber.log.Timber
 
 /**
  * Fragment for displaying a UI to browse media in a gallery listing.
@@ -72,7 +71,6 @@ class MediaGalleryFragment : DialogFragment() {
     }
 
     private fun bindMediaToViewPager(galleryItems: List<MediaGalleryItem>) {
-        Timber.d("[dcd] bindMediaToViewPager: ${galleryItems.size}")
         viewPager.adapter = MediaGalleryViewPagerAdapter(galleryItems)
     }
 
@@ -81,12 +79,6 @@ class MediaGalleryFragment : DialogFragment() {
     ) : RecyclerView.Adapter<MediaGalleryItemViewHolder>() {
 
         private val galleryItems = ArrayList(galleryItems) // prevent others from modifying our list
-
-        fun updateGalleryItems(galleryItems: List<MediaGalleryItem>) {
-            this.galleryItems.clear()
-            this.galleryItems.addAll(galleryItems)
-            notifyDataSetChanged()
-        }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MediaGalleryItemViewHolder {
             return MediaGalleryItemViewHolder(
@@ -97,7 +89,6 @@ class MediaGalleryFragment : DialogFragment() {
 
         override fun onBindViewHolder(holder: MediaGalleryItemViewHolder, position: Int) {
             galleryItems[position].let { galleryItem ->
-                Timber.d("[dcd] Loading gallery item into position $position: $galleryItem")
                 holder.bind(galleryItem)
             }
         }
