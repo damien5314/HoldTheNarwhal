@@ -17,6 +17,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 import rxreddit.model.AbsComment;
 import rxreddit.model.Comment;
 import rxreddit.model.CommentStub;
+import rxreddit.model.GalleryItem;
 import rxreddit.model.Link;
 import rxreddit.model.Listing;
 import rxreddit.model.ListingResponse;
@@ -69,9 +70,9 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
         if (!dataRequested) {
             dataRequested = true;
             redditService.loadLinkComments(
-                    linkCommentsView.getSubreddit(), linkCommentsView.getArticleId(),
-                    linkCommentsView.getSort(), linkCommentsView.getCommentId()
-            )
+                            linkCommentsView.getSubreddit(), linkCommentsView.getArticleId(),
+                            linkCommentsView.getSort(), linkCommentsView.getCommentId()
+                    )
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .doOnSubscribe(disposable -> mainView.showSpinner())
@@ -247,13 +248,14 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
                 final Media.RedditVideo redditVideo = media.getRedditVideo();
                 if (redditVideo != null) {
                     linkCommentsView.openRedditVideo(redditVideo);
-                    return;
                 }
+            } else if (link.isGallery()) {
+                final List<GalleryItem> galleryItems = link.getGalleryItems();
+                Timber.d("Link is a gallery, opening with item count: %s", galleryItems.size());
+                linkCommentsView.openLinkGallery(galleryItems);
             }
-            final String linkUrl = link.getUrl();
-            if (linkUrl != null) {
-                linkCommentsView.openUrlInWebView(linkUrl);
-            }
+        } else if (link.getUrl() != null) {
+            linkCommentsView.openUrlInWebView(link.getUrl());
         }
     }
 

@@ -380,6 +380,10 @@ abstract class BaseListingsFragment : BaseFragment(), ListingsView, SwipeRefresh
         redditNavigationView.openRedditVideo(redditVideo)
     }
 
+    open fun openLinkGallery(galleryItems: List<GalleryItem>) {
+        redditNavigationView.openLinkGallery(galleryItems)
+    }
+
     open fun openVideoInDialog(url: String) {
         VideoPlayerDialogBuilder(url)
             .build()

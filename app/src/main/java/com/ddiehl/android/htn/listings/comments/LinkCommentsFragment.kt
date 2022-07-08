@@ -16,6 +16,7 @@ import com.hannesdorfmann.fragmentargs.FragmentArgs
 import com.hannesdorfmann.fragmentargs.annotation.Arg
 import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs
 import rxreddit.model.Comment
+import rxreddit.model.GalleryItem
 import rxreddit.model.Link
 import rxreddit.model.Listing
 import javax.inject.Inject
@@ -225,6 +226,10 @@ class LinkCommentsFragment : BaseListingsFragment(), LinkCommentsView,
 
     override fun openUrlInWebView(url: String) {
         redditNavigationView.openURL(url)
+    }
+
+    override fun openLinkGallery(galleryItems: List<GalleryItem>) {
+        redditNavigationView.openLinkGallery(galleryItems)
     }
 
     override fun showCommentsForLink(subreddit: String, linkId: String, commentId: String?) {

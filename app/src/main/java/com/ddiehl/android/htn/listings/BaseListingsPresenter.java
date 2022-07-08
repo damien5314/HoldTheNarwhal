@@ -29,6 +29,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 import rxreddit.api.RedditService;
 import rxreddit.model.Comment;
 import rxreddit.model.CommentStub;
+import rxreddit.model.GalleryItem;
 import rxreddit.model.Hideable;
 import rxreddit.model.Link;
 import rxreddit.model.Listing;
@@ -222,10 +223,14 @@ public abstract class BaseListingsPresenter
                 final Media.RedditVideo redditVideo = media.getRedditVideo();
                 if (redditVideo != null) {
                     linkView.openRedditVideo(redditVideo);
-                    return;
+                } else if (link.isGallery()) {
+                    final List<GalleryItem> galleryItems = link.getGalleryItems();
+                    Timber.d("Link is a gallery, opening with item count: %s", galleryItems.size());
+                    linkView.openLinkGallery(galleryItems);
                 }
+            } else if (link.getUrl() != null) {
+                linkView.openUrlInWebView(link.getUrl());
             }
-            linkView.openUrlInWebView(link.getUrl());
         }
     }
 

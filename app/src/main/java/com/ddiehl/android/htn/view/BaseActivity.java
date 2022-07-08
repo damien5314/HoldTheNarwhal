@@ -65,6 +65,7 @@ import io.reactivex.rxjava3.functions.Function;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import rxreddit.android.SignInActivity;
 import rxreddit.api.RedditService;
+import rxreddit.model.GalleryItem;
 import rxreddit.model.Media;
 import rxreddit.model.PrivateMessage;
 import rxreddit.model.UserAccessToken;
@@ -419,6 +420,11 @@ public abstract class BaseActivity extends AppCompatActivity implements
     private void showWebViewForURL(@NotNull String url) {
         Intent intent = WebViewActivity.getIntent(this, url);
         startActivity(intent);
+    }
+
+    @Override
+    public void openLinkGallery(@NotNull List<GalleryItem> galleryItems) {
+        // TODO: Create link gallery UI and open it here
     }
 
     public void showUserSubreddits() {
