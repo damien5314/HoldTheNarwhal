@@ -20,7 +20,9 @@ import javax.inject.Singleton
 
 @Module
 class ApplicationModule(context: Context) {
-    private val appContext: Context
+
+    private val appContext: Context = context.applicationContext
+
     @Provides
     fun providesAppContext(): Context {
         return appContext
@@ -88,9 +90,5 @@ class ApplicationModule(context: Context) {
     @Provides
     fun providesNetworkConnectivityManager(context: Context?): NetworkConnectivityManager {
         return NetworkConnectivityManager(context!!)
-    }
-
-    init {
-        appContext = context.applicationContext
     }
 }
