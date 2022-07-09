@@ -24,7 +24,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:tabIndicatorColor="?attr/colorAccent"
-        app:tabSelectedTextColor="?attr/textColorPrimary"
-        app:tabTextColor="?attr/textColorSecondary" />
+        app:tabSelectedTextColor="?attr/tabLayoutSelectedTextColor"
+        app:tabTextColor="?attr/tabLayoutTextColor" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
