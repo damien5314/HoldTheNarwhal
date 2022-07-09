@@ -6,12 +6,19 @@ import com.ddiehl.android.htn.listings.BaseListingsPresenter
 import com.ddiehl.android.htn.listings.subreddit.ThumbnailMode
 import com.ddiehl.android.htn.utils.getColorFromAttr
 import rxreddit.model.Link
+import timber.log.Timber
 
 class ListingsLinkViewHolder(
     view: View,
     linkView: LinkView,
     presenter: BaseListingsPresenter,
 ) : BaseLinkViewHolder(view, linkView, presenter) {
+
+    init {
+        linkComments.setOnClickListener {
+            showCommentsForLink()
+        }
+    }
 
     private fun showCommentsForLink() {
         linkPresenter.showCommentsForLink(link)
@@ -27,28 +34,19 @@ class ListingsLinkViewHolder(
     }
 
     override fun showThumbnail(link: Link, mode: ThumbnailMode) {
-        var url: String? = null
-        if (link.over18) {
-            if (mode == ThumbnailMode.NO_THUMBNAIL) {
-                linkThumbnail.visibility = View.GONE
-            } else {
-                linkThumbnail.visibility = View.VISIBLE
-                url = if (mode == ThumbnailMode.VARIANT) {
-                    getPreviewUrl(link)
-                } else { // ThumbnailMode.FULL
-                    link.thumbnail
-                }
-            }
-        } else {
-            linkThumbnail.visibility = View.VISIBLE
-            url = link.thumbnail
+        Timber.d("[dcd] showThumbnail: ${mode.name} / ${link.title}")
+        if (mode == ThumbnailMode.NO_THUMBNAIL) {
+            linkThumbnail.visibility = View.GONE
+            return
         }
-        if (url == null) url = ""
-        when (url) {
+
+        // Handle VARIANT and FULL thumbnails
+        when (val url = if (link.over18 && mode == ThumbnailMode.VARIANT) getPreviewUrl(link) else link.thumbnail) {
             "nsfw",
             "",
             "default",
             "self",
+            null,
             -> linkThumbnail.visibility = View.GONE
             else -> {
                 linkThumbnail.visibility = View.VISIBLE
@@ -59,9 +57,5 @@ class ListingsLinkViewHolder(
 
     override fun showParentLink(link: Boolean) {
         // No-op; parent link does not exist in this ViewHolder
-    }
-
-    init {
-        linkComments.setOnClickListener { view1: View? -> showCommentsForLink() }
     }
 }
