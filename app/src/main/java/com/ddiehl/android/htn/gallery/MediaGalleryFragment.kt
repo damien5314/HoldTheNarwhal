@@ -12,6 +12,8 @@ import androidx.viewpager2.widget.ViewPager2
 import com.ddiehl.android.htn.HoldTheNarwhal
 import com.ddiehl.android.htn.R
 import com.ddiehl.android.htn.view.glide.GlideApp
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import rxreddit.model.GalleryItem
 import rxreddit.model.Link
 
@@ -50,9 +52,9 @@ class MediaGalleryFragment : DialogFragment() {
     private val galleryItems: List<MediaGalleryItem> by lazy {
         requireArguments().getParcelableArrayList<MediaGalleryItem>(ARG_GALLERY_ITEMS) as List<MediaGalleryItem>
     }
-    private val viewPager by lazy {
-        requireView().findViewById<ViewPager2>(R.id.media_gallery_view_pager)
-    }
+    private val viewPager by lazy { requireView().findViewById<ViewPager2>(R.id.media_gallery_view_pager) }
+    private val viewPagerTabs by lazy { requireView().findViewById<TabLayout>(R.id.media_gallery_view_pager_tabs) }
+    private var tabLayoutMediator: TabLayoutMediator? = null
 
     init {
         HoldTheNarwhal.getApplicationComponent().inject(this)
@@ -71,7 +73,13 @@ class MediaGalleryFragment : DialogFragment() {
     }
 
     private fun bindMediaToViewPager(galleryItems: List<MediaGalleryItem>) {
+        this.tabLayoutMediator?.detach()
+
         viewPager.adapter = MediaGalleryViewPagerAdapter(galleryItems)
+        tabLayoutMediator = TabLayoutMediator(viewPagerTabs, viewPager) { tab, position ->
+            tab.text = (position + 1).toString()
+        }
+            .also { it.attach() }
     }
 
     private class MediaGalleryViewPagerAdapter(
