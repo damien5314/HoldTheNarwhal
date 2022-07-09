@@ -36,8 +36,6 @@ public class HoldTheNarwhal extends Application {
                 .applicationModule(new ApplicationModule(this))
                 .build();
 
-//    LeakCanary.install(this);
-
         // Install logging trees
         if (BuildConfig.DEBUG) {
             Timber.Tree tree = new LogcatLoggingTree(new LogcatLogger());
