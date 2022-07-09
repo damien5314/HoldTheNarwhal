@@ -31,6 +31,7 @@ buildscript {
         GSON_VERSION = '2.8.9'
         TIMBER_VERSION = '4.7.1'
         EXOPLAYER_VERSION = '2.18.0'
+        TOUCH_IMAGEVIEW_VERSION = '3.2.1'
         LEAK_CANARY_VERSION = '1.6.1'
         JUNIT_VERSION = '4.13.2'
         MOCKITO_VERSION = '3.9.0'
