@@ -8,9 +8,9 @@ import com.ddiehl.android.htn.utils.getColorFromAttr
 import rxreddit.model.Link
 
 class ListingsLinkViewHolder(
-    view: View?,
-    linkView: LinkView?,
-    presenter: BaseListingsPresenter?,
+    view: View,
+    linkView: LinkView,
+    presenter: BaseListingsPresenter,
 ) : BaseLinkViewHolder(view, linkView, presenter) {
 
     private fun showCommentsForLink() {
