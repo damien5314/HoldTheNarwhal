@@ -24,6 +24,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:tabIndicatorColor="?attr/colorAccent"
+        app:tabMode="scrollable"
         app:tabSelectedTextColor="?attr/tabLayoutSelectedTextColor"
         app:tabTextColor="?attr/tabLayoutTextColor" />
 

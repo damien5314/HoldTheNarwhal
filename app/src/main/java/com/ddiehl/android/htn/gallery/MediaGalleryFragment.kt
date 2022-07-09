@@ -2,7 +2,10 @@ package com.ddiehl.android.htn.gallery
 
 import android.app.Dialog
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.MotionEvent
+import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
@@ -14,7 +17,6 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.ortiz.touchview.TouchImageView
 import rxreddit.model.GalleryItem
 import rxreddit.model.Link
-import timber.log.Timber
 
 /**
  * Fragment for displaying a UI to browse media in a gallery listing.
@@ -54,35 +56,13 @@ class MediaGalleryFragment : DialogFragment() {
     private val viewPager by lazy { requireView().findViewById<ViewPager2>(R.id.media_gallery_view_pager) }
     private val viewPagerTabs by lazy { requireView().findViewById<TabLayout>(R.id.media_gallery_view_pager_tabs) }
     private var tabLayoutMediator: TabLayoutMediator? = null
-    private lateinit var scaleGestureDetector: ScaleGestureDetector
 
     init {
         HoldTheNarwhal.getApplicationComponent().inject(this)
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
-        Dialog(requireContext(), R.style.DialogOverlay).also {
-            // TODO: Delete overloads you don't need
-            this.scaleGestureDetector = ScaleGestureDetector(
-                requireContext(),
-                object : ScaleGestureDetector.SimpleOnScaleGestureListener() {
-                    override fun onScale(detector: ScaleGestureDetector?): Boolean {
-                        return super.onScale(detector)
-                    }
-
-                    override fun onScaleBegin(detector: ScaleGestureDetector?): Boolean {
-                        Timber.d("[dcd] LOCKING user input for swiping")
-                        viewPager.isUserInputEnabled = false
-                        return false
-                    }
-
-                    override fun onScaleEnd(detector: ScaleGestureDetector?) {
-                        Timber.d("[dcd] UNLOCKING user input for swiping")
-                        super.onScaleEnd(detector)
-                        viewPager.isUserInputEnabled = true
-                    }
-                })
-        }
+        Dialog(requireContext(), R.style.DialogOverlay)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return inflater.inflate(R.layout.media_gallery_fragment, container, false)
@@ -99,21 +79,9 @@ class MediaGalleryFragment : DialogFragment() {
         viewPager.adapter = MediaGalleryViewPagerAdapter(galleryItems)
         tabLayoutMediator = TabLayoutMediator(viewPagerTabs, viewPager) { tab, position ->
             tab.text = (position + 1).toString()
+//            tab.text = 4.toString()
         }
             .also { it.attach() }
-    }
-
-    override fun onStart() {
-        super.onStart()
-        viewPager.setOnTouchListener { _, event ->
-            this.scaleGestureDetector?.onTouchEvent(event) ?: false
-        }
-    }
-
-    override fun onStop() {
-        super.onStop()
-        // TODO: Remove gesture detector
-        viewPager.setOnTouchListener(null)
     }
 
     private class MediaGalleryViewPagerAdapter(
