@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="BaseStandardAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="BaseStandardAppTheme" parent="Theme.Material3.Light.NoActionBar">
         <!-- to remove the default action -->
         <item name="android:windowNoTitle">true</item>
         <item name="windowActionBar">false</item> <!-- For 2.x version -->
@@ -11,7 +11,7 @@
         <item name="android:fontFamily">@font/firasans</item>
     </style>
 
-    <style name="BaseNightAppTheme" parent="Theme.AppCompat.NoActionBar">
+    <style name="BaseNightAppTheme" parent="Theme.Material3.Dark.NoActionBar">
         <!-- to remove the default action -->
         <item name="android:windowNoTitle">true</item>
         <item name="windowActionBar">false</item> <!-- For 2.x version -->
