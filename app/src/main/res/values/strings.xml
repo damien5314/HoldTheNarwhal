@@ -250,6 +250,7 @@
     <string name="subscription_manager_title">subscriptions</string>
     <string name="subscriptions_load_failed">failed to load subscriptions, try again later</string>
     <string name="subscription_icon">subreddit icon</string>
+    <string name="subscription_manager_search_button_cdesc">Search</string>
     <string name="subscribe">subscribe</string>
     <string name="subscribed">subscribed</string>
     <string name="unsubscribed">unsubscribed</string>

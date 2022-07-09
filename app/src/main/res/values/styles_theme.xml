@@ -5,7 +5,11 @@
         <!-- AppCompat theme attributes -->
         <item name="colorPrimary">@color/bluegrey500</item>
         <item name="colorPrimaryDark">@color/bluegrey700</item>
+        <item name="colorPrimaryContainer">?attr/colorAccent</item>
+        <item name="colorSecondary">?attr/colorAccent</item>
         <item name="colorAccent">@color/redA200</item>
+        <item name="colorContainer">?attr/colorAccent</item>
+        <item name="colorOnSurface">?attr/colorAccent</item>
         <item name="dialogTheme">@style/StandardDialogTheme</item>
         <item name="alertDialogTheme">@style/StandardDialogTheme</item>
         <!-- Custom attributes -->
@@ -50,7 +54,11 @@
         <!-- AppCompat theme attributes -->
         <item name="colorPrimary">@color/gray900</item>
         <item name="colorPrimaryDark">@color/black</item>
+        <item name="colorPrimaryContainer">?attr/colorAccent</item>
+        <item name="colorSecondary">?attr/colorAccent</item>
         <item name="colorAccent">@color/redA200</item>
+        <item name="colorContainer">?attr/colorAccent</item>
+        <item name="colorOnSurface">?attr/colorAccent</item>
         <item name="dialogTheme">@style/NightDialogTheme</item>
         <item name="alertDialogTheme">@style/NightDialogTheme</item>
         <!-- Custom attributes -->
