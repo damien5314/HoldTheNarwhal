@@ -424,6 +424,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
 
     @Override
     public void openLinkGallery(@NotNull List<GalleryItem> galleryItems) {
+        Timber.d("Opening gallery with item count: %s", galleryItems.size());
         MediaGalleryFragment.create(galleryItems)
                 .show(getSupportFragmentManager(), MediaGalleryFragment.TAG);
     }
