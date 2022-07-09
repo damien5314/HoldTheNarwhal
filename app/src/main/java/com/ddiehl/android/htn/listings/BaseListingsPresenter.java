@@ -214,23 +214,26 @@ public abstract class BaseListingsPresenter
         }
     }
 
+    // Keep in sync with impl in LinkCommentsPresenter
+    // TODO: Eventually consolidate routing so we don't have duplicate routing for Links
     public void openLink(@NotNull Link link) {
-        if (link.isSelf()) {
+        if (link.isSelf() && link.getSubreddit() != null) {
             linkView.showCommentsForLink(link.getSubreddit(), link.getId(), null);
-        } else {
-            final Media media = link.getMedia();
-            if (media != null) {
-                final Media.RedditVideo redditVideo = media.getRedditVideo();
-                if (redditVideo != null) {
-                    linkView.openRedditVideo(redditVideo);
-                } else if (link.isGallery()) {
-                    final List<GalleryItem> galleryItems = link.getGalleryItems();
-                    Timber.d("Link is a gallery, opening with item count: %s", galleryItems.size());
-                    linkView.openLinkGallery(galleryItems);
-                }
-            } else if (link.getUrl() != null) {
-                linkView.openUrlInWebView(link.getUrl());
+            return;
+        }
+
+        // Determine correct routing for link
+        final Media media = link.getMedia();
+        if (link.isGallery()) {
+            final List<GalleryItem> galleryItems = link.getGalleryItems();
+            linkView.openLinkGallery(galleryItems);
+        } else if (media != null) {
+            final Media.RedditVideo redditVideo = media.getRedditVideo();
+            if (redditVideo != null) {
+                linkView.openRedditVideo(redditVideo);
             }
+        } else if (link.getUrl() != null) {
+            linkView.openUrlInWebView(link.getUrl());
         }
     }
 
