@@ -164,17 +164,7 @@ public abstract class BaseLinkViewHolder extends RecyclerView.ViewHolder
     protected void showTimestamp(@NotNull Link link) {
         long timestamp = link.getCreatedUtc().longValue();
         linkTimestamp.setDate(timestamp);
-        if (link.isEdited() != null) {
-            switch (link.isEdited()) {
-                case "":
-                case "0":
-                case "false":
-                    setEdited(false);
-                    break;
-                default:
-                    setEdited(true);
-            }
-        }
+        setEdited(link.getEdited());
     }
 
     private void setEdited(boolean edited) {

@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-parcelize'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'
@@ -110,8 +111,11 @@ dependencies {
     implementation "com.google.android.exoplayer:exoplayer-core:$EXOPLAYER_VERSION"
     implementation "com.google.android.exoplayer:exoplayer-dash:$EXOPLAYER_VERSION"
     implementation "com.google.android.exoplayer:exoplayer-ui:$EXOPLAYER_VERSION"
+    implementation "com.github.MikeOrtiz:TouchImageView:$TOUCH_IMAGEVIEW_VERSION"
+
     debugImplementation "com.squareup.leakcanary:leakcanary-android:$LEAK_CANARY_VERSION"
     releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$LEAK_CANARY_VERSION"
+
     androidTestImplementation "junit:junit:$JUNIT_VERSION"
     androidTestImplementation "org.mockito:mockito-core:$MOCKITO_VERSION"
     kaptAndroidTest "com.google.dagger:dagger-compiler:$DAGGER_VERSION"

@@ -186,10 +186,10 @@ public class ThreadCommentViewHolder extends RecyclerView.ViewHolder
 
     // Set background tint based on isLiked
     private void showLiked(Comment comment) {
-        if (comment.isLiked() == null) {
+        if (comment.getLiked() == null) {
             final int neutralTextColor = ThemeUtilsKt.getColorFromAttr(context, R.attr.textColorSecondary);
             scoreView.setTextColor(neutralTextColor);
-        } else if (comment.isLiked()) {
+        } else if (comment.getLiked()) {
             final int upvoteColor = ThemeUtilsKt.getColorFromAttr(context, R.attr.contentLikedColor);
             scoreView.setTextColor(upvoteColor);
         } else {

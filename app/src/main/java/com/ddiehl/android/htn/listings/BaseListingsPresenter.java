@@ -29,6 +29,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 import rxreddit.api.RedditService;
 import rxreddit.model.Comment;
 import rxreddit.model.CommentStub;
+import rxreddit.model.GalleryItem;
 import rxreddit.model.Hideable;
 import rxreddit.model.Link;
 import rxreddit.model.Listing;
@@ -222,10 +223,14 @@ public abstract class BaseListingsPresenter
                 final Media.RedditVideo redditVideo = media.getRedditVideo();
                 if (redditVideo != null) {
                     linkView.openRedditVideo(redditVideo);
-                    return;
+                } else if (link.isGallery()) {
+                    final List<GalleryItem> galleryItems = link.getGalleryItems();
+                    Timber.d("Link is a gallery, opening with item count: %s", galleryItems.size());
+                    linkView.openLinkGallery(galleryItems);
                 }
+            } else if (link.getUrl() != null) {
+                linkView.openUrlInWebView(link.getUrl());
             }
-            linkView.openUrlInWebView(link.getUrl());
         }
     }
 
@@ -238,13 +243,13 @@ public abstract class BaseListingsPresenter
     }
 
     public void upvoteLink(@NotNull Link link) {
-        int dir = (link.isLiked() == null || !link.isLiked()) ? 1 : 0;
-        vote(link, dir);
+        int dir = (link.getLiked() == null || !link.getLiked()) ? 1 : 0;
+        vote(link, link.getId(), dir);
     }
 
     public void downvoteLink(@NotNull Link link) {
-        int dir = (link.isLiked() == null || link.isLiked()) ? -1 : 0;
-        vote(link, dir);
+        int dir = (link.getLiked() == null || link.getLiked()) ? -1 : 0;
+        vote(link, link.getId(), dir);
     }
 
     public void saveLink(@NotNull Link link) {
@@ -328,7 +333,7 @@ public abstract class BaseListingsPresenter
     }
 
     public void replyToComment(@NotNull Comment comment) {
-        if (comment.isArchived()) {
+        if (comment.getArchived()) {
             mainView.showToast(context.getString(R.string.listing_archived));
         } else {
             commentView.openReplyView(comment);
@@ -336,13 +341,13 @@ public abstract class BaseListingsPresenter
     }
 
     public void upvoteComment(@NotNull Comment comment) {
-        int dir = (comment.isLiked() == null || !comment.isLiked()) ? 1 : 0;
-        vote(comment, dir);
+        int dir = (comment.getLiked() == null || !comment.getLiked()) ? 1 : 0;
+        vote(comment, comment.getId(), dir);
     }
 
     public void downvoteComment(@NotNull Comment comment) {
-        int dir = (comment.isLiked() == null || comment.isLiked()) ? -1 : 0;
-        vote(comment, dir);
+        int dir = (comment.getLiked() == null || comment.getLiked()) ? -1 : 0;
+        vote(comment, comment.getId(), dir);
     }
 
     public void saveComment(@NotNull Comment comment) {
@@ -374,7 +379,7 @@ public abstract class BaseListingsPresenter
     }
 
     public void reportComment(@NotNull Comment comment) {
-        if (comment.isArchived()) {
+        if (comment.getArchived()) {
             mainView.showToast(context.getString(R.string.listing_archived));
         } else if (!redditService.isUserAuthorized()) {
             mainView.showToast(context.getString(R.string.user_required));
@@ -395,13 +400,13 @@ public abstract class BaseListingsPresenter
         refreshData();
     }
 
-    private void vote(Votable votable, int direction) {
-        if (votable.isArchived()) {
+    private void vote(Votable votable, String votableId, int direction) {
+        if (votable.getArchived()) {
             mainView.showToast(context.getString(R.string.listing_archived));
         } else if (!redditService.isUserAuthorized()) {
             mainView.showToast(context.getString(R.string.user_required));
         } else {
-            redditService.vote(votable.getKind() + "_" + votable.getId(), direction)
+            redditService.vote(votable.getKind() + "_" + votableId, direction)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(
@@ -435,7 +440,7 @@ public abstract class BaseListingsPresenter
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         () -> {
-                            savable.isSaved(toSave);
+                            savable.setSaved(toSave);
                             listingsView.notifyItemChanged(getIndexOf((Listing) savable));
                         },
                         error -> {
