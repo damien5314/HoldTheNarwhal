@@ -120,8 +120,8 @@ dependencies {
     androidTestImplementation "org.mockito:mockito-core:$MOCKITO_VERSION"
     kaptAndroidTest "com.google.dagger:dagger-compiler:$DAGGER_VERSION"
     androidTestImplementation "androidx.annotation:annotation:$ANDROIDX_ANNOTATION"
-    androidTestImplementation "androidx.test:runner:$ANDROIDX_TEST_SUPPORT"
-    androidTestImplementation "androidx.test:rules:$ANDROIDX_TEST_SUPPORT"
+    androidTestImplementation "androidx.test:runner:$ANDROIDX_TEST_RUNNER_VERSION"
+    androidTestImplementation "androidx.test:rules:$ANDROIDX_TEST_RULES_VERSION"
 }
 
 Properties getProperties(def filePath) {
