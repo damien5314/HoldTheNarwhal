@@ -6,7 +6,6 @@ import com.ddiehl.android.htn.listings.BaseListingsPresenter
 import com.ddiehl.android.htn.listings.subreddit.ThumbnailMode
 import com.ddiehl.android.htn.utils.getColorFromAttr
 import rxreddit.model.Link
-import timber.log.Timber
 
 class ListingsLinkViewHolder(
     view: View,
@@ -34,7 +33,6 @@ class ListingsLinkViewHolder(
     }
 
     override fun showThumbnail(link: Link, mode: ThumbnailMode) {
-        Timber.d("[dcd] showThumbnail: ${mode.name} / ${link.title}")
         if (mode == ThumbnailMode.NO_THUMBNAIL) {
             linkThumbnail.visibility = View.GONE
             return

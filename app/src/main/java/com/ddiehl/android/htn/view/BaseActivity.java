@@ -400,7 +400,6 @@ public abstract class BaseActivity extends AppCompatActivity implements
         intent.putExtras(extras);
 
         // Check if Activity exists to handle the Intent
-        // Should resolve https://fabric.io/projects11111111111476634619/android/apps/com.ddiehl.android.htn/issues/583bb8cd0aeb16625b5bed8c
         if (intent.resolveActivity(getPackageManager()) != null) {
             Timber.e("No Activity found that can handle custom tabs Intent");
             startActivity(intent);
