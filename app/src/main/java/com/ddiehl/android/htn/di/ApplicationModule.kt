@@ -88,7 +88,7 @@ class ApplicationModule(context: Context) {
     }
 
     @Provides
-    fun providesNetworkConnectivityManager(context: Context?): NetworkConnectivityManager {
-        return NetworkConnectivityManager(context!!)
+    fun providesNetworkConnectivityManager(context: Context): NetworkConnectivityManager {
+        return NetworkConnectivityManager(context)
     }
 }
