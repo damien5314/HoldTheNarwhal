@@ -79,7 +79,6 @@ class MediaGalleryFragment : DialogFragment() {
         viewPager.adapter = MediaGalleryViewPagerAdapter(galleryItems)
         tabLayoutMediator = TabLayoutMediator(viewPagerTabs, viewPager) { tab, position ->
             tab.text = (position + 1).toString()
-//            tab.text = 4.toString()
         }
             .also { it.attach() }
     }
