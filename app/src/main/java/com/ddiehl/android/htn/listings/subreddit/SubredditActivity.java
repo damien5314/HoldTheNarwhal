@@ -4,14 +4,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.ddiehl.android.htn.view.FragmentActivityCompat;
+import androidx.fragment.app.Fragment;
+
+import com.ddiehl.android.htn.view.FragmentActivityCompat2;
 
 import org.jetbrains.annotations.NotNull;
 
-import androidx.fragment.app.Fragment;
 import timber.log.Timber;
 
-public class SubredditActivity extends FragmentActivityCompat {
+public class SubredditActivity extends FragmentActivityCompat2 {
 
     public static final String TAG = SubredditActivity.class.getSimpleName();
 

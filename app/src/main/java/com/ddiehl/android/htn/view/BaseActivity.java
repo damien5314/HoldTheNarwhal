@@ -23,7 +23,6 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 
-import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.gallery.MediaGalleryFragment;
 import com.ddiehl.android.htn.identity.IdentityManager;
@@ -60,6 +59,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import dagger.android.AndroidInjection;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.functions.Function;
@@ -116,9 +116,9 @@ public abstract class BaseActivity extends AppCompatActivity implements
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        AndroidInjection.inject(this);
         // Color scheme needs to be applied before the call to super.onCreate, otherwise we can get in
         // weird states where the background is in default theme but the foreground is in another
-        HoldTheNarwhal.getApplicationComponent().inject(this);
         applyColorScheme();
 
         super.onCreate(savedInstanceState);
