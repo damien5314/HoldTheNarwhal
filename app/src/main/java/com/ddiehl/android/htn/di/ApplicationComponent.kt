@@ -17,12 +17,10 @@ import com.ddiehl.android.htn.listings.subreddit.submission.SubmitPostFragment
 import com.ddiehl.android.htn.listings.subreddit.submission.SubmitPostPresenter
 import com.ddiehl.android.htn.navigation.WebViewFragment
 import com.ddiehl.android.htn.notifications.UnreadInboxCheckJobService
-import com.ddiehl.android.htn.settings.SettingsActivity
 import com.ddiehl.android.htn.settings.SettingsFragmentComponent
 import com.ddiehl.android.htn.settings.SettingsFragmentModule
 import com.ddiehl.android.htn.settings.SettingsPresenter
 import com.ddiehl.android.htn.subscriptions.SubscriptionManagerPresenter
-import com.ddiehl.android.htn.view.BaseActivity
 import com.ddiehl.android.htn.view.BaseFragment
 import dagger.Component
 import dagger.android.AndroidInjectionModule
@@ -41,8 +39,6 @@ interface ApplicationComponent {
     fun inject(application: HoldTheNarwhal)
 
     // Activities
-    fun inject(activity: BaseActivity)
-    fun inject(activity: SettingsActivity)
     fun inject(activity: ReportView)
 
     // Fragments

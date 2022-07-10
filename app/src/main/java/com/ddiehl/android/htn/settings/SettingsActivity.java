@@ -5,9 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.ddiehl.android.htn.view.FragmentActivity;
+import com.ddiehl.android.htn.view.FragmentActivity2;
 
-public class SettingsActivity extends FragmentActivity {
+public class SettingsActivity extends FragmentActivity2 {
 
     public static Intent getIntent(Context context) {
         return new Intent(context, SettingsActivity.class);
