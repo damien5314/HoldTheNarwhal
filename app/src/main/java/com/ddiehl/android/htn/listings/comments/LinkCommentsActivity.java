@@ -4,14 +4,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.ddiehl.android.htn.view.FragmentActivityCompat;
+import androidx.fragment.app.Fragment;
+
+import com.ddiehl.android.htn.view.FragmentActivityCompat2;
 
 import org.jetbrains.annotations.NotNull;
 
-import androidx.fragment.app.Fragment;
 import timber.log.Timber;
 
-public class LinkCommentsActivity extends FragmentActivityCompat {
+public class LinkCommentsActivity extends FragmentActivityCompat2 {
 
     private static final String EXTRA_SUBREDDIT = "EXTRA_SUBREDDIT";
     private static final String EXTRA_ARTICLE_ID = "EXTRA_ARTICLE_ID";

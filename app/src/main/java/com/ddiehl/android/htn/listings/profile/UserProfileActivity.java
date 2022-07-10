@@ -4,13 +4,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.ddiehl.android.htn.view.FragmentActivityCompat;
+import androidx.fragment.app.Fragment;
+
+import com.ddiehl.android.htn.view.FragmentActivityCompat2;
 
 import org.jetbrains.annotations.NotNull;
 
-import androidx.fragment.app.Fragment;
-
-public class UserProfileActivity extends FragmentActivityCompat {
+public class UserProfileActivity extends FragmentActivityCompat2 {
 
     private static final String EXTRA_USERNAME = "EXTRA_USERNAME";
     private static final String EXTRA_SHOW = "EXTRA_SHOW";

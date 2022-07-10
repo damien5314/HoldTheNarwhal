@@ -4,7 +4,7 @@ import android.app.Fragment
 import com.ddiehl.android.htn.R
 
 @Suppress("DEPRECATION") // no kidding
-abstract class FragmentActivity2 : BaseDaggerActivity() {
+abstract class FragmentActivity : BaseDaggerActivity() {
 
     protected abstract val fragment: Fragment?
 

@@ -4,15 +4,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.fragment.app.Fragment;
+
 import com.ddiehl.android.htn.R;
-import com.ddiehl.android.htn.view.FragmentActivityCompat;
+import com.ddiehl.android.htn.view.FragmentActivityCompat2;
 
 import org.jetbrains.annotations.NotNull;
 
-import androidx.fragment.app.Fragment;
 
-
-public class SubmitPostActivity extends FragmentActivityCompat {
+public class SubmitPostActivity extends FragmentActivityCompat2 {
 
     public static final String TAG = SubmitPostActivity.class.getSimpleName();
 

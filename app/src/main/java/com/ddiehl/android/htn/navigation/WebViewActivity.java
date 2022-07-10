@@ -3,13 +3,13 @@ package com.ddiehl.android.htn.navigation;
 import android.content.Context;
 import android.content.Intent;
 
-import com.ddiehl.android.htn.view.FragmentActivityCompat;
+import androidx.fragment.app.Fragment;
+
+import com.ddiehl.android.htn.view.FragmentActivityCompat2;
 
 import org.jetbrains.annotations.NotNull;
 
-import androidx.fragment.app.Fragment;
-
-public class WebViewActivity extends FragmentActivityCompat {
+public class WebViewActivity extends FragmentActivityCompat2 {
 
     public static final String EXTRA_URL = "EXTRA_URL";
 
