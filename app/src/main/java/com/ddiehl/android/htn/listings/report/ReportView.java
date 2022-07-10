@@ -4,11 +4,10 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 
-import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
-import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
+import com.ddiehl.android.htn.view.BaseDaggerDialogFragment;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -31,7 +30,7 @@ import timber.log.Timber;
  * Host fragment for requesting data from API for reporting a listing, displaying a dialog with options, then
  * submitting the report to subreddit moderators.
  */
-public class ReportView extends DialogFragment
+public class ReportView extends BaseDaggerDialogFragment
         implements ReportDialog.Listener {
 
     public static final String TAG = "ReportView";
@@ -58,12 +57,6 @@ public class ReportView extends DialogFragment
 
     @Inject
     RedditService redditService;
-
-    @Override
-    public void onCreate(@androidx.annotation.Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        HoldTheNarwhal.getApplicationComponent().inject(this);
-    }
 
     @NotNull String getListingId() {
         return getArguments().getString(EXTRA_LISTING_ID);

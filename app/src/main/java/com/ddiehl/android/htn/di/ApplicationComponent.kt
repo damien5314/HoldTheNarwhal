@@ -11,7 +11,6 @@ import com.ddiehl.android.htn.listings.inbox.PrivateMessageAdapter
 import com.ddiehl.android.htn.listings.inbox.PrivateMessageFragment
 import com.ddiehl.android.htn.listings.profile.UserProfileFragment
 import com.ddiehl.android.htn.listings.profile.UserProfilePresenter
-import com.ddiehl.android.htn.listings.report.ReportView
 import com.ddiehl.android.htn.listings.subreddit.SubredditFragment
 import com.ddiehl.android.htn.listings.subreddit.submission.SubmitPostFragment
 import com.ddiehl.android.htn.listings.subreddit.submission.SubmitPostPresenter
@@ -32,14 +31,12 @@ import javax.inject.Singleton
         AndroidInjectionModule::class,
         ApplicationModule::class,
         ActivitiesBindingModule::class,
+        FragmentsBindingModule::class,
     ]
 )
 interface ApplicationComponent {
 
     fun inject(application: HoldTheNarwhal)
-
-    // Activities
-    fun inject(activity: ReportView)
 
     // Fragments
     fun inject(fragment: BaseFragment)
