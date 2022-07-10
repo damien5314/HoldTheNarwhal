@@ -3,9 +3,9 @@ package com.ddiehl.android.htn.gallery
 import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
@@ -14,6 +14,7 @@ import com.ddiehl.android.htn.R
 import com.ddiehl.android.htn.view.glide.GlideApp
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import com.ortiz.touchview.TouchImageView
 import rxreddit.model.GalleryItem
 import rxreddit.model.Link
 
@@ -106,11 +107,43 @@ class MediaGalleryFragment : DialogFragment() {
 
     private class MediaGalleryItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        val itemImageView: ImageView = itemView.findViewById(R.id.media_gallery_item_image)
+        val itemImageView: TouchImageView = itemView.findViewById(R.id.media_gallery_item_image)
+
+        init {
+            suppressParentScrollingDuringZoom()
+        }
+
+        // Adapted from https://github.com/MikeOrtiz/TouchImageView/issues/191
+        private fun suppressParentScrollingDuringZoom() {
+            itemImageView.setOnTouchListener { view, event ->
+                //can scroll horizontally checks if there's still a part of the image
+                //that can be scrolled until you reach the edge
+                return@setOnTouchListener if (event.pointerCount >= 2 ||
+                    view.canScrollHorizontally(1) && view.canScrollHorizontally(-1)
+                ) {
+                    //multi-touch event
+                    when (event.action) {
+                        MotionEvent.ACTION_DOWN,
+                        MotionEvent.ACTION_MOVE,
+                        -> {
+                            // Disallow RecyclerView to intercept touch events.
+                            itemView.parent.requestDisallowInterceptTouchEvent(true)
+                            false // Disable touch on view
+                        }
+                        MotionEvent.ACTION_UP -> {
+                            // Allow RecyclerView to intercept touch events.
+                            itemView.parent.requestDisallowInterceptTouchEvent(false)
+                            true
+                        }
+                        else -> true
+                    }
+                } else true
+            }
+        }
 
         fun bind(galleryItem: MediaGalleryItem) {
-            val context = itemView.context
-            GlideApp.with(context)
+            itemImageView.resetZoom()
+            GlideApp.with(itemView.context)
                 .load(galleryItem.url)
                 .into(itemImageView)
         }

@@ -13,18 +13,15 @@
         app:layout_constraintEnd_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Need to set tab colors because Material3 themes use colorPrimary for text by default? -->
-    <!-- https://github.com/material-components/material-components-android/blob/53b30013969e14c7aaafb808b4bdda7502684622/lib/java/com/google/android/material/tabs/res/color/m3_tabs_icon_color.xml#L23 -->
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/media_gallery_view_pager_tabs"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/transparent"
+        android:background="?attr/colorPrimary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:tabIndicatorColor="?attr/colorAccent"
-        app:tabSelectedTextColor="?attr/tabLayoutSelectedTextColor"
-        app:tabTextColor="?attr/tabLayoutTextColor" />
+        app:tabMode="scrollable"
+        app:tabTextColor="?attr/textColorPrimary" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
