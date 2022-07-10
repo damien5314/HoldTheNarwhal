@@ -3,7 +3,7 @@ package com.ddiehl.android.htn.view
 import androidx.fragment.app.Fragment
 import com.ddiehl.android.htn.R
 
-abstract class FragmentActivityCompat2 : BaseDaggerActivity() {
+abstract class FragmentActivityCompat : BaseDaggerActivity() {
 
     protected abstract val fragment: Fragment
 

@@ -6,11 +6,11 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
-import com.ddiehl.android.htn.view.FragmentActivityCompat2;
+import com.ddiehl.android.htn.view.FragmentActivityCompat;
 
 import org.jetbrains.annotations.NotNull;
 
-public class InboxActivity extends FragmentActivityCompat2 {
+public class InboxActivity extends FragmentActivityCompat {
 
     private static final String EXTRA_SHOW = "EXTRA_SHOW";
 

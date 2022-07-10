@@ -6,11 +6,11 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
-import com.ddiehl.android.htn.view.FragmentActivityCompat2;
+import com.ddiehl.android.htn.view.FragmentActivityCompat;
 
 import org.jetbrains.annotations.NotNull;
 
-public class UserProfileActivity extends FragmentActivityCompat2 {
+public class UserProfileActivity extends FragmentActivityCompat {
 
     private static final String EXTRA_USERNAME = "EXTRA_USERNAME";
     private static final String EXTRA_SHOW = "EXTRA_SHOW";

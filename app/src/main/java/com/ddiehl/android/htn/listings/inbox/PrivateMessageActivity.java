@@ -6,7 +6,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
-import com.ddiehl.android.htn.view.FragmentActivityCompat2;
+import com.ddiehl.android.htn.view.FragmentActivityCompat;
 import com.google.gson.Gson;
 
 import org.jetbrains.annotations.NotNull;
@@ -17,7 +17,7 @@ import javax.inject.Inject;
 
 import rxreddit.model.PrivateMessage;
 
-public class PrivateMessageActivity extends FragmentActivityCompat2 {
+public class PrivateMessageActivity extends FragmentActivityCompat {
 
     private static final String EXTRA_MESSAGES = "EXTRA_MESSAGES";
 

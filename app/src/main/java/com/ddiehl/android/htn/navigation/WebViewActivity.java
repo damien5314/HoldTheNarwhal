@@ -5,11 +5,11 @@ import android.content.Intent;
 
 import androidx.fragment.app.Fragment;
 
-import com.ddiehl.android.htn.view.FragmentActivityCompat2;
+import com.ddiehl.android.htn.view.FragmentActivityCompat;
 
 import org.jetbrains.annotations.NotNull;
 
-public class WebViewActivity extends FragmentActivityCompat2 {
+public class WebViewActivity extends FragmentActivityCompat {
 
     public static final String EXTRA_URL = "EXTRA_URL";
 

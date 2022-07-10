@@ -7,12 +7,12 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 
 import com.ddiehl.android.htn.R;
-import com.ddiehl.android.htn.view.FragmentActivityCompat2;
+import com.ddiehl.android.htn.view.FragmentActivityCompat;
 
 import org.jetbrains.annotations.NotNull;
 
 
-public class SubmitPostActivity extends FragmentActivityCompat2 {
+public class SubmitPostActivity extends FragmentActivityCompat {
 
     public static final String TAG = SubmitPostActivity.class.getSimpleName();
 

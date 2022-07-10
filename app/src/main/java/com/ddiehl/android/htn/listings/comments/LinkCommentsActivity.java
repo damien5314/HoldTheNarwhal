@@ -6,13 +6,13 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
-import com.ddiehl.android.htn.view.FragmentActivityCompat2;
+import com.ddiehl.android.htn.view.FragmentActivityCompat;
 
 import org.jetbrains.annotations.NotNull;
 
 import timber.log.Timber;
 
-public class LinkCommentsActivity extends FragmentActivityCompat2 {
+public class LinkCommentsActivity extends FragmentActivityCompat {
 
     private static final String EXTRA_SUBREDDIT = "EXTRA_SUBREDDIT";
     private static final String EXTRA_ARTICLE_ID = "EXTRA_ARTICLE_ID";
