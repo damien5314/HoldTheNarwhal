@@ -249,16 +249,22 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
         }
 
         // Determine correct routing for link
-        final Media media = link.getMedia();
         if (link.isGallery()) {
             final List<GalleryItem> galleryItems = link.getGalleryItems();
             linkCommentsView.openLinkGallery(galleryItems);
-        } else if (media != null) {
+            return;
+        }
+
+        final Media media = link.getMedia();
+        if (media != null) {
             final Media.RedditVideo redditVideo = media.getRedditVideo();
             if (redditVideo != null) {
                 linkCommentsView.openRedditVideo(redditVideo);
+                return;
             }
-        } else if (link.getUrl() != null) {
+        }
+
+        if (link.getUrl() != null) {
             linkCommentsView.openUrlInWebView(link.getUrl());
         }
     }

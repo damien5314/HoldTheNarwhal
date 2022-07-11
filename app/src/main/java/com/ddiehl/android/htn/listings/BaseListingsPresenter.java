@@ -223,16 +223,22 @@ public abstract class BaseListingsPresenter
         }
 
         // Determine correct routing for link
-        final Media media = link.getMedia();
         if (link.isGallery()) {
             final List<GalleryItem> galleryItems = link.getGalleryItems();
             linkView.openLinkGallery(galleryItems);
-        } else if (media != null) {
+            return;
+        }
+
+        final Media media = link.getMedia();
+        if (media != null) {
             final Media.RedditVideo redditVideo = media.getRedditVideo();
             if (redditVideo != null) {
                 linkView.openRedditVideo(redditVideo);
+                return;
             }
-        } else if (link.getUrl() != null) {
+        }
+
+        if (link.getUrl() != null) {
             linkView.openUrlInWebView(link.getUrl());
         }
     }
