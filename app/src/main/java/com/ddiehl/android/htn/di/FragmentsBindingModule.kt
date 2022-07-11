@@ -24,7 +24,7 @@ import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
 /**
- * TODO: Describe what this class is responsible for
+ * Provides subcomponent bindings for all Fragment classes using Dagger's [ContributesAndroidInjector].
  */
 @Module
 interface FragmentsBindingModule {
