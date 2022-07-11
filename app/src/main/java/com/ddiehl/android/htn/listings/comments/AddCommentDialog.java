@@ -8,13 +8,12 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 
-import androidx.fragment.app.DialogFragment;
-
 import com.ddiehl.android.htn.R;
+import com.ddiehl.android.htn.view.BaseDaggerDialogFragment;
 
 import org.jetbrains.annotations.NotNull;
 
-public class AddCommentDialog extends DialogFragment {
+public class AddCommentDialog extends BaseDaggerDialogFragment {
 
     public static final String TAG = AddCommentDialog.class.getSimpleName();
 

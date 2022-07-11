@@ -1,23 +1,22 @@
 package com.ddiehl.android.htn.subscriptions;
 
+import static android.app.Activity.RESULT_CANCELED;
+import static android.app.Activity.RESULT_OK;
+
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 
+import androidx.appcompat.app.AlertDialog;
+
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.navigation.SubredditEditText;
+import com.ddiehl.android.htn.view.BaseDaggerDialogFragment;
 
 import org.jetbrains.annotations.NotNull;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.fragment.app.DialogFragment;
-
-import static android.app.Activity.RESULT_CANCELED;
-import static android.app.Activity.RESULT_OK;
-
-
-public class SubredditSearchDialog extends DialogFragment {
+public class SubredditSearchDialog extends BaseDaggerDialogFragment {
 
     public static final String TAG = SubredditSearchDialog.class.getSimpleName();
 

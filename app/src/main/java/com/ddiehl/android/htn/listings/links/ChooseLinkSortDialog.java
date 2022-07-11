@@ -1,22 +1,23 @@
 package com.ddiehl.android.htn.listings.links;
 
+import static android.app.Activity.RESULT_CANCELED;
+import static android.app.Activity.RESULT_OK;
+
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AlertDialog;
+
 import com.ddiehl.android.htn.R;
+import com.ddiehl.android.htn.view.BaseDaggerDialogFragment;
 
 import org.jetbrains.annotations.NotNull;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.fragment.app.DialogFragment;
 import timber.log.Timber;
 
-import static android.app.Activity.RESULT_CANCELED;
-import static android.app.Activity.RESULT_OK;
-
-public class ChooseLinkSortDialog extends DialogFragment {
+public class ChooseLinkSortDialog extends BaseDaggerDialogFragment {
 
     public static final String TAG = ChooseLinkSortDialog.class.getSimpleName();
 

@@ -4,14 +4,14 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AlertDialog;
+
 import com.ddiehl.android.htn.R;
+import com.ddiehl.android.htn.view.BaseDaggerDialogFragment;
 
 import org.jetbrains.annotations.NotNull;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.fragment.app.DialogFragment;
-
-public class ConfirmExitDialog extends DialogFragment {
+public class ConfirmExitDialog extends BaseDaggerDialogFragment {
 
     public static final String TAG = ConfirmExitDialog.class.getSimpleName();
 
