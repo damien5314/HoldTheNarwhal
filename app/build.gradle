@@ -22,7 +22,7 @@ android {
         minSdkVersion MIN_SDK_VERSION
         targetSdkVersion TARGET_SDK_VERSION
         versionCode 2100024
-        versionName "0.19"
+        versionName "0.20"
         resConfigs "en"
         buildConfigField "long", "BUILD_TIME_UTC", "" + getTime()
         def appId = localProperties.getProperty("app_id")
