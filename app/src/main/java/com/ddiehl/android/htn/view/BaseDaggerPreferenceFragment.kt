@@ -9,7 +9,8 @@ import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 
 /**
- * TODO: Describe what this class is responsible for
+ * Base PreferenceFragment class that calls into [AndroidInjection] to inject dependencies
+ * from the Fragment's dagger subcomponent.
  */
 abstract class BaseDaggerPreferenceFragment : PreferenceFragment(),
     HasAndroidInjector {

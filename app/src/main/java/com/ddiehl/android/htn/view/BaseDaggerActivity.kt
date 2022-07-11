@@ -9,7 +9,8 @@ import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 
 /**
- * TODO: Describe what this class is responsible for
+ * Base Activity class that calls into [AndroidInjection] to inject dependencies
+ * from the Activity's dagger subcomponent.
  */
 abstract class BaseDaggerActivity : BaseActivity(),
     HasAndroidInjector {

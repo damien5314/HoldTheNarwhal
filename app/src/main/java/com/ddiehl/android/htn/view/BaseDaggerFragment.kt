@@ -2,6 +2,7 @@ package com.ddiehl.android.htn.view
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
+import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
@@ -9,7 +10,8 @@ import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
 
 /**
- * TODO: Describe what this class is responsible for
+ * Base Fragment class that calls into [AndroidInjection] to inject dependencies
+ * from the Fragment's dagger subcomponent.
  */
 abstract class BaseDaggerFragment : Fragment(),
     HasAndroidInjector {

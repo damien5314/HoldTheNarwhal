@@ -8,7 +8,8 @@ import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 
 /**
- * TODO: Describe what this class is responsible for
+ * Base JobService class that calls into [AndroidInjection] to inject dependencies
+ * from the Service's dagger subcomponent.
  */
 abstract class BaseJobService : JobService(),
     HasAndroidInjector {
