@@ -2,12 +2,9 @@ package com.ddiehl.android.htn.notifications
 
 import android.app.job.JobInfo
 import android.app.job.JobParameters
-import android.app.job.JobService
 import android.content.ComponentName
 import android.content.Context
-import android.os.Build
-import androidx.annotation.RequiresApi
-import com.ddiehl.android.htn.HoldTheNarwhal
+import com.ddiehl.android.htn.BaseJobService
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -19,7 +16,6 @@ import javax.inject.Inject
 const val JOB_ID = 1
 private const val LATENCY_15_MIN_MILLIS = 15 * 60 * 1000L
 
-@RequiresApi(Build.VERSION_CODES.LOLLIPOP)
 fun getJobInfo(context: Context): JobInfo {
     val serviceComponent = ComponentName(context, UnreadInboxCheckJobService::class.java)
     return JobInfo.Builder(JOB_ID, serviceComponent)
@@ -33,18 +29,13 @@ fun getJobInfo(context: Context): JobInfo {
  * Service which starts [UnreadInboxChecker] to check if a user has unread
  * inbox messages, then displays a notification with [InboxNotificationManager].
  */
-@RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-class UnreadInboxCheckJobService : JobService() {
+class UnreadInboxCheckJobService : BaseJobService() {
 
     @Inject
     lateinit var redditService: RedditService
     private lateinit var inboxNotificationManager: InboxNotificationManager
     private lateinit var inboxNotificationTracker: InboxNotificationTracker
     private var subscription: Disposable = Disposable.empty()
-
-    init {
-        HoldTheNarwhal.getApplicationComponent().inject(this)
-    }
 
     override fun onStartJob(params: JobParameters?): Boolean {
         inboxNotificationManager = InboxNotificationManager(applicationContext)
