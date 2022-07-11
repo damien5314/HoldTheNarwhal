@@ -26,6 +26,10 @@ interface ApplicationComponent {
 
     fun inject(application: HoldTheNarwhal)
 
+    // Below injectors are deprecated.
+    // All new additions should go into the *BindingModules listed as part of this component.
+    // TODO: Refactor out the remainder of these
+
     // ViewHolders
     fun inject(vh: ThreadStubViewHolder)
     fun inject(vh: PrivateMessageAdapter.VH)
