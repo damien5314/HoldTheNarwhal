@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
-import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -16,20 +15,20 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.ddiehl.android.htn.HoldTheNarwhal;
+import androidx.annotation.StringRes;
+
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.identity.IdentityManager;
 import com.ddiehl.android.htn.utils.MenuTintUtils;
 import com.ddiehl.android.htn.utils.ThemeUtilsKt;
+import com.ddiehl.android.htn.view.BaseDaggerPreferenceFragment;
 import com.google.android.material.snackbar.Snackbar;
 
 import javax.inject.Inject;
 
-import androidx.annotation.StringRes;
 import rxreddit.model.UserIdentity;
-import timber.log.Timber;
 
-public class SettingsFragment extends PreferenceFragment
+public class SettingsFragment extends BaseDaggerPreferenceFragment
         implements SettingsView {
 
     public static final String TAG = SettingsFragment.class.getSimpleName();
@@ -42,10 +41,6 @@ public class SettingsFragment extends PreferenceFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Timber.i("Showing settings");
-        HoldTheNarwhal.getApplicationComponent()
-                .plus(new SettingsFragmentModule(this))
-                .inject(this);
 
         setRetainInstance(true);
         setHasOptionsMenu(true);

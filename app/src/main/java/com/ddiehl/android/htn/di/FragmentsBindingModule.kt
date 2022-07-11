@@ -16,6 +16,8 @@ import com.ddiehl.android.htn.listings.subreddit.submission.SubmitPostFragment
 import com.ddiehl.android.htn.navigation.ConfirmExitDialog
 import com.ddiehl.android.htn.navigation.ConfirmSignOutDialog
 import com.ddiehl.android.htn.navigation.WebViewFragment
+import com.ddiehl.android.htn.settings.SettingsFragment
+import com.ddiehl.android.htn.settings.SettingsFragmentModule
 import com.ddiehl.android.htn.subredditinfo.SubredditInfoFragment
 import com.ddiehl.android.htn.subscriptions.SubredditSearchDialog
 import com.ddiehl.android.htn.subscriptions.SubscriptionManagerFragment
@@ -76,6 +78,12 @@ interface FragmentsBindingModule {
     @FragmentScope
     @ContributesAndroidInjector(modules = [])
     fun bindReportView(): ReportView
+
+    @FragmentScope
+    @ContributesAndroidInjector(modules = [
+        SettingsFragmentModule::class,
+    ])
+    fun bindSettingsFragment(): SettingsFragment
 
     @FragmentScope
     @ContributesAndroidInjector(modules = [])
