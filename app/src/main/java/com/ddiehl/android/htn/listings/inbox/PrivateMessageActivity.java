@@ -4,7 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.ddiehl.android.htn.HoldTheNarwhal;
+import androidx.fragment.app.Fragment;
+
 import com.ddiehl.android.htn.view.FragmentActivityCompat;
 import com.google.gson.Gson;
 
@@ -14,7 +15,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import androidx.fragment.app.Fragment;
 import rxreddit.model.PrivateMessage;
 
 public class PrivateMessageActivity extends FragmentActivityCompat {
@@ -38,7 +38,6 @@ public class PrivateMessageActivity extends FragmentActivityCompat {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        HoldTheNarwhal.getApplicationComponent().inject(this);
         if (getIntent().getExtras() == null) {
             throw new RuntimeException("no extras passed to PrivateMessageActivity");
         }

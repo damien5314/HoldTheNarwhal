@@ -7,8 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.VideoView
-import androidx.fragment.app.DialogFragment
 import com.ddiehl.android.htn.R
+import com.ddiehl.android.htn.view.BaseDaggerDialogFragment
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.ui.StyledPlayerView
@@ -20,7 +20,7 @@ import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs
  * Displays videos loaded from URL in a [VideoView].
  */
 @FragmentWithArgs
-class VideoPlayerDialog : DialogFragment() {
+class VideoPlayerDialog : BaseDaggerDialogFragment() {
 
     companion object {
         const val TAG: String = "VideoPlayerDialog"

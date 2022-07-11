@@ -1,5 +1,7 @@
 package com.ddiehl.android.htn.subscriptions;
 
+import static android.app.Activity.RESULT_OK;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -10,7 +12,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.subredditinfo.SubredditInfoActivity;
 import com.ddiehl.android.htn.subredditinfo.SubredditInfoFragment;
@@ -32,8 +33,6 @@ import rxreddit.model.Listing;
 import rxreddit.model.ListingResponse;
 import rxreddit.model.Subreddit;
 import timber.log.Timber;
-
-import static android.app.Activity.RESULT_OK;
 
 public class SubscriptionManagerFragment extends BaseFragment implements SubscriptionManagerView {
 
@@ -67,7 +66,6 @@ public class SubscriptionManagerFragment extends BaseFragment implements Subscri
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Timber.i("Showing subscriptions");
-        HoldTheNarwhal.getApplicationComponent().inject(this);
 
         presenter = new SubscriptionManagerPresenter();
     }

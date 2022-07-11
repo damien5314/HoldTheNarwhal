@@ -6,15 +6,16 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AlertDialog;
+
 import com.ddiehl.android.htn.R;
+import com.ddiehl.android.htn.view.BaseDaggerDialogFragment;
 
 import org.jetbrains.annotations.NotNull;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.fragment.app.DialogFragment;
 import timber.log.Timber;
 
-public class ChooseTimespanDialog extends DialogFragment {
+public class ChooseTimespanDialog extends BaseDaggerDialogFragment {
 
     public static final String TAG = ChooseTimespanDialog.class.getSimpleName();
 

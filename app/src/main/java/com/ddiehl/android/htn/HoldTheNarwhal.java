@@ -20,13 +20,24 @@ import com.ddiehl.android.logging.CrashlyticsLoggingTree;
 import com.ddiehl.android.logging.LogcatLogger;
 import com.ddiehl.android.logging.LogcatLoggingTree;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Arrays;
 
+import javax.inject.Inject;
+
+import dagger.android.AndroidInjector;
+import dagger.android.DispatchingAndroidInjector;
+import dagger.android.HasAndroidInjector;
 import timber.log.Timber;
 
-public class HoldTheNarwhal extends Application {
+public class HoldTheNarwhal extends Application implements HasAndroidInjector {
 
     private static ApplicationComponent component;
+
+    @NotNull
+    @Inject
+    DispatchingAndroidInjector<Object> dispatchingAndroidInjector;
 
     @Override
     public void onCreate() {
@@ -35,6 +46,7 @@ public class HoldTheNarwhal extends Application {
         component = DaggerApplicationComponent.builder()
                 .applicationModule(new ApplicationModule(this))
                 .build();
+        component.inject(this);
 
         // Install logging trees
         if (BuildConfig.DEBUG) {
@@ -101,5 +113,10 @@ public class HoldTheNarwhal extends Application {
         }
 
         Timber.i("Supported ABIs: %s", debugString);
+    }
+
+    @Override
+    public AndroidInjector<Object> androidInjector() {
+        return dispatchingAndroidInjector;
     }
 }

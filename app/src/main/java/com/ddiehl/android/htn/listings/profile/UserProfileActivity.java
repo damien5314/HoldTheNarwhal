@@ -4,11 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.fragment.app.Fragment;
+
 import com.ddiehl.android.htn.view.FragmentActivityCompat;
 
 import org.jetbrains.annotations.NotNull;
-
-import androidx.fragment.app.Fragment;
 
 public class UserProfileActivity extends FragmentActivityCompat {
 

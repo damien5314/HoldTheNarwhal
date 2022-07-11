@@ -13,11 +13,11 @@ import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
-import androidx.fragment.app.DialogFragment
 import com.ddiehl.android.htn.R
+import com.ddiehl.android.htn.view.BaseDaggerDialogFragment
 import com.ddiehl.android.htn.view.getDelegate
 
-class ReportDialog : DialogFragment() {
+class ReportDialog : BaseDaggerDialogFragment() {
 
     companion object {
 

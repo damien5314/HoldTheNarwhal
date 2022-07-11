@@ -1,5 +1,7 @@
 package com.ddiehl.android.htn.settings;
 
+import static com.ddiehl.android.htn.settings.SettingsFragmentModule.USER_PREFERENCES;
+
 import android.content.SharedPreferences;
 
 import com.ddiehl.android.htn.R;
@@ -8,6 +10,9 @@ import com.ddiehl.android.htn.managers.NetworkConnectivityManager;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.inject.Inject;
+import javax.inject.Named;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.schedulers.Schedulers;
@@ -24,9 +29,10 @@ public class SettingsPresenter implements SharedPreferences.OnSharedPreferenceCh
 
     private boolean isChanging = false;
 
+    @Inject
     public SettingsPresenter(
             SettingsView settingsView,
-            SharedPreferences sharedPreferences,
+            @Named(USER_PREFERENCES) SharedPreferences sharedPreferences,
             RedditService redditService,
             SettingsManager settingsManager,
             NetworkConnectivityManager networkConnectivityManager

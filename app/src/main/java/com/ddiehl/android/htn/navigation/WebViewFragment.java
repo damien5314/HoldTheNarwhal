@@ -15,7 +15,6 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
-import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.view.BaseFragment;
 import com.ddiehl.android.htn.view.MainView;
@@ -48,7 +47,6 @@ public class WebViewFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        HoldTheNarwhal.getApplicationComponent().inject(this);
         FragmentArgs.inject(this);
         setRetainInstance(true);
         setHasOptionsMenu(true);

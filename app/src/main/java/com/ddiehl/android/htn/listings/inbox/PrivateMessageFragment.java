@@ -14,7 +14,6 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.listings.report.ReportView;
 import com.ddiehl.android.htn.view.BaseFragment;
@@ -61,7 +60,6 @@ public class PrivateMessageFragment extends BaseFragment implements PrivateMessa
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        HoldTheNarwhal.getApplicationComponent().inject(this);
         FragmentArgs.inject(this);
         adapter = new PrivateMessageAdapter();
     }

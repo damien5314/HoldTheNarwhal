@@ -1,5 +1,7 @@
 package com.ddiehl.android.htn.listings.profile;
 
+import static android.app.Activity.RESULT_OK;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -14,7 +16,6 @@ import android.widget.TextView;
 
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
-import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.identity.IdentityManager;
 import com.ddiehl.android.htn.listings.BaseListingsFragment;
@@ -43,8 +44,6 @@ import javax.inject.Inject;
 import rxreddit.model.Listing;
 import rxreddit.model.Trophy;
 import rxreddit.model.UserIdentity;
-
-import static android.app.Activity.RESULT_OK;
 
 @FragmentWithArgs
 public class UserProfileFragment extends BaseListingsFragment
@@ -96,7 +95,6 @@ public class UserProfileFragment extends BaseListingsFragment
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        HoldTheNarwhal.getApplicationComponent().inject(this);
         FragmentArgs.inject(this);
 
         if (TextUtils.isEmpty(show)) show = "summary";

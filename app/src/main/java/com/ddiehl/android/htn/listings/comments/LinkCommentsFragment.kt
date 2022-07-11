@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.view.*
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.ddiehl.android.htn.HoldTheNarwhal
 import com.ddiehl.android.htn.R
 import com.ddiehl.android.htn.listings.BaseListingsFragment
 import com.ddiehl.android.htn.settings.SettingsManager
@@ -50,7 +49,6 @@ class LinkCommentsFragment : BaseListingsFragment(), LinkCommentsView,
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        HoldTheNarwhal.getApplicationComponent().inject(this)
         FragmentArgs.inject(this)
         presenter = LinkCommentsPresenter(this, redditNavigationView, this)
         listingsPresenter = presenter

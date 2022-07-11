@@ -1,5 +1,7 @@
 package com.ddiehl.android.htn.listings.subreddit;
 
+import static android.app.Activity.RESULT_OK;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,7 +16,6 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
-import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.listings.BaseListingsFragment;
 import com.ddiehl.android.htn.listings.ChooseTimespanDialog;
@@ -36,8 +37,6 @@ import javax.inject.Inject;
 
 import rxreddit.model.Link;
 import rxreddit.model.Subreddit;
-
-import static android.app.Activity.RESULT_OK;
 
 @FragmentWithArgs
 public class SubredditFragment extends BaseListingsFragment implements SubredditView {
@@ -70,7 +69,6 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        HoldTheNarwhal.getApplicationComponent().inject(this);
         FragmentArgs.inject(this);
 
         if (TextUtils.isEmpty(sort)) sort = "hot";

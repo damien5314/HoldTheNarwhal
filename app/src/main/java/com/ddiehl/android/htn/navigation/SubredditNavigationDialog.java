@@ -8,15 +8,14 @@ import android.view.View;
 import android.view.Window;
 import android.view.inputmethod.EditorInfo;
 
-import androidx.fragment.app.DialogFragment;
-
 import com.ddiehl.android.htn.R;
+import com.ddiehl.android.htn.view.BaseDaggerDialogFragment;
 
 import org.jetbrains.annotations.NotNull;
 
 import timber.log.Timber;
 
-public class SubredditNavigationDialog extends DialogFragment {
+public class SubredditNavigationDialog extends BaseDaggerDialogFragment {
 
     public static final String TAG = SubredditNavigationDialog.class.getSimpleName();
 
