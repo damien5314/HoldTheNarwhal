@@ -7,7 +7,6 @@ import android.view.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.ddiehl.android.htn.HoldTheNarwhal
 import com.ddiehl.android.htn.R
 import com.ddiehl.android.htn.listings.report.ReportView
 import com.ddiehl.android.htn.listings.report.ReportView.RESULT_REPORT_ERROR
@@ -54,7 +53,6 @@ abstract class BaseListingsFragment : BaseFragment(), ListingsView, SwipeRefresh
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        HoldTheNarwhal.getApplicationComponent().inject(this)
         retainInstance = true
         setHasOptionsMenu(true)
     }

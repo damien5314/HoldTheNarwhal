@@ -1,5 +1,7 @@
 package com.ddiehl.android.htn.view;
 
+import static android.app.Activity.RESULT_OK;
+
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -11,9 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.StringRes;
-import androidx.fragment.app.Fragment;
 
-import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.identity.IdentityManager;
 import com.ddiehl.android.htn.listings.subreddit.SubredditActivity;
@@ -37,9 +37,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 import rxreddit.api.RedditService;
 import timber.log.Timber;
 
-import static android.app.Activity.RESULT_OK;
-
-public abstract class BaseFragment extends Fragment implements MainView {
+public abstract class BaseFragment extends BaseDaggerFragment implements MainView {
 
     // FIXME: Should these all be in BaseFragment?
     protected static final int REQUEST_CHOOSE_SORT = 1;
@@ -66,7 +64,6 @@ public abstract class BaseFragment extends Fragment implements MainView {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        HoldTheNarwhal.getApplicationComponent().inject(this);
     }
 
     @NotNull

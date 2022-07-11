@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
-import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.identity.IdentityManager;
 import com.ddiehl.android.htn.listings.BaseListingsFragment;
@@ -53,7 +52,6 @@ public class InboxFragment extends BaseListingsFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        HoldTheNarwhal.getApplicationComponent().inject(this);
         FragmentArgs.inject(this);
 
         if (TextUtils.isEmpty(show)) show = "inbox";

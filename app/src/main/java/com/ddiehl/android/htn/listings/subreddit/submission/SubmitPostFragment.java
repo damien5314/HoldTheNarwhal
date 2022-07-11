@@ -1,5 +1,7 @@
 package com.ddiehl.android.htn.listings.subreddit.submission;
 
+import static com.ddiehl.android.htn.utils.AndroidUtils.getTextInputLayout;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,7 +15,6 @@ import android.widget.Toast;
 import androidx.annotation.StringRes;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
-import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.view.BaseFragment;
 import com.google.android.material.snackbar.Snackbar;
@@ -28,8 +29,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import rxreddit.model.SubmitPostResponse;
-
-import static com.ddiehl.android.htn.utils.AndroidUtils.getTextInputLayout;
 
 @FragmentWithArgs
 public class SubmitPostFragment extends BaseFragment
@@ -70,7 +69,6 @@ public class SubmitPostFragment extends BaseFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        HoldTheNarwhal.getApplicationComponent().inject(this);
         FragmentArgs.inject(this);
         presenter = new SubmitPostPresenter(this);
     }

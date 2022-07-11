@@ -1,6 +1,7 @@
 package com.ddiehl.android.htn.view
 
 import android.os.Bundle
+import androidx.fragment.app.Fragment
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
@@ -10,7 +11,7 @@ import javax.inject.Inject
 /**
  * TODO: Describe what this class is responsible for
  */
-abstract class BaseDaggerFragment : BaseFragment(),
+abstract class BaseDaggerFragment : Fragment(),
     HasAndroidInjector {
 
     @Inject
