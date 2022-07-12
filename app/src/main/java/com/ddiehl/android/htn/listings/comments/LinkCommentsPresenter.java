@@ -1,10 +1,12 @@
 package com.ddiehl.android.htn.listings.comments;
 
 import com.ddiehl.android.htn.R;
+import com.ddiehl.android.htn.gallery.MediaGalleryRouter;
 import com.ddiehl.android.htn.listings.BaseListingsPresenter;
-import com.ddiehl.android.htn.navigation.RedditNavigationView;
+import com.ddiehl.android.htn.routing.AppRouter;
 import com.ddiehl.android.htn.utils.RedditUtilKt;
 import com.ddiehl.android.htn.view.MainView;
+import com.ddiehl.android.htn.view.video.VideoPlayerRouter;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -29,14 +31,36 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
 
     private static final int MAX_CHILDREN_PER_REQUEST = 20;
 
+    private final AppRouter appRouter;
+    private final MediaGalleryRouter mediaGalleryRouter;
+    private final VideoPlayerRouter videoPlayerRouter;
     private final LinkCommentsView linkCommentsView;
     private final CommentBank commentBank;
     private Link linkContext;
     private Listing replyTarget = null;
     private boolean dataRequested = false;
 
-    public LinkCommentsPresenter(MainView main, RedditNavigationView navigationView, LinkCommentsView view) {
-        super(main, navigationView, view, view, view, null);
+    public LinkCommentsPresenter(
+            MainView main,
+            AppRouter appRouter,
+            LinkCommentsRouter linkCommentsRouter,
+            MediaGalleryRouter mediaGalleryRouter,
+            VideoPlayerRouter videoPlayerRouter,
+            LinkCommentsView view) {
+        super(
+                main,
+                appRouter,
+                linkCommentsRouter,
+                mediaGalleryRouter,
+                videoPlayerRouter,
+                view,
+                view,
+                view,
+                null
+        );
+        this.appRouter = appRouter;
+        this.mediaGalleryRouter = mediaGalleryRouter;
+        this.videoPlayerRouter = videoPlayerRouter;
         linkCommentsView = view;
         commentBank = new CommentBankList();
     }
@@ -251,7 +275,7 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
         // Determine correct routing for link
         if (link.isGallery()) {
             final List<GalleryItem> galleryItems = link.getGalleryItems();
-            linkCommentsView.openLinkGallery(galleryItems);
+            mediaGalleryRouter.openLinkGallery(galleryItems);
             return;
         }
 
@@ -259,13 +283,14 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
         if (media != null) {
             final Media.RedditVideo redditVideo = media.getRedditVideo();
             if (redditVideo != null) {
-                linkCommentsView.openRedditVideo(redditVideo);
+                videoPlayerRouter.openRedditVideo(redditVideo);
                 return;
             }
         }
 
-        if (link.getUrl() != null) {
-            linkCommentsView.openUrlInWebView(link.getUrl());
+        final String linkUrl = link.getUrl();
+        if (linkUrl != null) {
+            appRouter.openUrl(linkUrl);
         }
     }
 

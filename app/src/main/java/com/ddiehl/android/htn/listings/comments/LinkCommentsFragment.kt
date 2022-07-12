@@ -8,14 +8,15 @@ import android.view.*
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.ddiehl.android.htn.R
+import com.ddiehl.android.htn.gallery.MediaGalleryRouter
 import com.ddiehl.android.htn.listings.BaseListingsFragment
 import com.ddiehl.android.htn.settings.SettingsManager
 import com.ddiehl.android.htn.utils.AndroidUtils.safeStartActivity
+import com.ddiehl.android.htn.view.video.VideoPlayerRouter
 import com.hannesdorfmann.fragmentargs.FragmentArgs
 import com.hannesdorfmann.fragmentargs.annotation.Arg
 import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs
 import rxreddit.model.Comment
-import rxreddit.model.GalleryItem
 import rxreddit.model.Link
 import rxreddit.model.Listing
 import javax.inject.Inject
@@ -29,8 +30,14 @@ class LinkCommentsFragment : BaseListingsFragment(), LinkCommentsView,
         val TAG: String = LinkCommentsFragment::class.java.simpleName
     }
 
-    @field:Inject
+    @Inject
     lateinit var settingsManager: SettingsManager
+    @Inject
+    lateinit var linkCommentsRouter: LinkCommentsRouter
+    @Inject
+    lateinit var mediaGalleryRouter: MediaGalleryRouter
+    @Inject
+    lateinit var videoPlayRouter: VideoPlayerRouter
 
     @field:Arg
     override lateinit var subreddit: String
@@ -50,7 +57,14 @@ class LinkCommentsFragment : BaseListingsFragment(), LinkCommentsView,
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         FragmentArgs.inject(this)
-        presenter = LinkCommentsPresenter(this, redditNavigationView, this)
+        presenter = LinkCommentsPresenter(
+            this,
+            appRouter,
+            linkCommentsRouter,
+            mediaGalleryRouter,
+            videoPlayRouter,
+            this,
+        )
         listingsPresenter = presenter
         sort = settingsManager.commentSort
         callbacks = listingsPresenter
@@ -106,12 +120,20 @@ class LinkCommentsFragment : BaseListingsFragment(), LinkCommentsView,
 
     override fun openUserProfileView(link: Link) {
         link.author?.let { author ->
-            redditNavigationView.showUserProfile(author, null, null)
+            appRouter.showUserProfile(
+                username = author,
+                show = null,
+                sort = null,
+            )
         }
     }
 
     override fun openUserProfileView(comment: Comment) {
-        redditNavigationView.showUserProfile(comment.author, null, null)
+        appRouter.showUserProfile(
+            username = comment.author,
+            show = null,
+            sort = null,
+        )
     }
 
     override fun openLinkInBrowser(link: Link) {
@@ -220,18 +242,6 @@ class LinkCommentsFragment : BaseListingsFragment(), LinkCommentsView,
 
         this.sort = sort
         listingsPresenter.onSortChanged()
-    }
-
-    override fun openUrlInWebView(url: String) {
-        redditNavigationView.openURL(url)
-    }
-
-    override fun openLinkGallery(galleryItems: List<GalleryItem>) {
-        redditNavigationView.openLinkGallery(galleryItems)
-    }
-
-    override fun showCommentsForLink(subreddit: String, linkId: String, commentId: String?) {
-        redditNavigationView.showCommentsForLink(subreddit, linkId, commentId)
     }
 
     override fun openReplyView(listing: Listing) {

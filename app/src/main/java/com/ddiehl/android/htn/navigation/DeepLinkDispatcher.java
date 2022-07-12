@@ -3,15 +3,24 @@ package com.ddiehl.android.htn.navigation;
 import android.net.Uri;
 import android.os.Bundle;
 
+import com.ddiehl.android.htn.listings.comments.LinkCommentsRouter;
+import com.ddiehl.android.htn.routing.AppRouter;
 import com.ddiehl.android.htn.view.BaseActivity;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import timber.log.Timber;
 
 public class DeepLinkDispatcher extends BaseActivity {
+
+    @Inject
+    AppRouter appRouter;
+    @Inject
+    LinkCommentsRouter linkCommentsRouter;
 
     @Override
     protected boolean hasNavigationDrawer() {
@@ -32,10 +41,10 @@ public class DeepLinkDispatcher extends BaseActivity {
         List<String> segments = uri.getPathSegments();
         if (segments.size() == 0) {
             // Front page
-            showSubreddit(null, null, null);
+            appRouter.showSubreddit(null, null, null);
         } else if (isSubredditSort(segments.get(0))) {
             // Sorted front page
-            showSubreddit(null, segments.get(0), null);
+            appRouter.showSubreddit(null, segments.get(0), null);
         } else if (segments.get(0).equals("r")) {
             // Subreddit navigation
             String subreddit = segments.get(1);
@@ -45,18 +54,18 @@ public class DeepLinkDispatcher extends BaseActivity {
                     // Navigating to comment thread
                     if (segments.size() > 5) {
                         // Link to specific comment
-                        showCommentsForLink(subreddit, segments.get(3), segments.get(5));
+                        linkCommentsRouter.showCommentsForLink(subreddit, segments.get(3), segments.get(5));
                     } else {
                         // Link to full thread
-                        showCommentsForLink(subreddit, segments.get(3), null);
+                        linkCommentsRouter.showCommentsForLink(subreddit, segments.get(3), null);
                     }
                 } else if (isSubredditSort(segments.get(2))) {
                     // Subreddit sorted
-                    showSubreddit(subreddit, segments.get(2), null);
+                    appRouter.showSubreddit(subreddit, segments.get(2), null);
                 }
             } else {
                 // Subreddit default sort
-                showSubreddit(subreddit, null, null);
+                appRouter.showSubreddit(subreddit, null, null);
             }
         } else if (segments.get(0).equals("u") || segments.get(0).equals("user")) {
             // User profile navigation
@@ -65,17 +74,17 @@ public class DeepLinkDispatcher extends BaseActivity {
                 if (segments.size() > 3) {
                     // Profile view with sort
                     // FIXME This actually should be read from a query string
-                    showUserProfile(segments.get(1), segments.get(2), segments.get(3));
+                    appRouter.showUserProfile(segments.get(1), segments.get(2), segments.get(3));
                 } else {
                     // Profile view default sort
-                    showUserProfile(segments.get(1), segments.get(2), null);
+                    appRouter.showUserProfile(segments.get(1), segments.get(2), null);
                 }
             } else {
-                showUserProfile(segments.get(1), null, null);
+                appRouter.showUserProfile(segments.get(1), null, null);
             }
         } else {
             Timber.w("Deep link fell through without redirection: %s", uri.toString());
-            showSubreddit(null, null, null); // Show front page
+            appRouter.showFrontPage(null, null);
         }
 
         // Clear DeepLinkDispatcher from the activity task stack

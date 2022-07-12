@@ -17,15 +17,19 @@ import androidx.annotation.NonNull;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
 import com.ddiehl.android.htn.R;
+import com.ddiehl.android.htn.gallery.MediaGalleryRouter;
 import com.ddiehl.android.htn.listings.BaseListingsFragment;
 import com.ddiehl.android.htn.listings.ChooseTimespanDialog;
 import com.ddiehl.android.htn.listings.ListingsAdapter;
 import com.ddiehl.android.htn.listings.comments.LinkCommentsActivity;
+import com.ddiehl.android.htn.listings.comments.LinkCommentsRouter;
 import com.ddiehl.android.htn.listings.links.ChooseLinkSortDialog;
 import com.ddiehl.android.htn.listings.profile.UserProfileFragment;
 import com.ddiehl.android.htn.listings.subreddit.submission.SubmitPostActivity;
 import com.ddiehl.android.htn.listings.subreddit.submission.SubmitPostFragment;
+import com.ddiehl.android.htn.navigation.AppNavigationMenuHelper;
 import com.ddiehl.android.htn.settings.SettingsManager;
+import com.ddiehl.android.htn.view.video.VideoPlayerRouter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.hannesdorfmann.fragmentargs.FragmentArgs;
 import com.hannesdorfmann.fragmentargs.annotation.Arg;
@@ -44,7 +48,15 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
     public static final String TAG = SubredditFragment.class.getSimpleName();
 
     @Inject
-    protected SettingsManager settingsManager;
+    SettingsManager settingsManager;
+    @Inject
+    LinkCommentsRouter linkCommentsRouter;
+    @Inject
+    MediaGalleryRouter mediaGalleryRouter;
+    @Inject
+    VideoPlayerRouter videoPlayerRouter;
+    @Inject
+    AppNavigationMenuHelper appNavigationMenuHelper;
 
     @Arg(required = false)
     String subredditName;
@@ -74,7 +86,15 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
         if (TextUtils.isEmpty(sort)) sort = "hot";
         if (TextUtils.isEmpty(timespan)) timespan = "all";
 
-        SubredditPresenter presenter = new SubredditPresenter(this, redditNavigationView, this);
+        SubredditPresenter presenter = new SubredditPresenter(
+                this,
+                appRouter,
+                linkCommentsRouter,
+                mediaGalleryRouter,
+                videoPlayerRouter,
+                appNavigationMenuHelper,
+                this
+        );
         subredditPresenter = presenter;
         setListingsPresenter(presenter);
         setCallbacks(presenter);
@@ -110,14 +130,14 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
         Subreddit subredditInfo = subredditPresenter.getSubreddit();
         if (subredditInfo != null) {
             String url = subredditInfo.getHeaderImageUrl();
-            loadImageIntoDrawerHeader(url);
+            appNavigationMenuHelper.loadImageIntoDrawerHeader(url);
         }
     }
 
     @Override
     public void onPause() {
         // Clear subreddit image from drawer header
-        loadImageIntoDrawerHeader(null);
+        appNavigationMenuHelper.loadImageIntoDrawerHeader(null);
 
         super.onPause();
     }
@@ -301,11 +321,6 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
 
         String formatter = getString(R.string.link_subreddit);
         setTitle(String.format(formatter, getSubreddit()));
-    }
-
-    @Override
-    public void loadHeaderImage() {
-
     }
 
     @Override

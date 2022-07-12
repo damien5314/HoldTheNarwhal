@@ -15,7 +15,5 @@ public interface SubredditView extends ListingsView, LinkView {
 
     void onRandomSubredditLoaded(String randomSubreddit);
 
-    void loadHeaderImage();
-
     void refreshOptionsMenu();
 }

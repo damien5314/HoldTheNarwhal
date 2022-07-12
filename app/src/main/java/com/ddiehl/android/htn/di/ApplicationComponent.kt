@@ -9,13 +9,13 @@ import com.ddiehl.android.htn.listings.subreddit.submission.SubmitPostPresenter
 import com.ddiehl.android.htn.settings.SettingsPresenter
 import com.ddiehl.android.htn.subscriptions.SubscriptionManagerPresenter
 import dagger.Component
-import dagger.android.AndroidInjectionModule
+import dagger.android.support.AndroidSupportInjectionModule
 import javax.inject.Singleton
 
 @Singleton
 @Component(
     modules = [
-        AndroidInjectionModule::class,
+        AndroidSupportInjectionModule::class,
         ApplicationModule::class,
         ActivitiesBindingModule::class,
         FragmentsBindingModule::class,

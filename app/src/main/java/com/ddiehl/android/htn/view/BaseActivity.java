@@ -7,7 +7,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,29 +22,16 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 
 import com.ddiehl.android.htn.R;
-import com.ddiehl.android.htn.gallery.MediaGalleryFragment;
 import com.ddiehl.android.htn.identity.IdentityManager;
-import com.ddiehl.android.htn.listings.comments.LinkCommentsActivity;
-import com.ddiehl.android.htn.listings.inbox.InboxActivity;
-import com.ddiehl.android.htn.listings.inbox.PrivateMessageActivity;
-import com.ddiehl.android.htn.listings.profile.UserProfileActivity;
-import com.ddiehl.android.htn.listings.subreddit.SubredditActivity;
 import com.ddiehl.android.htn.managers.NetworkConnectivityManager;
 import com.ddiehl.android.htn.navigation.ConfirmExitDialog;
 import com.ddiehl.android.htn.navigation.ConfirmSignOutDialog;
-import com.ddiehl.android.htn.navigation.RedditNavigationView;
 import com.ddiehl.android.htn.navigation.SubredditNavigationDialog;
-import com.ddiehl.android.htn.navigation.WebViewActivity;
+import com.ddiehl.android.htn.routing.AppRouter;
 import com.ddiehl.android.htn.routing.AuthRouter;
-import com.ddiehl.android.htn.settings.SettingsActivity;
 import com.ddiehl.android.htn.settings.SettingsManager;
-import com.ddiehl.android.htn.subscriptions.SubscriptionManagerActivity;
 import com.ddiehl.android.htn.utils.AndroidUtils;
-import com.ddiehl.android.htn.utils.ThemeUtilsKt;
-import com.ddiehl.android.htn.view.glide.GlideApp;
 import com.ddiehl.android.htn.view.theme.ColorScheme;
-import com.ddiehl.android.htn.view.video.VideoPlayerDialog;
-import com.ddiehl.android.htn.view.video.VideoPlayerDialogBuilder;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
@@ -55,7 +41,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
-import java.util.List;
 
 import javax.inject.Inject;
 
@@ -66,15 +51,11 @@ import io.reactivex.rxjava3.functions.Function;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import rxreddit.android.SignInActivity;
 import rxreddit.api.RedditService;
-import rxreddit.model.GalleryItem;
-import rxreddit.model.Media;
-import rxreddit.model.PrivateMessage;
 import rxreddit.model.UserAccessToken;
 import rxreddit.model.UserIdentity;
 import timber.log.Timber;
 
 public abstract class BaseActivity extends BaseDaggerActivity implements
-        RedditNavigationView,
         IdentityManager.Callbacks,
         NavigationView.OnNavigationItemSelectedListener,
         ConfirmExitDialog.Callbacks,
@@ -83,10 +64,6 @@ public abstract class BaseActivity extends BaseDaggerActivity implements
 
     public static final int REQUEST_SIGN_IN = 2;
 
-    private static final String EXTRA_CUSTOM_TABS_SESSION =
-            "android.support.customtabs.extra.SESSION";
-    private static final String EXTRA_CUSTOM_TABS_TOOLBAR_COLOR =
-            "android.support.customtabs.extra.TOOLBAR_COLOR";
     private static final String EXTRA_AUTHENTICATION_STATE_CHANGE =
             "com.ddiehl.android.htn.EXTRA_AUTHENTICATION_STATE_CHANGE";
 
@@ -110,6 +87,8 @@ public abstract class BaseActivity extends BaseDaggerActivity implements
     NetworkConnectivityManager networkConnectivityManager;
     @Inject
     AuthRouter authRouter;
+    @Inject
+    AppRouter appRouter;
 
     ActionBarDrawerToggle drawerToggle;
     private ColorScheme currentColorScheme;
@@ -333,7 +312,7 @@ public abstract class BaseActivity extends BaseDaggerActivity implements
     }
 
     protected void onNavigateToSubreddit() {
-        showSubredditNavigationView();
+        appRouter.showSubredditNavigationView();
     }
 
     protected void onLogIn() {
@@ -345,93 +324,31 @@ public abstract class BaseActivity extends BaseDaggerActivity implements
     }
 
     protected void onShowInbox() {
-        showInbox();
+        appRouter.showInbox(null);
     }
 
     protected void onShowUserProfile() {
         String name = identityManager.getUserIdentity().getName();
-        showUserProfile(name, "summary", "new");
+        appRouter.showUserProfile(name, "summary", "new");
     }
 
     protected void onShowSubreddits() {
-        showUserSubreddits();
+        appRouter.showUserSubreddits();
     }
 
     protected void onShowFrontPage() {
-        showSubreddit(null, null, null);
+        appRouter.showFrontPage(null, null);
     }
 
     protected void onShowAllListings() {
-        showSubreddit("all", null, null);
+        appRouter.showSubreddit("all", null, null);
     }
 
     protected void onShowRandomSubreddit() {
-        showSubreddit("random", null, null);
+        appRouter.showSubreddit("random", null, null);
     }
 
-    public void showInbox() {
-        Intent intent = InboxActivity.getIntent(this, null);
-        startActivity(intent);
-    }
-
-    public void showUserProfile(
-            @NotNull String username, @Nullable String show, @Nullable String sort) {
-        Intent intent = UserProfileActivity.getIntent(this, username, show, sort);
-        startActivity(intent);
-    }
-
-    public void showSubreddit(@Nullable String subreddit, @Nullable String sort, String timespan) {
-        Intent intent = SubredditActivity.getIntent(this, subreddit, sort, timespan);
-        startActivity(intent);
-    }
-
-    public void openURL(@NotNull String url) {
-        // If so, present URL in custom tabs instead of WebView
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-        Bundle extras = new Bundle();
-        // Pass IBinder instead of null for a custom tabs session
-        extras.putBinder(EXTRA_CUSTOM_TABS_SESSION, null);
-        final int toolbarColor = ThemeUtilsKt.getColorFromAttr(this, R.attr.colorPrimary);
-        extras.putInt(EXTRA_CUSTOM_TABS_TOOLBAR_COLOR, toolbarColor);
-        intent.putExtras(extras);
-
-        // Check if Activity exists to handle the Intent
-        if (intent.resolveActivity(getPackageManager()) != null) {
-            Timber.e("No Activity found that can handle custom tabs Intent");
-            startActivity(intent);
-            return;
-        }
-
-        // Show web view for URL if we didn't show it in custom tabs
-        showWebViewForURL(url);
-    }
-
-    @Override
-    public void openRedditVideo(Media.@NotNull RedditVideo redditVideo) {
-        final String url = redditVideo.getDashUrl();
-        final VideoPlayerDialog dialog = VideoPlayerDialogBuilder.newVideoPlayerDialog(url);
-        dialog.show(getSupportFragmentManager(), VideoPlayerDialog.TAG);
-    }
-
-    private void showWebViewForURL(@NotNull String url) {
-        Intent intent = WebViewActivity.getIntent(this, url);
-        startActivity(intent);
-    }
-
-    @Override
-    public void openLinkGallery(@NotNull List<GalleryItem> galleryItems) {
-        Timber.d("Opening gallery with item count: %s", galleryItems.size());
-        MediaGalleryFragment.create(galleryItems)
-                .show(getSupportFragmentManager(), MediaGalleryFragment.TAG);
-    }
-
-    public void showUserSubreddits() {
-        Intent intent = SubscriptionManagerActivity.getIntent(this);
-        startActivity(intent);
-    }
-
-    //  @OnClick(R.id.sign_out_button)
-    void onSignOut() {
+    private void onSignOut() {
         new ConfirmSignOutDialog().show(getSupportFragmentManager(), ConfirmSignOutDialog.TAG);
     }
 
@@ -470,19 +387,6 @@ public abstract class BaseActivity extends BaseDaggerActivity implements
     }
 
     @Override
-    public void showSubredditImage(String url) {
-        GlideApp.with(this)
-                .load(url)
-                .into(headerImage);
-    }
-
-    @Override
-    public void showSettings() {
-        Intent intent = SettingsActivity.getIntent(this);
-        startActivity(intent);
-    }
-
-    @Override
     public void onBackPressed() {
         if (drawerLayout.isDrawerVisible(navigationView)) {
             closeNavigationDrawer();
@@ -512,23 +416,11 @@ public abstract class BaseActivity extends BaseDaggerActivity implements
 
     @Override
     public void onSubredditNavigationConfirmed(String subreddit) {
-        showSubreddit(subreddit, null, null);
+        appRouter.showSubreddit(subreddit, null, null);
     }
 
     @Override
     public void onSubredditNavigationCancelled() {
-    }
-
-    @Override
-    public void showSubredditNavigationView() {
-        new SubredditNavigationDialog().show(getSupportFragmentManager(), SubredditNavigationDialog.TAG);
-    }
-
-    @Override
-    public void showCommentsForLink(
-            @Nullable String subreddit, @Nullable String linkId, @Nullable String commentId) {
-        Intent intent = LinkCommentsActivity.getIntent(this, subreddit, linkId, commentId);
-        startActivity(intent);
     }
 
     @Override
@@ -573,12 +465,6 @@ public abstract class BaseActivity extends BaseDaggerActivity implements
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(identityManager::saveUserIdentity);
-    }
-
-    @Override
-    public void showInboxMessages(@NotNull List<PrivateMessage> messages) {
-        Intent intent = PrivateMessageActivity.getIntent(this, gson, messages);
-        startActivity(intent);
     }
 
     protected void showToast(@NotNull String message) {

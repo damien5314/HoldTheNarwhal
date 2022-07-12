@@ -1,9 +1,12 @@
 package com.ddiehl.android.htn.listings.inbox;
 
 import com.ddiehl.android.htn.R;
+import com.ddiehl.android.htn.gallery.MediaGalleryRouter;
 import com.ddiehl.android.htn.listings.BaseListingsPresenter;
-import com.ddiehl.android.htn.navigation.RedditNavigationView;
+import com.ddiehl.android.htn.listings.comments.LinkCommentsRouter;
+import com.ddiehl.android.htn.routing.AppRouter;
 import com.ddiehl.android.htn.view.MainView;
+import com.ddiehl.android.htn.view.video.VideoPlayerRouter;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -20,8 +23,24 @@ public class InboxPresenter extends BaseListingsPresenter {
 
     private final InboxView inboxView;
 
-    public InboxPresenter(MainView main, RedditNavigationView navigationView, InboxView inbox) {
-        super(main, navigationView, inbox, inbox, inbox, inbox);
+    public InboxPresenter(
+            MainView main,
+            AppRouter appRouter,
+            LinkCommentsRouter linkCommentsRouter,
+            MediaGalleryRouter mediaGalleryRouter,
+            VideoPlayerRouter videoPlayerRouter,
+            InboxView inbox) {
+        super(
+                main,
+                appRouter,
+                linkCommentsRouter,
+                mediaGalleryRouter,
+                videoPlayerRouter,
+                inbox,
+                inbox,
+                inbox,
+                inbox
+        );
         inboxView = inbox;
     }
 

@@ -5,24 +5,29 @@ import com.ddiehl.android.htn.listings.ChooseTimespanDialog
 import com.ddiehl.android.htn.listings.comments.AddCommentDialog
 import com.ddiehl.android.htn.listings.comments.ChooseCommentSortDialog
 import com.ddiehl.android.htn.listings.comments.LinkCommentsFragment
+import com.ddiehl.android.htn.listings.comments.LinkCommentsFragmentModule
 import com.ddiehl.android.htn.listings.inbox.InboxFragment
+import com.ddiehl.android.htn.listings.inbox.InboxFragmentModule
 import com.ddiehl.android.htn.listings.inbox.PrivateMessageFragment
+import com.ddiehl.android.htn.listings.inbox.PrivateMessageFragmentModule
 import com.ddiehl.android.htn.listings.links.ChooseLinkSortDialog
 import com.ddiehl.android.htn.listings.profile.UserProfileFragment
+import com.ddiehl.android.htn.listings.profile.UserProfileFragmentModule
 import com.ddiehl.android.htn.listings.report.ReportDialog
 import com.ddiehl.android.htn.listings.report.ReportView
 import com.ddiehl.android.htn.listings.subreddit.NsfwWarningDialog
 import com.ddiehl.android.htn.listings.subreddit.SubredditFragment
+import com.ddiehl.android.htn.listings.subreddit.SubredditFragmentModule
 import com.ddiehl.android.htn.listings.subreddit.submission.SubmitPostFragment
-import com.ddiehl.android.htn.navigation.ConfirmExitDialog
-import com.ddiehl.android.htn.navigation.ConfirmSignOutDialog
-import com.ddiehl.android.htn.navigation.SubredditNavigationDialog
-import com.ddiehl.android.htn.navigation.WebViewFragment
+import com.ddiehl.android.htn.listings.subreddit.submission.SubmitPostFragmentModule
+import com.ddiehl.android.htn.navigation.*
 import com.ddiehl.android.htn.settings.SettingsFragment
 import com.ddiehl.android.htn.settings.SettingsFragmentModule
 import com.ddiehl.android.htn.subredditinfo.SubredditInfoFragment
+import com.ddiehl.android.htn.subredditinfo.SubredditInfoFragmentModule
 import com.ddiehl.android.htn.subscriptions.SubredditSearchDialog
 import com.ddiehl.android.htn.subscriptions.SubscriptionManagerFragment
+import com.ddiehl.android.htn.subscriptions.SubscriptionManagerFragmentModule
 import com.ddiehl.android.htn.view.video.VideoPlayerDialog
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
@@ -62,11 +67,19 @@ interface FragmentsBindingModule {
     fun bindNsfwWarningDialog(): NsfwWarningDialog
 
     @FragmentScope
-    @ContributesAndroidInjector(modules = [])
+    @ContributesAndroidInjector(
+        modules = [
+            InboxFragmentModule::class,
+        ]
+    )
     fun bindInboxFragment(): InboxFragment
 
     @FragmentScope
-    @ContributesAndroidInjector(modules = [])
+    @ContributesAndroidInjector(
+        modules = [
+            LinkCommentsFragmentModule::class,
+        ]
+    )
     fun bindLinkCommentsFragment(): LinkCommentsFragment
 
     @FragmentScope
@@ -74,7 +87,11 @@ interface FragmentsBindingModule {
     fun bindMediaGalleryFragment(): MediaGalleryFragment
 
     @FragmentScope
-    @ContributesAndroidInjector(modules = [])
+    @ContributesAndroidInjector(
+        modules = [
+            PrivateMessageFragmentModule::class,
+        ]
+    )
     fun bindPrivateMessageFragment(): PrivateMessageFragment
 
     @FragmentScope
@@ -86,21 +103,35 @@ interface FragmentsBindingModule {
     fun bindReportView(): ReportView
 
     @FragmentScope
-    @ContributesAndroidInjector(modules = [
-        SettingsFragmentModule::class,
-    ])
+    @ContributesAndroidInjector(
+        modules = [
+            SettingsFragmentModule::class,
+        ]
+    )
     fun bindSettingsFragment(): SettingsFragment
 
     @FragmentScope
-    @ContributesAndroidInjector(modules = [])
+    @ContributesAndroidInjector(
+        modules = [
+            SubmitPostFragmentModule::class,
+        ]
+    )
     fun bindSubmitPostFragment(): SubmitPostFragment
 
     @FragmentScope
-    @ContributesAndroidInjector(modules = [])
+    @ContributesAndroidInjector(
+        modules = [
+            SubredditFragmentModule::class,
+        ]
+    )
     fun bindSubredditFragment(): SubredditFragment
 
     @FragmentScope
-    @ContributesAndroidInjector(modules = [])
+    @ContributesAndroidInjector(
+        modules = [
+            SubredditInfoFragmentModule::class,
+        ]
+    )
     fun bindSubredditInfoFragment(): SubredditInfoFragment
 
     @FragmentScope
@@ -112,15 +143,27 @@ interface FragmentsBindingModule {
     fun bindSubredditSearchDialog(): SubredditSearchDialog
 
     @FragmentScope
-    @ContributesAndroidInjector(modules = [])
+    @ContributesAndroidInjector(
+        modules = [
+            SubscriptionManagerFragmentModule::class,
+        ]
+    )
     fun bindSubscriptionManagerFragment(): SubscriptionManagerFragment
 
     @FragmentScope
-    @ContributesAndroidInjector(modules = [])
+    @ContributesAndroidInjector(
+        modules = [
+            UserProfileFragmentModule::class,
+        ]
+    )
     fun bindUserProfileFragment(): UserProfileFragment
 
     @FragmentScope
-    @ContributesAndroidInjector(modules = [])
+    @ContributesAndroidInjector(
+        modules = [
+            WebViewFragmentModule::class,
+        ]
+    )
     fun bindWebViewFragment(): WebViewFragment
 
     @FragmentScope

@@ -12,12 +12,15 @@ import com.ddiehl.android.htn.listings.report.ReportView
 import com.ddiehl.android.htn.listings.report.ReportView.RESULT_REPORT_ERROR
 import com.ddiehl.android.htn.listings.report.ReportView.RESULT_REPORT_SUCCESS
 import com.ddiehl.android.htn.listings.subreddit.SubredditActivity
+import com.ddiehl.android.htn.routing.AppRouter
 import com.ddiehl.android.htn.utils.AndroidUtils.safeStartActivity
 import com.ddiehl.android.htn.view.BaseFragment
-import com.ddiehl.android.htn.view.video.VideoPlayerDialog
-import com.ddiehl.android.htn.view.video.VideoPlayerDialogBuilder
 import com.google.android.material.snackbar.Snackbar
-import rxreddit.model.*
+import rxreddit.model.Comment
+import rxreddit.model.Link
+import rxreddit.model.Listing
+import rxreddit.model.PrivateMessage
+import javax.inject.Inject
 
 abstract class BaseListingsFragment : BaseFragment(), ListingsView, SwipeRefreshLayout.OnRefreshListener {
 
@@ -25,6 +28,9 @@ abstract class BaseListingsFragment : BaseFragment(), ListingsView, SwipeRefresh
         private const val REQUEST_REPORT_LISTING = 1000
         private const val LINK_BASE_URL = "https://www.reddit.com"
     }
+
+    @Inject
+    internal lateinit var appRouter: AppRouter
 
     lateinit var recyclerView: RecyclerView
     protected lateinit var swipeRefreshLayout: SwipeRefreshLayout
@@ -104,7 +110,7 @@ abstract class BaseListingsFragment : BaseFragment(), ListingsView, SwipeRefresh
                 return true
             }
             R.id.action_settings -> {
-                redditNavigationView.showSettings()
+                appRouter.showSettings()
                 return true
             }
         }
@@ -370,30 +376,6 @@ abstract class BaseListingsFragment : BaseFragment(), ListingsView, SwipeRefresh
         safeStartActivity(context, intent)
     }
 
-    open fun openUrlInWebView(url: String) {
-        redditNavigationView.openURL(url)
-    }
-
-    open fun openRedditVideo(redditVideo: Media.RedditVideo) {
-        redditNavigationView.openRedditVideo(redditVideo)
-    }
-
-    open fun openLinkGallery(galleryItems: List<GalleryItem>) {
-        redditNavigationView.openLinkGallery(galleryItems)
-    }
-
-    open fun openVideoInDialog(url: String) {
-        VideoPlayerDialogBuilder(url)
-            .build()
-            .show(parentFragmentManager, VideoPlayerDialog.TAG)
-    }
-
-    open fun showCommentsForLink(
-        subreddit: String, linkId: String, commentId: String?
-    ) {
-        redditNavigationView.showCommentsForLink(subreddit, linkId, commentId)
-    }
-
     open fun openReplyView(listing: Listing) {
         showToast(getString(R.string.implementation_pending))
     }
@@ -413,12 +395,20 @@ abstract class BaseListingsFragment : BaseFragment(), ListingsView, SwipeRefresh
 
     open fun openUserProfileView(link: Link) {
         link.author?.let { author ->
-            redditNavigationView.showUserProfile(author, null, null)
+            appRouter.showUserProfile(
+                username = author,
+                show = null,
+                sort = null,
+            )
         }
     }
 
     open fun openUserProfileView(comment: Comment) {
-        redditNavigationView.showUserProfile(comment.author, null, null)
+        appRouter.showUserProfile(
+            username = comment.author,
+            show = null,
+            sort = null,
+        )
     }
 
     open fun openCommentInBrowser(comment: Comment) {

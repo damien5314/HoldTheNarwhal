@@ -3,9 +3,13 @@ package com.ddiehl.android.htn.listings.subreddit;
 import androidx.annotation.NonNull;
 
 import com.ddiehl.android.htn.R;
+import com.ddiehl.android.htn.gallery.MediaGalleryRouter;
 import com.ddiehl.android.htn.listings.BaseListingsPresenter;
-import com.ddiehl.android.htn.navigation.RedditNavigationView;
+import com.ddiehl.android.htn.listings.comments.LinkCommentsRouter;
+import com.ddiehl.android.htn.navigation.AppNavigationMenuHelper;
+import com.ddiehl.android.htn.routing.AppRouter;
 import com.ddiehl.android.htn.view.MainView;
+import com.ddiehl.android.htn.view.video.VideoPlayerRouter;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -21,11 +25,30 @@ import timber.log.Timber;
 
 public class SubredditPresenter extends BaseListingsPresenter {
 
+    private final AppNavigationMenuHelper appNavigationMenuHelper;
     private SubredditView subredditView;
 
-    public SubredditPresenter(MainView main, RedditNavigationView navigationView, SubredditView view) {
-        super(main, navigationView, view, view, null, null);
-        subredditView = view;
+    public SubredditPresenter(
+            MainView main,
+            AppRouter appRouter,
+            LinkCommentsRouter linkCommentsRouter,
+            MediaGalleryRouter mediaGalleryRouter,
+            VideoPlayerRouter videoPlayerRouter,
+            AppNavigationMenuHelper appNavigationMenuHelper,
+            SubredditView view) {
+        super(
+                main,
+                appRouter,
+                linkCommentsRouter,
+                mediaGalleryRouter,
+                videoPlayerRouter,
+                view,
+                view,
+                null,
+                null
+        );
+        this.appNavigationMenuHelper = appNavigationMenuHelper;
+        this.subredditView = view;
     }
 
     @Override
@@ -161,7 +184,8 @@ public class SubredditPresenter extends BaseListingsPresenter {
             }
         }
 
-        subredditView.loadHeaderImage();
+        final String headerImageUrl = subreddit.getHeaderImageUrl();
+        appNavigationMenuHelper.loadImageIntoDrawerHeader(headerImageUrl);
     }
 
     private boolean shouldShowNsfwDialog(Subreddit subreddit, boolean userOver18) {
