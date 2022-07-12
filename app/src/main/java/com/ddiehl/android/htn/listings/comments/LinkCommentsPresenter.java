@@ -291,8 +291,9 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
             }
         }
 
-        if (link.getUrl() != null) {
-            linkCommentsView.openUrlInWebView(link.getUrl());
+        final String linkUrl = link.getUrl();
+        if (linkUrl != null) {
+            appRouter.openUrl(linkUrl);
         }
     }
 

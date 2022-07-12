@@ -7,7 +7,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -29,12 +28,10 @@ import com.ddiehl.android.htn.navigation.ConfirmExitDialog;
 import com.ddiehl.android.htn.navigation.ConfirmSignOutDialog;
 import com.ddiehl.android.htn.navigation.RedditNavigationView;
 import com.ddiehl.android.htn.navigation.SubredditNavigationDialog;
-import com.ddiehl.android.htn.navigation.WebViewActivity;
 import com.ddiehl.android.htn.routing.AppRouter;
 import com.ddiehl.android.htn.routing.AuthRouter;
 import com.ddiehl.android.htn.settings.SettingsManager;
 import com.ddiehl.android.htn.utils.AndroidUtils;
-import com.ddiehl.android.htn.utils.ThemeUtilsKt;
 import com.ddiehl.android.htn.view.theme.ColorScheme;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
@@ -69,10 +66,6 @@ public abstract class BaseActivity extends BaseDaggerActivity implements
 
     public static final int REQUEST_SIGN_IN = 2;
 
-    private static final String EXTRA_CUSTOM_TABS_SESSION =
-            "android.support.customtabs.extra.SESSION";
-    private static final String EXTRA_CUSTOM_TABS_TOOLBAR_COLOR =
-            "android.support.customtabs.extra.TOOLBAR_COLOR";
     private static final String EXTRA_AUTHENTICATION_STATE_CHANGE =
             "com.ddiehl.android.htn.EXTRA_AUTHENTICATION_STATE_CHANGE";
 
@@ -355,32 +348,6 @@ public abstract class BaseActivity extends BaseDaggerActivity implements
 
     protected void onShowRandomSubreddit() {
         appRouter.showSubreddit("random", null, null);
-    }
-
-    public void openURL(@NotNull String url) {
-        // If so, present URL in custom tabs instead of WebView
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-        Bundle extras = new Bundle();
-        // Pass IBinder instead of null for a custom tabs session
-        extras.putBinder(EXTRA_CUSTOM_TABS_SESSION, null);
-        final int toolbarColor = ThemeUtilsKt.getColorFromAttr(this, R.attr.colorPrimary);
-        extras.putInt(EXTRA_CUSTOM_TABS_TOOLBAR_COLOR, toolbarColor);
-        intent.putExtras(extras);
-
-        // Check if Activity exists to handle the Intent
-        if (intent.resolveActivity(getPackageManager()) != null) {
-            Timber.e("No Activity found that can handle custom tabs Intent");
-            startActivity(intent);
-            return;
-        }
-
-        // Show web view for URL if we didn't show it in custom tabs
-        showWebViewForURL(url);
-    }
-
-    private void showWebViewForURL(@NotNull String url) {
-        Intent intent = WebViewActivity.getIntent(this, url);
-        startActivity(intent);
     }
 
     private void onSignOut() {

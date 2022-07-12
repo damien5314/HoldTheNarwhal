@@ -254,8 +254,9 @@ public abstract class BaseListingsPresenter
             }
         }
 
-        if (link.getUrl() != null) {
-            linkView.openUrlInWebView(link.getUrl());
+        final String linkUrl = link.getUrl();
+        if (linkUrl != null) {
+            appRouter.openUrl(linkUrl);
         }
     }
 

@@ -15,8 +15,6 @@ import com.ddiehl.android.htn.listings.subreddit.SubredditActivity
 import com.ddiehl.android.htn.routing.AppRouter
 import com.ddiehl.android.htn.utils.AndroidUtils.safeStartActivity
 import com.ddiehl.android.htn.view.BaseFragment
-import com.ddiehl.android.htn.view.video.VideoPlayerDialog
-import com.ddiehl.android.htn.view.video.VideoPlayerDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import rxreddit.model.Comment
 import rxreddit.model.Link
@@ -376,16 +374,6 @@ abstract class BaseListingsFragment : BaseFragment(), ListingsView, SwipeRefresh
             flags = Intent.FLAG_ACTIVITY_NEW_TASK
         }
         safeStartActivity(context, intent)
-    }
-
-    open fun openUrlInWebView(url: String) {
-        redditNavigationView.openURL(url)
-    }
-
-    open fun openVideoInDialog(url: String) {
-        VideoPlayerDialogBuilder(url)
-            .build()
-            .show(parentFragmentManager, VideoPlayerDialog.TAG)
     }
 
     open fun openReplyView(listing: Listing) {

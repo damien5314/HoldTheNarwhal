@@ -245,10 +245,6 @@ class LinkCommentsFragment : BaseListingsFragment(), LinkCommentsView,
         listingsPresenter.onSortChanged()
     }
 
-    override fun openUrlInWebView(url: String) {
-        redditNavigationView.openURL(url)
-    }
-
     override fun openReplyView(listing: Listing) {
         val id = "${listing.kind}_${listing.id}"
         val dialog = AddCommentDialog.newInstance(id)

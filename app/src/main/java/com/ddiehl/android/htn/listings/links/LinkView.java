@@ -11,8 +11,6 @@ public interface LinkView {
 
     void showLinkContextMenu(ContextMenu menu, View view, Link link);
 
-    void openUrlInWebView(@NotNull String url);
-
     void openShareView(@NotNull Link link);
 
     void openSubredditView(String subreddit);
