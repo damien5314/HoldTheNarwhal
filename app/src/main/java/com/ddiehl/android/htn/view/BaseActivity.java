@@ -24,7 +24,6 @@ import androidx.fragment.app.FragmentManager;
 
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.identity.IdentityManager;
-import com.ddiehl.android.htn.listings.inbox.InboxActivity;
 import com.ddiehl.android.htn.listings.inbox.PrivateMessageActivity;
 import com.ddiehl.android.htn.listings.profile.UserProfileActivity;
 import com.ddiehl.android.htn.listings.subreddit.SubredditActivity;
@@ -34,6 +33,7 @@ import com.ddiehl.android.htn.navigation.ConfirmSignOutDialog;
 import com.ddiehl.android.htn.navigation.RedditNavigationView;
 import com.ddiehl.android.htn.navigation.SubredditNavigationDialog;
 import com.ddiehl.android.htn.navigation.WebViewActivity;
+import com.ddiehl.android.htn.routing.AppRouter;
 import com.ddiehl.android.htn.routing.AuthRouter;
 import com.ddiehl.android.htn.settings.SettingsManager;
 import com.ddiehl.android.htn.subscriptions.SubscriptionManagerActivity;
@@ -103,6 +103,8 @@ public abstract class BaseActivity extends BaseDaggerActivity implements
     NetworkConnectivityManager networkConnectivityManager;
     @Inject
     AuthRouter authRouter;
+    @Inject
+    AppRouter appRouter;
 
     ActionBarDrawerToggle drawerToggle;
     private ColorScheme currentColorScheme;
@@ -338,7 +340,7 @@ public abstract class BaseActivity extends BaseDaggerActivity implements
     }
 
     protected void onShowInbox() {
-        showInbox();
+        appRouter.showInbox(null);
     }
 
     protected void onShowUserProfile() {
@@ -360,11 +362,6 @@ public abstract class BaseActivity extends BaseDaggerActivity implements
 
     protected void onShowRandomSubreddit() {
         showSubreddit("random", null, null);
-    }
-
-    public void showInbox() {
-        Intent intent = InboxActivity.getIntent(this, null);
-        startActivity(intent);
     }
 
     public void showUserProfile(
