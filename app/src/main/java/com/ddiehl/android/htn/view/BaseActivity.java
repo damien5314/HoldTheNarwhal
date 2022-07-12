@@ -36,6 +36,7 @@ import com.ddiehl.android.htn.navigation.ConfirmSignOutDialog;
 import com.ddiehl.android.htn.navigation.RedditNavigationView;
 import com.ddiehl.android.htn.navigation.SubredditNavigationDialog;
 import com.ddiehl.android.htn.navigation.WebViewActivity;
+import com.ddiehl.android.htn.routing.AuthRouter;
 import com.ddiehl.android.htn.settings.SettingsActivity;
 import com.ddiehl.android.htn.settings.SettingsManager;
 import com.ddiehl.android.htn.subscriptions.SubscriptionManagerActivity;
@@ -107,6 +108,8 @@ public abstract class BaseActivity extends BaseDaggerActivity implements
     Gson gson;
     @Inject
     NetworkConnectivityManager networkConnectivityManager;
+    @Inject
+    AuthRouter authRouter;
 
     ActionBarDrawerToggle drawerToggle;
     private ColorScheme currentColorScheme;
@@ -335,7 +338,7 @@ public abstract class BaseActivity extends BaseDaggerActivity implements
 
     protected void onLogIn() {
         if (networkConnectivityManager.isConnectedToNetwork()) {
-            showLoginView();
+            authRouter.showLoginView();
         } else {
             showToast(getString(R.string.error_network_unavailable));
         }
@@ -364,12 +367,6 @@ public abstract class BaseActivity extends BaseDaggerActivity implements
 
     protected void onShowRandomSubreddit() {
         showSubreddit("random", null, null);
-    }
-
-    public void showLoginView() {
-        Intent intent = new Intent(this, SignInActivity.class);
-        intent.putExtra(SignInActivity.EXTRA_AUTH_URL, redditService.getAuthorizationUrl());
-        startActivityForResult(intent, REQUEST_SIGN_IN);
     }
 
     public void showInbox() {

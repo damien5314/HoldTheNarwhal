@@ -22,8 +22,6 @@ public interface RedditNavigationView {
 
     void showSettings();
 
-    void showLoginView();
-
     void showInbox();
 
     void showInboxMessages(@NotNull List<PrivateMessage> messages);
