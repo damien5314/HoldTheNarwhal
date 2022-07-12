@@ -7,6 +7,7 @@ import com.ddiehl.android.htn.listings.BaseListingsPresenter;
 import com.ddiehl.android.htn.listings.comments.LinkCommentsRouter;
 import com.ddiehl.android.htn.navigation.RedditNavigationView;
 import com.ddiehl.android.htn.view.MainView;
+import com.ddiehl.android.htn.view.video.VideoPlayerRouter;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -28,8 +29,9 @@ public class SubredditPresenter extends BaseListingsPresenter {
             MainView main,
             RedditNavigationView navigationView,
             LinkCommentsRouter linkCommentsRouter,
+            VideoPlayerRouter videoPlayerRouter,
             SubredditView view) {
-        super(main, navigationView, linkCommentsRouter, view, view, null, null);
+        super(main, navigationView, linkCommentsRouter, videoPlayerRouter, view, view, null, null);
         subredditView = view;
     }
 

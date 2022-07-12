@@ -9,15 +9,12 @@ import java.util.List;
 
 import rxreddit.model.GalleryItem;
 import rxreddit.model.Link;
-import rxreddit.model.Media;
 
 public interface LinkView {
 
     void showLinkContextMenu(ContextMenu menu, View view, Link link);
 
     void openUrlInWebView(@NotNull String url);
-
-    void openRedditVideo(@NotNull Media.RedditVideo url);
 
     void openLinkGallery(@NotNull List<GalleryItem> galleryItems);
 

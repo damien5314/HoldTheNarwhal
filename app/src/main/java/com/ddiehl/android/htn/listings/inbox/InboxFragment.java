@@ -17,6 +17,7 @@ import com.ddiehl.android.htn.listings.BaseListingsFragment;
 import com.ddiehl.android.htn.listings.ListingsAdapter;
 import com.ddiehl.android.htn.listings.comments.LinkCommentsRouter;
 import com.ddiehl.android.htn.utils.AndroidUtils;
+import com.ddiehl.android.htn.view.video.VideoPlayerRouter;
 import com.google.android.material.tabs.TabLayout;
 import com.hannesdorfmann.fragmentargs.FragmentArgs;
 import com.hannesdorfmann.fragmentargs.annotation.Arg;
@@ -39,6 +40,8 @@ public class InboxFragment extends BaseListingsFragment
     IdentityManager identityManager;
     @Inject
     LinkCommentsRouter linkCommentsRouter;
+    @Inject
+    VideoPlayerRouter videoPlayerRouter;
 
     @Arg(key = "ARG_SHOW")
     String show;
@@ -59,7 +62,7 @@ public class InboxFragment extends BaseListingsFragment
 
         if (TextUtils.isEmpty(show)) show = "inbox";
 
-        inboxPresenter = new InboxPresenter(this, redditNavigationView, linkCommentsRouter, this);
+        inboxPresenter = new InboxPresenter(this, redditNavigationView, linkCommentsRouter, videoPlayerRouter, this);
         setListingsPresenter(inboxPresenter);
         setCallbacks(inboxPresenter);
     }

@@ -26,6 +26,7 @@ import com.ddiehl.android.htn.listings.links.ChooseLinkSortDialog;
 import com.ddiehl.android.htn.listings.subreddit.SubredditFragment;
 import com.ddiehl.android.htn.utils.AndroidUtils;
 import com.ddiehl.android.htn.utils.Utils;
+import com.ddiehl.android.htn.view.video.VideoPlayerRouter;
 import com.google.android.material.tabs.TabLayout;
 import com.hannesdorfmann.fragmentargs.FragmentArgs;
 import com.hannesdorfmann.fragmentargs.annotation.Arg;
@@ -58,6 +59,8 @@ public class UserProfileFragment extends BaseListingsFragment
     IdentityManager identityManager;
     @Inject
     LinkCommentsRouter linkCommentsRouter;
+    @Inject
+    VideoPlayerRouter videoPlayerRouter;
 
     protected CoordinatorLayout coordinatorLayout;
     protected View userProfileSummary;
@@ -104,7 +107,13 @@ public class UserProfileFragment extends BaseListingsFragment
         if (TextUtils.isEmpty(sort)) sort = "new";
         if (TextUtils.isEmpty(timespan)) timespan = "all";
 
-        userProfilePresenter = new UserProfilePresenter(this, redditNavigationView, linkCommentsRouter, this);
+        userProfilePresenter = new UserProfilePresenter(
+                this,
+                redditNavigationView,
+                linkCommentsRouter,
+                videoPlayerRouter,
+                this
+        );
         setListingsPresenter(userProfilePresenter);
         setCallbacks(userProfilePresenter);
     }

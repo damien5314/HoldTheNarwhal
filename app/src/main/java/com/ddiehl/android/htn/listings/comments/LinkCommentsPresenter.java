@@ -5,6 +5,7 @@ import com.ddiehl.android.htn.listings.BaseListingsPresenter;
 import com.ddiehl.android.htn.navigation.RedditNavigationView;
 import com.ddiehl.android.htn.utils.RedditUtilKt;
 import com.ddiehl.android.htn.view.MainView;
+import com.ddiehl.android.htn.view.video.VideoPlayerRouter;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -29,6 +30,7 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
 
     private static final int MAX_CHILDREN_PER_REQUEST = 20;
 
+    private final VideoPlayerRouter videoPlayerRouter;
     private final LinkCommentsView linkCommentsView;
     private final CommentBank commentBank;
     private Link linkContext;
@@ -39,8 +41,10 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
             MainView main,
             RedditNavigationView navigationView,
             LinkCommentsRouter linkCommentsRouter,
+            VideoPlayerRouter videoPlayerRouter,
             LinkCommentsView view) {
-        super(main, navigationView, linkCommentsRouter, view, view, view, null);
+        super(main, navigationView, linkCommentsRouter, videoPlayerRouter, view, view, view, null);
+        this.videoPlayerRouter = videoPlayerRouter;
         linkCommentsView = view;
         commentBank = new CommentBankList();
     }
@@ -263,7 +267,7 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
         if (media != null) {
             final Media.RedditVideo redditVideo = media.getRedditVideo();
             if (redditVideo != null) {
-                linkCommentsView.openRedditVideo(redditVideo);
+                videoPlayerRouter.openRedditVideo(redditVideo);
                 return;
             }
         }

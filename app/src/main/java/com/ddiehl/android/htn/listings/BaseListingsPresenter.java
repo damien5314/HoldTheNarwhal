@@ -14,6 +14,7 @@ import com.ddiehl.android.htn.managers.NetworkConnectivityManager;
 import com.ddiehl.android.htn.navigation.RedditNavigationView;
 import com.ddiehl.android.htn.settings.SettingsManager;
 import com.ddiehl.android.htn.view.MainView;
+import com.ddiehl.android.htn.view.video.VideoPlayerRouter;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -63,7 +64,8 @@ public abstract class BaseListingsPresenter
     private final ListingsView listingsView;
     protected final MainView mainView;
     protected final RedditNavigationView redditNavigationView;
-    protected final LinkCommentsRouter linkCommentsRouter;
+    private final LinkCommentsRouter linkCommentsRouter;
+    private final VideoPlayerRouter videoPlayerRouter;
     private final LinkView linkView;
     private final CommentView commentView;
     private final PrivateMessageView privateMessageView;
@@ -77,6 +79,7 @@ public abstract class BaseListingsPresenter
             MainView main,
             RedditNavigationView redditNavigationView,
             LinkCommentsRouter linkCommentsRouter,
+            VideoPlayerRouter videoPlayerRouter,
             ListingsView view,
             LinkView linkView,
             CommentView commentView,
@@ -85,6 +88,7 @@ public abstract class BaseListingsPresenter
         this.mainView = main;
         this.redditNavigationView = redditNavigationView;
         this.linkCommentsRouter = linkCommentsRouter;
+        this.videoPlayerRouter = videoPlayerRouter;
         this.listingsView = view;
         this.linkView = linkView;
         this.commentView = commentView;
@@ -237,7 +241,7 @@ public abstract class BaseListingsPresenter
         if (media != null) {
             final Media.RedditVideo redditVideo = media.getRedditVideo();
             if (redditVideo != null) {
-                linkView.openRedditVideo(redditVideo);
+                videoPlayerRouter.openRedditVideo(redditVideo);
                 return;
             }
         }

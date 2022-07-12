@@ -9,6 +9,7 @@ import com.ddiehl.android.htn.listings.comments.LinkCommentsRouter;
 import com.ddiehl.android.htn.navigation.RedditNavigationView;
 import com.ddiehl.android.htn.utils.Utils;
 import com.ddiehl.android.htn.view.MainView;
+import com.ddiehl.android.htn.view.video.VideoPlayerRouter;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -38,8 +39,9 @@ public class UserProfilePresenter extends BaseListingsPresenter {
             MainView main,
             RedditNavigationView navigationView,
             LinkCommentsRouter linkCommentsRouter,
+            VideoPlayerRouter videoPlayerRouter,
             UserProfileView view) {
-        super(main, navigationView, linkCommentsRouter, view, view, view, null);
+        super(main, navigationView, linkCommentsRouter, videoPlayerRouter, view, view, view, null);
         HoldTheNarwhal.getApplicationComponent().inject(this);
         summaryView = view;
     }

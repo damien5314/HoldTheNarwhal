@@ -11,6 +11,7 @@ import com.ddiehl.android.htn.R
 import com.ddiehl.android.htn.listings.BaseListingsFragment
 import com.ddiehl.android.htn.settings.SettingsManager
 import com.ddiehl.android.htn.utils.AndroidUtils.safeStartActivity
+import com.ddiehl.android.htn.view.video.VideoPlayerRouter
 import com.hannesdorfmann.fragmentargs.FragmentArgs
 import com.hannesdorfmann.fragmentargs.annotation.Arg
 import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs
@@ -33,6 +34,8 @@ class LinkCommentsFragment : BaseListingsFragment(), LinkCommentsView,
     lateinit var settingsManager: SettingsManager
     @Inject
     lateinit var linkCommentsRouter: LinkCommentsRouter
+    @Inject
+    lateinit var videoPlayRouter: VideoPlayerRouter
 
     @field:Arg
     override lateinit var subreddit: String
@@ -52,7 +55,7 @@ class LinkCommentsFragment : BaseListingsFragment(), LinkCommentsView,
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         FragmentArgs.inject(this)
-        presenter = LinkCommentsPresenter(this, redditNavigationView, linkCommentsRouter, this)
+        presenter = LinkCommentsPresenter(this, redditNavigationView, linkCommentsRouter, videoPlayRouter, this)
         listingsPresenter = presenter
         sort = settingsManager.commentSort
         callbacks = listingsPresenter

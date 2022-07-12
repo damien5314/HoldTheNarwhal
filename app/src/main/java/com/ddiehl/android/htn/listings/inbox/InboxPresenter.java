@@ -5,6 +5,7 @@ import com.ddiehl.android.htn.listings.BaseListingsPresenter;
 import com.ddiehl.android.htn.listings.comments.LinkCommentsRouter;
 import com.ddiehl.android.htn.navigation.RedditNavigationView;
 import com.ddiehl.android.htn.view.MainView;
+import com.ddiehl.android.htn.view.video.VideoPlayerRouter;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -25,8 +26,9 @@ public class InboxPresenter extends BaseListingsPresenter {
             MainView main,
             RedditNavigationView navigationView,
             LinkCommentsRouter linkCommentsRouter,
+            VideoPlayerRouter videoPlayerRouter,
             InboxView inbox) {
-        super(main, navigationView, linkCommentsRouter, inbox, inbox, inbox, inbox);
+        super(main, navigationView, linkCommentsRouter, videoPlayerRouter, inbox, inbox, inbox, inbox);
         inboxView = inbox;
     }
 

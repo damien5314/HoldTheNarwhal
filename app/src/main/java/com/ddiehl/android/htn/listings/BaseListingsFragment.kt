@@ -26,9 +26,6 @@ abstract class BaseListingsFragment : BaseFragment(), ListingsView, SwipeRefresh
         private const val LINK_BASE_URL = "https://www.reddit.com"
     }
 
-//    @Inject
-//    internal lateinit var linkCommentsRouter: LinkCommentsRouter
-
     lateinit var recyclerView: RecyclerView
     protected lateinit var swipeRefreshLayout: SwipeRefreshLayout
 
@@ -375,10 +372,6 @@ abstract class BaseListingsFragment : BaseFragment(), ListingsView, SwipeRefresh
 
     open fun openUrlInWebView(url: String) {
         redditNavigationView.openURL(url)
-    }
-
-    open fun openRedditVideo(redditVideo: Media.RedditVideo) {
-        redditNavigationView.openRedditVideo(redditVideo)
     }
 
     open fun openLinkGallery(galleryItems: List<GalleryItem>) {

@@ -43,8 +43,6 @@ import com.ddiehl.android.htn.utils.AndroidUtils;
 import com.ddiehl.android.htn.utils.ThemeUtilsKt;
 import com.ddiehl.android.htn.view.glide.GlideApp;
 import com.ddiehl.android.htn.view.theme.ColorScheme;
-import com.ddiehl.android.htn.view.video.VideoPlayerDialog;
-import com.ddiehl.android.htn.view.video.VideoPlayerDialogBuilder;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
@@ -66,7 +64,6 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 import rxreddit.android.SignInActivity;
 import rxreddit.api.RedditService;
 import rxreddit.model.GalleryItem;
-import rxreddit.model.Media;
 import rxreddit.model.PrivateMessage;
 import rxreddit.model.UserAccessToken;
 import rxreddit.model.UserIdentity;
@@ -403,13 +400,6 @@ public abstract class BaseActivity extends BaseDaggerActivity implements
 
         // Show web view for URL if we didn't show it in custom tabs
         showWebViewForURL(url);
-    }
-
-    @Override
-    public void openRedditVideo(Media.@NotNull RedditVideo redditVideo) {
-        final String url = redditVideo.getDashUrl();
-        final VideoPlayerDialog dialog = VideoPlayerDialogBuilder.newVideoPlayerDialog(url);
-        dialog.show(getSupportFragmentManager(), VideoPlayerDialog.TAG);
     }
 
     private void showWebViewForURL(@NotNull String url) {

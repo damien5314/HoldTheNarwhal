@@ -6,15 +6,12 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 import rxreddit.model.GalleryItem;
-import rxreddit.model.Media;
 import rxreddit.model.PrivateMessage;
 
 @Deprecated
 public interface RedditNavigationView {
 
     void openURL(@NotNull String url);
-
-    void openRedditVideo(@NotNull Media.RedditVideo redditVideo);
 
     void openLinkGallery(@NotNull List<GalleryItem> galleryItems);
 

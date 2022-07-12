@@ -27,6 +27,7 @@ import com.ddiehl.android.htn.listings.profile.UserProfileFragment;
 import com.ddiehl.android.htn.listings.subreddit.submission.SubmitPostActivity;
 import com.ddiehl.android.htn.listings.subreddit.submission.SubmitPostFragment;
 import com.ddiehl.android.htn.settings.SettingsManager;
+import com.ddiehl.android.htn.view.video.VideoPlayerRouter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.hannesdorfmann.fragmentargs.FragmentArgs;
 import com.hannesdorfmann.fragmentargs.annotation.Arg;
@@ -48,6 +49,8 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
     SettingsManager settingsManager;
     @Inject
     LinkCommentsRouter linkCommentsRouter;
+    @Inject
+    VideoPlayerRouter videoPlayerRouter;
 
     @Arg(required = false)
     String subredditName;
@@ -77,7 +80,13 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
         if (TextUtils.isEmpty(sort)) sort = "hot";
         if (TextUtils.isEmpty(timespan)) timespan = "all";
 
-        SubredditPresenter presenter = new SubredditPresenter(this, redditNavigationView, linkCommentsRouter, this);
+        SubredditPresenter presenter = new SubredditPresenter(
+                this,
+                redditNavigationView,
+                linkCommentsRouter,
+                videoPlayerRouter,
+                this
+        );
         subredditPresenter = presenter;
         setListingsPresenter(presenter);
         setCallbacks(presenter);
