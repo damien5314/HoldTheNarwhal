@@ -27,6 +27,7 @@ import com.ddiehl.android.htn.listings.links.ChooseLinkSortDialog;
 import com.ddiehl.android.htn.listings.profile.UserProfileFragment;
 import com.ddiehl.android.htn.listings.subreddit.submission.SubmitPostActivity;
 import com.ddiehl.android.htn.listings.subreddit.submission.SubmitPostFragment;
+import com.ddiehl.android.htn.navigation.AppNavigationMenuHelper;
 import com.ddiehl.android.htn.settings.SettingsManager;
 import com.ddiehl.android.htn.view.video.VideoPlayerRouter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -54,6 +55,8 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
     MediaGalleryRouter mediaGalleryRouter;
     @Inject
     VideoPlayerRouter videoPlayerRouter;
+    @Inject
+    AppNavigationMenuHelper appNavigationMenuHelper;
 
     @Arg(required = false)
     String subredditName;
@@ -90,6 +93,7 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
                 linkCommentsRouter,
                 mediaGalleryRouter,
                 videoPlayerRouter,
+                appNavigationMenuHelper,
                 this
         );
         subredditPresenter = presenter;
@@ -127,14 +131,14 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
         Subreddit subredditInfo = subredditPresenter.getSubreddit();
         if (subredditInfo != null) {
             String url = subredditInfo.getHeaderImageUrl();
-            loadImageIntoDrawerHeader(url);
+            appNavigationMenuHelper.loadImageIntoDrawerHeader(url);
         }
     }
 
     @Override
     public void onPause() {
         // Clear subreddit image from drawer header
-        loadImageIntoDrawerHeader(null);
+        appNavigationMenuHelper.loadImageIntoDrawerHeader(null);
 
         super.onPause();
     }
@@ -318,11 +322,6 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
 
         String formatter = getString(R.string.link_subreddit);
         setTitle(String.format(formatter, getSubreddit()));
-    }
-
-    @Override
-    public void loadHeaderImage() {
-
     }
 
     @Override

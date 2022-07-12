@@ -6,6 +6,7 @@ import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.gallery.MediaGalleryRouter;
 import com.ddiehl.android.htn.listings.BaseListingsPresenter;
 import com.ddiehl.android.htn.listings.comments.LinkCommentsRouter;
+import com.ddiehl.android.htn.navigation.AppNavigationMenuHelper;
 import com.ddiehl.android.htn.navigation.RedditNavigationView;
 import com.ddiehl.android.htn.routing.AppRouter;
 import com.ddiehl.android.htn.view.MainView;
@@ -25,6 +26,7 @@ import timber.log.Timber;
 
 public class SubredditPresenter extends BaseListingsPresenter {
 
+    private final AppNavigationMenuHelper appNavigationMenuHelper;
     private SubredditView subredditView;
 
     public SubredditPresenter(
@@ -34,6 +36,7 @@ public class SubredditPresenter extends BaseListingsPresenter {
             LinkCommentsRouter linkCommentsRouter,
             MediaGalleryRouter mediaGalleryRouter,
             VideoPlayerRouter videoPlayerRouter,
+            AppNavigationMenuHelper appNavigationMenuHelper,
             SubredditView view) {
         super(
                 main,
@@ -47,7 +50,8 @@ public class SubredditPresenter extends BaseListingsPresenter {
                 null,
                 null
         );
-        subredditView = view;
+        this.appNavigationMenuHelper = appNavigationMenuHelper;
+        this.subredditView = view;
     }
 
     @Override
@@ -183,7 +187,8 @@ public class SubredditPresenter extends BaseListingsPresenter {
             }
         }
 
-        subredditView.loadHeaderImage();
+        final String headerImageUrl = subreddit.getHeaderImageUrl();
+        appNavigationMenuHelper.loadImageIntoDrawerHeader(headerImageUrl);
     }
 
     private boolean shouldShowNsfwDialog(Subreddit subreddit, boolean userOver18) {

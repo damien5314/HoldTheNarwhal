@@ -35,7 +35,6 @@ import com.ddiehl.android.htn.routing.AuthRouter;
 import com.ddiehl.android.htn.settings.SettingsManager;
 import com.ddiehl.android.htn.utils.AndroidUtils;
 import com.ddiehl.android.htn.utils.ThemeUtilsKt;
-import com.ddiehl.android.htn.view.glide.GlideApp;
 import com.ddiehl.android.htn.view.theme.ColorScheme;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
@@ -420,13 +419,6 @@ public abstract class BaseActivity extends BaseDaggerActivity implements
     @Override
     public void onSignOutCancel() {
         // no-op
-    }
-
-    @Override
-    public void showSubredditImage(String url) {
-        GlideApp.with(this)
-                .load(url)
-                .into(headerImage);
     }
 
     @Override

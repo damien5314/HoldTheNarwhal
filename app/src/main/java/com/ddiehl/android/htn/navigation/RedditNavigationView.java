@@ -6,6 +6,4 @@ import org.jetbrains.annotations.NotNull;
 public interface RedditNavigationView {
 
     void openURL(@NotNull String url);
-
-    void showSubredditImage(String url);
 }

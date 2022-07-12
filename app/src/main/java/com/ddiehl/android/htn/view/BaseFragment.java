@@ -177,11 +177,6 @@ public abstract class BaseFragment extends BaseDaggerFragment implements MainVie
         loadingOverlay.show();
     }
 
-    @Override
-    public void loadImageIntoDrawerHeader(@Nullable String url) {
-        redditNavigationView.showSubredditImage(url);
-    }
-
     public void finish() {
         // If we're the task root, start the main activity
         if (getActivity().isTaskRoot()) {

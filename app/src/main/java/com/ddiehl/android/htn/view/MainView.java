@@ -2,14 +2,11 @@ package com.ddiehl.android.htn.view;
 
 import android.net.MailTo;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 import androidx.annotation.StringRes;
 
-public interface MainView {
+import org.jetbrains.annotations.NotNull;
 
-    void loadImageIntoDrawerHeader(@Nullable String url);
+public interface MainView {
 
     void setTitle(@NotNull CharSequence title);
 
