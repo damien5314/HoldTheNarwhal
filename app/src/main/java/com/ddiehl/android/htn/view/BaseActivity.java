@@ -35,7 +35,6 @@ import com.ddiehl.android.htn.navigation.RedditNavigationView;
 import com.ddiehl.android.htn.navigation.SubredditNavigationDialog;
 import com.ddiehl.android.htn.navigation.WebViewActivity;
 import com.ddiehl.android.htn.routing.AuthRouter;
-import com.ddiehl.android.htn.settings.SettingsActivity;
 import com.ddiehl.android.htn.settings.SettingsManager;
 import com.ddiehl.android.htn.subscriptions.SubscriptionManagerActivity;
 import com.ddiehl.android.htn.utils.AndroidUtils;
@@ -454,12 +453,6 @@ public abstract class BaseActivity extends BaseDaggerActivity implements
         GlideApp.with(this)
                 .load(url)
                 .into(headerImage);
-    }
-
-    @Override
-    public void showSettings() {
-        Intent intent = SettingsActivity.getIntent(this);
-        startActivity(intent);
     }
 
     @Override

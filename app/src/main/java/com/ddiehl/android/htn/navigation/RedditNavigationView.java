@@ -12,8 +12,6 @@ public interface RedditNavigationView {
 
     void openURL(@NotNull String url);
 
-    void showSettings();
-
     void showInbox();
 
     void showInboxMessages(@NotNull List<PrivateMessage> messages);

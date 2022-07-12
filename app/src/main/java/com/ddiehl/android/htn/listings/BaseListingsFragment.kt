@@ -12,6 +12,7 @@ import com.ddiehl.android.htn.listings.report.ReportView
 import com.ddiehl.android.htn.listings.report.ReportView.RESULT_REPORT_ERROR
 import com.ddiehl.android.htn.listings.report.ReportView.RESULT_REPORT_SUCCESS
 import com.ddiehl.android.htn.listings.subreddit.SubredditActivity
+import com.ddiehl.android.htn.routing.AppRouter
 import com.ddiehl.android.htn.utils.AndroidUtils.safeStartActivity
 import com.ddiehl.android.htn.view.BaseFragment
 import com.ddiehl.android.htn.view.video.VideoPlayerDialog
@@ -21,6 +22,7 @@ import rxreddit.model.Comment
 import rxreddit.model.Link
 import rxreddit.model.Listing
 import rxreddit.model.PrivateMessage
+import javax.inject.Inject
 
 abstract class BaseListingsFragment : BaseFragment(), ListingsView, SwipeRefreshLayout.OnRefreshListener {
 
@@ -28,6 +30,9 @@ abstract class BaseListingsFragment : BaseFragment(), ListingsView, SwipeRefresh
         private const val REQUEST_REPORT_LISTING = 1000
         private const val LINK_BASE_URL = "https://www.reddit.com"
     }
+
+    @Inject
+    lateinit var appRouter: AppRouter
 
     lateinit var recyclerView: RecyclerView
     protected lateinit var swipeRefreshLayout: SwipeRefreshLayout
@@ -107,7 +112,7 @@ abstract class BaseListingsFragment : BaseFragment(), ListingsView, SwipeRefresh
                 return true
             }
             R.id.action_settings -> {
-                redditNavigationView.showSettings()
+                appRouter.showSettings()
                 return true
             }
         }
