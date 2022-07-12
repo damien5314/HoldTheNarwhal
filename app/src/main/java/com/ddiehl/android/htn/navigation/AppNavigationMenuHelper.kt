@@ -6,9 +6,6 @@ import com.ddiehl.android.htn.R
 import com.ddiehl.android.htn.view.glide.GlideApp
 import javax.inject.Inject
 
-/**
- * TODO: Describe what this class is responsible for
- */
 class AppNavigationMenuHelper @Inject constructor(
     private val activity: FragmentActivity,
 ) {

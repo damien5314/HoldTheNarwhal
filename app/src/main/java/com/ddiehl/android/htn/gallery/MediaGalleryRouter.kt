@@ -5,9 +5,6 @@ import rxreddit.model.GalleryItem
 import timber.log.Timber
 import javax.inject.Inject
 
-/**
- * TODO: Describe what this class is responsible for
- */
 class MediaGalleryRouter @Inject constructor(
     private val activity: FragmentActivity,
 ) {

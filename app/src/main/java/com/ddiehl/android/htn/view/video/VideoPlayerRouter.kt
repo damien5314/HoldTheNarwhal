@@ -4,9 +4,6 @@ import androidx.fragment.app.FragmentActivity
 import rxreddit.model.Media.RedditVideo
 import javax.inject.Inject
 
-/**
- * TODO: Describe what this class is responsible for
- */
 class VideoPlayerRouter @Inject constructor(
     private val fragmentActivity: FragmentActivity,
 ) {
