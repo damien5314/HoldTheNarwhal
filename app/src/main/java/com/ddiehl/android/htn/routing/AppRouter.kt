@@ -4,6 +4,7 @@ import androidx.fragment.app.FragmentActivity
 import com.ddiehl.android.htn.listings.inbox.InboxActivity
 import com.ddiehl.android.htn.listings.inbox.PrivateMessageActivity
 import com.ddiehl.android.htn.listings.profile.UserProfileActivity
+import com.ddiehl.android.htn.listings.subreddit.SubredditActivity
 import com.ddiehl.android.htn.navigation.SubredditNavigationDialog
 import com.ddiehl.android.htn.settings.SettingsActivity
 import com.ddiehl.android.htn.subscriptions.SubscriptionManagerActivity
@@ -34,6 +35,16 @@ class AppRouter @Inject constructor(
 
     fun showSettings() {
         val intent = SettingsActivity.getIntent(activity)
+        activity.startActivity(intent)
+    }
+
+    fun showFrontPage(sort: String?, timespan: String?) {
+        val intent = SubredditActivity.getIntent(activity, null, sort, timespan)
+        activity.startActivity(intent)
+    }
+
+    fun showSubreddit(subreddit: String, sort: String?, timespan: String?) {
+        val intent = SubredditActivity.getIntent(activity, subreddit, sort, timespan)
         activity.startActivity(intent)
     }
 

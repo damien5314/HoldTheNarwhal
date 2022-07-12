@@ -41,10 +41,10 @@ public class DeepLinkDispatcher extends BaseActivity {
         List<String> segments = uri.getPathSegments();
         if (segments.size() == 0) {
             // Front page
-            showSubreddit(null, null, null);
+            appRouter.showSubreddit(null, null, null);
         } else if (isSubredditSort(segments.get(0))) {
             // Sorted front page
-            showSubreddit(null, segments.get(0), null);
+            appRouter.showSubreddit(null, segments.get(0), null);
         } else if (segments.get(0).equals("r")) {
             // Subreddit navigation
             String subreddit = segments.get(1);
@@ -61,11 +61,11 @@ public class DeepLinkDispatcher extends BaseActivity {
                     }
                 } else if (isSubredditSort(segments.get(2))) {
                     // Subreddit sorted
-                    showSubreddit(subreddit, segments.get(2), null);
+                    appRouter.showSubreddit(subreddit, segments.get(2), null);
                 }
             } else {
                 // Subreddit default sort
-                showSubreddit(subreddit, null, null);
+                appRouter.showSubreddit(subreddit, null, null);
             }
         } else if (segments.get(0).equals("u") || segments.get(0).equals("user")) {
             // User profile navigation
@@ -84,7 +84,7 @@ public class DeepLinkDispatcher extends BaseActivity {
             }
         } else {
             Timber.w("Deep link fell through without redirection: %s", uri.toString());
-            showSubreddit(null, null, null); // Show front page
+            appRouter.showFrontPage(null, null);
         }
 
         // Clear DeepLinkDispatcher from the activity task stack

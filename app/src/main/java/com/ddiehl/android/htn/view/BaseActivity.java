@@ -24,7 +24,6 @@ import androidx.fragment.app.FragmentManager;
 
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.identity.IdentityManager;
-import com.ddiehl.android.htn.listings.subreddit.SubredditActivity;
 import com.ddiehl.android.htn.managers.NetworkConnectivityManager;
 import com.ddiehl.android.htn.navigation.ConfirmExitDialog;
 import com.ddiehl.android.htn.navigation.ConfirmSignOutDialog;
@@ -348,20 +347,15 @@ public abstract class BaseActivity extends BaseDaggerActivity implements
     }
 
     protected void onShowFrontPage() {
-        showSubreddit(null, null, null);
+        appRouter.showFrontPage(null, null);
     }
 
     protected void onShowAllListings() {
-        showSubreddit("all", null, null);
+        appRouter.showSubreddit("all", null, null);
     }
 
     protected void onShowRandomSubreddit() {
-        showSubreddit("random", null, null);
-    }
-
-    public void showSubreddit(@Nullable String subreddit, @Nullable String sort, String timespan) {
-        Intent intent = SubredditActivity.getIntent(this, subreddit, sort, timespan);
-        startActivity(intent);
+        appRouter.showSubreddit("random", null, null);
     }
 
     public void openURL(@NotNull String url) {
@@ -465,7 +459,7 @@ public abstract class BaseActivity extends BaseDaggerActivity implements
 
     @Override
     public void onSubredditNavigationConfirmed(String subreddit) {
-        showSubreddit(subreddit, null, null);
+        appRouter.showSubreddit(subreddit, null, null);
     }
 
     @Override
