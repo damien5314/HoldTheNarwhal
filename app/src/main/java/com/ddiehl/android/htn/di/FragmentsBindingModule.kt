@@ -1,6 +1,7 @@
 package com.ddiehl.android.htn.di
 
 import com.ddiehl.android.htn.gallery.MediaGalleryFragment
+import com.ddiehl.android.htn.listings.ChooseTimespanDialog
 import com.ddiehl.android.htn.listings.comments.AddCommentDialog
 import com.ddiehl.android.htn.listings.comments.ChooseCommentSortDialog
 import com.ddiehl.android.htn.listings.comments.LinkCommentsFragment
@@ -43,6 +44,10 @@ interface FragmentsBindingModule {
     @FragmentScope
     @ContributesAndroidInjector(modules = [])
     fun bindChooseLinkSortDialog(): ChooseLinkSortDialog
+
+    @FragmentScope
+    @ContributesAndroidInjector(modules = [])
+    fun bindChooseTimespanDialog(): ChooseTimespanDialog
 
     @FragmentScope
     @ContributesAndroidInjector(modules = [])
