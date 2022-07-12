@@ -5,6 +5,7 @@ import com.ddiehl.android.htn.gallery.MediaGalleryRouter;
 import com.ddiehl.android.htn.listings.BaseListingsPresenter;
 import com.ddiehl.android.htn.listings.comments.LinkCommentsRouter;
 import com.ddiehl.android.htn.navigation.RedditNavigationView;
+import com.ddiehl.android.htn.routing.AppRouter;
 import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.android.htn.view.video.VideoPlayerRouter;
 
@@ -26,6 +27,7 @@ public class InboxPresenter extends BaseListingsPresenter {
     public InboxPresenter(
             MainView main,
             RedditNavigationView navigationView,
+            AppRouter appRouter,
             LinkCommentsRouter linkCommentsRouter,
             MediaGalleryRouter mediaGalleryRouter,
             VideoPlayerRouter videoPlayerRouter,
@@ -33,6 +35,7 @@ public class InboxPresenter extends BaseListingsPresenter {
         super(
                 main,
                 navigationView,
+                appRouter,
                 linkCommentsRouter,
                 mediaGalleryRouter,
                 videoPlayerRouter,

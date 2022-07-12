@@ -113,6 +113,7 @@ public class UserProfileFragment extends BaseListingsFragment
         userProfilePresenter = new UserProfilePresenter(
                 this,
                 redditNavigationView,
+                appRouter,
                 linkCommentsRouter,
                 mediaGalleryRouter,
                 videoPlayerRouter,

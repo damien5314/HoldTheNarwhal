@@ -32,7 +32,7 @@ abstract class BaseListingsFragment : BaseFragment(), ListingsView, SwipeRefresh
     }
 
     @Inject
-    lateinit var appRouter: AppRouter
+    internal lateinit var appRouter: AppRouter
 
     lateinit var recyclerView: RecyclerView
     protected lateinit var swipeRefreshLayout: SwipeRefreshLayout

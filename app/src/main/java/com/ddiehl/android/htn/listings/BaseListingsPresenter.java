@@ -13,6 +13,7 @@ import com.ddiehl.android.htn.listings.links.LinkView;
 import com.ddiehl.android.htn.listings.subreddit.ThumbnailMode;
 import com.ddiehl.android.htn.managers.NetworkConnectivityManager;
 import com.ddiehl.android.htn.navigation.RedditNavigationView;
+import com.ddiehl.android.htn.routing.AppRouter;
 import com.ddiehl.android.htn.settings.SettingsManager;
 import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.android.htn.view.video.VideoPlayerRouter;
@@ -65,6 +66,7 @@ public abstract class BaseListingsPresenter
     private final ListingsView listingsView;
     protected final MainView mainView;
     protected final RedditNavigationView redditNavigationView;
+    private final AppRouter appRouter;
     private final LinkCommentsRouter linkCommentsRouter;
     private final MediaGalleryRouter mediaGalleryRouter;
     private final VideoPlayerRouter videoPlayerRouter;
@@ -80,6 +82,7 @@ public abstract class BaseListingsPresenter
     public BaseListingsPresenter(
             MainView main,
             RedditNavigationView redditNavigationView,
+            AppRouter appRouter,
             LinkCommentsRouter linkCommentsRouter,
             MediaGalleryRouter mediaGalleryRouter,
             VideoPlayerRouter videoPlayerRouter,
@@ -90,6 +93,7 @@ public abstract class BaseListingsPresenter
         HoldTheNarwhal.getApplicationComponent().inject(this);
         this.mainView = main;
         this.redditNavigationView = redditNavigationView;
+        this.appRouter = appRouter;
         this.linkCommentsRouter = linkCommentsRouter;
         this.mediaGalleryRouter = mediaGalleryRouter;
         this.videoPlayerRouter = videoPlayerRouter;
@@ -589,7 +593,7 @@ public abstract class BaseListingsPresenter
             }
         }
         messages.add(0, message);
-        redditNavigationView.showInboxMessages(messages);
+        appRouter.showInboxMessages(messages);
     }
 
     public void reportMessage(@NotNull PrivateMessage message) {

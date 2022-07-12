@@ -4,6 +4,7 @@ import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.gallery.MediaGalleryRouter;
 import com.ddiehl.android.htn.listings.BaseListingsPresenter;
 import com.ddiehl.android.htn.navigation.RedditNavigationView;
+import com.ddiehl.android.htn.routing.AppRouter;
 import com.ddiehl.android.htn.utils.RedditUtilKt;
 import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.android.htn.view.video.VideoPlayerRouter;
@@ -31,6 +32,7 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
 
     private static final int MAX_CHILDREN_PER_REQUEST = 20;
 
+    private final AppRouter appRouter;
     private final MediaGalleryRouter mediaGalleryRouter;
     private final VideoPlayerRouter videoPlayerRouter;
     private final LinkCommentsView linkCommentsView;
@@ -42,11 +44,24 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
     public LinkCommentsPresenter(
             MainView main,
             RedditNavigationView navigationView,
+            AppRouter appRouter,
             LinkCommentsRouter linkCommentsRouter,
             MediaGalleryRouter mediaGalleryRouter,
             VideoPlayerRouter videoPlayerRouter,
             LinkCommentsView view) {
-        super(main, navigationView, linkCommentsRouter, mediaGalleryRouter, videoPlayerRouter, view, view, view, null);
+        super(
+                main,
+                navigationView,
+                appRouter,
+                linkCommentsRouter,
+                mediaGalleryRouter,
+                videoPlayerRouter,
+                view,
+                view,
+                view,
+                null
+        );
+        this.appRouter = appRouter;
         this.mediaGalleryRouter = mediaGalleryRouter;
         this.videoPlayerRouter = videoPlayerRouter;
         linkCommentsView = view;

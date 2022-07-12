@@ -60,6 +60,7 @@ class LinkCommentsFragment : BaseListingsFragment(), LinkCommentsView,
         presenter = LinkCommentsPresenter(
             this,
             redditNavigationView,
+            appRouter,
             linkCommentsRouter,
             mediaGalleryRouter,
             videoPlayRouter,

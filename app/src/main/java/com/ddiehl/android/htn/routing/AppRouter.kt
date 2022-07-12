@@ -2,7 +2,10 @@ package com.ddiehl.android.htn.routing
 
 import androidx.fragment.app.FragmentActivity
 import com.ddiehl.android.htn.listings.inbox.InboxActivity
+import com.ddiehl.android.htn.listings.inbox.PrivateMessageActivity
 import com.ddiehl.android.htn.settings.SettingsActivity
+import com.google.gson.Gson
+import rxreddit.model.PrivateMessage
 import javax.inject.Inject
 
 /**
@@ -11,11 +14,18 @@ import javax.inject.Inject
  * TODO: Break this into fragment-specific routers so we can modularize later.
  */
 class AppRouter @Inject constructor(
-    private val activity: FragmentActivity
+    private val activity: FragmentActivity,
+    private val gson: Gson,
 ) {
 
     fun showInbox(show: String? = null) {
         val intent = InboxActivity.getIntent(activity, show)
+        activity.startActivity(intent)
+    }
+
+    fun showInboxMessages(messages: List<PrivateMessage>) {
+        val messageJson = gson.toJson(messages)
+        val intent = PrivateMessageActivity.getIntent(activity, messageJson)
         activity.startActivity(intent)
     }
 

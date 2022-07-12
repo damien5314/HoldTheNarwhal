@@ -24,7 +24,6 @@ import androidx.fragment.app.FragmentManager;
 
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.identity.IdentityManager;
-import com.ddiehl.android.htn.listings.inbox.PrivateMessageActivity;
 import com.ddiehl.android.htn.listings.profile.UserProfileActivity;
 import com.ddiehl.android.htn.listings.subreddit.SubredditActivity;
 import com.ddiehl.android.htn.managers.NetworkConnectivityManager;
@@ -50,7 +49,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
-import java.util.List;
 
 import javax.inject.Inject;
 
@@ -61,7 +59,6 @@ import io.reactivex.rxjava3.functions.Function;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import rxreddit.android.SignInActivity;
 import rxreddit.api.RedditService;
-import rxreddit.model.PrivateMessage;
 import rxreddit.model.UserAccessToken;
 import rxreddit.model.UserIdentity;
 import timber.log.Timber;
@@ -536,12 +533,6 @@ public abstract class BaseActivity extends BaseDaggerActivity implements
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(identityManager::saveUserIdentity);
-    }
-
-    @Override
-    public void showInboxMessages(@NotNull List<PrivateMessage> messages) {
-        Intent intent = PrivateMessageActivity.getIntent(this, gson, messages);
-        startActivity(intent);
     }
 
     protected void showToast(@NotNull String message) {

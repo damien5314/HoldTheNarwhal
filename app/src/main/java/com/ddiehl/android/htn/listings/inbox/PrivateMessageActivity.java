@@ -10,11 +10,7 @@ import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.view.BaseActivity;
 import com.google.gson.Gson;
 
-import java.util.List;
-
 import javax.inject.Inject;
-
-import rxreddit.model.PrivateMessage;
 
 public class PrivateMessageActivity extends BaseActivity {
 
@@ -22,10 +18,9 @@ public class PrivateMessageActivity extends BaseActivity {
 
     @Inject protected Gson mGson;
 
-    public static Intent getIntent(Context context, Gson gson, List<PrivateMessage> messages) {
+    public static Intent getIntent(Context context, String messagesJson) {
         Intent intent = new Intent(context, PrivateMessageActivity.class);
-        String json = gson.toJson(messages);
-        intent.putExtra(EXTRA_MESSAGES, json); // lol
+        intent.putExtra(EXTRA_MESSAGES, messagesJson); // lol
         return intent;
     }
 
