@@ -324,7 +324,7 @@ public abstract class BaseActivity extends BaseDaggerActivity implements
     }
 
     protected void onNavigateToSubreddit() {
-        showSubredditNavigationView();
+        appRouter.showSubredditNavigationView();
     }
 
     protected void onLogIn() {
@@ -477,11 +477,6 @@ public abstract class BaseActivity extends BaseDaggerActivity implements
 
     @Override
     public void onSubredditNavigationCancelled() {
-    }
-
-    @Override
-    public void showSubredditNavigationView() {
-        new SubredditNavigationDialog().show(getSupportFragmentManager(), SubredditNavigationDialog.TAG);
     }
 
     @Override

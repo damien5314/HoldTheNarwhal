@@ -8,8 +8,6 @@ public interface RedditNavigationView {
 
     void openURL(@NotNull String url);
 
-    void showSubredditNavigationView();
-
     void showUserSubreddits();
 
     void showSubreddit(@Nullable String subreddit, @Nullable String sort, String timespan);

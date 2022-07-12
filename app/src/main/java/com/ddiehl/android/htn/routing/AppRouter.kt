@@ -4,6 +4,7 @@ import androidx.fragment.app.FragmentActivity
 import com.ddiehl.android.htn.listings.inbox.InboxActivity
 import com.ddiehl.android.htn.listings.inbox.PrivateMessageActivity
 import com.ddiehl.android.htn.listings.profile.UserProfileActivity
+import com.ddiehl.android.htn.navigation.SubredditNavigationDialog
 import com.ddiehl.android.htn.settings.SettingsActivity
 import com.google.gson.Gson
 import rxreddit.model.PrivateMessage
@@ -33,6 +34,11 @@ class AppRouter @Inject constructor(
     fun showSettings() {
         val intent = SettingsActivity.getIntent(activity)
         activity.startActivity(intent)
+    }
+
+    fun showSubredditNavigationView() {
+        val dialog = SubredditNavigationDialog()
+        dialog.show(activity.supportFragmentManager, SubredditNavigationDialog.TAG)
     }
 
     fun showUserProfile(
