@@ -7,7 +7,6 @@ import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.gallery.MediaGalleryRouter;
 import com.ddiehl.android.htn.listings.BaseListingsPresenter;
 import com.ddiehl.android.htn.listings.comments.LinkCommentsRouter;
-import com.ddiehl.android.htn.navigation.RedditNavigationView;
 import com.ddiehl.android.htn.routing.AppRouter;
 import com.ddiehl.android.htn.utils.Utils;
 import com.ddiehl.android.htn.view.MainView;
@@ -39,7 +38,6 @@ public class UserProfilePresenter extends BaseListingsPresenter {
 
     public UserProfilePresenter(
             MainView main,
-            RedditNavigationView navigationView,
             AppRouter appRouter,
             LinkCommentsRouter linkCommentsRouter,
             MediaGalleryRouter mediaGalleryRouter,
@@ -47,7 +45,6 @@ public class UserProfilePresenter extends BaseListingsPresenter {
             UserProfileView view) {
         super(
                 main,
-                navigationView,
                 appRouter,
                 linkCommentsRouter,
                 mediaGalleryRouter,

@@ -3,7 +3,6 @@ package com.ddiehl.android.htn.listings.comments;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.gallery.MediaGalleryRouter;
 import com.ddiehl.android.htn.listings.BaseListingsPresenter;
-import com.ddiehl.android.htn.navigation.RedditNavigationView;
 import com.ddiehl.android.htn.routing.AppRouter;
 import com.ddiehl.android.htn.utils.RedditUtilKt;
 import com.ddiehl.android.htn.view.MainView;
@@ -43,7 +42,6 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
 
     public LinkCommentsPresenter(
             MainView main,
-            RedditNavigationView navigationView,
             AppRouter appRouter,
             LinkCommentsRouter linkCommentsRouter,
             MediaGalleryRouter mediaGalleryRouter,
@@ -51,7 +49,6 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
             LinkCommentsView view) {
         super(
                 main,
-                navigationView,
                 appRouter,
                 linkCommentsRouter,
                 mediaGalleryRouter,

@@ -59,7 +59,6 @@ class LinkCommentsFragment : BaseListingsFragment(), LinkCommentsView,
         FragmentArgs.inject(this)
         presenter = LinkCommentsPresenter(
             this,
-            redditNavigationView,
             appRouter,
             linkCommentsRouter,
             mediaGalleryRouter,

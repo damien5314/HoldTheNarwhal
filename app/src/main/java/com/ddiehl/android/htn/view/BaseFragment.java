@@ -3,7 +3,6 @@ package com.ddiehl.android.htn.view;
 import static android.app.Activity.RESULT_OK;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.net.MailTo;
 import android.os.Bundle;
@@ -18,7 +17,6 @@ import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.gallery.MediaGalleryRouter;
 import com.ddiehl.android.htn.identity.IdentityManager;
 import com.ddiehl.android.htn.listings.subreddit.SubredditActivity;
-import com.ddiehl.android.htn.navigation.RedditNavigationView;
 import com.ddiehl.android.htn.navigation.WebViewFragment;
 import com.ddiehl.android.htn.utils.AndroidUtils;
 import com.ddiehl.android.htn.utils.MenuTintUtils;
@@ -55,7 +53,6 @@ public abstract class BaseFragment extends BaseDaggerFragment implements MainVie
     @Inject
     MediaGalleryRouter mediaGalleryRouter;
 
-    protected RedditNavigationView redditNavigationView;
     ProgressDialog loadingOverlay;
     protected TabLayout tabLayout;
 
@@ -75,20 +72,6 @@ public abstract class BaseFragment extends BaseDaggerFragment implements MainVie
         View view = inflater.inflate(getLayoutResId(), container, false);
         tabLayout = getActivity().findViewById(R.id.tab_layout);
         return view;
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof RedditNavigationView) {
-            redditNavigationView = (RedditNavigationView) context;
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        redditNavigationView = null;
-        super.onDetach();
     }
 
     @Override

@@ -88,7 +88,6 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
 
         SubredditPresenter presenter = new SubredditPresenter(
                 this,
-                redditNavigationView,
                 appRouter,
                 linkCommentsRouter,
                 mediaGalleryRouter,

@@ -7,7 +7,6 @@ import com.ddiehl.android.htn.gallery.MediaGalleryRouter;
 import com.ddiehl.android.htn.listings.BaseListingsPresenter;
 import com.ddiehl.android.htn.listings.comments.LinkCommentsRouter;
 import com.ddiehl.android.htn.navigation.AppNavigationMenuHelper;
-import com.ddiehl.android.htn.navigation.RedditNavigationView;
 import com.ddiehl.android.htn.routing.AppRouter;
 import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.android.htn.view.video.VideoPlayerRouter;
@@ -31,7 +30,6 @@ public class SubredditPresenter extends BaseListingsPresenter {
 
     public SubredditPresenter(
             MainView main,
-            RedditNavigationView navigationView,
             AppRouter appRouter,
             LinkCommentsRouter linkCommentsRouter,
             MediaGalleryRouter mediaGalleryRouter,
@@ -40,7 +38,6 @@ public class SubredditPresenter extends BaseListingsPresenter {
             SubredditView view) {
         super(
                 main,
-                navigationView,
                 appRouter,
                 linkCommentsRouter,
                 mediaGalleryRouter,

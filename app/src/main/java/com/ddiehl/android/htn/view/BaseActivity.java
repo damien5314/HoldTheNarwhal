@@ -26,7 +26,6 @@ import com.ddiehl.android.htn.identity.IdentityManager;
 import com.ddiehl.android.htn.managers.NetworkConnectivityManager;
 import com.ddiehl.android.htn.navigation.ConfirmExitDialog;
 import com.ddiehl.android.htn.navigation.ConfirmSignOutDialog;
-import com.ddiehl.android.htn.navigation.RedditNavigationView;
 import com.ddiehl.android.htn.navigation.SubredditNavigationDialog;
 import com.ddiehl.android.htn.routing.AppRouter;
 import com.ddiehl.android.htn.routing.AuthRouter;
@@ -57,7 +56,6 @@ import rxreddit.model.UserIdentity;
 import timber.log.Timber;
 
 public abstract class BaseActivity extends BaseDaggerActivity implements
-        RedditNavigationView,
         IdentityManager.Callbacks,
         NavigationView.OnNavigationItemSelectedListener,
         ConfirmExitDialog.Callbacks,

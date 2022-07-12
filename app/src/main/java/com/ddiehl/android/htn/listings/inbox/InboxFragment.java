@@ -67,7 +67,6 @@ public class InboxFragment extends BaseListingsFragment
 
         inboxPresenter = new InboxPresenter(
                 this,
-                redditNavigationView,
                 appRouter,
                 linkCommentsRouter,
                 mediaGalleryRouter,
