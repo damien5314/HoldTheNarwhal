@@ -121,12 +121,20 @@ class LinkCommentsFragment : BaseListingsFragment(), LinkCommentsView,
 
     override fun openUserProfileView(link: Link) {
         link.author?.let { author ->
-            redditNavigationView.showUserProfile(author, null, null)
+            appRouter.showUserProfile(
+                username = author,
+                show = null,
+                sort = null,
+            )
         }
     }
 
     override fun openUserProfileView(comment: Comment) {
-        redditNavigationView.showUserProfile(comment.author, null, null)
+        appRouter.showUserProfile(
+            username = comment.author,
+            show = null,
+            sort = null,
+        )
     }
 
     override fun openLinkInBrowser(link: Link) {

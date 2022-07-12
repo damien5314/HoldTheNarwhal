@@ -24,7 +24,6 @@ import androidx.fragment.app.FragmentManager;
 
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.identity.IdentityManager;
-import com.ddiehl.android.htn.listings.profile.UserProfileActivity;
 import com.ddiehl.android.htn.listings.subreddit.SubredditActivity;
 import com.ddiehl.android.htn.managers.NetworkConnectivityManager;
 import com.ddiehl.android.htn.navigation.ConfirmExitDialog;
@@ -342,7 +341,7 @@ public abstract class BaseActivity extends BaseDaggerActivity implements
 
     protected void onShowUserProfile() {
         String name = identityManager.getUserIdentity().getName();
-        showUserProfile(name, "summary", "new");
+        appRouter.showUserProfile(name, "summary", "new");
     }
 
     protected void onShowSubreddits() {
@@ -359,12 +358,6 @@ public abstract class BaseActivity extends BaseDaggerActivity implements
 
     protected void onShowRandomSubreddit() {
         showSubreddit("random", null, null);
-    }
-
-    public void showUserProfile(
-            @NotNull String username, @Nullable String show, @Nullable String sort) {
-        Intent intent = UserProfileActivity.getIntent(this, username, show, sort);
-        startActivity(intent);
     }
 
     public void showSubreddit(@Nullable String subreddit, @Nullable String sort, String timespan) {

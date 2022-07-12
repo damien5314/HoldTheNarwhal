@@ -3,6 +3,7 @@ package com.ddiehl.android.htn.routing
 import androidx.fragment.app.FragmentActivity
 import com.ddiehl.android.htn.listings.inbox.InboxActivity
 import com.ddiehl.android.htn.listings.inbox.PrivateMessageActivity
+import com.ddiehl.android.htn.listings.profile.UserProfileActivity
 import com.ddiehl.android.htn.settings.SettingsActivity
 import com.google.gson.Gson
 import rxreddit.model.PrivateMessage
@@ -31,6 +32,15 @@ class AppRouter @Inject constructor(
 
     fun showSettings() {
         val intent = SettingsActivity.getIntent(activity)
+        activity.startActivity(intent)
+    }
+
+    fun showUserProfile(
+        username: String,
+        show: String?,
+        sort: String?,
+    ) {
+        val intent = UserProfileActivity.getIntent(activity, username, show, sort)
         activity.startActivity(intent)
     }
 }

@@ -4,6 +4,7 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import com.ddiehl.android.htn.listings.comments.LinkCommentsRouter;
+import com.ddiehl.android.htn.routing.AppRouter;
 import com.ddiehl.android.htn.view.BaseActivity;
 
 import org.jetbrains.annotations.NotNull;
@@ -16,6 +17,8 @@ import timber.log.Timber;
 
 public class DeepLinkDispatcher extends BaseActivity {
 
+    @Inject
+    AppRouter appRouter;
     @Inject
     LinkCommentsRouter linkCommentsRouter;
 
@@ -71,13 +74,13 @@ public class DeepLinkDispatcher extends BaseActivity {
                 if (segments.size() > 3) {
                     // Profile view with sort
                     // FIXME This actually should be read from a query string
-                    showUserProfile(segments.get(1), segments.get(2), segments.get(3));
+                    appRouter.showUserProfile(segments.get(1), segments.get(2), segments.get(3));
                 } else {
                     // Profile view default sort
-                    showUserProfile(segments.get(1), segments.get(2), null);
+                    appRouter.showUserProfile(segments.get(1), segments.get(2), null);
                 }
             } else {
-                showUserProfile(segments.get(1), null, null);
+                appRouter.showUserProfile(segments.get(1), null, null);
             }
         } else {
             Timber.w("Deep link fell through without redirection: %s", uri.toString());
