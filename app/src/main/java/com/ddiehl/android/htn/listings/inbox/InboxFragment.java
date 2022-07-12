@@ -205,12 +205,4 @@ public class InboxFragment extends BaseListingsFragment
     protected View getChromeView() {
         return coordinatorLayout;
     }
-
-//    void showCommentsForLink(
-//            String subreddit,
-//            String linkId,
-//            String commentId
-//    ) {
-//        linkCommentsRouter.showCommentsForLink(subreddit, linkId, commentId);
-//    }
 }
