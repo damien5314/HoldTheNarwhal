@@ -6,6 +6,7 @@ import com.ddiehl.android.htn.listings.inbox.PrivateMessageActivity
 import com.ddiehl.android.htn.listings.profile.UserProfileActivity
 import com.ddiehl.android.htn.navigation.SubredditNavigationDialog
 import com.ddiehl.android.htn.settings.SettingsActivity
+import com.ddiehl.android.htn.subscriptions.SubscriptionManagerActivity
 import com.google.gson.Gson
 import rxreddit.model.PrivateMessage
 import javax.inject.Inject
@@ -47,6 +48,11 @@ class AppRouter @Inject constructor(
         sort: String?,
     ) {
         val intent = UserProfileActivity.getIntent(activity, username, show, sort)
+        activity.startActivity(intent)
+    }
+
+    fun showUserSubreddits() {
+        val intent = SubscriptionManagerActivity.getIntent(activity)
         activity.startActivity(intent)
     }
 }

@@ -34,7 +34,6 @@ import com.ddiehl.android.htn.navigation.WebViewActivity;
 import com.ddiehl.android.htn.routing.AppRouter;
 import com.ddiehl.android.htn.routing.AuthRouter;
 import com.ddiehl.android.htn.settings.SettingsManager;
-import com.ddiehl.android.htn.subscriptions.SubscriptionManagerActivity;
 import com.ddiehl.android.htn.utils.AndroidUtils;
 import com.ddiehl.android.htn.utils.ThemeUtilsKt;
 import com.ddiehl.android.htn.view.glide.GlideApp;
@@ -345,7 +344,7 @@ public abstract class BaseActivity extends BaseDaggerActivity implements
     }
 
     protected void onShowSubreddits() {
-        showUserSubreddits();
+        appRouter.showUserSubreddits();
     }
 
     protected void onShowFrontPage() {
@@ -391,13 +390,7 @@ public abstract class BaseActivity extends BaseDaggerActivity implements
         startActivity(intent);
     }
 
-    public void showUserSubreddits() {
-        Intent intent = SubscriptionManagerActivity.getIntent(this);
-        startActivity(intent);
-    }
-
-    //  @OnClick(R.id.sign_out_button)
-    void onSignOut() {
+    private void onSignOut() {
         new ConfirmSignOutDialog().show(getSupportFragmentManager(), ConfirmSignOutDialog.TAG);
     }
 
