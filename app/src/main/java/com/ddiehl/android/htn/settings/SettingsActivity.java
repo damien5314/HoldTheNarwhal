@@ -1,13 +1,13 @@
 package com.ddiehl.android.htn.settings;
 
-import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.ddiehl.android.htn.view.FragmentActivity;
+import com.ddiehl.android.htn.R;
+import com.ddiehl.android.htn.view.BaseActivity;
 
-public class SettingsActivity extends FragmentActivity {
+public class SettingsActivity extends BaseActivity {
 
     public static Intent getIntent(Context context) {
         return new Intent(context, SettingsActivity.class);
@@ -19,18 +19,19 @@ public class SettingsActivity extends FragmentActivity {
     }
 
     @Override
-    protected Fragment getFragment() {
-        return new SettingsFragment();
-    }
-
-    @Override
-    protected String getFragmentTag() {
-        return SettingsFragment.TAG;
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         showTabs(false);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (getFragmentManager().findFragmentByTag(SettingsFragment.TAG) == null) {
+            final SettingsFragment fragment = new SettingsFragment();
+            getFragmentManager().beginTransaction()
+                    .add(R.id.fragment_container, fragment, SettingsFragment.TAG)
+                    .commit();
+        }
     }
 }

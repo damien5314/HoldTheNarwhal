@@ -2,6 +2,7 @@ package com.ddiehl.android.htn.view
 
 import android.os.Bundle
 import android.os.PersistableBundle
+import androidx.appcompat.app.AppCompatActivity
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -12,7 +13,7 @@ import javax.inject.Inject
  * Base Activity class that calls into [AndroidInjection] to inject dependencies
  * from the Activity's dagger subcomponent.
  */
-abstract class BaseDaggerActivity : BaseActivity(),
+abstract class BaseDaggerActivity : AppCompatActivity(),
     HasAndroidInjector {
 
     @Inject

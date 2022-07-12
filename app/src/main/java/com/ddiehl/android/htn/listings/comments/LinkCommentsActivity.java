@@ -4,15 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import androidx.fragment.app.Fragment;
-
-import com.ddiehl.android.htn.view.FragmentActivityCompat;
-
-import org.jetbrains.annotations.NotNull;
+import com.ddiehl.android.htn.R;
+import com.ddiehl.android.htn.view.BaseActivity;
 
 import timber.log.Timber;
 
-public class LinkCommentsActivity extends FragmentActivityCompat {
+public class LinkCommentsActivity extends BaseActivity {
 
     private static final String EXTRA_SUBREDDIT = "EXTRA_SUBREDDIT";
     private static final String EXTRA_ARTICLE_ID = "EXTRA_ARTICLE_ID";
@@ -29,17 +26,6 @@ public class LinkCommentsActivity extends FragmentActivityCompat {
     @Override
     protected boolean hasNavigationDrawer() {
         return false;
-    }
-
-    @NotNull @Override
-    protected Fragment getFragment() {
-        return new LinkCommentsFragmentBuilder(getArticleId(), getCommentId(), getSubreddit())
-                .build();
-    }
-
-    @NotNull @Override
-    protected String getFragmentTag() {
-        return LinkCommentsFragment.TAG;
     }
 
     String getSubreddit() {
@@ -59,5 +45,21 @@ public class LinkCommentsActivity extends FragmentActivityCompat {
         super.onCreate(savedInstanceState);
         Timber.i("Showing LinkCommentsActivity: %s", getArticleId());
         showTabs(false);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (getSupportFragmentManager().findFragmentByTag(LinkCommentsFragment.TAG) == null) {
+            final LinkCommentsFragment fragment = new LinkCommentsFragmentBuilder(
+                    getArticleId(),
+                    getCommentId(),
+                    getSubreddit()
+            )
+                    .build();
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.fragment_container, fragment, LinkCommentsFragment.TAG)
+                    .commit();
+        }
     }
 }
