@@ -21,6 +21,7 @@ import com.ddiehl.android.htn.identity.IdentityManager;
 import com.ddiehl.android.htn.listings.BaseListingsFragment;
 import com.ddiehl.android.htn.listings.ChooseTimespanDialog;
 import com.ddiehl.android.htn.listings.ListingsAdapter;
+import com.ddiehl.android.htn.listings.comments.LinkCommentsRouter;
 import com.ddiehl.android.htn.listings.links.ChooseLinkSortDialog;
 import com.ddiehl.android.htn.listings.subreddit.SubredditFragment;
 import com.ddiehl.android.htn.utils.AndroidUtils;
@@ -55,6 +56,8 @@ public class UserProfileFragment extends BaseListingsFragment
 
     @Inject
     IdentityManager identityManager;
+    @Inject
+    LinkCommentsRouter linkCommentsRouter;
 
     protected CoordinatorLayout coordinatorLayout;
     protected View userProfileSummary;
@@ -101,7 +104,7 @@ public class UserProfileFragment extends BaseListingsFragment
         if (TextUtils.isEmpty(sort)) sort = "new";
         if (TextUtils.isEmpty(timespan)) timespan = "all";
 
-        userProfilePresenter = new UserProfilePresenter(this, redditNavigationView, this);
+        userProfilePresenter = new UserProfilePresenter(this, redditNavigationView, linkCommentsRouter, this);
         setListingsPresenter(userProfilePresenter);
         setCallbacks(userProfilePresenter);
     }

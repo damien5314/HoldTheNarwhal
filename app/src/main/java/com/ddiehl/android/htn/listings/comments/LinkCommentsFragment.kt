@@ -29,8 +29,10 @@ class LinkCommentsFragment : BaseListingsFragment(), LinkCommentsView,
         val TAG: String = LinkCommentsFragment::class.java.simpleName
     }
 
-    @field:Inject
+    @Inject
     lateinit var settingsManager: SettingsManager
+    @Inject
+    lateinit var linkCommentsRouter: LinkCommentsRouter
 
     @field:Arg
     override lateinit var subreddit: String
@@ -50,7 +52,7 @@ class LinkCommentsFragment : BaseListingsFragment(), LinkCommentsView,
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         FragmentArgs.inject(this)
-        presenter = LinkCommentsPresenter(this, redditNavigationView, this)
+        presenter = LinkCommentsPresenter(this, redditNavigationView, linkCommentsRouter, this)
         listingsPresenter = presenter
         sort = settingsManager.commentSort
         callbacks = listingsPresenter
@@ -228,10 +230,6 @@ class LinkCommentsFragment : BaseListingsFragment(), LinkCommentsView,
 
     override fun openLinkGallery(galleryItems: List<GalleryItem>) {
         redditNavigationView.openLinkGallery(galleryItems)
-    }
-
-    override fun showCommentsForLink(subreddit: String, linkId: String, commentId: String?) {
-        redditNavigationView.showCommentsForLink(subreddit, linkId, commentId)
     }
 
     override fun openReplyView(listing: Listing) {

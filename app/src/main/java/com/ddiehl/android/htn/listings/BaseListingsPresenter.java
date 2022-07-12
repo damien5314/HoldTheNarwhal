@@ -6,6 +6,7 @@ import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.identity.IdentityManager;
 import com.ddiehl.android.htn.listings.comments.CommentView;
+import com.ddiehl.android.htn.listings.comments.LinkCommentsRouter;
 import com.ddiehl.android.htn.listings.inbox.PrivateMessageView;
 import com.ddiehl.android.htn.listings.links.LinkView;
 import com.ddiehl.android.htn.listings.subreddit.ThumbnailMode;
@@ -62,6 +63,7 @@ public abstract class BaseListingsPresenter
     private final ListingsView listingsView;
     protected final MainView mainView;
     protected final RedditNavigationView redditNavigationView;
+    protected final LinkCommentsRouter linkCommentsRouter;
     private final LinkView linkView;
     private final CommentView commentView;
     private final PrivateMessageView privateMessageView;
@@ -74,6 +76,7 @@ public abstract class BaseListingsPresenter
     public BaseListingsPresenter(
             MainView main,
             RedditNavigationView redditNavigationView,
+            LinkCommentsRouter linkCommentsRouter,
             ListingsView view,
             LinkView linkView,
             CommentView commentView,
@@ -81,6 +84,7 @@ public abstract class BaseListingsPresenter
         HoldTheNarwhal.getApplicationComponent().inject(this);
         this.mainView = main;
         this.redditNavigationView = redditNavigationView;
+        this.linkCommentsRouter = linkCommentsRouter;
         this.listingsView = view;
         this.linkView = linkView;
         this.commentView = commentView;
@@ -218,7 +222,7 @@ public abstract class BaseListingsPresenter
     // TODO: Eventually consolidate routing so we don't have duplicate routing for Links
     public void openLink(@NotNull Link link) {
         if (link.isSelf() && link.getSubreddit() != null) {
-            linkView.showCommentsForLink(link.getSubreddit(), link.getId(), null);
+            linkCommentsRouter.showCommentsForLink(link.getSubreddit(), link.getId(), null);
             return;
         }
 
@@ -244,7 +248,7 @@ public abstract class BaseListingsPresenter
     }
 
     public void showCommentsForLink(@NotNull Link link) {
-        linkView.showCommentsForLink(link.getSubreddit(), link.getId(), null);
+        linkCommentsRouter.showCommentsForLink(link.getSubreddit(), link.getId(), null);
     }
 
     public void replyToLink(Link link) {
@@ -326,7 +330,7 @@ public abstract class BaseListingsPresenter
 
     public void showCommentThread(
             @NotNull String subreddit, @NotNull String linkId, @NotNull String commentId) {
-        redditNavigationView.showCommentsForLink(subreddit, linkId, commentId);
+        linkCommentsRouter.showCommentsForLink(subreddit, linkId, commentId);
     }
 
     public void getMoreComments(@NotNull CommentStub comment) {
@@ -398,7 +402,7 @@ public abstract class BaseListingsPresenter
     }
 
     public void openCommentLink(@NotNull Comment comment) {
-        redditNavigationView.showCommentsForLink(comment.getSubreddit(), comment.getLinkId(), null);
+        linkCommentsRouter.showCommentsForLink(comment.getSubreddit(), comment.getLinkId(), null);
     }
 
     public UserIdentity getAuthorizedUser() {

@@ -26,6 +26,9 @@ abstract class BaseListingsFragment : BaseFragment(), ListingsView, SwipeRefresh
         private const val LINK_BASE_URL = "https://www.reddit.com"
     }
 
+//    @Inject
+//    internal lateinit var linkCommentsRouter: LinkCommentsRouter
+
     lateinit var recyclerView: RecyclerView
     protected lateinit var swipeRefreshLayout: SwipeRefreshLayout
 
@@ -386,12 +389,6 @@ abstract class BaseListingsFragment : BaseFragment(), ListingsView, SwipeRefresh
         VideoPlayerDialogBuilder(url)
             .build()
             .show(parentFragmentManager, VideoPlayerDialog.TAG)
-    }
-
-    open fun showCommentsForLink(
-        subreddit: String, linkId: String, commentId: String?
-    ) {
-        redditNavigationView.showCommentsForLink(subreddit, linkId, commentId)
     }
 
     open fun openReplyView(listing: Listing) {

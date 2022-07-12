@@ -9,10 +9,8 @@ import rxreddit.model.GalleryItem;
 import rxreddit.model.Media;
 import rxreddit.model.PrivateMessage;
 
+@Deprecated
 public interface RedditNavigationView {
-
-    void showCommentsForLink(
-            @NotNull String subreddit, @NotNull String linkId, @Nullable String commentId);
 
     void openURL(@NotNull String url);
 

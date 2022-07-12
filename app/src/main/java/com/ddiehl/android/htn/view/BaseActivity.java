@@ -25,7 +25,6 @@ import androidx.fragment.app.FragmentManager;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.gallery.MediaGalleryFragment;
 import com.ddiehl.android.htn.identity.IdentityManager;
-import com.ddiehl.android.htn.listings.comments.LinkCommentsActivity;
 import com.ddiehl.android.htn.listings.inbox.InboxActivity;
 import com.ddiehl.android.htn.listings.inbox.PrivateMessageActivity;
 import com.ddiehl.android.htn.listings.profile.UserProfileActivity;
@@ -522,13 +521,6 @@ public abstract class BaseActivity extends BaseDaggerActivity implements
     @Override
     public void showSubredditNavigationView() {
         new SubredditNavigationDialog().show(getSupportFragmentManager(), SubredditNavigationDialog.TAG);
-    }
-
-    @Override
-    public void showCommentsForLink(
-            @Nullable String subreddit, @Nullable String linkId, @Nullable String commentId) {
-        Intent intent = LinkCommentsActivity.getIntent(this, subreddit, linkId, commentId);
-        startActivity(intent);
     }
 
     @Override

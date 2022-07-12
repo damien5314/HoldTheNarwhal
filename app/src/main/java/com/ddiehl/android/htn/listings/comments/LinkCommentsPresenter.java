@@ -35,8 +35,12 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
     private Listing replyTarget = null;
     private boolean dataRequested = false;
 
-    public LinkCommentsPresenter(MainView main, RedditNavigationView navigationView, LinkCommentsView view) {
-        super(main, navigationView, view, view, view, null);
+    public LinkCommentsPresenter(
+            MainView main,
+            RedditNavigationView navigationView,
+            LinkCommentsRouter linkCommentsRouter,
+            LinkCommentsView view) {
+        super(main, navigationView, linkCommentsRouter, view, view, view, null);
         linkCommentsView = view;
         commentBank = new CommentBankList();
     }

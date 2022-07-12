@@ -4,7 +4,6 @@ import android.view.ContextMenu;
 import android.view.View;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -21,9 +20,6 @@ public interface LinkView {
     void openRedditVideo(@NotNull Media.RedditVideo url);
 
     void openLinkGallery(@NotNull List<GalleryItem> galleryItems);
-
-    void showCommentsForLink(
-            @NotNull String subreddit, @NotNull String linkId, @Nullable String commentId);
 
     void openShareView(@NotNull Link link);
 

@@ -3,15 +3,21 @@ package com.ddiehl.android.htn.navigation;
 import android.net.Uri;
 import android.os.Bundle;
 
+import com.ddiehl.android.htn.listings.comments.LinkCommentsRouter;
 import com.ddiehl.android.htn.view.BaseActivity;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import timber.log.Timber;
 
 public class DeepLinkDispatcher extends BaseActivity {
+
+    @Inject
+    LinkCommentsRouter linkCommentsRouter;
 
     @Override
     protected boolean hasNavigationDrawer() {
@@ -45,10 +51,10 @@ public class DeepLinkDispatcher extends BaseActivity {
                     // Navigating to comment thread
                     if (segments.size() > 5) {
                         // Link to specific comment
-                        showCommentsForLink(subreddit, segments.get(3), segments.get(5));
+                        linkCommentsRouter.showCommentsForLink(subreddit, segments.get(3), segments.get(5));
                     } else {
                         // Link to full thread
-                        showCommentsForLink(subreddit, segments.get(3), null);
+                        linkCommentsRouter.showCommentsForLink(subreddit, segments.get(3), null);
                     }
                 } else if (isSubredditSort(segments.get(2))) {
                     // Subreddit sorted

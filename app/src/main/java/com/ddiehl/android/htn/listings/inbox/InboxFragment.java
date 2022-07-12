@@ -15,6 +15,7 @@ import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.identity.IdentityManager;
 import com.ddiehl.android.htn.listings.BaseListingsFragment;
 import com.ddiehl.android.htn.listings.ListingsAdapter;
+import com.ddiehl.android.htn.listings.comments.LinkCommentsRouter;
 import com.ddiehl.android.htn.utils.AndroidUtils;
 import com.google.android.material.tabs.TabLayout;
 import com.hannesdorfmann.fragmentargs.FragmentArgs;
@@ -36,6 +37,8 @@ public class InboxFragment extends BaseListingsFragment
 
     @Inject
     IdentityManager identityManager;
+    @Inject
+    LinkCommentsRouter linkCommentsRouter;
 
     @Arg(key = "ARG_SHOW")
     String show;
@@ -56,7 +59,7 @@ public class InboxFragment extends BaseListingsFragment
 
         if (TextUtils.isEmpty(show)) show = "inbox";
 
-        inboxPresenter = new InboxPresenter(this, redditNavigationView, this);
+        inboxPresenter = new InboxPresenter(this, redditNavigationView, linkCommentsRouter, this);
         setListingsPresenter(inboxPresenter);
         setCallbacks(inboxPresenter);
     }
@@ -189,4 +192,12 @@ public class InboxFragment extends BaseListingsFragment
     protected View getChromeView() {
         return coordinatorLayout;
     }
+
+//    void showCommentsForLink(
+//            String subreddit,
+//            String linkId,
+//            String commentId
+//    ) {
+//        linkCommentsRouter.showCommentsForLink(subreddit, linkId, commentId);
+//    }
 }

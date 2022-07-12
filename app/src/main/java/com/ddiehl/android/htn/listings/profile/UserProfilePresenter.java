@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.listings.BaseListingsPresenter;
+import com.ddiehl.android.htn.listings.comments.LinkCommentsRouter;
 import com.ddiehl.android.htn.navigation.RedditNavigationView;
 import com.ddiehl.android.htn.utils.Utils;
 import com.ddiehl.android.htn.view.MainView;
@@ -33,8 +34,12 @@ public class UserProfilePresenter extends BaseListingsPresenter {
 
     private final UserProfileView summaryView;
 
-    public UserProfilePresenter(MainView main, RedditNavigationView navigationView, UserProfileView view) {
-        super(main, navigationView, view, view, view, null);
+    public UserProfilePresenter(
+            MainView main,
+            RedditNavigationView navigationView,
+            LinkCommentsRouter linkCommentsRouter,
+            UserProfileView view) {
+        super(main, navigationView, linkCommentsRouter, view, view, view, null);
         HoldTheNarwhal.getApplicationComponent().inject(this);
         summaryView = view;
     }
@@ -67,10 +72,10 @@ public class UserProfilePresenter extends BaseListingsPresenter {
         String before = append ? null : prevPageListingId;
         String after = append ? nextPageListingId : null;
         redditService.loadUserProfile(
-                summaryView.getShow(), summaryView.getUsernameContext(),
-                summaryView.getSort(), summaryView.getTimespan(),
-                before, after
-        )
+                        summaryView.getShow(), summaryView.getUsernameContext(),
+                        summaryView.getSort(), summaryView.getTimespan(),
+                        before, after
+                )
                 .flatMap(this::checkNullResponse)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -123,13 +128,13 @@ public class UserProfilePresenter extends BaseListingsPresenter {
 
     private void getSummaryData() {
         Observable.combineLatest(
-                getUserInfo(), getTrophies(),
-                // Combine trophies into the user info tuple
-                (tuple, trophies) -> {
-                    tuple.trophies = trophies;
-                    return tuple;
-                }
-        )
+                        getUserInfo(), getTrophies(),
+                        // Combine trophies into the user info tuple
+                        (tuple, trophies) -> {
+                            tuple.trophies = trophies;
+                            return tuple;
+                        }
+                )
                 .doOnSubscribe(disposable -> {
                     mainView.showSpinner();
                     nextRequested = true;

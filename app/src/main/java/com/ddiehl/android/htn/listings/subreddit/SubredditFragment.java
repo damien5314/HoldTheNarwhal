@@ -21,6 +21,7 @@ import com.ddiehl.android.htn.listings.BaseListingsFragment;
 import com.ddiehl.android.htn.listings.ChooseTimespanDialog;
 import com.ddiehl.android.htn.listings.ListingsAdapter;
 import com.ddiehl.android.htn.listings.comments.LinkCommentsActivity;
+import com.ddiehl.android.htn.listings.comments.LinkCommentsRouter;
 import com.ddiehl.android.htn.listings.links.ChooseLinkSortDialog;
 import com.ddiehl.android.htn.listings.profile.UserProfileFragment;
 import com.ddiehl.android.htn.listings.subreddit.submission.SubmitPostActivity;
@@ -44,7 +45,9 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
     public static final String TAG = SubredditFragment.class.getSimpleName();
 
     @Inject
-    protected SettingsManager settingsManager;
+    SettingsManager settingsManager;
+    @Inject
+    LinkCommentsRouter linkCommentsRouter;
 
     @Arg(required = false)
     String subredditName;
@@ -74,7 +77,7 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
         if (TextUtils.isEmpty(sort)) sort = "hot";
         if (TextUtils.isEmpty(timespan)) timespan = "all";
 
-        SubredditPresenter presenter = new SubredditPresenter(this, redditNavigationView, this);
+        SubredditPresenter presenter = new SubredditPresenter(this, redditNavigationView, linkCommentsRouter, this);
         subredditPresenter = presenter;
         setListingsPresenter(presenter);
         setCallbacks(presenter);

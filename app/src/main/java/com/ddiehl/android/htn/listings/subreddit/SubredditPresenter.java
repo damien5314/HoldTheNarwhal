@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.listings.BaseListingsPresenter;
+import com.ddiehl.android.htn.listings.comments.LinkCommentsRouter;
 import com.ddiehl.android.htn.navigation.RedditNavigationView;
 import com.ddiehl.android.htn.view.MainView;
 
@@ -23,8 +24,12 @@ public class SubredditPresenter extends BaseListingsPresenter {
 
     private SubredditView subredditView;
 
-    public SubredditPresenter(MainView main, RedditNavigationView navigationView, SubredditView view) {
-        super(main, navigationView, view, view, null, null);
+    public SubredditPresenter(
+            MainView main,
+            RedditNavigationView navigationView,
+            LinkCommentsRouter linkCommentsRouter,
+            SubredditView view) {
+        super(main, navigationView, linkCommentsRouter, view, view, null, null);
         subredditView = view;
     }
 

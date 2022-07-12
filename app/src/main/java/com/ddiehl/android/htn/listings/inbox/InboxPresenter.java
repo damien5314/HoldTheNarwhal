@@ -2,6 +2,7 @@ package com.ddiehl.android.htn.listings.inbox;
 
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.listings.BaseListingsPresenter;
+import com.ddiehl.android.htn.listings.comments.LinkCommentsRouter;
 import com.ddiehl.android.htn.navigation.RedditNavigationView;
 import com.ddiehl.android.htn.view.MainView;
 
@@ -20,8 +21,12 @@ public class InboxPresenter extends BaseListingsPresenter {
 
     private final InboxView inboxView;
 
-    public InboxPresenter(MainView main, RedditNavigationView navigationView, InboxView inbox) {
-        super(main, navigationView, inbox, inbox, inbox, inbox);
+    public InboxPresenter(
+            MainView main,
+            RedditNavigationView navigationView,
+            LinkCommentsRouter linkCommentsRouter,
+            InboxView inbox) {
+        super(main, navigationView, linkCommentsRouter, inbox, inbox, inbox, inbox);
         inboxView = inbox;
     }
 
