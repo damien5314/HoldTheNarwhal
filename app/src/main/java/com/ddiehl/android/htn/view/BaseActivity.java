@@ -17,7 +17,6 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -73,7 +72,7 @@ import rxreddit.model.UserAccessToken;
 import rxreddit.model.UserIdentity;
 import timber.log.Timber;
 
-public abstract class BaseActivity extends AppCompatActivity implements
+public abstract class BaseActivity extends BaseDaggerActivity implements
         RedditNavigationView,
         IdentityManager.Callbacks,
         NavigationView.OnNavigationItemSelectedListener,

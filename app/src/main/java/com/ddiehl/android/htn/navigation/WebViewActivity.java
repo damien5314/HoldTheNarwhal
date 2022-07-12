@@ -5,11 +5,12 @@ import android.content.Intent;
 
 import androidx.fragment.app.Fragment;
 
-import com.ddiehl.android.htn.view.FragmentActivityCompat;
+import com.ddiehl.android.htn.R;
+import com.ddiehl.android.htn.view.BaseActivity;
 
 import org.jetbrains.annotations.NotNull;
 
-public class WebViewActivity extends FragmentActivityCompat {
+public class WebViewActivity extends BaseActivity {
 
     public static final String EXTRA_URL = "EXTRA_URL";
 
@@ -20,18 +21,29 @@ public class WebViewActivity extends FragmentActivityCompat {
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        if (getSupportFragmentManager().findFragmentByTag(getFragmentTag()) == null) {
+            final Fragment fragment = getFragment();
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.fragment_container, fragment, getFragmentTag())
+                    .commit();
+        }
+    }
+
+    @Override
     protected boolean hasNavigationDrawer() {
         return false;
     }
 
-    @NotNull @Override
-    protected Fragment getFragment() {
+    @NotNull
+    private Fragment getFragment() {
         return new WebViewFragmentBuilder(getUrl())
                 .build();
     }
 
-    @NotNull @Override
-    protected String getFragmentTag() {
+    @NotNull
+    private String getFragmentTag() {
         return WebViewFragment.TAG;
     }
 

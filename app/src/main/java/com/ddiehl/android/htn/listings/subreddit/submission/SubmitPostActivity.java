@@ -7,12 +7,12 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 
 import com.ddiehl.android.htn.R;
-import com.ddiehl.android.htn.view.FragmentActivityCompat;
+import com.ddiehl.android.htn.view.BaseActivity;
 
 import org.jetbrains.annotations.NotNull;
 
 
-public class SubmitPostActivity extends FragmentActivityCompat {
+public class SubmitPostActivity extends BaseActivity {
 
     public static final String TAG = SubmitPostActivity.class.getSimpleName();
 
@@ -38,20 +38,27 @@ public class SubmitPostActivity extends FragmentActivityCompat {
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        if (getSupportFragmentManager().findFragmentByTag(getFragmentTag()) == null) {
+            final Fragment fragment = getFragment();
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.fragment_container, fragment, getFragmentTag())
+                    .commit();
+        }
+    }
+
+    @Override
     protected boolean hasNavigationDrawer() {
         return false;
     }
 
-    @NotNull
-    @Override
-    protected Fragment getFragment() {
+    private Fragment getFragment() {
         return new SubmitPostFragmentBuilder(subreddit)
                 .build();
     }
 
-    @NotNull
-    @Override
-    protected String getFragmentTag() {
+    private String getFragmentTag() {
         return SubmitPostFragment.TAG;
     }
 }

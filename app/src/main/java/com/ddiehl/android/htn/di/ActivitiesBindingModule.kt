@@ -6,6 +6,7 @@ import com.ddiehl.android.htn.listings.inbox.PrivateMessageActivity
 import com.ddiehl.android.htn.listings.profile.UserProfileActivity
 import com.ddiehl.android.htn.listings.subreddit.SubredditActivity
 import com.ddiehl.android.htn.listings.subreddit.submission.SubmitPostActivity
+import com.ddiehl.android.htn.navigation.DeepLinkDispatcher
 import com.ddiehl.android.htn.navigation.WebViewActivity
 import com.ddiehl.android.htn.settings.SettingsActivity
 import com.ddiehl.android.htn.subredditinfo.SubredditInfoActivity
@@ -18,6 +19,10 @@ import dagger.android.ContributesAndroidInjector
  */
 @Module
 interface ActivitiesBindingModule {
+
+    @ActivityScope
+    @ContributesAndroidInjector(modules = [])
+    fun bindDeepLinkDispatcher(): DeepLinkDispatcher
 
     @ActivityScope
     @ContributesAndroidInjector(modules = [])
