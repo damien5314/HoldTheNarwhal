@@ -4,6 +4,7 @@ import android.text.TextUtils;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
+import com.ddiehl.android.htn.gallery.MediaGalleryRouter;
 import com.ddiehl.android.htn.listings.BaseListingsPresenter;
 import com.ddiehl.android.htn.listings.comments.LinkCommentsRouter;
 import com.ddiehl.android.htn.navigation.RedditNavigationView;
@@ -39,9 +40,10 @@ public class UserProfilePresenter extends BaseListingsPresenter {
             MainView main,
             RedditNavigationView navigationView,
             LinkCommentsRouter linkCommentsRouter,
+            MediaGalleryRouter mediaGalleryRouter,
             VideoPlayerRouter videoPlayerRouter,
             UserProfileView view) {
-        super(main, navigationView, linkCommentsRouter, videoPlayerRouter, view, view, view, null);
+        super(main, navigationView, linkCommentsRouter, mediaGalleryRouter, videoPlayerRouter, view, view, view, null);
         HoldTheNarwhal.getApplicationComponent().inject(this);
         summaryView = view;
     }

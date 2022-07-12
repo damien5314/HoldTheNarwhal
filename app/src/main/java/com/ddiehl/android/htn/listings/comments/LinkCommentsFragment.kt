@@ -8,6 +8,7 @@ import android.view.*
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.ddiehl.android.htn.R
+import com.ddiehl.android.htn.gallery.MediaGalleryRouter
 import com.ddiehl.android.htn.listings.BaseListingsFragment
 import com.ddiehl.android.htn.settings.SettingsManager
 import com.ddiehl.android.htn.utils.AndroidUtils.safeStartActivity
@@ -16,7 +17,6 @@ import com.hannesdorfmann.fragmentargs.FragmentArgs
 import com.hannesdorfmann.fragmentargs.annotation.Arg
 import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs
 import rxreddit.model.Comment
-import rxreddit.model.GalleryItem
 import rxreddit.model.Link
 import rxreddit.model.Listing
 import javax.inject.Inject
@@ -34,6 +34,8 @@ class LinkCommentsFragment : BaseListingsFragment(), LinkCommentsView,
     lateinit var settingsManager: SettingsManager
     @Inject
     lateinit var linkCommentsRouter: LinkCommentsRouter
+    @Inject
+    lateinit var mediaGalleryRouter: MediaGalleryRouter
     @Inject
     lateinit var videoPlayRouter: VideoPlayerRouter
 
@@ -55,7 +57,14 @@ class LinkCommentsFragment : BaseListingsFragment(), LinkCommentsView,
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         FragmentArgs.inject(this)
-        presenter = LinkCommentsPresenter(this, redditNavigationView, linkCommentsRouter, videoPlayRouter, this)
+        presenter = LinkCommentsPresenter(
+            this,
+            redditNavigationView,
+            linkCommentsRouter,
+            mediaGalleryRouter,
+            videoPlayRouter,
+            this,
+        )
         listingsPresenter = presenter
         sort = settingsManager.commentSort
         callbacks = listingsPresenter
@@ -229,10 +238,6 @@ class LinkCommentsFragment : BaseListingsFragment(), LinkCommentsView,
 
     override fun openUrlInWebView(url: String) {
         redditNavigationView.openURL(url)
-    }
-
-    override fun openLinkGallery(galleryItems: List<GalleryItem>) {
-        redditNavigationView.openLinkGallery(galleryItems)
     }
 
     override fun openReplyView(listing: Listing) {

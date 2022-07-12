@@ -1,6 +1,7 @@
 package com.ddiehl.android.htn.listings.comments;
 
 import com.ddiehl.android.htn.R;
+import com.ddiehl.android.htn.gallery.MediaGalleryRouter;
 import com.ddiehl.android.htn.listings.BaseListingsPresenter;
 import com.ddiehl.android.htn.navigation.RedditNavigationView;
 import com.ddiehl.android.htn.utils.RedditUtilKt;
@@ -30,6 +31,7 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
 
     private static final int MAX_CHILDREN_PER_REQUEST = 20;
 
+    private final MediaGalleryRouter mediaGalleryRouter;
     private final VideoPlayerRouter videoPlayerRouter;
     private final LinkCommentsView linkCommentsView;
     private final CommentBank commentBank;
@@ -41,9 +43,11 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
             MainView main,
             RedditNavigationView navigationView,
             LinkCommentsRouter linkCommentsRouter,
+            MediaGalleryRouter mediaGalleryRouter,
             VideoPlayerRouter videoPlayerRouter,
             LinkCommentsView view) {
-        super(main, navigationView, linkCommentsRouter, videoPlayerRouter, view, view, view, null);
+        super(main, navigationView, linkCommentsRouter, mediaGalleryRouter, videoPlayerRouter, view, view, view, null);
+        this.mediaGalleryRouter = mediaGalleryRouter;
         this.videoPlayerRouter = videoPlayerRouter;
         linkCommentsView = view;
         commentBank = new CommentBankList();
@@ -259,7 +263,7 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
         // Determine correct routing for link
         if (link.isGallery()) {
             final List<GalleryItem> galleryItems = link.getGalleryItems();
-            linkCommentsView.openLinkGallery(galleryItems);
+            mediaGalleryRouter.openLinkGallery(galleryItems);
             return;
         }
 

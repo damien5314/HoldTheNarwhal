@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
+import com.ddiehl.android.htn.gallery.MediaGalleryRouter;
 import com.ddiehl.android.htn.identity.IdentityManager;
 import com.ddiehl.android.htn.listings.comments.CommentView;
 import com.ddiehl.android.htn.listings.comments.LinkCommentsRouter;
@@ -65,6 +66,7 @@ public abstract class BaseListingsPresenter
     protected final MainView mainView;
     protected final RedditNavigationView redditNavigationView;
     private final LinkCommentsRouter linkCommentsRouter;
+    private final MediaGalleryRouter mediaGalleryRouter;
     private final VideoPlayerRouter videoPlayerRouter;
     private final LinkView linkView;
     private final CommentView commentView;
@@ -79,6 +81,7 @@ public abstract class BaseListingsPresenter
             MainView main,
             RedditNavigationView redditNavigationView,
             LinkCommentsRouter linkCommentsRouter,
+            MediaGalleryRouter mediaGalleryRouter,
             VideoPlayerRouter videoPlayerRouter,
             ListingsView view,
             LinkView linkView,
@@ -88,6 +91,7 @@ public abstract class BaseListingsPresenter
         this.mainView = main;
         this.redditNavigationView = redditNavigationView;
         this.linkCommentsRouter = linkCommentsRouter;
+        this.mediaGalleryRouter = mediaGalleryRouter;
         this.videoPlayerRouter = videoPlayerRouter;
         this.listingsView = view;
         this.linkView = linkView;
@@ -233,7 +237,7 @@ public abstract class BaseListingsPresenter
         // Determine correct routing for link
         if (link.isGallery()) {
             final List<GalleryItem> galleryItems = link.getGalleryItems();
-            linkView.openLinkGallery(galleryItems);
+            mediaGalleryRouter.openLinkGallery(galleryItems);
             return;
         }
 

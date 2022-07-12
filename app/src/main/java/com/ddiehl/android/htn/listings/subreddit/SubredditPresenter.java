@@ -3,6 +3,7 @@ package com.ddiehl.android.htn.listings.subreddit;
 import androidx.annotation.NonNull;
 
 import com.ddiehl.android.htn.R;
+import com.ddiehl.android.htn.gallery.MediaGalleryRouter;
 import com.ddiehl.android.htn.listings.BaseListingsPresenter;
 import com.ddiehl.android.htn.listings.comments.LinkCommentsRouter;
 import com.ddiehl.android.htn.navigation.RedditNavigationView;
@@ -29,9 +30,20 @@ public class SubredditPresenter extends BaseListingsPresenter {
             MainView main,
             RedditNavigationView navigationView,
             LinkCommentsRouter linkCommentsRouter,
+            MediaGalleryRouter mediaGalleryRouter,
             VideoPlayerRouter videoPlayerRouter,
             SubredditView view) {
-        super(main, navigationView, linkCommentsRouter, videoPlayerRouter, view, view, null, null);
+        super(
+                main,
+                navigationView,
+                linkCommentsRouter,
+                mediaGalleryRouter,
+                videoPlayerRouter,
+                view,
+                view,
+                null,
+                null
+        );
         subredditView = view;
     }
 

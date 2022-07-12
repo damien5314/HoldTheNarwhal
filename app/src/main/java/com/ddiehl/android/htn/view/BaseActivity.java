@@ -23,7 +23,6 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 
 import com.ddiehl.android.htn.R;
-import com.ddiehl.android.htn.gallery.MediaGalleryFragment;
 import com.ddiehl.android.htn.identity.IdentityManager;
 import com.ddiehl.android.htn.listings.inbox.InboxActivity;
 import com.ddiehl.android.htn.listings.inbox.PrivateMessageActivity;
@@ -63,7 +62,6 @@ import io.reactivex.rxjava3.functions.Function;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import rxreddit.android.SignInActivity;
 import rxreddit.api.RedditService;
-import rxreddit.model.GalleryItem;
 import rxreddit.model.PrivateMessage;
 import rxreddit.model.UserAccessToken;
 import rxreddit.model.UserIdentity;
@@ -405,13 +403,6 @@ public abstract class BaseActivity extends BaseDaggerActivity implements
     private void showWebViewForURL(@NotNull String url) {
         Intent intent = WebViewActivity.getIntent(this, url);
         startActivity(intent);
-    }
-
-    @Override
-    public void openLinkGallery(@NotNull List<GalleryItem> galleryItems) {
-        Timber.d("Opening gallery with item count: %s", galleryItems.size());
-        MediaGalleryFragment.create(galleryItems)
-                .show(getSupportFragmentManager(), MediaGalleryFragment.TAG);
     }
 
     public void showUserSubreddits() {

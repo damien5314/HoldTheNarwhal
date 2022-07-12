@@ -17,6 +17,7 @@ import android.widget.TextView;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
 import com.ddiehl.android.htn.R;
+import com.ddiehl.android.htn.gallery.MediaGalleryRouter;
 import com.ddiehl.android.htn.identity.IdentityManager;
 import com.ddiehl.android.htn.listings.BaseListingsFragment;
 import com.ddiehl.android.htn.listings.ChooseTimespanDialog;
@@ -59,6 +60,8 @@ public class UserProfileFragment extends BaseListingsFragment
     IdentityManager identityManager;
     @Inject
     LinkCommentsRouter linkCommentsRouter;
+    @Inject
+    MediaGalleryRouter mediaGalleryRouter;
     @Inject
     VideoPlayerRouter videoPlayerRouter;
 
@@ -111,6 +114,7 @@ public class UserProfileFragment extends BaseListingsFragment
                 this,
                 redditNavigationView,
                 linkCommentsRouter,
+                mediaGalleryRouter,
                 videoPlayerRouter,
                 this
         );

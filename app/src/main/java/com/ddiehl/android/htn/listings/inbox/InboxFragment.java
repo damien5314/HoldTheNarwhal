@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
 import com.ddiehl.android.htn.R;
+import com.ddiehl.android.htn.gallery.MediaGalleryRouter;
 import com.ddiehl.android.htn.identity.IdentityManager;
 import com.ddiehl.android.htn.listings.BaseListingsFragment;
 import com.ddiehl.android.htn.listings.ListingsAdapter;
@@ -41,6 +42,8 @@ public class InboxFragment extends BaseListingsFragment
     @Inject
     LinkCommentsRouter linkCommentsRouter;
     @Inject
+    MediaGalleryRouter mediaGalleryRouter;
+    @Inject
     VideoPlayerRouter videoPlayerRouter;
 
     @Arg(key = "ARG_SHOW")
@@ -62,7 +65,14 @@ public class InboxFragment extends BaseListingsFragment
 
         if (TextUtils.isEmpty(show)) show = "inbox";
 
-        inboxPresenter = new InboxPresenter(this, redditNavigationView, linkCommentsRouter, videoPlayerRouter, this);
+        inboxPresenter = new InboxPresenter(
+                this,
+                redditNavigationView,
+                linkCommentsRouter,
+                mediaGalleryRouter,
+                videoPlayerRouter,
+                this
+        );
         setListingsPresenter(inboxPresenter);
         setCallbacks(inboxPresenter);
     }

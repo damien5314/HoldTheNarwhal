@@ -5,9 +5,6 @@ import android.view.View;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-
-import rxreddit.model.GalleryItem;
 import rxreddit.model.Link;
 
 public interface LinkView {
@@ -15,8 +12,6 @@ public interface LinkView {
     void showLinkContextMenu(ContextMenu menu, View view, Link link);
 
     void openUrlInWebView(@NotNull String url);
-
-    void openLinkGallery(@NotNull List<GalleryItem> galleryItems);
 
     void openShareView(@NotNull Link link);
 

@@ -17,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
 import com.ddiehl.android.htn.R;
+import com.ddiehl.android.htn.gallery.MediaGalleryRouter;
 import com.ddiehl.android.htn.listings.BaseListingsFragment;
 import com.ddiehl.android.htn.listings.ChooseTimespanDialog;
 import com.ddiehl.android.htn.listings.ListingsAdapter;
@@ -49,6 +50,8 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
     SettingsManager settingsManager;
     @Inject
     LinkCommentsRouter linkCommentsRouter;
+    @Inject
+    MediaGalleryRouter mediaGalleryRouter;
     @Inject
     VideoPlayerRouter videoPlayerRouter;
 
@@ -84,6 +87,7 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
                 this,
                 redditNavigationView,
                 linkCommentsRouter,
+                mediaGalleryRouter,
                 videoPlayerRouter,
                 this
         );

@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import androidx.annotation.StringRes;
 
 import com.ddiehl.android.htn.R;
+import com.ddiehl.android.htn.gallery.MediaGalleryRouter;
 import com.ddiehl.android.htn.identity.IdentityManager;
 import com.ddiehl.android.htn.listings.subreddit.SubredditActivity;
 import com.ddiehl.android.htn.navigation.RedditNavigationView;
@@ -51,6 +52,8 @@ public abstract class BaseFragment extends BaseDaggerFragment implements MainVie
     RedditService redditService;
     @Inject
     IdentityManager identityManager;
+    @Inject
+    MediaGalleryRouter mediaGalleryRouter;
 
     protected RedditNavigationView redditNavigationView;
     ProgressDialog loadingOverlay;

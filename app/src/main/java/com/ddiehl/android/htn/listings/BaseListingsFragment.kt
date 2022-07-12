@@ -17,7 +17,10 @@ import com.ddiehl.android.htn.view.BaseFragment
 import com.ddiehl.android.htn.view.video.VideoPlayerDialog
 import com.ddiehl.android.htn.view.video.VideoPlayerDialogBuilder
 import com.google.android.material.snackbar.Snackbar
-import rxreddit.model.*
+import rxreddit.model.Comment
+import rxreddit.model.Link
+import rxreddit.model.Listing
+import rxreddit.model.PrivateMessage
 
 abstract class BaseListingsFragment : BaseFragment(), ListingsView, SwipeRefreshLayout.OnRefreshListener {
 
@@ -372,10 +375,6 @@ abstract class BaseListingsFragment : BaseFragment(), ListingsView, SwipeRefresh
 
     open fun openUrlInWebView(url: String) {
         redditNavigationView.openURL(url)
-    }
-
-    open fun openLinkGallery(galleryItems: List<GalleryItem>) {
-        redditNavigationView.openLinkGallery(galleryItems)
     }
 
     open fun openVideoInDialog(url: String) {
