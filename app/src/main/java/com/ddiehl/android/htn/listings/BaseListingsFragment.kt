@@ -1,16 +1,13 @@
 package com.ddiehl.android.htn.listings
 
-import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.*
-import androidx.fragment.app.FragmentResultListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.ddiehl.android.htn.R
-import com.ddiehl.android.htn.listings.report.ReportView
 import com.ddiehl.android.htn.listings.report.ReportViewRouter
 import com.ddiehl.android.htn.routing.AppRouter
 import com.ddiehl.android.htn.utils.AndroidUtils.safeStartActivity
@@ -20,11 +17,9 @@ import rxreddit.model.Comment
 import rxreddit.model.Link
 import rxreddit.model.Listing
 import rxreddit.model.PrivateMessage
-import timber.log.Timber
 import javax.inject.Inject
 
 abstract class BaseListingsFragment : BaseFragment(),
-    FragmentResultListener,
     ListingsView,
     SwipeRefreshLayout.OnRefreshListener {
 
@@ -372,24 +367,14 @@ abstract class BaseListingsFragment : BaseFragment(),
     }
 
     private fun listenForReportViewResults() {
-        val fragmentManager = parentFragmentManager
-        Timber.d("[dcd] listenForReportViewResults, setting listener for FragmentManager $fragmentManager")
-        Timber.d("[dcd] listenForReportViewResults, could also set to $childFragmentManager")
-//        parentFragmentManager.setFragmentResultListener(REQUEST_REPORT_LISTING.toString(), this, this)
-        fragmentManager.setFragmentResultListener(ReportView.REQUEST_KEY, this, this)
-//        activity?.supportFragmentManager?.setFragmentResultListener(REQUEST_REPORT_LISTING.toString(), this, this)
-    }
-
-    override fun onFragmentResult(requestKey: String, result: Bundle) {
-        Timber.d("[dcd] onFragmentResult: $requestKey, $result")
-        when (requestKey) {
-            ReportView.REQUEST_KEY -> {
-                when (result.getInt(ReportView.BUNDLE_KEY_RESULT_CODE, -100)) {
-                    Activity.RESULT_OK -> showReportSuccessToast()
-                    Activity.RESULT_CANCELED -> showReportErrorToast()
+        reportViewRouter.observeReportResults()
+            .subscribe { result ->
+                when (result) {
+                    ReportViewRouter.ReportResult.SUCCESS -> showReportSuccessToast()
+                    ReportViewRouter.ReportResult.CANCELED -> showReportErrorToast()
+                    null -> { }
                 }
             }
-        }
     }
 
     private fun showReportSuccessToast() {

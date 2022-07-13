@@ -150,16 +150,9 @@ public class ReportView extends BaseDaggerDialogFragment
     }
 
     private void deliverResult(int resultCode) {
-//        final Fragment targetFragment = getTargetFragment();
-//        if (targetFragment == null) {
-//            throw new IllegalStateException("No target fragment set for ReportView");
-//        }
-//        targetFragment.onActivityResult(getTargetRequestCode(), resultCode, null);
         final Bundle resultBundle = new Bundle();
         resultBundle.putInt(BUNDLE_KEY_RESULT_CODE, resultCode);
         final FragmentManager parentFragmentManager = getParentFragmentManager();
-        Timber.d("[dcd] delivering result to FragmentManager: %s", parentFragmentManager.toString());
-        Timber.d("[dcd] could also deliver results to: %s", getChildFragmentManager().toString());
         parentFragmentManager.setFragmentResult(REQUEST_KEY, resultBundle);
     }
 
