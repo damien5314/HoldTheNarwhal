@@ -98,20 +98,6 @@ class LinkCommentsFragment : BaseListingsFragment(), LinkCommentsView,
         safeStartActivity(context, intent)
     }
 
-    override fun openLinkInBrowser(link: Link) {
-        val uri = Uri.parse(link.url)
-        val intent = Intent(Intent.ACTION_VIEW, uri)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        safeStartActivity(context, intent)
-    }
-
-    override fun openCommentsInBrowser(link: Link) {
-        val uri = Uri.parse("https://www.reddit.com" + link.permalink)
-        val intent = Intent(Intent.ACTION_VIEW, uri)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        safeStartActivity(context, intent)
-    }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
             REQUEST_CHOOSE_SORT -> if (resultCode == RESULT_OK) {

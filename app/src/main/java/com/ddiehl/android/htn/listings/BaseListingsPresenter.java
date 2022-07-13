@@ -302,15 +302,18 @@ public abstract class BaseListingsPresenter
     }
 
     public void openLinkUserProfile(@NotNull Link link) {
-        appRouter.showUserProfile(link.getAuthor(), null, null);
+        final String author = link.getAuthor();
+        if (author != null) {
+            appRouter.showUserProfile(author, null, null);
+        }
     }
 
     public void openLinkInBrowser(@NotNull Link link) {
-        linkView.openLinkInBrowser(link);
+        appRouter.openLinkInBrowser(link);
     }
 
     public void openCommentsInBrowser(@NotNull Link link) {
-        linkView.openCommentsInBrowser(link);
+        appRouter.openLinkCommentsInBrowser(link);
     }
 
     public void hideLink(@NotNull Link link) {

@@ -13,6 +13,7 @@ import com.ddiehl.android.htn.navigation.SubredditNavigationDialog
 import com.ddiehl.android.htn.navigation.WebViewActivity
 import com.ddiehl.android.htn.settings.SettingsActivity
 import com.ddiehl.android.htn.subscriptions.SubscriptionManagerActivity
+import com.ddiehl.android.htn.utils.AndroidUtils
 import com.ddiehl.android.htn.utils.getColorFromAttr
 import com.google.gson.Gson
 import rxreddit.model.Comment
@@ -111,12 +112,27 @@ class AppRouter @Inject constructor(
         intent.putExtras(extras)
 
         // Check if Activity exists to handle the Intent
-        if (intent.resolveActivity(activity.packageManager) != null) {
+        val activityStarted = AndroidUtils.safeStartActivity(activity, intent)
+        if (!activityStarted) {
             Timber.e("No Activity found that can handle custom tabs Intent")
-            activity.startActivity(intent)
-        } else {
             val intent = WebViewActivity.getIntent(activity, url)
             activity.startActivity(intent)
         }
+    }
+
+    fun openLinkInBrowser(link: Link) {
+        val uri = Uri.parse(link.url)
+        val intent = Intent(Intent.ACTION_VIEW, uri).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        }
+        AndroidUtils.safeStartActivity(activity, intent)
+    }
+
+    fun openLinkCommentsInBrowser(link: Link) {
+        val uri = Uri.parse(LINK_BASE_URL + link.permalink)
+        val intent = Intent(Intent.ACTION_VIEW, uri).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        }
+        AndroidUtils.safeStartActivity(activity, intent)
     }
 }

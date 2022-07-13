@@ -11,9 +11,5 @@ public interface LinkView {
 
     void showLinkContextMenu(ContextMenu menu, View view, Link link);
 
-    void openLinkInBrowser(@NotNull Link link);
-
-    void openCommentsInBrowser(@NotNull Link link);
-
     void openReportView(@NotNull Link link);
 }

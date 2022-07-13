@@ -349,22 +349,6 @@ abstract class BaseListingsFragment : BaseFragment(), ListingsView, SwipeRefresh
         }
     }
 
-    open fun openLinkInBrowser(link: Link) {
-        val uri = Uri.parse(link.url)
-        val intent = Intent(Intent.ACTION_VIEW, uri).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        }
-        safeStartActivity(context, intent)
-    }
-
-    open fun openCommentsInBrowser(link: Link) {
-        val uri = Uri.parse(LINK_BASE_URL + link.permalink)
-        val intent = Intent(Intent.ACTION_VIEW, uri).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        }
-        safeStartActivity(context, intent)
-    }
-
     open fun openReplyView(listing: Listing) {
         showToast(getString(R.string.implementation_pending))
     }
