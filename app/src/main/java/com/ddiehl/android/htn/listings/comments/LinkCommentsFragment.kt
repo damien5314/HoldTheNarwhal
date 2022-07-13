@@ -2,7 +2,6 @@ package com.ddiehl.android.htn.listings.comments
 
 import android.app.Activity.RESULT_OK
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.*
 import androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -11,12 +10,10 @@ import com.ddiehl.android.htn.R
 import com.ddiehl.android.htn.gallery.MediaGalleryRouter
 import com.ddiehl.android.htn.listings.BaseListingsFragment
 import com.ddiehl.android.htn.settings.SettingsManager
-import com.ddiehl.android.htn.utils.AndroidUtils.safeStartActivity
 import com.ddiehl.android.htn.view.video.VideoPlayerRouter
 import com.hannesdorfmann.fragmentargs.FragmentArgs
 import com.hannesdorfmann.fragmentargs.annotation.Arg
 import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs
-import rxreddit.model.Comment
 import rxreddit.model.Link
 import rxreddit.model.Listing
 import javax.inject.Inject
@@ -91,13 +88,6 @@ class LinkCommentsFragment : BaseListingsFragment(), LinkCommentsView,
     }
 
     override val listingsAdapter by lazy { LinkCommentsAdapter(this, presenter) }
-
-    override fun openCommentInBrowser(comment: Comment) {
-        val uri = Uri.parse(comment.url)
-        val intent = Intent(Intent.ACTION_VIEW, uri)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        safeStartActivity(context, intent)
-    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {

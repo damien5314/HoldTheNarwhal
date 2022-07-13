@@ -135,4 +135,12 @@ class AppRouter @Inject constructor(
         }
         AndroidUtils.safeStartActivity(activity, intent)
     }
+
+    fun openCommentInBrowser(comment: Comment) {
+        val uri = Uri.parse(comment.url)
+        val intent = Intent(Intent.ACTION_VIEW, uri).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        }
+        AndroidUtils.safeStartActivity(activity, intent)
+    }
 }

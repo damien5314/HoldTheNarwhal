@@ -12,7 +12,5 @@ public interface CommentView {
 
     void showCommentContextMenu(ContextMenu menu, View v, Comment comment);
 
-    void openCommentInBrowser(@NotNull Comment comment);
-
     void openReplyView(@NotNull Listing listing);
 }

@@ -398,7 +398,7 @@ public abstract class BaseListingsPresenter
     }
 
     public void openCommentInBrowser(@NotNull Comment comment) {
-        commentView.openCommentInBrowser(comment);
+        appRouter.openCommentInBrowser(comment);
     }
 
     public void reportComment(@NotNull Comment comment) {

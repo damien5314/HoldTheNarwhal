@@ -1,7 +1,5 @@
 package com.ddiehl.android.htn.listings
 
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.*
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -10,7 +8,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.ddiehl.android.htn.R
 import com.ddiehl.android.htn.listings.report.ReportViewRouter
 import com.ddiehl.android.htn.routing.AppRouter
-import com.ddiehl.android.htn.utils.AndroidUtils.safeStartActivity
 import com.ddiehl.android.htn.view.BaseFragment
 import com.google.android.material.snackbar.Snackbar
 import rxreddit.model.Comment
@@ -333,14 +330,6 @@ abstract class BaseListingsFragment : BaseFragment(),
 
     open fun openReplyView(listing: Listing) {
         showToast(getString(R.string.implementation_pending))
-    }
-
-    open fun openCommentInBrowser(comment: Comment) {
-        val uri = Uri.parse(comment.url)
-        val intent = Intent(Intent.ACTION_VIEW, uri).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        }
-        safeStartActivity(context, intent)
     }
 
     override fun notifyDataSetChanged() = listingsAdapter.notifyDataSetChanged()
