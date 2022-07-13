@@ -1,8 +1,8 @@
 package com.ddiehl.android.htn.utils;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -14,8 +14,15 @@ import android.text.style.URLSpan;
 import android.util.DisplayMetrics;
 import android.view.ViewGroup;
 import android.view.ViewParent;
+import android.widget.Toast;
+
+import androidx.annotation.AttrRes;
+import androidx.annotation.ColorInt;
+import androidx.annotation.DrawableRes;
+import androidx.core.content.ContextCompat;
 
 import com.ddiehl.android.htn.BuildConfig;
+import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.view.text.CustomBulletSpan;
 import com.ddiehl.android.htn.view.text.CustomQuoteSpan;
 import com.ddiehl.android.htn.view.text.NoUnderlineURLSpan;
@@ -29,10 +36,6 @@ import org.jetbrains.annotations.Nullable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import androidx.annotation.AttrRes;
-import androidx.annotation.ColorInt;
-import androidx.annotation.DrawableRes;
-import androidx.core.content.ContextCompat;
 import okhttp3.Response;
 import timber.log.Timber;
 
@@ -129,16 +132,18 @@ public class AndroidUtils {
         return drawable;
     }
 
-    public static void safeStartActivity(@Nullable Context context, @NotNull Intent intent) {
-        if (context == null) return;
+    public static boolean safeStartActivity(@Nullable Context context, @NotNull Intent intent) {
+        if (context == null) return false;
 
-        final PackageManager packageManager = context.getPackageManager();
-        if (intent.resolveActivity(packageManager) != null) {
+        try {
             context.startActivity(intent);
-            return;
+            return true;
+        } catch (ActivityNotFoundException e) {
+            Timber.w(new RuntimeException("Unable to handle this Uri: " + intent.getDataString()));
+            Toast.makeText(context, R.string.error_opening_url_in_browser, Toast.LENGTH_LONG)
+                    .show();
+            return false;
         }
-
-        Timber.e(new RuntimeException("Unable to handle this Uri: " + intent.getDataString()));
     }
 
     public static void convertUrlSpansToNoUnderlineForm(SpannableStringBuilder text) {
