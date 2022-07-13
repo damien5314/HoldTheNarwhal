@@ -350,16 +350,6 @@ abstract class BaseListingsFragment : BaseFragment(), ListingsView, SwipeRefresh
         }
     }
 
-    open fun openShareView(link: Link) {
-        val intent = Intent().apply {
-            action = Intent.ACTION_SEND
-            type = "text/plain"
-            putExtra(Intent.EXTRA_TEXT, LINK_BASE_URL + link.permalink)
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        }
-        startActivity(intent)
-    }
-
     open fun openLinkInBrowser(link: Link) {
         val uri = Uri.parse(link.url)
         val intent = Intent(Intent.ACTION_VIEW, uri).apply {
@@ -380,13 +370,8 @@ abstract class BaseListingsFragment : BaseFragment(), ListingsView, SwipeRefresh
         showToast(getString(R.string.implementation_pending))
     }
 
-    open fun openShareView(comment: Comment) {
-        val i = Intent(Intent.ACTION_SEND)
-        i.type = "text/plain"
-        i.putExtra(Intent.EXTRA_TEXT, comment.url)
-        i.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        startActivity(i)
-    }
+
+
 
     fun openSubredditView(subreddit: String) {
         val intent = SubredditActivity.getIntent(context, subreddit, null, null)

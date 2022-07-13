@@ -291,7 +291,7 @@ public abstract class BaseListingsPresenter
     }
 
     public void shareLink(@NotNull Link link) {
-        linkView.openShareView(link);
+        appRouter.openShareView(link);
     }
 
     public void openLinkSubreddit(@NotNull Link link) {
@@ -389,7 +389,7 @@ public abstract class BaseListingsPresenter
     }
 
     public void shareComment(@NotNull Comment comment) {
-        commentView.openShareView(comment);
+        appRouter.openShareView(comment);
     }
 
     public void openCommentUserProfile(@NotNull Comment comment) {

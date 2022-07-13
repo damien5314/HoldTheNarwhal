@@ -91,31 +91,11 @@ class LinkCommentsFragment : BaseListingsFragment(), LinkCommentsView,
 
     override val listingsAdapter by lazy { LinkCommentsAdapter(this, presenter) }
 
-    override fun openShareView(comment: Comment) {
-        val intent = Intent().apply {
-            action = Intent.ACTION_SEND
-            type = "text/plain"
-            putExtra(Intent.EXTRA_TEXT, comment.url)
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        }
-        startActivity(intent)
-    }
-
     override fun openCommentInBrowser(comment: Comment) {
         val uri = Uri.parse(comment.url)
         val intent = Intent(Intent.ACTION_VIEW, uri)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
         safeStartActivity(context, intent)
-    }
-
-    override fun openShareView(link: Link) {
-        val intent = Intent(Intent.ACTION_SEND).apply {
-            action = Intent.ACTION_SEND
-            type = "text/plain"
-            putExtra(Intent.EXTRA_TEXT, "https://www.reddit.com" + link.permalink)
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        }
-        startActivity(intent)
     }
 
     override fun openUserProfileView(link: Link) {

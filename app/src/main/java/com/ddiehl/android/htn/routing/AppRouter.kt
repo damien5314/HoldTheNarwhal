@@ -15,6 +15,8 @@ import com.ddiehl.android.htn.settings.SettingsActivity
 import com.ddiehl.android.htn.subscriptions.SubscriptionManagerActivity
 import com.ddiehl.android.htn.utils.getColorFromAttr
 import com.google.gson.Gson
+import rxreddit.model.Comment
+import rxreddit.model.Link
 import rxreddit.model.PrivateMessage
 import timber.log.Timber
 import javax.inject.Inject
@@ -32,6 +34,7 @@ class AppRouter @Inject constructor(
     companion object {
         private const val EXTRA_CUSTOM_TABS_SESSION = "android.support.customtabs.extra.SESSION"
         private const val EXTRA_CUSTOM_TABS_TOOLBAR_COLOR = "android.support.customtabs.extra.TOOLBAR_COLOR"
+        private const val LINK_BASE_URL = "https://www.reddit.com"
     }
 
     fun showInbox(show: String? = null) {
@@ -53,6 +56,24 @@ class AppRouter @Inject constructor(
     fun showFrontPage(sort: String?, timespan: String?) {
         val intent = SubredditActivity.getIntent(activity, null, sort, timespan)
         activity.startActivity(intent)
+    }
+
+    fun openShareView(link: Link) {
+        val intent = Intent().apply {
+            action = Intent.ACTION_SEND
+            type = "text/plain"
+            putExtra(Intent.EXTRA_TEXT, LINK_BASE_URL + link.permalink)
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        }
+        activity.startActivity(intent)
+    }
+
+    fun openShareView(comment: Comment) {
+        val i = Intent(Intent.ACTION_SEND)
+        i.type = "text/plain"
+        i.putExtra(Intent.EXTRA_TEXT, comment.url)
+        i.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        activity.startActivity(i)
     }
 
     fun showSubreddit(subreddit: String, sort: String?, timespan: String?) {
