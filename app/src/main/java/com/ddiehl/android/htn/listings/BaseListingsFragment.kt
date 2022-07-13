@@ -23,11 +23,6 @@ abstract class BaseListingsFragment : BaseFragment(),
     ListingsView,
     SwipeRefreshLayout.OnRefreshListener {
 
-    companion object {
-        const val REQUEST_REPORT_LISTING = 1000
-        private const val LINK_BASE_URL = "https://www.reddit.com"
-    }
-
     @Inject
     internal lateinit var appRouter: AppRouter
     @Inject
