@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.gallery.MediaGalleryRouter;
 import com.ddiehl.android.htn.listings.BaseListingsPresenter;
+import com.ddiehl.android.htn.listings.comments.AddCommentDialogRouter;
 import com.ddiehl.android.htn.listings.comments.LinkCommentsRouter;
 import com.ddiehl.android.htn.listings.report.ReportViewRouter;
 import com.ddiehl.android.htn.routing.AppRouter;
@@ -42,6 +43,7 @@ public class UserProfilePresenter extends BaseListingsPresenter {
             LinkCommentsRouter linkCommentsRouter,
             MediaGalleryRouter mediaGalleryRouter,
             VideoPlayerRouter videoPlayerRouter,
+            AddCommentDialogRouter addCommentDialogRouter,
             ReportViewRouter reportViewRouter,
             UserProfileView view) {
         super(
@@ -50,6 +52,7 @@ public class UserProfilePresenter extends BaseListingsPresenter {
                 linkCommentsRouter,
                 mediaGalleryRouter,
                 videoPlayerRouter,
+                addCommentDialogRouter,
                 reportViewRouter,
                 view,
                 view

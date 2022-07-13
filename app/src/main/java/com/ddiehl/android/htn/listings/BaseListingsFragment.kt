@@ -328,10 +328,6 @@ abstract class BaseListingsFragment : BaseFragment(),
         }
     }
 
-    open fun openReplyView(listing: Listing) {
-        showToast(getString(R.string.implementation_pending))
-    }
-
     override fun notifyDataSetChanged() = listingsAdapter.notifyDataSetChanged()
     override fun notifyItemChanged(position: Int) = listingsAdapter.notifyItemChanged(position)
     override fun notifyItemInserted(position: Int) = listingsAdapter.notifyItemInserted(position)

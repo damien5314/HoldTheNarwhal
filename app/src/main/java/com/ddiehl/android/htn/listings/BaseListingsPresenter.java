@@ -6,6 +6,7 @@ import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.gallery.MediaGalleryRouter;
 import com.ddiehl.android.htn.identity.IdentityManager;
+import com.ddiehl.android.htn.listings.comments.AddCommentDialogRouter;
 import com.ddiehl.android.htn.listings.comments.CommentView;
 import com.ddiehl.android.htn.listings.comments.LinkCommentsRouter;
 import com.ddiehl.android.htn.listings.report.ReportViewRouter;
@@ -67,6 +68,7 @@ public abstract class BaseListingsPresenter
     private final LinkCommentsRouter linkCommentsRouter;
     private final MediaGalleryRouter mediaGalleryRouter;
     private final VideoPlayerRouter videoPlayerRouter;
+    private final AddCommentDialogRouter addCommentDialogRouter;
     private final ReportViewRouter reportViewRouter;
     private final CommentView commentView;
 
@@ -81,6 +83,7 @@ public abstract class BaseListingsPresenter
             LinkCommentsRouter linkCommentsRouter,
             MediaGalleryRouter mediaGalleryRouter,
             VideoPlayerRouter videoPlayerRouter,
+            AddCommentDialogRouter addCommentDialogRouter,
             ReportViewRouter reportViewRouter,
             ListingsView view,
             CommentView commentView) {
@@ -90,6 +93,7 @@ public abstract class BaseListingsPresenter
         this.linkCommentsRouter = linkCommentsRouter;
         this.mediaGalleryRouter = mediaGalleryRouter;
         this.videoPlayerRouter = videoPlayerRouter;
+        this.addCommentDialogRouter = addCommentDialogRouter;
         this.reportViewRouter = reportViewRouter;
         this.listingsView = view;
         this.commentView = commentView;
@@ -257,7 +261,7 @@ public abstract class BaseListingsPresenter
     }
 
     public void replyToLink(Link link) {
-        commentView.openReplyView(link);
+        addCommentDialogRouter.openReplyDialog(link.getFullName());
     }
 
     public void upvoteLink(@NotNull Link link) {
@@ -359,7 +363,7 @@ public abstract class BaseListingsPresenter
         if (comment.getArchived()) {
             mainView.showToast(context.getString(R.string.listing_archived));
         } else {
-            commentView.openReplyView(comment);
+            addCommentDialogRouter.openReplyDialog(comment.getFullName());
         }
     }
 

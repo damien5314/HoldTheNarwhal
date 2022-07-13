@@ -15,7 +15,6 @@ import com.hannesdorfmann.fragmentargs.FragmentArgs
 import com.hannesdorfmann.fragmentargs.annotation.Arg
 import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs
 import rxreddit.model.Link
-import rxreddit.model.Listing
 import javax.inject.Inject
 
 @FragmentWithArgs
@@ -33,6 +32,8 @@ class LinkCommentsFragment : BaseListingsFragment(), LinkCommentsView,
     lateinit var linkCommentsRouter: LinkCommentsRouter
     @Inject
     lateinit var mediaGalleryRouter: MediaGalleryRouter
+    @Inject
+    lateinit var addCommentDialogRouter: AddCommentDialogRouter
     @Inject
     lateinit var videoPlayRouter: VideoPlayerRouter
 
@@ -60,6 +61,7 @@ class LinkCommentsFragment : BaseListingsFragment(), LinkCommentsView,
             linkCommentsRouter,
             mediaGalleryRouter,
             videoPlayRouter,
+            addCommentDialogRouter,
             reportViewRouter,
             this,
         )
@@ -181,13 +183,6 @@ class LinkCommentsFragment : BaseListingsFragment(), LinkCommentsView,
 
         this.sort = sort
         listingsPresenter.onSortChanged()
-    }
-
-    override fun openReplyView(listing: Listing) {
-        val id = "${listing.kind}_${listing.id}"
-        val dialog = AddCommentDialog.newInstance(id)
-        dialog.setTargetFragment(this, REQUEST_ADD_COMMENT)
-        dialog.show(parentFragmentManager, AddCommentDialog.TAG)
     }
 
     override fun onRefresh() {

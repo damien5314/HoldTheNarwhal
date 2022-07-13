@@ -22,6 +22,7 @@ import com.ddiehl.android.htn.identity.IdentityManager;
 import com.ddiehl.android.htn.listings.BaseListingsFragment;
 import com.ddiehl.android.htn.listings.ChooseTimespanDialog;
 import com.ddiehl.android.htn.listings.ListingsAdapter;
+import com.ddiehl.android.htn.listings.comments.AddCommentDialogRouter;
 import com.ddiehl.android.htn.listings.comments.LinkCommentsRouter;
 import com.ddiehl.android.htn.listings.links.ChooseLinkSortDialog;
 import com.ddiehl.android.htn.listings.subreddit.SubredditFragment;
@@ -62,6 +63,8 @@ public class UserProfileFragment extends BaseListingsFragment
     LinkCommentsRouter linkCommentsRouter;
     @Inject
     MediaGalleryRouter mediaGalleryRouter;
+    @Inject
+    AddCommentDialogRouter addCommentDialogRouter;
     @Inject
     VideoPlayerRouter videoPlayerRouter;
 
@@ -116,6 +119,7 @@ public class UserProfileFragment extends BaseListingsFragment
                 linkCommentsRouter,
                 mediaGalleryRouter,
                 videoPlayerRouter,
+                addCommentDialogRouter,
                 reportViewRouter,
                 this
         );

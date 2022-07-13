@@ -35,6 +35,7 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
     private final AppRouter appRouter;
     private final MediaGalleryRouter mediaGalleryRouter;
     private final VideoPlayerRouter videoPlayerRouter;
+    private final AddCommentDialogRouter addCommentDialogRouter;
     private final LinkCommentsView linkCommentsView;
     private final CommentBank commentBank;
     private Link linkContext;
@@ -47,6 +48,7 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
             LinkCommentsRouter linkCommentsRouter,
             MediaGalleryRouter mediaGalleryRouter,
             VideoPlayerRouter videoPlayerRouter,
+            AddCommentDialogRouter addCommentDialogRouter,
             ReportViewRouter reportViewRouter,
             LinkCommentsView view) {
         super(
@@ -55,6 +57,7 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
                 linkCommentsRouter,
                 mediaGalleryRouter,
                 videoPlayerRouter,
+                addCommentDialogRouter,
                 reportViewRouter,
                 view,
                 view
@@ -62,6 +65,7 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
         this.appRouter = appRouter;
         this.mediaGalleryRouter = mediaGalleryRouter;
         this.videoPlayerRouter = videoPlayerRouter;
+        this.addCommentDialogRouter = addCommentDialogRouter;
         linkCommentsView = view;
         commentBank = new CommentBankList();
     }
@@ -303,7 +307,7 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
             mainView.showToast(context.getString(R.string.user_required));
         } else {
             replyTarget = link;
-            linkCommentsView.openReplyView(link);
+            addCommentDialogRouter.openReplyDialog(link.getFullName());
         }
     }
 
@@ -315,7 +319,7 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
             mainView.showToast(context.getString(R.string.user_required));
         } else {
             replyTarget = comment;
-            linkCommentsView.openReplyView(comment);
+            addCommentDialogRouter.openReplyDialog(comment.getFullName());
         }
     }
 

@@ -3,6 +3,7 @@ package com.ddiehl.android.htn.listings.inbox;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.gallery.MediaGalleryRouter;
 import com.ddiehl.android.htn.listings.BaseListingsPresenter;
+import com.ddiehl.android.htn.listings.comments.AddCommentDialogRouter;
 import com.ddiehl.android.htn.listings.comments.LinkCommentsRouter;
 import com.ddiehl.android.htn.listings.report.ReportViewRouter;
 import com.ddiehl.android.htn.routing.AppRouter;
@@ -30,6 +31,7 @@ public class InboxPresenter extends BaseListingsPresenter {
             LinkCommentsRouter linkCommentsRouter,
             MediaGalleryRouter mediaGalleryRouter,
             VideoPlayerRouter videoPlayerRouter,
+            AddCommentDialogRouter addCommentDialogRouter,
             ReportViewRouter reportViewRouter,
             InboxView inbox
     ) {
@@ -39,6 +41,7 @@ public class InboxPresenter extends BaseListingsPresenter {
                 linkCommentsRouter,
                 mediaGalleryRouter,
                 videoPlayerRouter,
+                addCommentDialogRouter,
                 reportViewRouter,
                 inbox,
                 inbox

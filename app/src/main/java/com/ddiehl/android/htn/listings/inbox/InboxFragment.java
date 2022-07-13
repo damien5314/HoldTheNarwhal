@@ -16,6 +16,7 @@ import com.ddiehl.android.htn.gallery.MediaGalleryRouter;
 import com.ddiehl.android.htn.identity.IdentityManager;
 import com.ddiehl.android.htn.listings.BaseListingsFragment;
 import com.ddiehl.android.htn.listings.ListingsAdapter;
+import com.ddiehl.android.htn.listings.comments.AddCommentDialogRouter;
 import com.ddiehl.android.htn.listings.comments.LinkCommentsRouter;
 import com.ddiehl.android.htn.utils.AndroidUtils;
 import com.ddiehl.android.htn.view.video.VideoPlayerRouter;
@@ -45,6 +46,8 @@ public class InboxFragment extends BaseListingsFragment
     MediaGalleryRouter mediaGalleryRouter;
     @Inject
     VideoPlayerRouter videoPlayerRouter;
+    @Inject
+    AddCommentDialogRouter addCommentDialogRouter;
 
     @Arg(key = "ARG_SHOW")
     String show;
@@ -71,6 +74,7 @@ public class InboxFragment extends BaseListingsFragment
                 linkCommentsRouter,
                 mediaGalleryRouter,
                 videoPlayerRouter,
+                addCommentDialogRouter,
                 reportViewRouter,
                 this
         );

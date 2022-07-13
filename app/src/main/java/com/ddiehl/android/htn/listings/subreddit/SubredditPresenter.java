@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.gallery.MediaGalleryRouter;
 import com.ddiehl.android.htn.listings.BaseListingsPresenter;
+import com.ddiehl.android.htn.listings.comments.AddCommentDialogRouter;
 import com.ddiehl.android.htn.listings.comments.LinkCommentsRouter;
 import com.ddiehl.android.htn.listings.report.ReportViewRouter;
 import com.ddiehl.android.htn.navigation.AppNavigationMenuHelper;
@@ -35,6 +36,7 @@ public class SubredditPresenter extends BaseListingsPresenter {
             LinkCommentsRouter linkCommentsRouter,
             MediaGalleryRouter mediaGalleryRouter,
             VideoPlayerRouter videoPlayerRouter,
+            AddCommentDialogRouter addCommentDialogRouter,
             ReportViewRouter reportViewRouter,
             AppNavigationMenuHelper appNavigationMenuHelper,
             SubredditView view
@@ -45,6 +47,7 @@ public class SubredditPresenter extends BaseListingsPresenter {
                 linkCommentsRouter,
                 mediaGalleryRouter,
                 videoPlayerRouter,
+                addCommentDialogRouter,
                 reportViewRouter,
                 view,
                 null

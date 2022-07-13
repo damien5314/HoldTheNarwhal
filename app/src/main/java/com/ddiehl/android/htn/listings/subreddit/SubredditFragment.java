@@ -21,6 +21,7 @@ import com.ddiehl.android.htn.gallery.MediaGalleryRouter;
 import com.ddiehl.android.htn.listings.BaseListingsFragment;
 import com.ddiehl.android.htn.listings.ChooseTimespanDialog;
 import com.ddiehl.android.htn.listings.ListingsAdapter;
+import com.ddiehl.android.htn.listings.comments.AddCommentDialogRouter;
 import com.ddiehl.android.htn.listings.comments.LinkCommentsActivity;
 import com.ddiehl.android.htn.listings.comments.LinkCommentsRouter;
 import com.ddiehl.android.htn.listings.links.ChooseLinkSortDialog;
@@ -55,6 +56,8 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
     MediaGalleryRouter mediaGalleryRouter;
     @Inject
     VideoPlayerRouter videoPlayerRouter;
+    @Inject
+    AddCommentDialogRouter addCommentDialogRouter;
     @Inject
     AppNavigationMenuHelper appNavigationMenuHelper;
 
@@ -92,6 +95,7 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
                 linkCommentsRouter,
                 mediaGalleryRouter,
                 videoPlayerRouter,
+                addCommentDialogRouter,
                 reportViewRouter,
                 appNavigationMenuHelper,
                 this

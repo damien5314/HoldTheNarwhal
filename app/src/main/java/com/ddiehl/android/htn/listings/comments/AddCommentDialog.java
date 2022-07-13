@@ -19,6 +19,8 @@ public class AddCommentDialog extends BaseDaggerDialogFragment {
 
     public static final String EXTRA_PARENT_ID = "EXTRA_PARENT_ID";
     public static final String EXTRA_COMMENT_TEXT = "EXTRA_COMMENT_TEXT";
+    public static final String REQUEST_KEY = "AddCommentDialog/request_key";
+    public static final String BUNDLE_KEY_RESULT_CODE = "AddCommentDialog/result_code";
 
     private EditText mCommentEditText;
     private Button commentSubmit;
