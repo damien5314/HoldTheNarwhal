@@ -98,24 +98,6 @@ class LinkCommentsFragment : BaseListingsFragment(), LinkCommentsView,
         safeStartActivity(context, intent)
     }
 
-    override fun openUserProfileView(link: Link) {
-        link.author?.let { author ->
-            appRouter.showUserProfile(
-                username = author,
-                show = null,
-                sort = null,
-            )
-        }
-    }
-
-    override fun openUserProfileView(comment: Comment) {
-        appRouter.showUserProfile(
-            username = comment.author,
-            show = null,
-            sort = null,
-        )
-    }
-
     override fun openLinkInBrowser(link: Link) {
         val uri = Uri.parse(link.url)
         val intent = Intent(Intent.ACTION_VIEW, uri)

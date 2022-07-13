@@ -302,7 +302,7 @@ public abstract class BaseListingsPresenter
     }
 
     public void openLinkUserProfile(@NotNull Link link) {
-        linkView.openUserProfileView(link);
+        appRouter.showUserProfile(link.getAuthor(), null, null);
     }
 
     public void openLinkInBrowser(@NotNull Link link) {
@@ -395,7 +395,7 @@ public abstract class BaseListingsPresenter
     }
 
     public void openCommentUserProfile(@NotNull Comment comment) {
-        commentView.openUserProfileView(comment);
+        appRouter.showUserProfile(comment.getAuthor(), null, null);
     }
 
     public void openCommentInBrowser(@NotNull Comment comment) {

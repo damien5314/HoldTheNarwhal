@@ -369,24 +369,6 @@ abstract class BaseListingsFragment : BaseFragment(), ListingsView, SwipeRefresh
         showToast(getString(R.string.implementation_pending))
     }
 
-    open fun openUserProfileView(link: Link) {
-        link.author?.let { author ->
-            appRouter.showUserProfile(
-                username = author,
-                show = null,
-                sort = null,
-            )
-        }
-    }
-
-    open fun openUserProfileView(comment: Comment) {
-        appRouter.showUserProfile(
-            username = comment.author,
-            show = null,
-            sort = null,
-        )
-    }
-
     open fun openCommentInBrowser(comment: Comment) {
         val uri = Uri.parse(comment.url)
         val intent = Intent(Intent.ACTION_VIEW, uri).apply {
