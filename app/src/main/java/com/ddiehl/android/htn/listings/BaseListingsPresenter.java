@@ -8,8 +8,6 @@ import com.ddiehl.android.htn.gallery.MediaGalleryRouter;
 import com.ddiehl.android.htn.identity.IdentityManager;
 import com.ddiehl.android.htn.listings.comments.CommentView;
 import com.ddiehl.android.htn.listings.comments.LinkCommentsRouter;
-import com.ddiehl.android.htn.listings.inbox.PrivateMessageView;
-import com.ddiehl.android.htn.listings.links.LinkView;
 import com.ddiehl.android.htn.listings.report.ReportViewRouter;
 import com.ddiehl.android.htn.listings.subreddit.ThumbnailMode;
 import com.ddiehl.android.htn.managers.NetworkConnectivityManager;
@@ -70,9 +68,7 @@ public abstract class BaseListingsPresenter
     private final MediaGalleryRouter mediaGalleryRouter;
     private final VideoPlayerRouter videoPlayerRouter;
     private final ReportViewRouter reportViewRouter;
-    private final LinkView linkView;
     private final CommentView commentView;
-    private final PrivateMessageView privateMessageView;
 
     protected boolean beforeRequested, nextRequested = false;
     protected String prevPageListingId, nextPageListingId;
@@ -87,9 +83,7 @@ public abstract class BaseListingsPresenter
             VideoPlayerRouter videoPlayerRouter,
             ReportViewRouter reportViewRouter,
             ListingsView view,
-            LinkView linkView,
-            CommentView commentView,
-            PrivateMessageView messageView) {
+            CommentView commentView) {
         HoldTheNarwhal.getApplicationComponent().inject(this);
         this.mainView = main;
         this.appRouter = appRouter;
@@ -98,9 +92,7 @@ public abstract class BaseListingsPresenter
         this.videoPlayerRouter = videoPlayerRouter;
         this.reportViewRouter = reportViewRouter;
         this.listingsView = view;
-        this.linkView = linkView;
         this.commentView = commentView;
-        this.privateMessageView = messageView;
     }
 
     public List<Listing> getListings() {

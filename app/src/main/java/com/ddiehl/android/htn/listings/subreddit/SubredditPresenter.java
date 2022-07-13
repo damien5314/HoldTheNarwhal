@@ -47,8 +47,6 @@ public class SubredditPresenter extends BaseListingsPresenter {
                 videoPlayerRouter,
                 reportViewRouter,
                 view,
-                view,
-                null,
                 null
         );
         this.appNavigationMenuHelper = appNavigationMenuHelper;

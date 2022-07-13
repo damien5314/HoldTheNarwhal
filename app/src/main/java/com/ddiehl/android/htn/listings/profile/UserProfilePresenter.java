@@ -2,7 +2,6 @@ package com.ddiehl.android.htn.listings.profile;
 
 import android.text.TextUtils;
 
-import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.gallery.MediaGalleryRouter;
 import com.ddiehl.android.htn.listings.BaseListingsPresenter;
@@ -53,11 +52,8 @@ public class UserProfilePresenter extends BaseListingsPresenter {
                 videoPlayerRouter,
                 reportViewRouter,
                 view,
-                view,
-                view,
-                null
+                view
         );
-        HoldTheNarwhal.getApplicationComponent().inject(this);
         summaryView = view;
     }
 
