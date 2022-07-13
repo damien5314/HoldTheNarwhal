@@ -295,8 +295,10 @@ public abstract class BaseListingsPresenter
     }
 
     public void openLinkSubreddit(@NotNull Link link) {
-        String subreddit = link.getSubreddit();
-        linkView.openSubredditView(subreddit);
+        final String subreddit = link.getSubreddit();
+        if (subreddit != null) {
+            appRouter.showSubreddit(subreddit, null, null);
+        }
     }
 
     public void openLinkUserProfile(@NotNull Link link) {

@@ -11,7 +11,6 @@ import com.ddiehl.android.htn.R
 import com.ddiehl.android.htn.listings.report.ReportView
 import com.ddiehl.android.htn.listings.report.ReportView.RESULT_REPORT_ERROR
 import com.ddiehl.android.htn.listings.report.ReportView.RESULT_REPORT_SUCCESS
-import com.ddiehl.android.htn.listings.subreddit.SubredditActivity
 import com.ddiehl.android.htn.routing.AppRouter
 import com.ddiehl.android.htn.utils.AndroidUtils.safeStartActivity
 import com.ddiehl.android.htn.view.BaseFragment
@@ -368,14 +367,6 @@ abstract class BaseListingsFragment : BaseFragment(), ListingsView, SwipeRefresh
 
     open fun openReplyView(listing: Listing) {
         showToast(getString(R.string.implementation_pending))
-    }
-
-
-
-
-    fun openSubredditView(subreddit: String) {
-        val intent = SubredditActivity.getIntent(context, subreddit, null, null)
-        startActivity(intent)
     }
 
     open fun openUserProfileView(link: Link) {

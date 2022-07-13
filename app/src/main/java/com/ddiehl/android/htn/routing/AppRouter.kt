@@ -76,7 +76,7 @@ class AppRouter @Inject constructor(
         activity.startActivity(i)
     }
 
-    fun showSubreddit(subreddit: String, sort: String?, timespan: String?) {
+    fun showSubreddit(subreddit: String, sort: String? = null, timespan: String? = null) {
         val intent = SubredditActivity.getIntent(activity, subreddit, sort, timespan)
         activity.startActivity(intent)
     }

@@ -11,8 +11,6 @@ public interface LinkView {
 
     void showLinkContextMenu(ContextMenu menu, View view, Link link);
 
-    void openSubredditView(String subreddit);
-
     void openUserProfileView(@NotNull Link link);
 
     void openLinkInBrowser(@NotNull Link link);
