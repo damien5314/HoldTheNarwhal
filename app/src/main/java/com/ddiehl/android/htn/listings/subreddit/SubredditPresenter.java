@@ -6,6 +6,7 @@ import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.gallery.MediaGalleryRouter;
 import com.ddiehl.android.htn.listings.BaseListingsPresenter;
 import com.ddiehl.android.htn.listings.comments.LinkCommentsRouter;
+import com.ddiehl.android.htn.listings.report.ReportViewRouter;
 import com.ddiehl.android.htn.navigation.AppNavigationMenuHelper;
 import com.ddiehl.android.htn.routing.AppRouter;
 import com.ddiehl.android.htn.view.MainView;
@@ -34,14 +35,17 @@ public class SubredditPresenter extends BaseListingsPresenter {
             LinkCommentsRouter linkCommentsRouter,
             MediaGalleryRouter mediaGalleryRouter,
             VideoPlayerRouter videoPlayerRouter,
+            ReportViewRouter reportViewRouter,
             AppNavigationMenuHelper appNavigationMenuHelper,
-            SubredditView view) {
+            SubredditView view
+    ) {
         super(
                 main,
                 appRouter,
                 linkCommentsRouter,
                 mediaGalleryRouter,
                 videoPlayerRouter,
+                reportViewRouter,
                 view,
                 view,
                 null,

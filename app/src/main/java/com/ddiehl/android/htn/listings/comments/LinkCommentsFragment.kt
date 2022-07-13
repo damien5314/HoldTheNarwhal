@@ -63,6 +63,7 @@ class LinkCommentsFragment : BaseListingsFragment(), LinkCommentsView,
             linkCommentsRouter,
             mediaGalleryRouter,
             videoPlayRouter,
+            reportViewRouter,
             this,
         )
         listingsPresenter = presenter

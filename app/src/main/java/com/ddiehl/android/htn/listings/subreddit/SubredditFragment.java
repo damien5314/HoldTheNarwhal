@@ -92,6 +92,7 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
                 linkCommentsRouter,
                 mediaGalleryRouter,
                 videoPlayerRouter,
+                reportViewRouter,
                 appNavigationMenuHelper,
                 this
         );

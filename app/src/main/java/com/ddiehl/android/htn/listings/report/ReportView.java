@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.view.BaseDaggerDialogFragment;
@@ -37,6 +38,8 @@ public class ReportView extends BaseDaggerDialogFragment
     public static final String EXTRA_LISTING_ID = "EXTRA_LISTING_ID";
     public static final String EXTRA_SUBREDDIT = "EXTRA_SUBREDDIT";
 
+    public static final String REQUEST_KEY = "ReportView/request_key";
+    public static final String BUNDLE_KEY_RESULT_CODE = "ReportView/result_code";
     public static final int RESULT_GET_SUBREDDIT_RULES_ERROR = 10;
     public static final int RESULT_REPORT_ERROR = 11;
     public static final int RESULT_REPORT_SUCCESS = Activity.RESULT_OK;
@@ -117,8 +120,10 @@ public class ReportView extends BaseDaggerDialogFragment
         showReportDialogWithRules(ruleNames, getSiteRulesList());
     }
 
-    void showReportDialogWithRules(String[] subredditRules, String[] siteRules) {
-        ReportDialog.newInstance(subredditRules, siteRules)
+    void showReportDialogWithRules(@Nullable String[] subredditRules, @Nullable String[] siteRules) {
+        final String[] subredditRules2 = subredditRules != null ? subredditRules : new String[]{};
+        final String[] siteRules2 = siteRules != null ? siteRules : new String[]{};
+        ReportDialog.newInstance(subredditRules2, siteRules2)
                 .show(getChildFragmentManager(), ReportDialog.TAG);
     }
 
@@ -145,11 +150,17 @@ public class ReportView extends BaseDaggerDialogFragment
     }
 
     private void deliverResult(int resultCode) {
-        final Fragment targetFragment = getTargetFragment();
-        if (targetFragment == null) {
-            throw new IllegalStateException("No target fragment set for ReportView");
-        }
-        targetFragment.onActivityResult(getTargetRequestCode(), resultCode, null);
+//        final Fragment targetFragment = getTargetFragment();
+//        if (targetFragment == null) {
+//            throw new IllegalStateException("No target fragment set for ReportView");
+//        }
+//        targetFragment.onActivityResult(getTargetRequestCode(), resultCode, null);
+        final Bundle resultBundle = new Bundle();
+        resultBundle.putInt(BUNDLE_KEY_RESULT_CODE, resultCode);
+        final FragmentManager parentFragmentManager = getParentFragmentManager();
+        Timber.d("[dcd] delivering result to FragmentManager: %s", parentFragmentManager.toString());
+        Timber.d("[dcd] could also deliver results to: %s", getChildFragmentManager().toString());
+        parentFragmentManager.setFragmentResult(REQUEST_KEY, resultBundle);
     }
 
     //region ReportDialog.Listener

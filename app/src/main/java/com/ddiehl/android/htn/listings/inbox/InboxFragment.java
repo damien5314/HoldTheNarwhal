@@ -71,6 +71,7 @@ public class InboxFragment extends BaseListingsFragment
                 linkCommentsRouter,
                 mediaGalleryRouter,
                 videoPlayerRouter,
+                reportViewRouter,
                 this
         );
         setListingsPresenter(inboxPresenter);

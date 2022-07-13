@@ -123,13 +123,6 @@ public class PrivateMessageFragment extends BaseFragment implements PrivateMessa
     }
 
     @Override
-    public void openReportView(@NotNull PrivateMessage message) {
-        ReportView intent = ReportView.newInstance(message.getFullName(), null);
-        intent.setTargetFragment(this, REQUEST_REPORT_MESSAGE);
-        intent.show(requireFragmentManager(), ReportView.TAG);
-    }
-
-    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case REQUEST_REPORT_MESSAGE:

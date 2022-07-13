@@ -1,16 +1,17 @@
 package com.ddiehl.android.htn.listings
 
+import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.*
+import androidx.fragment.app.FragmentResultListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.ddiehl.android.htn.R
 import com.ddiehl.android.htn.listings.report.ReportView
-import com.ddiehl.android.htn.listings.report.ReportView.RESULT_REPORT_ERROR
-import com.ddiehl.android.htn.listings.report.ReportView.RESULT_REPORT_SUCCESS
+import com.ddiehl.android.htn.listings.report.ReportViewRouter
 import com.ddiehl.android.htn.routing.AppRouter
 import com.ddiehl.android.htn.utils.AndroidUtils.safeStartActivity
 import com.ddiehl.android.htn.view.BaseFragment
@@ -19,17 +20,23 @@ import rxreddit.model.Comment
 import rxreddit.model.Link
 import rxreddit.model.Listing
 import rxreddit.model.PrivateMessage
+import timber.log.Timber
 import javax.inject.Inject
 
-abstract class BaseListingsFragment : BaseFragment(), ListingsView, SwipeRefreshLayout.OnRefreshListener {
+abstract class BaseListingsFragment : BaseFragment(),
+    FragmentResultListener,
+    ListingsView,
+    SwipeRefreshLayout.OnRefreshListener {
 
     companion object {
-        private const val REQUEST_REPORT_LISTING = 1000
+        const val REQUEST_REPORT_LISTING = 1000
         private const val LINK_BASE_URL = "https://www.reddit.com"
     }
 
     @Inject
     internal lateinit var appRouter: AppRouter
+    @Inject
+    internal lateinit var reportViewRouter: ReportViewRouter
 
     lateinit var recyclerView: RecyclerView
     protected lateinit var swipeRefreshLayout: SwipeRefreshLayout
@@ -60,6 +67,7 @@ abstract class BaseListingsFragment : BaseFragment(), ListingsView, SwipeRefresh
         super.onCreate(savedInstanceState)
         retainInstance = true
         setHasOptionsMenu(true)
+        listenForReportViewResults()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, state: Bundle?): View {
@@ -123,24 +131,6 @@ abstract class BaseListingsFragment : BaseFragment(), ListingsView, SwipeRefresh
             "hot", "new", "rising" -> menu.findItem(R.id.action_change_timespan).isVisible = false
             else -> menu.findItem(R.id.action_change_timespan).isVisible = false
         }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        when (requestCode) {
-            REQUEST_REPORT_LISTING -> when (resultCode) {
-                RESULT_REPORT_SUCCESS -> showReportSuccessToast(listingSelected!!)
-                RESULT_REPORT_ERROR -> showReportErrorToast(listingSelected!!)
-            }
-            else -> super.onActivityResult(requestCode, resultCode, data)
-        }
-    }
-
-    private fun showReportSuccessToast(listing: Listing) {
-        Snackbar.make(chromeView, R.string.report_successful, Snackbar.LENGTH_LONG).show()
-    }
-
-    private fun showReportErrorToast(listing: Listing) {
-        Snackbar.make(chromeView, R.string.report_error, Snackbar.LENGTH_LONG).show()
     }
 
     open fun showLinkContextMenu(menu: ContextMenu, view: View, link: Link) {
@@ -274,7 +264,9 @@ abstract class BaseListingsFragment : BaseFragment(), ListingsView, SwipeRefresh
                 return true
             }
             R.id.action_link_report -> {
-                listingsPresenter.reportLink(listingSelected as Link)
+                listingSelected?.let { listing ->
+                    reportViewRouter.openReportView(listing.fullName)
+                }
                 return true
             }
             R.id.action_comment_permalink -> {
@@ -361,24 +353,6 @@ abstract class BaseListingsFragment : BaseFragment(), ListingsView, SwipeRefresh
         safeStartActivity(context, intent)
     }
 
-    fun openReportView(link: Link) {
-        val fragment = ReportView.newInstance(link.fullName, link.subreddit)
-        fragment.setTargetFragment(this, REQUEST_REPORT_LISTING)
-        fragment.show(requireFragmentManager(), ReportView.TAG)
-    }
-
-    fun openReportView(comment: Comment) {
-        val fragment = ReportView.newInstance(comment.fullName, comment.subreddit)
-        fragment.setTargetFragment(this, REQUEST_REPORT_LISTING)
-        fragment.show(requireFragmentManager(), ReportView.TAG)
-    }
-
-    fun openReportView(message: PrivateMessage) {
-        val fragment = ReportView.newInstance(message.fullName, null)
-        fragment.setTargetFragment(this, REQUEST_REPORT_LISTING)
-        fragment.show(requireFragmentManager(), ReportView.TAG)
-    }
-
     override fun notifyDataSetChanged() = listingsAdapter.notifyDataSetChanged()
     override fun notifyItemChanged(position: Int) = listingsAdapter.notifyItemChanged(position)
     override fun notifyItemInserted(position: Int) = listingsAdapter.notifyItemInserted(position)
@@ -395,5 +369,34 @@ abstract class BaseListingsFragment : BaseFragment(), ListingsView, SwipeRefresh
     override fun onRefresh() {
         swipeRefreshLayout.isRefreshing = false
         listingsPresenter.refreshData()
+    }
+
+    private fun listenForReportViewResults() {
+        val fragmentManager = parentFragmentManager
+        Timber.d("[dcd] listenForReportViewResults, setting listener for FragmentManager $fragmentManager")
+        Timber.d("[dcd] listenForReportViewResults, could also set to $childFragmentManager")
+//        parentFragmentManager.setFragmentResultListener(REQUEST_REPORT_LISTING.toString(), this, this)
+        fragmentManager.setFragmentResultListener(ReportView.REQUEST_KEY, this, this)
+//        activity?.supportFragmentManager?.setFragmentResultListener(REQUEST_REPORT_LISTING.toString(), this, this)
+    }
+
+    override fun onFragmentResult(requestKey: String, result: Bundle) {
+        Timber.d("[dcd] onFragmentResult: $requestKey, $result")
+        when (requestKey) {
+            ReportView.REQUEST_KEY -> {
+                when (result.getInt(ReportView.BUNDLE_KEY_RESULT_CODE, -100)) {
+                    Activity.RESULT_OK -> showReportSuccessToast()
+                    Activity.RESULT_CANCELED -> showReportErrorToast()
+                }
+            }
+        }
+    }
+
+    private fun showReportSuccessToast() {
+        Snackbar.make(chromeView, R.string.report_successful, Snackbar.LENGTH_LONG).show()
+    }
+
+    private fun showReportErrorToast() {
+        Snackbar.make(chromeView, R.string.report_error, Snackbar.LENGTH_LONG).show()
     }
 }

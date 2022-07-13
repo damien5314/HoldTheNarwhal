@@ -10,6 +10,7 @@ import com.ddiehl.android.htn.listings.comments.CommentView;
 import com.ddiehl.android.htn.listings.comments.LinkCommentsRouter;
 import com.ddiehl.android.htn.listings.inbox.PrivateMessageView;
 import com.ddiehl.android.htn.listings.links.LinkView;
+import com.ddiehl.android.htn.listings.report.ReportViewRouter;
 import com.ddiehl.android.htn.listings.subreddit.ThumbnailMode;
 import com.ddiehl.android.htn.managers.NetworkConnectivityManager;
 import com.ddiehl.android.htn.routing.AppRouter;
@@ -68,6 +69,7 @@ public abstract class BaseListingsPresenter
     private final LinkCommentsRouter linkCommentsRouter;
     private final MediaGalleryRouter mediaGalleryRouter;
     private final VideoPlayerRouter videoPlayerRouter;
+    private final ReportViewRouter reportViewRouter;
     private final LinkView linkView;
     private final CommentView commentView;
     private final PrivateMessageView privateMessageView;
@@ -83,6 +85,7 @@ public abstract class BaseListingsPresenter
             LinkCommentsRouter linkCommentsRouter,
             MediaGalleryRouter mediaGalleryRouter,
             VideoPlayerRouter videoPlayerRouter,
+            ReportViewRouter reportViewRouter,
             ListingsView view,
             LinkView linkView,
             CommentView commentView,
@@ -93,6 +96,7 @@ public abstract class BaseListingsPresenter
         this.linkCommentsRouter = linkCommentsRouter;
         this.mediaGalleryRouter = mediaGalleryRouter;
         this.videoPlayerRouter = videoPlayerRouter;
+        this.reportViewRouter = reportViewRouter;
         this.listingsView = view;
         this.linkView = linkView;
         this.commentView = commentView;
@@ -338,7 +342,7 @@ public abstract class BaseListingsPresenter
         if (!redditService.isUserAuthorized()) {
             mainView.showToast(context.getString(R.string.user_required));
         } else {
-            linkView.openReportView(link);
+            reportViewRouter.openReportView(link.getFullName());
         }
     }
 
@@ -411,7 +415,7 @@ public abstract class BaseListingsPresenter
         } else if (!redditService.isUserAuthorized()) {
             mainView.showToast(context.getString(R.string.user_required));
         } else {
-            commentView.openReportView(comment);
+            reportViewRouter.openReportView(comment.getFullName());
         }
     }
 
@@ -599,7 +603,7 @@ public abstract class BaseListingsPresenter
     }
 
     public void reportMessage(@NotNull PrivateMessage message) {
-        privateMessageView.openReportView(message);
+        reportViewRouter.openReportView(message.getFullName());
     }
 
     public void blockUser(@NotNull PrivateMessage message) {

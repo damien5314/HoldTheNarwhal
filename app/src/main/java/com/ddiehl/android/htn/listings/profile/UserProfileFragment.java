@@ -116,6 +116,7 @@ public class UserProfileFragment extends BaseListingsFragment
                 linkCommentsRouter,
                 mediaGalleryRouter,
                 videoPlayerRouter,
+                reportViewRouter,
                 this
         );
         setListingsPresenter(userProfilePresenter);
