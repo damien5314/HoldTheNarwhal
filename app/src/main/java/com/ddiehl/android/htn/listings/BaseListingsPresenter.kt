@@ -1,608 +1,717 @@
-package com.ddiehl.android.htn.listings;
+package com.ddiehl.android.htn.listings
 
-import android.content.Context;
+import android.content.Context
+import android.view.MenuItem
+import com.ddiehl.android.htn.HoldTheNarwhal
+import com.ddiehl.android.htn.R
+import com.ddiehl.android.htn.gallery.MediaGalleryRouter
+import com.ddiehl.android.htn.identity.IdentityManager
+import com.ddiehl.android.htn.listings.comments.AddCommentDialogRouter
+import com.ddiehl.android.htn.listings.comments.LinkCommentsRouter
+import com.ddiehl.android.htn.listings.report.ReportViewRouter
+import com.ddiehl.android.htn.listings.subreddit.ThumbnailMode
+import com.ddiehl.android.htn.managers.NetworkConnectivityManager
+import com.ddiehl.android.htn.routing.AppRouter
+import com.ddiehl.android.htn.settings.SettingsManager
+import com.ddiehl.android.htn.view.MainView
+import com.ddiehl.android.htn.view.video.VideoPlayerRouter
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.ObservableSource
+import io.reactivex.rxjava3.schedulers.Schedulers
+import rxreddit.api.RedditService
+import rxreddit.model.*
+import timber.log.Timber
+import java.io.IOException
+import javax.inject.Inject
 
-import com.ddiehl.android.htn.HoldTheNarwhal;
-import com.ddiehl.android.htn.R;
-import com.ddiehl.android.htn.gallery.MediaGalleryRouter;
-import com.ddiehl.android.htn.identity.IdentityManager;
-import com.ddiehl.android.htn.listings.comments.AddCommentDialogRouter;
-import com.ddiehl.android.htn.listings.comments.CommentView;
-import com.ddiehl.android.htn.listings.comments.LinkCommentsRouter;
-import com.ddiehl.android.htn.listings.report.ReportViewRouter;
-import com.ddiehl.android.htn.listings.subreddit.ThumbnailMode;
-import com.ddiehl.android.htn.managers.NetworkConnectivityManager;
-import com.ddiehl.android.htn.routing.AppRouter;
-import com.ddiehl.android.htn.settings.SettingsManager;
-import com.ddiehl.android.htn.view.MainView;
-import com.ddiehl.android.htn.view.video.VideoPlayerRouter;
+abstract class BaseListingsPresenter(
+    main: MainView,
+    appRouter: AppRouter,
+    linkCommentsRouter: LinkCommentsRouter,
+    mediaGalleryRouter: MediaGalleryRouter,
+    videoPlayerRouter: VideoPlayerRouter,
+    addCommentDialogRouter: AddCommentDialogRouter,
+    reportViewRouter: ReportViewRouter,
+    view: ListingsView,
+) : ListingsView.Callbacks {
 
-import org.jetbrains.annotations.NotNull;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.inject.Inject;
-
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
-import io.reactivex.rxjava3.core.Observable;
-import io.reactivex.rxjava3.core.ObservableSource;
-import io.reactivex.rxjava3.schedulers.Schedulers;
-import rxreddit.api.RedditService;
-import rxreddit.model.Comment;
-import rxreddit.model.CommentStub;
-import rxreddit.model.GalleryItem;
-import rxreddit.model.Hideable;
-import rxreddit.model.Link;
-import rxreddit.model.Listing;
-import rxreddit.model.ListingResponse;
-import rxreddit.model.ListingResponseData;
-import rxreddit.model.Media;
-import rxreddit.model.PrivateMessage;
-import rxreddit.model.Savable;
-import rxreddit.model.Subreddit;
-import rxreddit.model.UserIdentity;
-import rxreddit.model.Votable;
-import timber.log.Timber;
-
-public abstract class BaseListingsPresenter
-        implements ListingsView.Callbacks {
-
+    @JvmField
     @Inject
-    protected Context context;
+    var context: Context? = null
+
+    @JvmField
     @Inject
-    protected IdentityManager identityManager;
+    var identityManager: IdentityManager? = null
+
+    @JvmField
     @Inject
-    protected SettingsManager settingsManager;
+    var settingsManager: SettingsManager? = null
+
+    @JvmField
     @Inject
-    protected RedditService redditService;
+    var redditService: RedditService? = null
+
+    @JvmField
     @Inject
-    protected NetworkConnectivityManager networkConnectivityManager;
+    var networkConnectivityManager: NetworkConnectivityManager? = null
 
-    final List<Listing> listings = new ArrayList<>();
+    val listings: MutableList<Listing> = mutableListOf()
+    private val listingsView: ListingsView
 
-    private final ListingsView listingsView;
-    protected final MainView mainView;
-    private final AppRouter appRouter;
-    private final LinkCommentsRouter linkCommentsRouter;
-    private final MediaGalleryRouter mediaGalleryRouter;
-    private final VideoPlayerRouter videoPlayerRouter;
-    private final AddCommentDialogRouter addCommentDialogRouter;
-    private final ReportViewRouter reportViewRouter;
-    private final CommentView commentView;
+    @JvmField
+    protected val mainView: MainView
+    private val appRouter: AppRouter
+    private val linkCommentsRouter: LinkCommentsRouter
+    private val mediaGalleryRouter: MediaGalleryRouter
+    private val videoPlayerRouter: VideoPlayerRouter
+    private val addCommentDialogRouter: AddCommentDialogRouter
+    private val reportViewRouter: ReportViewRouter
+    @JvmField
+    protected var beforeRequested = false
 
-    protected boolean beforeRequested, nextRequested = false;
-    protected String prevPageListingId, nextPageListingId;
+    @JvmField
+    protected var nextRequested = false
 
-    protected Subreddit subreddit;
+    @JvmField
+    protected var prevPageListingId: String? = null
 
-    public BaseListingsPresenter(
-            MainView main,
-            AppRouter appRouter,
-            LinkCommentsRouter linkCommentsRouter,
-            MediaGalleryRouter mediaGalleryRouter,
-            VideoPlayerRouter videoPlayerRouter,
-            AddCommentDialogRouter addCommentDialogRouter,
-            ReportViewRouter reportViewRouter,
-            ListingsView view,
-            CommentView commentView) {
-        HoldTheNarwhal.getApplicationComponent().inject(this);
-        this.mainView = main;
-        this.appRouter = appRouter;
-        this.linkCommentsRouter = linkCommentsRouter;
-        this.mediaGalleryRouter = mediaGalleryRouter;
-        this.videoPlayerRouter = videoPlayerRouter;
-        this.addCommentDialogRouter = addCommentDialogRouter;
-        this.reportViewRouter = reportViewRouter;
-        this.listingsView = view;
-        this.commentView = commentView;
+    @JvmField
+    protected var nextPageListingId: String? = null
+
+    @JvmField
+    protected var subreddit: Subreddit? = null
+    private var listingSelected: Listing? = null
+
+    init {
+        HoldTheNarwhal.getApplicationComponent().inject(this)
+        this.mainView = main
+        this.appRouter = appRouter
+        this.linkCommentsRouter = linkCommentsRouter
+        this.mediaGalleryRouter = mediaGalleryRouter
+        this.videoPlayerRouter = videoPlayerRouter
+        this.addCommentDialogRouter = addCommentDialogRouter
+        this.reportViewRouter = reportViewRouter
+        this.listingsView = view
     }
 
-    public List<Listing> getListings() {
-        return listings;
+    open fun hasData(): Boolean {
+        return listings.size != 0
     }
 
-    public boolean hasData() {
-        return listings.size() != 0;
+    open fun clearData() {
+        listings.clear()
+        listingsView.notifyDataSetChanged()
     }
 
-    public void clearData() {
-        listings.clear();
-        listingsView.notifyDataSetChanged();
+    open fun refreshData() {
+        prevPageListingId = null
+        nextPageListingId = null
+        val numItems = listings.size
+        listings.clear()
+        listingsView.notifyItemRangeRemoved(0, numItems)
+        nextData
     }
 
-    public void refreshData() {
-        prevPageListingId = null;
-        nextPageListingId = null;
-        int numItems = listings.size();
-        listings.clear();
-        listingsView.notifyItemRangeRemoved(0, numItems);
-        getNextData();
-    }
-
-    public void getPreviousData() {
-        if (!beforeRequested) {
-            if (networkConnectivityManager.isConnectedToNetwork()) {
-                requestPreviousData();
-            } else {
-                String message = context.getString(R.string.error_network_unavailable);
-                mainView.showToast(message);
+    val previousData: Unit
+        get() {
+            if (!beforeRequested) {
+                if (networkConnectivityManager!!.isConnectedToNetwork()) {
+                    requestPreviousData()
+                } else {
+                    val message = context!!.getString(R.string.error_network_unavailable)
+                    mainView.showToast(message)
+                }
             }
         }
-    }
-
-    public void getNextData() {
-        if (!nextRequested) {
-            if (networkConnectivityManager.isConnectedToNetwork()) {
-                requestNextData();
-            } else {
-                String message = context.getString(R.string.error_network_unavailable);
-                mainView.showToast(message);
+    val nextData: Unit
+        get() {
+            if (!nextRequested) {
+                if (networkConnectivityManager!!.isConnectedToNetwork()) {
+                    requestNextData()
+                } else {
+                    val message = context!!.getString(R.string.error_network_unavailable)
+                    mainView.showToast(message)
+                }
             }
         }
-    }
 
-    protected abstract void requestPreviousData();
+    protected abstract fun requestPreviousData()
 
-    protected abstract void requestNextData();
+    protected abstract fun requestNextData()
 
-    @Override
-    public void onFirstItemShown() {
+    override fun onFirstItemShown() {
         if (!beforeRequested && hasPreviousListings()) {
-            Timber.d("Get PREVIOUS data");
-            getPreviousData();
+            Timber.d("Get PREVIOUS data")
+            previousData
         }
     }
 
-    @Override
-    public void onLastItemShown() {
+    override fun onLastItemShown() {
         if (!nextRequested && hasNextListings()) {
-            Timber.d("Get NEXT data");
-            getNextData();
+            Timber.d("Get NEXT data")
+            nextData
         }
     }
 
-    public void setData(@NotNull List<Listing> data) {
-        listings.clear();
-        listings.addAll(data);
+    fun setData(data: List<Listing>) {
+        listings.clear()
+        listings.addAll(data)
     }
 
-    public int getNumListings() {
-        return listings.size();
+    open val numListings: Int
+        get() = listings.size
+
+    open fun getListingAt(position: Int): Listing? {
+        return listings[position]
     }
 
-    public Listing getListingAt(int position) {
-        return listings.get(position);
+    fun hasPreviousListings(): Boolean {
+        return prevPageListingId != null
     }
 
-    public boolean hasPreviousListings() {
-        return prevPageListingId != null;
+    fun hasNextListings(): Boolean {
+        return nextPageListingId != null
     }
 
-    public boolean hasNextListings() {
-        return nextPageListingId != null;
-    }
+    val showControversiality: Boolean
+        get() = settingsManager!!.showControversiality
 
-    public boolean getShowControversiality() {
-        return settingsManager.getShowControversiality();
-    }
-
-    protected void onListingsLoaded(ListingResponse response, boolean append) {
-        mainView.dismissSpinner();
-
-        if (append) nextRequested = false;
-        else beforeRequested = false;
-
+    protected fun onListingsLoaded(response: ListingResponse?, append: Boolean) {
+        mainView.dismissSpinner()
+        if (append) nextRequested = false else beforeRequested = false
         if (response == null) {
-            mainView.showToast(context.getString(R.string.error_xxx));
-            return;
+            mainView.showToast(context!!.getString(R.string.error_xxx))
+            return
         }
-
-        ListingResponseData data = response.getData();
-        List<Listing> listings = data.getChildren();
-
-        Timber.i("Loaded %d listings", listings.size());
-
+        val data = response.data
+        val listings = data.children
+        Timber.i("Loaded %d listings", listings.size)
         if (append) {
-            int lastIndex = this.listings.size() - 1;
-            this.listings.addAll(listings);
-            nextPageListingId = data.getAfter();
-            listingsView.notifyItemRangeInserted(lastIndex + 1, listings.size());
+            val lastIndex = this.listings.size - 1
+            this.listings.addAll(listings)
+            nextPageListingId = data.after
+            listingsView.notifyItemRangeInserted(lastIndex + 1, listings.size)
         } else {
-            this.listings.addAll(0, listings);
-            prevPageListingId = listings.size() == 0 ? null : listings.get(0).getFullName();
-            listingsView.notifyItemRangeInserted(0, listings.size());
+            this.listings.addAll(0, listings)
+            prevPageListingId = if (listings.size == 0) null else listings[0].fullName
+            listingsView.notifyItemRangeInserted(0, listings.size)
         }
     }
 
-    protected ObservableSource<ListingResponse> checkNullResponse(ListingResponse listingResponse) {
-        if (listingResponse.getData().getChildren() == null) {
-            prevPageListingId = null;
-            nextPageListingId = null;
-            return Observable.error(new NullPointerException("no links"));
+    protected fun checkNullResponse(listingResponse: ListingResponse): ObservableSource<ListingResponse> {
+        return if (listingResponse.data.children == null) {
+            prevPageListingId = null
+            nextPageListingId = null
+            Observable.error(NullPointerException("no links"))
         } else {
-            return Observable.just(listingResponse);
+            Observable.just(listingResponse)
+        }
+    }
+
+    fun onContextItemSelected(item: MenuItem): Boolean {
+        // FIXME: We can now make a lot of these handlers private but some of them are still shared
+        when (item.itemId) {
+            R.id.action_link_reply -> {
+                replyToLink(listingSelected as Link)
+                return true
+            }
+            R.id.action_link_upvote -> {
+                upvoteLink(listingSelected as Link)
+                return true
+            }
+            R.id.action_link_downvote -> {
+                downvoteLink(listingSelected as Link)
+                return true
+            }
+            R.id.action_link_show_comments -> {
+                showCommentsForLink(listingSelected as Link)
+                return true
+            }
+            R.id.action_link_save -> {
+                saveLink(listingSelected as Link)
+                return true
+            }
+            R.id.action_link_unsave -> {
+                unsaveLink(listingSelected as Link)
+                return true
+            }
+            R.id.action_link_share -> {
+                shareLink(listingSelected as Link)
+                return true
+            }
+            R.id.action_link_view_subreddit -> {
+                openLinkSubreddit(listingSelected as Link)
+                return true
+            }
+            R.id.action_link_view_user_profile -> {
+                openLinkUserProfile(listingSelected as Link)
+                return true
+            }
+            R.id.action_link_open_in_browser -> {
+                openLinkInBrowser(listingSelected as Link)
+                return true
+            }
+            R.id.action_link_open_comments_in_browser -> {
+                openCommentsInBrowser(listingSelected as Link)
+                return true
+            }
+            R.id.action_link_hide -> {
+                hideLink(listingSelected as Link)
+                return true
+            }
+            R.id.action_link_unhide -> {
+                unhideLink(listingSelected as Link)
+                return true
+            }
+            R.id.action_link_report -> {
+                listingSelected?.let { listing ->
+                    reportViewRouter.openReportView(listing.fullName)
+                }
+                return true
+            }
+            R.id.action_comment_permalink -> {
+                openCommentPermalink(listingSelected as Comment)
+                return true
+            }
+            R.id.action_comment_parent -> {
+                openCommentParent(listingSelected as Comment)
+                return true
+            }
+            R.id.action_comment_reply -> {
+                replyToComment(listingSelected as Comment)
+                return true
+            }
+            R.id.action_comment_upvote -> {
+                upvoteComment(listingSelected as Comment)
+                return true
+            }
+            R.id.action_comment_downvote -> {
+                downvoteComment(listingSelected as Comment)
+                return true
+            }
+            R.id.action_comment_save -> {
+                saveComment(listingSelected as Comment)
+                return true
+            }
+            R.id.action_comment_unsave -> {
+                unsaveComment(listingSelected as Comment)
+                return true
+            }
+            R.id.action_comment_share -> {
+                shareComment(listingSelected as Comment)
+                return true
+            }
+            R.id.action_comment_view_user_profile -> {
+                openCommentUserProfile(listingSelected as Comment)
+                return true
+            }
+            R.id.action_comment_open_in_browser -> {
+                openCommentInBrowser(listingSelected as Comment)
+                return true
+            }
+            R.id.action_comment_report -> {
+                reportComment(listingSelected as Comment)
+                return true
+            }
+            R.id.action_message_show_permalink -> {
+                showMessagePermalink(listingSelected as PrivateMessage)
+                return true
+            }
+            R.id.action_message_report -> {
+                reportMessage(listingSelected as PrivateMessage)
+                return true
+            }
+            R.id.action_message_block_user -> {
+                blockUser(listingSelected as PrivateMessage)
+                return true
+            }
+            R.id.action_message_mark_read -> {
+                markMessageRead(listingSelected as PrivateMessage)
+                return true
+            }
+            R.id.action_message_mark_unread -> {
+                markMessageUnread(listingSelected as PrivateMessage)
+                return true
+            }
+            R.id.action_message_reply -> {
+                replyToMessage(listingSelected as PrivateMessage)
+                return true
+            }
+            else -> throw IllegalArgumentException("no action associated with item: ${item.title}")
         }
     }
 
     // Keep in sync with impl in LinkCommentsPresenter
     // TODO: Eventually consolidate routing so we don't have duplicate routing for Links
-    public void openLink(@NotNull Link link) {
-        if (link.isSelf() && link.getSubreddit() != null) {
-            linkCommentsRouter.showCommentsForLink(link.getSubreddit(), link.getId(), null);
-            return;
+    open fun openLink(link: Link) {
+        if (link.isSelf && link.subreddit != null) {
+            linkCommentsRouter.showCommentsForLink(link.subreddit, link.id, null)
+            return
         }
 
         // Determine correct routing for link
-        if (link.isGallery()) {
-            final List<GalleryItem> galleryItems = link.getGalleryItems();
-            mediaGalleryRouter.openLinkGallery(galleryItems);
-            return;
+        if (link.isGallery) {
+            val galleryItems = link.galleryItems
+            mediaGalleryRouter.openLinkGallery(galleryItems)
+            return
         }
-
-        final Media media = link.getMedia();
+        val media = link.media
         if (media != null) {
-            final Media.RedditVideo redditVideo = media.getRedditVideo();
+            val redditVideo = media.redditVideo
             if (redditVideo != null) {
-                videoPlayerRouter.openRedditVideo(redditVideo);
-                return;
+                videoPlayerRouter.openRedditVideo(redditVideo)
+                return
             }
         }
-
-        final String linkUrl = link.getUrl();
+        val linkUrl = link.url
         if (linkUrl != null) {
-            appRouter.openUrl(linkUrl);
+            appRouter.openUrl(linkUrl)
         }
     }
 
-    public void showCommentsForLink(@NotNull Link link) {
-        linkCommentsRouter.showCommentsForLink(link.getSubreddit(), link.getId(), null);
+    fun showCommentsForLink(link: Link) {
+        linkCommentsRouter.showCommentsForLink(link.subreddit, link.id, null)
     }
 
-    public void replyToLink(Link link) {
-        addCommentDialogRouter.openReplyDialog(link.getFullName());
+    open fun replyToLink(link: Link) {
+        addCommentDialogRouter.openReplyDialog(link.fullName)
     }
 
-    public void upvoteLink(@NotNull Link link) {
-        int dir = (link.getLiked() == null || !link.getLiked()) ? 1 : 0;
-        vote(link, link.getId(), dir);
+    fun upvoteLink(link: Link) {
+        val dir = if (link.liked == null || !link.liked!!) 1 else 0
+        vote(link, link.id, dir)
     }
 
-    public void downvoteLink(@NotNull Link link) {
-        int dir = (link.getLiked() == null || link.getLiked()) ? -1 : 0;
-        vote(link, link.getId(), dir);
+    fun downvoteLink(link: Link) {
+        val dir = if (link.liked == null || link.liked!!) -1 else 0
+        vote(link, link.id, dir)
     }
 
-    public void saveLink(@NotNull Link link) {
-        if (!redditService.isUserAuthorized()) {
-            mainView.showToast(context.getString(R.string.user_required));
-            return;
+    fun saveLink(link: Link) {
+        if (!redditService!!.isUserAuthorized) {
+            mainView.showToast(context!!.getString(R.string.user_required))
+            return
         }
-        save(link, true);
+        save(link, true)
     }
 
-    public void unsaveLink(@NotNull Link link) {
-        if (!redditService.isUserAuthorized()) {
-            mainView.showToast(context.getString(R.string.user_required));
-            return;
+    fun unsaveLink(link: Link) {
+        if (!redditService!!.isUserAuthorized) {
+            mainView.showToast(context!!.getString(R.string.user_required))
+            return
         }
-        save(link, false);
+        save(link, false)
     }
 
-    public void shareLink(@NotNull Link link) {
-        appRouter.openShareView(link);
+    fun shareLink(link: Link) {
+        appRouter.openShareView(link)
     }
 
-    public void openLinkSubreddit(@NotNull Link link) {
-        final String subreddit = link.getSubreddit();
+    fun openLinkSubreddit(link: Link) {
+        val subreddit = link.subreddit
         if (subreddit != null) {
-            appRouter.showSubreddit(subreddit, null, null);
+            appRouter.showSubreddit(subreddit, null, null)
         }
     }
 
-    public void openLinkUserProfile(@NotNull Link link) {
-        final String author = link.getAuthor();
+    fun openLinkUserProfile(link: Link) {
+        val author = link.author
         if (author != null) {
-            appRouter.showUserProfile(author, null, null);
+            appRouter.showUserProfile(author, null, null)
         }
     }
 
-    public void openLinkInBrowser(@NotNull Link link) {
-        appRouter.openLinkInBrowser(link);
+    fun openLinkInBrowser(link: Link) {
+        appRouter.openLinkInBrowser(link)
     }
 
-    public void openCommentsInBrowser(@NotNull Link link) {
-        appRouter.openLinkCommentsInBrowser(link);
+    fun openCommentsInBrowser(link: Link) {
+        appRouter.openLinkCommentsInBrowser(link)
     }
 
-    public void hideLink(@NotNull Link link) {
-        if (!redditService.isUserAuthorized()) {
-            mainView.showToast(context.getString(R.string.user_required));
-            return;
+    fun hideLink(link: Link) {
+        if (!redditService!!.isUserAuthorized) {
+            mainView.showToast(context!!.getString(R.string.user_required))
+            return
         }
-
-        hide(link, true);
+        hide(link, true)
     }
 
-    public void unhideLink(@NotNull Link link) {
-        if (!redditService.isUserAuthorized()) {
-            mainView.showToast(context.getString(R.string.user_required));
-            return;
+    fun unhideLink(link: Link) {
+        if (!redditService!!.isUserAuthorized) {
+            mainView.showToast(context!!.getString(R.string.user_required))
+            return
         }
-
-        hide(link, false);
+        hide(link, false)
     }
 
-    public void reportLink(@NotNull Link link) {
-        if (!redditService.isUserAuthorized()) {
-            mainView.showToast(context.getString(R.string.user_required));
+    fun reportLink(link: Link) {
+        if (!redditService!!.isUserAuthorized) {
+            mainView.showToast(context!!.getString(R.string.user_required))
         } else {
-            reportViewRouter.openReportView(link.getFullName());
+            reportViewRouter.openReportView(link.fullName)
         }
     }
 
-    public void showCommentThread(
-            @NotNull String subreddit, @NotNull String linkId, @NotNull String commentId) {
-        linkCommentsRouter.showCommentsForLink(subreddit, linkId, commentId);
+    fun showCommentThread(
+        subreddit: String, linkId: String, commentId: String
+    ) {
+        linkCommentsRouter.showCommentsForLink(subreddit, linkId, commentId)
     }
 
-    public void getMoreComments(@NotNull CommentStub comment) {
+    open fun getMoreComments(comment: CommentStub) {
         // Comment stubs cannot appear in a listing view
     }
 
-    public void openCommentPermalink(@NotNull Comment comment) {
-        showCommentThread(comment.getSubreddit(), comment.getLinkId(), comment.getId());
+    fun openCommentPermalink(comment: Comment) {
+        showCommentThread(comment.subreddit, comment.linkId, comment.id)
     }
 
-    public void openCommentParent(@NotNull Comment comment) {
-        showCommentThread(comment.getSubreddit(), comment.getLinkId(), comment.getParentId());
+    fun openCommentParent(comment: Comment) {
+        showCommentThread(comment.subreddit, comment.linkId, comment.parentId)
     }
 
-    public void replyToComment(@NotNull Comment comment) {
-        if (comment.getArchived()) {
-            mainView.showToast(context.getString(R.string.listing_archived));
+    open fun replyToComment(comment: Comment) {
+        if (comment.archived) {
+            mainView.showToast(context!!.getString(R.string.listing_archived))
         } else {
-            addCommentDialogRouter.openReplyDialog(comment.getFullName());
+            addCommentDialogRouter.openReplyDialog(comment.fullName)
         }
     }
 
-    public void upvoteComment(@NotNull Comment comment) {
-        int dir = (comment.getLiked() == null || !comment.getLiked()) ? 1 : 0;
-        vote(comment, comment.getId(), dir);
+    fun upvoteComment(comment: Comment) {
+        val liked = comment.liked
+        val dir = if (liked == null || !liked) 1 else 0
+        vote(comment, comment.id, dir)
     }
 
-    public void downvoteComment(@NotNull Comment comment) {
-        int dir = (comment.getLiked() == null || comment.getLiked()) ? -1 : 0;
-        vote(comment, comment.getId(), dir);
+    fun downvoteComment(comment: Comment) {
+        val liked = comment.liked
+        val dir = if (liked == null || liked) -1 else 0
+        vote(comment, comment.id, dir)
     }
 
-    public void saveComment(@NotNull Comment comment) {
-        if (!redditService.isUserAuthorized()) {
-            mainView.showToast(context.getString(R.string.user_required));
-            return;
+    fun saveComment(comment: Comment) {
+        if (!redditService!!.isUserAuthorized) {
+            mainView.showToast(context!!.getString(R.string.user_required))
+            return
         }
-        save(comment, true);
+        save(comment, true)
     }
 
-    public void unsaveComment(@NotNull Comment comment) {
-        if (!redditService.isUserAuthorized()) {
-            mainView.showToast(context.getString(R.string.user_required));
-            return;
+    fun unsaveComment(comment: Comment) {
+        if (!redditService!!.isUserAuthorized) {
+            mainView.showToast(context!!.getString(R.string.user_required))
+            return
         }
-        save(comment, false);
+        save(comment, false)
     }
 
-    public void shareComment(@NotNull Comment comment) {
-        appRouter.openShareView(comment);
+    fun shareComment(comment: Comment) {
+        appRouter.openShareView(comment)
     }
 
-    public void openCommentUserProfile(@NotNull Comment comment) {
-        appRouter.showUserProfile(comment.getAuthor(), null, null);
+    fun openCommentUserProfile(comment: Comment) {
+        appRouter.showUserProfile(comment.author, null, null)
     }
 
-    public void openCommentInBrowser(@NotNull Comment comment) {
-        appRouter.openCommentInBrowser(comment);
+    fun openCommentInBrowser(comment: Comment) {
+        appRouter.openCommentInBrowser(comment)
     }
 
-    public void reportComment(@NotNull Comment comment) {
-        if (comment.getArchived()) {
-            mainView.showToast(context.getString(R.string.listing_archived));
-        } else if (!redditService.isUserAuthorized()) {
-            mainView.showToast(context.getString(R.string.user_required));
+    fun reportComment(comment: Comment) {
+        if (comment.archived) {
+            mainView.showToast(context!!.getString(R.string.listing_archived))
+        } else if (!redditService!!.isUserAuthorized) {
+            mainView.showToast(context!!.getString(R.string.user_required))
         } else {
-            reportViewRouter.openReportView(comment.getFullName());
+            reportViewRouter.openReportView(comment.fullName)
         }
     }
 
-    public void openCommentLink(@NotNull Comment comment) {
-        linkCommentsRouter.showCommentsForLink(comment.getSubreddit(), comment.getLinkId(), null);
+    open fun openCommentLink(comment: Comment) {
+        linkCommentsRouter.showCommentsForLink(comment.subreddit, comment.linkId, null)
     }
 
-    public UserIdentity getAuthorizedUser() {
-        return identityManager.getUserIdentity();
+    val authorizedUser: UserIdentity
+        get() = identityManager!!.userIdentity
+
+    fun onSortChanged() {
+        refreshData()
     }
 
-    public void onSortChanged() {
-        refreshData();
-    }
-
-    private void vote(Votable votable, String votableId, int direction) {
-        if (votable.getArchived()) {
-            mainView.showToast(context.getString(R.string.listing_archived));
-        } else if (!redditService.isUserAuthorized()) {
-            mainView.showToast(context.getString(R.string.user_required));
+    private fun vote(votable: Votable, votableId: String, direction: Int) {
+        if (votable.archived) {
+            mainView.showToast(context!!.getString(R.string.listing_archived))
+        } else if (!redditService!!.isUserAuthorized) {
+            mainView.showToast(context!!.getString(R.string.user_required))
         } else {
-            redditService.vote(votable.getKind() + "_" + votableId, direction)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(
-                            () -> {
-                                votable.applyVote(direction);
-                                listingsView.notifyItemChanged(getIndexOf((Listing) votable));
-                            },
-                            error -> {
-                                if (error instanceof IOException) {
-                                    String message = context.getString(R.string.error_network_unavailable);
-                                    mainView.showError(message);
-                                } else {
-                                    Timber.w(error, "Error voting on listing");
-                                    String message = context.getString(R.string.vote_failed);
-                                    mainView.showError(message);
-                                }
-                            }
-                    );
+            redditService!!.vote(votable.kind + "_" + votableId, direction)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                    {
+                        votable.applyVote(direction)
+                        listingsView.notifyItemChanged(getIndexOf(votable as Listing))
+                    }
+                ) { error: Throwable? ->
+                    if (error is IOException) {
+                        val message = context!!.getString(R.string.error_network_unavailable)
+                        mainView.showError(message)
+                    } else {
+                        Timber.w(error, "Error voting on listing")
+                        val message = context!!.getString(R.string.vote_failed)
+                        mainView.showError(message)
+                    }
+                }
         }
     }
 
     /**
      * This is overridden in link comments view which has headers
      */
-    protected int getIndexOf(Listing listing) {
-        return listings.indexOf(listing);
+    protected open fun getIndexOf(listing: Listing): Int {
+        return listings.indexOf(listing)
     }
 
-    private void save(Savable savable, boolean toSave) {
-        redditService.save(savable.getFullName(), null, toSave)
-                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        () -> {
-                            savable.setSaved(toSave);
-                            listingsView.notifyItemChanged(getIndexOf((Listing) savable));
-                        },
-                        error -> {
-                            if (error instanceof IOException) {
-                                String message = context.getString(R.string.error_network_unavailable);
-                                mainView.showError(message);
-                            } else {
-                                Timber.w(error, "Error saving listing");
-                                String message = context.getString(R.string.save_failed);
-                                mainView.showError(message);
-                            }
-                        }
-                );
-    }
-
-    private void hide(Hideable hideable, boolean toHide) {
-        redditService.hide(hideable.getFullName(), toHide)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        () -> {
-                            int pos = getIndexOf((Listing) hideable);
-                            listings.remove(pos);
-                            listingsView.notifyItemRemoved(pos);
-                        },
-                        error -> {
-                            if (error instanceof IOException) {
-                                String message = context.getString(R.string.error_network_unavailable);
-                                mainView.showError(message);
-                            } else {
-                                Timber.w(error, "Error hiding listing");
-                                String message = context.getString(R.string.hide_failed);
-                                mainView.showError(message);
-                            }
-                        }
-                );
-    }
-
-    public boolean shouldShowNsfwTag() {
-        final boolean isNsfwSubreddit = subreddit != null && subreddit.isOver18();
-        final boolean hideNsfwInSettings =
-                settingsManager.getNoProfanity() || settingsManager.getLabelNsfw();
-        final boolean userOver18 = settingsManager.getOver18();
-        return !userOver18 || !isNsfwSubreddit && hideNsfwInSettings;
-    }
-
-    public ThumbnailMode getThumbnailMode() {
-        if (settingsManager.getOver18()) {
-            if (subreddit != null && subreddit.isOver18()) {
-                return ThumbnailMode.FULL;
-            } else {
-                if (settingsManager.getNoProfanity()) {
-                    return ThumbnailMode.VARIANT;
+    private fun save(savable: Savable, toSave: Boolean) {
+        redditService!!.save(savable.fullName, null, toSave)
+            .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                {
+                    savable.isSaved = toSave
+                    listingsView.notifyItemChanged(getIndexOf(savable as Listing))
+                }
+            ) { error: Throwable? ->
+                if (error is IOException) {
+                    val message = context!!.getString(R.string.error_network_unavailable)
+                    mainView.showError(message)
                 } else {
-                    if (settingsManager.getLabelNsfw()) {
-                        return ThumbnailMode.VARIANT;
+                    Timber.w(error, "Error saving listing")
+                    val message = context!!.getString(R.string.save_failed)
+                    mainView.showError(message)
+                }
+            }
+    }
+
+    private fun hide(hideable: Hideable, toHide: Boolean) {
+        redditService!!.hide(hideable.fullName, toHide)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                {
+                    val pos = getIndexOf(hideable as Listing)
+                    listings.removeAt(pos)
+                    listingsView.notifyItemRemoved(pos)
+                }
+            ) { error: Throwable? ->
+                if (error is IOException) {
+                    val message = context!!.getString(R.string.error_network_unavailable)
+                    mainView.showError(message)
+                } else {
+                    Timber.w(error, "Error hiding listing")
+                    val message = context!!.getString(R.string.hide_failed)
+                    mainView.showError(message)
+                }
+            }
+    }
+
+    fun shouldShowNsfwTag(): Boolean {
+        val isNsfwSubreddit = subreddit != null && subreddit!!.isOver18
+        val hideNsfwInSettings = settingsManager!!.noProfanity || settingsManager!!.labelNsfw
+        val userOver18 = settingsManager!!.over18
+        return !userOver18 || !isNsfwSubreddit && hideNsfwInSettings
+    }
+
+    val thumbnailMode: ThumbnailMode
+        get() = if (settingsManager!!.over18) {
+            if (subreddit != null && subreddit!!.isOver18) {
+                ThumbnailMode.FULL
+            } else {
+                if (settingsManager!!.noProfanity) {
+                    ThumbnailMode.VARIANT
+                } else {
+                    if (settingsManager!!.labelNsfw) {
+                        ThumbnailMode.VARIANT
                     } else {
-                        return ThumbnailMode.FULL;
+                        ThumbnailMode.FULL
                     }
                 }
             }
         } else {
-            return ThumbnailMode.NO_THUMBNAIL;
+            ThumbnailMode.NO_THUMBNAIL
         }
+    val userIdentity: UserIdentity
+        get() = identityManager!!.userIdentity
+
+    fun replyToMessage(message: PrivateMessage) {
+        mainView.showToast(context!!.getString(R.string.implementation_pending))
     }
 
-    public UserIdentity getUserIdentity() {
-        return identityManager.getUserIdentity();
+    fun markMessageRead(pm: PrivateMessage) {
+        val fullname = pm.fullName
+        redditService!!.markMessagesRead(fullname)
+            .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                {
+                    pm.markUnread(false)
+                    listingsView.notifyItemChanged(getIndexOf(pm))
+                }
+            ) { error: Throwable? ->
+                if (error is IOException) {
+                    val message = context!!.getString(R.string.error_network_unavailable)
+                    mainView.showError(message)
+                } else {
+                    Timber.w(error, "Error marking message read")
+                    val errorMessage = context!!.getString(R.string.error_xxx)
+                    mainView.showError(errorMessage)
+                }
+            }
     }
 
-    public void replyToMessage(@NotNull PrivateMessage message) {
-        mainView.showToast(context.getString(R.string.implementation_pending));
+    fun markMessageUnread(pm: PrivateMessage) {
+        val fullname = pm.fullName
+        redditService!!.markMessagesUnread(fullname)
+            .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                {
+                    pm.markUnread(true)
+                    listingsView.notifyItemChanged(getIndexOf(pm))
+                }
+            ) { error: Throwable? ->
+                if (error is IOException) {
+                    val message = context!!.getString(R.string.error_network_unavailable)
+                    mainView.showError(message)
+                } else {
+                    Timber.w(error, "Error marking message unread")
+                    val errorMessage = context!!.getString(R.string.error_xxx)
+                    mainView.showError(errorMessage)
+                }
+            }
     }
 
-    public void markMessageRead(@NotNull PrivateMessage pm) {
-        String fullname = pm.getFullName();
-        redditService.markMessagesRead(fullname)
-                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        () -> {
-                            pm.markUnread(false);
-                            listingsView.notifyItemChanged(getIndexOf(pm));
-                        },
-                        error -> {
-                            if (error instanceof IOException) {
-                                String message = context.getString(R.string.error_network_unavailable);
-                                mainView.showError(message);
-                            } else {
-                                Timber.w(error, "Error marking message read");
-                                String errorMessage = context.getString(R.string.error_xxx);
-                                mainView.showError(errorMessage);
-                            }
-                        }
-                );
-    }
-
-    public void markMessageUnread(@NotNull PrivateMessage pm) {
-        String fullname = pm.getFullName();
-        redditService.markMessagesUnread(fullname)
-                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        () -> {
-                            pm.markUnread(true);
-                            listingsView.notifyItemChanged(getIndexOf(pm));
-                        },
-                        error -> {
-                            if (error instanceof IOException) {
-                                String message = context.getString(R.string.error_network_unavailable);
-                                mainView.showError(message);
-                            } else {
-                                Timber.w(error, "Error marking message unread");
-                                String errorMessage = context.getString(R.string.error_xxx);
-                                mainView.showError(errorMessage);
-                            }
-                        }
-                );
-    }
-
-    public void showMessagePermalink(@NotNull PrivateMessage message) {
-        ListingResponse listingResponse = message.getReplies();
-        List<PrivateMessage> messages = new ArrayList<>();
+    fun showMessagePermalink(message: PrivateMessage) {
+        val listingResponse = message.replies
+        val messages: MutableList<PrivateMessage> = ArrayList()
         if (listingResponse != null) {
-            for (Listing item : listingResponse.getData().getChildren()) {
-                messages.add((PrivateMessage) item);
+            for (item in listingResponse.data.children) {
+                messages.add(item as PrivateMessage)
             }
         }
-        messages.add(0, message);
-        appRouter.showInboxMessages(messages);
+        messages.add(0, message)
+        appRouter.showInboxMessages(messages)
     }
 
-    public void reportMessage(@NotNull PrivateMessage message) {
-        reportViewRouter.openReportView(message.getFullName());
+    fun reportMessage(message: PrivateMessage) {
+        reportViewRouter.openReportView(message.fullName)
     }
 
-    public void blockUser(@NotNull PrivateMessage message) {
-        mainView.showToast(context.getString(R.string.implementation_pending));
+    fun blockUser(message: PrivateMessage) {
+        mainView.showToast(context!!.getString(R.string.implementation_pending))
+    }
+
+    fun onContextMenuShownForLink(link: Link) {
+        listingSelected = link
     }
 }

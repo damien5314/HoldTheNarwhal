@@ -43,7 +43,6 @@ public class InboxPresenter extends BaseListingsPresenter {
                 videoPlayerRouter,
                 addCommentDialogRouter,
                 reportViewRouter,
-                inbox,
                 inbox
         );
         inboxView = inbox;

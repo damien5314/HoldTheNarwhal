@@ -49,8 +49,7 @@ public class SubredditPresenter extends BaseListingsPresenter {
                 videoPlayerRouter,
                 addCommentDialogRouter,
                 reportViewRouter,
-                view,
-                null
+                view
         );
         this.appNavigationMenuHelper = appNavigationMenuHelper;
         this.subredditView = view;

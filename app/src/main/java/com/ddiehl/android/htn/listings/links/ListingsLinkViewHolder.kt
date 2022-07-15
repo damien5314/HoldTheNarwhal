@@ -9,9 +9,11 @@ import rxreddit.model.Link
 
 class ListingsLinkViewHolder(
     view: View,
-    linkView: LinkView,
     presenter: BaseListingsPresenter,
-) : BaseLinkViewHolder(view, linkView, presenter) {
+) : BaseLinkViewHolder(
+    view,
+    presenter,
+) {
 
     init {
         linkComments.setOnClickListener {

@@ -3,7 +3,10 @@ package com.ddiehl.android.htn.listings.comments
 import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.os.Bundle
-import android.view.*
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.ddiehl.android.htn.R
@@ -14,7 +17,6 @@ import com.ddiehl.android.htn.view.video.VideoPlayerRouter
 import com.hannesdorfmann.fragmentargs.FragmentArgs
 import com.hannesdorfmann.fragmentargs.annotation.Arg
 import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs
-import rxreddit.model.Link
 import javax.inject.Inject
 
 @FragmentWithArgs
@@ -201,12 +203,13 @@ class LinkCommentsFragment : BaseListingsFragment(), LinkCommentsView,
 
     override fun getChromeView(): View = coordinatorLayout
 
-    override fun showLinkContextMenu(menu: ContextMenu, view: View, link: Link) {
-        super.showLinkContextMenu(menu, view, link)
-
-        // Show the reply action when viewing link comments
-        menu.findItem(R.id.action_link_reply).isVisible = true
-    }
+    // TODO: Migrate this reply visibility update to another component
+//    override fun showLinkContextMenu(menu: ContextMenu, view: View, link: Link) {
+//        super.showLinkContextMenu(menu, view, link)
+//
+//        // Show the reply action when viewing link comments
+//        menu.findItem(R.id.action_link_reply).isVisible = true
+//    }
 
     /**
      * Overriding the below methods to account for the presence

@@ -11,7 +11,6 @@ import com.ddiehl.android.htn.routing.AppRouter
 import com.ddiehl.android.htn.view.BaseFragment
 import com.google.android.material.snackbar.Snackbar
 import rxreddit.model.Comment
-import rxreddit.model.Link
 import rxreddit.model.Listing
 import rxreddit.model.PrivateMessage
 import javax.inject.Inject
@@ -31,6 +30,7 @@ abstract class BaseListingsFragment : BaseFragment(),
     protected lateinit var listingsPresenter: BaseListingsPresenter
     protected abstract val listingsAdapter: ListingsAdapter
     protected lateinit var callbacks: ListingsView.Callbacks
+    @Deprecated("Move this to BaseListingsPresenter and call that directly")
     private var listingSelected: Listing? = null
 
     private val onScrollListener: RecyclerView.OnScrollListener
@@ -120,10 +120,6 @@ abstract class BaseListingsFragment : BaseFragment(),
         }
     }
 
-    open fun showLinkContextMenu(menu: ContextMenu, view: View, link: Link) {
-        listingSelected = link
-    }
-
     fun showCommentContextMenu(menu: ContextMenu, view: View, comment: Comment) {
         listingSelected = comment
         activity?.menuInflater?.inflate(R.menu.comment_context, menu)
@@ -166,135 +162,7 @@ abstract class BaseListingsFragment : BaseFragment(),
     }
 
     override fun onContextItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.action_link_reply -> {
-                listingsPresenter.replyToLink(listingSelected as Link)
-                return true
-            }
-            R.id.action_link_upvote -> {
-                listingsPresenter.upvoteLink(listingSelected as Link)
-                return true
-            }
-            R.id.action_link_downvote -> {
-                listingsPresenter.downvoteLink(listingSelected as Link)
-                return true
-            }
-            R.id.action_link_show_comments -> {
-                listingsPresenter.showCommentsForLink(listingSelected as Link)
-                return true
-            }
-            R.id.action_link_save -> {
-                listingsPresenter.saveLink(listingSelected as Link)
-                return true
-            }
-            R.id.action_link_unsave -> {
-                listingsPresenter.unsaveLink(listingSelected as Link)
-                return true
-            }
-            R.id.action_link_share -> {
-                listingsPresenter.shareLink(listingSelected as Link)
-                return true
-            }
-            R.id.action_link_view_subreddit -> {
-                listingsPresenter.openLinkSubreddit(listingSelected as Link)
-                return true
-            }
-            R.id.action_link_view_user_profile -> {
-                listingsPresenter.openLinkUserProfile(listingSelected as Link)
-                return true
-            }
-            R.id.action_link_open_in_browser -> {
-                listingsPresenter.openLinkInBrowser(listingSelected as Link)
-                return true
-            }
-            R.id.action_link_open_comments_in_browser -> {
-                listingsPresenter.openCommentsInBrowser(listingSelected as Link)
-                return true
-            }
-            R.id.action_link_hide -> {
-                listingsPresenter.hideLink(listingSelected as Link)
-                return true
-            }
-            R.id.action_link_unhide -> {
-                listingsPresenter.unhideLink(listingSelected as Link)
-                return true
-            }
-            R.id.action_link_report -> {
-                listingSelected?.let { listing ->
-                    reportViewRouter.openReportView(listing.fullName)
-                }
-                return true
-            }
-            R.id.action_comment_permalink -> {
-                listingsPresenter.openCommentPermalink(listingSelected as Comment)
-                return true
-            }
-            R.id.action_comment_parent -> {
-                listingsPresenter.openCommentParent(listingSelected as Comment)
-                return true
-            }
-            R.id.action_comment_reply -> {
-                listingsPresenter.replyToComment(listingSelected as Comment)
-                return true
-            }
-            R.id.action_comment_upvote -> {
-                listingsPresenter.upvoteComment(listingSelected as Comment)
-                return true
-            }
-            R.id.action_comment_downvote -> {
-                listingsPresenter.downvoteComment(listingSelected as Comment)
-                return true
-            }
-            R.id.action_comment_save -> {
-                listingsPresenter.saveComment(listingSelected as Comment)
-                return true
-            }
-            R.id.action_comment_unsave -> {
-                listingsPresenter.unsaveComment(listingSelected as Comment)
-                return true
-            }
-            R.id.action_comment_share -> {
-                listingsPresenter.shareComment(listingSelected as Comment)
-                return true
-            }
-            R.id.action_comment_view_user_profile -> {
-                listingsPresenter.openCommentUserProfile(listingSelected as Comment)
-                return true
-            }
-            R.id.action_comment_open_in_browser -> {
-                listingsPresenter.openCommentInBrowser(listingSelected as Comment)
-                return true
-            }
-            R.id.action_comment_report -> {
-                listingsPresenter.reportComment(listingSelected as Comment)
-                return true
-            }
-            R.id.action_message_show_permalink -> {
-                listingsPresenter.showMessagePermalink(listingSelected as PrivateMessage)
-                return true
-            }
-            R.id.action_message_report -> {
-                listingsPresenter.reportMessage(listingSelected as PrivateMessage)
-                return true
-            }
-            R.id.action_message_block_user -> {
-                listingsPresenter.blockUser(listingSelected as PrivateMessage)
-                return true
-            }
-            R.id.action_message_mark_read -> {
-                listingsPresenter.markMessageRead(listingSelected as PrivateMessage)
-                return true
-            }
-            R.id.action_message_mark_unread -> {
-                listingsPresenter.markMessageUnread(listingSelected as PrivateMessage)
-                return true
-            }
-            R.id.action_message_reply -> {
-                listingsPresenter.replyToMessage(listingSelected as PrivateMessage)
-                return true
-            }
-            else -> throw IllegalArgumentException("no action associated with item: ${item.title}")
-        }
+        return listingsPresenter.onContextItemSelected(item)
     }
 
     override fun notifyDataSetChanged() = listingsAdapter.notifyDataSetChanged()

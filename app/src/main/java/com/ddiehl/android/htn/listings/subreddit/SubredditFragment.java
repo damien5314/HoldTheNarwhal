@@ -153,7 +153,11 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
     @Override
     public ListingsAdapter getListingsAdapter() {
         if (listingsAdapter == null) {
-            listingsAdapter = new ListingsAdapter(listingsPresenter, this, null, null);
+            listingsAdapter = new ListingsAdapter(
+                    listingsPresenter,
+                    null,
+                    null
+            );
         }
         return listingsAdapter;
     }

@@ -4,14 +4,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.listings.ListingsAdapter;
 import com.ddiehl.android.htn.listings.links.BaseLinkViewHolder;
 import com.ddiehl.android.htn.listings.links.CommentsLinkViewHolder;
 import com.ddiehl.android.htn.listings.subreddit.ThumbnailMode;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 import rxreddit.model.Comment;
 import rxreddit.model.CommentStub;
 import rxreddit.model.Link;
@@ -27,7 +28,7 @@ public class LinkCommentsAdapter extends ListingsAdapter {
     private final LinkCommentsPresenter linkCommentsPresenter;
 
     public LinkCommentsAdapter(LinkCommentsView linkCommentsView, LinkCommentsPresenter presenter) {
-        super(presenter, linkCommentsView, linkCommentsView, null);
+        super(presenter, linkCommentsView, null);
         this.linkCommentsView = linkCommentsView;
         this.linkCommentsPresenter = presenter;
     }
@@ -47,7 +48,7 @@ public class LinkCommentsAdapter extends ListingsAdapter {
             case TYPE_LINK:
                 View view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.link_comments_link, parent, false);
-                return new CommentsLinkViewHolder(view, linkCommentsView, linkCommentsPresenter);
+                return new CommentsLinkViewHolder(view, linkCommentsPresenter);
             case TYPE_COMMENT:
                 view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.link_comments_comment, parent, false);

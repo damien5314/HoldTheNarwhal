@@ -34,8 +34,8 @@ public class CommentsLinkViewHolder extends BaseLinkViewHolder {
     private final LinkOptionsBar linkOptionsBar;
     private final View parentLinkView;
 
-    public CommentsLinkViewHolder(View view, LinkView linkView, BaseListingsPresenter presenter) {
-        super(view, linkView, presenter);
+    public CommentsLinkViewHolder(View view, BaseListingsPresenter presenter) {
+        super(view, presenter);
         linkOptionsBar = view.findViewById(R.id.link_options_bar);
         parentLinkView = view.findViewById(R.id.link_parent_view);
         linkOptionsBar.showIcons(false, HIDE, SHARE);

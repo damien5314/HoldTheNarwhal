@@ -4,6 +4,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.listings.comments.CommentView;
 import com.ddiehl.android.htn.listings.comments.ListingsCommentViewHolder;
@@ -11,12 +14,9 @@ import com.ddiehl.android.htn.listings.inbox.InboxPresenter;
 import com.ddiehl.android.htn.listings.inbox.ListingsMessageViewHolder;
 import com.ddiehl.android.htn.listings.inbox.PrivateMessageView;
 import com.ddiehl.android.htn.listings.links.BaseLinkViewHolder;
-import com.ddiehl.android.htn.listings.links.LinkView;
 import com.ddiehl.android.htn.listings.links.ListingsLinkViewHolder;
 import com.ddiehl.android.htn.listings.subreddit.ThumbnailMode;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 import rxreddit.model.Comment;
 import rxreddit.model.Link;
 import rxreddit.model.Listing;
@@ -28,7 +28,6 @@ public class ListingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private static final int TYPE_COMMENT = 2;
     private static final int TYPE_PRIVATE_MESSAGE = 3;
 
-    protected final LinkView linkView;
     protected final CommentView commentView;
     protected final PrivateMessageView privateMessageView;
     protected final BaseListingsPresenter listingsPresenter;
@@ -37,9 +36,10 @@ public class ListingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     public ListingsAdapter(
             BaseListingsPresenter presenter,
-            LinkView linkView, CommentView commentView, PrivateMessageView pmView) {
+            CommentView commentView,
+            PrivateMessageView pmView
+    ) {
         this.listingsPresenter = presenter;
-        this.linkView = linkView;
         this.commentView = commentView;
         this.privateMessageView = pmView;
         getSettings();
@@ -60,7 +60,7 @@ public class ListingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             case TYPE_LINK:
                 View view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.listings_link, parent, false);
-                return new ListingsLinkViewHolder(view, linkView, listingsPresenter);
+                return new ListingsLinkViewHolder(view, listingsPresenter);
             case TYPE_COMMENT:
                 view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.listings_comment, parent, false);

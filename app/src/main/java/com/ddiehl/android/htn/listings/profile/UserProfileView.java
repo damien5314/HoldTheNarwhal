@@ -2,7 +2,6 @@ package com.ddiehl.android.htn.listings.profile;
 
 import com.ddiehl.android.htn.listings.ListingsView;
 import com.ddiehl.android.htn.listings.comments.CommentView;
-import com.ddiehl.android.htn.listings.links.LinkView;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -11,7 +10,7 @@ import java.util.List;
 import rxreddit.model.Listing;
 import rxreddit.model.UserIdentity;
 
-public interface UserProfileView extends ListingsView, LinkView, CommentView {
+public interface UserProfileView extends ListingsView, CommentView {
 
     void showUserInfo(@NotNull UserIdentity user);
 

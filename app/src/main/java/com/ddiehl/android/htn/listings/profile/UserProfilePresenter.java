@@ -54,7 +54,6 @@ public class UserProfilePresenter extends BaseListingsPresenter {
                 videoPlayerRouter,
                 addCommentDialogRouter,
                 reportViewRouter,
-                view,
                 view
         );
         summaryView = view;

@@ -59,7 +59,6 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
                 videoPlayerRouter,
                 addCommentDialogRouter,
                 reportViewRouter,
-                view,
                 view
         );
         this.appRouter = appRouter;
