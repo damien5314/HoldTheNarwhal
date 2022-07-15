@@ -2,7 +2,6 @@ package com.ddiehl.android.htn.listings.comments;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.Window;
 import android.widget.Button;
@@ -56,11 +55,12 @@ public class AddCommentDialog extends BaseDaggerDialogFragment {
     private void init() {
         commentSubmit.setOnClickListener(view -> {
             String commentText = mCommentEditText.getText().toString();
-            Intent data = new Intent();
-            data.putExtra(EXTRA_PARENT_ID, parentFullName);
-            data.putExtra(EXTRA_COMMENT_TEXT, commentText);
+            Bundle result = new Bundle();
+            result.putInt(BUNDLE_KEY_RESULT_CODE, Activity.RESULT_OK);
+            result.putString(EXTRA_PARENT_ID, parentFullName);
+            result.putString(EXTRA_COMMENT_TEXT, commentText);
+            getParentFragmentManager().setFragmentResult(REQUEST_KEY, result);
             dismiss();
-            getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, data);
         });
     }
 }

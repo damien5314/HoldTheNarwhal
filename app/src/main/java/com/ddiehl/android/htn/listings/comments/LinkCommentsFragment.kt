@@ -68,6 +68,8 @@ class LinkCommentsFragment : BaseListingsFragment(), LinkCommentsView,
         listingsPresenter = presenter
         sort = settingsManager.commentSort
         callbacks = listingsPresenter
+
+        listenForAddCommentResult()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -91,16 +93,23 @@ class LinkCommentsFragment : BaseListingsFragment(), LinkCommentsView,
 
     override val listingsAdapter by lazy { LinkCommentsAdapter(this, presenter) }
 
+    private fun listenForAddCommentResult() {
+        addCommentDialogRouter.observeResults()
+            .subscribe { result ->
+                when (result) {
+                    is AddCommentDialogRouter.Result.Success -> presenter.onCommentSubmitted(result.commentText)
+                    AddCommentDialogRouter.Result.Canceled -> {
+                        // no-op
+                    }
+                }
+            }
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
             REQUEST_CHOOSE_SORT -> if (resultCode == RESULT_OK) {
                 data?.getStringExtra(ChooseCommentSortDialog.EXTRA_SORT)?.let { sort ->
                     onSortSelected(sort)
-                }
-            }
-            REQUEST_ADD_COMMENT -> if (resultCode == RESULT_OK) {
-                data?.getStringExtra(AddCommentDialog.EXTRA_COMMENT_TEXT)?.let { commentText ->
-                    presenter.onCommentSubmitted(commentText)
                 }
             }
         }
