@@ -203,14 +203,6 @@ class LinkCommentsFragment : BaseListingsFragment(), LinkCommentsView,
 
     override fun getChromeView(): View = coordinatorLayout
 
-    // TODO: Migrate this reply visibility update to another component
-//    override fun showLinkContextMenu(menu: ContextMenu, view: View, link: Link) {
-//        super.showLinkContextMenu(menu, view, link)
-//
-//        // Show the reply action when viewing link comments
-//        menu.findItem(R.id.action_link_reply).isVisible = true
-//    }
-
     /**
      * Overriding the below methods to account for the presence
      * of a link at the top of the adapter
