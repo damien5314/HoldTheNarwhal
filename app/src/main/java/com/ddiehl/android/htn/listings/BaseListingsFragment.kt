@@ -122,37 +122,6 @@ abstract class BaseListingsFragment : BaseFragment(),
 
     open fun showLinkContextMenu(menu: ContextMenu, view: View, link: Link) {
         listingSelected = link
-        activity?.menuInflater?.inflate(R.menu.link_context, menu)
-
-        // Build title for menu
-        val score = if (link.score == null) {
-            view.context.getString(R.string.hidden_score_placeholder)
-        } else {
-            link.score.toString()
-        }
-        val title = getString(R.string.menu_action_link).format(link.title, score)
-        menu.setHeaderTitle(title)
-
-        // Set state of hide/unhide
-        menu.findItem(R.id.action_link_hide).isVisible = !link.hidden
-        menu.findItem(R.id.action_link_unhide).isVisible = link.hidden
-
-        // Set subreddit for link in the view subreddit menu item
-        val subreddit = getString(R.string.action_view_subreddit).format(link.subreddit)
-        menu.findItem(R.id.action_link_view_subreddit).title = subreddit
-
-        // Set username for link in the view user profile menu item
-        val username = getString(R.string.action_view_user_profile).format(link.author)
-        menu.findItem(R.id.action_link_view_user_profile).title = username
-
-        // Hide user profile for posts by deleted users
-        if ("[deleted]".equals(link.author, ignoreCase = true)) {
-            menu.findItem(R.id.action_link_view_user_profile).isVisible = false
-        }
-
-        menu.findItem(R.id.action_link_reply).isVisible = false
-        menu.findItem(R.id.action_link_save).isVisible = !link.isSaved
-        menu.findItem(R.id.action_link_unsave).isVisible = link.isSaved
     }
 
     fun showCommentContextMenu(menu: ContextMenu, view: View, comment: Comment) {

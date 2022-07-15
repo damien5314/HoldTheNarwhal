@@ -247,6 +247,6 @@ public abstract class BaseLinkViewHolder extends RecyclerView.ViewHolder
     @Override
     public void onCreateContextMenu(
             ContextMenu menu, View view, ContextMenu.ContextMenuInfo menuInfo) {
-        linkView.showLinkContextMenu(menu, view, link);
+        LinkViewHolderContextMenuUtil.showLinkContextMenu(menu, view, link);
     }
 }
