@@ -29,22 +29,22 @@ class LinkCommentsFragment : BaseListingsFragment(), LinkCommentsView,
     }
 
     @Inject
-    lateinit var settingsManager: SettingsManager
+    internal lateinit var presenter: LinkCommentsPresenter
     @Inject
-    lateinit var linkCommentsRouter: LinkCommentsRouter
+    internal lateinit var settingsManager: SettingsManager
     @Inject
-    lateinit var mediaGalleryRouter: MediaGalleryRouter
+    internal lateinit var linkCommentsRouter: LinkCommentsRouter
     @Inject
-    lateinit var addCommentDialogRouter: AddCommentDialogRouter
+    internal lateinit var mediaGalleryRouter: MediaGalleryRouter
     @Inject
-    lateinit var videoPlayRouter: VideoPlayerRouter
+    internal lateinit var addCommentDialogRouter: AddCommentDialogRouter
+    @Inject
+    internal lateinit var videoPlayRouter: VideoPlayerRouter
 
     @field:Arg
     override lateinit var subreddit: String
-
     @field:Arg
     override lateinit var articleId: String
-
     @field:Arg
     override var commentId: String? = null
 
@@ -52,21 +52,9 @@ class LinkCommentsFragment : BaseListingsFragment(), LinkCommentsView,
 
     override lateinit var sort: String
 
-    private lateinit var presenter: LinkCommentsPresenter
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         FragmentArgs.inject(this)
-        presenter = LinkCommentsPresenter(
-            this,
-            appRouter,
-            linkCommentsRouter,
-            mediaGalleryRouter,
-            videoPlayRouter,
-            addCommentDialogRouter,
-            reportViewRouter,
-            this,
-        )
         listingsPresenter = presenter
         sort = settingsManager.commentSort
         callbacks = listingsPresenter

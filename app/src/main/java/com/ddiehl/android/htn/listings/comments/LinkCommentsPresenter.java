@@ -15,6 +15,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import rxreddit.model.AbsComment;
@@ -42,6 +44,7 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
     private Listing replyTarget = null;
     private boolean dataRequested = false;
 
+    @Inject
     public LinkCommentsPresenter(
             MainView main,
             AppRouter appRouter,
