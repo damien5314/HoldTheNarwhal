@@ -36,11 +36,11 @@ class ReportDialog : BaseDaggerDialogFragment() {
         }
     }
 
-    private val rules: Array<String> by lazy { arguments!!.getStringArray(ARG_RULES) as Array<String> }
-    private val siteRules: Array<String> by lazy { arguments!!.getStringArray(ARG_SITE_RULES) as Array<String> }
+    private val rules by lazy { requireArguments().getStringArray(ARG_RULES) as Array<String> }
+    private val siteRules by lazy { requireArguments().getStringArray(ARG_SITE_RULES) as Array<String> }
 
-    internal var selectedIndex = -1
-    internal var selectedButton: RadioButton? = null
+    private var selectedIndex = -1
+    private var selectedButton: RadioButton? = null
     internal var listener: Listener? = null
 
     interface Listener {
@@ -150,6 +150,7 @@ class ReportDialog : BaseDaggerDialogFragment() {
 
     private fun onSubmit(): DialogInterface.OnClickListener {
         return DialogInterface.OnClickListener { _, _ ->
+            if (selectedIndex < 0) return@OnClickListener // no rule selected yet
             // If index is in rules array, submit the rule
             if (selectedIndex < rules.size) {
                 submit(rules[selectedIndex], null, null)
