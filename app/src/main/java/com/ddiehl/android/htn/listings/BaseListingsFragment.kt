@@ -10,7 +10,6 @@ import com.ddiehl.android.htn.listings.report.ReportViewRouter
 import com.ddiehl.android.htn.routing.AppRouter
 import com.ddiehl.android.htn.view.BaseFragment
 import com.google.android.material.snackbar.Snackbar
-import rxreddit.model.Listing
 import javax.inject.Inject
 
 abstract class BaseListingsFragment : BaseFragment(),
@@ -28,8 +27,6 @@ abstract class BaseListingsFragment : BaseFragment(),
     protected lateinit var listingsPresenter: BaseListingsPresenter
     protected abstract val listingsAdapter: ListingsAdapter
     protected lateinit var callbacks: ListingsView.Callbacks
-    @Deprecated("Move this to BaseListingsPresenter and call that directly")
-    private var listingSelected: Listing? = null
 
     private val onScrollListener: RecyclerView.OnScrollListener
         get() = object : RecyclerView.OnScrollListener() {
