@@ -3,7 +3,6 @@ package com.ddiehl.android.htn.listings.inbox;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -35,7 +34,7 @@ import rxreddit.model.Listing;
 import rxreddit.model.PrivateMessage;
 
 @FragmentWithArgs
-public class PrivateMessageFragment extends BaseFragment implements PrivateMessageView {
+public class PrivateMessageFragment extends BaseFragment {
 
     public static final String TAG = PrivateMessageFragment.class.getSimpleName();
 
@@ -105,11 +104,6 @@ public class PrivateMessageFragment extends BaseFragment implements PrivateMessa
                 .setVisible(false);
     }
 
-    @Override
-    public void showMessageContextMenu(ContextMenu menu, View v, PrivateMessage privateMessage) {
-
-    }
-
     private void scrollToBottom() {
         new Handler().post(() ->
                 recyclerView.smoothScrollToPosition(adapter.getItemCount() - 1)
@@ -120,13 +114,6 @@ public class PrivateMessageFragment extends BaseFragment implements PrivateMessa
     @Override
     protected View getChromeView() {
         return coordinatorLayout;
-    }
-
-    @Override
-    public void openReportView(@NotNull PrivateMessage message) {
-        ReportView intent = ReportView.newInstance(message.getFullName(), null);
-        intent.setTargetFragment(this, REQUEST_REPORT_MESSAGE);
-        intent.show(requireFragmentManager(), ReportView.TAG);
     }
 
     @Override

@@ -5,7 +5,9 @@ import androidx.annotation.NonNull;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.gallery.MediaGalleryRouter;
 import com.ddiehl.android.htn.listings.BaseListingsPresenter;
+import com.ddiehl.android.htn.listings.comments.AddCommentDialogRouter;
 import com.ddiehl.android.htn.listings.comments.LinkCommentsRouter;
+import com.ddiehl.android.htn.listings.report.ReportViewRouter;
 import com.ddiehl.android.htn.navigation.AppNavigationMenuHelper;
 import com.ddiehl.android.htn.routing.AppRouter;
 import com.ddiehl.android.htn.view.MainView;
@@ -14,6 +16,8 @@ import com.ddiehl.android.htn.view.video.VideoPlayerRouter;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+
+import javax.inject.Inject;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.schedulers.Schedulers;
@@ -25,28 +29,33 @@ import timber.log.Timber;
 
 public class SubredditPresenter extends BaseListingsPresenter {
 
+    private final MainView mainView;
     private final AppNavigationMenuHelper appNavigationMenuHelper;
-    private SubredditView subredditView;
+    private final SubredditView subredditView;
 
+    @Inject
     public SubredditPresenter(
             MainView main,
             AppRouter appRouter,
             LinkCommentsRouter linkCommentsRouter,
             MediaGalleryRouter mediaGalleryRouter,
             VideoPlayerRouter videoPlayerRouter,
+            AddCommentDialogRouter addCommentDialogRouter,
+            ReportViewRouter reportViewRouter,
             AppNavigationMenuHelper appNavigationMenuHelper,
-            SubredditView view) {
+            SubredditView view
+    ) {
         super(
                 main,
                 appRouter,
                 linkCommentsRouter,
                 mediaGalleryRouter,
                 videoPlayerRouter,
-                view,
-                view,
-                null,
-                null
+                addCommentDialogRouter,
+                reportViewRouter,
+                view
         );
+        this.mainView = main;
         this.appNavigationMenuHelper = appNavigationMenuHelper;
         this.subredditView = view;
     }

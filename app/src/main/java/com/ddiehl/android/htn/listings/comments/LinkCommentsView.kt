@@ -1,9 +1,8 @@
 package com.ddiehl.android.htn.listings.comments
 
 import com.ddiehl.android.htn.listings.ListingsView
-import com.ddiehl.android.htn.listings.links.LinkView
 
-interface LinkCommentsView : ListingsView, LinkView, CommentView {
+interface LinkCommentsView : ListingsView {
 
     val subreddit: String
 

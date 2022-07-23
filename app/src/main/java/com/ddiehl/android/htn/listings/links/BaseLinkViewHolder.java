@@ -30,7 +30,6 @@ public abstract class BaseLinkViewHolder extends RecyclerView.ViewHolder
         implements View.OnCreateContextMenuListener {
 
     protected final Context context;
-    protected final LinkView linkView;
     protected final BaseListingsPresenter linkPresenter;
     protected final HtmlParser htmlParser;
     protected Link link;
@@ -50,10 +49,12 @@ public abstract class BaseLinkViewHolder extends RecyclerView.ViewHolder
     protected final TextView gildedText;
     protected final View stickiedView;
 
-    public BaseLinkViewHolder(View view, LinkView linkView, BaseListingsPresenter presenter) {
+    public BaseLinkViewHolder(
+            View view,
+            BaseListingsPresenter presenter
+    ) {
         super(view);
         this.context = view.getContext();
-        this.linkView = linkView;
         this.linkPresenter = presenter;
         this.htmlParser = new HtmlParser(context);
         this.view = view.findViewById(R.id.link_view);
@@ -247,6 +248,7 @@ public abstract class BaseLinkViewHolder extends RecyclerView.ViewHolder
     @Override
     public void onCreateContextMenu(
             ContextMenu menu, View view, ContextMenu.ContextMenuInfo menuInfo) {
-        linkView.showLinkContextMenu(menu, view, link);
+        LinkViewHolderContextMenuUtil.showLinkContextMenu(menu, view, link);
+        linkPresenter.onContextMenuShownForLink(link);
     }
 }

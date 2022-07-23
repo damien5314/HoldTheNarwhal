@@ -3,6 +3,7 @@ package com.ddiehl.android.htn.listings.comments;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.gallery.MediaGalleryRouter;
 import com.ddiehl.android.htn.listings.BaseListingsPresenter;
+import com.ddiehl.android.htn.listings.report.ReportViewRouter;
 import com.ddiehl.android.htn.routing.AppRouter;
 import com.ddiehl.android.htn.utils.RedditUtilKt;
 import com.ddiehl.android.htn.view.MainView;
@@ -13,6 +14,8 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.schedulers.Schedulers;
@@ -31,21 +34,26 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
 
     private static final int MAX_CHILDREN_PER_REQUEST = 20;
 
+    private final MainView mainView;
     private final AppRouter appRouter;
     private final MediaGalleryRouter mediaGalleryRouter;
     private final VideoPlayerRouter videoPlayerRouter;
+    private final AddCommentDialogRouter addCommentDialogRouter;
     private final LinkCommentsView linkCommentsView;
     private final CommentBank commentBank;
     private Link linkContext;
     private Listing replyTarget = null;
     private boolean dataRequested = false;
 
+    @Inject
     public LinkCommentsPresenter(
             MainView main,
             AppRouter appRouter,
             LinkCommentsRouter linkCommentsRouter,
             MediaGalleryRouter mediaGalleryRouter,
             VideoPlayerRouter videoPlayerRouter,
+            AddCommentDialogRouter addCommentDialogRouter,
+            ReportViewRouter reportViewRouter,
             LinkCommentsView view) {
         super(
                 main,
@@ -53,14 +61,15 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
                 linkCommentsRouter,
                 mediaGalleryRouter,
                 videoPlayerRouter,
-                view,
-                view,
-                view,
-                null
+                addCommentDialogRouter,
+                reportViewRouter,
+                view
         );
+        this.mainView = main;
         this.appRouter = appRouter;
         this.mediaGalleryRouter = mediaGalleryRouter;
         this.videoPlayerRouter = videoPlayerRouter;
+        this.addCommentDialogRouter = addCommentDialogRouter;
         linkCommentsView = view;
         commentBank = new CommentBankList();
     }
@@ -302,7 +311,7 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
             mainView.showToast(context.getString(R.string.user_required));
         } else {
             replyTarget = link;
-            linkCommentsView.openReplyView(link);
+            addCommentDialogRouter.openReplyDialog(link.getFullName());
         }
     }
 
@@ -314,7 +323,7 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
             mainView.showToast(context.getString(R.string.user_required));
         } else {
             replyTarget = comment;
-            linkCommentsView.openReplyView(comment);
+            addCommentDialogRouter.openReplyDialog(comment.getFullName());
         }
     }
 

@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ddiehl.android.htn.R;
@@ -27,7 +28,6 @@ public class ListingsMessageViewHolder extends RecyclerView.ViewHolder
         implements View.OnCreateContextMenuListener {
 
     private final Context context;
-    private final PrivateMessageView privateMessageView;
     private final BaseListingsPresenter messagePresenter;
     private final HtmlParser htmlParser;
     private PrivateMessage message;
@@ -42,11 +42,10 @@ public class ListingsMessageViewHolder extends RecyclerView.ViewHolder
     private final View unreadMessageIndicator;
     private final TextView lastMessageBody;
 
-    public ListingsMessageViewHolder(View view, PrivateMessageView pmView, BaseListingsPresenter presenter) {
+    public ListingsMessageViewHolder(View view, BaseListingsPresenter presenter) {
         super(view);
 
         context = view.getContext();
-        privateMessageView = pmView;
         messagePresenter = presenter;
         htmlParser = new HtmlParser(context);
 
@@ -122,7 +121,8 @@ public class ListingsMessageViewHolder extends RecyclerView.ViewHolder
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        privateMessageView.showMessageContextMenu(menu, v, message);
+        InboxMenuHelper.INSTANCE.showMessageContextMenu(((FragmentActivity) v.getContext()), menu, message);
+        messagePresenter.onContextMenuShownForMessage(message);
     }
 
     private void onClick(View view) {

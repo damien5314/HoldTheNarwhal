@@ -2,11 +2,12 @@ package com.ddiehl.android.htn.listings.profile;
 
 import android.text.TextUtils;
 
-import com.ddiehl.android.htn.HoldTheNarwhal;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.gallery.MediaGalleryRouter;
 import com.ddiehl.android.htn.listings.BaseListingsPresenter;
+import com.ddiehl.android.htn.listings.comments.AddCommentDialogRouter;
 import com.ddiehl.android.htn.listings.comments.LinkCommentsRouter;
+import com.ddiehl.android.htn.listings.report.ReportViewRouter;
 import com.ddiehl.android.htn.routing.AppRouter;
 import com.ddiehl.android.htn.utils.Utils;
 import com.ddiehl.android.htn.view.MainView;
@@ -16,6 +17,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Observable;
@@ -34,14 +37,18 @@ public class UserProfilePresenter extends BaseListingsPresenter {
         public List<Listing> trophies;
     }
 
+    private final MainView mainView;
     private final UserProfileView summaryView;
 
+    @Inject
     public UserProfilePresenter(
             MainView main,
             AppRouter appRouter,
             LinkCommentsRouter linkCommentsRouter,
             MediaGalleryRouter mediaGalleryRouter,
             VideoPlayerRouter videoPlayerRouter,
+            AddCommentDialogRouter addCommentDialogRouter,
+            ReportViewRouter reportViewRouter,
             UserProfileView view) {
         super(
                 main,
@@ -49,12 +56,11 @@ public class UserProfilePresenter extends BaseListingsPresenter {
                 linkCommentsRouter,
                 mediaGalleryRouter,
                 videoPlayerRouter,
-                view,
-                view,
-                view,
-                null
+                addCommentDialogRouter,
+                reportViewRouter,
+                view
         );
-        HoldTheNarwhal.getApplicationComponent().inject(this);
+        mainView = main;
         summaryView = view;
     }
 

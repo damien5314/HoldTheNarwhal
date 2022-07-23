@@ -1,36 +1,25 @@
 package com.ddiehl.android.htn.listings
 
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.ddiehl.android.htn.R
-import com.ddiehl.android.htn.listings.report.ReportView
-import com.ddiehl.android.htn.listings.report.ReportView.RESULT_REPORT_ERROR
-import com.ddiehl.android.htn.listings.report.ReportView.RESULT_REPORT_SUCCESS
-import com.ddiehl.android.htn.listings.subreddit.SubredditActivity
+import com.ddiehl.android.htn.listings.report.ReportViewRouter
 import com.ddiehl.android.htn.routing.AppRouter
-import com.ddiehl.android.htn.utils.AndroidUtils.safeStartActivity
 import com.ddiehl.android.htn.view.BaseFragment
 import com.google.android.material.snackbar.Snackbar
-import rxreddit.model.Comment
-import rxreddit.model.Link
-import rxreddit.model.Listing
-import rxreddit.model.PrivateMessage
 import javax.inject.Inject
 
-abstract class BaseListingsFragment : BaseFragment(), ListingsView, SwipeRefreshLayout.OnRefreshListener {
-
-    companion object {
-        private const val REQUEST_REPORT_LISTING = 1000
-        private const val LINK_BASE_URL = "https://www.reddit.com"
-    }
+abstract class BaseListingsFragment : BaseFragment(),
+    ListingsView,
+    SwipeRefreshLayout.OnRefreshListener {
 
     @Inject
     internal lateinit var appRouter: AppRouter
+    @Inject
+    internal lateinit var reportViewRouter: ReportViewRouter
 
     lateinit var recyclerView: RecyclerView
     protected lateinit var swipeRefreshLayout: SwipeRefreshLayout
@@ -38,7 +27,6 @@ abstract class BaseListingsFragment : BaseFragment(), ListingsView, SwipeRefresh
     protected lateinit var listingsPresenter: BaseListingsPresenter
     protected abstract val listingsAdapter: ListingsAdapter
     protected lateinit var callbacks: ListingsView.Callbacks
-    private var listingSelected: Listing? = null
 
     private val onScrollListener: RecyclerView.OnScrollListener
         get() = object : RecyclerView.OnScrollListener() {
@@ -61,6 +49,7 @@ abstract class BaseListingsFragment : BaseFragment(), ListingsView, SwipeRefresh
         super.onCreate(savedInstanceState)
         retainInstance = true
         setHasOptionsMenu(true)
+        listenForReportViewResults()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, state: Bundle?): View {
@@ -126,315 +115,8 @@ abstract class BaseListingsFragment : BaseFragment(), ListingsView, SwipeRefresh
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        when (requestCode) {
-            REQUEST_REPORT_LISTING -> when (resultCode) {
-                RESULT_REPORT_SUCCESS -> showReportSuccessToast(listingSelected!!)
-                RESULT_REPORT_ERROR -> showReportErrorToast(listingSelected!!)
-            }
-            else -> super.onActivityResult(requestCode, resultCode, data)
-        }
-    }
-
-    private fun showReportSuccessToast(listing: Listing) {
-        Snackbar.make(chromeView, R.string.report_successful, Snackbar.LENGTH_LONG).show()
-    }
-
-    private fun showReportErrorToast(listing: Listing) {
-        Snackbar.make(chromeView, R.string.report_error, Snackbar.LENGTH_LONG).show()
-    }
-
-    open fun showLinkContextMenu(menu: ContextMenu, view: View, link: Link) {
-        listingSelected = link
-        activity?.menuInflater?.inflate(R.menu.link_context, menu)
-
-        // Build title for menu
-        val score = if (link.score == null) {
-            view.context.getString(R.string.hidden_score_placeholder)
-        } else {
-            link.score.toString()
-        }
-        val title = getString(R.string.menu_action_link).format(link.title, score)
-        menu.setHeaderTitle(title)
-
-        // Set state of hide/unhide
-        menu.findItem(R.id.action_link_hide).isVisible = !link.hidden
-        menu.findItem(R.id.action_link_unhide).isVisible = link.hidden
-
-        // Set subreddit for link in the view subreddit menu item
-        val subreddit = getString(R.string.action_view_subreddit).format(link.subreddit)
-        menu.findItem(R.id.action_link_view_subreddit).title = subreddit
-
-        // Set username for link in the view user profile menu item
-        val username = getString(R.string.action_view_user_profile).format(link.author)
-        menu.findItem(R.id.action_link_view_user_profile).title = username
-
-        // Hide user profile for posts by deleted users
-        if ("[deleted]".equals(link.author, ignoreCase = true)) {
-            menu.findItem(R.id.action_link_view_user_profile).isVisible = false
-        }
-
-        menu.findItem(R.id.action_link_reply).isVisible = false
-        menu.findItem(R.id.action_link_save).isVisible = !link.isSaved
-        menu.findItem(R.id.action_link_unsave).isVisible = link.isSaved
-    }
-
-    fun showCommentContextMenu(menu: ContextMenu, view: View, comment: Comment) {
-        listingSelected = comment
-        activity?.menuInflater?.inflate(R.menu.comment_context, menu)
-
-        // Build title for menu
-        val score = if (comment.score == null) {
-            view.context.getString(R.string.hidden_score_placeholder)
-        } else {
-            comment.score!!.toString()
-        }
-        val title = getString(R.string.menu_action_comment).format(comment.author, score)
-        menu.setHeaderTitle(title)
-
-        // Set username for listing in the user profile menu item
-        val username = getString(R.string.action_view_user_profile).format(comment.author)
-        menu.findItem(R.id.action_comment_view_user_profile).title = username
-
-        // Hide save/unsave option
-        menu.findItem(R.id.action_comment_save).isVisible = !comment.isSaved
-        menu.findItem(R.id.action_comment_unsave).isVisible = comment.isSaved
-
-        // Hide user profile for posts by deleted users
-        if ("[deleted]".equals(comment.author, ignoreCase = true)) {
-            menu.findItem(R.id.action_comment_view_user_profile).isVisible = false
-        }
-
-        // Don't show parent menu option if there is no parent
-        if (comment.linkId == comment.parentId) {
-            menu.findItem(R.id.action_comment_parent).isVisible = false
-        }
-    }
-
-    fun showMessageContextMenu(menu: ContextMenu, view: View, message: PrivateMessage) {
-        listingSelected = message
-        requireActivity().menuInflater.inflate(R.menu.message_context, menu)
-
-        // Hide ride/unread option based on state
-        menu.findItem(R.id.action_message_mark_read).isVisible = message.isUnread!!
-        menu.findItem(R.id.action_message_mark_unread).isVisible = !message.isUnread
-    }
-
     override fun onContextItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.action_link_reply -> {
-                listingsPresenter.replyToLink(listingSelected as Link)
-                return true
-            }
-            R.id.action_link_upvote -> {
-                listingsPresenter.upvoteLink(listingSelected as Link)
-                return true
-            }
-            R.id.action_link_downvote -> {
-                listingsPresenter.downvoteLink(listingSelected as Link)
-                return true
-            }
-            R.id.action_link_show_comments -> {
-                listingsPresenter.showCommentsForLink(listingSelected as Link)
-                return true
-            }
-            R.id.action_link_save -> {
-                listingsPresenter.saveLink(listingSelected as Link)
-                return true
-            }
-            R.id.action_link_unsave -> {
-                listingsPresenter.unsaveLink(listingSelected as Link)
-                return true
-            }
-            R.id.action_link_share -> {
-                listingsPresenter.shareLink(listingSelected as Link)
-                return true
-            }
-            R.id.action_link_view_subreddit -> {
-                listingsPresenter.openLinkSubreddit(listingSelected as Link)
-                return true
-            }
-            R.id.action_link_view_user_profile -> {
-                listingsPresenter.openLinkUserProfile(listingSelected as Link)
-                return true
-            }
-            R.id.action_link_open_in_browser -> {
-                listingsPresenter.openLinkInBrowser(listingSelected as Link)
-                return true
-            }
-            R.id.action_link_open_comments_in_browser -> {
-                listingsPresenter.openCommentsInBrowser(listingSelected as Link)
-                return true
-            }
-            R.id.action_link_hide -> {
-                listingsPresenter.hideLink(listingSelected as Link)
-                return true
-            }
-            R.id.action_link_unhide -> {
-                listingsPresenter.unhideLink(listingSelected as Link)
-                return true
-            }
-            R.id.action_link_report -> {
-                listingsPresenter.reportLink(listingSelected as Link)
-                return true
-            }
-            R.id.action_comment_permalink -> {
-                listingsPresenter.openCommentPermalink(listingSelected as Comment)
-                return true
-            }
-            R.id.action_comment_parent -> {
-                listingsPresenter.openCommentParent(listingSelected as Comment)
-                return true
-            }
-            R.id.action_comment_reply -> {
-                listingsPresenter.replyToComment(listingSelected as Comment)
-                return true
-            }
-            R.id.action_comment_upvote -> {
-                listingsPresenter.upvoteComment(listingSelected as Comment)
-                return true
-            }
-            R.id.action_comment_downvote -> {
-                listingsPresenter.downvoteComment(listingSelected as Comment)
-                return true
-            }
-            R.id.action_comment_save -> {
-                listingsPresenter.saveComment(listingSelected as Comment)
-                return true
-            }
-            R.id.action_comment_unsave -> {
-                listingsPresenter.unsaveComment(listingSelected as Comment)
-                return true
-            }
-            R.id.action_comment_share -> {
-                listingsPresenter.shareComment(listingSelected as Comment)
-                return true
-            }
-            R.id.action_comment_view_user_profile -> {
-                listingsPresenter.openCommentUserProfile(listingSelected as Comment)
-                return true
-            }
-            R.id.action_comment_open_in_browser -> {
-                listingsPresenter.openCommentInBrowser(listingSelected as Comment)
-                return true
-            }
-            R.id.action_comment_report -> {
-                listingsPresenter.reportComment(listingSelected as Comment)
-                return true
-            }
-            R.id.action_message_show_permalink -> {
-                listingsPresenter.showMessagePermalink(listingSelected as PrivateMessage)
-                return true
-            }
-            R.id.action_message_report -> {
-                listingsPresenter.reportMessage(listingSelected as PrivateMessage)
-                return true
-            }
-            R.id.action_message_block_user -> {
-                listingsPresenter.blockUser(listingSelected as PrivateMessage)
-                return true
-            }
-            R.id.action_message_mark_read -> {
-                listingsPresenter.markMessageRead(listingSelected as PrivateMessage)
-                return true
-            }
-            R.id.action_message_mark_unread -> {
-                listingsPresenter.markMessageUnread(listingSelected as PrivateMessage)
-                return true
-            }
-            R.id.action_message_reply -> {
-                listingsPresenter.replyToMessage(listingSelected as PrivateMessage)
-                return true
-            }
-            else -> throw IllegalArgumentException("no action associated with item: ${item.title}")
-        }
-    }
-
-    open fun openShareView(link: Link) {
-        val intent = Intent().apply {
-            action = Intent.ACTION_SEND
-            type = "text/plain"
-            putExtra(Intent.EXTRA_TEXT, LINK_BASE_URL + link.permalink)
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        }
-        startActivity(intent)
-    }
-
-    open fun openLinkInBrowser(link: Link) {
-        val uri = Uri.parse(link.url)
-        val intent = Intent(Intent.ACTION_VIEW, uri).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        }
-        safeStartActivity(context, intent)
-    }
-
-    open fun openCommentsInBrowser(link: Link) {
-        val uri = Uri.parse(LINK_BASE_URL + link.permalink)
-        val intent = Intent(Intent.ACTION_VIEW, uri).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        }
-        safeStartActivity(context, intent)
-    }
-
-    open fun openReplyView(listing: Listing) {
-        showToast(getString(R.string.implementation_pending))
-    }
-
-    open fun openShareView(comment: Comment) {
-        val i = Intent(Intent.ACTION_SEND)
-        i.type = "text/plain"
-        i.putExtra(Intent.EXTRA_TEXT, comment.url)
-        i.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        startActivity(i)
-    }
-
-    fun openSubredditView(subreddit: String) {
-        val intent = SubredditActivity.getIntent(context, subreddit, null, null)
-        startActivity(intent)
-    }
-
-    open fun openUserProfileView(link: Link) {
-        link.author?.let { author ->
-            appRouter.showUserProfile(
-                username = author,
-                show = null,
-                sort = null,
-            )
-        }
-    }
-
-    open fun openUserProfileView(comment: Comment) {
-        appRouter.showUserProfile(
-            username = comment.author,
-            show = null,
-            sort = null,
-        )
-    }
-
-    open fun openCommentInBrowser(comment: Comment) {
-        val uri = Uri.parse(comment.url)
-        val intent = Intent(Intent.ACTION_VIEW, uri).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        }
-        safeStartActivity(context, intent)
-    }
-
-    fun openReportView(link: Link) {
-        val fragment = ReportView.newInstance(link.fullName, link.subreddit)
-        fragment.setTargetFragment(this, REQUEST_REPORT_LISTING)
-        fragment.show(requireFragmentManager(), ReportView.TAG)
-    }
-
-    fun openReportView(comment: Comment) {
-        val fragment = ReportView.newInstance(comment.fullName, comment.subreddit)
-        fragment.setTargetFragment(this, REQUEST_REPORT_LISTING)
-        fragment.show(requireFragmentManager(), ReportView.TAG)
-    }
-
-    fun openReportView(message: PrivateMessage) {
-        val fragment = ReportView.newInstance(message.fullName, null)
-        fragment.setTargetFragment(this, REQUEST_REPORT_LISTING)
-        fragment.show(requireFragmentManager(), ReportView.TAG)
+        return listingsPresenter.onContextItemSelected(item)
     }
 
     override fun notifyDataSetChanged() = listingsAdapter.notifyDataSetChanged()
@@ -453,5 +135,24 @@ abstract class BaseListingsFragment : BaseFragment(), ListingsView, SwipeRefresh
     override fun onRefresh() {
         swipeRefreshLayout.isRefreshing = false
         listingsPresenter.refreshData()
+    }
+
+    private fun listenForReportViewResults() {
+        reportViewRouter.observeReportResults()
+            .subscribe { result ->
+                when (result) {
+                    ReportViewRouter.ReportResult.SUCCESS -> showReportSuccessToast()
+                    ReportViewRouter.ReportResult.CANCELED -> showReportErrorToast()
+                    null -> { }
+                }
+            }
+    }
+
+    private fun showReportSuccessToast() {
+        Snackbar.make(chromeView, R.string.report_successful, Snackbar.LENGTH_LONG).show()
+    }
+
+    private fun showReportErrorToast() {
+        Snackbar.make(chromeView, R.string.report_error, Snackbar.LENGTH_LONG).show()
     }
 }

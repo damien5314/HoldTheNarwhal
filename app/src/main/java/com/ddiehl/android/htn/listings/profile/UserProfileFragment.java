@@ -22,6 +22,7 @@ import com.ddiehl.android.htn.identity.IdentityManager;
 import com.ddiehl.android.htn.listings.BaseListingsFragment;
 import com.ddiehl.android.htn.listings.ChooseTimespanDialog;
 import com.ddiehl.android.htn.listings.ListingsAdapter;
+import com.ddiehl.android.htn.listings.comments.AddCommentDialogRouter;
 import com.ddiehl.android.htn.listings.comments.LinkCommentsRouter;
 import com.ddiehl.android.htn.listings.links.ChooseLinkSortDialog;
 import com.ddiehl.android.htn.listings.subreddit.SubredditFragment;
@@ -57,11 +58,15 @@ public class UserProfileFragment extends BaseListingsFragment
     private static final int NUM_DEFAULT_TABS = 5;
 
     @Inject
+    UserProfilePresenter userProfilePresenter;
+    @Inject
     IdentityManager identityManager;
     @Inject
     LinkCommentsRouter linkCommentsRouter;
     @Inject
     MediaGalleryRouter mediaGalleryRouter;
+    @Inject
+    AddCommentDialogRouter addCommentDialogRouter;
     @Inject
     VideoPlayerRouter videoPlayerRouter;
 
@@ -94,8 +99,6 @@ public class UserProfileFragment extends BaseListingsFragment
     private TabLayout.Tab tabHidden;
     private TabLayout.Tab tabSaved;
 
-    private UserProfilePresenter userProfilePresenter;
-
     @Override
     protected int getLayoutResId() {
         return R.layout.listings_fragment_user_profile;
@@ -110,14 +113,6 @@ public class UserProfileFragment extends BaseListingsFragment
         if (TextUtils.isEmpty(sort)) sort = "new";
         if (TextUtils.isEmpty(timespan)) timespan = "all";
 
-        userProfilePresenter = new UserProfilePresenter(
-                this,
-                appRouter,
-                linkCommentsRouter,
-                mediaGalleryRouter,
-                videoPlayerRouter,
-                this
-        );
         setListingsPresenter(userProfilePresenter);
         setCallbacks(userProfilePresenter);
     }
@@ -244,7 +239,7 @@ public class UserProfileFragment extends BaseListingsFragment
     @Override
     public ListingsAdapter getListingsAdapter() {
         if (listingsAdapter == null) {
-            listingsAdapter = new ListingsAdapter(getListingsPresenter(), this, this, null);
+            listingsAdapter = new ListingsAdapter(getListingsPresenter());
         }
         return listingsAdapter;
     }

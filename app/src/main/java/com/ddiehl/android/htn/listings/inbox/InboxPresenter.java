@@ -3,7 +3,9 @@ package com.ddiehl.android.htn.listings.inbox;
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.gallery.MediaGalleryRouter;
 import com.ddiehl.android.htn.listings.BaseListingsPresenter;
+import com.ddiehl.android.htn.listings.comments.AddCommentDialogRouter;
 import com.ddiehl.android.htn.listings.comments.LinkCommentsRouter;
+import com.ddiehl.android.htn.listings.report.ReportViewRouter;
 import com.ddiehl.android.htn.routing.AppRouter;
 import com.ddiehl.android.htn.view.MainView;
 import com.ddiehl.android.htn.view.video.VideoPlayerRouter;
@@ -11,6 +13,8 @@ import com.ddiehl.android.htn.view.video.VideoPlayerRouter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.schedulers.Schedulers;
@@ -21,26 +25,31 @@ import timber.log.Timber;
 
 public class InboxPresenter extends BaseListingsPresenter {
 
+    private final MainView mainView;
     private final InboxView inboxView;
 
+    @Inject
     public InboxPresenter(
             MainView main,
             AppRouter appRouter,
             LinkCommentsRouter linkCommentsRouter,
             MediaGalleryRouter mediaGalleryRouter,
             VideoPlayerRouter videoPlayerRouter,
-            InboxView inbox) {
+            AddCommentDialogRouter addCommentDialogRouter,
+            ReportViewRouter reportViewRouter,
+            InboxView inbox
+    ) {
         super(
                 main,
                 appRouter,
                 linkCommentsRouter,
                 mediaGalleryRouter,
                 videoPlayerRouter,
-                inbox,
-                inbox,
-                inbox,
+                addCommentDialogRouter,
+                reportViewRouter,
                 inbox
         );
+        mainView = main;
         inboxView = inbox;
     }
 

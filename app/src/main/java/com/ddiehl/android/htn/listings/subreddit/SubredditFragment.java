@@ -21,6 +21,7 @@ import com.ddiehl.android.htn.gallery.MediaGalleryRouter;
 import com.ddiehl.android.htn.listings.BaseListingsFragment;
 import com.ddiehl.android.htn.listings.ChooseTimespanDialog;
 import com.ddiehl.android.htn.listings.ListingsAdapter;
+import com.ddiehl.android.htn.listings.comments.AddCommentDialogRouter;
 import com.ddiehl.android.htn.listings.comments.LinkCommentsActivity;
 import com.ddiehl.android.htn.listings.comments.LinkCommentsRouter;
 import com.ddiehl.android.htn.listings.links.ChooseLinkSortDialog;
@@ -48,6 +49,8 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
     public static final String TAG = SubredditFragment.class.getSimpleName();
 
     @Inject
+    SubredditPresenter subredditPresenter;
+    @Inject
     SettingsManager settingsManager;
     @Inject
     LinkCommentsRouter linkCommentsRouter;
@@ -55,6 +58,8 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
     MediaGalleryRouter mediaGalleryRouter;
     @Inject
     VideoPlayerRouter videoPlayerRouter;
+    @Inject
+    AddCommentDialogRouter addCommentDialogRouter;
     @Inject
     AppNavigationMenuHelper appNavigationMenuHelper;
 
@@ -67,8 +72,6 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
 
     private CoordinatorLayout coordinatorLayout;
     private FloatingActionButton submitNewPostButton;
-
-    SubredditPresenter subredditPresenter;
 
     // Cache for sort selected before showing timespan dialog
     private String selectedSort;
@@ -86,18 +89,8 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
         if (TextUtils.isEmpty(sort)) sort = "hot";
         if (TextUtils.isEmpty(timespan)) timespan = "all";
 
-        SubredditPresenter presenter = new SubredditPresenter(
-                this,
-                appRouter,
-                linkCommentsRouter,
-                mediaGalleryRouter,
-                videoPlayerRouter,
-                appNavigationMenuHelper,
-                this
-        );
-        subredditPresenter = presenter;
-        setListingsPresenter(presenter);
-        setCallbacks(presenter);
+        setListingsPresenter(subredditPresenter);
+        setCallbacks(subredditPresenter);
     }
 
     @NotNull
@@ -148,7 +141,7 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
     @Override
     public ListingsAdapter getListingsAdapter() {
         if (listingsAdapter == null) {
-            listingsAdapter = new ListingsAdapter(listingsPresenter, this, null, null);
+            listingsAdapter = new ListingsAdapter(listingsPresenter);
         }
         return listingsAdapter;
     }

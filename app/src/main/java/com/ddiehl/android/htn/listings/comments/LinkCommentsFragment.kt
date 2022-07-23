@@ -2,23 +2,21 @@ package com.ddiehl.android.htn.listings.comments
 
 import android.app.Activity.RESULT_OK
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
-import android.view.*
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.ddiehl.android.htn.R
 import com.ddiehl.android.htn.gallery.MediaGalleryRouter
 import com.ddiehl.android.htn.listings.BaseListingsFragment
 import com.ddiehl.android.htn.settings.SettingsManager
-import com.ddiehl.android.htn.utils.AndroidUtils.safeStartActivity
 import com.ddiehl.android.htn.view.video.VideoPlayerRouter
 import com.hannesdorfmann.fragmentargs.FragmentArgs
 import com.hannesdorfmann.fragmentargs.annotation.Arg
 import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs
-import rxreddit.model.Comment
-import rxreddit.model.Link
-import rxreddit.model.Listing
 import javax.inject.Inject
 
 @FragmentWithArgs
@@ -31,20 +29,22 @@ class LinkCommentsFragment : BaseListingsFragment(), LinkCommentsView,
     }
 
     @Inject
-    lateinit var settingsManager: SettingsManager
+    internal lateinit var presenter: LinkCommentsPresenter
     @Inject
-    lateinit var linkCommentsRouter: LinkCommentsRouter
+    internal lateinit var settingsManager: SettingsManager
     @Inject
-    lateinit var mediaGalleryRouter: MediaGalleryRouter
+    internal lateinit var linkCommentsRouter: LinkCommentsRouter
     @Inject
-    lateinit var videoPlayRouter: VideoPlayerRouter
+    internal lateinit var mediaGalleryRouter: MediaGalleryRouter
+    @Inject
+    internal lateinit var addCommentDialogRouter: AddCommentDialogRouter
+    @Inject
+    internal lateinit var videoPlayRouter: VideoPlayerRouter
 
     @field:Arg
     override lateinit var subreddit: String
-
     @field:Arg
     override lateinit var articleId: String
-
     @field:Arg
     override var commentId: String? = null
 
@@ -52,22 +52,14 @@ class LinkCommentsFragment : BaseListingsFragment(), LinkCommentsView,
 
     override lateinit var sort: String
 
-    private lateinit var presenter: LinkCommentsPresenter
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         FragmentArgs.inject(this)
-        presenter = LinkCommentsPresenter(
-            this,
-            appRouter,
-            linkCommentsRouter,
-            mediaGalleryRouter,
-            videoPlayRouter,
-            this,
-        )
         listingsPresenter = presenter
         sort = settingsManager.commentSort
         callbacks = listingsPresenter
+
+        listenForAddCommentResult()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -91,63 +83,16 @@ class LinkCommentsFragment : BaseListingsFragment(), LinkCommentsView,
 
     override val listingsAdapter by lazy { LinkCommentsAdapter(this, presenter) }
 
-    override fun openShareView(comment: Comment) {
-        val intent = Intent().apply {
-            action = Intent.ACTION_SEND
-            type = "text/plain"
-            putExtra(Intent.EXTRA_TEXT, comment.url)
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        }
-        startActivity(intent)
-    }
-
-    override fun openCommentInBrowser(comment: Comment) {
-        val uri = Uri.parse(comment.url)
-        val intent = Intent(Intent.ACTION_VIEW, uri)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        safeStartActivity(context, intent)
-    }
-
-    override fun openShareView(link: Link) {
-        val intent = Intent(Intent.ACTION_SEND).apply {
-            action = Intent.ACTION_SEND
-            type = "text/plain"
-            putExtra(Intent.EXTRA_TEXT, "https://www.reddit.com" + link.permalink)
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        }
-        startActivity(intent)
-    }
-
-    override fun openUserProfileView(link: Link) {
-        link.author?.let { author ->
-            appRouter.showUserProfile(
-                username = author,
-                show = null,
-                sort = null,
-            )
-        }
-    }
-
-    override fun openUserProfileView(comment: Comment) {
-        appRouter.showUserProfile(
-            username = comment.author,
-            show = null,
-            sort = null,
-        )
-    }
-
-    override fun openLinkInBrowser(link: Link) {
-        val uri = Uri.parse(link.url)
-        val intent = Intent(Intent.ACTION_VIEW, uri)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        safeStartActivity(context, intent)
-    }
-
-    override fun openCommentsInBrowser(link: Link) {
-        val uri = Uri.parse("https://www.reddit.com" + link.permalink)
-        val intent = Intent(Intent.ACTION_VIEW, uri)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        safeStartActivity(context, intent)
+    private fun listenForAddCommentResult() {
+        addCommentDialogRouter.observeResults()
+            .subscribe { result ->
+                when (result) {
+                    is AddCommentDialogRouter.Result.Success -> presenter.onCommentSubmitted(result.commentText)
+                    AddCommentDialogRouter.Result.Canceled -> {
+                        // no-op
+                    }
+                }
+            }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -155,11 +100,6 @@ class LinkCommentsFragment : BaseListingsFragment(), LinkCommentsView,
             REQUEST_CHOOSE_SORT -> if (resultCode == RESULT_OK) {
                 data?.getStringExtra(ChooseCommentSortDialog.EXTRA_SORT)?.let { sort ->
                     onSortSelected(sort)
-                }
-            }
-            REQUEST_ADD_COMMENT -> if (resultCode == RESULT_OK) {
-                data?.getStringExtra(AddCommentDialog.EXTRA_COMMENT_TEXT)?.let { commentText ->
-                    presenter.onCommentSubmitted(commentText)
                 }
             }
         }
@@ -244,26 +184,12 @@ class LinkCommentsFragment : BaseListingsFragment(), LinkCommentsView,
         listingsPresenter.onSortChanged()
     }
 
-    override fun openReplyView(listing: Listing) {
-        val id = "${listing.kind}_${listing.id}"
-        val dialog = AddCommentDialog.newInstance(id)
-        dialog.setTargetFragment(this, REQUEST_ADD_COMMENT)
-        dialog.show(parentFragmentManager, AddCommentDialog.TAG)
-    }
-
     override fun onRefresh() {
         swipeRefreshLayout.isRefreshing = false
         presenter.refreshData()
     }
 
     override fun getChromeView(): View = coordinatorLayout
-
-    override fun showLinkContextMenu(menu: ContextMenu, view: View, link: Link) {
-        super.showLinkContextMenu(menu, view, link)
-
-        // Show the reply action when viewing link comments
-        menu.findItem(R.id.action_link_reply).isVisible = true
-    }
 
     /**
      * Overriding the below methods to account for the presence

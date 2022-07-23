@@ -16,6 +16,7 @@ import com.ddiehl.android.htn.gallery.MediaGalleryRouter;
 import com.ddiehl.android.htn.identity.IdentityManager;
 import com.ddiehl.android.htn.listings.BaseListingsFragment;
 import com.ddiehl.android.htn.listings.ListingsAdapter;
+import com.ddiehl.android.htn.listings.comments.AddCommentDialogRouter;
 import com.ddiehl.android.htn.listings.comments.LinkCommentsRouter;
 import com.ddiehl.android.htn.utils.AndroidUtils;
 import com.ddiehl.android.htn.view.video.VideoPlayerRouter;
@@ -38,6 +39,8 @@ public class InboxFragment extends BaseListingsFragment
     public static final String TAG = InboxFragment.class.getSimpleName();
 
     @Inject
+    InboxPresenter inboxPresenter;
+    @Inject
     IdentityManager identityManager;
     @Inject
     LinkCommentsRouter linkCommentsRouter;
@@ -45,13 +48,13 @@ public class InboxFragment extends BaseListingsFragment
     MediaGalleryRouter mediaGalleryRouter;
     @Inject
     VideoPlayerRouter videoPlayerRouter;
+    @Inject
+    AddCommentDialogRouter addCommentDialogRouter;
 
     @Arg(key = "ARG_SHOW")
     String show;
 
     private CoordinatorLayout coordinatorLayout;
-
-    private InboxPresenter inboxPresenter;
 
     @Override
     protected int getLayoutResId() {
@@ -64,15 +67,6 @@ public class InboxFragment extends BaseListingsFragment
         FragmentArgs.inject(this);
 
         if (TextUtils.isEmpty(show)) show = "inbox";
-
-        inboxPresenter = new InboxPresenter(
-                this,
-                appRouter,
-                linkCommentsRouter,
-                mediaGalleryRouter,
-                videoPlayerRouter,
-                this
-        );
         setListingsPresenter(inboxPresenter);
         setCallbacks(inboxPresenter);
     }
@@ -145,7 +139,7 @@ public class InboxFragment extends BaseListingsFragment
     @Override
     public ListingsAdapter getListingsAdapter() {
         if (listingsAdapter == null) {
-            listingsAdapter = new ListingsAdapter(getListingsPresenter(), this, this, this);
+            listingsAdapter = new ListingsAdapter(getListingsPresenter());
         }
         return listingsAdapter;
     }
