@@ -11,7 +11,6 @@ import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.listings.comments.ListingsCommentViewHolder;
 import com.ddiehl.android.htn.listings.inbox.InboxPresenter;
 import com.ddiehl.android.htn.listings.inbox.ListingsMessageViewHolder;
-import com.ddiehl.android.htn.listings.inbox.PrivateMessageView;
 import com.ddiehl.android.htn.listings.links.BaseLinkViewHolder;
 import com.ddiehl.android.htn.listings.links.ListingsLinkViewHolder;
 import com.ddiehl.android.htn.listings.subreddit.ThumbnailMode;
@@ -27,17 +26,12 @@ public class ListingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private static final int TYPE_COMMENT = 2;
     private static final int TYPE_PRIVATE_MESSAGE = 3;
 
-    protected final PrivateMessageView privateMessageView;
     protected final BaseListingsPresenter listingsPresenter;
     protected boolean showNsfwTag;
     protected ThumbnailMode thumbnailMode;
 
-    public ListingsAdapter(
-            BaseListingsPresenter presenter,
-            PrivateMessageView pmView
-    ) {
+    public ListingsAdapter(BaseListingsPresenter presenter) {
         this.listingsPresenter = presenter;
-        this.privateMessageView = pmView;
         getSettings();
     }
 
@@ -64,7 +58,7 @@ public class ListingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             case TYPE_PRIVATE_MESSAGE:
                 view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.listings_message, parent, false);
-                return new ListingsMessageViewHolder(view, privateMessageView, listingsPresenter);
+                return new ListingsMessageViewHolder(view, listingsPresenter);
             default:
                 throw new RuntimeException("Unexpected ViewHolder type: " + viewType);
         }

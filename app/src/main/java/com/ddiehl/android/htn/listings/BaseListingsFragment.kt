@@ -11,7 +11,6 @@ import com.ddiehl.android.htn.routing.AppRouter
 import com.ddiehl.android.htn.view.BaseFragment
 import com.google.android.material.snackbar.Snackbar
 import rxreddit.model.Listing
-import rxreddit.model.PrivateMessage
 import javax.inject.Inject
 
 abstract class BaseListingsFragment : BaseFragment(),
@@ -117,15 +116,6 @@ abstract class BaseListingsFragment : BaseFragment(),
             "hot", "new", "rising" -> menu.findItem(R.id.action_change_timespan).isVisible = false
             else -> menu.findItem(R.id.action_change_timespan).isVisible = false
         }
-    }
-
-    fun showMessageContextMenu(menu: ContextMenu, view: View, message: PrivateMessage) {
-        listingSelected = message
-        requireActivity().menuInflater.inflate(R.menu.message_context, menu)
-
-        // Hide ride/unread option based on state
-        menu.findItem(R.id.action_message_mark_read).isVisible = message.isUnread!!
-        menu.findItem(R.id.action_message_mark_unread).isVisible = !message.isUnread
     }
 
     override fun onContextItemSelected(item: MenuItem): Boolean {

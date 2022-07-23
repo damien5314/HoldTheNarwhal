@@ -3,7 +3,6 @@ package com.ddiehl.android.htn.listings.inbox;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -35,7 +34,7 @@ import rxreddit.model.Listing;
 import rxreddit.model.PrivateMessage;
 
 @FragmentWithArgs
-public class PrivateMessageFragment extends BaseFragment implements PrivateMessageView {
+public class PrivateMessageFragment extends BaseFragment {
 
     public static final String TAG = PrivateMessageFragment.class.getSimpleName();
 
@@ -103,11 +102,6 @@ public class PrivateMessageFragment extends BaseFragment implements PrivateMessa
                 .setVisible(false);
         menu.findItem(R.id.action_refresh)
                 .setVisible(false);
-    }
-
-    @Override
-    public void showMessageContextMenu(ContextMenu menu, View v, PrivateMessage privateMessage) {
-
     }
 
     private void scrollToBottom() {

@@ -4,7 +4,7 @@ import com.ddiehl.android.htn.listings.ListingsView;
 
 import org.jetbrains.annotations.NotNull;
 
-public interface InboxView extends ListingsView, PrivateMessageView {
+public interface InboxView extends ListingsView {
 
     void selectTab(@NotNull String show);
 

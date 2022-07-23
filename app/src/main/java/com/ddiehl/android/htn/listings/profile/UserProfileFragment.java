@@ -249,7 +249,7 @@ public class UserProfileFragment extends BaseListingsFragment
     @Override
     public ListingsAdapter getListingsAdapter() {
         if (listingsAdapter == null) {
-            listingsAdapter = new ListingsAdapter(getListingsPresenter(), null);
+            listingsAdapter = new ListingsAdapter(getListingsPresenter());
         }
         return listingsAdapter;
     }

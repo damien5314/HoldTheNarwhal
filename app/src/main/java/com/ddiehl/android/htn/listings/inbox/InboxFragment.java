@@ -150,7 +150,7 @@ public class InboxFragment extends BaseListingsFragment
     @Override
     public ListingsAdapter getListingsAdapter() {
         if (listingsAdapter == null) {
-            listingsAdapter = new ListingsAdapter(getListingsPresenter(), this);
+            listingsAdapter = new ListingsAdapter(getListingsPresenter());
         }
         return listingsAdapter;
     }

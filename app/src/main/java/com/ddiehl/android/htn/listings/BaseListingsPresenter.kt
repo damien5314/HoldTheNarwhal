@@ -718,4 +718,8 @@ abstract class BaseListingsPresenter(
     fun onContextMenuShownForComment(comment: Comment) {
         listingSelected = comment
     }
+
+    fun onContextMenuShownForMessage(message: PrivateMessage) {
+        listingSelected = message
+    }
 }
