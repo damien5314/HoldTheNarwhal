@@ -49,6 +49,8 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
     public static final String TAG = SubredditFragment.class.getSimpleName();
 
     @Inject
+    SubredditPresenter subredditPresenter;
+    @Inject
     SettingsManager settingsManager;
     @Inject
     LinkCommentsRouter linkCommentsRouter;
@@ -71,8 +73,6 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
     private CoordinatorLayout coordinatorLayout;
     private FloatingActionButton submitNewPostButton;
 
-    SubredditPresenter subredditPresenter;
-
     // Cache for sort selected before showing timespan dialog
     private String selectedSort;
 
@@ -89,20 +89,8 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
         if (TextUtils.isEmpty(sort)) sort = "hot";
         if (TextUtils.isEmpty(timespan)) timespan = "all";
 
-        SubredditPresenter presenter = new SubredditPresenter(
-                this,
-                appRouter,
-                linkCommentsRouter,
-                mediaGalleryRouter,
-                videoPlayerRouter,
-                addCommentDialogRouter,
-                reportViewRouter,
-                appNavigationMenuHelper,
-                this
-        );
-        subredditPresenter = presenter;
-        setListingsPresenter(presenter);
-        setCallbacks(presenter);
+        setListingsPresenter(subredditPresenter);
+        setCallbacks(subredditPresenter);
     }
 
     @NotNull

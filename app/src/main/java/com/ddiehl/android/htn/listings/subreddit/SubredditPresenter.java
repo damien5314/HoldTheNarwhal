@@ -17,6 +17,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 
+import javax.inject.Inject;
+
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import rxreddit.api.NoSuchSubredditException;
@@ -30,6 +32,7 @@ public class SubredditPresenter extends BaseListingsPresenter {
     private final AppNavigationMenuHelper appNavigationMenuHelper;
     private SubredditView subredditView;
 
+    @Inject
     public SubredditPresenter(
             MainView main,
             AppRouter appRouter,
