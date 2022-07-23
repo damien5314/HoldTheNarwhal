@@ -14,6 +14,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import rxreddit.model.Listing;
@@ -25,6 +27,7 @@ public class InboxPresenter extends BaseListingsPresenter {
 
     private final InboxView inboxView;
 
+    @Inject
     public InboxPresenter(
             MainView main,
             AppRouter appRouter,

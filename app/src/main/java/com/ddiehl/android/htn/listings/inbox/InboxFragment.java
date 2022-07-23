@@ -39,6 +39,8 @@ public class InboxFragment extends BaseListingsFragment
     public static final String TAG = InboxFragment.class.getSimpleName();
 
     @Inject
+    InboxPresenter inboxPresenter;
+    @Inject
     IdentityManager identityManager;
     @Inject
     LinkCommentsRouter linkCommentsRouter;
@@ -54,8 +56,6 @@ public class InboxFragment extends BaseListingsFragment
 
     private CoordinatorLayout coordinatorLayout;
 
-    private InboxPresenter inboxPresenter;
-
     @Override
     protected int getLayoutResId() {
         return R.layout.listings_fragment_inbox;
@@ -67,17 +67,6 @@ public class InboxFragment extends BaseListingsFragment
         FragmentArgs.inject(this);
 
         if (TextUtils.isEmpty(show)) show = "inbox";
-
-        inboxPresenter = new InboxPresenter(
-                this,
-                appRouter,
-                linkCommentsRouter,
-                mediaGalleryRouter,
-                videoPlayerRouter,
-                addCommentDialogRouter,
-                reportViewRouter,
-                this
-        );
         setListingsPresenter(inboxPresenter);
         setCallbacks(inboxPresenter);
     }
