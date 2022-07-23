@@ -1,7 +1,6 @@
 package com.ddiehl.android.htn.di
 
 import com.ddiehl.android.htn.HoldTheNarwhal
-import com.ddiehl.android.htn.listings.BaseListingsPresenter
 import com.ddiehl.android.htn.listings.comments.ThreadStubViewHolder
 import com.ddiehl.android.htn.listings.inbox.PrivateMessageAdapter
 import com.ddiehl.android.htn.listings.subreddit.submission.SubmitPostPresenter
@@ -34,7 +33,6 @@ interface ApplicationComponent {
     fun inject(vh: PrivateMessageAdapter.VH)
 
     // Presenters
-    fun inject(presenter: BaseListingsPresenter)
     fun inject(presenter: SettingsPresenter)
     fun inject(presenter: SubscriptionManagerPresenter)
     fun inject(presenter: SubmitPostPresenter)

@@ -29,8 +29,9 @@ import timber.log.Timber;
 
 public class SubredditPresenter extends BaseListingsPresenter {
 
+    private final MainView mainView;
     private final AppNavigationMenuHelper appNavigationMenuHelper;
-    private SubredditView subredditView;
+    private final SubredditView subredditView;
 
     @Inject
     public SubredditPresenter(
@@ -54,6 +55,7 @@ public class SubredditPresenter extends BaseListingsPresenter {
                 reportViewRouter,
                 view
         );
+        this.mainView = main;
         this.appNavigationMenuHelper = appNavigationMenuHelper;
         this.subredditView = view;
     }

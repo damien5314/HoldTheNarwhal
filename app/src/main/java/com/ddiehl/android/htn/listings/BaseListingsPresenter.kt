@@ -2,7 +2,6 @@ package com.ddiehl.android.htn.listings
 
 import android.content.Context
 import android.view.MenuItem
-import com.ddiehl.android.htn.HoldTheNarwhal
 import com.ddiehl.android.htn.R
 import com.ddiehl.android.htn.gallery.MediaGalleryRouter
 import com.ddiehl.android.htn.identity.IdentityManager
@@ -26,14 +25,14 @@ import java.io.IOException
 import javax.inject.Inject
 
 abstract class BaseListingsPresenter(
-    main: MainView,
-    appRouter: AppRouter,
-    linkCommentsRouter: LinkCommentsRouter,
-    mediaGalleryRouter: MediaGalleryRouter,
-    videoPlayerRouter: VideoPlayerRouter,
-    addCommentDialogRouter: AddCommentDialogRouter,
-    reportViewRouter: ReportViewRouter,
-    view: ListingsView,
+    private val mainView: MainView,
+    private val appRouter: AppRouter,
+    private val linkCommentsRouter: LinkCommentsRouter,
+    private val mediaGalleryRouter: MediaGalleryRouter,
+    private val videoPlayerRouter: VideoPlayerRouter,
+    private val addCommentDialogRouter: AddCommentDialogRouter,
+    private val reportViewRouter: ReportViewRouter,
+    private val listingsView: ListingsView,
 ) : ListingsView.Callbacks {
 
     @JvmField
@@ -57,16 +56,7 @@ abstract class BaseListingsPresenter(
     var networkConnectivityManager: NetworkConnectivityManager? = null
 
     val listings: MutableList<Listing> = mutableListOf()
-    private val listingsView: ListingsView
 
-    @JvmField
-    protected val mainView: MainView
-    private val appRouter: AppRouter
-    private val linkCommentsRouter: LinkCommentsRouter
-    private val mediaGalleryRouter: MediaGalleryRouter
-    private val videoPlayerRouter: VideoPlayerRouter
-    private val addCommentDialogRouter: AddCommentDialogRouter
-    private val reportViewRouter: ReportViewRouter
     @JvmField
     protected var beforeRequested = false
 
@@ -82,18 +72,6 @@ abstract class BaseListingsPresenter(
     @JvmField
     protected var subreddit: Subreddit? = null
     private var listingSelected: Listing? = null
-
-    init {
-        HoldTheNarwhal.getApplicationComponent().inject(this)
-        this.mainView = main
-        this.appRouter = appRouter
-        this.linkCommentsRouter = linkCommentsRouter
-        this.mediaGalleryRouter = mediaGalleryRouter
-        this.videoPlayerRouter = videoPlayerRouter
-        this.addCommentDialogRouter = addCommentDialogRouter
-        this.reportViewRouter = reportViewRouter
-        this.listingsView = view
-    }
 
     open fun hasData(): Boolean {
         return listings.size != 0

@@ -34,6 +34,7 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
 
     private static final int MAX_CHILDREN_PER_REQUEST = 20;
 
+    private final MainView mainView;
     private final AppRouter appRouter;
     private final MediaGalleryRouter mediaGalleryRouter;
     private final VideoPlayerRouter videoPlayerRouter;
@@ -64,6 +65,7 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
                 reportViewRouter,
                 view
         );
+        this.mainView = main;
         this.appRouter = appRouter;
         this.mediaGalleryRouter = mediaGalleryRouter;
         this.videoPlayerRouter = videoPlayerRouter;

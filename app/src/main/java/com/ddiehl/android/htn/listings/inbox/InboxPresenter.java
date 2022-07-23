@@ -25,6 +25,7 @@ import timber.log.Timber;
 
 public class InboxPresenter extends BaseListingsPresenter {
 
+    private final MainView mainView;
     private final InboxView inboxView;
 
     @Inject
@@ -48,6 +49,7 @@ public class InboxPresenter extends BaseListingsPresenter {
                 reportViewRouter,
                 inbox
         );
+        mainView = main;
         inboxView = inbox;
     }
 

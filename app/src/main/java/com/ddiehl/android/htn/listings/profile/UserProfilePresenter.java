@@ -37,6 +37,7 @@ public class UserProfilePresenter extends BaseListingsPresenter {
         public List<Listing> trophies;
     }
 
+    private final MainView mainView;
     private final UserProfileView summaryView;
 
     @Inject
@@ -59,6 +60,7 @@ public class UserProfilePresenter extends BaseListingsPresenter {
                 reportViewRouter,
                 view
         );
+        mainView = main;
         summaryView = view;
     }
 
