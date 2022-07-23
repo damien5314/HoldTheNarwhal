@@ -227,6 +227,7 @@ public class ListingsCommentViewHolder extends RecyclerView.ViewHolder
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View view, ContextMenu.ContextMenuInfo menuInfo) {
+        commentPresenter.onContextMenuShownForComment(comment);
         CommentMenuHelper.showCommentContextMenu((FragmentActivity) view.getContext(), menu, comment);
     }
 }
