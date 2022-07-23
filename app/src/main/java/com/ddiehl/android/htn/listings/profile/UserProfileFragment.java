@@ -58,6 +58,8 @@ public class UserProfileFragment extends BaseListingsFragment
     private static final int NUM_DEFAULT_TABS = 5;
 
     @Inject
+    UserProfilePresenter userProfilePresenter;
+    @Inject
     IdentityManager identityManager;
     @Inject
     LinkCommentsRouter linkCommentsRouter;
@@ -97,8 +99,6 @@ public class UserProfileFragment extends BaseListingsFragment
     private TabLayout.Tab tabHidden;
     private TabLayout.Tab tabSaved;
 
-    private UserProfilePresenter userProfilePresenter;
-
     @Override
     protected int getLayoutResId() {
         return R.layout.listings_fragment_user_profile;
@@ -113,16 +113,6 @@ public class UserProfileFragment extends BaseListingsFragment
         if (TextUtils.isEmpty(sort)) sort = "new";
         if (TextUtils.isEmpty(timespan)) timespan = "all";
 
-        userProfilePresenter = new UserProfilePresenter(
-                this,
-                appRouter,
-                linkCommentsRouter,
-                mediaGalleryRouter,
-                videoPlayerRouter,
-                addCommentDialogRouter,
-                reportViewRouter,
-                this
-        );
         setListingsPresenter(userProfilePresenter);
         setCallbacks(userProfilePresenter);
     }

@@ -18,6 +18,8 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.functions.Function;
@@ -37,6 +39,7 @@ public class UserProfilePresenter extends BaseListingsPresenter {
 
     private final UserProfileView summaryView;
 
+    @Inject
     public UserProfilePresenter(
             MainView main,
             AppRouter appRouter,
