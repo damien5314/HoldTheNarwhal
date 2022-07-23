@@ -28,7 +28,7 @@ public class LinkCommentsAdapter extends ListingsAdapter {
     private final LinkCommentsPresenter linkCommentsPresenter;
 
     public LinkCommentsAdapter(LinkCommentsView linkCommentsView, LinkCommentsPresenter presenter) {
-        super(presenter, linkCommentsView, null);
+        super(presenter, null);
         this.linkCommentsView = linkCommentsView;
         this.linkCommentsPresenter = presenter;
     }

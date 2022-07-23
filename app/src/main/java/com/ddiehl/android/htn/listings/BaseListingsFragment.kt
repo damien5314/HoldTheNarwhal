@@ -10,7 +10,6 @@ import com.ddiehl.android.htn.listings.report.ReportViewRouter
 import com.ddiehl.android.htn.routing.AppRouter
 import com.ddiehl.android.htn.view.BaseFragment
 import com.google.android.material.snackbar.Snackbar
-import rxreddit.model.Comment
 import rxreddit.model.Listing
 import rxreddit.model.PrivateMessage
 import javax.inject.Inject
@@ -117,38 +116,6 @@ abstract class BaseListingsFragment : BaseFragment(),
             "controversial", "top" -> menu.findItem(R.id.action_change_timespan).isVisible = true
             "hot", "new", "rising" -> menu.findItem(R.id.action_change_timespan).isVisible = false
             else -> menu.findItem(R.id.action_change_timespan).isVisible = false
-        }
-    }
-
-    fun showCommentContextMenu(menu: ContextMenu, view: View, comment: Comment) {
-        listingSelected = comment
-        activity?.menuInflater?.inflate(R.menu.comment_context, menu)
-
-        // Build title for menu
-        val score = if (comment.score == null) {
-            view.context.getString(R.string.hidden_score_placeholder)
-        } else {
-            comment.score!!.toString()
-        }
-        val title = getString(R.string.menu_action_comment).format(comment.author, score)
-        menu.setHeaderTitle(title)
-
-        // Set username for listing in the user profile menu item
-        val username = getString(R.string.action_view_user_profile).format(comment.author)
-        menu.findItem(R.id.action_comment_view_user_profile).title = username
-
-        // Hide save/unsave option
-        menu.findItem(R.id.action_comment_save).isVisible = !comment.isSaved
-        menu.findItem(R.id.action_comment_unsave).isVisible = comment.isSaved
-
-        // Hide user profile for posts by deleted users
-        if ("[deleted]".equals(comment.author, ignoreCase = true)) {
-            menu.findItem(R.id.action_comment_view_user_profile).isVisible = false
-        }
-
-        // Don't show parent menu option if there is no parent
-        if (comment.linkId == comment.parentId) {
-            menu.findItem(R.id.action_comment_parent).isVisible = false
         }
     }
 

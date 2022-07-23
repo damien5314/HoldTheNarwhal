@@ -714,4 +714,8 @@ abstract class BaseListingsPresenter(
     fun onContextMenuShownForLink(link: Link) {
         listingSelected = link
     }
+
+    fun onContextMenuShownForComment(comment: Comment) {
+        listingSelected = comment
+    }
 }

@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ddiehl.android.htn.R;
@@ -221,6 +222,7 @@ public class ThreadCommentViewHolder extends RecyclerView.ViewHolder
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View view, ContextMenu.ContextMenuInfo menuInfo) {
-        linkCommentsView.showCommentContextMenu(menu, view, comment);
+        linkCommentsPresenter.onContextMenuShownForComment(comment);
+        CommentMenuHelper.showCommentContextMenu((FragmentActivity) view.getContext(), menu, comment);
     }
 }
