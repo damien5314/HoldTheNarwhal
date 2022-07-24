@@ -124,15 +124,9 @@ public class SubredditFragment extends BaseListingsFragment implements Subreddit
         if (subredditInfo != null) {
             String url = subredditInfo.getHeaderImageUrl();
             appNavigationMenuHelper.loadImageIntoDrawerHeader(url);
+        } else {
+            appNavigationMenuHelper.loadImageIntoDrawerHeader(null);
         }
-    }
-
-    @Override
-    public void onPause() {
-        // Clear subreddit image from drawer header
-        appNavigationMenuHelper.loadImageIntoDrawerHeader(null);
-
-        super.onPause();
     }
 
     private ListingsAdapter listingsAdapter;
