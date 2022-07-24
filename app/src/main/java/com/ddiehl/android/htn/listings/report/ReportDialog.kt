@@ -36,11 +36,11 @@ class ReportDialog : BaseDaggerDialogFragment() {
         }
     }
 
-    private val rules: Array<String> by lazy { arguments!!.getStringArray(ARG_RULES) as Array<String> }
-    private val siteRules: Array<String> by lazy { arguments!!.getStringArray(ARG_SITE_RULES) as Array<String> }
+    private val rules by lazy { requireArguments().getStringArray(ARG_RULES) as Array<String> }
+    private val siteRules by lazy { requireArguments().getStringArray(ARG_SITE_RULES) as Array<String> }
 
-    internal var selectedIndex = -1
-    internal var selectedButton: RadioButton? = null
+    private var selectedIndex = -1
+    private var selectedButton: RadioButton? = null
     internal var listener: Listener? = null
 
     interface Listener {
@@ -120,10 +120,10 @@ class ReportDialog : BaseDaggerDialogFragment() {
         parent.addView(otherOptionView)
 
         // Build AlertDialog from custom view
-        return AlertDialog.Builder(context!!)
+        return AlertDialog.Builder(requireContext())
             .setTitle(R.string.report_menu_title)
-            .setPositiveButton(R.string.report_submit, onSubmit())
-            .setNegativeButton(R.string.report_cancel, onCancelButton())
+            .setPositiveButton(R.string.report_submit, this::onSubmit)
+            .setNegativeButton(R.string.report_cancel, this::onCancelButton)
             .setView(view)
             .create()
     }
@@ -148,26 +148,31 @@ class ReportDialog : BaseDaggerDialogFragment() {
         return reportOptions
     }
 
-    private fun onSubmit(): DialogInterface.OnClickListener {
-        return DialogInterface.OnClickListener { _, _ ->
-            // If index is in rules array, submit the rule
-            if (selectedIndex < rules.size) {
-                submit(rules[selectedIndex], null, null)
-            } else if (selectedIndex < rules.size + siteRules.size) {
-                submit(null, siteRules[selectedIndex - rules.size], null)
-            }
-            // Otherwise, submit the other reason
-            // If index is in site rules array, submit the site rule
-            else {
-                val otherText = dialog!!.findViewById<EditText>(R.id.report_choice_edit_text)
-                val input = otherText.text.toString().trim { it <= ' ' }
-                submit(null, null, input)
-            }
+    private fun onSubmit(dialog: DialogInterface, which: Int) {
+        if (selectedIndex < 0) {
+            // no rule selected yet
+            listener!!.onCancelled()
+            dismiss()
+            return
         }
+        // If index is in rules array, submit the rule
+        if (selectedIndex < rules.size) {
+            submit(rules[selectedIndex], null, null)
+        } else if (selectedIndex < rules.size + siteRules.size) {
+            submit(null, siteRules[selectedIndex - rules.size], null)
+        }
+        // Otherwise, submit the other reason
+        // If index is in site rules array, submit the site rule
+        else {
+            val otherText = this.dialog!!.findViewById<EditText>(R.id.report_choice_edit_text)
+            val input = otherText.text.toString().trim { it <= ' ' }
+            submit(null, null, input)
+        }
+        dismiss()
     }
 
-    internal fun onCancelButton(): DialogInterface.OnClickListener {
-        return DialogInterface.OnClickListener { dialogInterface, _ -> onCancel(dialogInterface) }
+    private fun onCancelButton(dialog: DialogInterface, which: Int) {
+        onCancel(dialog)
     }
 
     override fun onCancel(dialog: DialogInterface) {
@@ -178,13 +183,10 @@ class ReportDialog : BaseDaggerDialogFragment() {
     private fun submit(rule: String?, siteRule: String?, other: String?) {
         if (other != null) {
             listener!!.onOtherSubmitted(other)
-            dismiss()
         } else if (rule != null) {
             listener!!.onRuleSubmitted(rule)
-            dismiss()
         } else if (siteRule != null) {
             listener!!.onSiteRuleSubmitted(siteRule)
-            dismiss()
         }
     }
 }
