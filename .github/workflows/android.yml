@@ -12,22 +12,28 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-    - name: set up JDK 11
-      uses: actions/setup-java@v3
-      with:
-        java-version: '11'
-        distribution: 'temurin'
-        cache: gradle
-    - name: Add app_id to local.properties
-      env:
-        HTN_APP_ID: ${{ secrets.HTN_APP_ID }}
-      run: echo app_id="$HTN_APP_ID" >> ./local.properties
-    - name: Add app_redirect_uri to local.properties
-      env:
-        HTN_REDIRECT_URI: ${{ secrets.HTN_REDIRECT_URI }}
-      run: echo app_redirect_uri="$HTN_REDIRECT_URI" >> ./local.properties
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
-    - name: Build with Gradle
-      run: ./gradlew build
+      - uses: actions/checkout@v3
+      - name: set up JDK 11
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+          cache: gradle
+      - name: Add app_id to local.properties
+        env:
+          HTN_APP_ID: ${{ secrets.HTN_APP_ID }}
+        run: echo app_id="$HTN_APP_ID" >> ./local.properties
+      - name: Add app_redirect_uri to local.properties
+        env:
+          HTN_REDIRECT_URI: ${{ secrets.HTN_REDIRECT_URI }}
+        run: echo app_redirect_uri="$HTN_REDIRECT_URI" >> ./local.properties
+      - name: Create google-services.json
+        run: cat ./app/google-services.json | base64
+      - name: Populate google-services.json
+        env:
+          GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
+        run: echo $GOOGLE_SERVICES_JSON > ./app/google-services.json
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+      - name: Build with Gradle
+        run: ./gradlew build
