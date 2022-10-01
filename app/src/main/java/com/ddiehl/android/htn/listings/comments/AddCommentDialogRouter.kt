@@ -2,10 +2,12 @@ package com.ddiehl.android.htn.listings.comments
 
 import android.app.Activity
 import androidx.fragment.app.Fragment
+import com.ddiehl.android.htn.di.FragmentScope
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.PublishSubject
 import javax.inject.Inject
 
+@FragmentScope
 class AddCommentDialogRouter @Inject constructor(
     private val fragment: Fragment,
 ) {
