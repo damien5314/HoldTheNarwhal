@@ -28,11 +28,11 @@ jobs:
           HTN_REDIRECT_URI: ${{ secrets.HTN_REDIRECT_URI }}
         run: echo app_redirect_uri="$HTN_REDIRECT_URI" >> ./local.properties
       - name: Create google-services.json
-        run: cat ./app/google-services.json | base64
+        run: touch ./app/google-services.json
       - name: Populate google-services.json
         env:
           GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
-        run: echo $GOOGLE_SERVICES_JSON > ./app/google-services.json
+        run: echo $GOOGLE_SERVICES_JSON | base64 -d ./app/google-services.json
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
       - name: Build with Gradle
