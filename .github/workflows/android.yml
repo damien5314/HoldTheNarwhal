@@ -19,7 +19,14 @@ jobs:
         java-version: '11'
         distribution: 'temurin'
         cache: gradle
-
+    - name: Add app_id to local.properties
+      env:
+        HTN_APP_ID: ${{ secrets.HTN_APP_ID }}
+      run: echo app_id="$HTN_APP_ID" >> ./local.properties
+    - name: Add app_redirect_uri to local.properties
+      env:
+        HTN_REDIRECT_URI: ${{ secrets.HTN_REDIRECT_URI }}
+      run: echo app_redirect_uri="$HTN_REDIRECT_URI" >> ./local.properties
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Build with Gradle
