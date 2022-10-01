@@ -2,6 +2,7 @@ package com.ddiehl.android.htn.listings
 
 import android.content.Context
 import android.view.MenuItem
+import androidx.fragment.app.FragmentActivity
 import com.ddiehl.android.htn.R
 import com.ddiehl.android.htn.gallery.MediaGalleryRouter
 import com.ddiehl.android.htn.identity.IdentityManager
@@ -25,6 +26,7 @@ import java.io.IOException
 import javax.inject.Inject
 
 abstract class BaseListingsPresenter(
+    private val activity: FragmentActivity,
     private val mainView: MainView,
     private val appRouter: AppRouter,
     private val linkCommentsRouter: LinkCommentsRouter,
@@ -331,14 +333,14 @@ abstract class BaseListingsPresenter(
         // Determine correct routing for link
         if (link.isGallery) {
             val galleryItems = link.galleryItems
-            mediaGalleryRouter.openLinkGallery(galleryItems)
+            mediaGalleryRouter.openLinkGallery(activity, galleryItems)
             return
         }
         val media = link.media
         if (media != null) {
             val redditVideo = media.redditVideo
             if (redditVideo != null) {
-                videoPlayerRouter.openRedditVideo(redditVideo)
+                videoPlayerRouter.openRedditVideo(activity, redditVideo)
                 return
             }
         }

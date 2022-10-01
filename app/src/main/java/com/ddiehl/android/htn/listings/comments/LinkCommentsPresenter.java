@@ -1,5 +1,7 @@
 package com.ddiehl.android.htn.listings.comments;
 
+import androidx.fragment.app.FragmentActivity;
+
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.gallery.MediaGalleryRouter;
 import com.ddiehl.android.htn.listings.BaseListingsPresenter;
@@ -34,6 +36,7 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
 
     private static final int MAX_CHILDREN_PER_REQUEST = 20;
 
+    private final FragmentActivity activity;
     private final MainView mainView;
     private final AppRouter appRouter;
     private final MediaGalleryRouter mediaGalleryRouter;
@@ -47,6 +50,7 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
 
     @Inject
     public LinkCommentsPresenter(
+            FragmentActivity activity,
             MainView main,
             AppRouter appRouter,
             LinkCommentsRouter linkCommentsRouter,
@@ -56,6 +60,7 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
             ReportViewRouter reportViewRouter,
             LinkCommentsView view) {
         super(
+                activity,
                 main,
                 appRouter,
                 linkCommentsRouter,
@@ -65,6 +70,7 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
                 reportViewRouter,
                 view
         );
+        this.activity = activity;
         this.mainView = main;
         this.appRouter = appRouter;
         this.mediaGalleryRouter = mediaGalleryRouter;
@@ -284,7 +290,7 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
         // Determine correct routing for link
         if (link.isGallery()) {
             final List<GalleryItem> galleryItems = link.getGalleryItems();
-            mediaGalleryRouter.openLinkGallery(galleryItems);
+            mediaGalleryRouter.openLinkGallery(activity, galleryItems);
             return;
         }
 
@@ -292,7 +298,7 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
         if (media != null) {
             final Media.RedditVideo redditVideo = media.getRedditVideo();
             if (redditVideo != null) {
-                videoPlayerRouter.openRedditVideo(redditVideo);
+                videoPlayerRouter.openRedditVideo(activity, redditVideo);
                 return;
             }
         }

@@ -4,13 +4,11 @@ import androidx.fragment.app.FragmentActivity
 import rxreddit.model.Media.RedditVideo
 import javax.inject.Inject
 
-class VideoPlayerRouter @Inject constructor(
-    private val fragmentActivity: FragmentActivity,
-) {
+class VideoPlayerRouter @Inject constructor() {
 
-    fun openRedditVideo(redditVideo: RedditVideo) {
+    fun openRedditVideo(activity: FragmentActivity, redditVideo: RedditVideo) {
         val url = redditVideo.dashUrl
         val dialog: VideoPlayerDialog = VideoPlayerDialogBuilder.newVideoPlayerDialog(url)
-        dialog.show(fragmentActivity.supportFragmentManager, VideoPlayerDialog.TAG)
+        dialog.show(activity.supportFragmentManager, VideoPlayerDialog.TAG)
     }
 }
