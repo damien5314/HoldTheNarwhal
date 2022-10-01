@@ -1,5 +1,7 @@
 package com.ddiehl.android.htn.listings.inbox;
 
+import androidx.fragment.app.FragmentActivity;
+
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.gallery.MediaGalleryRouter;
 import com.ddiehl.android.htn.listings.BaseListingsPresenter;
@@ -30,6 +32,7 @@ public class InboxPresenter extends BaseListingsPresenter {
 
     @Inject
     public InboxPresenter(
+            FragmentActivity activity,
             MainView main,
             AppRouter appRouter,
             LinkCommentsRouter linkCommentsRouter,
@@ -40,6 +43,7 @@ public class InboxPresenter extends BaseListingsPresenter {
             InboxView inbox
     ) {
         super(
+                activity,
                 main,
                 appRouter,
                 linkCommentsRouter,

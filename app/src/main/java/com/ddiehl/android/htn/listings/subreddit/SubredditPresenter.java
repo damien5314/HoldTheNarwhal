@@ -1,6 +1,7 @@
 package com.ddiehl.android.htn.listings.subreddit;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
 
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.gallery.MediaGalleryRouter;
@@ -35,6 +36,7 @@ public class SubredditPresenter extends BaseListingsPresenter {
 
     @Inject
     public SubredditPresenter(
+            FragmentActivity activity,
             MainView main,
             AppRouter appRouter,
             LinkCommentsRouter linkCommentsRouter,
@@ -46,6 +48,7 @@ public class SubredditPresenter extends BaseListingsPresenter {
             SubredditView view
     ) {
         super(
+                activity,
                 main,
                 appRouter,
                 linkCommentsRouter,

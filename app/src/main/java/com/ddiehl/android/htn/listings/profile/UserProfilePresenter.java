@@ -2,6 +2,8 @@ package com.ddiehl.android.htn.listings.profile;
 
 import android.text.TextUtils;
 
+import androidx.fragment.app.FragmentActivity;
+
 import com.ddiehl.android.htn.R;
 import com.ddiehl.android.htn.gallery.MediaGalleryRouter;
 import com.ddiehl.android.htn.listings.BaseListingsPresenter;
@@ -42,6 +44,7 @@ public class UserProfilePresenter extends BaseListingsPresenter {
 
     @Inject
     public UserProfilePresenter(
+            FragmentActivity activity,
             MainView main,
             AppRouter appRouter,
             LinkCommentsRouter linkCommentsRouter,
@@ -51,6 +54,7 @@ public class UserProfilePresenter extends BaseListingsPresenter {
             ReportViewRouter reportViewRouter,
             UserProfileView view) {
         super(
+                activity,
                 main,
                 appRouter,
                 linkCommentsRouter,
