@@ -298,7 +298,7 @@ public class LinkCommentsPresenter extends BaseListingsPresenter {
         if (media != null) {
             final Media.RedditVideo redditVideo = media.getRedditVideo();
             if (redditVideo != null) {
-                videoPlayerRouter.openRedditVideo(redditVideo);
+                videoPlayerRouter.openRedditVideo(activity, redditVideo);
                 return;
             }
         }

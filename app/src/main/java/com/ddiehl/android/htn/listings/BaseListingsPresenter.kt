@@ -340,7 +340,7 @@ abstract class BaseListingsPresenter(
         if (media != null) {
             val redditVideo = media.redditVideo
             if (redditVideo != null) {
-                videoPlayerRouter.openRedditVideo(redditVideo)
+                videoPlayerRouter.openRedditVideo(activity, redditVideo)
                 return
             }
         }
