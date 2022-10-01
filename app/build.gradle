@@ -21,8 +21,8 @@ android {
         applicationId "com.ddiehl.android.htn"
         minSdkVersion MIN_SDK_VERSION
         targetSdkVersion TARGET_SDK_VERSION
-        versionCode 2100030
-        versionName "0.24"
+        versionCode 2100031
+        versionName "0.25"
         resConfigs "en"
         buildConfigField "long", "BUILD_TIME_UTC", "" + getTime()
         def appId = localProperties.getProperty("app_id")
