@@ -57,6 +57,12 @@ class InboxNotificationManager(private val applicationContext: Context) {
         val taskStack = TaskStackBuilder.create(applicationContext)
         val inboxIntent = InboxActivity.getIntent(applicationContext, "unread")
         taskStack.addNextIntentWithParentStack(inboxIntent)
-        return taskStack.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT)
+
+        val flags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        } else {
+            PendingIntent.FLAG_UPDATE_CURRENT
+        }
+        return taskStack.getPendingIntent(0, flags)
     }
 }
